@@ -1,0 +1,31 @@
+<variant
+    name="arm64Release"
+    package="com.delua"
+    minSdkVersion="24"
+    targetSdkVersion="35"
+    mergedManifest="build\intermediates\merged_manifest\arm64Release\processArm64ReleaseMainManifest\AndroidManifest.xml"
+    manifestMergeReport="build\outputs\logs\manifest-merger-arm64-release-report.txt"
+    proguardFiles="build\intermediates\default_proguard_files\global\proguard-android-optimize.txt-8.5.2;proguard-rules.pro"
+    partialResultsDir="build\intermediates\lint_vital_partial_results\arm64Release\lintVitalAnalyzeArm64Release\out">
+  <buildFeatures
+      namespacing="REQUIRED"/>
+  <sourceProviders>
+    <sourceProvider
+        manifests="src\main\AndroidManifest.xml"
+        javaDirectories="src\main\java;src\arm64\java;src\release\java;src\arm64Release\java;src\main\kotlin;src\arm64\kotlin;src\release\kotlin;src\arm64Release\kotlin"
+        resDirectories="src\main\res;src\arm64\res;src\release\res;src\arm64Release\res"
+        assetsDirectories="src\main\assets;src\arm64\assets;src\release\assets;src\arm64Release\assets"/>
+  </sourceProviders>
+  <testSourceProviders>
+  </testSourceProviders>
+  <testFixturesSourceProviders>
+  </testFixturesSourceProviders>
+  <artifact
+      classOutputs="build\intermediates\javac\arm64Release\compileArm64ReleaseJavaWithJavac\classes;build\tmp\kotlin-classes\arm64Release;build\kotlinToolingMetadata;build\intermediates\compile_and_runtime_not_namespaced_r_class_jar\arm64Release\processArm64ReleaseResources\R.jar"
+      type="MAIN"
+      applicationId="com.delua"
+      generatedSourceFolders="build\generated\ap_generated_sources\arm64Release\out"
+      generatedResourceFolders="build\generated\res\resValues\arm64\release"
+      desugaredMethodsFiles="C:\Users\liois\.gradle\caches\9.5.1\transforms\35a2f2a6643fb97c583d3d7077db30e7\transformed\D8BackportedDesugaredMethods.txt">
+  </artifact>
+</variant>

@@ -1,0 +1,98 @@
+package com.delua.ui.navigation
+
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.NavHostController
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
+import com.delua.engine.LuaRunner
+import com.delua.model.Project
+import com.delua.project.ProjectManager
+import com.delua.ui.screen.EditorScreen
+import com.delua.ui.screen.ProjectListScreen
+import com.delua.ui.screen.RunScreen
+import java.net.URLDecoder
+import java.net.URLEncoder
+
+object Routes {
+    const val PROJECT_LIST = "projects"
+    const val EDITOR = "editor/{projectName}/{projectPath}"
+    const val RUN = "run/{projectName}/{projectPath}/{fileName}"
+
+    fun editor(project: Project): String {
+        return "editor/${enc(project.name)}/${enc(project.path)}"
+    }
+
+    fun run(project: Project, fileName: String): String {
+        return "run/${enc(project.name)}/${enc(project.path)}/${enc(fileName)}"
+    }
+
+    fun enc(s: String) = URLEncoder.encode(s, "UTF-8")
+    fun dec(s: String?) = URLDecoder.decode(s ?: "", "UTF-8")
+}
+
+@Composable
+fun DeluaNavHost(navController: NavHostController) {
+    val context = LocalContext.current
+    val projectManager = remember { ProjectManager(context) }
+    val luaRunner = remember { LuaRunner(context) }
+
+    NavHost(navController = navController, startDestination = Routes.PROJECT_LIST) {
+        composable(Routes.PROJECT_LIST) {
+            ProjectListScreen(
+                projectManager = projectManager,
+                onProjectClick = { project ->
+                    navController.navigate(Routes.editor(project))
+                }
+            )
+        }
+        composable(
+            route = Routes.EDITOR,
+            arguments = listOf(
+                navArgument("projectName") { type = NavType.StringType },
+                navArgument("projectPath") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val project = rememberProject(backStackEntry.arguments?.getString("projectName"),
+                backStackEntry.arguments?.getString("projectPath"))
+            EditorScreen(
+                project = project,
+                projectManager = projectManager,
+                onBack = { navController.popBackStack() },
+                onRun = { fileName ->
+                    navController.navigate(Routes.run(project, fileName))
+                }
+            )
+        }
+        composable(
+            route = Routes.RUN,
+            arguments = listOf(
+                navArgument("projectName") { type = NavType.StringType },
+                navArgument("projectPath") { type = NavType.StringType },
+                navArgument("fileName") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val project = rememberProject(
+                backStackEntry.arguments?.getString("projectName"),
+                backStackEntry.arguments?.getString("projectPath")
+            )
+            val fileName = Routes.dec(backStackEntry.arguments?.getString("fileName"))
+            RunScreen(
+                project = project,
+                fileName = fileName,
+                luaRunner = luaRunner,
+                onBack = { navController.popBackStack() }
+            )
+        }
+    }
+}
+
+@Composable
+private fun rememberProject(name: String?, path: String?): Project {
+    val n = Routes.dec(name)
+    val p = Routes.dec(path)
+    return remember(n, p) { Project(name = n, path = p) }
+}

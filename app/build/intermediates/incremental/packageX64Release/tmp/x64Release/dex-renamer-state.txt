@@ -1,0 +1,7 @@
+#Wed Jul 29 05:43:50 CST 2026
+base.0=D\:\\Users\\liois\\Documents\\lioisme\\kotlin\\delua\\app\\build\\intermediates\\dex\\x64Release\\mergeDexX64Release\\classes.dex
+base.1=D\:\\Users\\liois\\Documents\\lioisme\\kotlin\\delua\\app\\build\\intermediates\\dex\\x64Release\\mergeDexX64Release\\classes2.dex
+path.0=classes.dex
+path.1=classes2.dex
+renamed.0=classes.dex
+renamed.1=classes2.dex
