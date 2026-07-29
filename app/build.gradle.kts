@@ -91,6 +91,7 @@ repositories {
 }
 
 dependencies {
+    implementation(fileTree("libs") { include("*.jar") })
     implementation(project(":androlua"))
     implementation("org.luaj:luaj-jse:3.0.1")
 

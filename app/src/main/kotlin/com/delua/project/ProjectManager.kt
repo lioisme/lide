@@ -119,7 +119,14 @@ class ProjectManager(private val context: Context) {
         dir.mkdirs()
         val packageName = "com.delua.$name"
         File(dir, "main.lua").writeText("-- $name\nprint(\"hello from $name!\")\n")
-        File(dir, "init.lua").writeText("appname = \"$name\"\nappver = \"1.0\"\npackage = \"$packageName\"\nicon = nil\n")
+        File(dir, "init.lua").writeText("""
+appname = "$name"
+appver = "1.0"
+package = "$packageName"
+icon = nil
+pages = {"main"}
+user_permission = {}
+""".trimIndent())
         return Project(
             name = name,
             path = dir.absolutePath,

@@ -1,10 +1,10 @@
 package com.delua
 
-import android.app.Application
+import com.delua.androlua.LuaApplication
 import com.delua.i18n.LocaleManager
 import com.delua.ui.theme.SettingsManager
 
-class DeluaApp : Application() {
+class DeluaApp : LuaApplication() {
     override fun onCreate() {
         super.onCreate()
         SettingsManager.init(this)
