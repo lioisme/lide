@@ -1,26 +1,34 @@
 package com.delua.project
 
 import android.content.Context
+import android.util.Log
 import com.delua.androlua.LuaApplication
 import com.delua.model.Project
 import java.io.File
 
 class ProjectManager(private val context: Context) {
 
-    private val projectsDir: File
-        get() = File(LuaApplication.instance().luaExtDir, "projects").also { it.mkdirs() }
+    private val localProjectsDir: File
+        get() = File(context.filesDir, "projects").also { it.mkdirs() }
+
+    private fun scanDir(dir: File): List<Project> {
+        return dir.listFiles()
+            ?.filter { it.isDirectory && File(it, "main.lua").exists() }
+            ?.map { loadProject(it) }
+            ?: emptyList()
+    }
 
     fun listProjects(): List<Project> {
         val list = mutableListOf<Project>()
         list.addAll(loadBuiltinProjects())
-        val dirs = projectsDir.listFiles()?.filter { it.isDirectory } ?: emptyList()
-        for (dir in dirs) {
-            val mainFile = File(dir, "main.lua")
-            if (mainFile.exists()) {
-                list.add(loadProject(dir))
-            }
+        list.addAll(scanDir(localProjectsDir))
+        try {
+            val extDir = LuaApplication.instance().luaExtDir
+            list.addAll(scanDir(File(extDir)))
+        } catch (_: Exception) {
+            Log.d("ProjectManager", "Cannot scan luaExtDir: may lack storage permission")
         }
-        return list
+        return list.distinctBy { it.path }
     }
 
     private fun loadProject(dir: File): Project {
@@ -116,7 +124,7 @@ class ProjectManager(private val context: Context) {
     }
 
     fun createProject(name: String): Project {
-        val dir = File(projectsDir, name)
+        val dir = File(localProjectsDir, name)
         dir.mkdirs()
         val packageName = "com.delua.$name"
         File(dir, "main.lua").writeText("-- $name\nprint(\"hello from $name!\")\n")
@@ -134,5 +142,9 @@ user_permission = {}
             files = listOf("main.lua", "init.lua"),
             packageName = packageName
         )
+    }
+
+    fun deleteProject(project: Project): Boolean {
+        return File(project.path).deleteRecursively()
     }
 }

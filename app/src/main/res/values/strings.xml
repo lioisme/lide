@@ -16,13 +16,8 @@
 
     <!-- Run -->
     <string name="run_title">Run: %1$s/%2$s</string>
-    <string name="repl_title">REPL: %1$s</string>
     <string name="running">Running…</string>
     <string name="no_output">(no output)</string>
-    <string name="run_main">Run main.lua</string>
-    <string name="repl_mode">REPL</string>
-    <string name="repl_welcome">delua REPL — type Lua code below and press ▶ to execute</string>
-    <string name="repl_input_hint">type Lua code here…</string>
 
     <!-- Settings sections -->
     <string name="settings">Settings</string>
