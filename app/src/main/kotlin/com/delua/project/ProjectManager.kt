@@ -1,13 +1,14 @@
 package com.delua.project
 
 import android.content.Context
+import com.delua.androlua.LuaApplication
 import com.delua.model.Project
 import java.io.File
 
 class ProjectManager(private val context: Context) {
 
     private val projectsDir: File
-        get() = File(context.filesDir, "projects").also { it.mkdirs() }
+        get() = File(LuaApplication.instance().luaExtDir, "projects").also { it.mkdirs() }
 
     fun listProjects(): List<Project> {
         val list = mutableListOf<Project>()

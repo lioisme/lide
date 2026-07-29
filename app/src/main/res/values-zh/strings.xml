@@ -16,8 +16,13 @@
 
     <!-- Run -->
     <string name="run_title">运行: %1$s/%2$s</string>
+    <string name="repl_title">REPL: %1$s</string>
     <string name="running">运行中…</string>
     <string name="no_output">(无输出)</string>
+    <string name="run_main">运行 main.lua</string>
+    <string name="repl_mode">REPL</string>
+    <string name="repl_welcome">delua REPL — 在下方输入 Lua 代码，按 ▶ 执行</string>
+    <string name="repl_input_hint">在此输入 Lua 代码…</string>
 
     <!-- Settings sections -->
     <string name="settings">设置</string>

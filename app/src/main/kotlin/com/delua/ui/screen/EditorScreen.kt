@@ -4,15 +4,21 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.delua.R
+import com.delua.androlua.engine.LuaRunner
 import com.delua.model.Project
 import com.delua.project.ProjectManager
 import com.delua.ui.editor.EditorToolbar
 import com.delua.ui.editor.LuaEditor
+import com.delua.ui.editor.updateDiagnostics
 import io.github.rosemoe.sora.widget.CodeEditor
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -22,9 +28,11 @@ fun EditorScreen(
     onBack: () -> Unit,
     onRun: (fileName: String) -> Unit,
 ) {
+    val context = LocalContext.current
+    val luaRunner = remember { LuaRunner(context) }
     val files = remember { projectManager.listProjectFiles(project) }
     var currentFile by remember {
-        mutableStateOf(files.firstOrNull() ?: project.mainFile)
+        mutableStateOf(if (files.contains(project.mainFile)) project.mainFile else (files.firstOrNull() ?: project.mainFile))
     }
     var content by remember {
         mutableStateOf(projectManager.getProjectScript(project, currentFile))
@@ -33,6 +41,8 @@ fun EditorScreen(
     var canRedo by remember { mutableStateOf(false) }
     var showFileMenu by remember { mutableStateOf(false) }
     val editorRef = remember { mutableStateOf<CodeEditor?>(null) }
+    val diagJob = remember { mutableStateOf<Job?>(null) }
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(currentFile) {
         content = projectManager.getProjectScript(project, currentFile)
@@ -40,6 +50,14 @@ fun EditorScreen(
 
     val autoSave: () -> Unit = {
         projectManager.saveProjectScript(project, currentFile, content)
+    }
+
+    LaunchedEffect(content) {
+        diagJob.value?.cancel()
+        diagJob.value = scope.launch {
+            delay(500)
+            editorRef.value?.let { updateDiagnostics(it, content, luaRunner) }
+        }
     }
 
     Scaffold(
