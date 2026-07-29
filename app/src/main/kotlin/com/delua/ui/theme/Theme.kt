@@ -15,12 +15,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlin.math.abs
 
 val LocalThemeConfig = compositionLocalOf { ThemeConfig() }
 val LocalIsDarkTheme = compositionLocalOf { false }
@@ -57,13 +57,15 @@ fun resolveIsDark(appearanceMode: AppearanceMode): Boolean = when (appearanceMod
 }
 
 @Composable
-fun resolveColorScheme(config: ThemeConfig, isDark: Boolean): ColorScheme {
-    if (config.useWallpaper && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+fun resolveColorScheme(config: ThemeConfig, isDark: Boolean): ColorScheme = when {
+    config.useWallpaper && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
         val context = LocalContext.current
-        return if (isDark) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+        if (isDark) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
     }
-    val seed = Color(config.customSeedColor)
-    return if (isDark) tonalDarkScheme(seed) else tonalLightScheme(seed)
+    else -> {
+        val seed = Color(config.customSeedColor)
+        if (isDark) generateDarkScheme(seed) else generateLightScheme(seed)
+    }
 }
 
 @Composable
@@ -84,152 +86,99 @@ fun DeluaTheme(config: ThemeConfig = ThemeConfig(), content: @Composable () -> U
     }
 }
 
-// ---- Tonal palette generator (Material3-style) ----
-
 private const val BG_LIGHT = 0xFFFDFCFF
 private const val BG_DARK = 0xFF1A1C1E
 private const val ON_BG_LIGHT = 0xFF1A1C1E
 private const val ON_BG_DARK = 0xFFE2E2E6
-private const val SURF_VAR_LIGHT = 0xFFE0E2EC
-private const val SURF_VAR_DARK = 0xFF44474E
-private const val OUTLINE = 0xFF74777F
-private const val OUTLINE_DARK = 0xFF8E9099
-private const val OUTLINE_VAR = 0xFFC4C6D0
 
-private val ERROR_LIGHT = Color(0xFFBA1A1A)
-private val ON_ERROR_LIGHT = Color.White
-private val ERROR_CONTAINER_LIGHT = Color(0xFFFFDAD6)
-private val ON_ERROR_CONTAINER_LIGHT = Color(0xFF410002)
-private val ERROR_DARK = Color(0xFFFFB4AB)
-private val ON_ERROR_DARK = Color(0xFF690005)
-private val ERROR_CONTAINER_DARK = Color(0xFF93000A)
-private val ON_ERROR_CONTAINER_DARK = Color(0xFFFFDAD6)
-
-internal fun tonalLightScheme(seed: Color): ColorScheme {
-    val hue = seed.hue()
-    val c = seed.chroma()
-    val h2 = (hue + 30f) % 360f
-    val h3 = (hue + 330f) % 360f
+internal fun generateLightScheme(primary: Color): ColorScheme {
+    val s = rotateHue(primary, 30f, 0.6f)
+    val t = rotateHue(primary, -30f, 0.4f)
     return lightColorScheme(
-        primary = tonal(hue, c * 0.7f, 40),
-        onPrimary = Color.White,
-        primaryContainer = tonal(hue, c * 0.5f, 90),
-        onPrimaryContainer = tonal(hue, c * 0.7f, 10),
-        secondary = tonal(h2, c * 0.4f, 40),
-        onSecondary = Color.White,
-        secondaryContainer = tonal(h2, c * 0.3f, 90),
-        onSecondaryContainer = tonal(h2, c * 0.4f, 10),
-        tertiary = tonal(h3, c * 0.35f, 40),
-        onTertiary = Color.White,
-        tertiaryContainer = tonal(h3, c * 0.25f, 90),
-        onTertiaryContainer = tonal(h3, c * 0.35f, 10),
-        error = ERROR_LIGHT,
-        onError = ON_ERROR_LIGHT,
-        errorContainer = ERROR_CONTAINER_LIGHT,
-        onErrorContainer = ON_ERROR_CONTAINER_LIGHT,
+        primary = primary,
+        onPrimary = contrastingColor(primary),
+        primaryContainer = lighten(primary, 0.85f),
+        onPrimaryContainer = darken(primary, 0.3f),
+        secondary = s,
+        onSecondary = contrastingColor(s),
+        secondaryContainer = lighten(s, 0.85f),
+        onSecondaryContainer = darken(s, 0.3f),
+        tertiary = t,
+        onTertiary = contrastingColor(t),
+        tertiaryContainer = lighten(t, 0.85f),
+        onTertiaryContainer = darken(t, 0.3f),
+        error = Color(0xFFBA1A1A),
+        onError = Color.White,
+        errorContainer = Color(0xFFFFDAD6),
+        onErrorContainer = Color(0xFF410002),
         background = Color(BG_LIGHT),
         onBackground = Color(ON_BG_LIGHT),
         surface = Color(BG_LIGHT),
         onSurface = Color(ON_BG_LIGHT),
-        surfaceVariant = Color(SURF_VAR_LIGHT),
+        surfaceVariant = Color(0xFFE0E2EC),
         onSurfaceVariant = Color(0xFF44474E),
-        outline = Color(OUTLINE),
-        outlineVariant = Color(OUTLINE_VAR),
+        outline = Color(0xFF74777F),
+        outlineVariant = Color(0xFFC4C6D0),
         inverseSurface = Color(0xFF2F3033),
         inverseOnSurface = Color(0xFFF1F0F4),
-        inversePrimary = tonal(hue, c * 0.7f, 80),
-        surfaceTint = tonal(hue, c * 0.7f, 40),
+        inversePrimary = lighten(primary, 0.4f),
+        surfaceTint = primary,
     )
 }
 
-internal fun tonalDarkScheme(seed: Color): ColorScheme {
-    val hue = seed.hue()
-    val c = seed.chroma()
-    val h2 = (hue + 30f) % 360f
-    val h3 = (hue + 330f) % 360f
+internal fun generateDarkScheme(primary: Color): ColorScheme {
+    val s = rotateHue(primary, 30f, 0.6f)
+    val t = rotateHue(primary, -30f, 0.4f)
+    val dp = lighten(primary, 0.25f)
+    val ds = lighten(s, 0.25f)
+    val dt = lighten(t, 0.25f)
     return darkColorScheme(
-        primary = tonal(hue, c * 0.7f, 80),
-        onPrimary = tonal(hue, c * 0.5f, 20),
-        primaryContainer = tonal(hue, c * 0.5f, 30),
-        onPrimaryContainer = tonal(hue, c * 0.4f, 90),
-        secondary = tonal(h2, c * 0.4f, 80),
-        onSecondary = tonal(h2, c * 0.3f, 20),
-        secondaryContainer = tonal(h2, c * 0.3f, 30),
-        onSecondaryContainer = tonal(h2, c * 0.25f, 90),
-        tertiary = tonal(h3, c * 0.35f, 80),
-        onTertiary = tonal(h3, c * 0.25f, 20),
-        tertiaryContainer = tonal(h3, c * 0.25f, 30),
-        onTertiaryContainer = tonal(h3, c * 0.2f, 90),
-        error = ERROR_DARK,
-        onError = ON_ERROR_DARK,
-        errorContainer = ERROR_CONTAINER_DARK,
-        onErrorContainer = ON_ERROR_CONTAINER_DARK,
+        primary = dp,
+        onPrimary = darken(primary, 0.7f),
+        primaryContainer = darken(primary, 0.7f),
+        onPrimaryContainer = lighten(primary, 0.85f),
+        secondary = ds,
+        onSecondary = darken(s, 0.7f),
+        secondaryContainer = darken(s, 0.7f),
+        onSecondaryContainer = lighten(s, 0.85f),
+        tertiary = dt,
+        onTertiary = darken(t, 0.7f),
+        tertiaryContainer = darken(t, 0.7f),
+        onTertiaryContainer = lighten(t, 0.85f),
+        error = Color(0xFFFFB4AB),
+        onError = Color(0xFF690005),
+        errorContainer = Color(0xFF93000A),
+        onErrorContainer = Color(0xFFFFDAD6),
         background = Color(BG_DARK),
         onBackground = Color(ON_BG_DARK),
         surface = Color(BG_DARK),
         onSurface = Color(ON_BG_DARK),
-        surfaceVariant = Color(SURF_VAR_DARK),
+        surfaceVariant = Color(0xFF44474E),
         onSurfaceVariant = Color(0xFFC4C6D0),
-        outline = Color(OUTLINE_DARK),
-        outlineVariant = Color(SURF_VAR_DARK),
+        outline = Color(0xFF8E9099),
+        outlineVariant = Color(0xFF44474E),
         inverseSurface = Color(ON_BG_DARK),
         inverseOnSurface = Color(ON_BG_LIGHT),
-        inversePrimary = tonal(hue, c * 0.7f, 40),
-        surfaceTint = tonal(hue, c * 0.7f, 80),
+        inversePrimary = primary,
+        surfaceTint = dp,
     )
 }
 
-/**
- * Generate a tonal color for a given hue, chroma strength, and tone (0-100).
- * Uses a simplified HCT-like model: hue drives the base color,
- * chromaCurve peaks at mid-tones (tone ~50) and falls to near-zero at extremes.
- */
-private fun tonal(hue: Float, chroma: Float, tone: Int): Color {
-    val t = (tone.coerceIn(0, 100)) / 100f
-    val curve = (1f - 4f * (t - 0.5f) * (t - 0.5f)).coerceIn(0f, 1f)
-    val effectiveChroma = chroma * curve
-    val s = (effectiveChroma / (t + 0.001f)).coerceIn(0f, 1f)
-    val v = (t + effectiveChroma * (1f - t)).coerceIn(0f, 1f)
-    return Color.hsv(hue, s, v)
+private fun lighten(c: Color, a: Float) = lerp(c, Color.White, a)
+private fun darken(c: Color, a: Float) = lerp(c, Color.Black, a)
+
+private fun contrastingColor(bg: Color): Color {
+    val y = 0.299f * bg.red + 0.587f * bg.green + 0.114f * bg.blue
+    return if (y > 0.5f) Color(ON_BG_LIGHT) else Color.White
 }
 
-private fun Color.hue(): Float {
-    val (h, _, _) = toHsv()
-    return h
-}
-
-private fun Color.chroma(): Float {
-    val (_, s, v) = toHsv()
-    return s * v
-}
-
-private fun Color.toHsv(): FloatArray {
-    val r = red; val g = green; val b = blue
-    val max = maxOf(r, g, b); val min = minOf(r, g, b)
-    val delta = max - min
-    val h = when {
-        delta == 0f -> 0f
-        max == r -> 60f * (((g - b) / delta) % 6f)
-        max == g -> 60f * (((b - r) / delta) + 2f)
-        else -> 60f * (((r - g) / delta) + 4f)
-    }
-    val s = if (max == 0f) 0f else delta / max
-    return floatArrayOf((h + 360f) % 360f, s, max)
-}
-
-private fun Color.Companion.hsv(h: Float, s: Float, v: Float): Color {
-    val hi = ((h / 60f).toInt() % 6)
-    val f = h / 60f - hi
-    val p = v * (1f - s)
-    val q = v * (1f - f * s)
-    val t = v * (1f - (1f - f) * s)
-    val (r, g, b) = when (hi) {
-        0 -> Triple(v, t, p)
-        1 -> Triple(q, v, p)
-        2 -> Triple(p, v, t)
-        3 -> Triple(p, q, v)
-        4 -> Triple(t, p, v)
-        else -> Triple(v, p, q)
-    }
-    return Color(r.coerceIn(0f, 1f), g.coerceIn(0f, 1f), b.coerceIn(0f, 1f))
+private fun rotateHue(c: Color, deg: Float, sf: Float): Color {
+    val hsv = FloatArray(3)
+    android.graphics.Color.RGBToHSV(
+        (c.red * 255).toInt(), (c.green * 255).toInt(), (c.blue * 255).toInt(), hsv
+    )
+    hsv[0] = (hsv[0] + deg) % 360f
+    hsv[1] = (hsv[1] * sf).coerceIn(0f, 1f)
+    hsv[2] = hsv[2] * 0.85f
+    return Color(android.graphics.Color.HSVToColor(hsv))
 }

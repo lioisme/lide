@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.navigation.compose.rememberNavController
+import com.delua.i18n.LocaleManager
 import com.delua.ui.navigation.DeluaNavHost
 import com.delua.ui.theme.DeluaTheme
 import com.delua.ui.theme.SettingsManager
@@ -22,5 +23,9 @@ class MainActivity : ComponentActivity() {
                 DeluaNavHost(navController = navController)
             }
         }
+    }
+
+    override fun attachBaseContext(base: android.content.Context) {
+        super.attachBaseContext(LocaleManager.wrap(base))
     }
 }

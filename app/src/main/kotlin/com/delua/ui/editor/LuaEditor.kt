@@ -84,11 +84,13 @@ fun LuaEditor(
     val currentContent by rememberUpdatedState(content)
     val currentOnContentChanged by rememberUpdatedState(onContentChanged)
     val currentOnUndoRedoStateChanged by rememberUpdatedState(onUndoRedoStateChanged)
+    var lastTheme by remember { mutableStateOf<String?>(null) }
 
-    LaunchedEffect(isDarkMode) {
-        if (initReady) {
-            val themeName = if (isDarkMode) "darcula" else "quietlight"
-            ThemeRegistry.getInstance().setTheme(themeName)
+    if (initReady) {
+        val targetTheme = if (isDarkMode) "darcula" else "quietlight"
+        if (lastTheme != targetTheme) {
+            lastTheme = targetTheme
+            ThemeRegistry.getInstance().setTheme(targetTheme)
         }
     }
 
@@ -130,6 +132,7 @@ fun LuaEditor(
             }
         },
         update = { editor ->
+            editor.colorScheme = TextMateColorScheme.create(ThemeRegistry.getInstance())
             if (editor.text.toString() != content) {
                 editor.setText(content)
             }

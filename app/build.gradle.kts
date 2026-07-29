@@ -84,6 +84,8 @@ android {
 }
 
 repositories {
+    maven { url = uri("https://maven.aliyun.com/repository/public") }
+    maven { url = uri("https://maven.aliyun.com/repository/google") }
     google()
     mavenCentral()
 }
@@ -92,19 +94,17 @@ dependencies {
     implementation(project(":androlua"))
     implementation("org.luaj:luaj-jse:3.0.1")
 
-    implementation(platform("androidx.compose:compose-bom:2024.06.00"))
+    implementation(platform("androidx.compose:compose-bom:2024.09.00"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.material:material-icons-extended")
-    implementation("androidx.activity:activity-compose:1.9.0")
-    implementation("androidx.navigation:navigation-compose:2.7.7")
-    implementation("androidx.core:core-ktx:1.13.1")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.2")
-    implementation("com.google.android.material:material:1.12.0")
-    implementation("io.github.scwang90:refresh-layout-kernel:3.0.0-alpha")
-    implementation("io.github.scwang90:refresh-header-material:3.0.0-alpha")
+    implementation("androidx.activity:activity-compose:1.9.3")
+    implementation("androidx.navigation:navigation-compose:2.8.5")
+    implementation("androidx.core:core-ktx:1.15.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")
+    implementation("com.google.android.material:material:1.13.0")
 
     // sora-editor - 专业代码编辑器
     implementation("io.github.rosemoe:editor:0.24.6")

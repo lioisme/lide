@@ -135,7 +135,21 @@ fun DeluaNavHost(navController: NavHostController) {
                 onBack = { navController.popBackStack() }
             )
         }
-        composable(route = Routes.SETTINGS) {
+        composable(
+            route = Routes.SETTINGS,
+            enterTransition = {
+                slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(ANIM_DURATION))
+            },
+            exitTransition = {
+                slideOutHorizontally(targetOffsetX = { -it }, animationSpec = tween(ANIM_DURATION))
+            },
+            popEnterTransition = {
+                slideInHorizontally(initialOffsetX = { -it }, animationSpec = tween(ANIM_DURATION))
+            },
+            popExitTransition = {
+                slideOutHorizontally(targetOffsetX = { it }, animationSpec = tween(ANIM_DURATION))
+            }
+        ) {
             SettingsScreen(
                 onBack = { navController.popBackStack() }
             )

@@ -1,5 +1,8 @@
 package com.delua.ui.screen
 
+import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -27,8 +30,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.delua.R
+import com.delua.i18n.LocaleManager
 import com.delua.ui.theme.*
 
 private val colorOptions = listOf(
@@ -43,18 +49,29 @@ private val colorOptions = listOf(
 @Composable
 fun SettingsScreen(onBack: () -> Unit) {
     val context = LocalContext.current
+    val activity = context.resolveActivity()
     val config by SettingsManager.themeConfig.collectAsState()
 
     var showAppearanceSheet by remember { mutableStateOf(false) }
     var showColorSheet by remember { mutableStateOf(false) }
+    var showLanguageSheet by remember { mutableStateOf(false) }
+
+    val currentLanguageTag = LocaleManager.currentLanguageTag
+
+    val languageSubtitle = when (currentLanguageTag) {
+        "system" -> stringResource(R.string.system_default)
+        "en" -> stringResource(R.string.lang_en)
+        "zh" -> stringResource(R.string.lang_zh)
+        else -> currentLanguageTag
+    }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Settings") },
+                title = { Text(stringResource(R.string.settings)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.cd_back))
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -71,40 +88,40 @@ fun SettingsScreen(onBack: () -> Unit) {
                 .padding(horizontal = 16.dp),
         ) {
             Spacer(Modifier.height(8.dp))
-            SettingsSection("Display") {
+            SettingsSection(stringResource(R.string.display)) {
                 SettingsItem(
                     icon = when (config.appearanceMode) {
                         AppearanceMode.SYSTEM -> Icons.Default.PhoneAndroid
                         AppearanceMode.LIGHT -> Icons.Default.LightMode
                         AppearanceMode.DARK -> Icons.Default.DarkMode
                     },
-                    title = "Appearance",
+                    title = stringResource(R.string.appearance),
                     subtitle = when (config.appearanceMode) {
-                        AppearanceMode.SYSTEM -> "Follow system"
-                        AppearanceMode.LIGHT -> "Light mode"
-                        AppearanceMode.DARK -> "Dark mode"
+                        AppearanceMode.SYSTEM -> stringResource(R.string.follow_system)
+                        AppearanceMode.LIGHT -> stringResource(R.string.light_mode)
+                        AppearanceMode.DARK -> stringResource(R.string.dark_mode)
                     },
                     onClick = { showAppearanceSheet = true },
                 )
                 SettingsItem(
                     icon = Icons.Default.Palette,
-                    title = "Theme color",
-                    subtitle = if (config.useWallpaper) "Follow wallpaper" else "Custom accent",
+                    title = stringResource(R.string.theme_color),
+                    subtitle = if (config.useWallpaper) stringResource(R.string.follow_wallpaper) else stringResource(R.string.custom_accent),
                     onClick = { showColorSheet = true },
                 )
             }
             Spacer(Modifier.height(24.dp))
-            SettingsSection("General") {
+            SettingsSection(stringResource(R.string.general)) {
                 SettingsItem(
                     icon = Icons.Default.Language,
-                    title = "Language",
-                    subtitle = "System default",
-                    onClick = { /* TODO */ },
+                    title = stringResource(R.string.language),
+                    subtitle = languageSubtitle,
+                    onClick = { showLanguageSheet = true },
                 )
                 SettingsItem(
                     icon = Icons.Default.Info,
-                    title = "About",
-                    subtitle = "delua v1.0",
+                    title = stringResource(R.string.about),
+                    subtitle = stringResource(R.string.version),
                     onClick = { /* TODO */ },
                 )
             }
@@ -129,13 +146,25 @@ fun SettingsScreen(onBack: () -> Unit) {
             onSelectWallpaper = {
                 SettingsManager.update(config.copy(useWallpaper = true), context)
             },
-            onSelectColor = { color ->
+            onSelectColor = { argb ->
                 SettingsManager.update(
-                    config.copy(useWallpaper = false, customSeedColor = color.value.toLong() and 0xFFFFFFFFL),
+                    config.copy(useWallpaper = false, customSeedColor = argb),
                     context,
                 )
             },
             onDismiss = { showColorSheet = false },
+        )
+    }
+
+    if (showLanguageSheet) {
+        LanguageSheet(
+            currentTag = currentLanguageTag,
+            onSelect = { tag ->
+                LocaleManager.setLanguage(context, tag)
+                showLanguageSheet = false
+                activity?.recreate()
+            },
+            onDismiss = { showLanguageSheet = false },
         )
     }
 }
@@ -179,11 +208,57 @@ private fun SettingsItem(icon: ImageVector, title: String, subtitle: String, onC
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+private fun LanguageSheet(
+    currentTag: String,
+    onSelect: (String) -> Unit,
+    onDismiss: () -> Unit,
+) {
+    ModalBottomSheet(onDismissRequest = onDismiss) {
+        Column(modifier = Modifier.padding(bottom = 32.dp)) {
+            Text(
+                stringResource(R.string.language), style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
+            )
+            Spacer(Modifier.height(8.dp))
+
+            val localeData = listOf(
+                Triple("system", Icons.Default.PhoneAndroid, R.string.system_default),
+                Triple("en", Icons.Default.Language, R.string.lang_en),
+                Triple("zh", Icons.Default.Language, R.string.lang_zh),
+            )
+
+            localeData.forEach { (tag, icon, labelRes) ->
+                val label = stringResource(labelRes)
+                val selected = tag == currentTag
+                Row(
+                    modifier = Modifier.fillMaxWidth().clickable { onSelect(tag) }
+                        .padding(horizontal = 24.dp, vertical = 14.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Icon(icon, null,
+                        tint = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.size(24.dp))
+                    Spacer(Modifier.width(16.dp))
+                    Text(label, style = MaterialTheme.typography.bodyLarge,
+                        fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal,
+                        color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier.weight(1f),
+                    )
+                    if (selected) Icon(Icons.Default.Check, null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(20.dp))
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
 private fun AppearanceSheet(current: AppearanceMode, onSelect: (AppearanceMode) -> Unit, onDismiss: () -> Unit) {
     ModalBottomSheet(onDismissRequest = onDismiss) {
         Column(modifier = Modifier.padding(bottom = 32.dp)) {
             Text(
-                "Appearance", style = MaterialTheme.typography.titleLarge,
+                stringResource(R.string.appearance), style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
             )
@@ -195,9 +270,9 @@ private fun AppearanceSheet(current: AppearanceMode, onSelect: (AppearanceMode) 
                     AppearanceMode.DARK -> Icons.Default.DarkMode
                 }
                 val label = when (mode) {
-                    AppearanceMode.SYSTEM -> "Follow system"
-                    AppearanceMode.LIGHT -> "Light mode"
-                    AppearanceMode.DARK -> "Dark mode"
+                    AppearanceMode.SYSTEM -> stringResource(R.string.follow_system)
+                    AppearanceMode.LIGHT -> stringResource(R.string.light_mode)
+                    AppearanceMode.DARK -> stringResource(R.string.dark_mode)
                 }
                 val selected = mode == current
                 Row(
@@ -225,13 +300,13 @@ private fun ColorSheet(
     useWallpaper: Boolean,
     selectedColor: Color?,
     onSelectWallpaper: () -> Unit,
-    onSelectColor: (Color) -> Unit,
+    onSelectColor: (Long) -> Unit,
     onDismiss: () -> Unit,
 ) {
     ModalBottomSheet(onDismissRequest = onDismiss) {
         Column(modifier = Modifier.padding(bottom = 32.dp)) {
             Text(
-                "Theme color", style = MaterialTheme.typography.titleLarge,
+                stringResource(R.string.theme_color), style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
             )
@@ -247,13 +322,13 @@ private fun ColorSheet(
                     modifier = Modifier.size(24.dp))
                 Spacer(Modifier.width(16.dp))
                 Column(modifier = Modifier.weight(1f)) {
-                    Text("System wallpaper",
+                    Text(stringResource(R.string.system_wallpaper),
                         style = MaterialTheme.typography.bodyLarge,
                         fontWeight = if (useWallpaper) FontWeight.SemiBold else FontWeight.Normal,
                         color = if (useWallpaper) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
                     )
                     if (useWallpaper) {
-                        Text("Dynamic color from wallpaper",
+                        Text(stringResource(R.string.wallpaper_desc),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
@@ -270,7 +345,7 @@ private fun ColorSheet(
             ) {
                 Icon(Icons.Default.Palette, null, tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(24.dp))
                 Spacer(Modifier.width(16.dp))
-                Text("Pick an accent color", style = MaterialTheme.typography.bodyLarge,
+                Text(stringResource(R.string.pick_accent), style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurface)
             }
 
@@ -292,7 +367,7 @@ private fun ColorSheet(
                                 if (isSelected) Modifier.border(3.dp, MaterialTheme.colorScheme.onSurface, CircleShape)
                                 else Modifier.border(1.dp, Color.White.copy(alpha = 0.2f), CircleShape)
                             )
-                            .clickable { onSelectColor(color) },
+                            .clickable { onSelectColor(argb) },
                         contentAlignment = Alignment.Center,
                     ) {
                         if (isSelected) {
@@ -309,4 +384,10 @@ private fun ColorSheet(
 
 private fun Color.luminance(): Float {
     return 0.299f * red + 0.587f * green + 0.114f * blue
+}
+
+private tailrec fun Context.resolveActivity(): Activity? = when (this) {
+    is Activity -> this
+    is ContextWrapper -> baseContext.resolveActivity()
+    else -> null
 }

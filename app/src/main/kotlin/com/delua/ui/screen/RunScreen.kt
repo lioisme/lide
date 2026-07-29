@@ -10,11 +10,12 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.delua.R
 import com.delua.androlua.engine.ExecutionResult
 import com.delua.androlua.engine.LuaRunner
 import com.delua.model.Project
@@ -48,15 +49,15 @@ fun RunScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Run: ${project.name}/$fileName", maxLines = 1) },
+                title = { Text(stringResource(R.string.run_title, project.name, fileName), maxLines = 1) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.cd_back))
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface
                 )
             )
         }
@@ -83,7 +84,7 @@ fun RunScreen(
                                 strokeWidth = 4.dp
                             )
                             Spacer(Modifier.height(16.dp))
-                            Text("Running...", style = MaterialTheme.typography.bodyMedium)
+                            Text(stringResource(R.string.running), style = MaterialTheme.typography.bodyMedium)
                         }
                     }
                 } else {
@@ -102,7 +103,7 @@ fun RunScreen(
                             shape = MaterialTheme.shapes.medium
                         ) {
                             Text(
-                                text = res.fullText.ifEmpty { "(no output)" },
+                                text = res.fullText.ifEmpty { stringResource(R.string.no_output) },
                                 style = TextStyle(
                                     fontFamily = FontFamily.Monospace,
                                     fontSize = 13.sp,

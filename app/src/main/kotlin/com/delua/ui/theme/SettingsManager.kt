@@ -17,7 +17,13 @@ object SettingsManager {
     fun init(context: Context) {
         val prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
         _themeConfig.value = ThemeConfig(
-            appearanceMode = AppearanceMode.entries[prefs.getInt(KEY_APPEARANCE, 0)],
+            appearanceMode = try {
+                AppearanceMode.valueOf(
+                    prefs.getString(KEY_APPEARANCE, AppearanceMode.SYSTEM.name) ?: AppearanceMode.SYSTEM.name
+                )
+            } catch (_: IllegalArgumentException) {
+                AppearanceMode.SYSTEM
+            },
             useWallpaper = prefs.getBoolean(KEY_USE_WALLPAPER, true),
             customSeedColor = prefs.getLong(KEY_CUSTOM_SEED, 0xFF1976D2),
         )
@@ -26,7 +32,7 @@ object SettingsManager {
     fun update(config: ThemeConfig, context: Context) {
         val prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
         prefs.edit()
-            .putInt(KEY_APPEARANCE, config.appearanceMode.ordinal)
+            .putString(KEY_APPEARANCE, config.appearanceMode.name)
             .putBoolean(KEY_USE_WALLPAPER, config.useWallpaper)
             .putLong(KEY_CUSTOM_SEED, config.customSeedColor)
             .apply()

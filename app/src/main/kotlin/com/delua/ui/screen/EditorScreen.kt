@@ -4,7 +4,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.delua.R
 import com.delua.model.Project
 import com.delua.project.ProjectManager
 import com.delua.ui.editor.EditorToolbar
@@ -66,7 +69,7 @@ fun EditorScreen(
     if (showFileMenu && files.size > 1) {
         AlertDialog(
             onDismissRequest = { showFileMenu = false },
-            title = { Text("Select File") },
+            title = { Text(stringResource(R.string.select_file)) },
             text = {
                 Column {
                     files.forEach { file ->
@@ -80,10 +83,7 @@ fun EditorScreen(
                         ) {
                             Text(
                                 file,
-                                fontWeight = if (file == currentFile)
-                                    androidx.compose.ui.text.font.FontWeight.Bold
-                                else
-                                    androidx.compose.ui.text.font.FontWeight.Normal,
+                                fontWeight = if (file == currentFile) FontWeight.Bold else FontWeight.Normal,
                                 color = if (file == currentFile)
                                     MaterialTheme.colorScheme.primary
                                 else
@@ -95,7 +95,7 @@ fun EditorScreen(
             },
             confirmButton = {
                 TextButton(onClick = { showFileMenu = false }) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.cancel))
                 }
             },
         )
