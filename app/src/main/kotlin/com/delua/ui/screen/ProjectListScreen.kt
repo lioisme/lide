@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Folder
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -33,7 +34,8 @@ import kotlinx.coroutines.withContext
 @Composable
 fun ProjectListScreen(
     projectManager: ProjectManager,
-    onProjectClick: (Project) -> Unit
+    onProjectClick: (Project) -> Unit,
+    onSettingsClick: () -> Unit,
 ) {
     var projects by remember { mutableStateOf(projectManager.listProjects()) }
     var showCreateDialog by remember { mutableStateOf(false) }
@@ -67,6 +69,9 @@ fun ProjectListScreen(
                 actions = {
                     IconButton(onClick = { showCreateDialog = true }) {
                         Icon(Icons.Default.Add, contentDescription = "New Project")
+                    }
+                    IconButton(onClick = onSettingsClick) {
+                        Icon(Icons.Default.Settings, contentDescription = "Settings")
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(

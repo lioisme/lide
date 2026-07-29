@@ -1,4 +1,4 @@
-#Thu Jul 30 02:42:16 CST 2026
+#Thu Jul 30 03:29:19 CST 2026
 base.0=D\:\\Users\\liois\\Documents\\lioisme\\kotlin\\delua\\app\\build\\intermediates\\dex\\x64Release\\mergeDexX64Release\\classes.dex
 base.1=D\:\\Users\\liois\\Documents\\lioisme\\kotlin\\delua\\app\\build\\intermediates\\global_synthetics_dex\\x64Release\\mergeX64ReleaseGlobalSynthetics\\classes.dex
 base.2=D\:\\Users\\liois\\Documents\\lioisme\\kotlin\\delua\\app\\build\\intermediates\\dex\\x64Release\\mergeDexX64Release\\classes2.dex

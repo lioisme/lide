@@ -17,6 +17,7 @@ import com.delua.project.ProjectManager
 import com.delua.ui.screen.EditorScreen
 import com.delua.ui.screen.ProjectListScreen
 import com.delua.ui.screen.RunScreen
+import com.delua.ui.screen.SettingsScreen
 import java.net.URLDecoder
 import java.net.URLEncoder
 
@@ -26,6 +27,7 @@ object Routes {
     const val PROJECT_LIST = "projects"
     const val EDITOR = "editor/{projectName}/{projectPath}"
     const val RUN = "run/{projectName}/{projectPath}/{fileName}"
+    const val SETTINGS = "settings"
 
     fun editor(project: Project): String {
         return "editor/${enc(project.name)}/${enc(project.path)}"
@@ -65,7 +67,10 @@ fun DeluaNavHost(navController: NavHostController) {
                 projectManager = projectManager,
                 onProjectClick = { project ->
                     navController.navigate(Routes.editor(project))
-                }
+                },
+                onSettingsClick = {
+                    navController.navigate(Routes.SETTINGS)
+                },
             )
         }
         composable(
@@ -127,6 +132,11 @@ fun DeluaNavHost(navController: NavHostController) {
                 project = project,
                 fileName = fileName,
                 luaRunner = luaRunner,
+                onBack = { navController.popBackStack() }
+            )
+        }
+        composable(route = Routes.SETTINGS) {
+            SettingsScreen(
                 onBack = { navController.popBackStack() }
             )
         }
