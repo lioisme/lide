@@ -8,3 +8,4 @@ pluginManagement {
 
 rootProject.name = "delua"
 include(":app")
+include(":androlua")

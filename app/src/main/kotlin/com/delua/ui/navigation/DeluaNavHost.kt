@@ -1,5 +1,8 @@
 package com.delua.ui.navigation
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
@@ -8,7 +11,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.delua.engine.LuaRunner
+import com.delua.androlua.engine.LuaRunner
 import com.delua.model.Project
 import com.delua.project.ProjectManager
 import com.delua.ui.screen.EditorScreen
@@ -16,6 +19,8 @@ import com.delua.ui.screen.ProjectListScreen
 import com.delua.ui.screen.RunScreen
 import java.net.URLDecoder
 import java.net.URLEncoder
+
+private const val ANIM_DURATION = 300
 
 object Routes {
     const val PROJECT_LIST = "projects"
@@ -41,7 +46,21 @@ fun DeluaNavHost(navController: NavHostController) {
     val luaRunner = remember { LuaRunner(context) }
 
     NavHost(navController = navController, startDestination = Routes.PROJECT_LIST) {
-        composable(Routes.PROJECT_LIST) {
+        composable(
+            route = Routes.PROJECT_LIST,
+            enterTransition = {
+                slideInHorizontally(initialOffsetX = { it / 4 }, animationSpec = tween(ANIM_DURATION))
+            },
+            exitTransition = {
+                slideOutHorizontally(targetOffsetX = { -it / 4 }, animationSpec = tween(ANIM_DURATION))
+            },
+            popEnterTransition = {
+                slideInHorizontally(initialOffsetX = { -it / 4 }, animationSpec = tween(ANIM_DURATION))
+            },
+            popExitTransition = {
+                slideOutHorizontally(targetOffsetX = { it / 4 }, animationSpec = tween(ANIM_DURATION))
+            }
+        ) {
             ProjectListScreen(
                 projectManager = projectManager,
                 onProjectClick = { project ->
@@ -54,7 +73,19 @@ fun DeluaNavHost(navController: NavHostController) {
             arguments = listOf(
                 navArgument("projectName") { type = NavType.StringType },
                 navArgument("projectPath") { type = NavType.StringType }
-            )
+            ),
+            enterTransition = {
+                slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(ANIM_DURATION))
+            },
+            exitTransition = {
+                slideOutHorizontally(targetOffsetX = { -it }, animationSpec = tween(ANIM_DURATION))
+            },
+            popEnterTransition = {
+                slideInHorizontally(initialOffsetX = { -it }, animationSpec = tween(ANIM_DURATION))
+            },
+            popExitTransition = {
+                slideOutHorizontally(targetOffsetX = { it }, animationSpec = tween(ANIM_DURATION))
+            }
         ) { backStackEntry ->
             val project = rememberProject(backStackEntry.arguments?.getString("projectName"),
                 backStackEntry.arguments?.getString("projectPath"))
@@ -73,7 +104,19 @@ fun DeluaNavHost(navController: NavHostController) {
                 navArgument("projectName") { type = NavType.StringType },
                 navArgument("projectPath") { type = NavType.StringType },
                 navArgument("fileName") { type = NavType.StringType }
-            )
+            ),
+            enterTransition = {
+                slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(ANIM_DURATION))
+            },
+            exitTransition = {
+                slideOutHorizontally(targetOffsetX = { -it }, animationSpec = tween(ANIM_DURATION))
+            },
+            popEnterTransition = {
+                slideInHorizontally(initialOffsetX = { -it }, animationSpec = tween(ANIM_DURATION))
+            },
+            popExitTransition = {
+                slideOutHorizontally(targetOffsetX = { it }, animationSpec = tween(ANIM_DURATION))
+            }
         ) { backStackEntry ->
             val project = rememberProject(
                 backStackEntry.arguments?.getString("projectName"),

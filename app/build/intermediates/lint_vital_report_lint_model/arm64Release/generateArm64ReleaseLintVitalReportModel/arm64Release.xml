@@ -2,7 +2,7 @@
     name="arm64Release"
     package="com.delua"
     minSdkVersion="24"
-    targetSdkVersion="35"
+    targetSdkVersion="36"
     mergedManifest="build\intermediates\merged_manifest\arm64Release\processArm64ReleaseMainManifest\AndroidManifest.xml"
     manifestMergeReport="build\outputs\logs\manifest-merger-arm64-release-report.txt"
     proguardFiles="build\intermediates\default_proguard_files\global\proguard-android-optimize.txt-8.5.2;proguard-rules.pro"
@@ -26,6 +26,6 @@
       applicationId="com.delua"
       generatedSourceFolders="build\generated\ap_generated_sources\arm64Release\out"
       generatedResourceFolders="build\generated\res\resValues\arm64\release"
-      desugaredMethodsFiles="C:\Users\liois\.gradle\caches\9.5.1\transforms\35a2f2a6643fb97c583d3d7077db30e7\transformed\D8BackportedDesugaredMethods.txt">
+      desugaredMethodsFiles="C:\Users\liois\.gradle\caches\9.5.1\transforms\0112830acabfc50918a82fea0a1c449b\transformed\D8BackportedDesugaredMethods.txt">
   </artifact>
 </variant>

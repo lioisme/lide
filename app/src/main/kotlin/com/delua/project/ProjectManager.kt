@@ -27,10 +27,24 @@ class ProjectManager(private val context: Context) {
             ?.filter { it.isFile && it.name.endsWith(".lua") }
             ?.map { it.name }
             ?.sorted() ?: listOf("main.lua")
+        val initFile = File(dir, "init.lua")
+        var packageName = ""
+        var icon: String? = null
+        if (initFile.exists()) {
+            try {
+                val content = initFile.readText()
+                val packageRegex = Regex("""package\s*=\s*"([^"]*)"""")
+                val iconRegex = Regex("""icon\s*=\s*"([^"]*)"""")
+                packageRegex.find(content)?.let { packageName = it.groupValues[1] }
+                iconRegex.find(content)?.let { icon = it.groupValues[1] }
+            } catch (_: Exception) { }
+        }
         return Project(
             name = dir.name,
             path = dir.absolutePath,
-            files = files
+            files = files,
+            packageName = packageName,
+            icon = icon
         )
     }
 
@@ -103,12 +117,14 @@ class ProjectManager(private val context: Context) {
     fun createProject(name: String): Project {
         val dir = File(projectsDir, name)
         dir.mkdirs()
+        val packageName = "com.delua.$name"
         File(dir, "main.lua").writeText("-- $name\nprint(\"hello from $name!\")\n")
-        File(dir, "init.lua").writeText("appname = \"$name\"\nappver = \"1.0\"\n")
+        File(dir, "init.lua").writeText("appname = \"$name\"\nappver = \"1.0\"\npackage = \"$packageName\"\nicon = nil\n")
         return Project(
             name = name,
             path = dir.absolutePath,
-            files = listOf("main.lua", "init.lua")
+            files = listOf("main.lua", "init.lua"),
+            packageName = packageName
         )
     }
 }

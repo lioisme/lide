@@ -15,8 +15,8 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.delua.engine.ExecutionResult
-import com.delua.engine.LuaRunner
+import com.delua.androlua.engine.ExecutionResult
+import com.delua.androlua.engine.LuaRunner
 import com.delua.model.Project
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -78,41 +78,41 @@ fun RunScreen(
                         contentAlignment = Alignment.Center
                     ) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            CircularProgressIndicator()
-                            Spacer(Modifier.height(12.dp))
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(48.dp),
+                                strokeWidth = 4.dp
+                            )
+                            Spacer(Modifier.height(16.dp))
                             Text("Running...", style = MaterialTheme.typography.bodyMedium)
                         }
                     }
                 } else {
-                    val vScroll = rememberScrollState()
-                    val hScroll = rememberScrollState()
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .verticalScroll(vScroll)
-                            .horizontalScroll(hScroll)
-                    ) {
-                        result?.let { res ->
-                            Surface(
-                                color = if (res.success)
-                                    MaterialTheme.colorScheme.surface
-                                else
-                                    MaterialTheme.colorScheme.errorContainer,
-                                shape = MaterialTheme.shapes.small
-                            ) {
-                                Text(
-                                    text = res.fullText.ifEmpty { "(no output)" },
-                                    style = TextStyle(
-                                        fontFamily = FontFamily.Monospace,
-                                        fontSize = 13.sp,
-                                        color = if (res.success)
-                                            MaterialTheme.colorScheme.onSurface
-                                        else
-                                            MaterialTheme.colorScheme.onErrorContainer
-                                    ),
-                                    modifier = Modifier.padding(12.dp)
-                                )
-                            }
+                    result?.let { res ->
+                        val vScroll = rememberScrollState()
+                        val hScroll = rememberScrollState()
+                        Surface(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .verticalScroll(vScroll)
+                                .horizontalScroll(hScroll),
+                            color = if (res.success)
+                                MaterialTheme.colorScheme.surface
+                            else
+                                MaterialTheme.colorScheme.errorContainer,
+                            shape = MaterialTheme.shapes.medium
+                        ) {
+                            Text(
+                                text = res.fullText.ifEmpty { "(no output)" },
+                                style = TextStyle(
+                                    fontFamily = FontFamily.Monospace,
+                                    fontSize = 13.sp,
+                                    color = if (res.success)
+                                        MaterialTheme.colorScheme.onSurface
+                                    else
+                                        MaterialTheme.colorScheme.onErrorContainer
+                                ),
+                                modifier = Modifier.padding(16.dp)
+                            )
                         }
                     }
                 }
