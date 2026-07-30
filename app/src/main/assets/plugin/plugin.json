@@ -1,0 +1,8 @@
+{
+  "name": "Example Plugin",
+  "version": "1.0",
+  "description": "An example plugin for delua",
+  "main": "init.lua",
+  "author": "",
+  "minVersion": "1.0"
+}
