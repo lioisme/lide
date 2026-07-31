@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 经典推入式转场：新页从右侧推入（与 Compose NavTransitions.FULL 一致，300ms）。 -->
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:duration="300"
+    android:interpolator="@android:anim/decelerate_interpolator">
+    <translate
+        android:fromXDelta="100%"
+        android:toXDelta="0%" />
+</set>

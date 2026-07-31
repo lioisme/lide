@@ -18,29 +18,38 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.lioisme.delua.R
+import com.lioisme.delua.editor.EditorTabs
 import com.lioisme.delua.editor.EditorToolbar
+import com.lioisme.delua.editor.FileNode
 import com.lioisme.delua.editor.LuaEditor
+import com.lioisme.delua.editor.ProjectFileTree
 import com.lioisme.delua.editor.SearchBar
 import com.lioisme.delua.model.Project
 import com.lioisme.delua.project.ProjectManager
+import com.lioisme.delua.session.EditorSession
 import com.lioisme.delua.ui.theme.LocalIsDarkTheme
 import com.lioisme.delua.ui.theme.SettingsManager
-import io.github.rosemoe.sora.event.PublishSearchResultEvent
-import io.github.rosemoe.sora.widget.CodeEditor
 import io.github.rosemoe.sora.widget.EditorSearcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-
-private data class SearchResultState(
-    val matchCount: Int = 0,
-    val currentMatch: Int = 0,
-)
+import java.io.File
 
 private const val AUTO_SAVE_DELAY_MS = 500L
 
+/**
+ * 编辑器页面（会话驱动）。
+ *
+ * 重组模型（对齐 Squircle `EditorViewModel`）：
+ * - 每键编辑只触发会话内部 [EditorSession.editTick]（StateFlow，不重组）；
+ *   脏标记 / undo 能力仅在值实际变化时经 [EditorSession.tabs] 发射——稳态打字零重组；
+ * - 搜索面板自持全部状态，打字与搜索结果只重组 SearchBar 子树；
+ * - 文件切换走 [Content] 缓存复用，零读盘、零 O(n) 重建（除首次打开）。
+ *
+ * 布局：ModalNavigationDrawer（侧边栏工程树）→ Scaffold（工具栏 + 标签行 + 编辑器）。
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditorScreen(
@@ -55,38 +64,17 @@ fun EditorScreen(
     val isDarkTheme = LocalIsDarkTheme.current
     val appEditorConfig by SettingsManager.editorConfig.collectAsState()
 
-    var files by remember { mutableStateOf<List<String>>(emptyList()) }
-    var currentFile by remember { mutableStateOf(project.mainFile) }
-    var loadedText by remember { mutableStateOf<String?>(null) }
-    var dirty by remember { mutableStateOf(false) }
-    var editVersion by remember { mutableStateOf(0) }
-    var canUndo by remember { mutableStateOf(false) }
-    var canRedo by remember { mutableStateOf(false) }
-    var showFileMenu by remember { mutableStateOf(false) }
-    val editorRef = remember { mutableStateOf<CodeEditor?>(null) }
+    val session = remember(project) { EditorSession(project, projectManager) }
+    val tabs by session.tabs.collectAsState()
+    val selectedFile by session.selectedFile.collectAsState()
+    val content by session.selectedContent.collectAsState()
 
+    val editorRef = remember { mutableStateOf<io.github.rosemoe.sora.widget.CodeEditor?>(null) }
+    val drawerState = rememberDrawerState(DrawerValue.Closed)
+
+    var treeRoot by remember { mutableStateOf<FileNode?>(null) }
     var isSearchVisible by remember { mutableStateOf(false) }
-    var searchQuery by remember { mutableStateOf("") }
-    var replaceQuery by remember { mutableStateOf("") }
-    var isCaseSensitive by remember { mutableStateOf(false) }
-    var isRegex by remember { mutableStateOf(false) }
-    var showReplace by remember { mutableStateOf(false) }
-    val searchResult = remember { MutableStateFlow(SearchResultState()) }
-    val searchResultState by searchResult.collectAsState()
-
-    LaunchedEffect(Unit) {
-        val loaded = withContext(Dispatchers.IO) { projectManager.listProjectFiles(project) }
-        files = loaded
-        if (loaded.isNotEmpty() && !loaded.contains(currentFile) && !dirty) {
-            currentFile = loaded.first()
-        }
-    }
-
-    LaunchedEffect(currentFile) {
-        loadedText = withContext(Dispatchers.IO) {
-            projectManager.getProjectScript(project, currentFile)
-        }
-    }
+    var pendingCloseFile by remember { mutableStateOf<String?>(null) }
 
     val extPermissionMissing = remember {
         mutableStateOf(!hasStoragePermission(context))
@@ -98,81 +86,32 @@ fun EditorScreen(
         extPermissionMissing.value = !hasStoragePermission(context)
     }
 
-    val saveNow: () -> Unit = {
-        val editor = editorRef.value
-        if (editor != null && dirty && !extPermissionMissing.value) {
-            val file = currentFile
-            dirty = false
-            scope.launch(Dispatchers.IO) {
-                // Content.toString 内部持有 ReadWriteLock，快照可安全在后台线程获取。
-                projectManager.saveProjectScript(project, file, editor.text.toString())
-            }
-        }
+    LaunchedEffect(Unit) {
+        session.initialize()
+        treeRoot = withContext(Dispatchers.IO) { projectManager.listProjectTree(project) }
     }
 
-    LaunchedEffect(editVersion) {
-        if (editVersion == 0) return@LaunchedEffect
-        delay(AUTO_SAVE_DELAY_MS)
-        val editor = editorRef.value ?: return@LaunchedEffect
-        if (dirty && !extPermissionMissing.value) {
-            val file = currentFile
-            dirty = false
-            withContext(Dispatchers.IO) {
-                projectManager.saveProjectScript(project, file, editor.text.toString())
-            }
+    // 自动保存：500ms 防抖。editTick 为 StateFlow，收集过程不触发重组。
+    LaunchedEffect(Unit) {
+        session.editTick.collectLatest {
+            delay(AUTO_SAVE_DELAY_MS)
+            if (!extPermissionMissing.value) session.flushSelectedDirty()
         }
-    }
-
-    DisposableEffect(editorRef.value) {
-        val editor = editorRef.value
-        if (editor == null) {
-            onDispose { }
-        } else {
-            val receipt = editor.subscribeAlways(PublishSearchResultEvent::class.java) { _ ->
-                try {
-                    val searcher = editor.getSearcher()
-                    if (searcher.hasQuery()) {
-                        val index = searcher.getCurrentMatchedPositionIndex()
-                        searchResult.value = SearchResultState(
-                            matchCount = searcher.getMatchedPositionCount(),
-                            currentMatch = if (index >= 0) index + 1 else 0,
-                        )
-                    } else {
-                        searchResult.value = SearchResultState()
-                    }
-                } catch (t: Throwable) {
-                    searchResult.value = SearchResultState()
-                }
-            }
-            onDispose { receipt.unsubscribe() }
-        }
-    }
-
-    fun performSearch() {
-        val editor = editorRef.value ?: return
-        val searcher = editor.getSearcher()
-        if (searchQuery.isBlank()) {
-            if (searcher.hasQuery()) {
-                searcher.stopSearch()
-            }
-            searchResult.value = SearchResultState()
-            return
-        }
-        val searchType = if (isRegex) EditorSearcher.SearchOptions.TYPE_REGULAR_EXPRESSION
-                         else EditorSearcher.SearchOptions.TYPE_NORMAL
-        val options = EditorSearcher.SearchOptions(searchType, !isCaseSensitive)
-        try {
-            searcher.search(searchQuery, options)
-        } catch (_: Exception) {
-            searchResult.value = SearchResultState()
-        }
-    }
-
-    LaunchedEffect(searchQuery, isCaseSensitive, isRegex) {
-        performSearch()
     }
 
     fun getSearcher(): EditorSearcher? = editorRef.value?.getSearcher()
+
+    fun openFileFromTree(node: FileNode) {
+        if (node.isDirectory) return
+        val prefix = project.path + File.separator
+        val relative = if (node.path.startsWith(prefix)) node.path.removePrefix(prefix) else node.name
+        scope.launch {
+            session.openTab(relative)
+            drawerState.close()
+        }
+    }
+
+    val selectedTab = tabs.firstOrNull { it.fileName == selectedFile }
 
     Box(
         modifier = Modifier
@@ -182,141 +121,180 @@ fun EditorScreen(
                     isSearchVisible = !isSearchVisible
                     if (!isSearchVisible) {
                         getSearcher()?.stopSearch()
-                        searchQuery = ""
-                        searchResult.value = SearchResultState()
                     }
                     true
                 } else false
             }
     ) {
-        Scaffold(
-            topBar = {
-                EditorToolbar(
-                    fileName = currentFile,
-                    canUndo = canUndo,
-                    canRedo = canRedo,
-                    onBack = { saveNow(); onBack() },
-                    onUndo = { editorRef.value?.undo() },
-                    onRedo = { editorRef.value?.redo() },
-                    onRun = { saveNow(); onRun(project.mainFile) },
-                    onSearch = { isSearchVisible = true },
-                    onDependencies = onDependencies,
-                )
-            }
-        ) { padding ->
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding)
-            ) {
-                val text = loadedText
-                if (text != null) {
-                    LuaEditor(
-                        text = text,
-                        isDarkTheme = isDarkTheme,
-                        config = appEditorConfig,
-                        onContentModified = {
-                            dirty = true
-                            editVersion++
-                        },
-                        onUndoRedoStateChanged = { u, r -> canUndo = u; canRedo = r },
-                        onRelease = { content ->
-                            if (dirty && !extPermissionMissing.value) {
-                                val file = currentFile
-                                dirty = false
-                                scope.launch(Dispatchers.IO) {
-                                    projectManager.saveProjectScript(project, file, content)
-                                }
+        ModalNavigationDrawer(
+            drawerState = drawerState,
+            // 关闭手势，避免与编辑器触摸交互冲突（仅工具栏汉堡键开合）。
+            gesturesEnabled = false,
+            drawerContent = {
+                ModalDrawerSheet {
+                    Column(Modifier.fillMaxSize()) {
+                        Column(Modifier.fillMaxWidth().padding(16.dp)) {
+                            Text(
+                                project.name,
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Medium,
+                            )
+                            Text(
+                                project.path,
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                maxLines = 1,
+                            )
+                        }
+                        HorizontalDivider()
+                        val root = treeRoot
+                        if (root != null) {
+                            ProjectFileTree(
+                                root = root,
+                                selectedPath = selectedFile?.let { File(project.path, it).absolutePath },
+                                onFileClick = ::openFileFromTree,
+                                modifier = Modifier.fillMaxWidth().weight(1f),
+                            )
+                        } else {
+                            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                                CircularProgressIndicator()
                             }
-                        },
-                        editorRef = editorRef,
-                        modifier = Modifier.fillMaxSize(),
-                    )
-                } else {
-                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        CircularProgressIndicator()
+                        }
                     }
                 }
-
-                Column(Modifier.align(Alignment.TopCenter)) {
-                    if (extPermissionMissing.value) {
-                        StoragePermissionBanner(
-                            onGrant = {
-                                manageStorageLauncher.launch(
-                                    Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION).apply {
-                                        data = Uri.parse("package:${context.packageName}")
-                                    }
-                                )
+            },
+        ) {
+            Scaffold(
+                topBar = {
+                    EditorToolbar(
+                        fileName = selectedFile.orEmpty(),
+                        canUndo = selectedTab?.canUndo == true,
+                        canRedo = selectedTab?.canRedo == true,
+                        onBack = {
+                            session.flushSelectedDirtyAsync()
+                            onBack()
+                        },
+                        onToggleDrawer = { scope.launch { drawerState.open() } },
+                        onUndo = { editorRef.value?.undo() },
+                        onRedo = { editorRef.value?.redo() },
+                        onRun = {
+                            scope.launch {
+                                session.flushSelectedDirty()
+                                onRun(project.mainFile)
+                            }
+                        },
+                        onSearch = { isSearchVisible = true },
+                        onDependencies = onDependencies,
+                    )
+                }
+            ) { padding ->
+                Column(
+                    Modifier
+                        .fillMaxSize()
+                        .padding(padding)
+                ) {
+                    if (tabs.isNotEmpty()) {
+                        EditorTabs(
+                            tabs = tabs.map { it.tab },
+                            selectedFile = selectedFile,
+                            onTabClick = { session.select(it) },
+                            onTabClose = { file ->
+                                if (session.requestClose(file)) pendingCloseFile = file
                             },
                             modifier = Modifier.fillMaxWidth(),
                         )
                     }
-                    if (isSearchVisible) {
-                        SearchBar(
-                            query = searchQuery,
-                            replaceQuery = replaceQuery,
-                            matchCount = searchResultState.matchCount,
-                            currentMatch = searchResultState.currentMatch,
-                            isCaseSensitive = isCaseSensitive,
-                            isRegex = isRegex,
-                            showReplace = showReplace,
-                            onQueryChange = { searchQuery = it },
-                            onReplaceQueryChange = { replaceQuery = it },
-                            onNext = { getSearcher()?.gotoNext() },
-                            onPrev = { getSearcher()?.gotoPrevious() },
-                            onReplace = {
-                                val searcher = getSearcher() ?: return@SearchBar
-                                searcher.replaceCurrentMatch(replaceQuery)
-                            },
-                            onReplaceAll = {
-                                val searcher = getSearcher() ?: return@SearchBar
-                                searcher.replaceAll(replaceQuery)
-                            },
-                            onToggleCaseSensitive = { isCaseSensitive = !isCaseSensitive },
-                            onToggleRegex = { isRegex = !isRegex },
-                            onToggleReplace = { showReplace = !showReplace },
-                            onClose = {
-                                isSearchVisible = false
-                                getSearcher()?.stopSearch()
-                                searchQuery = ""
-                                searchResult.value = SearchResultState()
-                            },
-                            modifier = Modifier.fillMaxWidth(),
-                        )
+
+                    Box(
+                        Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
+                    ) {
+                        val currentContent = content
+                        if (currentContent != null && selectedFile != null) {
+                            LuaEditor(
+                                content = currentContent,
+                                isDarkTheme = isDarkTheme,
+                                config = appEditorConfig,
+                                onContentModified = { session.onContentModified() },
+                                onUndoRedoStateChanged = { u, r -> session.onUndoRedoChanged(u, r) },
+                                onRelease = {
+                                    // 兜底保存：编辑内容最后一次快照交回会话（会话作用域存活，安全）。
+                                    session.flushSelectedDirtyAsync()
+                                },
+                                editorRef = editorRef,
+                                modifier = Modifier.fillMaxSize(),
+                            )
+                        } else {
+                            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                                if (selectedFile == null) {
+                                    Text(
+                                        stringResource(R.string.editor_no_file),
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    )
+                                } else {
+                                    CircularProgressIndicator()
+                                }
+                            }
+                        }
+
+                        Column(Modifier.align(Alignment.TopCenter)) {
+                            if (extPermissionMissing.value) {
+                                StoragePermissionBanner(
+                                    onGrant = {
+                                        manageStorageLauncher.launch(
+                                            Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION).apply {
+                                                data = Uri.parse("package:${context.packageName}")
+                                            }
+                                        )
+                                    },
+                                    modifier = Modifier.fillMaxWidth(),
+                                )
+                            }
+                            if (isSearchVisible) {
+                                SearchBar(
+                                    editorProvider = { editorRef.value },
+                                    onClose = {
+                                        isSearchVisible = false
+                                        getSearcher()?.stopSearch()
+                                    },
+                                    modifier = Modifier.fillMaxWidth(),
+                                )
+                            }
+                        }
                     }
                 }
             }
         }
 
-        if (showFileMenu && files.size > 1) {
+        val pendingFile = pendingCloseFile
+        if (pendingFile != null) {
             AlertDialog(
-                onDismissRequest = { showFileMenu = false },
-                title = { Text(stringResource(R.string.select_file)) },
-                text = {
-                    Column {
-                        files.forEach { file ->
-                            TextButton(
-                                onClick = {
-                                    saveNow()
-                                    currentFile = file
-                                    showFileMenu = false
-                                },
-                                modifier = Modifier.fillMaxWidth(),
-                            ) {
-                                Text(
-                                    file,
-                                    fontWeight = if (file == currentFile) FontWeight.Bold else FontWeight.Normal,
-                                    color = if (file == currentFile)
-                                        MaterialTheme.colorScheme.primary
-                                    else
-                                        MaterialTheme.colorScheme.onSurface,
-                                )
+                onDismissRequest = { pendingCloseFile = null },
+                title = { Text(stringResource(R.string.close_file_title)) },
+                text = { Text(stringResource(R.string.close_file_message, pendingFile)) },
+                confirmButton = {
+                    Row {
+                        TextButton(
+                            onClick = {
+                                session.discardAndClose(pendingFile)
+                                pendingCloseFile = null
                             }
+                        ) {
+                            Text(stringResource(R.string.discard))
+                        }
+                        TextButton(
+                            onClick = {
+                                session.saveAndClose(pendingFile)
+                                pendingCloseFile = null
+                            }
+                        ) {
+                            Text(stringResource(R.string.save))
                         }
                     }
                 },
-                confirmButton = {
-                    TextButton(onClick = { showFileMenu = false }) {
+                dismissButton = {
+                    TextButton(onClick = { pendingCloseFile = null }) {
                         Text(stringResource(R.string.cancel))
                     }
                 },

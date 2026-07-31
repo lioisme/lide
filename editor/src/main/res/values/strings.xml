@@ -13,6 +13,13 @@
     <string name="menu_more">More</string>
     <string name="menu_dependencies">Dependencies</string>
 
+    <!-- Editor tabs -->
+    <string name="cd_close_tab">Close tab</string>
+    <string name="cd_toggle_tree">Toggle file tree</string>
+
+    <!-- File tree -->
+    <string name="file_tree_empty">No files</string>
+
     <!-- Content descriptions -->
     <string name="cd_back">Back</string>
     <string name="cd_undo">Undo</string>

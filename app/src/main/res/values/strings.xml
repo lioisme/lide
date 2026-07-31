@@ -100,6 +100,13 @@
     <string name="editor_storage_permission_warning">No storage permission - changes will not be saved</string>
     <string name="editor_storage_permission_grant">Grant</string>
 
+    <!-- Editor session -->
+    <string name="editor_no_file">No file open</string>
+    <string name="close_file_title">Unsaved changes</string>
+    <string name="close_file_message">Save changes to %1$s before closing?</string>
+    <string name="save">Save</string>
+    <string name="discard">Discard</string>
+
     <!-- Content descriptions -->
     <string name="cd_new_project">New Project</string>
     <string name="cd_settings">Settings</string>

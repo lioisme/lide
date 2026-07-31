@@ -1,10 +1,12 @@
 package com.lioisme.delua.editor
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Redo
 import androidx.compose.material.icons.automirrored.filled.Undo
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Search
@@ -27,6 +29,7 @@ fun EditorToolbar(
     canUndo: Boolean,
     canRedo: Boolean,
     onBack: () -> Unit,
+    onToggleDrawer: () -> Unit,
     onUndo: () -> Unit,
     onRedo: () -> Unit,
     onRun: () -> Unit,
@@ -44,11 +47,16 @@ fun EditorToolbar(
             )
         },
         navigationIcon = {
-            IconButton(onClick = onBack) {
-                Icon(
-                    Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = stringResource(R.string.cd_back),
-                )
+            Row {
+                IconButton(onClick = onToggleDrawer) {
+                    Icon(Icons.Default.Menu, contentDescription = stringResource(R.string.cd_toggle_tree))
+                }
+                IconButton(onClick = onBack) {
+                    Icon(
+                        Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = stringResource(R.string.cd_back),
+                    )
+                }
             }
         },
         actions = {

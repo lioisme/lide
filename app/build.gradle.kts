@@ -61,7 +61,9 @@ android {
         }
         release {
             signingConfig = signingConfigs.getByName("release")
-            isMinifyEnabled = false
+            // R8：androlua / luaj / 宿主类均可能被 Lua 脚本与插件 dex 按类名反射引用，
+            // keep 规则见 proguard-rules.pro；启用后显著缩小方法与常量池（P2 冷启动优化）。
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -122,4 +124,55 @@ dependencies {
     implementation("io.github.rosemoe:editor:0.24.6")
     // TextMate 语法高亮支持
     implementation("io.github.rosemoe:language-textmate:0.24.6")
+}
+
+// Lua 可见 API 面回归门禁：Lua 脚本 / 插件 dex 以字符串类名经 luajava
+// bindClass/import 引用这些类，R8 的 Java 引用图看不到它们。本任务在
+// release 构建后检查 mapping，任一缺失即失败（CI 与本地均可运行）。
+val luaApiSurface = listOf(
+    "android.widget.ArrayListAdapter",
+    "android.widget.ArrayPageAdapter",
+    "android.widget.BasePageAdapter",
+    "android.widget.PageAdapter",
+    "android.widget.ArrayExpandableListAdapter",
+    "android.widget.ExListView",
+    "android.widget.FloatButton",
+    "android.widget.ToolBar",
+    "android.widget.PageView",
+    "android.widget.PageLayout",
+    "android.widget.DrawerLayout",
+    "android.widget.CircleImageView",
+    "android.widget.CardView",
+    "android.widget.HorizontalListView",
+    "android.widget.PullingLayout",
+    "android.widget.SlidingLayout",
+    "android.app.AlertDialogBuilder",
+    "android.app.FloatWindow",
+    "com.nirenr.Color",
+    "com.nirenr.ColorFinder",
+    "com.nirenr.ColorPoint",
+    "com.nirenr.screencapture.ScreenShot",
+    "com.android.cglib.proxy.Enhancer",
+    "com.android.cglib.dx.DexMaker",
+    "com.luajava.LuaState",
+    "com.luajava.LuaObject",
+    "com.androlua.LuaActivity",
+    "com.androlua.LuaEnhancer",
+    "com.androlua.LuaContext"
+)
+
+tasks.register("verifyReleaseLuaSurface") {
+    group = "verification"
+    description = "校验 release 构建保留了 Lua 可见 API 面（防 R8 误删回归）"
+    dependsOn("assembleArm64Release")
+    doLast {
+        val mapping = file("build/outputs/mapping/arm64Release/mapping.txt")
+        check(mapping.exists()) { "未找到 mapping 文件：${mapping}" }
+        val content = mapping.readText()
+        val missing = luaApiSurface.filter { "$it -> " !in content }
+        check(missing.isEmpty()) {
+            "Lua 可见 API 面被 R8 移除：\n" + missing.joinToString("\n") { "  - $it" }
+        }
+        println("Lua 可见 API 面校验通过：${luaApiSurface.size} 个类全部保留")
+    }
 }

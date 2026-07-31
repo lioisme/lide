@@ -5,6 +5,7 @@ import android.util.Log
 import com.androlua.LuaApplication
 import com.lioisme.delua.androlua.common.DependencyManager
 import com.lioisme.delua.androlua.common.model.ProjectDependencies
+import com.lioisme.delua.editor.FileNode
 import com.lioisme.delua.model.Project
 import java.io.File
 
@@ -67,6 +68,39 @@ class ProjectManager(private val context: Context) {
             ?.filter { it.isFile && it.name.endsWith(".lua") }
             ?.map { it.name }
             ?.sorted() ?: listOf(project.mainFile)
+    }
+
+    /**
+     * 递归扫描工程目录为文件树（目录在前、按名排序；仅收录 .lua 文件与
+     * 含 .lua 后代的目录）。节点路径为绝对路径，供侧边栏工程树渲染。
+     */
+    fun listProjectTree(project: Project): FileNode {
+        val root = File(project.path)
+        return FileNode(
+            name = root.name,
+            path = root.absolutePath,
+            isDirectory = true,
+            children = scanTreeDir(root),
+        )
+    }
+
+    private fun scanTreeDir(dir: File): List<FileNode> {
+        val entries = dir.listFiles() ?: return emptyList()
+        val dirs = mutableListOf<FileNode>()
+        val files = mutableListOf<FileNode>()
+        for (entry in entries) {
+            if (entry.isDirectory) {
+                val children = scanTreeDir(entry)
+                if (children.isNotEmpty()) {
+                    dirs += FileNode(entry.name, entry.absolutePath, true, children)
+                }
+            } else if (entry.isFile && entry.name.endsWith(".lua", ignoreCase = true)) {
+                files += FileNode(entry.name, entry.absolutePath, false)
+            }
+        }
+        dirs.sortBy { it.name }
+        files.sortBy { it.name }
+        return dirs + files
     }
 
     fun getProjectScript(project: Project, fileName: String = project.mainFile): String {

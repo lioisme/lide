@@ -18,28 +18,83 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.lioisme.delua.editor.R
+import io.github.rosemoe.sora.event.PublishSearchResultEvent
+import io.github.rosemoe.sora.widget.CodeEditor
+import io.github.rosemoe.sora.widget.EditorSearcher
+import io.github.rosemoe.sora.widget.subscribeAlways
 
+/**
+ * 自包含搜索面板：查询 / 替换 / 匹配计数等全部状态内聚在本组件内，
+ * 打字与搜索结果只重组本子树（宿主整屏零重组）。
+ *
+ * 搜索执行经 [editorProvider] 获取当前编辑器实例；结果计数由 sora
+ * `PublishSearchResultEvent` 驱动（与 sora 渲染器高亮同源，计数必然一致）。
+ */
 @Composable
 fun SearchBar(
-    query: String,
-    replaceQuery: String,
-    matchCount: Int,
-    currentMatch: Int,
-    isCaseSensitive: Boolean,
-    isRegex: Boolean,
-    showReplace: Boolean,
-    onQueryChange: (String) -> Unit,
-    onReplaceQueryChange: (String) -> Unit,
-    onNext: () -> Unit,
-    onPrev: () -> Unit,
-    onReplace: () -> Unit,
-    onReplaceAll: () -> Unit,
-    onToggleCaseSensitive: () -> Unit,
-    onToggleRegex: () -> Unit,
-    onToggleReplace: () -> Unit,
+    editorProvider: () -> CodeEditor?,
     onClose: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    var query by remember { mutableStateOf("") }
+    var replaceQuery by remember { mutableStateOf("") }
+    var isCaseSensitive by remember { mutableStateOf(false) }
+    var isRegex by remember { mutableStateOf(false) }
+    var showReplace by remember { mutableStateOf(false) }
+    var matchCount by remember { mutableStateOf(0) }
+    var currentMatch by remember { mutableStateOf(0) }
+
+    val editor = editorProvider()
+
+    DisposableEffect(editor) {
+        if (editor == null) {
+            onDispose { }
+        } else {
+            val receipt = editor.subscribeAlways(PublishSearchResultEvent::class.java) { _ ->
+                try {
+                    val searcher = editor.getSearcher()
+                    if (searcher.hasQuery()) {
+                        val index = searcher.getCurrentMatchedPositionIndex()
+                        matchCount = searcher.getMatchedPositionCount()
+                        currentMatch = if (index >= 0) index + 1 else 0
+                    } else {
+                        matchCount = 0
+                        currentMatch = 0
+                    }
+                } catch (t: Throwable) {
+                    matchCount = 0
+                    currentMatch = 0
+                }
+            }
+            onDispose { receipt.unsubscribe() }
+        }
+    }
+
+    fun performSearch() {
+        val searcher = editorProvider()?.getSearcher() ?: return
+        if (query.isBlank()) {
+            if (searcher.hasQuery()) {
+                searcher.stopSearch()
+            }
+            matchCount = 0
+            currentMatch = 0
+            return
+        }
+        val searchType = if (isRegex) EditorSearcher.SearchOptions.TYPE_REGULAR_EXPRESSION
+                         else EditorSearcher.SearchOptions.TYPE_NORMAL
+        val options = EditorSearcher.SearchOptions(searchType, !isCaseSensitive)
+        try {
+            searcher.search(query, options)
+        } catch (_: Exception) {
+            matchCount = 0
+            currentMatch = 0
+        }
+    }
+
+    LaunchedEffect(query, isCaseSensitive, isRegex) {
+        performSearch()
+    }
+
     Card(
         modifier = modifier.padding(8.dp),
         shape = RoundedCornerShape(12.dp),
@@ -60,7 +115,7 @@ fun SearchBar(
 
                 OutlinedTextField(
                     value = query,
-                    onValueChange = onQueryChange,
+                    onValueChange = { query = it },
                     placeholder = { Text(stringResource(R.string.search_hint)) },
                     singleLine = true,
                     textStyle = MaterialTheme.typography.bodyMedium,
@@ -86,12 +141,14 @@ fun SearchBar(
                         modifier = Modifier.padding(horizontal = 8.dp),
                     )
 
-                    IconButton(onClick = onPrev, modifier = Modifier.size(32.dp)) {
+                    IconButton(onClick = { editorProvider()?.getSearcher()?.gotoPrevious() },
+                        modifier = Modifier.size(32.dp)) {
                         Icon(Icons.Default.KeyboardArrowUp,
                             stringResource(R.string.cd_search_prev),
                             modifier = Modifier.size(20.dp))
                     }
-                    IconButton(onClick = onNext, modifier = Modifier.size(32.dp)) {
+                    IconButton(onClick = { editorProvider()?.getSearcher()?.gotoNext() },
+                        modifier = Modifier.size(32.dp)) {
                         Icon(Icons.Default.KeyboardArrowDown,
                             stringResource(R.string.cd_search_next),
                             modifier = Modifier.size(20.dp))
@@ -111,7 +168,7 @@ fun SearchBar(
             ) {
                 OutlinedTextField(
                     value = replaceQuery,
-                    onValueChange = onReplaceQueryChange,
+                    onValueChange = { replaceQuery = it },
                     placeholder = { Text(stringResource(R.string.replace_hint)) },
                     singleLine = true,
                     textStyle = MaterialTheme.typography.bodyMedium,
@@ -130,7 +187,9 @@ fun SearchBar(
 
                 Spacer(Modifier.width(4.dp))
                 FilledTonalButton(
-                    onClick = onReplace,
+                    onClick = {
+                        editorProvider()?.getSearcher()?.replaceCurrentMatch(replaceQuery)
+                    },
                     enabled = query.isNotEmpty() && matchCount > 0,
                     contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
                     modifier = Modifier.height(32.dp),
@@ -139,7 +198,9 @@ fun SearchBar(
                 }
                 Spacer(Modifier.width(4.dp))
                 FilledTonalButton(
-                    onClick = onReplaceAll,
+                    onClick = {
+                        editorProvider()?.getSearcher()?.replaceAll(replaceQuery)
+                    },
                     enabled = query.isNotEmpty() && matchCount > 0,
                     contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
                     modifier = Modifier.height(32.dp),
@@ -154,13 +215,13 @@ fun SearchBar(
             ) {
                 FilterChip(
                     selected = isCaseSensitive,
-                    onClick = onToggleCaseSensitive,
+                    onClick = { isCaseSensitive = !isCaseSensitive },
                     label = { Text(stringResource(R.string.case_sensitive), style = MaterialTheme.typography.labelSmall) },
                     modifier = Modifier.height(28.dp),
                 )
                 FilterChip(
                     selected = isRegex,
-                    onClick = onToggleRegex,
+                    onClick = { isRegex = !isRegex },
                     label = { Text(stringResource(R.string.regex), style = MaterialTheme.typography.labelSmall) },
                     modifier = Modifier.height(28.dp),
                 )

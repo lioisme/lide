@@ -100,6 +100,13 @@
     <string name="editor_storage_permission_warning">未授予存储权限，更改将无法保存</string>
     <string name="editor_storage_permission_grant">去授权</string>
 
+    <!-- Editor session -->
+    <string name="editor_no_file">未打开文件</string>
+    <string name="close_file_title">未保存的修改</string>
+    <string name="close_file_message">关闭前保存 %1$s 的修改？</string>
+    <string name="save">保存</string>
+    <string name="discard">放弃</string>
+
     <!-- Content descriptions -->
     <string name="cd_new_project">新建项目</string>
     <string name="cd_settings">设置</string>
