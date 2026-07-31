@@ -18,11 +18,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.lioisme.delua.R
+import com.lioisme.delua.editor.EditorToolbar
+import com.lioisme.delua.editor.LuaEditor
+import com.lioisme.delua.editor.SearchBar
 import com.lioisme.delua.model.Project
 import com.lioisme.delua.project.ProjectManager
-import com.lioisme.delua.ui.editor.EditorToolbar
-import com.lioisme.delua.ui.editor.LuaEditor
-import com.lioisme.delua.ui.editor.SearchBar
+import com.lioisme.delua.ui.theme.LocalIsDarkTheme
+import com.lioisme.delua.ui.theme.SettingsManager
 import io.github.rosemoe.sora.event.PublishSearchResultEvent
 import io.github.rosemoe.sora.widget.CodeEditor
 import io.github.rosemoe.sora.widget.EditorSearcher
@@ -50,6 +52,8 @@ fun EditorScreen(
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+    val isDarkTheme = LocalIsDarkTheme.current
+    val appEditorConfig by SettingsManager.editorConfig.collectAsState()
 
     var files by remember { mutableStateOf<List<String>>(emptyList()) }
     var currentFile by remember { mutableStateOf(project.mainFile) }
@@ -98,10 +102,10 @@ fun EditorScreen(
         val editor = editorRef.value
         if (editor != null && dirty && !extPermissionMissing.value) {
             val file = currentFile
-            val content = editor.text.toString()
             dirty = false
             scope.launch(Dispatchers.IO) {
-                projectManager.saveProjectScript(project, file, content)
+                // Content.toString 内部持有 ReadWriteLock，快照可安全在后台线程获取。
+                projectManager.saveProjectScript(project, file, editor.text.toString())
             }
         }
     }
@@ -112,23 +116,9 @@ fun EditorScreen(
         val editor = editorRef.value ?: return@LaunchedEffect
         if (dirty && !extPermissionMissing.value) {
             val file = currentFile
-            val content = editor.text.toString()
             dirty = false
             withContext(Dispatchers.IO) {
-                projectManager.saveProjectScript(project, file, content)
-            }
-        }
-    }
-
-    DisposableEffect(Unit) {
-        onDispose {
-            val editor = editorRef.value
-            if (editor != null && dirty && !extPermissionMissing.value) {
-                val file = currentFile
-                val content = editor.text.toString()
-                scope.launch(Dispatchers.IO) {
-                    projectManager.saveProjectScript(project, file, content)
-                }
+                projectManager.saveProjectScript(project, file, editor.text.toString())
             }
         }
     }
@@ -139,14 +129,18 @@ fun EditorScreen(
             onDispose { }
         } else {
             val receipt = editor.subscribeAlways(PublishSearchResultEvent::class.java) { _ ->
-                val searcher = editor.getSearcher()
-                if (searcher.hasQuery()) {
-                    val index = searcher.getCurrentMatchedPositionIndex()
-                    searchResult.value = SearchResultState(
-                        matchCount = searcher.getMatchedPositionCount(),
-                        currentMatch = if (index >= 0) index + 1 else 0,
-                    )
-                } else {
+                try {
+                    val searcher = editor.getSearcher()
+                    if (searcher.hasQuery()) {
+                        val index = searcher.getCurrentMatchedPositionIndex()
+                        searchResult.value = SearchResultState(
+                            matchCount = searcher.getMatchedPositionCount(),
+                            currentMatch = if (index >= 0) index + 1 else 0,
+                        )
+                    } else {
+                        searchResult.value = SearchResultState()
+                    }
+                } catch (t: Throwable) {
                     searchResult.value = SearchResultState()
                 }
             }
@@ -219,11 +213,22 @@ fun EditorScreen(
                 if (text != null) {
                     LuaEditor(
                         text = text,
+                        isDarkTheme = isDarkTheme,
+                        config = appEditorConfig,
                         onContentModified = {
                             dirty = true
                             editVersion++
                         },
                         onUndoRedoStateChanged = { u, r -> canUndo = u; canRedo = r },
+                        onRelease = { content ->
+                            if (dirty && !extPermissionMissing.value) {
+                                val file = currentFile
+                                dirty = false
+                                scope.launch(Dispatchers.IO) {
+                                    projectManager.saveProjectScript(project, file, content)
+                                }
+                            }
+                        },
                         editorRef = editorRef,
                         modifier = Modifier.fillMaxSize(),
                     )

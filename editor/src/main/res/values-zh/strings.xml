@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Editor search -->
+    <string name="search_hint">查找…</string>
+    <string name="replace_hint">替换…</string>
+    <string name="replace">替换</string>
+    <string name="replace_all">全部替换</string>
+    <string name="case_sensitive">区分大小写</string>
+    <string name="regex">正则表达式</string>
+
+    <!-- Editor toolbar -->
+    <string name="menu_more">更多</string>
+    <string name="menu_dependencies">依赖管理</string>
+
+    <!-- Content descriptions -->
+    <string name="cd_back">返回</string>
+    <string name="cd_undo">撤销</string>
+    <string name="cd_redo">重做</string>
+    <string name="cd_run">运行</string>
+    <string name="cd_search">搜索</string>
+    <string name="cd_search_next">下一个匹配</string>
+    <string name="cd_search_prev">上一个匹配</string>
+    <string name="cd_search_close">关闭搜索</string>
+</resources>

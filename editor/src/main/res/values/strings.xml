@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Editor search -->
+    <string name="search_hint">Find…</string>
+    <string name="replace_hint">Replace…</string>
+    <string name="replace">Replace</string>
+    <string name="replace_all">Replace All</string>
+    <string name="case_sensitive">Case sensitive</string>
+    <string name="regex">Regex</string>
+
+    <!-- Editor toolbar -->
+    <string name="menu_more">More</string>
+    <string name="menu_dependencies">Dependencies</string>
+
+    <!-- Content descriptions -->
+    <string name="cd_back">Back</string>
+    <string name="cd_undo">Undo</string>
+    <string name="cd_redo">Redo</string>
+    <string name="cd_run">Run</string>
+    <string name="cd_search">Search</string>
+    <string name="cd_search_next">Next match</string>
+    <string name="cd_search_prev">Previous match</string>
+    <string name="cd_search_close">Close search</string>
+</resources>

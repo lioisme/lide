@@ -1,6 +1,7 @@
 package com.lioisme.delua
 
 import com.androlua.LuaApplication
+import com.lioisme.delua.editor.TextMateInitializer
 import com.lioisme.delua.i18n.LocaleManager
 import com.lioisme.delua.ui.theme.SettingsManager
 import java.io.File
@@ -18,7 +19,7 @@ class DeluaApp : LuaApplication() {
 
     private fun preloadTextMate() {
         Thread {
-            com.lioisme.delua.ui.editor.TextMateInitializer.initialize(applicationContext)
+            TextMateInitializer.initialize(applicationContext)
         }.apply {
             name = "TextMatePreload"
             isDaemon = true

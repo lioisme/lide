@@ -1,6 +1,7 @@
 package com.lioisme.delua.ui.theme
 
 import android.content.Context
+import com.lioisme.delua.editor.EditorConfig
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,13 +24,6 @@ object SettingsManager {
 
     private val _editorConfig = MutableStateFlow(EditorConfig())
     val editorConfig: StateFlow<EditorConfig> = _editorConfig.asStateFlow()
-
-    data class EditorConfig(
-        val wordWrap: Boolean = false,
-        val showWhitespace: Boolean = false,
-        val fontSize: Int = 14,
-        val tabSize: Int = 4,
-    )
 
     fun init(context: Context) {
         val prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
