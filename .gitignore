@@ -1,0 +1,26 @@
+# Gradle / Android build output
+.gradle/
+build/
+app/build/
+
+# IDE
+.idea/
+*.iml
+.DS_Store
+
+# Local configuration
+local.properties
+
+# Logs and crash dumps
+*.log
+hs_err_pid*.log
+replay_pid*.log
+
+# Build error captures
+build-java-errors*.txt
+
+# Stray artifacts
+classes.jar
+
+# Downloaded reference projects (never committed)
+docs/reference/
