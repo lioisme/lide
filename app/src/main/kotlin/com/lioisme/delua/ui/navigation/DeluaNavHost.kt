@@ -12,11 +12,8 @@ import com.lioisme.delua.engine.RunEngineLauncher
 import com.lioisme.delua.model.Project
 import com.lioisme.delua.project.ProjectManager
 import com.lioisme.delua.ui.screen.EditorScreen
-import com.lioisme.delua.ui.screen.LibraryManagerScreen
 import com.lioisme.delua.ui.screen.LuaManualScreen
-import com.lioisme.delua.ui.screen.ModuleManagerScreen
 import com.lioisme.delua.ui.screen.PermissionScreen
-import com.lioisme.delua.ui.screen.ProjectDependenciesScreen
 import com.lioisme.delua.ui.screen.ProjectListScreen
 import com.lioisme.delua.ui.screen.PluginScreen
 import com.lioisme.delua.ui.screen.SettingsScreen
@@ -30,17 +27,10 @@ object Routes {
     const val SETTINGS = "settings"
     const val PERMISSIONS = "permissions"
     const val PLUGINS = "plugins"
-    const val LIBRARIES = "libraries"
-    const val MODULES = "modules"
-    const val DEPENDENCIES = "dependencies/{projectName}/{projectPath}"
     const val MANUAL = "manual"
 
     fun editor(project: Project): String {
         return "editor/${enc(project.name)}/${enc(project.path)}?fileName=${enc(project.mainFile)}"
-    }
-
-    fun dependencies(project: Project): String {
-        return "dependencies/${enc(project.name)}/${enc(project.path)}"
     }
 
     fun enc(s: String) = URLEncoder.encode(s, "UTF-8")
@@ -123,9 +113,6 @@ fun DeluaNavHost(
                 onRun = { fileName ->
                     engineLauncher.launch(project.path, fileName)
                 },
-                onDependencies = {
-                    navController.navigate(Routes.dependencies(project))
-                }
             )
         }
         slideComposable(route = Routes.SETTINGS) {
@@ -133,8 +120,6 @@ fun DeluaNavHost(
                 onBack = { navController.popBackStack() },
                 onPermissionsClick = { navController.navigate(Routes.PERMISSIONS) },
                 onPluginsClick = { navController.navigate(Routes.PLUGINS) },
-                onLibrariesClick = { navController.navigate(Routes.LIBRARIES) },
-                onModulesClick = { navController.navigate(Routes.MODULES) },
                 onManualClick = { navController.navigate(Routes.MANUAL) },
             )
         }
@@ -162,37 +147,6 @@ fun DeluaNavHost(
                     )
                 },
                 onBack = { navController.popBackStack() }
-            )
-        }
-        slideComposable(route = Routes.LIBRARIES) {
-            LibraryManagerScreen(
-                projectManager = projectManager,
-                onBack = { navController.popBackStack() },
-            )
-        }
-        slideComposable(route = Routes.MODULES) {
-            ModuleManagerScreen(
-                projectManager = projectManager,
-                onBack = { navController.popBackStack() },
-            )
-        }
-        slideComposable(
-            route = Routes.DEPENDENCIES,
-            arguments = listOf(
-                navArgument("projectName") { type = NavType.StringType },
-                navArgument("projectPath") { type = NavType.StringType }
-            )
-        ) { backStackEntry ->
-            val project = rememberProject(
-                backStackEntry.arguments?.getString("projectName"),
-                backStackEntry.arguments?.getString("projectPath")
-            )
-            ProjectDependenciesScreen(
-                project = project,
-                projectManager = projectManager,
-                onBack = { navController.popBackStack() },
-                onNavigateToLibraries = { navController.navigate(Routes.LIBRARIES) },
-                onNavigateToModules = { navController.navigate(Routes.MODULES) },
             )
         }
     }

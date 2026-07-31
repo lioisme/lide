@@ -12,7 +12,6 @@ class DeluaApp : LuaApplication() {
         super.onCreate()
         SettingsManager.init(this)
         LocaleManager.init(this)
-        com.lioisme.delua.androlua.common.DependencyManager(this).ensureDirsExist()
         extractSamples()
         extractExamplePlugin()
         extractLayoutTemplates()

@@ -414,6 +414,23 @@ CI åŒ…å«å››ä¸ª Jobï¼š
 
 ---
 
+## WP-009£ºÒÆ³ıÈ«¾ÖÒÀÀµ¹ÜÀí²ã£¨·½°¸ A£¬ÒÑÍê³É£©
+
+**¾ö²ß**£º°´ `docs/DEPENDENCY_MODEL_AUDIT_REPORT.md` ·½°¸ A Ö´ĞĞ¡ª¡ª**É¾³ı** delua ×Ô´´µÄÈ«¾ÖÒÀÀµ¹ÜÀí²ã£¨`common/libs` + `common/modules` + init.lua `dependencies` ¿é + ÔËĞĞÇ°Îï»¯£©£¬»Ø¹é AndroLua Pro¡¸¹¤³ÌÄÚ×ÔĞĞ¹ÜÀí¡¹Ä£ĞÍ£»²»Ìá¹©¾É°æ±¾Ç¨ÒÆ¼æÈİ¡£**·´×ª WP-007 P2-12 / WP-008 P1-4~9 ÖĞ¡¸±£ÁôÈ«¾Ö²Ö¿â + Îï»¯Í¬²½¡¹µÄÖÕÌ¬¾ö²ß**£¬ÀíÓÉ£ºÈ«¾Ö²ãÓëÔËĞĞÊ±ÁãñîºÏ£¨Java ÔËĞĞÊ±¶Ô `common/` ÁãÒıÓÃ£©£¬ÇÒ S1 ±ØĞŞÈ±Ïİ£¨ÑùÀı `demo` ÉùÃ÷ `modules={"dkjson"}` ¶ø dkjson.lua Ëæ¹¤³Ì×Ô´ø£¬È«ĞÂ°²×°ºóÈ«¾Ö²Ö¿âÎª¿Õµ¼ÖÂ demo ¾Ü¾øÔËĞĞ£©¡£
+
+**Íê³ÉÄÚÈİ**£º
+- **Éó¼Æ²ú³ö**£º`docs/DEPENDENCY_MODEL_AUDIT_REPORT.md`£¨S1¨CS7 È±ÏİÇåµ¥¡¢A/B/C ·½°¸¶Ô±È¡¢É¾³ı/±£ÁôÇåµ¥£©¡£
+- **ÔËĞĞÊ±É¾³ı**£º`androlua/.../common/{DependencyManager,LibraryRegistry,ModuleRegistry}.kt` + `common/model/{LibraryInfo,ModuleInfo,ProjectDependencies}.kt`£¬`common/` Ä¿Â¼ÕûÌåÒÆ³ı¡£
+- **UI É¾³ı**£º`LibraryManagerScreen.kt`¡¢`ModuleManagerScreen.kt`¡¢`ProjectDependenciesScreen.kt`£»Settings ÒÆ³ı¿â/Ä£¿éÁ½¸öÈë¿ÚÏî£»EditorToolbar ÒÆ³ıÒÀÀµ¹ÜÀí²Ëµ¥Ïî£¨DropdownMenu/MoreVert/menu_more/menu_dependencies£©£»NavHost ÒÆ³ı LIBRARIES/MODULES/DEPENDENCIES ÈıÌõÂ·ÓÉÓë `dependencies()` ¹¹Ôì¡£
+- **Æô¶¯Á´»¹Ô­**£º`RunEngineLauncher.kt` ÖØĞ´Îª´¿Ö±Æô£¨ÒÆ³ıºóÌ¨Ïß³ÌÒÀÀµÎï»¯ + Ê§°Ü Toast£©£¬`DeluaApp` ÒÆ³ı `ensureDirsExist()`¡£
+- **ÒÀÀµÊÕ¿Ú**£º`ProjectManager.getLocalLibFiles` É¾³ı£»`app/build.gradle.kts` ÒÆ³ı `androidx.documentfile:documentfile:1.0.1`£¨ÁãÒıÓÃ£©¡£
+- **×Ö·û´®**£ºvalues + values-zh ¸÷É¾³ı 49 Ìõ£¨¿â/Ä£¿é¹ÜÀíÆ÷¡¢ÒÀÀµÉùÃ÷¡¢°æ±¾/´óĞ¡/×÷Õß±êÇ©¡¢Ğ¶ÔØ¡¢run_materialize_failed£©+ 4 ÌõÊ§Ğ§×¢ÊÍ£»editor Ë«ÓïÑÔ¸÷É¾ 2 Ìõ£¨menu_more/menu_dependencies£©£»S7 `dependencies_title` ÂÒÂëËæÉ¾³ı×ÔÈ»ÏûÊ§¡£
+- **ÑùÀı**£º`demo/init.lua` ÒÆ³ı `modules={"dkjson"}` ÒÀÀµ¿é¡¢`testjson/init.lua` ÒÆ³ı¿ÕÒÀÀµ¿é£¨kleinbottle/DemoProject ±¾¾ÍÎŞ¿é£©¡£
+
+**ÑéÊÕ**£º`:app:compileArm64DebugKotlin` âœ…¡¢`:app:assembleArm64Debug` âœ…£¨BUILD SUCCESSFUL£©¡¢`:editor` R1 ±ß½ç grep£¨luajava|androlua|loadLibrary£©ÁãÃüÖĞ âœ…¡¢È«¿â²ĞÁô·ûºÅÉ¨Ãè£¨DependencyManager/LibraryRegistry/ModuleRegistry/LibraryInfo/ModuleInfo/ProjectDependencies/getLocalLibFiles/Routes.{LIBRARIES,MODULES,DEPENDENCIES}/onDependencies/run_materialize_failed/menu_dependencies/documentfile£©ÁãÃüÖĞ âœ…¡£
+
+**Ê£Óà**£ºÕæ»ú»Ø¹é£¨demo/testjson È«ĞÂ°²×°¼´¿ÉÔËĞĞ¡¢`.so` ¹¤³ÌÄÚ `libs/` ¼ÓÔØ¡¢²å¼ş `{luadir, luapath}`£©´ıÉè±¸ÑéÖ¤¡£
+
 ## æ•´ä½“éªŒæ”¶çŠ¶æ€
 
 | ç¼–å· | æ ‡å‡† | çŠ¶æ€ |

@@ -161,17 +161,6 @@ dependencies = {
         )
     }
 
-    fun getLocalLibFiles(project: Project): List<String> {
-        val libsDir = File(project.path, "libs")
-        if (!libsDir.isDirectory) return emptyList()
-        return libsDir.listFiles()
-            ?.filter {
-                it.isFile && (it.name.endsWith(".jar") || it.name.endsWith(".dex") || it.name.endsWith(".so"))
-            }
-            ?.map { it.name }
-            ?.sorted() ?: emptyList()
-    }
-
     fun deleteProject(project: Project): Boolean {
         return try {
             File(project.path).deleteRecursively()

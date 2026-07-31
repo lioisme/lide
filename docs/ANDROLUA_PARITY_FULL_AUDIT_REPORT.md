@@ -326,6 +326,8 @@ ProjectDependenciesScreen 勾选(172-179) → saveDependencies(67-87)
 - **P2-13 ✅ 已完成**：AGENTS.md R2 改为"EngineBridge → EngineActivity，同进程运行"单进程口径；白皮书 3.3 独立 Activity 栈表述与实现一致（历史报告保留原貌）。
 - **P2-14 ✅ 部分完成（资产侧）**：pro `assets/javaapi/{clayout,layout,mlayout}.aly` 复制入 `app/src/main/assets/layouts/javaapi/`，`DeluaApp` 首启提取到 `filesDir/layouts/`（存在即跳过）；布局预览/编辑器侧布局助手 UI 仍待单独立项（审计原结论不变）。
 
+> **2026-07-31 架构反转（依赖模型收口）**：本节 P1-4/5/7 与 P2-12 涉及的「全局仓库 + 物化同步」终态决策已被 `docs/DEPENDENCY_MODEL_AUDIT_REPORT.md` 方案 A **整体撤销并执行完毕**（无迁移兼容）：删除 `common/` 管理类（DependencyManager/LibraryRegistry/ModuleRegistry + 3 模型）、三个管理界面、4 条路由、2 个设置入口、init.lua `dependencies` 块语义、`run_materialize_failed` 物化链路与 51+2 条字符串，回归 AndroLua Pro「工程内自行管理」纯模型（样例 S1 缺陷自愈）。本报告 §13 结论保留历史原貌（含"统一管理层已通链"表述），已删除内容以 `PROGRESS.md` WP-009 与依赖模型审计报告为准。
+
 ---
 
 ## 13. 总结

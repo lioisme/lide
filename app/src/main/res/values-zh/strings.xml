@@ -23,8 +23,6 @@
     <string name="export_success">项目已导出为 .alp</string>
     <string name="export_failed">导出失败</string>
 
-    <!-- Run -->
-    <string name="run_materialize_failed">依赖准备失败</string>
 
     <!-- Settings sections -->
     <string name="settings">设置</string>
@@ -82,61 +80,10 @@
     <string name="plugin_version">v%1$s</string>
     <string name="plugin_version_author">v%1$s，作者 %2$s</string>
 
-    <!-- Libraries -->
-    <string name="library_manager">库管理</string>
-    <string name="library_manager_subtitle">管理已安装的 Java 库</string>
-    <string name="install_library">安装库</string>
-    <string name="no_libraries">暂无已安装的库</string>
-    <string name="library_hint">从存储中安装 JAR/DEX/SO 文件</string>
-    <string name="go_to_library_manager">管理库</string>
-    <string name="java_libraries">Java 库</string>
-    <string name="project_local_libs">项目本地 libs/</string>
-    <string name="lua_modules">Lua 模块</string>
-    <string name="module_manager">模块管理</string>
-    <string name="module_manager_subtitle">管理已安装的 Lua 模块</string>
-    <string name="install_module">安装模块</string>
-    <string name="install_module_files">安装 .lua 文件</string>
-    <string name="install_module_folder">安装文件夹</string>
-    <string name="no_modules">暂无已安装的模块</string>
-    <string name="module_hint">从存储中安装 .lua 文件</string>
-    <string name="go_to_module_manager">管理模块</string>
-    <string name="module_no_lua_files">未选择 .lua 文件</string>
-    <string name="module_folder_empty">所选文件夹中没有 .lua 文件</string>
-    <string name="module_installed">已安装模块 \'%1$s\'</string>
-    <string name="module_uninstalled">已卸载模块 \'%1$s\'</string>
-    <string name="module_files_label">文件（%1$d）：</string>
 
-    <!-- Manager common -->
-    <string name="library_installed">已安装库 \'%1$s\'</string>
-    <string name="library_uninstalled">已卸载库 \'%1$s\'</string>
-    <string name="uninstall_title">卸载 %1$s？</string>
-    <string name="library_uninstall_message">库 \"%1$s\"（v%2$s）将从公共存储移除。</string>
-    <string name="module_uninstall_message">模块 \"%1$s\"（v%2$s）将从公共存储移除。</string>
-    <string name="uninstall">卸载</string>
-    <string name="close">关闭</string>
-    <string name="version_label">版本：%1$s</string>
-    <string name="author_label">作者：%1$s</string>
-    <string name="size_label">大小：%1$s</string>
-    <string name="installed_label">安装于：%1$s</string>
-    <string name="size_mb">%1$d MB</string>
-    <string name="size_kb">%1$d KB</string>
-    <string name="size_bytes">%1$d 字节</string>
-    <string name="search_libraries">搜索库...</string>
-    <string name="search_modules">搜索模块...</string>
     <string name="cannot_read_file">无法读取文件</string>
-    <string name="install_failed">安装失败：%1$s</string>
-    <string name="uninstall_failed">卸载失败：%1$s</string>
     <string name="error_prefix">错误：%1$s</string>
 
-    <!-- Project dependencies -->
-    <string name="dependencies">依赖管理</string>
-    <string name="dependencies_title">依赖管理 — %1$s</string>
-    <string name="save_dependencies">保存</string>
-    <string name="dependencies_saved">依赖已保存</string>
-    <string name="dependencies_save_failed">保存依赖失败</string>
-    <string name="no_dep_available">暂无可用项</string>
-    <string name="project_local_none">（无）</string>
-    <string name="version_prefix">v%1$s</string>
 
     <!-- Project list -->
     <string name="project_delete">删除</string>

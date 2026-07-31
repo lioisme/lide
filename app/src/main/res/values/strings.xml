@@ -23,8 +23,6 @@
     <string name="export_success">Project exported as .alp</string>
     <string name="export_failed">Failed to export project</string>
 
-    <!-- Run -->
-    <string name="run_materialize_failed">Failed to prepare dependencies</string>
 
     <!-- Settings sections -->
     <string name="settings">Settings</string>
@@ -82,61 +80,10 @@
     <string name="plugin_version">v%1$s</string>
     <string name="plugin_version_author">v%1$s by %2$s</string>
 
-    <!-- Libraries -->
-    <string name="library_manager">Library Manager</string>
-    <string name="library_manager_subtitle">Manage installed Java libraries</string>
-    <string name="install_library">Install Library</string>
-    <string name="no_libraries">No libraries installed</string>
-    <string name="library_hint">Install JAR/DEX/SO files from storage</string>
-    <string name="go_to_library_manager">Manage Libraries</string>
-    <string name="java_libraries">Java Libraries</string>
-    <string name="project_local_libs">Project local libs/</string>
-    <string name="lua_modules">Lua Modules</string>
-    <string name="module_manager">Module Manager</string>
-    <string name="module_manager_subtitle">Manage installed Lua modules</string>
-    <string name="install_module">Install Module</string>
-    <string name="install_module_files">Install .lua files</string>
-    <string name="install_module_folder">Install folder</string>
-    <string name="no_modules">No modules installed</string>
-    <string name="module_hint">Install .lua files from storage</string>
-    <string name="go_to_module_manager">Manage Modules</string>
-    <string name="module_no_lua_files">No .lua files selected</string>
-    <string name="module_folder_empty">No .lua files in selected folder</string>
-    <string name="module_installed">Module \'%1$s\' installed</string>
-    <string name="module_uninstalled">Module \'%1$s\' uninstalled</string>
-    <string name="module_files_label">Files (%1$d):</string>
 
-    <!-- Manager common -->
-    <string name="library_installed">Library \'%1$s\' installed</string>
-    <string name="library_uninstalled">Library \'%1$s\' uninstalled</string>
-    <string name="uninstall_title">Uninstall %1$s?</string>
-    <string name="library_uninstall_message">Library \"%1$s\" (v%2$s) will be removed from common storage.</string>
-    <string name="module_uninstall_message">Module \"%1$s\" (v%2$s) will be removed from common storage.</string>
-    <string name="uninstall">Uninstall</string>
-    <string name="close">Close</string>
-    <string name="version_label">Version: %1$s</string>
-    <string name="author_label">Author: %1$s</string>
-    <string name="size_label">Size: %1$s</string>
-    <string name="installed_label">Installed: %1$s</string>
-    <string name="size_mb">%1$d MB</string>
-    <string name="size_kb">%1$d KB</string>
-    <string name="size_bytes">%1$d bytes</string>
-    <string name="search_libraries">Search libraries...</string>
-    <string name="search_modules">Search modules...</string>
     <string name="cannot_read_file">Cannot read file</string>
-    <string name="install_failed">Install failed: %1$s</string>
-    <string name="uninstall_failed">Uninstall failed: %1$s</string>
     <string name="error_prefix">Error: %1$s</string>
 
-    <!-- Project dependencies -->
-    <string name="dependencies">Dependencies</string>
-    <string name="dependencies_title">Dependencies — %1$s</string>
-    <string name="save_dependencies">Save</string>
-    <string name="dependencies_saved">Dependencies saved</string>
-    <string name="dependencies_save_failed">Failed to save dependencies</string>
-    <string name="no_dep_available">Nothing available</string>
-    <string name="project_local_none">(none)</string>
-    <string name="version_prefix">v%1$s</string>
 
     <!-- Project list -->
     <string name="project_delete">Delete</string>

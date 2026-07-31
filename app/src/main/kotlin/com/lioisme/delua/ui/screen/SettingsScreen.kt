@@ -42,7 +42,6 @@ import com.lioisme.delua.R
 import com.lioisme.delua.i18n.LocaleManager
 import com.lioisme.delua.ui.theme.*
 import androidx.compose.material.icons.filled.Extension
-import androidx.compose.material.icons.filled.LibraryBooks
 
 private val colorOptions = listOf(
     0xFFF44336, 0xFFE91E63, 0xFF9C27B0, 0xFF673AB7,
@@ -54,7 +53,7 @@ private val colorOptions = listOf(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen(onBack: () -> Unit, onPermissionsClick: () -> Unit = {}, onPluginsClick: () -> Unit = {}, onLibrariesClick: () -> Unit = {}, onModulesClick: () -> Unit = {}, onManualClick: () -> Unit = {}) {
+fun SettingsScreen(onBack: () -> Unit, onPermissionsClick: () -> Unit = {}, onPluginsClick: () -> Unit = {}, onManualClick: () -> Unit = {}) {
     val context = LocalContext.current
     val activity = context.resolveActivity()
     val config by SettingsManager.themeConfig.collectAsState()
@@ -169,18 +168,6 @@ fun SettingsScreen(onBack: () -> Unit, onPermissionsClick: () -> Unit = {}, onPl
                     title = stringResource(R.string.plugins),
                     subtitle = stringResource(R.string.plugins_subtitle),
                     onClick = onPluginsClick,
-                )
-                SettingsItem(
-                    icon = Icons.Default.LibraryBooks,
-                    title = stringResource(R.string.library_manager),
-                    subtitle = stringResource(R.string.library_manager_subtitle),
-                    onClick = onLibrariesClick,
-                )
-                SettingsItem(
-                    icon = Icons.Default.Extension,
-                    title = stringResource(R.string.module_manager),
-                    subtitle = stringResource(R.string.module_manager_subtitle),
-                    onClick = onModulesClick,
                 )
             }
         }

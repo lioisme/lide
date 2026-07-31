@@ -5,6 +5,3 @@ user_permission={
   "INTERNET",
   "WRITE_EXTERNAL_STORAGE",
 }
-dependencies = {
-    modules = {"dkjson"}
-}

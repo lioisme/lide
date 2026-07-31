@@ -3,46 +3,25 @@ package com.lioisme.delua.engine
 import android.app.Activity
 import android.content.Context
 import android.os.Build
-import android.os.Handler
-import android.os.Looper
-import android.widget.Toast
 import com.lioisme.delua.R
-import com.lioisme.delua.androlua.common.DependencyManager
 import com.lioisme.delua.androlua.engine.EngineBridge
-import java.util.concurrent.Executors
 
 /**
- * 运行入口：物化依赖后直接拉起 EngineActivity（全屏引擎界面），
- * 不经过任何宿主中间页。依赖物化失败时仅提示，不启动引擎。
+ * 运行入口：直接拉起 EngineActivity（全屏引擎界面），不经过任何宿主中间页。
+ * 依赖管理采用 AndroLua Pro 同款「工程内自行管理」模型——工程 libs/ 与 lua/
+ * 目录由用户自行维护，引擎经 LuaDexLoader.loadLibs / package.path 自动消费，
+ * 本类不做任何运行前物化或校验。
  */
 class RunEngineLauncher(private val context: Context) {
 
-    private val executor = Executors.newSingleThreadExecutor()
-    private val mainHandler = Handler(Looper.getMainLooper())
-
     fun launch(projectDir: String, mainFile: String = "main.lua", args: Array<Any?>? = null) {
-        executor.execute {
-            val ok = DependencyManager(context)
-                .materializeProjectDependencies(projectDir)
-                .isSuccess
-            mainHandler.post {
-                if (ok) {
-                    context.startActivity(
-                        EngineBridge(context).createEngineIntent(projectDir, mainFile, args)
-                    )
-                    // 经典推入式转场（与 Compose 页面转场同款）：引擎页从右推入，宿主向左退出。
-                    // Activity#overrideActivityTransition(OPEN) 的文档要求是「紧邻 startActivity 之后」调用，
-                    // 调用过早（startActivity 之前）在 API 34+ 上不生效，静默回退为默认转场。
-                    (context as? Activity)?.applyLaunchTransition()
-                } else {
-                    Toast.makeText(
-                        context,
-                        R.string.run_materialize_failed,
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
-        }
+        context.startActivity(
+            EngineBridge(context).createEngineIntent(projectDir, mainFile, args)
+        )
+        // 经典推入式转场（与 Compose 页面转场同款）：引擎页从右推入，宿主向左退出。
+        // Activity#overrideActivityTransition(OPEN) 的文档要求是「紧邻 startActivity 之后」调用，
+        // 调用过早（startActivity 之前）在 API 34+ 上不生效，静默回退为默认转场。
+        (context as? Activity)?.applyLaunchTransition()
     }
 
     /** 旧 API [Activity.overridePendingTransition] 自 API 34 起弃用，按版本分流。 */
