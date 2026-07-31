@@ -537,3 +537,20 @@ CI 包含四个 Job：
 - RunEngineLauncher 新增 createIntent（launcher 路径无转场动画，视觉回退已注释说明）。
 
 **验收**：设备 emulator-5554：ACC-1 运行 demo 返回编辑器无崩溃 ✅（Snackbar 为短时提示，链路与对话框同源已证）；ACC-2 含 local x=nil; print(x.y) 工程 → 宿主对话框 + 「跳到出错行」定位第 3 行 ✅；ACC-3 nil global 'http' → 「插入 import "http"」按钮，点击后 main.lua 顶部插入并写盘 ✅；ACC-4 2 万行输出（>200KB 截断线）返回不崩溃 ✅（10 万行极端场景触发 androlua LuaObject.finalize watchdog 崩溃，属引擎固有 GC 极限，非本工作包范围）；ACC-5 运行中 back 返回宿主不崩 ✅；单测 7/7 + 全仓单测绿；:app:compileArm64DebugKotlin ✅；:editor R1 门禁零命中 ✅。
+
+---
+
+## 工作单 WP-004：工程属性页 + 抽屉工程名刷新（已完成）
+
+**目标**：按 docs/PARITY_COMPLETION_WORK_ORDER.md WP-004 提供工程属性（init.lua 元数据）编辑页，保存后抽屉工程名即时刷新；同时修复桌面抽屉顶部内容被顶栏裁剪的显示 bug。
+
+**完成内容**：
+- **ProjectInfoScreen（:app 新增）**：读取/回写 init.lua 全字段（appname/appver/appcode/appsdk/path_pattern/packagename/theme/app_key/app_channel/developer/description/debugmode/user_permission）。`LuaConfigParser.quoteLuaString()` 实现 Lua `%q` 等价转义（`\"` `\\` `\n` `\r` `\t` + 控制字符 `\u{XX}`）；setField 全字段串行保存（测试复现验证无 bug）；README 字段缺失时 Field?→String fallback + 非根 rootField 重载。
+- **抽屉工程名即时刷新**：DrawerContent `remember(project, projectInfoVersion)` 重读 init.lua appname；保存后版本自增驱动更新（load 为 remember 不随 edits 重跑）。
+- **抽屉裁剪修复（本轮核心 bug）**：`ModalNavigationDrawer` 从 Scaffold content 槽移至 Scaffold **外层**。根因：Scaffold 顶栏 z 序高于 content，抽屉放 content 内时顶栏（0..352px，状态栏 96 + TopAppBar 256）把抽屉顶部 ~256px 完全盖住——640dpi 模拟器（1440x2560 = 360dp 宽）sheet 全宽、scrim 不可见，现象为「抽屉顶部缺失」。修复后 sheet+scrim 覆盖整屏（含顶栏），工程名/路径/按钮/文件树全量可见。定位手段：彩色标记盒逐槽位像素扫描 + uiautomator bounds 交叉验证（path@352 恰为顶栏底）。
+- **PermissionCatalog.kt（:app 新增）**：共享权限清单，PermissionScreen 引用。
+- **LuaConfigParserTest（:androlua 新增）**：quote 转义 / setField / setStringArrayField / 注释保留 / 追加字段等 10+ 例全绿。
+
+**验收**：设备 emulator-5554（x64 / API 34）：ACC-1 工程属性页打开读取 README+init.lua ✅；ACC-2 保存后 init.lua 完整状态回写（含 current=0）并重置编辑态 ✅；ACC-3 保存后抽屉工程名即时更新为 appname ✅；ACC-4 抽屉打开后工程名（@y=160）/路径/权限按钮/文件树全部可见（uiautomator bounds 验证，截图归档 `%TEMP%\delua-verify\wp004-drawer-fixed.png`）✅；ACC-5 单测 3 模块全绿（:app:testX64DebugUnitTest :editor:testDebugUnitTest :androlua:testDebugUnitTest）✅；:app:compileArm64DebugKotlin ✅、:app:assembleX64Debug ✅；:editor R1 门禁零命中 ✅。
+
+**剩余**：无强制项。
