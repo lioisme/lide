@@ -39,8 +39,8 @@ class AlpManager(private val context: Context) {
             return null
         }
         val initContent = ZipUtil.readEntryText(file, "init.lua")
-        val kind = resolveKind(file.name, initContent)
-        val name = resolveName(file.name, initContent)
+        val kind = AlpNaming.resolveKind(file.name, initContent)
+        val name = AlpNaming.resolveName(file.name, initContent)
         val targetDir = resolveTargetDir(kind, name)
         return if (ZipUtil.unzip(file, targetDir)) {
             AlpImportResult(targetDir.absolutePath, kind)
@@ -84,17 +84,8 @@ class AlpManager(private val context: Context) {
 
     /**
      * 目录名（pro importx:1153 同款规则）：优先 init.lua 的 appname，
-     * 否则取文件名去扩展名后截断到首个 `.`/`_`。
+     * 否则取文件名去扩展名后截断到首个 `.`/`_`。同名时按 [AlpNaming.dedupeName] 追加 -1/-2。
      */
-    private fun resolveName(alpFileName: String, initContent: String?): String {
-        val appName = initContent?.let {
-            Regex("""(?m)^\s*appname\s*=\s*"([^"]*)"\s*$""").find(it)?.groupValues?.get(1)
-        }
-        if (!appName.isNullOrBlank()) return appName
-        val base = alpFileName.substringBeforeLast('.')
-        return base.substringBefore('.').substringBefore('_').ifBlank { "imported" }
-    }
-
     private fun resolveTargetDir(kind: AlpKind, name: String): File {
         val luaExtDir = LuaApplication.getInstance().luaExtDir
         val subDir = if (kind == AlpKind.PLUGIN) "plugin" else "project"

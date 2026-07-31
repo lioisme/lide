@@ -341,7 +341,14 @@ object LuaDiagnostics {
                                     wordIs(source, wordStart, len, "if") -> stack.addLast(Frame("if", lineNo))
                                     wordIs(source, wordStart, len, "for") -> stack.addLast(Frame("for", lineNo))
                                     wordIs(source, wordStart, len, "while") -> stack.addLast(Frame("while", lineNo))
-                                    wordIs(source, wordStart, len, "do") -> stack.addLast(Frame("do", lineNo))
+                                    wordIs(source, wordStart, len, "do") -> {
+                                        // `for ... do` / `while ... do` 的 do 与 for/while 共享同一个 end，
+                                        // 不重复压栈（`while x do ... end` 只有一个 end）；独立的 do 块压栈。
+                                        val top = stack.lastOrNull()
+                                        if (top?.kind != "for" && top?.kind != "while") {
+                                            stack.addLast(Frame("do", lineNo))
+                                        }
+                                    }
                                     wordIs(source, wordStart, len, "function") -> stack.addLast(Frame("function", lineNo))
                                     wordIs(source, wordStart, len, "repeat") -> stack.addLast(Frame("repeat", lineNo))
                                     wordIs(source, wordStart, len, "then") -> {
@@ -353,6 +360,14 @@ object LuaDiagnostics {
                                         if (top != null && top.kind in BLOCK_KINDS) {
                                             stack.removeLast()
                                         } else {
+                                            val bracket = stack.lastOrNull { it.kind.startsWith("bracket:") }
+                                            if (bracket != null) {
+                                                return ScanResult(
+                                                    mode,
+                                                    bracket.line,
+                                                    "未闭合的 '${bracket.kind.removePrefix("bracket:")}'",
+                                                )
+                                            }
                                             return ScanResult(mode, lineNo, "多余的 'end'")
                                         }
                                     }
@@ -361,6 +376,14 @@ object LuaDiagnostics {
                                         if (top?.kind == "repeat") {
                                             stack.removeLast()
                                         } else {
+                                            val bracket = stack.lastOrNull { it.kind.startsWith("bracket:") }
+                                            if (bracket != null) {
+                                                return ScanResult(
+                                                    mode,
+                                                    bracket.line,
+                                                    "未闭合的 '${bracket.kind.removePrefix("bracket:")}'",
+                                                )
+                                            }
                                             return ScanResult(mode, lineNo, "多余的 'until'")
                                         }
                                     }

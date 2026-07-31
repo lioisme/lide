@@ -36,6 +36,27 @@ jobs:
       - name: Run lint
         run: ./gradlew lintArm64Debug
 
+  unit-test:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Run JVM unit tests
+        run: ./gradlew :app:testX64DebugUnitTest :editor:testDebugUnitTest
+
   build-arm64:
     name: Build ARM64 APK
     runs-on: ubuntu-latest

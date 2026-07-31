@@ -24,6 +24,11 @@ android {
     buildFeatures {
         compose = true
     }
+
+    testOptions {
+        // JVM 单测：android.util.Log 等桩方法返回默认值（不加载设备类）。
+        unitTests.isReturnDefaultValues = true
+    }
 }
 
 repositories {
@@ -47,4 +52,6 @@ dependencies {
     implementation("io.github.rosemoe:editor:0.24.6")
     // TextMate 语法高亮支持
     implementation("io.github.rosemoe:language-textmate:0.24.6")
+
+    testImplementation("junit:junit:4.13.2")
 }
