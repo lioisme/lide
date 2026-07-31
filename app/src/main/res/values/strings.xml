@@ -71,6 +71,11 @@
     <string name="perm_project_empty">This project declares no user_permission in init.lua</string>
     <string name="drawer_permissions">Project Permissions</string>
     <string name="run_permission_denied_hint">%1$d permission(s) denied - running anyway</string>
+    <string name="run_finished">Run finished</string>
+    <string name="run_error_title">Run error</string>
+    <string name="run_jump_to_line">Jump to error line</string>
+    <string name="run_insert_import">Insert import \"%1$s\"</string>
+    <string name="run_import_suggestion">Tip: try import \"%1$s\"</string>
 
     <!-- Plugins -->
     <string name="plugins">Plugins</string>

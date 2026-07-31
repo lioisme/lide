@@ -2,6 +2,7 @@ package com.lioisme.delua.engine
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import com.lioisme.delua.R
 import com.lioisme.delua.androlua.engine.EngineBridge
@@ -15,13 +16,19 @@ import com.lioisme.delua.androlua.engine.EngineBridge
 class RunEngineLauncher(private val context: Context) {
 
     fun launch(projectDir: String, mainFile: String = "main.lua", args: Array<Any?>? = null) {
-        context.startActivity(
-            EngineBridge(context).createEngineIntent(projectDir, mainFile, args)
-        )
+        context.startActivity(createIntent(projectDir, mainFile, args))
         // 经典推入式转场（与 Compose 页面转场同款）：引擎页从右推入，宿主向左退出。
         // Activity#overrideActivityTransition(OPEN) 的文档要求是「紧邻 startActivity 之后」调用，
         // 调用过早（startActivity 之前）在 API 34+ 上不生效，静默回退为默认转场。
         (context as? Activity)?.applyLaunchTransition()
+    }
+
+    /**
+     * 构建引擎 Intent（WP-002：宿主经 ActivityResult 通道启动以便收取运行结果，
+     * 转场动画在经 launcher 启动的路径下不生效——ActivityResult 时机不可插桩，属可接受的视觉回退）。
+     */
+    fun createIntent(projectDir: String, mainFile: String = "main.lua", args: Array<Any?>? = null): Intent {
+        return EngineBridge(context).createEngineIntent(projectDir, mainFile, args)
     }
 
     /** 旧 API [Activity.overridePendingTransition] 自 API 34 起弃用，按版本分流。 */

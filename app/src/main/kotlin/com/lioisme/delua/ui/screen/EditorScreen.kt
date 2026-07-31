@@ -11,6 +11,8 @@ import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
@@ -25,6 +27,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.lioisme.delua.R
 import com.lioisme.delua.androlua.PermissionResolver
+import com.lioisme.delua.engine.EngineActivity
+import com.lioisme.delua.engine.EngineResultParser
+import com.lioisme.delua.engine.RunEngineLauncher
 import com.lioisme.delua.editor.EditorConfig
 import com.lioisme.delua.editor.EditorTab
 import com.lioisme.delua.editor.EditorTabs
@@ -49,6 +54,12 @@ import kotlinx.coroutines.withContext
 import java.io.File
 
 private const val AUTO_SAVE_DELAY_MS = 500L
+
+/** WP-002 引擎运行结果（宿主展示用）。 */
+private data class RunResult(
+    val output: String,
+    val location: EngineResultParser.ErrorLocation?,
+)
 
 /**
  * 编辑器页面（会话驱动）。
@@ -87,6 +98,7 @@ fun EditorScreen(
     val content by session.selectedContent.collectAsState()
 
     val editorRef = remember { mutableStateOf<CodeEditor?>(null) }
+    val snackbarHostState = remember { SnackbarHostState() }
     // 非 saveable 抽屉状态：抽屉必须每次进入页面均为关闭态。
     // rememberDrawerState 是 rememberSaveable 实现（Saver 保存 currentValue），
     // 转屏/进程重建会把 Open 复活并产生可见「展开→收起」闪烁，故此处用官方裸构造。
@@ -111,10 +123,69 @@ fun EditorScreen(
     // WP-003 运行前权限门：工程 init.lua 声明而尚未授予的运行时权限，
     // 经系统对话框一次性请求；回调里无论授予与否都继续运行（pro 行为：
     // 拒绝仅 Toast 提示，不阻断脚本执行）。
+
+    // WP-002 运行诊断闭环状态：引擎返回结果（成功 Snackbar / 失败对话框）。
+    var runResult by remember { mutableStateOf<RunResult?>(null) }
+    var snackbarMsg by remember { mutableStateOf<String?>(null) }
+    // 跳行/插入 import 的待执行标记：编辑器绑定目标文件后消费。
+    var pendingGotoLine by remember { mutableStateOf<Int?>(null) }
+    var pendingImportGlobal by remember { mutableStateOf<String?>(null) }
+
+    val engineResultLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        val data = result.data
+        val output = data?.getStringExtra(EngineActivity.EXTRA_OUTPUT) ?: ""
+        val isError = data?.getBooleanExtra(EngineActivity.EXTRA_ERROR, false) == true ||
+            EngineResultParser.isErrorOutput(output)
+        if (isError) {
+            runResult = RunResult(output, EngineResultParser.findErrorLocation(output))
+        } else {
+            snackbarMsg = context.getString(R.string.run_finished)
+        }
+    }
+
     val doRun: () -> Unit = {
         scope.launch {
             session.flushSelectedDirty()
-            onRun(project.mainFile)
+            engineResultLauncher.launch(
+                RunEngineLauncher(context).createIntent(project.path, project.mainFile)
+            )
+        }
+    }
+
+    // 跳行：等待编辑器绑定到目标文件后定位（sora setSelection 0 基行号，自动滚动）。
+    LaunchedEffect(pendingGotoLine) {
+        val line = pendingGotoLine ?: return@LaunchedEffect
+        while (editorRef.value == null) {
+            delay(16)
+        }
+        val editor = editorRef.value
+        if (editor != null) {
+            val last = (editor.text.lineCount - 1).coerceAtLeast(0)
+            editor.setSelection(line.coerceIn(0, last), 0)
+            editor.requestFocus()
+        }
+        pendingGotoLine = null
+    }
+
+    fun jumpToError() {
+        val loc = runResult?.location ?: run { runResult = null; return }
+        runResult = null
+        scope.launch {
+            session.openTab(loc.file)
+            pendingGotoLine = loc.line - 1
+        }
+    }
+
+    fun insertImport(globalName: String) {
+        val target = runResult?.location?.file ?: project.mainFile
+        runResult = null
+        scope.launch {
+            session.openTab(target)
+            val content = session.selectedContent.value ?: return@launch
+            content.insert(0, 0, "import \"$globalName\"\n")
+            session.onContentModified()
         }
     }
 
@@ -156,6 +227,13 @@ fun EditorScreen(
             delay(AUTO_SAVE_DELAY_MS)
             if (!extPermissionMissing.value) session.flushSelectedDirty()
         }
+    }
+
+    // 运行结束提示（成功路径）：Snackbar 一次性消费。
+    LaunchedEffect(snackbarMsg) {
+        val msg = snackbarMsg ?: return@LaunchedEffect
+        snackbarMsg = null
+        snackbarHostState.showSnackbar(msg)
     }
 
     fun getSearcher(): EditorSearcher? = editorRef.value?.getSearcher()
@@ -212,7 +290,10 @@ fun EditorScreen(
                     onSearch = { isSearchVisible = true },
                     showDrawerToggle = !isWide,
                 )
-            }
+            },
+            snackbarHost = {
+                SnackbarHost(hostState = snackbarHostState)
+            },
         ) { padding ->
             // 抽屉策略：宽屏常驻并排（顶栏隐藏汉堡键）；窄屏经典 Modal 侧边抽屉。
             NavigationDrawerPanel(
@@ -296,6 +377,56 @@ fun EditorScreen(
                 },
                 dismissButton = {
                     TextButton(onClick = { closeQueue = emptyList() }) {
+                        Text(stringResource(R.string.cancel))
+                    }
+                },
+            )
+        }
+
+        // WP-002 运行结果对话框：失败时展示错误文本 + 跳行 / import 建议。
+        val result = runResult
+        if (result != null) {
+            val nilGlobal = EngineResultParser.findNilGlobal(result.output)
+            AlertDialog(
+                onDismissRequest = { runResult = null },
+                title = { Text(stringResource(R.string.run_error_title)) },
+                text = {
+                    Column {
+                        Text(
+                            result.output,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .heightIn(max = 280.dp)
+                                .verticalScroll(rememberScrollState()),
+                        )
+                        if (nilGlobal != null) {
+                            Spacer(Modifier.height(8.dp))
+                            Text(
+                                stringResource(R.string.run_import_suggestion, nilGlobal),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.primary,
+                            )
+                        }
+                    }
+                },
+                confirmButton = {
+                    Row {
+                        if (result.location != null) {
+                            TextButton(onClick = { jumpToError() }) {
+                                Text(stringResource(R.string.run_jump_to_line))
+                            }
+                        }
+                        if (nilGlobal != null) {
+                            TextButton(onClick = { insertImport(nilGlobal) }) {
+                                Text(stringResource(R.string.run_insert_import, nilGlobal))
+                            }
+                        }
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { runResult = null }) {
                         Text(stringResource(R.string.cancel))
                     }
                 },

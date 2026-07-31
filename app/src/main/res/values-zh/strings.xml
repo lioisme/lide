@@ -71,6 +71,11 @@
     <string name="perm_project_empty">该工程在 init.lua 中未声明 user_permission</string>
     <string name="drawer_permissions">工程权限</string>
     <string name="run_permission_denied_hint">已拒绝 %1$d 项权限，继续运行</string>
+    <string name="run_finished">运行结束</string>
+    <string name="run_error_title">运行出错</string>
+    <string name="run_jump_to_line">跳到出错行</string>
+    <string name="run_insert_import">插入 import \"%1$s\"</string>
+    <string name="run_import_suggestion">提示：可尝试 import \"%1$s\"</string>
 
     <!-- Plugins -->
     <string name="plugins">插件</string>

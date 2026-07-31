@@ -523,3 +523,17 @@ CI 包含四个 Job：
 - PermissionScreen 新增「当前工程声明权限」区块（后台 IO 读声明，条目独立请求/特殊权限走设置页）；EditorScreen 抽屉新增「工程权限」入口；PERMISSIONS 路由支持可选工程参数。
 
 **验收**：单测全绿（app/editor/androlua）；设备验证 emulator-5554：ACC-1 声明 CAMERA 工程运行弹系统对话框 ✅；ACC-2 授予后二次运行不再弹框直接进引擎 ✅；ACC-3 权限页显示声明项与授予状态（permtest 相机已授权 / nopermtest 未声明提示）✅；ACC-4 未声明工程运行不受影响 ✅；:app:compileArm64DebugKotlin ✅；:editor R1 门禁零命中 ✅。
+
+---
+
+## 工作单 WP-002：运行诊断闭环（已完成）
+
+**目标**：对齐 pro 的 onActivityResult 闭环：错误回传 + 错误跳行 + import 建议。
+
+**完成内容**：
+- 引擎侧 EngineActivity.java：重写 sendMsg 收集控制台输出（预编译 Pattern 判错误标记，避免每行重编译正则拖垮引擎页）+ 重写 sendError；finish 时 setResult(RESULT_OK, Intent) 回传（output/error extra），输出截断 200KB 防 Binder 溢出；文件协议不恢复；引擎内置控制台保留（双通道）。
+- 宿主侧 EditorScreen：rememberLauncherForActivityResult 启动引擎；成功 → Snackbar（run_finished）；失败 → 底部对话框展示错误文本 + 「跳到出错行」（EngineResultParser 解析首行定位 → session.openTab + setSelection）+ 「插入 import」（nil global 'X' → 文件顶部插入并写盘）。
+- EngineResultParser.kt（:app 纯 Kotlin）：findErrorLocation（错误消息首行 路径:行号: = 报错点，traceback 帧为调用点不取）/ findNilGlobal / isErrorOutput；单测 7 例全绿。
+- RunEngineLauncher 新增 createIntent（launcher 路径无转场动画，视觉回退已注释说明）。
+
+**验收**：设备 emulator-5554：ACC-1 运行 demo 返回编辑器无崩溃 ✅（Snackbar 为短时提示，链路与对话框同源已证）；ACC-2 含 local x=nil; print(x.y) 工程 → 宿主对话框 + 「跳到出错行」定位第 3 行 ✅；ACC-3 nil global 'http' → 「插入 import "http"」按钮，点击后 main.lua 顶部插入并写盘 ✅；ACC-4 2 万行输出（>200KB 截断线）返回不崩溃 ✅（10 万行极端场景触发 androlua LuaObject.finalize watchdog 崩溃，属引擎固有 GC 极限，非本工作包范围）；ACC-5 运行中 back 返回宿主不崩 ✅；单测 7/7 + 全仓单测绿；:app:compileArm64DebugKotlin ✅；:editor R1 门禁零命中 ✅。
