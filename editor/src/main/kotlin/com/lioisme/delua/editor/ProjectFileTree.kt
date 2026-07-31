@@ -2,14 +2,17 @@ package com.lioisme.delua.editor
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Description
@@ -78,7 +81,11 @@ fun ProjectFileTree(
         return
     }
 
-    LazyColumn(modifier = modifier.fillMaxSize()) {
+    LazyColumn(
+        modifier = modifier
+            .fillMaxSize()
+            .horizontalScroll(rememberScrollState()),
+    ) {
         items(rows, key = { it.node.path }) { row ->
             TreeRowItem(
                 row = row,
@@ -118,6 +125,7 @@ private fun TreeRowItem(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
+            .widthIn(min = 248.dp)
             .background(background)
             .clickable(onClick = onClick)
             .padding(start = (12 + row.depth * 14).dp, end = 12.dp)

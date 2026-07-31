@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.Settings
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
@@ -57,7 +58,6 @@ fun EditorScreen(
     projectManager: ProjectManager,
     onBack: () -> Unit,
     onRun: (fileName: String) -> Unit,
-    onDependencies: () -> Unit = {},
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -74,7 +74,9 @@ fun EditorScreen(
 
     var treeRoot by remember { mutableStateOf<FileNode?>(null) }
     var isSearchVisible by remember { mutableStateOf(false) }
-    var pendingCloseFile by remember { mutableStateOf<String?>(null) }
+    // 脏文件待确认队列：单标签关闭时为单元素列表；「关闭其他/全部」时为批量队列，
+    // 逐个确认后经 saveAndClose/discardAndClose 出队，取消即放弃剩余批次。
+    var closeQueue by remember { mutableStateOf<List<String>>(emptyList()) }
 
     val extPermissionMissing = remember {
         mutableStateOf(!hasStoragePermission(context))
@@ -91,6 +93,12 @@ fun EditorScreen(
         treeRoot = withContext(Dispatchers.IO) { projectManager.listProjectTree(project) }
     }
 
+    // 防御性归位：Material3 的 rememberDrawerState 为 saveable 实现，若 back-stack entry 恢复时
+    // 残留 Open 值（历史版本缺陷触发链），静默关闭；已关闭时为 no-op。
+    LaunchedEffect(Unit) {
+        drawerState.close()
+    }
+
     // 自动保存：500ms 防抖。editTick 为 StateFlow，收集过程不触发重组。
     LaunchedEffect(Unit) {
         session.editTick.collectLatest {
@@ -105,10 +113,9 @@ fun EditorScreen(
         if (node.isDirectory) return
         val prefix = project.path + File.separator
         val relative = if (node.path.startsWith(prefix)) node.path.removePrefix(prefix) else node.name
-        scope.launch {
-            session.openTab(relative)
-            drawerState.close()
-        }
+        // 抽屉关闭与文件打开互不依赖：关闭立即执行（杜绝「IO 期间敞开」窗口），打开保持原异步语义。
+        scope.launch { drawerState.close() }
+        scope.launch { session.openTab(relative) }
     }
 
     val selectedTab = tabs.firstOrNull { it.fileName == selectedFile }
@@ -126,10 +133,16 @@ fun EditorScreen(
                 } else false
             }
     ) {
+        // 经典抽屉返回契约：抽屉打开时系统返回键先关抽屉（条件注册，关闭时返回事件归 NavHost，
+        // 避免与 navigation-compose 2.8.5 的预测性返回竞争）；再按一次才退出编辑器。
+        BackHandler(enabled = drawerState.isOpen) {
+            scope.launch { drawerState.close() }
+        }
+
         ModalNavigationDrawer(
             drawerState = drawerState,
-            // 关闭手势，避免与编辑器触摸交互冲突（仅工具栏汉堡键开合）。
-            gesturesEnabled = false,
+            // 打开状态可拖拽关闭；不启用边缘滑开（避免与编辑器触摸交互冲突）。
+            gesturesEnabled = drawerState.isOpen,
             drawerContent = {
                 ModalDrawerSheet {
                     Column(Modifier.fillMaxSize()) {
@@ -174,7 +187,11 @@ fun EditorScreen(
                             session.flushSelectedDirtyAsync()
                             onBack()
                         },
-                        onToggleDrawer = { scope.launch { drawerState.open() } },
+                        onToggleDrawer = {
+                            scope.launch {
+                                if (drawerState.isOpen) drawerState.close() else drawerState.open()
+                            }
+                        },
                         onUndo = { editorRef.value?.undo() },
                         onRedo = { editorRef.value?.redo() },
                         onRun = {
@@ -184,7 +201,6 @@ fun EditorScreen(
                             }
                         },
                         onSearch = { isSearchVisible = true },
-                        onDependencies = onDependencies,
                     )
                 }
             ) { padding ->
@@ -199,7 +215,16 @@ fun EditorScreen(
                             selectedFile = selectedFile,
                             onTabClick = { session.select(it) },
                             onTabClose = { file ->
-                                if (session.requestClose(file)) pendingCloseFile = file
+                                if (session.requestClose(file)) closeQueue = listOf(file)
+                            },
+                            onTabMoved = { from, to -> session.moveTab(from, to) },
+                            onCloseOthers = { file ->
+                                val dirty = session.closeOthers(file)
+                                if (dirty.isNotEmpty()) closeQueue = dirty
+                            },
+                            onCloseAll = {
+                                val dirty = session.closeAll()
+                                if (dirty.isNotEmpty()) closeQueue = dirty
                             },
                             modifier = Modifier.fillMaxWidth(),
                         )
@@ -267,10 +292,10 @@ fun EditorScreen(
             }
         }
 
-        val pendingFile = pendingCloseFile
+        val pendingFile = closeQueue.firstOrNull()
         if (pendingFile != null) {
             AlertDialog(
-                onDismissRequest = { pendingCloseFile = null },
+                onDismissRequest = { closeQueue = emptyList() },
                 title = { Text(stringResource(R.string.close_file_title)) },
                 text = { Text(stringResource(R.string.close_file_message, pendingFile)) },
                 confirmButton = {
@@ -278,7 +303,7 @@ fun EditorScreen(
                         TextButton(
                             onClick = {
                                 session.discardAndClose(pendingFile)
-                                pendingCloseFile = null
+                                closeQueue = closeQueue.drop(1)
                             }
                         ) {
                             Text(stringResource(R.string.discard))
@@ -286,7 +311,7 @@ fun EditorScreen(
                         TextButton(
                             onClick = {
                                 session.saveAndClose(pendingFile)
-                                pendingCloseFile = null
+                                closeQueue = closeQueue.drop(1)
                             }
                         ) {
                             Text(stringResource(R.string.save))
@@ -294,7 +319,7 @@ fun EditorScreen(
                     }
                 },
                 dismissButton = {
-                    TextButton(onClick = { pendingCloseFile = null }) {
+                    TextButton(onClick = { closeQueue = emptyList() }) {
                         Text(stringResource(R.string.cancel))
                     }
                 },

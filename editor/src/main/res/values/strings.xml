@@ -10,12 +10,14 @@
     <string name="regex">Regex</string>
 
     <!-- Editor toolbar -->
-    <string name="menu_more">More</string>
-    <string name="menu_dependencies">Dependencies</string>
 
     <!-- Editor tabs -->
     <string name="cd_close_tab">Close tab</string>
     <string name="cd_toggle_tree">Toggle file tree</string>
+    <string name="dirty_marker">• </string>
+    <string name="menu_close_tab">Close</string>
+    <string name="menu_close_others">Close Others</string>
+    <string name="menu_close_all">Close All</string>
 
     <!-- File tree -->
     <string name="file_tree_empty">No files</string>

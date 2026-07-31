@@ -1,22 +1,15 @@
 package com.lioisme.delua.editor
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Redo
 import androidx.compose.material.icons.automirrored.filled.Undo
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Inventory2
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -34,10 +27,8 @@ fun EditorToolbar(
     onRedo: () -> Unit,
     onRun: () -> Unit,
     onSearch: () -> Unit = {},
-    onDependencies: () -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
-    var showMenu by remember { mutableStateOf(false) }
     TopAppBar(
         title = {
             Text(
@@ -71,18 +62,6 @@ fun EditorToolbar(
             }
             IconButton(onClick = onRun) {
                 Icon(Icons.Default.PlayArrow, contentDescription = stringResource(R.string.cd_run))
-            }
-            Box {
-                IconButton(onClick = { showMenu = true }) {
-                    Icon(Icons.Default.MoreVert, contentDescription = stringResource(R.string.menu_more))
-                }
-                DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
-                    DropdownMenuItem(
-                        text = { Text(stringResource(R.string.menu_dependencies)) },
-                        onClick = { showMenu = false; onDependencies() },
-                        leadingIcon = { Icon(Icons.Default.Inventory2, null) },
-                    )
-                }
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(
