@@ -27,6 +27,8 @@ fun EditorToolbar(
     onRedo: () -> Unit,
     onRun: () -> Unit,
     onSearch: () -> Unit = {},
+    // 宽屏常驻抽屉场景下汉堡键无意义（抽屉恒可见），由宿主注入关闭。
+    showDrawerToggle: Boolean = true,
     modifier: Modifier = Modifier,
 ) {
     TopAppBar(
@@ -39,8 +41,10 @@ fun EditorToolbar(
         },
         navigationIcon = {
             Row {
-                IconButton(onClick = onToggleDrawer) {
-                    Icon(Icons.Default.Menu, contentDescription = stringResource(R.string.cd_toggle_tree))
+                if (showDrawerToggle) {
+                    IconButton(onClick = onToggleDrawer) {
+                        Icon(Icons.Default.Menu, contentDescription = stringResource(R.string.cd_toggle_tree))
+                    }
                 }
                 IconButton(onClick = onBack) {
                     Icon(
