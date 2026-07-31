@@ -376,6 +376,44 @@ CI 包含四个 Job：
 
 ---
 
+## WP-008：AndroLua 全量一致性审计收口（P0/P1/P2 全部完成）
+
+**目标**：按 `docs/ANDROLUA_PARITY_FULL_AUDIT_REPORT.md` §12 行动项（P0-1~3、P1-4~9、P2-10~14）完成 delua 工程/库/插件/模块系统与 pro 生态的一致性收口。全部通过 `:app:compileArm64DebugKotlin` 与 `:app:assembleArm64Debug`。
+
+**完成内容**：
+
+### P0 插件系统（3/3）
+- **P0-1 插件入口语义**：`PluginManager.PluginInfo.main` 默认 `init.lua`→`main.lua`（data class + optString 两处）；`assets/plugin/plugin.json` main 同步修正。
+- **P0-2 插件上下文参数**：`EngineBridge` 新增 `EXTRA_SCRIPT_ARGS="arg"`（对齐 LuaActivity `ARG` 键）+ `createEngineIntent(projectDir, mainFile, args)`；`RunEngineLauncher.launch` 透传；插件运行传 `(plugin.dir, plugin.dir/main)` 作为 `{luadir, luapath}`。
+- **P0-3 .alp mode 分流**：`ZipUtil` 重写（`safeEntryName` zip-slip 防护 + `readEntryText`）；`AlpManager` 重写（`AlpKind{PROJECT,PLUGIN}`、`import(File/Uri)`、`resolveKind`：init.lua `mode="plugin"` 或文件名 `*_plugin`、目标名 = appname 或去扩展名截断）；`MainActivity` 导入后按 kind 分流，插件跳转插件列表。
+
+### P1 库/模块管理面（6/6）
+- **P1-4 .so 入仓**：`LibraryRegistry.findArtifactFile` 认 `.so`；安装命名 `lib<name>.so`（libsloader `luaopen_<name>` 命中）；重装先删旧构件；`getLocalLibFiles` 支持 .so。
+- **P1-5 物化清理**：`.delua-materialized.json` 清单（canonical 守卫 + pruneEmptyParents），取消声明/换版后同步删除残留。
+- **P1-6 registry.json 收口**：registry 概念整体移除（字段 + read/write/update 删除）。
+- **P1-7 模块子目录**：`installModule` 递归收集 `.lua` 按相对路径入仓；物化落 `<project>/lua/<rel>` 与 `<project>/lua/<name>/`；新增 `installModuleFromFiles`；`ModuleRegistry.readMetadata` files 缺失回退磁盘重列。
+- **P1-8 示例防覆盖**：`extractSamples` 存在即跳过；新增 `extractExamplePlugin`（plugin.json + main.lua → `plugin/example/`）。
+- **P1-9 delua.json 收口**：读路径 + 包装方法删除，依赖声明单一事实源 = init.lua `dependencies` 块；`Project.dependencies` 字段删除。
+
+### P2 生态/工程化（5/5）
+- **P2-10 打包决策**：v1.0 明确暂不支持独立 APK 打包，理由与后续平移机制写入 `WHITEPAPER.md` 阶段四。
+- **P2-11 zip 防护 + 结构化替换**：见 P0-3；`replaceDependenciesBlock` 改为 `findDependenciesBlock` 结构化扫描（跳过字符串/注释/长括号 + 花括号配平）。
+- **P2-12 死代码 + i18n**：清理 `loadedPlugins`、`DependencyManager` 只读函数、`AlpManager.export(File)`、`ProjectManager` delua.json 方法、`Project.dependencies`；**deleteProject 接入 UI**（工程长按 → 确认对话框）；插件/库/模块/依赖/工程列表文案全部 strings.xml 化（含 values-zh），ProjectDependenciesScreen 乱码修复。
+- **P2-13 单进程口径**：AGENTS.md R2 改为"EngineBridge → EngineActivity，同进程运行"。
+- **P2-14 布局助手资产**：pro `javaapi/*.aly`（clayout/layout/mlayout）→ `app/src/main/assets/layouts/javaapi/`，首启提取 `filesDir/layouts/`（存在即跳过）；布局预览 UI 留待单独立项。
+
+### 其它
+- `app/build.gradle.kts` 新增 `androidx.documentfile:documentfile:1.0.1`（SAF 文件夹安装模块）。
+- `ModuleManagerScreen` 全量重写：搜索/详情/卸载 + 双安装入口（文件多选 / 文件夹树，SAF 递归复制）；`LibraryManagerScreen`/`PluginScreen` i18n 与空态。
+
+**修复的编译问题**：DependencyManager `const val` 类内声明与 `regionMatches` 参数错误；DeluaApp KDoc 内 `javaapi/*.aly` 的 `/*` 触发 Kotlin 块注释嵌套导致文件尾被吞；ProjectDependenciesScreen 历史遗留多余闭括号；MainActivity `parentFile` 空安全与 `findProjectDir` 循环判空警告。
+
+**验收**：`:app:compileArm64DebugKotlin` ✅、`:app:assembleArm64Debug` ✅（BUILD SUCCESSFUL）、`:editor` R1 边界 grep 零命中 ✅。
+
+**剩余**：真机回归（.alp 插件导入、插件运行 `{luadir, luapath}`、.so 库 import、SAF 文件夹安装、删除工程）待设备验证。
+
+---
+
 ## 整体验收状态
 
 | 编号 | 标准 | 状态 |

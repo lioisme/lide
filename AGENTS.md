@@ -7,8 +7,8 @@
 - **R1** `:editor`（包 `com.lioisme.delua.editor`）禁止出现 `com.androlua`、`com.luajava`、
   `System.loadLibrary`、jniLibs；其 `build.gradle.kts` 禁止依赖 `:androlua`。
   编辑器进程内的一切 Lint / 诊断 / 补全 / 高亮逻辑必须是纯 Kotlin/Java，禁止触碰 `libluajava.so`。
-- **R2** Lua 编译与运行能力属于宿主 `:app`（EngineBridge 独立进程）。编辑器只做文本级能力
-  （行级词法诊断、补全、高亮、搜索），不做运行时语义。
+- **R2** Lua 编译与运行能力属于宿主 `:app`（`EngineBridge` → `EngineActivity`，同进程运行）。
+  编辑器只做文本级能力（行级词法诊断、补全、高亮、搜索），不做运行时语义。
 - **R3** 新增编辑器功能默认放 `:editor`；宿主专属逻辑（文件、权限、运行时、设置持久化）放 `:app`。
 - **R4** `:editor` 不得读取 `:app` 的任何状态或类型；宿主依赖一律通过参数 / 接口注入。
 

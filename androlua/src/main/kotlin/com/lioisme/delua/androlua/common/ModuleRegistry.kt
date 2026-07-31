@@ -26,6 +26,13 @@ class ModuleRegistry(private val commonModulesDir: File) {
                     files.add(filesArr.getString(i))
                 }
             }
+            if (files.isEmpty()) {
+                // 兼容旧版元数据缺 files 的场景：从磁盘重列（排除元数据自身）。
+                moduleDir.walkTopDown()
+                    .filter { it.isFile && it.name.endsWith(".lua", ignoreCase = true) }
+                    .sortedBy { it.absolutePath }
+                    .forEach { files.add(it.relativeTo(moduleDir).path.replace('\\', '/')) }
+            }
             ModuleInfo(
                 name = json.optString("name", moduleDir.name),
                 version = json.optString("version", ""),

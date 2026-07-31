@@ -52,6 +52,7 @@ fun DeluaNavHost(
     navController: NavHostController,
     pendingImportPaths: List<String> = emptyList(),
     pendingOpenFiles: List<Pair<String, String>> = emptyList(),
+    pendingPluginImport: Boolean = false,
 ) {
     val context = LocalContext.current
     val projectManager = remember { ProjectManager(context) }
@@ -66,6 +67,12 @@ fun DeluaNavHost(
                     Project(name = dir.name, path = dir.absolutePath, mainFile = open.second)
                 )
             )
+        }
+    }
+
+    LaunchedEffect(navController, pendingPluginImport) {
+        if (pendingPluginImport) {
+            navController.navigate(Routes.PLUGINS)
         }
     }
 
@@ -144,7 +151,15 @@ fun DeluaNavHost(
         slideComposable(route = Routes.PLUGINS) {
             PluginScreen(
                 onRun = { plugin ->
-                    engineLauncher.launch(plugin.dir, plugin.main)
+                    // pro 兼容：插件入口收到 {luadir, luapath} 变长参数。
+                    // delua 插件独立于 IDE Lua 上下文运行，luadir/luapath 为插件自身
+                    // 目录与入口路径（自洽上下文，恒非空）。
+                    val mainPath = "${plugin.dir}/${plugin.main}"
+                    engineLauncher.launch(
+                        plugin.dir,
+                        plugin.main,
+                        arrayOf(plugin.dir, mainPath)
+                    )
                 },
                 onBack = { navController.popBackStack() }
             )

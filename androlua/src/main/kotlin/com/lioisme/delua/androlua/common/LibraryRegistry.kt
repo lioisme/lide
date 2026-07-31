@@ -19,16 +19,14 @@ class LibraryRegistry(private val commonLibsDir: File) {
         if (!metaFile.exists()) return null
         return try {
             val json = JSONObject(metaFile.readText())
-            val jarFile = libDir.listFiles()?.firstOrNull { f ->
-                f.name.endsWith(".jar") || f.name.endsWith(".dex")
-            }
+            val artifact = findArtifactFile(libDir)
             LibraryInfo(
                 name = json.optString("name", libDir.name),
                 version = json.optString("version", ""),
                 description = json.optString("description", ""),
                 author = json.optString("author", ""),
-                filePath = jarFile?.absolutePath ?: "",
-                fileSize = jarFile?.length() ?: 0,
+                filePath = artifact?.absolutePath ?: "",
+                fileSize = artifact?.length() ?: 0,
                 installTime = json.optLong("installTime", 0)
             )
         } catch (_: Exception) {
@@ -54,10 +52,18 @@ class LibraryRegistry(private val commonLibsDir: File) {
         return if (dir.isDirectory) dir.deleteRecursively() else false
     }
 
-    fun findJarFile(name: String): File? {
+    /**
+     * 查找库的唯一构件（jar / dex / so）。
+     * 单构件约束：安装新版本前会清理旧构件，目录内最多一个构件，结果确定。
+     */
+    fun findArtifactFile(name: String): File? {
         val dir = File(commonLibsDir, name)
-        return if (dir.isDirectory) {
-            dir.listFiles()?.firstOrNull { it.name.endsWith(".jar") || it.name.endsWith(".dex") }
-        } else null
+        return if (dir.isDirectory) findArtifactFile(dir) else null
+    }
+
+    private fun findArtifactFile(dir: File): File? {
+        return dir.listFiles()?.firstOrNull { f ->
+            f.isFile && (f.name.endsWith(".jar") || f.name.endsWith(".dex") || f.name.endsWith(".so"))
+        }
     }
 }

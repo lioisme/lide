@@ -76,11 +76,13 @@ fun ProjectDependenciesScreen(
             result.fold(
                 onSuccess = {
                     hasChanges = false
-                    Toast.makeText(context, "Dependencies saved", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.dependencies_saved), Toast.LENGTH_SHORT).show()
                     onBack()
                 },
                 onFailure = { e ->
-                    snackbarHostState.showSnackbar("Save failed: ${e.message}")
+                    snackbarHostState.showSnackbar(
+                        context.getString(R.string.dependencies_save_failed, e.message)
+                    )
                 }
             )
         }
@@ -90,7 +92,7 @@ fun ProjectDependenciesScreen(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
-                title = { Text("Dependencies â€?${project.name}") },
+                title = { Text(stringResource(R.string.dependencies_title, project.name)) },
                 navigationIcon = {
                     IconButton(onClick = {
                         if (hasChanges) {
@@ -181,7 +183,7 @@ fun ProjectDependenciesScreen(
                                 Row(verticalAlignment = Alignment.CenterVertically) {
                                     Text(lib.name, style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Medium)
                                     Spacer(Modifier.width(8.dp))
-                                    Text("v${lib.version}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                    Text("${stringResource(R.string.version_prefix)}${lib.version}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                 }
                                 if (lib.description.isNotBlank()) {
                                     Text(lib.description, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1)
@@ -254,7 +256,7 @@ fun ProjectDependenciesScreen(
                                 Row(verticalAlignment = Alignment.CenterVertically) {
                                     Text(mod.name, style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Medium)
                                     Spacer(Modifier.width(8.dp))
-                                    Text("v${mod.version}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                    Text("${stringResource(R.string.version_prefix)}${mod.version}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                 }
                                 if (mod.description.isNotBlank()) {
                                     Text(mod.description, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1)
@@ -277,7 +279,7 @@ fun ProjectDependenciesScreen(
                 val localLibs = remember { projectManager.getLocalLibFiles(project) }
                 if (localLibs.isEmpty()) {
                     Text(
-                        "(none)",
+                        stringResource(R.string.project_local_none),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
@@ -290,7 +292,7 @@ fun ProjectDependenciesScreen(
                         ) {
                             Icon(Icons.Default.Bookmark, null, modifier = Modifier.size(16.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
                             Spacer(Modifier.width(8.dp))
-                            Text("â€?$libName", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            Text(libName, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
                     }
                 }

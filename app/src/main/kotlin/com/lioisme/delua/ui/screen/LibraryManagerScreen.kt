@@ -46,6 +46,7 @@ fun LibraryManagerScreen(
     var showDetailDialog by remember { mutableStateOf<LibraryInfo?>(null) }
     val snackbarHostState = remember { SnackbarHostState() }
     val depManager = remember { DependencyManager(context) }
+    val strCannotReadFile = stringResource(R.string.cannot_read_file)
 
     fun refresh() {
         scope.launch {
@@ -63,7 +64,7 @@ fun LibraryManagerScreen(
             try {
                 val inputStream = withContext(Dispatchers.IO) { context.contentResolver.openInputStream(uri) }
                 if (inputStream == null) {
-                    snackbarHostState.showSnackbar("Cannot read file")
+                    snackbarHostState.showSnackbar(strCannotReadFile)
                     return@launch
                 }
                 val rawName = File(uri.lastPathSegment ?: "library.jar").name
@@ -82,15 +83,23 @@ fun LibraryManagerScreen(
                 }
                 result.fold(
                     onSuccess = {
-                        Toast.makeText(context, "Library '$name' installed", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            context,
+                            context.getString(R.string.library_installed, name),
+                            Toast.LENGTH_SHORT
+                        ).show()
                         refresh()
                     },
                     onFailure = { e ->
-                        snackbarHostState.showSnackbar("Install failed: ${e.message}")
+                        snackbarHostState.showSnackbar(
+                            context.getString(R.string.install_failed, e.message)
+                        )
                     }
                 )
             } catch (e: Exception) {
-                snackbarHostState.showSnackbar("Error: ${e.message}")
+                snackbarHostState.showSnackbar(
+                    context.getString(R.string.error_prefix, e.message)
+                )
             }
         }
     }
@@ -128,7 +137,7 @@ fun LibraryManagerScreen(
             OutlinedTextField(
                 value = searchQuery,
                 onValueChange = { searchQuery = it },
-                placeholder = { Text("Search libraries...") },
+                placeholder = { Text(stringResource(R.string.search_libraries)) },
                 leadingIcon = { Icon(Icons.Default.Search, null) },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
@@ -162,8 +171,12 @@ fun LibraryManagerScreen(
     showUninstallDialog?.let { lib ->
         AlertDialog(
             onDismissRequest = { showUninstallDialog = null },
-            title = { Text("Uninstall ${lib.name}?") },
-            text = { Text("Library \"${lib.name}\" (v${lib.version}) will be removed from common storage.") },
+            title = { Text(stringResource(R.string.uninstall_title, lib.name)) },
+            text = {
+                Text(
+                    stringResource(R.string.library_uninstall_message, lib.name, lib.version)
+                )
+            },
             confirmButton = {
                 TextButton(onClick = {
                     showUninstallDialog = null
@@ -171,15 +184,21 @@ fun LibraryManagerScreen(
                         val result = withContext(Dispatchers.IO) { depManager.uninstallLibrary(lib.name) }
                         result.fold(
                             onSuccess = {
-                                Toast.makeText(context, "Library '${lib.name}' uninstalled", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    context,
+                                    context.getString(R.string.library_uninstalled, lib.name),
+                                    Toast.LENGTH_SHORT
+                                ).show()
                                 refresh()
                             },
                             onFailure = { e ->
-                                snackbarHostState.showSnackbar("Uninstall failed: ${e.message}")
+                                snackbarHostState.showSnackbar(
+                                    context.getString(R.string.uninstall_failed, e.message)
+                                )
                             }
                         )
                     }
-                }) { Text("Uninstall") }
+                }) { Text(stringResource(R.string.uninstall)) }
             },
             dismissButton = {
                 TextButton(onClick = { showUninstallDialog = null }) { Text(stringResource(R.string.cancel)) }
@@ -193,29 +212,46 @@ fun LibraryManagerScreen(
             title = { Text(lib.name) },
             text = {
                 Column {
-                    Text("Version: ${lib.version}", style = MaterialTheme.typography.bodyMedium)
+                    Text(
+                        stringResource(R.string.version_label, lib.version),
+                        style = MaterialTheme.typography.bodyMedium
+                    )
                     if (lib.description.isNotBlank()) {
                         Spacer(Modifier.height(4.dp))
                         Text(lib.description, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                     if (lib.author.isNotBlank()) {
                         Spacer(Modifier.height(4.dp))
-                        Text("Author: ${lib.author}", style = MaterialTheme.typography.bodySmall)
+                        Text(
+                            stringResource(R.string.author_label, lib.author),
+                            style = MaterialTheme.typography.bodySmall
+                        )
                     }
                     Spacer(Modifier.height(4.dp))
-                    val formattedSize = if (lib.fileSize > 1024 * 1024) "${lib.fileSize / (1024 * 1024)} MB"
-                    else if (lib.fileSize > 1024) "${lib.fileSize / 1024} KB"
-                    else "${lib.fileSize} bytes"
-                    Text("Size: $formattedSize", style = MaterialTheme.typography.bodySmall)
+                    val formattedSize = when {
+                        lib.fileSize > 1024 * 1024 ->
+                            stringResource(R.string.size_mb, lib.fileSize / (1024 * 1024))
+                        lib.fileSize > 1024 ->
+                            stringResource(R.string.size_kb, lib.fileSize / 1024)
+                        else ->
+                            stringResource(R.string.size_bytes, lib.fileSize)
+                    }
+                    Text(
+                        stringResource(R.string.size_label, formattedSize),
+                        style = MaterialTheme.typography.bodySmall
+                    )
                     if (lib.installTime > 0) {
                         val date = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(Date(lib.installTime))
                         Spacer(Modifier.height(4.dp))
-                        Text("Installed: $date", style = MaterialTheme.typography.bodySmall)
+                        Text(
+                            stringResource(R.string.installed_label, date),
+                            style = MaterialTheme.typography.bodySmall
+                        )
                     }
                 }
             },
             confirmButton = {
-                TextButton(onClick = { showDetailDialog = null }) { Text("Close") }
+                TextButton(onClick = { showDetailDialog = null }) { Text(stringResource(R.string.close)) }
             },
         )
     }
@@ -244,14 +280,22 @@ private fun LibraryItem(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(library.name, style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Medium)
                     Spacer(Modifier.width(8.dp))
-                    Text("v${library.version}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(
+                        stringResource(R.string.version_prefix, library.version),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 }
                 if (library.description.isNotBlank()) {
                     Text(library.description, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1)
                 }
             }
             IconButton(onClick = onUninstall) {
-                Icon(Icons.Default.Delete, contentDescription = "Uninstall", tint = MaterialTheme.colorScheme.error)
+                Icon(
+                    Icons.Default.Delete,
+                    contentDescription = stringResource(R.string.uninstall),
+                    tint = MaterialTheme.colorScheme.error
+                )
             }
         }
     }

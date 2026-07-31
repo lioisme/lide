@@ -307,6 +307,25 @@ ProjectDependenciesScreen 勾选(172-179) → saveDependencies(67-87)
 | 13 | 消除"EngineBridge 独立进程"文档与单进程实现的偏差（AGENTS.md / 白皮书口径统一） |
 | 14 | 编辑器侧布局助手（javaapi/*.aly 模板 + 布局预览）——pro 的高频创作特性，工作量较大，建议单独立项 |
 
+### 12.1 行动项执行状态（2026-07-31 全部收口）
+
+> 每项均标注完成情况与工作简述；构建验收：`:app:compileArm64DebugKotlin` ✅、`:app:assembleArm64Debug` ✅、`:editor` R1 边界 grep 零命中 ✅。
+
+- **P0-1 ✅ 已完成**：`PluginManager.kt` `PluginInfo.main` 默认值 `init.lua`→`main.lua`（data class 默认值 + `optString("main", ...)` 两处）；`app/src/main/assets/plugin/plugin.json` main 字段同步修正。安装的 plugin.json 插件点击后运行 main.lua。
+- **P0-2 ✅ 已完成**：`EngineBridge.kt` 重写——新增 `EXTRA_SCRIPT_ARGS="arg"` 常量（对齐 LuaActivity `ARG` 键）、`createEngineIntent(projectDir, mainFile, args: Array<Any?>?)`；`RunEngineLauncher.launch` 增 `args` 参数透传；`DeluaNavHost` 插件运行传 `arrayOf(plugin.dir, plugin.dir/main)` 作为 `{luadir, luapath}`。
+- **P0-3 ✅ 已完成**：`ZipUtil.kt` 重写（`safeEntryName` zip-slip 防护 + `readEntryText`）；`AlpManager.kt` 重写——`AlpKind{PROJECT,PLUGIN}`、`resolveKind`（init.lua `mode="plugin"` 或文件名 `*_plugin`）、`import(File/Uri): AlpImportResult?`；`MainActivity` `.alp` 导入后按 kind 分流，插件跳转插件列表；工程列表导入结果按类型计数提示。
+- **P1-4 ✅ 已完成**：`LibraryRegistry.findArtifactFile` 扩展认 `.so`；`DependencyManager.installLibrary` 对 .so 命名 `lib<name>.so`（libsloader `luaopen_<name>` 可命中），jar/dex 仍 `<name>-<version>.<ext>`，重装先删旧构件（单构件约束）；`ProjectManager.getLocalLibFiles` 支持 `.so`。
+- **P1-5 ✅ 已完成**：物化清单 `.delua-materialized.json`（`MaterializationManifest` 私有嵌套类）——运行前同步，`syncMaterializedFiles` 删除未声明文件（canonical 前缀守卫 + `pruneEmptyParents`），卸载/换版本后引擎不再加载残留。
+- **P1-6 ✅ 已完成**：`registry.json` 概念整体移除（`registryFile` 字段与 read/write/update 函数删除）；`getLibraryInfo/getModuleInfo` 死代码同步清理。
+- **P1-7 ✅ 已完成**：`installModule(sourceDir, ...)` 递归收集 `.lua` 按相对路径入仓（socket 式目录模块）；物化同时落 `<project>/lua/<rel>` 与（含 init.lua 时）`<project>/lua/<name>/`；新增 `installModuleFromFiles`（文件多选安装）；`ModuleRegistry.readMetadata` files 缺失时回退磁盘重列。
+- **P1-8 ✅ 已完成**：`DeluaApp.extractSamples` 目录存在即跳过（重启不丢用户修改）；新增 `extractExamplePlugin`（G4 收口：`plugin/example/` 从 assets 提取 plugin.json + 生成 main.lua）、`extractLayoutTemplates`（P2-14 配套）。
+- **P1-9 ✅ 已完成**：`delua.json` 读路径与 `ProjectManager.parseDependencies/getProjectDependencies/setProjectDependencies` 删除；依赖声明单一事实源 = init.lua `dependencies` 块；`Project.dependencies` 字段删除。
+- **P2-10 ✅ 已决策**：v1.0 明确暂不支持设备端独立 APK 打包，决策理由（mao/sign 缺失、v1-only 签名不可装、模板携带全套 IDE 运行时、优先级低）写入 `WHITEPAPER.md` 阶段四；后续平移 pro `bin.lua` 的 luac/checklib/manifest 补丁三机制。
+- **P2-11 ✅ 已完成**：`ZipUtil` 路径穿越防护（见 P0-3）；`replaceDependenciesBlock` 改为结构化扫描（`findDependenciesBlock` 跳过字符串/注释/长括号 + 花括号配平 `skipBalancedBraces`），不再依赖换行/非嵌套假设。
+- **P2-12 ✅ 已完成**：死代码清理（`PluginManager.loadedPlugins`、`DependencyManager` 三项只读函数、`AlpManager.export(File)`、`ProjectManager` delua.json 依赖方法、`Project.dependencies`）；`deleteProject` 接入 UI（工程长按 → 删除确认对话框）；UI 文案国际化收口（插件/库/模块/依赖/工程列表全部走 strings.xml，含 values-zh；ProjectDependenciesScreen 乱码清理）。
+- **P2-13 ✅ 已完成**：AGENTS.md R2 改为"EngineBridge → EngineActivity，同进程运行"单进程口径；白皮书 3.3 独立 Activity 栈表述与实现一致（历史报告保留原貌）。
+- **P2-14 ✅ 部分完成（资产侧）**：pro `assets/javaapi/{clayout,layout,mlayout}.aly` 复制入 `app/src/main/assets/layouts/javaapi/`，`DeluaApp` 首启提取到 `filesDir/layouts/`（存在即跳过）；布局预览/编辑器侧布局助手 UI 仍待单独立项（审计原结论不变）。
+
 ---
 
 ## 13. 总结

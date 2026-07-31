@@ -9,7 +9,7 @@ data class PluginInfo(
     val dir: String,
     val version: String = "1.0",
     val description: String = "",
-    val main: String = "init.lua",
+    val main: String = "main.lua",
     val author: String = "",
 )
 
@@ -32,8 +32,6 @@ class PluginManager {
         }
         return plugins.toList()
     }
-
-    val loadedPlugins: List<PluginInfo> get() = plugins.toList()
 
     fun installFromAlp(alpFile: String, pluginDir: String): PluginInfo? {
         val file = File(alpFile)
@@ -66,7 +64,7 @@ class PluginManager {
                     dir = dir.absolutePath,
                     version = json.optString("version", "1.0"),
                     description = json.optString("description", ""),
-                    main = json.optString("main", "init.lua"),
+                    main = json.optString("main", "main.lua"),
                     author = json.optString("author", ""),
                 )
             } catch (e: Exception) {

@@ -341,13 +341,15 @@ EngineActivity (extends LuaActivity, 独立 Activity 栈)
 - 运行入口（RunEngineLauncher：物化依赖 → 直启引擎，输出由引擎控制台展示）
 - Lua 运行时脚本（25 个 `.lua` 文件）
 
-### 阶段四：构建系统（规划中）
+### 阶段四：构建系统（规划中；v1.0 明确暂不支持，见下方决策说明）
 
 - AndroidManifest 二进制 XML 编码/解码
 - APK 容器组装（ZIP 格式）
 - `classes.dex` 注入
 - 资源打包（图标、启动图）
 - 对齐（zipalign）
+
+> **v1.0 决策（2026-07-31）**：设备端独立 APK 打包暂不支持。原因：① pro 打包器 `bin.lua` 依赖外部 `mao/sign` 签名 jar（不在仓库中），且 v1-only 签名在现代 Android（targetSdk≥30）不可安装；② 宿主 APK 模板携带全套 IDE 运行时，产物方法数/体积不可控；③ 打包器属于设备端构建链，与 IDE 编辑/运行主链路正交，优先级低。后续立项时平移 pro 的 luac 字节码化、`checklib` 依赖自动收集、manifest 字符串级补丁三个机制即可（参考 `docs/XPOSED_MODULE_FEASIBILITY_REPORT.md` §3.2 的继承价值分析）。
 
 ### 阶段五：签名与发布（规划中）
 

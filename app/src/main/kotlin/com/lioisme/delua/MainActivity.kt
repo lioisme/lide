@@ -12,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.navigation.compose.rememberNavController
 import com.androlua.LuaApplication
 import com.lioisme.delua.androlua.AlpManager
+import com.lioisme.delua.androlua.AlpManager.AlpKind
 import com.lioisme.delua.engine.RunEngineLauncher
 import com.lioisme.delua.i18n.LocaleManager
 import com.lioisme.delua.ui.navigation.DeluaNavHost
@@ -23,6 +24,7 @@ class MainActivity : ComponentActivity() {
 
     private val pendingImport: MutableSet<String> = mutableSetOf()
     private val pendingOpenFiles: MutableList<Pair<String, String>> = mutableListOf()
+    private var pendingPluginImport: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +40,7 @@ class MainActivity : ComponentActivity() {
                     navController = navController,
                     pendingImportPaths = pendingImport.toList().also { pendingImport.clear() },
                     pendingOpenFiles = pendingOpenFiles.toList().also { pendingOpenFiles.clear() },
+                    pendingPluginImport = pendingPluginImport.also { pendingPluginImport = false },
                 )
             }
         }
@@ -60,10 +63,14 @@ class MainActivity : ComponentActivity() {
         val path = resolveFilePath(uri) ?: return
         when {
             path.endsWith(".alp", ignoreCase = true) -> {
-                val alpDir = AlpManager(this).import(path)
-                if (alpDir != null) {
-                    Log.d("MainActivity", "imported .alp to $alpDir")
-                    pendingImport.add(path)
+                val result = AlpManager(this).import(path)
+                if (result != null) {
+                    Log.d("MainActivity", "imported .alp to ${result.dir} (${result.kind})")
+                    if (result.kind == AlpKind.PLUGIN) {
+                        pendingPluginImport = true
+                    } else {
+                        pendingImport.add(path)
+                    }
                 }
             }
             path.endsWith(".lua", ignoreCase = true) -> openOrAdoptLuaFile(path)
@@ -85,7 +92,9 @@ class MainActivity : ComponentActivity() {
             }
         } else if (target.isFile && target.name.endsWith(".lua", ignoreCase = true)) {
             if (target.name.equals("main.lua", ignoreCase = true)) {
-                RunEngineLauncher(this).launch(target.parentFile.absolutePath, target.name)
+                target.parentFile?.let {
+                    RunEngineLauncher(this).launch(it.absolutePath, target.name)
+                }
             } else {
                 openOrAdoptLuaFile(target.absolutePath)
             }
@@ -112,7 +121,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun findProjectDir(file: File): File? {
-        var dir = file.parentFile ?: return null
+        var dir: File? = file.parentFile ?: return null
         while (dir != null) {
             if (File(dir, "init.lua").isFile) return dir
             dir = dir.parentFile

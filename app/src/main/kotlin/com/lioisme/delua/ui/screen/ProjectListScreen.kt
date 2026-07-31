@@ -3,12 +3,14 @@ package com.lioisme.delua.ui.screen
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.FileDownload
 import androidx.compose.material.icons.filled.FileUpload
 import androidx.compose.material.icons.filled.Folder
@@ -24,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.lioisme.delua.R
 import com.lioisme.delua.androlua.AlpManager
+import com.lioisme.delua.androlua.AlpManager.AlpKind
 import com.lioisme.delua.model.Project
 import com.lioisme.delua.project.ProjectManager
 import kotlinx.coroutines.Dispatchers
@@ -31,7 +34,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.delay
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun ProjectListScreen(
     projectManager: ProjectManager,
@@ -45,6 +48,7 @@ fun ProjectListScreen(
     var newName by remember { mutableStateOf("") }
     var errorMsg by remember { mutableStateOf<String?>(null) }
     var pendingExportProject by remember { mutableStateOf<Project?>(null) }
+    var pendingDeleteProject by remember { mutableStateOf<Project?>(null) }
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
     val strImportSuccess = stringResource(R.string.import_success)
@@ -104,15 +108,29 @@ fun ProjectListScreen(
     ) { uris ->
         if (uris.isEmpty()) return@rememberLauncherForActivityResult
         scope.launch {
-            var successCount = 0
+            var projectCount = 0
+            var pluginCount = 0
             for (uri in uris) {
                 val result = withContext(Dispatchers.IO) {
                     AlpManager(context).import(uri)
                 }
-                if (result != null) successCount++
+                when (result?.kind) {
+                    AlpKind.PROJECT -> projectCount++
+                    AlpKind.PLUGIN -> pluginCount++
+                    null -> {}
+                }
             }
-            if (successCount > 0) {
-                Toast.makeText(context, "Imported $successCount project(s)", Toast.LENGTH_SHORT).show()
+            val imported = projectCount + pluginCount
+            if (imported > 0) {
+                val message = when {
+                    pluginCount > 0 && projectCount == 0 ->
+                        context.getString(R.string.import_plugin_success, pluginCount)
+                    pluginCount == 0 ->
+                        context.getString(R.string.import_projects_success, projectCount)
+                    else ->
+                        context.getString(R.string.import_mixed_success, projectCount, pluginCount)
+                }
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
                 loadProjects()
             } else {
                 errorMsg = strImportFailed
@@ -132,10 +150,10 @@ fun ProjectListScreen(
                         Icon(Icons.Default.FileDownload, contentDescription = stringResource(R.string.import_alp))
                     }
                     IconButton(onClick = { showCreateDialog = true }) {
-                        Icon(Icons.Default.Add, contentDescription = "New Project")
+                        Icon(Icons.Default.Add, contentDescription = stringResource(R.string.cd_new_project))
                     }
                     IconButton(onClick = onSettingsClick) {
-                        Icon(Icons.Default.Settings, contentDescription = "Settings")
+                        Icon(Icons.Default.Settings, contentDescription = stringResource(R.string.settings))
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -166,13 +184,13 @@ fun ProjectListScreen(
                         )
                         Spacer(Modifier.height(16.dp))
                         Text(
-                            "No projects yet",
+                            stringResource(R.string.no_projects),
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                         Spacer(Modifier.height(4.dp))
                         Text(
-                            "Tap + to create one",
+                            stringResource(R.string.tap_to_create),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
                         )
@@ -185,7 +203,10 @@ fun ProjectListScreen(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clickable(onClick = { onProjectClick(project) })
+                                .combinedClickable(
+                                    onClick = { onProjectClick(project) },
+                                    onLongClick = { pendingDeleteProject = project },
+                                )
                                 .padding(horizontal = 16.dp, vertical = 12.dp),
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
@@ -237,12 +258,12 @@ fun ProjectListScreen(
     if (showCreateDialog) {
         AlertDialog(
             onDismissRequest = { showCreateDialog = false },
-            title = { Text("New Project") },
+            title = { Text(stringResource(R.string.new_project)) },
             text = {
                 OutlinedTextField(
                     value = newName,
                     onValueChange = { newName = it },
-                    label = { Text("Project name") },
+                    label = { Text(stringResource(R.string.project_name)) },
                     singleLine = true,
                 )
             },
@@ -258,15 +279,42 @@ fun ProjectListScreen(
                             if (created != null) {
                                 loadProjects()
                             } else {
-                                errorMsg = "Failed to create project '$name'"
+                                errorMsg = context.getString(R.string.project_create_failed, name)
                             }
                         }
                     }
                 }
-            ) { Text("Create") }
+            ) { Text(stringResource(R.string.create)) }
             },
             dismissButton = {
-                TextButton(onClick = { showCreateDialog = false }) { Text("Cancel") }
+                TextButton(onClick = { showCreateDialog = false }) { Text(stringResource(R.string.cancel)) }
+            },
+        )
+    }
+
+    pendingDeleteProject?.let { project ->
+        AlertDialog(
+            onDismissRequest = { pendingDeleteProject = null },
+            icon = { Icon(Icons.Default.Delete, contentDescription = null) },
+            title = { Text(stringResource(R.string.delete_project_title, project.name)) },
+            text = { Text(stringResource(R.string.delete_project_message, project.name)) },
+            confirmButton = {
+                TextButton(onClick = {
+                    pendingDeleteProject = null
+                    scope.launch {
+                        val deleted = withContext(Dispatchers.IO) {
+                            projectManager.deleteProject(project)
+                        }
+                        if (deleted) {
+                            loadProjects()
+                        } else {
+                            errorMsg = context.getString(R.string.project_delete_failed, project.name)
+                        }
+                    }
+                }) { Text(stringResource(R.string.project_delete)) }
+            },
+            dismissButton = {
+                TextButton(onClick = { pendingDeleteProject = null }) { Text(stringResource(R.string.cancel)) }
             },
         )
     }

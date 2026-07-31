@@ -8,13 +8,21 @@ import com.lioisme.delua.androlua.common.model.ProjectDependencies
 import org.json.JSONObject
 import java.io.File
 
+/**
+ * 统一管理层：全局仓库（common/libs + common/modules）的安装 / 卸载 / 校验，
+ * 以及运行前把声明的依赖物化（materialize）到工程目录——这是全局仓库与
+ * pro 式"工程内自行管理"模型之间的唯一桥梁。
+ *
+ * 事实源约定：工程依赖声明的单一事实源是 `<project>/init.lua` 的
+ * `dependencies = { libs = {...}, modules = {...} }` 块（pro 兼容）；
+ * delua.json 已废弃，读路径于本次审计收口移除。
+ */
 class DependencyManager(private val context: Context) {
 
     private val luaExtDir: String get() = LuaApplication.getInstance().luaExtDir
     private val commonDir: File get() = File(luaExtDir, "common")
     val commonLibsDir: File get() = File(commonDir, "libs")
     val commonModulesDir: File get() = File(commonDir, "modules")
-    private val registryFile: File get() = File(commonDir, "registry.json")
 
     private val libraryRegistry = LibraryRegistry(commonLibsDir)
     private val moduleRegistry = ModuleRegistry(commonModulesDir)
@@ -25,6 +33,16 @@ class DependencyManager(private val context: Context) {
         commonModulesDir.mkdirs()
     }
 
+    // ------------------------------------------------------------------
+    // 库仓库
+    // ------------------------------------------------------------------
+
+    /**
+     * 安装库。单构件约束：
+     * - jar/dex → `<name>-<version>.<ext>`（重装先清除旧构件，无孤儿版本）；
+     * - so → `lib<name>.so`（libsloader / libCache 要求库名与文件名严格一致，
+     *   版本只记录在 metadata.json，升级即覆盖）。
+     */
     fun installLibrary(
         sourceFile: File,
         name: String,
@@ -35,8 +53,9 @@ class DependencyManager(private val context: Context) {
         ensureDirsExist()
         val libDir = File(commonLibsDir, name)
         libDir.mkdirs()
-        val ext = sourceFile.extension
-        val destName = "$name-$version.$ext"
+        removeArtifacts(libDir)
+        val ext = sourceFile.extension.lowercase()
+        val destName = if (ext == "so") "lib$name.so" else "$name-$version.$ext"
         val destFile = File(libDir, destName)
         sourceFile.copyTo(destFile, overwrite = true)
         val info = LibraryInfo(
@@ -49,7 +68,14 @@ class DependencyManager(private val context: Context) {
             installTime = System.currentTimeMillis()
         )
         libraryRegistry.writeMetadata(libDir, info)
-        updateRegistry()
+    }
+
+    private fun removeArtifacts(libDir: File) {
+        libDir.listFiles()?.forEach { f ->
+            if (f.isFile && f.name != "metadata.json") {
+                f.delete()
+            }
+        }
     }
 
     fun uninstallLibrary(name: String): Result<Unit> = runCatching {
@@ -60,16 +86,18 @@ class DependencyManager(private val context: Context) {
             throw IllegalStateException("Library '$name' is used by projects: ${projectsWithDep.joinToString(", ")}")
         }
         libraryRegistry.remove(name)
-        updateRegistry()
     }
 
     fun listLibraries(): List<LibraryInfo> = libraryRegistry.scan()
 
-    fun getLibraryInfo(name: String): LibraryInfo? {
-        val libDir = File(commonLibsDir, name)
-        return if (libDir.isDirectory) libraryRegistry.readMetadata(libDir) else null
-    }
+    // ------------------------------------------------------------------
+    // 模块仓库
+    // ------------------------------------------------------------------
 
+    /**
+     * 从目录安装模块：保留相对路径（socket 式目录模块可入仓），
+     * files[] 记录相对路径，供物化原样还原。
+     */
     fun installModule(
         sourceDir: File,
         name: String,
@@ -79,27 +107,30 @@ class DependencyManager(private val context: Context) {
         author: String = ""
     ): Result<Unit> = runCatching {
         ensureDirsExist()
+        val luaFiles = collectLuaFiles(sourceDir)
+        check(luaFiles.isNotEmpty()) { "No .lua files found in source directory" }
         val moduleDir = File(commonModulesDir, name)
+        moduleDir.deleteRecursively()
         moduleDir.mkdirs()
-        val luaFiles = sourceDir.listFiles()?.filter { it.name.endsWith(".lua") }
-            ?: throw IllegalArgumentException("No .lua files found in source directory")
-        for (file in luaFiles) {
-            file.copyTo(File(moduleDir, file.name), overwrite = true)
+        val relPaths = luaFiles.map { it.relativeTo(sourceDir).path.replace('\\', '/') }
+        for (rel in relPaths) {
+            val dest = File(moduleDir, rel)
+            dest.parentFile?.mkdirs()
+            File(sourceDir, rel).copyTo(dest, overwrite = true)
         }
-        val allFiles = moduleDir.listFiles()?.filter { it.isFile }?.map { it.name } ?: emptyList()
         val info = ModuleInfo(
             name = name,
             version = version,
             description = description,
             author = author,
             entryPoint = entryPoint,
-            files = allFiles,
+            files = relPaths,
             installTime = System.currentTimeMillis()
         )
         moduleRegistry.writeMetadata(moduleDir, info)
-        updateRegistry()
     }
 
+    /** 从平铺文件列表安装模块（多文件选择器场景，文件已集中在临时目录）。 */
     fun installModuleFromFiles(
         files: List<File>,
         name: String,
@@ -109,24 +140,28 @@ class DependencyManager(private val context: Context) {
         author: String = ""
     ): Result<Unit> = runCatching {
         ensureDirsExist()
+        val luaFiles = files.filter { it.isFile && it.name.endsWith(".lua", ignoreCase = true) }
+        check(luaFiles.isNotEmpty()) { "No .lua files found" }
         val moduleDir = File(commonModulesDir, name)
+        moduleDir.deleteRecursively()
         moduleDir.mkdirs()
-        for (file in files) {
-            file.copyTo(File(moduleDir, file.name), overwrite = true)
+        val relPaths = luaFiles.map { it.name }
+        for (file in luaFiles) {
+            val dest = File(moduleDir, file.name)
+            dest.parentFile?.mkdirs()
+            file.copyTo(dest, overwrite = true)
         }
-        val allFiles = moduleDir.listFiles()?.filter { it.isFile }?.map { it.name } ?: emptyList()
-        val ep = if (entryPoint.isNotEmpty()) entryPoint else (files.firstOrNull()?.name ?: "init.lua")
+        val ep = if (entryPoint.isNotEmpty()) entryPoint else relPaths.first()
         val info = ModuleInfo(
             name = name,
             version = version,
             description = description,
             author = author,
             entryPoint = ep,
-            files = allFiles,
+            files = relPaths,
             installTime = System.currentTimeMillis()
         )
         moduleRegistry.writeMetadata(moduleDir, info)
-        updateRegistry()
     }
 
     fun uninstallModule(name: String): Result<Unit> = runCatching {
@@ -137,23 +172,25 @@ class DependencyManager(private val context: Context) {
             throw IllegalStateException("Module '$name' is used by projects: ${projectsWithDep.joinToString(", ")}")
         }
         moduleRegistry.remove(name)
-        updateRegistry()
     }
 
     fun listModules(): List<ModuleInfo> = moduleRegistry.scan()
 
-    fun getModuleInfo(name: String): ModuleInfo? {
-        val moduleDir = File(commonModulesDir, name)
-        return if (moduleDir.isDirectory) moduleRegistry.readMetadata(moduleDir) else null
+    private fun collectLuaFiles(dir: File): List<File> {
+        if (!dir.isDirectory) return emptyList()
+        return dir.walkTopDown()
+            .filter { it.isFile && it.name.endsWith(".lua", ignoreCase = true) }
+            .sortedBy { it.absolutePath }
+            .toList()
     }
+
+    // ------------------------------------------------------------------
+    // 工程依赖声明（单一事实源：init.lua 的 dependencies 块）
+    // ------------------------------------------------------------------
 
     fun getProjectDependencies(projectDir: String): ProjectDependencies {
         val initFile = File(projectDir, "init.lua")
         if (!initFile.exists()) return ProjectDependencies()
-        val deluaJson = File(projectDir, "delua.json")
-        if (deluaJson.exists()) {
-            return parseDeluaJson(deluaJson)
-        }
         return parseInitLuaDeps(initFile)
     }
 
@@ -161,7 +198,7 @@ class DependencyManager(private val context: Context) {
         val initFile = File(projectDir, "init.lua")
         if (!initFile.exists()) throw IllegalArgumentException("init.lua not found in $projectDir")
         var content = initFile.readText()
-        content = replaceDependenciesInInitLua(content, deps)
+        content = replaceDependenciesBlock(content, deps)
         initFile.writeText(content)
     }
 
@@ -169,7 +206,7 @@ class DependencyManager(private val context: Context) {
         val deps = getProjectDependencies(projectDir)
         val missingLibs = deps.libs.filter { name ->
             val libDir = File(commonLibsDir, name)
-            !libDir.isDirectory || libraryRegistry.findJarFile(name) == null
+            !libDir.isDirectory || libraryRegistry.findArtifactFile(name) == null
         }
         val missingModules = deps.modules.filter { !File(commonModulesDir, it).isDirectory }
         return DependencyValidationResult(
@@ -179,12 +216,22 @@ class DependencyManager(private val context: Context) {
         )
     }
 
+    data class DependencyValidationResult(
+        val valid: Boolean,
+        val missingLibs: List<String>,
+        val missingModules: List<String>
+    )
+
     /**
      * 把声明的依赖物化到工程内，使全局仓库与 pro 的"工程内自行管理"模型归一：
-     * - Java/Dex 库 → `<project>/libs/`（LuaDexLoader.loadLibs 自动加载）
-     * - Lua 模块 → `<project>/lua/`（package.path 已含 `工程目录/lua/?.lua`），
+     * - Java/Dex/原生库 → `<project>/libs/`（LuaDexLoader.loadLibs 自动加载；
+     *   .so 以 `lib<name>.so` 命名，libsloader 按名命中）；
+     * - Lua 模块 → `<project>/lua/<相对路径>`（package.path 已含 `工程/lua/?.lua`），
      *   含 init.lua 的模块同时落到 `<project>/lua/<name>/`（`require "name"` 走 `?/init.lua`）。
-     * 物化前校验依赖完整性，缺失即报错，避免"声明了却 import 不到"。
+     *
+     * 幂等且可清理：先校验依赖完整性（缺失即拒绝运行），再按上一轮物化清单
+     * `.delua-materialized.json` 移除已声明但已取消/换版的残留文件
+     * （只动本管理器物化的文件，用户手放的 libs/lua 文件不受影响）。
      */
     fun materializeProjectDependencies(projectDir: String): Result<Unit> = runCatching {
         val validation = validateDependencies(projectDir)
@@ -194,39 +241,80 @@ class DependencyManager(private val context: Context) {
             "Missing dependencies: $missing"
         }
         val deps = getProjectDependencies(projectDir)
-        val projectLibsDir = File(projectDir, "libs")
-        if (deps.libs.isNotEmpty()) {
+        val projectRoot = File(projectDir)
+        val manifest = MaterializationManifest.load(projectRoot)
+
+        val newLibFiles = mutableListOf<String>()
+        val projectLibsDir = File(projectRoot, "libs")
+        for (name in deps.libs) {
+            val artifact = libraryRegistry.findArtifactFile(name)
+                ?: throw IllegalStateException("Library '$name' has no jar/dex/so file")
             projectLibsDir.mkdirs()
-            for (name in deps.libs) {
-                val jar = libraryRegistry.findJarFile(name)
-                    ?: throw IllegalStateException("Library '$name' has no jar/dex file")
-                jar.copyTo(File(projectLibsDir, jar.name), overwrite = true)
-            }
+            val dest = File(projectLibsDir, artifact.name)
+            artifact.copyTo(dest, overwrite = true)
+            newLibFiles += dest.relativeTo(projectRoot).path.replace('\\', '/')
         }
-        val luaDir = File(projectDir, "lua")
+        syncMaterializedFiles(projectRoot, manifest.libraries, newLibFiles)
+
+        val newModuleFiles = mutableListOf<String>()
+        val luaDir = File(projectRoot, "lua")
         for (name in deps.modules) {
             val moduleDir = File(commonModulesDir, name)
-            val files = moduleDir.listFiles()?.filter { it.isFile } ?: emptyList()
+            val info = moduleRegistry.readMetadata(moduleDir)
+                ?: throw IllegalStateException("Module '$name' has no metadata")
+            val files = info.files
             check(files.isNotEmpty()) { "Module '$name' is empty" }
-            luaDir.mkdirs()
-            for (file in files) {
-                file.copyTo(File(luaDir, file.name), overwrite = true)
+            for (rel in files) {
+                val src = File(moduleDir, rel)
+                if (!src.isFile) continue
+                luaDir.mkdirs()
+                val dest = File(luaDir, rel)
+                dest.parentFile?.mkdirs()
+                src.copyTo(dest, overwrite = true)
+                newModuleFiles += dest.relativeTo(projectRoot).path.replace('\\', '/')
             }
-            if (files.any { it.name == "init.lua" }) {
+            if (files.any { it.equals("init.lua", ignoreCase = true) }) {
                 val namespaceDir = File(luaDir, name)
-                namespaceDir.mkdirs()
-                for (file in files) {
-                    file.copyTo(File(namespaceDir, file.name), overwrite = true)
+                for (rel in files) {
+                    val src = File(moduleDir, rel)
+                    if (!src.isFile) continue
+                    val dest = File(namespaceDir, rel)
+                    dest.parentFile?.mkdirs()
+                    src.copyTo(dest, overwrite = true)
+                    newModuleFiles += dest.relativeTo(projectRoot).path.replace('\\', '/')
                 }
+            }
+        }
+        syncMaterializedFiles(projectRoot, manifest.modules, newModuleFiles)
+
+        MaterializationManifest(libraries = newLibFiles, modules = newModuleFiles).save(projectRoot)
+    }
+
+    /** 删除上一轮物化清单中已不在声明集合内的文件，并向上清理空目录。 */
+    private fun syncMaterializedFiles(
+        projectRoot: File,
+        previous: List<String>,
+        current: List<String>
+    ) {
+        val currentSet = current.toHashSet()
+        val rootPrefix = projectRoot.canonicalPath + File.separator
+        for (rel in previous) {
+            if (rel in currentSet) continue
+            val target = File(projectRoot, rel)
+            if (target.canonicalPath.startsWith(rootPrefix)) {
+                target.delete()
+                pruneEmptyParents(projectRoot, target)
             }
         }
     }
 
-    data class DependencyValidationResult(
-        val valid: Boolean,
-        val missingLibs: List<String>,
-        val missingModules: List<String>
-    )
+    private fun pruneEmptyParents(projectRoot: File, file: File) {
+        var dir = file.parentFile ?: return
+        while (dir != projectRoot && dir.listFiles()?.isEmpty() == true) {
+            dir.delete()
+            dir = dir.parentFile ?: return
+        }
+    }
 
     fun findProjectsUsingLibrary(libName: String): List<String> {
         val projectDir = File(luaExtDir, "project")
@@ -246,64 +334,9 @@ class DependencyManager(private val context: Context) {
         } ?: emptyList()
     }
 
-    fun readRegistry(): JSONObject? {
-        if (!registryFile.exists()) return null
-        return try {
-            JSONObject(registryFile.readText())
-        } catch (_: Exception) {
-            null
-        }
-    }
-
-    fun updateRegistry() {
-        val registry = JSONObject().apply {
-            put("schemaVersion", 1)
-            put("lastUpdated", System.currentTimeMillis())
-            val libs = JSONObject()
-            libraryRegistry.scan().forEach { info ->
-                libs.put(info.name, JSONObject().apply {
-                    put("name", info.name)
-                    put("version", info.version)
-                    put("description", info.description)
-                    put("fileSize", info.fileSize)
-                })
-            }
-            put("libraries", libs)
-            val mods = JSONObject()
-            moduleRegistry.scan().forEach { info ->
-                mods.put(info.name, JSONObject().apply {
-                    put("name", info.name)
-                    put("version", info.version)
-                    put("description", info.description)
-                    put("entryPoint", info.entryPoint)
-                })
-            }
-            put("modules", mods)
-        }
-        commonDir.mkdirs()
-        registryFile.writeText(registry.toString(2))
-    }
-
-    private fun parseDeluaJson(file: File): ProjectDependencies {
-        return try {
-            val json = JSONObject(file.readText())
-            val deps = json.optJSONObject("dependencies")
-            if (deps != null) {
-                val libsArr = deps.optJSONArray("libs")
-                val modulesArr = deps.optJSONArray("modules")
-                ProjectDependencies(
-                    libs = libsArr?.let { arr ->
-                        (0 until arr.length()).map { arr.getString(it) }
-                    } ?: emptyList(),
-                    modules = modulesArr?.let { arr ->
-                        (0 until arr.length()).map { arr.getString(it) }
-                    } ?: emptyList()
-                )
-            } else ProjectDependencies()
-        } catch (_: Exception) {
-            ProjectDependencies()
-        }
-    }
+    // ------------------------------------------------------------------
+    // init.lua 依赖块解析 / 结构化替换
+    // ------------------------------------------------------------------
 
     private fun parseInitLuaDeps(initFile: File): ProjectDependencies {
         return try {
@@ -324,29 +357,189 @@ class DependencyManager(private val context: Context) {
         return body.split(",").map { it.trim().removeSurrounding("\"") }.filter { it.isNotEmpty() }
     }
 
-    private fun replaceDependenciesInInitLua(content: String, deps: ProjectDependencies): String {
-        val libsStr = if (deps.libs.isEmpty()) "" else {
-            "    libs = {" + deps.libs.joinToString(", ") { "\"$it\"" } + "}"
-        }
-        val modulesStr = if (deps.modules.isEmpty()) "" else {
-            "    modules = {" + deps.modules.joinToString(", ") { "\"$it\"" } + "}"
-        }
-        val depsBody = listOfNotNull(
-            if (libsStr.isNotEmpty()) libsStr else null,
-            if (modulesStr.isNotEmpty()) modulesStr else null
-        ).joinToString(",\n")
-        val depsBlock = if (depsBody.isNotEmpty()) {
-            "\ndependencies = {\n$depsBody\n}"
-        } else ""
-
-        val depsRegex = Regex("""\ndependencies\s*=\s*\{[^}]*\}""")
-        val hasExisting = depsRegex.containsMatchIn(content)
-        return if (hasExisting) {
-            depsRegex.replace(content, depsBlock)
-        } else if (depsBlock.isNotEmpty()) {
-            content.trimEnd() + "\n" + depsBlock.trimStart() + "\n"
+    /**
+     * 结构化替换 dependencies 块：跳过字符串 / 注释 / 长括号，定位
+     * `dependencies` 标识符后配平花括号的完整块并替换；不存在则追加到文件末尾。
+     * （替代历史脆弱正则：原方案要求块前有换行、不处理嵌套花括号，易重复追加。）
+     */
+    private fun replaceDependenciesBlock(content: String, deps: ProjectDependencies): String {
+        val block = buildDependenciesBlock(deps)
+        val range = findDependenciesBlock(content)
+        return if (range != null) {
+            content.replaceRange(range.first, range.last + 1, block)
+        } else if (block.isNotEmpty()) {
+            content.trimEnd() + "\n" + block + "\n"
         } else {
             content
+        }
+    }
+
+    private fun buildDependenciesBlock(deps: ProjectDependencies): String {
+        val lines = mutableListOf<String>()
+        if (deps.libs.isNotEmpty()) {
+            lines += "    libs = {" + deps.libs.joinToString(", ") { "\"$it\"" } + "}"
+        }
+        if (deps.modules.isNotEmpty()) {
+            lines += "    modules = {" + deps.modules.joinToString(", ") { "\"$it\"" } + "}"
+        }
+        if (lines.isEmpty()) return ""
+        return "dependencies = {\n" + lines.joinToString(",\n") + "\n}"
+    }
+
+    private val keyword = "dependencies"
+
+    private fun findDependenciesBlock(content: String): IntRange? {
+        var i = 0
+        val n = content.length
+        while (i < n) {
+            when (content[i]) {
+                '"', '\'' -> i = skipString(content, i)
+                '-' -> {
+                    if (i + 1 < n && content[i + 1] == '-') {
+                        i = skipLineComment(content, i)
+                    } else {
+                        i++
+                    }
+                }
+                '[' -> {
+                    val end = skipLongBracket(content, i)
+                    i = end ?: (i + 1)
+                }
+                else -> {
+                    if (content[i] == 'd' && content.regionMatches(i, keyword, 0, keyword.length)) {
+                        val beforeOk = i == 0 || !isWordChar(content[i - 1])
+                        val afterOk = i + keyword.length >= n || !isWordChar(content[i + keyword.length])
+                        if (beforeOk && afterOk) {
+                            var j = skipWhitespace(content, i + keyword.length)
+                            if (j < n && content[j] == '=') {
+                                j = skipWhitespace(content, j + 1)
+                                if (j < n && content[j] == '{') {
+                                    val end = skipBalancedBraces(content, j)
+                                    if (end != null) return i..end
+                                }
+                            }
+                        }
+                    }
+                    i++
+                }
+            }
+        }
+        return null
+    }
+
+    private fun isWordChar(c: Char): Boolean = c.isLetterOrDigit() || c == '_'
+
+    private fun skipWhitespace(content: String, start: Int): Int {
+        var i = start
+        while (i < content.length && content[i].isWhitespace()) i++
+        return i
+    }
+
+    /** 跳过双引号 / 单引号字符串（处理转义），返回字符串结束后的下标。 */
+    private fun skipString(content: String, start: Int): Int {
+        val quote = content[start]
+        var i = start + 1
+        while (i < content.length) {
+            when (content[i]) {
+                '\\' -> i += 2
+                quote -> return i + 1
+                else -> i++
+            }
+        }
+        return content.length
+    }
+
+    /** 跳过 `--` 行注释，返回行尾后的下标。 */
+    private fun skipLineComment(content: String, start: Int): Int {
+        var i = start + 2
+        while (i < content.length && content[i] != '\n') i++
+        return i
+    }
+
+    /** 若为长括号（`[[` / `[=[`）返回其结束后的下标，否则 null。 */
+    private fun skipLongBracket(content: String, start: Int): Int? {
+        var eq = 0
+        var i = start + 1
+        while (i < content.length && content[i] == '=') {
+            eq++
+            i++
+        }
+        if (i >= content.length || content[i] != '[') return null
+        i++
+        val closeTag = "]" + "=".repeat(eq) + "]"
+        val end = content.indexOf(closeTag, i)
+        return if (end < 0) content.length else end + closeTag.length
+    }
+
+    /** 从 `{` 起配平花括号（嵌套块内跳过字符串/注释/长括号），返回 `}` 下标。 */
+    private fun skipBalancedBraces(content: String, openIdx: Int): Int? {
+        var depth = 0
+        var i = openIdx
+        val n = content.length
+        while (i < n) {
+            when (content[i]) {
+                '{' -> depth++
+                '}' -> {
+                    depth--
+                    if (depth == 0) return i
+                }
+                '"', '\'' -> i = skipString(content, i)
+                '-' -> {
+                    if (i + 1 < n && content[i + 1] == '-') {
+                        i = skipLineComment(content, i)
+                    } else {
+                        i++
+                    }
+                }
+                '[' -> {
+                    val end = skipLongBracket(content, i)
+                    if (end != null) i = end
+                }
+            }
+            i++
+        }
+        return null
+    }
+
+    // ------------------------------------------------------------------
+    // 物化清单（.delua-materialized.json）
+    // ------------------------------------------------------------------
+
+    /** 记录本管理器物化到工程内的文件（相对路径），供运行前同步清理。 */
+    private data class MaterializationManifest(
+        val libraries: List<String> = emptyList(),
+        val modules: List<String> = emptyList(),
+    ) {
+        companion object {
+            private const val FILE_NAME = ".delua-materialized.json"
+
+            fun load(projectRoot: File): MaterializationManifest {
+                val file = File(projectRoot, FILE_NAME)
+                if (!file.exists()) return MaterializationManifest()
+                return try {
+                    val json = JSONObject(file.readText())
+                    MaterializationManifest(
+                        libraries = readStringList(json.optJSONArray("libraries")),
+                        modules = readStringList(json.optJSONArray("modules")),
+                    )
+                } catch (_: Exception) {
+                    MaterializationManifest()
+                }
+            }
+
+            private fun readStringList(array: org.json.JSONArray?): List<String> {
+                if (array == null) return emptyList()
+                return (0 until array.length()).map { array.getString(it) }
+            }
+        }
+
+        fun save(projectRoot: File) {
+            val json = JSONObject().apply {
+                put("schemaVersion", 1)
+                put("libraries", libraries)
+                put("modules", modules)
+            }
+            File(projectRoot, FILE_NAME).writeText(json.toString(2))
         }
     }
 }

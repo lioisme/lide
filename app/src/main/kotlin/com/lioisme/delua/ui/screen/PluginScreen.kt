@@ -17,9 +17,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.androlua.LuaApplication
+import com.lioisme.delua.R
 import com.lioisme.delua.androlua.PluginInfo
 import com.lioisme.delua.androlua.PluginManager
 import kotlinx.coroutines.Dispatchers
@@ -38,6 +40,8 @@ fun PluginScreen(
     var plugins by remember { mutableStateOf(listOf<PluginInfo>()) }
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
+    val strCannotReadFile = stringResource(R.string.cannot_read_file)
+    val strPluginInvalid = stringResource(R.string.plugin_invalid)
 
     fun refresh() {
         scope.launch {
@@ -58,7 +62,7 @@ fun PluginScreen(
             try {
                 val inputStream = withContext(Dispatchers.IO) { context.contentResolver.openInputStream(uri) }
                 if (inputStream == null) {
-                    snackbarHostState.showSnackbar("Cannot read file")
+                    snackbarHostState.showSnackbar(strCannotReadFile)
                     return@launch
                 }
                 val rawName = File(uri.lastPathSegment ?: "plugin.alp").name
@@ -74,13 +78,19 @@ fun PluginScreen(
                 }
                 withContext(Dispatchers.IO) { tempFile.delete() }
                 if (info != null) {
-                    Toast.makeText(context, "Plugin '${info.name}' installed", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.plugin_installed, info.name),
+                        Toast.LENGTH_SHORT
+                    ).show()
                     refresh()
                 } else {
-                    snackbarHostState.showSnackbar("Not a valid plugin (.alp)")
+                    snackbarHostState.showSnackbar(strPluginInvalid)
                 }
             } catch (e: Exception) {
-                snackbarHostState.showSnackbar("Error: ${e.message}")
+                snackbarHostState.showSnackbar(
+                    context.getString(R.string.error_prefix, e.message)
+                )
             }
         }
     }
@@ -89,15 +99,15 @@ fun PluginScreen(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
-                title = { Text("Plugins") },
+                title = { Text(stringResource(R.string.plugins)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.cd_back))
                     }
                 },
                 actions = {
                     IconButton(onClick = { alpPickerLauncher.launch("*/*") }) {
-                        Icon(Icons.Default.Add, contentDescription = "Install .alp")
+                        Icon(Icons.Default.Add, contentDescription = stringResource(R.string.plugin_install_alp))
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -121,13 +131,13 @@ fun PluginScreen(
                     )
                     Spacer(Modifier.height(16.dp))
                     Text(
-                        "No plugins installed",
+                        stringResource(R.string.plugin_empty_title),
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                     Spacer(Modifier.height(4.dp))
                     Text(
-                        "Install .alp files via the + button",
+                        stringResource(R.string.plugin_empty_hint),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
                     )
@@ -166,7 +176,11 @@ fun PluginScreen(
                                     fontWeight = FontWeight.Medium,
                                 )
                                 Text(
-                                    "v${plugin.version}${if (plugin.author.isNotBlank()) " by ${plugin.author}" else ""}",
+                                    if (plugin.author.isNotBlank()) {
+                                        context.getString(R.string.plugin_version_author, plugin.version, plugin.author)
+                                    } else {
+                                        context.getString(R.string.plugin_version, plugin.version)
+                                    },
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 )
@@ -180,7 +194,7 @@ fun PluginScreen(
                             }
                             Icon(
                                 Icons.Default.PlayArrow,
-                                contentDescription = "Run",
+                                contentDescription = stringResource(R.string.plugin_run),
                                 tint = MaterialTheme.colorScheme.primary,
                             )
                         }

@@ -1,7 +1,5 @@
 package com.lioisme.delua.model
 
-import com.lioisme.delua.androlua.common.model.ProjectDependencies
-
 data class Project(
     val name: String,
     val path: String,
@@ -11,5 +9,4 @@ data class Project(
     val appVersion: String = "1.0",
     val packageName: String = "",
     val icon: String? = null,
-    val dependencies: ProjectDependencies = ProjectDependencies()
 )

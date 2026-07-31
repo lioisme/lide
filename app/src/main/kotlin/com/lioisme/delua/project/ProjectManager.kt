@@ -3,8 +3,6 @@ package com.lioisme.delua.project
 import android.content.Context
 import android.util.Log
 import com.androlua.LuaApplication
-import com.lioisme.delua.androlua.common.DependencyManager
-import com.lioisme.delua.androlua.common.model.ProjectDependencies
 import com.lioisme.delua.editor.FileNode
 import com.lioisme.delua.model.Project
 import java.io.File
@@ -39,7 +37,6 @@ class ProjectManager(private val context: Context) {
         var packageName = ""
         var icon: String? = null
         var appName = dir.name
-        var dependencies = ProjectDependencies()
         if (initFile.exists()) {
             try {
                 val content = initFile.readText()
@@ -49,7 +46,6 @@ class ProjectManager(private val context: Context) {
                 appnameRegex.find(content)?.let { appName = it.groupValues[1] }
                 packageRegex.find(content)?.let { packageName = it.groupValues[1] }
                 iconRegex.find(content)?.let { icon = it.groupValues[1] }
-                dependencies = parseDependencies(content)
             } catch (_: Exception) { }
         }
         return Project(
@@ -58,7 +54,6 @@ class ProjectManager(private val context: Context) {
             files = files,
             packageName = packageName,
             icon = icon,
-            dependencies = dependencies
         )
     }
 
@@ -124,38 +119,6 @@ class ProjectManager(private val context: Context) {
         }
     }
 
-    private fun parseDependencies(content: String): ProjectDependencies {
-        val libsRegex = Regex("""libs\s*=\s*\{([^}]*)\}""")
-        val modsRegex = Regex("""modules\s*=\s*\{([^}]*)\}""")
-        val libs = libsRegex.find(content)?.let { match ->
-            val body = match.groupValues[1].trim()
-            if (body.isEmpty()) emptyList()
-            else body.split(",").map { it.trim().removeSurrounding("\"") }.filter { it.isNotEmpty() }
-        } ?: emptyList()
-        val modules = modsRegex.find(content)?.let { match ->
-            val body = match.groupValues[1].trim()
-            if (body.isEmpty()) emptyList()
-            else body.split(",").map { it.trim().removeSurrounding("\"") }.filter { it.isNotEmpty() }
-        } ?: emptyList()
-        return ProjectDependencies(libs = libs, modules = modules)
-    }
-
-    fun getProjectDependencies(project: Project): ProjectDependencies {
-        return try {
-            DependencyManager(context).getProjectDependencies(project.path)
-        } catch (_: Exception) {
-            ProjectDependencies()
-        }
-    }
-
-    fun setProjectDependencies(project: Project, deps: ProjectDependencies): Boolean {
-        return try {
-            DependencyManager(context).setProjectDependencies(project.path, deps).isSuccess
-        } catch (_: Exception) {
-            false
-        }
-    }
-
     fun createProject(name: String): Project? {
         val extDir = LuaApplication.getInstance().luaExtDir
         Log.d("ProjectManager", "createProject: name=$name, luaExtDir=$extDir")
@@ -195,7 +158,6 @@ dependencies = {
             path = dir.absolutePath,
             files = listOf("main.lua", "init.lua"),
             packageName = packageName,
-            dependencies = ProjectDependencies()
         )
     }
 
@@ -203,7 +165,9 @@ dependencies = {
         val libsDir = File(project.path, "libs")
         if (!libsDir.isDirectory) return emptyList()
         return libsDir.listFiles()
-            ?.filter { it.isFile && (it.name.endsWith(".jar") || it.name.endsWith(".dex")) }
+            ?.filter {
+                it.isFile && (it.name.endsWith(".jar") || it.name.endsWith(".dex") || it.name.endsWith(".so"))
+            }
             ?.map { it.name }
             ?.sorted() ?: emptyList()
     }

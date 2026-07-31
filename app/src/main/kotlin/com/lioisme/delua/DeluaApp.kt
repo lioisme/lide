@@ -14,6 +14,8 @@ class DeluaApp : LuaApplication() {
         LocaleManager.init(this)
         com.lioisme.delua.androlua.common.DependencyManager(this).ensureDirsExist()
         extractSamples()
+        extractExamplePlugin()
+        extractLayoutTemplates()
         extractLuadoc()
         preloadTextMate()
     }
@@ -32,6 +34,10 @@ class DeluaApp : LuaApplication() {
         LocaleManager.init(this)
     }
 
+    /**
+     * 内置示例工程：目标目录已存在即跳过（不覆盖用户修改；用户删除后也不再复活）。
+     * 版本化更新由宿主发版时的"改名 + 新示例"策略承担，避免无条件覆盖。
+     */
     private fun extractSamples() {
         val projectDir = File(luaExtDir, "project")
         projectDir.mkdirs()
@@ -39,29 +45,65 @@ class DeluaApp : LuaApplication() {
             val sampleNames = assets.list("samples") ?: return
             for (sampleName in sampleNames) {
                 val outDir = File(projectDir, sampleName)
+                if (outDir.exists()) continue
                 outDir.mkdirs()
-                val files = assets.list("samples/$sampleName") ?: continue
-                for (name in files) {
-                    val subFiles = assets.list("samples/$sampleName/$name")
-                    if (subFiles != null && subFiles.isNotEmpty()) {
-                        val subDir = File(outDir, name)
-                        subDir.mkdirs()
-                        for (subName in subFiles) {
-                            copyAsset("samples/$sampleName/$name/$subName", File(subDir, subName))
-                        }
-                    } else {
-                        copyAsset("samples/$sampleName/$name", File(outDir, name))
-                    }
-                }
+                copyAssetDir("samples/$sampleName", outDir)
             }
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
+    /** 示例插件（G4 收口）：asset 中的 plugin.json 配套 main.lua 提取到 plugin/example/，已存在即跳过。 */
+    private fun extractExamplePlugin() {
+        try {
+            val outDir = File(luaExtDir, "plugin/example")
+            if (outDir.exists()) return
+            outDir.mkdirs()
+            copyAsset("plugin/plugin.json", File(outDir, "plugin.json"))
+            File(outDir, "main.lua").writeText(
+                "-- Example plugin entry\n" +
+                    "local luadir, luapath = ...\n" +
+                    "print(\"Hello from the example plugin!\")\n" +
+                    "print(\"context: \" .. tostring(luadir) .. \" / \" .. tostring(luapath))\n"
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    /** 布局助手模板（pro 的 javaapi 目录 .aly 文件）：提取到 filesDir/layouts/，已存在即跳过。 */
+    private fun extractLayoutTemplates() {
+        try {
+            val outDir = File(filesDir, "layouts")
+            if (outDir.exists() && outDir.listFiles()?.isNotEmpty() == true) return
+            outDir.mkdirs()
+            copyAssetDir("layouts", outDir)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    /** 递归复制 assets 目录（"子目录"判定与 extractSamples 历史逻辑一致）。 */
+    private fun copyAssetDir(assetDir: String, outDir: File) {
+        val entries = assets.list(assetDir) ?: return
+        outDir.mkdirs()
+        for (entry in entries) {
+            val assetPath = "$assetDir/$entry"
+            val outFile = File(outDir, entry)
+            val subEntries = assets.list(assetPath)
+            if (subEntries != null && subEntries.isNotEmpty()) {
+                copyAssetDir(assetPath, outFile)
+            } else {
+                copyAsset(assetPath, outFile)
+            }
+        }
+    }
+
     private fun copyAsset(assetPath: String, outFile: File) {
         try {
             assets.open(assetPath).use { input ->
+                outFile.parentFile?.mkdirs()
                 FileOutputStream(outFile).use { output ->
                     input.copyTo(output)
                 }

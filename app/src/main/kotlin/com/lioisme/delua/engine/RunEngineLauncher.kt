@@ -20,7 +20,7 @@ class RunEngineLauncher(private val context: Context) {
     private val executor = Executors.newSingleThreadExecutor()
     private val mainHandler = Handler(Looper.getMainLooper())
 
-    fun launch(projectDir: String, mainFile: String = "main.lua") {
+    fun launch(projectDir: String, mainFile: String = "main.lua", args: Array<Any?>? = null) {
         executor.execute {
             val ok = DependencyManager(context)
                 .materializeProjectDependencies(projectDir)
@@ -28,7 +28,7 @@ class RunEngineLauncher(private val context: Context) {
             mainHandler.post {
                 if (ok) {
                     context.startActivity(
-                        EngineBridge(context).createEngineIntent(projectDir, mainFile)
+                        EngineBridge(context).createEngineIntent(projectDir, mainFile, args)
                     )
                     // 经典推入式转场（与 Compose 页面转场同款）：引擎页从右推入，宿主向左退出。
                     // Activity#overrideActivityTransition(OPEN) 的文档要求是「紧邻 startActivity 之后」调用，
