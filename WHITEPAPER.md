@@ -360,6 +360,21 @@ EngineActivity (extends LuaActivity, 独立 Activity 栈)
 
 ---
 
+## 7.1 原生模块差异声明（2026-08-01）
+
+> 对应 `docs/LIBS_SUPPORT_WORK_ORDER.md` LIBS-003 的最终结论。
+
+与 AndroLua_pro（`jni/` 19 个 C 模块源码随 APK 打包）相比，delua 内置原生模块为 **17 个 × 3 ABI**（15 个原有 + lfs + lsqlite3 已补齐）：
+
+- ✅ **lfs / lsqlite3**：已按 WP-001 流程预编译（`build-scripts/jni/{lfs,lsqlite3}/Android.mk` + `build-scripts/patches/lsqlite3/lsqlite3.c` 的 Lua 5.3 兼容补丁），产物入 `prebuilt/` 与 `app/src/main/jniLibs/`，真机 `require "lfs"` / `require "lsqlite3"` 验证通过。
+- ⏭️ **lluv**：与已内置的 luv 功能重叠（同源于 libuv），pro 生态中极少直接使用，不预编译。
+- ⏭️ **tcc**：脚本内嵌 C 编译器；NDK 29 仅 armeabi-v7a 有目标（无 arm64-v8a / x86_64），对现代设备无实际可用性，不预编译。
+- **补偿机制**：缺失模块（含任意第三方 .so）由工程 `libs/` 自备 —— 引擎 `loadLibs` 自动登记 `getLibrarys()`，`libsloader` 优先命中表，否则 `package.loadlib("./libs/lib…so", "luaopen_…")`。用法见 `app/src/main/assets/samples/DemoProject/libs/README.txt`。
+
+另注：delua 内置模块含 `gl`（OpenGL 绑定，对应 pro 的 luagl）与 `mime`（pro 未内置）等；`socket` 等常用模块与 pro 完全一致。内置 Lua 库为 pro 超集（31 文件 vs pro 28）。
+
+---
+
 ## 8. 风险与缓解
 
 | 风险 | 说明 | 缓解措施 |

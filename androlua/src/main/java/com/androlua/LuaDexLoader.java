@@ -8,15 +8,19 @@ import android.content.res.Resources;
 
 import com.luajava.LuaException;
 
+import dalvik.system.DexClassLoader;
+import dalvik.system.InMemoryDexClassLoader;
+
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.lang.reflect.Method;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import dalvik.system.DexClassLoader;
-
 public class LuaDexLoader {
-    private static HashMap<String, LuaDexClassLoader> dexCache = new HashMap<String, LuaDexClassLoader>();
+    private static HashMap<String, ClassLoader> dexCache = new HashMap<String, ClassLoader>();
     private ArrayList<ClassLoader> dexList = new ArrayList<ClassLoader>();
     private HashMap<String, String> libCache = new HashMap<String, String>();
 
@@ -47,9 +51,9 @@ public class LuaDexLoader {
         return dexList;
     }
 
-    public LuaDexClassLoader loadApp(String pkg) {
+    public ClassLoader loadApp(String pkg) {
         try {
-            LuaDexClassLoader dex = dexCache.get(pkg);
+            ClassLoader dex = dexCache.get(pkg);
             if (dex == null) {
                 PackageManager manager = mContext.getContext().getPackageManager();
                 ApplicationInfo info = manager.getPackageInfo(pkg, 0).applicationInfo;
@@ -106,8 +110,8 @@ public class LuaDexLoader {
     }
 
 
-    public DexClassLoader loadDex(String path) throws LuaException {
-        LuaDexClassLoader dex = dexCache.get(path);
+    public ClassLoader loadDex(String path) throws LuaException {
+        ClassLoader dex = dexCache.get(path);
         if(dex==null)
            dex = loadApp(path);
         if (dex == null){
@@ -127,16 +131,37 @@ public class LuaDexLoader {
             dex = dexCache.get(id);
 
             if (dex == null) {
-                dex = new LuaDexClassLoader(path, odexDir, LuaApplication.getInstance().getApplicationInfo().nativeLibraryDir, mContext.getContext().getClassLoader());
+                // Android 8.0+（W^X 策略）禁止从 app 可写位置加载 dex：
+                // /sdcard 经 FUSE 呈现 0664（chmod 无效）、/data/data 亦被拒，
+                // 均抛 SecurityException "Writable dex file ... is not allowed"。
+                // API 26+ 改走内存加载绕过路径校验；API < 26 保持原文件加载。
+                if (android.os.Build.VERSION.SDK_INT >= 26) {
+                    try {
+                        FileInputStream in = new FileInputStream(path);
+                        byte[] data;
+                        try {
+                            data = LuaUtil.readAll(in);
+                        } finally {
+                            in.close();
+                        }
+                        dex = new InMemoryDexClassLoader(ByteBuffer.wrap(data), mContext.getContext().getClassLoader());
+                    } catch (IOException e) {
+                        throw new LuaException(path + " can not load dex: " + e.getMessage());
+                    }
+                } else {
+                    dex = new LuaDexClassLoader(path, odexDir, LuaApplication.getInstance().getApplicationInfo().nativeLibraryDir, mContext.getContext().getClassLoader());
+                }
                 dexCache.put(id, dex);
             }
         }
 
         if (!dexList.contains(dex)) {
             dexList.add(dex);
-            path = dex.getDexPath();
-            if (path.endsWith(".jar"))
-                loadResources(path);
+            if (dex instanceof LuaDexClassLoader) {
+                path = ((LuaDexClassLoader) dex).getDexPath();
+                if (path.endsWith(".jar"))
+                    loadResources(path);
+            }
         }
         return dex;
     }

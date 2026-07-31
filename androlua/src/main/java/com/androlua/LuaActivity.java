@@ -572,11 +572,11 @@ public class LuaActivity extends Activity implements LuaBroadcastReceiver.OnRece
         zipInputStream.close();
     }
 
-    public DexClassLoader loadApp(String path) throws LuaException {
+    public ClassLoader loadApp(String path) throws LuaException {
         return mLuaDexLoader.loadApp(path);
     }
 
-    public DexClassLoader loadDex(String path) throws LuaException {
+    public ClassLoader loadDex(String path) throws LuaException {
         return mLuaDexLoader.loadDex(path);
     }
 

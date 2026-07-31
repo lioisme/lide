@@ -142,10 +142,6 @@ packagename = "$packageName"
 icon = nil
 pages = {"main"}
 user_permission = {}
-dependencies = {
-    libs = {},
-    modules = {}
-}
 """.trimIndent())
         } catch (e: Exception) {
             Log.e("ProjectManager", "Failed to write project files: ${e.message}")

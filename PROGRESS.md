@@ -414,22 +414,22 @@ CI åŒ…å«å››ä¸ª Jobï¼š
 
 ---
 
-## WP-009£ºÒÆ³ıÈ«¾ÖÒÀÀµ¹ÜÀí²ã£¨·½°¸ A£¬ÒÑÍê³É£©
+## WP-009ï¿½ï¿½ï¿½Æ³ï¿½È«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ã£¨ï¿½ï¿½ï¿½ï¿½ Aï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É£ï¿½
 
-**¾ö²ß**£º°´ `docs/DEPENDENCY_MODEL_AUDIT_REPORT.md` ·½°¸ A Ö´ĞĞ¡ª¡ª**É¾³ı** delua ×Ô´´µÄÈ«¾ÖÒÀÀµ¹ÜÀí²ã£¨`common/libs` + `common/modules` + init.lua `dependencies` ¿é + ÔËĞĞÇ°Îï»¯£©£¬»Ø¹é AndroLua Pro¡¸¹¤³ÌÄÚ×ÔĞĞ¹ÜÀí¡¹Ä£ĞÍ£»²»Ìá¹©¾É°æ±¾Ç¨ÒÆ¼æÈİ¡£**·´×ª WP-007 P2-12 / WP-008 P1-4~9 ÖĞ¡¸±£ÁôÈ«¾Ö²Ö¿â + Îï»¯Í¬²½¡¹µÄÖÕÌ¬¾ö²ß**£¬ÀíÓÉ£ºÈ«¾Ö²ãÓëÔËĞĞÊ±ÁãñîºÏ£¨Java ÔËĞĞÊ±¶Ô `common/` ÁãÒıÓÃ£©£¬ÇÒ S1 ±ØĞŞÈ±Ïİ£¨ÑùÀı `demo` ÉùÃ÷ `modules={"dkjson"}` ¶ø dkjson.lua Ëæ¹¤³Ì×Ô´ø£¬È«ĞÂ°²×°ºóÈ«¾Ö²Ö¿âÎª¿Õµ¼ÖÂ demo ¾Ü¾øÔËĞĞ£©¡£
+**ï¿½ï¿½ï¿½ï¿½**ï¿½ï¿½ï¿½ï¿½ `docs/DEPENDENCY_MODEL_AUDIT_REPORT.md` ï¿½ï¿½ï¿½ï¿½ A Ö´ï¿½Ğ¡ï¿½ï¿½ï¿½**É¾ï¿½ï¿½** delua ï¿½Ô´ï¿½ï¿½ï¿½È«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ã£¨`common/libs` + `common/modules` + init.lua `dependencies` ï¿½ï¿½ + ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï»¯ï¿½ï¿½ï¿½ï¿½ï¿½Ø¹ï¿½ AndroLua Proï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ğ¹ï¿½ï¿½ï¿½ï¿½ï¿½Ä£ï¿½Í£ï¿½ï¿½ï¿½ï¿½á¹©ï¿½É°æ±¾Ç¨ï¿½Æ¼ï¿½ï¿½İ¡ï¿½**ï¿½ï¿½×ª WP-007 P2-12 / WP-008 P1-4~9 ï¿½Ğ¡ï¿½ï¿½ï¿½ï¿½ï¿½È«ï¿½Ö²Ö¿ï¿½ + ï¿½ï»¯Í¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì¬ï¿½ï¿½ï¿½ï¿½**ï¿½ï¿½ï¿½ï¿½ï¿½É£ï¿½È«ï¿½Ö²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½Ï£ï¿½Java ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ `common/` ï¿½ï¿½ï¿½ï¿½ï¿½Ã£ï¿½ï¿½ï¿½ï¿½ï¿½ S1 ï¿½ï¿½ï¿½ï¿½È±ï¿½İ£ï¿½ï¿½ï¿½ï¿½ï¿½ `demo` ï¿½ï¿½ï¿½ï¿½ `modules={"dkjson"}` ï¿½ï¿½ dkjson.lua ï¿½æ¹¤ï¿½ï¿½ï¿½Ô´ï¿½ï¿½ï¿½È«ï¿½Â°ï¿½×°ï¿½ï¿½È«ï¿½Ö²Ö¿ï¿½Îªï¿½Õµï¿½ï¿½ï¿½ demo ï¿½Ü¾ï¿½ï¿½ï¿½ï¿½Ğ£ï¿½ï¿½ï¿½
 
-**Íê³ÉÄÚÈİ**£º
-- **Éó¼Æ²ú³ö**£º`docs/DEPENDENCY_MODEL_AUDIT_REPORT.md`£¨S1¨CS7 È±ÏİÇåµ¥¡¢A/B/C ·½°¸¶Ô±È¡¢É¾³ı/±£ÁôÇåµ¥£©¡£
-- **ÔËĞĞÊ±É¾³ı**£º`androlua/.../common/{DependencyManager,LibraryRegistry,ModuleRegistry}.kt` + `common/model/{LibraryInfo,ModuleInfo,ProjectDependencies}.kt`£¬`common/` Ä¿Â¼ÕûÌåÒÆ³ı¡£
-- **UI É¾³ı**£º`LibraryManagerScreen.kt`¡¢`ModuleManagerScreen.kt`¡¢`ProjectDependenciesScreen.kt`£»Settings ÒÆ³ı¿â/Ä£¿éÁ½¸öÈë¿ÚÏî£»EditorToolbar ÒÆ³ıÒÀÀµ¹ÜÀí²Ëµ¥Ïî£¨DropdownMenu/MoreVert/menu_more/menu_dependencies£©£»NavHost ÒÆ³ı LIBRARIES/MODULES/DEPENDENCIES ÈıÌõÂ·ÓÉÓë `dependencies()` ¹¹Ôì¡£
-- **Æô¶¯Á´»¹Ô­**£º`RunEngineLauncher.kt` ÖØĞ´Îª´¿Ö±Æô£¨ÒÆ³ıºóÌ¨Ïß³ÌÒÀÀµÎï»¯ + Ê§°Ü Toast£©£¬`DeluaApp` ÒÆ³ı `ensureDirsExist()`¡£
-- **ÒÀÀµÊÕ¿Ú**£º`ProjectManager.getLocalLibFiles` É¾³ı£»`app/build.gradle.kts` ÒÆ³ı `androidx.documentfile:documentfile:1.0.1`£¨ÁãÒıÓÃ£©¡£
-- **×Ö·û´®**£ºvalues + values-zh ¸÷É¾³ı 49 Ìõ£¨¿â/Ä£¿é¹ÜÀíÆ÷¡¢ÒÀÀµÉùÃ÷¡¢°æ±¾/´óĞ¡/×÷Õß±êÇ©¡¢Ğ¶ÔØ¡¢run_materialize_failed£©+ 4 ÌõÊ§Ğ§×¢ÊÍ£»editor Ë«ÓïÑÔ¸÷É¾ 2 Ìõ£¨menu_more/menu_dependencies£©£»S7 `dependencies_title` ÂÒÂëËæÉ¾³ı×ÔÈ»ÏûÊ§¡£
-- **ÑùÀı**£º`demo/init.lua` ÒÆ³ı `modules={"dkjson"}` ÒÀÀµ¿é¡¢`testjson/init.lua` ÒÆ³ı¿ÕÒÀÀµ¿é£¨kleinbottle/DemoProject ±¾¾ÍÎŞ¿é£©¡£
+**ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½**ï¿½ï¿½
+- **ï¿½ï¿½Æ²ï¿½ï¿½ï¿½**ï¿½ï¿½`docs/DEPENDENCY_MODEL_AUDIT_REPORT.md`ï¿½ï¿½S1ï¿½CS7 È±ï¿½ï¿½ï¿½åµ¥ï¿½ï¿½A/B/C ï¿½ï¿½ï¿½ï¿½ï¿½Ô±È¡ï¿½É¾ï¿½ï¿½/ï¿½ï¿½ï¿½ï¿½ï¿½åµ¥ï¿½ï¿½ï¿½ï¿½
+- **ï¿½ï¿½ï¿½ï¿½Ê±É¾ï¿½ï¿½**ï¿½ï¿½`androlua/.../common/{DependencyManager,LibraryRegistry,ModuleRegistry}.kt` + `common/model/{LibraryInfo,ModuleInfo,ProjectDependencies}.kt`ï¿½ï¿½`common/` Ä¿Â¼ï¿½ï¿½ï¿½ï¿½ï¿½Æ³ï¿½ï¿½ï¿½
+- **UI É¾ï¿½ï¿½**ï¿½ï¿½`LibraryManagerScreen.kt`ï¿½ï¿½`ModuleManagerScreen.kt`ï¿½ï¿½`ProjectDependenciesScreen.kt`ï¿½ï¿½Settings ï¿½Æ³ï¿½ï¿½ï¿½/Ä£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½î£»EditorToolbar ï¿½Æ³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ëµï¿½ï¿½î£¨DropdownMenu/MoreVert/menu_more/menu_dependenciesï¿½ï¿½ï¿½ï¿½NavHost ï¿½Æ³ï¿½ LIBRARIES/MODULES/DEPENDENCIES ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ `dependencies()` ï¿½ï¿½ï¿½ì¡£
+- **ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô­**ï¿½ï¿½`RunEngineLauncher.kt` ï¿½ï¿½Ğ´Îªï¿½ï¿½Ö±ï¿½ï¿½ï¿½ï¿½ï¿½Æ³ï¿½ï¿½ï¿½Ì¨ï¿½ß³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï»¯ + Ê§ï¿½ï¿½ Toastï¿½ï¿½ï¿½ï¿½`DeluaApp` ï¿½Æ³ï¿½ `ensureDirsExist()`ï¿½ï¿½
+- **ï¿½ï¿½ï¿½ï¿½ï¿½Õ¿ï¿½**ï¿½ï¿½`ProjectManager.getLocalLibFiles` É¾ï¿½ï¿½ï¿½ï¿½`app/build.gradle.kts` ï¿½Æ³ï¿½ `androidx.documentfile:documentfile:1.0.1`ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã£ï¿½ï¿½ï¿½
+- **ï¿½Ö·ï¿½ï¿½ï¿½**ï¿½ï¿½values + values-zh ï¿½ï¿½É¾ï¿½ï¿½ 49 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½/Ä£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½æ±¾/ï¿½ï¿½Ğ¡/ï¿½ï¿½ï¿½ß±ï¿½Ç©ï¿½ï¿½Ğ¶ï¿½Ø¡ï¿½run_materialize_failedï¿½ï¿½+ 4 ï¿½ï¿½Ê§Ğ§×¢ï¿½Í£ï¿½editor Ë«ï¿½ï¿½ï¿½Ô¸ï¿½É¾ 2 ï¿½ï¿½ï¿½ï¿½menu_more/menu_dependenciesï¿½ï¿½ï¿½ï¿½S7 `dependencies_title` ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½È»ï¿½ï¿½Ê§ï¿½ï¿½
+- **ï¿½ï¿½ï¿½ï¿½**ï¿½ï¿½`demo/init.lua` ï¿½Æ³ï¿½ `modules={"dkjson"}` ï¿½ï¿½ï¿½ï¿½ï¿½é¡¢`testjson/init.lua` ï¿½Æ³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½é£¨kleinbottle/DemoProject ï¿½ï¿½ï¿½ï¿½ï¿½Ş¿é£©ï¿½ï¿½
 
-**ÑéÊÕ**£º`:app:compileArm64DebugKotlin` âœ…¡¢`:app:assembleArm64Debug` âœ…£¨BUILD SUCCESSFUL£©¡¢`:editor` R1 ±ß½ç grep£¨luajava|androlua|loadLibrary£©ÁãÃüÖĞ âœ…¡¢È«¿â²ĞÁô·ûºÅÉ¨Ãè£¨DependencyManager/LibraryRegistry/ModuleRegistry/LibraryInfo/ModuleInfo/ProjectDependencies/getLocalLibFiles/Routes.{LIBRARIES,MODULES,DEPENDENCIES}/onDependencies/run_materialize_failed/menu_dependencies/documentfile£©ÁãÃüÖĞ âœ…¡£
+**ï¿½ï¿½ï¿½ï¿½**ï¿½ï¿½`:app:compileArm64DebugKotlin` âœ…ï¿½ï¿½`:app:assembleArm64Debug` âœ…ï¿½ï¿½BUILD SUCCESSFULï¿½ï¿½ï¿½ï¿½`:editor` R1 ï¿½ß½ï¿½ grepï¿½ï¿½luajava|androlua|loadLibraryï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ âœ…ï¿½ï¿½È«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É¨ï¿½è£¨DependencyManager/LibraryRegistry/ModuleRegistry/LibraryInfo/ModuleInfo/ProjectDependencies/getLocalLibFiles/Routes.{LIBRARIES,MODULES,DEPENDENCIES}/onDependencies/run_materialize_failed/menu_dependencies/documentfileï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ âœ…ï¿½ï¿½
 
-**Ê£Óà**£ºÕæ»ú»Ø¹é£¨demo/testjson È«ĞÂ°²×°¼´¿ÉÔËĞĞ¡¢`.so` ¹¤³ÌÄÚ `libs/` ¼ÓÔØ¡¢²å¼ş `{luadir, luapath}`£©´ıÉè±¸ÑéÖ¤¡£
+**Ê£ï¿½ï¿½**ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø¹é£¨demo/testjson È«ï¿½Â°ï¿½×°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ğ¡ï¿½`.so` ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ `libs/` ï¿½ï¿½ï¿½Ø¡ï¿½ï¿½ï¿½ï¿½ `{luadir, luapath}`ï¿½ï¿½ï¿½ï¿½ï¿½è±¸ï¿½ï¿½Ö¤ï¿½ï¿½
 
 ## æ•´ä½“éªŒæ”¶çŠ¶æ€
 
@@ -443,3 +443,37 @@ CI åŒ…å«å››ä¸ª Jobï¼š
 | ACC-06 | å¼•æ“ä¸å®¿ä¸» Java è¿è¡Œæ—¶æºç é›†æˆ | âœ… è®¾è®¡ç¡®è®¤ï¼ˆ`androlua` æ¨¡å—ç¼–è¯‘è¿›ä¸» DEXï¼‰ |
 | ACC-07 | `prebuilt/` äº§ç‰©é½å…¨ | âœ… ç¡®è®¤ |
 | ACC-08 | APK ä½“ç§¯ â‰¤ 30MB | âšª å¾… APK æ„å»ºååˆ†æ |
+
+---
+
+## WP-010ï¼š/libs å…¨é“¾è·¯æ”¯æŒï¼ˆLIBS-001~007ï¼Œå·²å®Œæˆï¼‰
+
+**ç›®æ ‡**ï¼šæŒ‰ `docs/LIBS_SUPPORT_WORK_ORDER.md` å®Œæˆå·¥ç¨‹ `/libs`ï¼ˆ.dex / .so / .luaï¼‰å…¨é“¾è·¯èƒ½åŠ›æ”¶å£ä¸çœŸæœºéªŒè¯ã€‚å…¨éƒ¨é€šè¿‡ `:app:assembleArm64Debug`ã€‚
+
+**å®Œæˆå†…å®¹**ï¼š
+
+### LIBS-001/002/004/005ï¼ˆæ¸…ç†ä¸æ”¶å£ï¼‰
+- åˆ é™¤ `androlua/src/main/assets/builtin/import.lua` æ­»ä»£ç ï¼ˆ`git rm`ï¼Œrg é›¶æ®‹ç•™ï¼‰ã€‚
+- å†…ç½® Lua èµ„äº§å•ä¸€æ¥æºæ”¶å£ï¼š`loadlayout2/loadlayout3/xml2table.lua` ä» `:androlua` ä¸Šç§»è‡³ `:app/assets/lua/`ï¼ˆæ–¹æ¡ˆ Aï¼‰ï¼Œ`:androlua` ä¸å†æºå¸¦ä»»ä½• `.lua`ã€‚
+- `DemoProject/libs/README.txt` ä¿®æ­£ï¼ˆ`loadDex` éå…¨å±€å‡½æ•°ï¼›æ¨è `import "com.example.mylib.*"`ï¼‰ã€‚
+- `ProjectManager.createProject` æ¨¡æ¿åˆ é™¤ `dependencies` å—ï¼ˆå¼•æ“ä¸æ¶ˆè´¹ï¼‰ã€‚
+
+### LIBS-003ï¼ˆåŸç”Ÿæ¨¡å—è¡¥é½ï¼Œéƒ¨åˆ†å®Œæˆï¼‰
+- **lfs / lsqlite3 å·²è¡¥é½**ï¼š`build-scripts/jni/{lfs,lsqlite3}/Android.mk` + `build-scripts/patches/lsqlite3/lsqlite3.c`ï¼ˆLua 5.3 `lua_strlen` å…¼å®¹è¡¥ä¸ï¼‰ï¼›`scripts/rebuild_engine.{ps1,sh}` æ‰©å±•ï¼ˆ`DISABLED_MODULES=("lluv","tcc")`ï¼‰ï¼›NDK 29 ç¼–è¯‘äº§ç‰©å…¥ `prebuilt/` ä¸ `app/src/main/jniLibs/`ï¼ˆ3 ABI Ã— 2 æ¨¡å—ï¼‰ã€‚
+- **lluv / tcc è·³è¿‡**ï¼ˆæŒ‰é¢„æ¡ˆï¼‰ï¼šlluv ä¸ luv åŠŸèƒ½é‡å ï¼›tcc æ—  arm64/x86_64 ç›®æ ‡ã€‚å·®å¼‚å£°æ˜å…¥ WHITEPAPER Â§7.1ã€‚
+
+### å¼•æ“ä¿®å¤ï¼šW^X writable-dexï¼ˆLIBS-006 éªŒè¯ä¸­å‘ç°ï¼Œè¶…å‡ºå·¥ä½œå•èŒƒå›´ï¼‰
+- çœŸæœºå®è¯ï¼šAndroid 8+/14+ ç¦æ­¢ä» app å¯å†™ç›®å½•åŠ è½½ dexï¼ˆ`Writable dex file ... is not allowed`ï¼‰ï¼Œ`/sdcard`ï¼ˆFUSEï¼Œchmod æ— æ•ˆï¼‰ä¸ `/data/data` å‡è¢«æ‹’ã€‚
+- `LuaDexLoader.loadDex` ä¿®å¤ï¼šAPIâ‰¥26 èµ° `InMemoryDexClassLoader(ByteBuffer.wrap(readAll))`ï¼›`loadDex`/`loadApp` è¿”å›ç±»å‹æ”¹ `ClassLoader`ï¼›`dexCache` æ”¹ `HashMap<String,ClassLoader>`ï¼›`.jar` loadResources ä»…å¯¹ `LuaDexClassLoader` å®ä¾‹ç”Ÿæ•ˆï¼›`LuaActivity`/`LuaService` åŒæ­¥ã€‚è¯¥æ–‡ä»¶æˆä¸º**æœ‰æ„çš„**ä¸ pro çš„å·®å¼‚ï¼ˆå·¥ä½œå• Â§10.1 å·²ä¿®è®¢ï¼‰ã€‚
+
+### LIBS-006 çœŸæœºéªŒè¯çŸ©é˜µï¼ˆV-01~V-10 å…¨é€šè¿‡ï¼‰
+- è®¾å¤‡ï¼šSDK 36ï¼ˆarm64-v8aï¼‰ç”Ÿäº§ buildï¼›å·¥ç¨‹ `AndroLua/project/libsTest/`ï¼›`androlua://` æ‹‰èµ·ã€‚
+- V-01 PASS auto-loaded-widget|42ï¼›V-02 PASS extra-dex-loadedï¼›V-03 PASS 42.0ï¼ˆè‡ªåˆ¶ libmytest.soï¼‰ï¼›V-04 PASS LuaSocket 3.0-rc1;true;true;true;true;3.0ï¼›V-05 PASS hello-from-project-lua-subdirï¼›V-06 PASS init-env-isolatedï¼›V-07 PASS 29\|import=trueï¼ˆuninstall/reinstall å†·å¯åŠ¨è§£åŒ…ï¼‰ï¼›V-08 PASS checkV08=true/falseï¼ˆèµ„äº§å‡çº§è¦†ç›– + è¿˜åŸï¼‰ï¼›V-09 PASS missing=false\|corruptClass=falseï¼ˆcorrupt.dex ä¸å†ä¸­æ­¢å¯åŠ¨ï¼Œä¼˜äºé¢„æœŸï¼‰ï¼›V-10 PASS 2->2ï¼ˆclassloaders ç¨³å®šï¼‰ã€‚
+- å…³é”®ç»éªŒï¼ˆå·¥ä½œå• Â§5.3-9/10ï¼‰ï¼šJava æ–¹æ³•ç‚¹è¯­æ³•ï¼ˆå†’å·è°ƒç”¨å‚æ•°é”™ä½ï¼‰ï¼›`getFilesDir()` è¢« `getDir(String,int)` é®è”½ï¼›ç”Ÿäº§ build æ—  `pm clear`/`pm grant`ï¼Œå†·å¯åŠ¨ç”¨ uninstall/reinstallï¼Œå­˜å‚¨æƒé™èµ°ã€Œæ‰€æœ‰æ–‡ä»¶è®¿é—®ã€è®¾ç½®é¡µ + uiautomatorã€‚
+
+### LIBS-007 æ–‡æ¡£æ”¶å£
+- å·¥ä½œå•å›å¡«ç»ˆæ€ï¼›WHITEPAPER Â§7.1 åŸç”Ÿæ¨¡å—å·®å¼‚å£°æ˜ï¼›AGENTS.md æ–°å¢ã€Œ/libs æœºåˆ¶çº¦å®šã€ï¼›æœ¬æ¡ç›®ï¼ˆWP-010ï¼‰ã€‚
+
+**éªŒæ”¶**ï¼š`:app:assembleArm64Debug` âœ…ï¼ˆBUILD SUCCESSFULï¼‰ã€`:editor` R1 è¾¹ç•Œ grep é›¶å‘½ä¸­ âœ…ã€çœŸæœºçŸ©é˜µ V-01~V-10 å…¨ç»¿ âœ…ï¼ˆæ—¥å¿— `%TEMP%\delua-verify\matrix-final*.txt`ï¼‰ã€‚
+
+**å‰©ä½™**ï¼šæ— å¼ºåˆ¶é¡¹ï¼ˆV-04 ä¸­ `require "lluv"`/`"tcc"` æŒ‰å·®å¼‚å£°æ˜ä¸æä¾›ï¼›mytest åº“ä¸ºéªŒè¯ä¸“ç”¨ä¸åœ¨ä»“åº“ï¼‰ã€‚

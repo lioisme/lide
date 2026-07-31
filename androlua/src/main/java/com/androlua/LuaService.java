@@ -84,7 +84,7 @@ public class LuaService extends Service implements LuaContext,LuaBroadcastReceiv
 		return mLuaDexLoader.getClassLoaders();
 	}
 
-	public DexClassLoader loadDex(String path) throws LuaException {
+	public ClassLoader loadDex(String path) throws LuaException {
 		return mLuaDexLoader.loadDex(path);
 	}
 

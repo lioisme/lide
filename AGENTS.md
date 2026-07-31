@@ -32,3 +32,12 @@ rg -n "luajava|androlua|loadLibrary" editor/src
 - 自动保存：快照与写盘均在 `Dispatchers.IO`；离开编辑器时经 `onRelease` 兜底保存。
 - 大文件（> 200 KB）：关闭括号高亮 / 当前块 / 自动换行，并跳过行级诊断。
 - 补全、诊断、事件回调必须 `try/catch(Throwable)` 降级，不得让异常逃逸进 sora 主循环。
+
+## /libs 机制约定（工程 /libs 支持，详见 docs/LIBS_SUPPORT_WORK_ORDER.md）
+
+- 引擎初始化时序不可变：`luaDir` 由 `EngineActivity.getLuaPath()` 设为 `projectDir` 后，`new LuaDexLoader(this)` + `loadLibs()`（LuaActivity.onCreate 顺序）。乱序会导致 dex/so 静默不加载。
+- `activity` / `service` 全局是 `import.lua` 的生命线（`local luacontext = activity or service`），禁止破坏 `initLua()` 的全局注册。
+- **dex 必须内存加载**：Android 8+/14+ W^X 拒绝从任何 app 可写目录加载 dex。`LuaDexLoader.loadDex` 在 API≥26 走 `InMemoryDexClassLoader` 字节加载，禁止回退为文件路径加载（V-01/V-02 真机回归兜底）。
+- 脚本调 Java 方法用**点语法**（`activity.loadDex(path)`、`obj.mul(6,7)`）；冒号调用会把 self 推进栈导致参数错位。`getFilesDir()` 被 `getDir(String,int)` 遮蔽，需用 `getDir(...).getParentFile()`。
+- 工程 `libs/lib*.so` 一律经 `libsloader` / `getLibrarys()` / `package.loadlib` 路径加载；宿主 APK 内置 .so 由 `nativeLibraryDir` 提供，两者入口不同，混淆会 `UnsatisfiedLinkError`。
+- 工程 `libs/` 内容按不可信输入对待：dex/so 加载失败必须降级（不崩溃），错误信息可读。

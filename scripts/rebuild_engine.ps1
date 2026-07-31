@@ -35,19 +35,21 @@ if (-not $DELUA_ROOT) {
 }
 $PREBUILT_DIR = Join-Path $DELUA_ROOT "prebuilt"
 $JNILIBS_DIR = Join-Path $DELUA_ROOT "app\src\main\jniLibs"
-$JNI_SRC_DIR = Join-Path $DELUA_ROOT "docs\AndroLua_pro-master\app\src\main\jni"
+$JNI_SRC_DIR = Join-Path $DELUA_ROOT "docs\reference\androlua\AndroLua_pro-master\app\src\main\jni"
 $JNI_CFG_DIR = Join-Path $DELUA_ROOT "build-scripts\jni"
 $BUILD_DIR = Join-Path $env:TEMP "delua-ndk-build"
 $BUILD_LOG = Join-Path $BUILD_DIR "build.log"
 
 # Disabled modules kept in reference tree (Android.mk2 only / no build file)
-$DISABLED_MODULES = @("lluv", "lsqlite3", "tcc", "lfs")
+# Note: lfs & lsqlite3 are enabled (build-scripts/jni has Android.mk).
+# lluv is superseded by luv (already shipped); tcc lacks arm64/x86_64 targets.
+$DISABLED_MODULES = @("lluv", "tcc")
 
 # Expected shared library modules (excluding luajava which is the base dependency)
 $EXPECTED_MODULES = @(
     "cjson", "md5", "crypt", "zip", "xml", "regex",
     "zlib", "canvas", "bson", "luv", "socket", "mime",
-    "sensor", "gl"
+    "sensor", "gl", "lfs", "lsqlite3"
 )
 
 # 1. Locate NDK
