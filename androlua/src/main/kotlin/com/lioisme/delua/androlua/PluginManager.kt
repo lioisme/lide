@@ -87,25 +87,16 @@ class PluginManager {
         return try {
             val init = initFile.readText()
             PluginInfo(
-                name = fieldOf(init, "appname") ?: dir.name,
+                name = LuaConfigParser.stringField(init, "appname") ?: dir.name,
                 dir = dir.absolutePath,
-                version = fieldOf(init, "appver") ?: "1.0",
-                description = fieldOf(init, "description") ?: "",
+                version = LuaConfigParser.stringField(init, "appver") ?: "1.0",
+                description = LuaConfigParser.stringField(init, "description") ?: "",
                 main = "main.lua",
-                author = fieldOf(init, "author") ?: "",
+                author = LuaConfigParser.stringField(init, "author") ?: "",
             )
         } catch (e: Exception) {
             Log.w("PluginManager", "failed to read init.lua in ${dir.name}: ${e.message}")
             null
         }
-    }
-
-    private fun fieldOf(content: String, field: String): String? {
-        val regex = Regex("""(?m)^\s*$field\s*=\s*"([^"]*)"\s*$""")
-        val quoted = regex.find(content)?.groupValues?.get(1)
-        if (quoted != null) return quoted
-        val plain = Regex("""(?m)^\s*$field\s*=\s*([^\s"]+)\s*$""")
-            .find(content)?.groupValues?.get(1)
-        return plain?.takeIf { !it.startsWith("{") && !it.startsWith("[") && !it.startsWith("nil") }
     }
 }

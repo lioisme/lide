@@ -152,10 +152,6 @@ class MainActivity : ComponentActivity() {
                 icon = nil
                 pages = {"main"}
                 user_permission = {}
-                dependencies = {
-                    libs = {},
-                    modules = {}
-                }
                 """.trimIndent()
             )
             projectDir.absolutePath to file.name

@@ -3,6 +3,7 @@ package com.lioisme.delua.project
 import android.content.Context
 import android.util.Log
 import com.androlua.LuaApplication
+import com.lioisme.delua.androlua.LuaConfigParser
 import com.lioisme.delua.editor.FileNode
 import com.lioisme.delua.model.Project
 import java.io.File
@@ -40,12 +41,11 @@ class ProjectManager(private val context: Context) {
         if (initFile.exists()) {
             try {
                 val content = initFile.readText()
-                val appnameRegex = Regex("""appname\s*=\s*"([^"]*)"""")
-                val packageRegex = Regex("""(?:package|packagename)\s*=\s*"([^"]*)"""")
-                val iconRegex = Regex("""icon\s*=\s*"([^"]*)"""")
-                appnameRegex.find(content)?.let { appName = it.groupValues[1] }
-                packageRegex.find(content)?.let { packageName = it.groupValues[1] }
-                iconRegex.find(content)?.let { icon = it.groupValues[1] }
+                // 结构化解析（跳过注释/字符串，避免正则命中注释内容）。
+                appName = LuaConfigParser.stringField(content, "appname") ?: appName
+                packageName = LuaConfigParser.stringField(content, "packagename")
+                    ?: LuaConfigParser.stringField(content, "package") ?: ""
+                icon = LuaConfigParser.stringField(content, "icon")
             } catch (_: Exception) { }
         }
         return Project(
