@@ -13,6 +13,16 @@ class DeluaApp : LuaApplication() {
         LocaleManager.init(this)
         com.lioisme.delua.androlua.common.DependencyManager(this).ensureDirsExist()
         extractSamples()
+        preloadTextMate()
+    }
+
+    private fun preloadTextMate() {
+        Thread {
+            com.lioisme.delua.ui.editor.TextMateInitializer.initialize(applicationContext)
+        }.apply {
+            name = "TextMatePreload"
+            isDaemon = true
+        }.start()
     }
 
     override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {

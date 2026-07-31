@@ -1,6 +1,6 @@
 1<?xml version="1.0" encoding="utf-8"?>
 2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-3    package="com.delua"
+3    package="com.lioisme.delua"
 4    android:versionCode="1"
 5    android:versionName="1.0" >
 6
@@ -14,119 +14,280 @@
 12    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 12-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:5:5-81
 12-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:5:22-78
-13
-14    <permission
-14-->[androidx.core:core:1.13.1] C:\Users\liois\.gradle\caches\9.5.1\transforms\fb5f17a15ee1553bc2c9d4e5cf7af10f\transformed\core-1.13.1\AndroidManifest.xml:22:5-24:47
-15        android:name="com.delua.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
-15-->[androidx.core:core:1.13.1] C:\Users\liois\.gradle\caches\9.5.1\transforms\fb5f17a15ee1553bc2c9d4e5cf7af10f\transformed\core-1.13.1\AndroidManifest.xml:23:9-81
-16        android:protectionLevel="signature" />
-16-->[androidx.core:core:1.13.1] C:\Users\liois\.gradle\caches\9.5.1\transforms\fb5f17a15ee1553bc2c9d4e5cf7af10f\transformed\core-1.13.1\AndroidManifest.xml:24:9-44
-17
-18    <uses-permission android:name="com.delua.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
-18-->[androidx.core:core:1.13.1] C:\Users\liois\.gradle\caches\9.5.1\transforms\fb5f17a15ee1553bc2c9d4e5cf7af10f\transformed\core-1.13.1\AndroidManifest.xml:26:5-97
-18-->[androidx.core:core:1.13.1] C:\Users\liois\.gradle\caches\9.5.1\transforms\fb5f17a15ee1553bc2c9d4e5cf7af10f\transformed\core-1.13.1\AndroidManifest.xml:26:22-94
-19
-20    <application
-20-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:7:5-23:19
-21        android:name="com.delua.DeluaApp"
-21-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:8:9-33
-22        android:allowBackup="true"
-22-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:9:9-35
-23        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
-23-->[androidx.core:core:1.13.1] C:\Users\liois\.gradle\caches\9.5.1\transforms\fb5f17a15ee1553bc2c9d4e5cf7af10f\transformed\core-1.13.1\AndroidManifest.xml:28:18-86
-24        android:debuggable="true"
-25        android:extractNativeLibs="false"
-26        android:label="@string/app_name"
-26-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:10:9-41
-27        android:supportsRtl="true"
-27-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:11:9-35
-28        android:theme="@style/Theme.Delua" >
-28-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:12:9-43
-29        <activity
-29-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:14:9-22:20
-30            android:name="com.delua.MainActivity"
-30-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:15:13-41
-31            android:exported="true"
-31-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:16:13-36
-32            android:windowSoftInputMode="adjustResize" >
-32-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:17:13-55
-33            <intent-filter>
-33-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:18:13-21:29
-34                <action android:name="android.intent.action.MAIN" />
-34-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:19:17-69
-34-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:19:25-66
-35
-36                <category android:name="android.intent.category.LAUNCHER" />
-36-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:20:17-77
-36-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:20:27-74
-37            </intent-filter>
-38        </activity>
-39
-40        <provider
-40-->[androidx.emoji2:emoji2:1.3.0] C:\Users\liois\.gradle\caches\9.5.1\transforms\9f45f28b65c2b627c617d0a692eecb4f\transformed\emoji2-1.3.0\AndroidManifest.xml:24:9-32:20
-41            android:name="androidx.startup.InitializationProvider"
-41-->[androidx.emoji2:emoji2:1.3.0] C:\Users\liois\.gradle\caches\9.5.1\transforms\9f45f28b65c2b627c617d0a692eecb4f\transformed\emoji2-1.3.0\AndroidManifest.xml:25:13-67
-42            android:authorities="com.delua.androidx-startup"
-42-->[androidx.emoji2:emoji2:1.3.0] C:\Users\liois\.gradle\caches\9.5.1\transforms\9f45f28b65c2b627c617d0a692eecb4f\transformed\emoji2-1.3.0\AndroidManifest.xml:26:13-68
-43            android:exported="false" >
-43-->[androidx.emoji2:emoji2:1.3.0] C:\Users\liois\.gradle\caches\9.5.1\transforms\9f45f28b65c2b627c617d0a692eecb4f\transformed\emoji2-1.3.0\AndroidManifest.xml:27:13-37
-44            <meta-data
-44-->[androidx.emoji2:emoji2:1.3.0] C:\Users\liois\.gradle\caches\9.5.1\transforms\9f45f28b65c2b627c617d0a692eecb4f\transformed\emoji2-1.3.0\AndroidManifest.xml:29:13-31:52
-45                android:name="androidx.emoji2.text.EmojiCompatInitializer"
-45-->[androidx.emoji2:emoji2:1.3.0] C:\Users\liois\.gradle\caches\9.5.1\transforms\9f45f28b65c2b627c617d0a692eecb4f\transformed\emoji2-1.3.0\AndroidManifest.xml:30:17-75
-46                android:value="androidx.startup" />
-46-->[androidx.emoji2:emoji2:1.3.0] C:\Users\liois\.gradle\caches\9.5.1\transforms\9f45f28b65c2b627c617d0a692eecb4f\transformed\emoji2-1.3.0\AndroidManifest.xml:31:17-49
-47            <meta-data
-47-->[androidx.lifecycle:lifecycle-process:2.8.2] C:\Users\liois\.gradle\caches\9.5.1\transforms\10a3058119481082d234623d4f34a9ed\transformed\lifecycle-process-2.8.2\AndroidManifest.xml:29:13-31:52
-48                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
-48-->[androidx.lifecycle:lifecycle-process:2.8.2] C:\Users\liois\.gradle\caches\9.5.1\transforms\10a3058119481082d234623d4f34a9ed\transformed\lifecycle-process-2.8.2\AndroidManifest.xml:30:17-78
-49                android:value="androidx.startup" />
-49-->[androidx.lifecycle:lifecycle-process:2.8.2] C:\Users\liois\.gradle\caches\9.5.1\transforms\10a3058119481082d234623d4f34a9ed\transformed\lifecycle-process-2.8.2\AndroidManifest.xml:31:17-49
-50            <meta-data
-50-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\liois\.gradle\caches\9.5.1\transforms\590e9957eb6940d3a90299288da481ac\transformed\profileinstaller-1.3.1\AndroidManifest.xml:29:13-31:52
-51                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
-51-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\liois\.gradle\caches\9.5.1\transforms\590e9957eb6940d3a90299288da481ac\transformed\profileinstaller-1.3.1\AndroidManifest.xml:30:17-85
-52                android:value="androidx.startup" />
-52-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\liois\.gradle\caches\9.5.1\transforms\590e9957eb6940d3a90299288da481ac\transformed\profileinstaller-1.3.1\AndroidManifest.xml:31:17-49
-53        </provider>
-54
-55        <receiver
-55-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\liois\.gradle\caches\9.5.1\transforms\590e9957eb6940d3a90299288da481ac\transformed\profileinstaller-1.3.1\AndroidManifest.xml:34:9-52:20
-56            android:name="androidx.profileinstaller.ProfileInstallReceiver"
-56-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\liois\.gradle\caches\9.5.1\transforms\590e9957eb6940d3a90299288da481ac\transformed\profileinstaller-1.3.1\AndroidManifest.xml:35:13-76
-57            android:directBootAware="false"
-57-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\liois\.gradle\caches\9.5.1\transforms\590e9957eb6940d3a90299288da481ac\transformed\profileinstaller-1.3.1\AndroidManifest.xml:36:13-44
-58            android:enabled="true"
-58-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\liois\.gradle\caches\9.5.1\transforms\590e9957eb6940d3a90299288da481ac\transformed\profileinstaller-1.3.1\AndroidManifest.xml:37:13-35
-59            android:exported="true"
-59-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\liois\.gradle\caches\9.5.1\transforms\590e9957eb6940d3a90299288da481ac\transformed\profileinstaller-1.3.1\AndroidManifest.xml:38:13-36
-60            android:permission="android.permission.DUMP" >
-60-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\liois\.gradle\caches\9.5.1\transforms\590e9957eb6940d3a90299288da481ac\transformed\profileinstaller-1.3.1\AndroidManifest.xml:39:13-57
-61            <intent-filter>
-61-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\liois\.gradle\caches\9.5.1\transforms\590e9957eb6940d3a90299288da481ac\transformed\profileinstaller-1.3.1\AndroidManifest.xml:40:13-42:29
-62                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
-62-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\liois\.gradle\caches\9.5.1\transforms\590e9957eb6940d3a90299288da481ac\transformed\profileinstaller-1.3.1\AndroidManifest.xml:41:17-91
-62-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\liois\.gradle\caches\9.5.1\transforms\590e9957eb6940d3a90299288da481ac\transformed\profileinstaller-1.3.1\AndroidManifest.xml:41:25-88
-63            </intent-filter>
-64            <intent-filter>
-64-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\liois\.gradle\caches\9.5.1\transforms\590e9957eb6940d3a90299288da481ac\transformed\profileinstaller-1.3.1\AndroidManifest.xml:43:13-45:29
-65                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
-65-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\liois\.gradle\caches\9.5.1\transforms\590e9957eb6940d3a90299288da481ac\transformed\profileinstaller-1.3.1\AndroidManifest.xml:44:17-85
-65-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\liois\.gradle\caches\9.5.1\transforms\590e9957eb6940d3a90299288da481ac\transformed\profileinstaller-1.3.1\AndroidManifest.xml:44:25-82
-66            </intent-filter>
-67            <intent-filter>
-67-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\liois\.gradle\caches\9.5.1\transforms\590e9957eb6940d3a90299288da481ac\transformed\profileinstaller-1.3.1\AndroidManifest.xml:46:13-48:29
-68                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
-68-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\liois\.gradle\caches\9.5.1\transforms\590e9957eb6940d3a90299288da481ac\transformed\profileinstaller-1.3.1\AndroidManifest.xml:47:17-88
-68-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\liois\.gradle\caches\9.5.1\transforms\590e9957eb6940d3a90299288da481ac\transformed\profileinstaller-1.3.1\AndroidManifest.xml:47:25-85
-69            </intent-filter>
+13    <uses-permission android:name="android.permission.INTERNET" />
+13-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:6:5-67
+13-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:6:22-64
+14    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+14-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:7:5-79
+14-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:7:22-76
+15    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+15-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:8:5-76
+15-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:8:22-73
+16    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+16-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:9:5-76
+16-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:9:22-73
+17    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+17-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:10:5-79
+17-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:10:22-76
+18    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+18-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:11:5-81
+18-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:11:22-78
+19    <uses-permission android:name="android.permission.CAMERA" />
+19-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:12:5-65
+19-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:12:22-62
+20    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+20-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:13:5-71
+20-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:13:22-68
+21    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+21-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:14:5-80
+21-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:14:22-77
+22    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+22-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:15:5-75
+22-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:15:22-72
+23    <uses-permission android:name="android.permission.CALL_PHONE" />
+23-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:16:5-69
+23-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:16:22-66
+24    <uses-permission android:name="android.permission.READ_CALL_LOG" />
+24-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:17:5-72
+24-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:17:22-69
+25    <uses-permission android:name="android.permission.SEND_SMS" />
+25-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:18:5-67
+25-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:18:22-64
+26    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+26-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:19:5-70
+26-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:19:22-67
+27    <uses-permission android:name="android.permission.READ_SMS" />
+27-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:20:5-67
+27-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:20:22-64
+28    <uses-permission android:name="android.permission.RECEIVE_MMS" />
+28-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:21:5-70
+28-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:21:22-67
+29    <uses-permission android:name="android.permission.READ_CONTACTS" />
+29-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:22:5-72
+29-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:22:22-69
+30    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
+30-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:23:5-73
+30-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:23:22-70
+31    <uses-permission android:name="android.permission.READ_CALENDAR" />
+31-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:24:5-72
+31-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:24:22-69
+32    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
+32-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:25:5-73
+32-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:25:22-70
+33    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+33-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:26:5-83
+33-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:26:22-80
+34    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+34-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:27:5-73
+34-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:27:22-70
+35    <uses-permission android:name="android.permission.VIBRATE" />
+35-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:28:5-66
+35-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:28:22-63
+36    <uses-permission android:name="android.permission.FLASHLIGHT" />
+36-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:29:5-69
+36-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:29:22-66
+37    <uses-permission android:name="android.permission.READ_LOGS" />
+37-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:30:5-68
+37-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:30:22-65
+38    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
+38-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:31:5-84
+38-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:31:22-81
+39    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+39-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:32:5-95
+39-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:32:22-92
+40    <uses-permission android:name="android.permission.BLUETOOTH" />
+40-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:33:5-68
+40-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:33:22-65
+41    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+41-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:34:5-74
+41-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:34:22-71
+42    <uses-permission android:name="android.permission.NFC" />
+42-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:35:5-62
+42-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:35:22-59
+43    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
+43-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:36:5-74
+43-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:36:22-71
+44    <uses-permission android:name="android.permission.WAKE_LOCK" />
+44-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:37:5-68
+44-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:37:22-65
+45    <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
+45-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:38:5-80
+45-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:38:22-77
+46    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+46-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:39:5-77
+46-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:39:22-74
+47    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+47-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:40:5-77
+47-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:40:22-74
+48    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+48-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:41:5-82
+48-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:41:22-79
+49
+50    <permission
+50-->[androidx.core:core:1.15.0] C:\Users\liois\.gradle\caches\9.5.1\transforms\0136671d1f8b48577241307c0ab1c66d\transformed\core-1.15.0\AndroidManifest.xml:22:5-24:47
+51        android:name="com.lioisme.delua.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+51-->[androidx.core:core:1.15.0] C:\Users\liois\.gradle\caches\9.5.1\transforms\0136671d1f8b48577241307c0ab1c66d\transformed\core-1.15.0\AndroidManifest.xml:23:9-81
+52        android:protectionLevel="signature" />
+52-->[androidx.core:core:1.15.0] C:\Users\liois\.gradle\caches\9.5.1\transforms\0136671d1f8b48577241307c0ab1c66d\transformed\core-1.15.0\AndroidManifest.xml:24:9-44
+53
+54    <uses-permission android:name="com.lioisme.delua.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+54-->[androidx.core:core:1.15.0] C:\Users\liois\.gradle\caches\9.5.1\transforms\0136671d1f8b48577241307c0ab1c66d\transformed\core-1.15.0\AndroidManifest.xml:26:5-97
+54-->[androidx.core:core:1.15.0] C:\Users\liois\.gradle\caches\9.5.1\transforms\0136671d1f8b48577241307c0ab1c66d\transformed\core-1.15.0\AndroidManifest.xml:26:22-94
+55
+56    <application
+56-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:43:5-81:19
+57        android:name="com.lioisme.delua.DeluaApp"
+57-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:44:9-33
+58        android:allowBackup="true"
+58-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:45:9-35
+59        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+59-->[androidx.core:core:1.15.0] C:\Users\liois\.gradle\caches\9.5.1\transforms\0136671d1f8b48577241307c0ab1c66d\transformed\core-1.15.0\AndroidManifest.xml:28:18-86
+60        android:debuggable="true"
+61        android:extractNativeLibs="true"
+62        android:label="@string/app_name"
+62-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:46:9-41
+63        android:requestLegacyExternalStorage="true"
+63-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:47:9-52
+64        android:supportsRtl="true"
+64-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:48:9-35
+65        android:theme="@style/Theme.Delua" >
+65-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:49:9-43
+66        <activity
+66-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:51:9-74:20
+67            android:name="com.lioisme.delua.MainActivity"
+67-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:52:13-41
+68            android:exported="true"
+68-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:53:13-36
+69            android:windowSoftInputMode="adjustResize" >
+69-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:54:13-55
 70            <intent-filter>
-70-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\liois\.gradle\caches\9.5.1\transforms\590e9957eb6940d3a90299288da481ac\transformed\profileinstaller-1.3.1\AndroidManifest.xml:49:13-51:29
-71                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
-71-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\liois\.gradle\caches\9.5.1\transforms\590e9957eb6940d3a90299288da481ac\transformed\profileinstaller-1.3.1\AndroidManifest.xml:50:17-95
-71-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\liois\.gradle\caches\9.5.1\transforms\590e9957eb6940d3a90299288da481ac\transformed\profileinstaller-1.3.1\AndroidManifest.xml:50:25-92
-72            </intent-filter>
-73        </receiver>
-74    </application>
-75
-76</manifest>
+70-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:55:13-58:29
+71                <action android:name="android.intent.action.MAIN" />
+71-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:56:17-69
+71-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:56:25-66
+72
+73                <category android:name="android.intent.category.LAUNCHER" />
+73-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:57:17-77
+73-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:57:27-74
+74            </intent-filter>
+75            <intent-filter>
+75-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:59:13-66:29
+76                <action android:name="android.intent.action.VIEW" />
+76-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:60:17-69
+76-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:60:25-66
+77
+78                <category android:name="android.intent.category.DEFAULT" />
+78-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:61:17-76
+78-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:61:27-73
+79                <category android:name="android.intent.category.BROWSABLE" />
+79-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:62:17-78
+79-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:62:27-75
+80
+81                <data android:scheme="content" />
+81-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:63:17-50
+81-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:63:23-47
+82                <data android:mimeType="*/*" />
+82-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:63:17-50
+82-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:64:23-45
+83                <data android:pathPattern=".*\\.alp" />
+83-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:63:17-50
+83-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:65:23-53
+84            </intent-filter>
+85            <intent-filter>
+85-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:67:13-73:29
+86                <action android:name="android.intent.action.VIEW" />
+86-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:60:17-69
+86-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:60:25-66
+87
+88                <category android:name="android.intent.category.DEFAULT" />
+88-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:61:17-76
+88-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:61:27-73
+89
+90                <data android:scheme="file" />
+90-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:63:17-50
+90-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:63:23-47
+91                <data android:mimeType="*/*" />
+91-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:63:17-50
+91-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:64:23-45
+92                <data android:pathPattern=".*\\.alp" />
+92-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:63:17-50
+92-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:65:23-53
+93            </intent-filter>
+94        </activity>
+95        <activity
+95-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:76:9-79:50
+96            android:name="com.lioisme.delua.engine.EngineActivity"
+96-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:77:13-50
+97            android:exported="false"
+97-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:78:13-37
+98            android:theme="@style/Theme.Delua" />
+98-->D:\Users\liois\Documents\lioisme\kotlin\delua\app\src\main\AndroidManifest.xml:79:13-47
+99
+100        <provider
+100-->[androidx.emoji2:emoji2:1.3.0] C:\Users\liois\.gradle\caches\9.5.1\transforms\9f45f28b65c2b627c617d0a692eecb4f\transformed\emoji2-1.3.0\AndroidManifest.xml:24:9-32:20
+101            android:name="androidx.startup.InitializationProvider"
+101-->[androidx.emoji2:emoji2:1.3.0] C:\Users\liois\.gradle\caches\9.5.1\transforms\9f45f28b65c2b627c617d0a692eecb4f\transformed\emoji2-1.3.0\AndroidManifest.xml:25:13-67
+102            android:authorities="com.lioisme.delua.androidx-startup"
+102-->[androidx.emoji2:emoji2:1.3.0] C:\Users\liois\.gradle\caches\9.5.1\transforms\9f45f28b65c2b627c617d0a692eecb4f\transformed\emoji2-1.3.0\AndroidManifest.xml:26:13-68
+103            android:exported="false" >
+103-->[androidx.emoji2:emoji2:1.3.0] C:\Users\liois\.gradle\caches\9.5.1\transforms\9f45f28b65c2b627c617d0a692eecb4f\transformed\emoji2-1.3.0\AndroidManifest.xml:27:13-37
+104            <meta-data
+104-->[androidx.emoji2:emoji2:1.3.0] C:\Users\liois\.gradle\caches\9.5.1\transforms\9f45f28b65c2b627c617d0a692eecb4f\transformed\emoji2-1.3.0\AndroidManifest.xml:29:13-31:52
+105                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+105-->[androidx.emoji2:emoji2:1.3.0] C:\Users\liois\.gradle\caches\9.5.1\transforms\9f45f28b65c2b627c617d0a692eecb4f\transformed\emoji2-1.3.0\AndroidManifest.xml:30:17-75
+106                android:value="androidx.startup" />
+106-->[androidx.emoji2:emoji2:1.3.0] C:\Users\liois\.gradle\caches\9.5.1\transforms\9f45f28b65c2b627c617d0a692eecb4f\transformed\emoji2-1.3.0\AndroidManifest.xml:31:17-49
+107            <meta-data
+107-->[androidx.lifecycle:lifecycle-process:2.8.7] C:\Users\liois\.gradle\caches\9.5.1\transforms\18e05c8f5dc8c81609f2004e92fbe338\transformed\lifecycle-process-2.8.7\AndroidManifest.xml:29:13-31:52
+108                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+108-->[androidx.lifecycle:lifecycle-process:2.8.7] C:\Users\liois\.gradle\caches\9.5.1\transforms\18e05c8f5dc8c81609f2004e92fbe338\transformed\lifecycle-process-2.8.7\AndroidManifest.xml:30:17-78
+109                android:value="androidx.startup" />
+109-->[androidx.lifecycle:lifecycle-process:2.8.7] C:\Users\liois\.gradle\caches\9.5.1\transforms\18e05c8f5dc8c81609f2004e92fbe338\transformed\lifecycle-process-2.8.7\AndroidManifest.xml:31:17-49
+110            <meta-data
+110-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\liois\.gradle\caches\9.5.1\transforms\590e9957eb6940d3a90299288da481ac\transformed\profileinstaller-1.3.1\AndroidManifest.xml:29:13-31:52
+111                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+111-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\liois\.gradle\caches\9.5.1\transforms\590e9957eb6940d3a90299288da481ac\transformed\profileinstaller-1.3.1\AndroidManifest.xml:30:17-85
+112                android:value="androidx.startup" />
+112-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\liois\.gradle\caches\9.5.1\transforms\590e9957eb6940d3a90299288da481ac\transformed\profileinstaller-1.3.1\AndroidManifest.xml:31:17-49
+113        </provider>
+114
+115        <receiver
+115-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\liois\.gradle\caches\9.5.1\transforms\590e9957eb6940d3a90299288da481ac\transformed\profileinstaller-1.3.1\AndroidManifest.xml:34:9-52:20
+116            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+116-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\liois\.gradle\caches\9.5.1\transforms\590e9957eb6940d3a90299288da481ac\transformed\profileinstaller-1.3.1\AndroidManifest.xml:35:13-76
+117            android:directBootAware="false"
+117-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\liois\.gradle\caches\9.5.1\transforms\590e9957eb6940d3a90299288da481ac\transformed\profileinstaller-1.3.1\AndroidManifest.xml:36:13-44
+118            android:enabled="true"
+118-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\liois\.gradle\caches\9.5.1\transforms\590e9957eb6940d3a90299288da481ac\transformed\profileinstaller-1.3.1\AndroidManifest.xml:37:13-35
+119            android:exported="true"
+119-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\liois\.gradle\caches\9.5.1\transforms\590e9957eb6940d3a90299288da481ac\transformed\profileinstaller-1.3.1\AndroidManifest.xml:38:13-36
+120            android:permission="android.permission.DUMP" >
+120-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\liois\.gradle\caches\9.5.1\transforms\590e9957eb6940d3a90299288da481ac\transformed\profileinstaller-1.3.1\AndroidManifest.xml:39:13-57
+121            <intent-filter>
+121-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\liois\.gradle\caches\9.5.1\transforms\590e9957eb6940d3a90299288da481ac\transformed\profileinstaller-1.3.1\AndroidManifest.xml:40:13-42:29
+122                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+122-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\liois\.gradle\caches\9.5.1\transforms\590e9957eb6940d3a90299288da481ac\transformed\profileinstaller-1.3.1\AndroidManifest.xml:41:17-91
+122-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\liois\.gradle\caches\9.5.1\transforms\590e9957eb6940d3a90299288da481ac\transformed\profileinstaller-1.3.1\AndroidManifest.xml:41:25-88
+123            </intent-filter>
+124            <intent-filter>
+124-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\liois\.gradle\caches\9.5.1\transforms\590e9957eb6940d3a90299288da481ac\transformed\profileinstaller-1.3.1\AndroidManifest.xml:43:13-45:29
+125                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+125-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\liois\.gradle\caches\9.5.1\transforms\590e9957eb6940d3a90299288da481ac\transformed\profileinstaller-1.3.1\AndroidManifest.xml:44:17-85
+125-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\liois\.gradle\caches\9.5.1\transforms\590e9957eb6940d3a90299288da481ac\transformed\profileinstaller-1.3.1\AndroidManifest.xml:44:25-82
+126            </intent-filter>
+127            <intent-filter>
+127-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\liois\.gradle\caches\9.5.1\transforms\590e9957eb6940d3a90299288da481ac\transformed\profileinstaller-1.3.1\AndroidManifest.xml:46:13-48:29
+128                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+128-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\liois\.gradle\caches\9.5.1\transforms\590e9957eb6940d3a90299288da481ac\transformed\profileinstaller-1.3.1\AndroidManifest.xml:47:17-88
+128-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\liois\.gradle\caches\9.5.1\transforms\590e9957eb6940d3a90299288da481ac\transformed\profileinstaller-1.3.1\AndroidManifest.xml:47:25-85
+129            </intent-filter>
+130            <intent-filter>
+130-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\liois\.gradle\caches\9.5.1\transforms\590e9957eb6940d3a90299288da481ac\transformed\profileinstaller-1.3.1\AndroidManifest.xml:49:13-51:29
+131                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+131-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\liois\.gradle\caches\9.5.1\transforms\590e9957eb6940d3a90299288da481ac\transformed\profileinstaller-1.3.1\AndroidManifest.xml:50:17-95
+131-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\liois\.gradle\caches\9.5.1\transforms\590e9957eb6940d3a90299288da481ac\transformed\profileinstaller-1.3.1\AndroidManifest.xml:50:25-92
+132            </intent-filter>
+133        </receiver>
+134    </application>
+135
+136</manifest>

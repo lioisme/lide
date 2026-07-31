@@ -4,7 +4,7 @@
     "type": "PACKAGED_MANIFESTS",
     "kind": "Directory"
   },
-  "applicationId": "com.delua",
+  "applicationId": "com.lioisme.delua",
   "variantName": "x64Release",
   "elements": [
     {

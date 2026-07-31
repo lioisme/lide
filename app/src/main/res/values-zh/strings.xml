@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">delua</string>
 
     <!-- Common -->
+    <string name="app_name">delua</string>
     <string name="back">返回</string>
     <string name="cancel">取消</string>
     <string name="create">创建</string>
@@ -13,6 +13,12 @@
     <string name="new_project">新建项目</string>
     <string name="no_projects">暂无项目</string>
     <string name="tap_to_create">点击 + 创建项目</string>
+    <string name="import_alp">导入 .alp</string>
+    <string name="import_success">已从 .alp 导入项目</string>
+    <string name="import_failed">导入 .alp 失败</string>
+    <string name="export_alp">导出为 .alp</string>
+    <string name="export_success">项目已导出为 .alp</string>
+    <string name="export_failed">导出失败</string>
 
     <!-- Run -->
     <string name="run_title">运行: %1$s/%2$s</string>
@@ -23,6 +29,7 @@
     <string name="settings">设置</string>
     <string name="display">显示</string>
     <string name="general">通用</string>
+    <string name="editor">编辑器</string>
 
     <!-- Settings items -->
     <string name="appearance">外观</string>
@@ -34,15 +41,72 @@
     <string name="custom_accent">自定义强调色</string>
     <string name="language">语言</string>
     <string name="system_default">系统默认</string>
+    <string name="word_wrap">自动换行</string>
+    <string name="word_wrap_on">已启用</string>
+    <string name="word_wrap_off">已关闭</string>
+    <string name="show_whitespace">显示空白字符</string>
+    <string name="whitespace_on">可见</string>
+    <string name="whitespace_off">隐藏</string>
+    <string name="font_size">字体大小</string>
+    <string name="tab_size">制表符大小</string>
     <string name="about">关于</string>
     <string name="version">delua v1.0</string>
     <string name="system_wallpaper">系统壁纸</string>
     <string name="wallpaper_desc">壁纸动态取色</string>
     <string name="pick_accent">选择强调色</string>
-
-    <!-- Language names (endonyms) -->
     <string name="lang_en">English</string>
     <string name="lang_zh">中文</string>
+
+    <!-- Permissions -->
+    <string name="permission_management">权限管理</string>
+    <string name="perm_subtitle">管理应用权限</string>
+    <string name="perm_special_section">特殊权限</string>
+    <string name="perm_regular_section">常规权限</string>
+    <string name="perm_note">部分权限需在系统设置中开启。点击请求打开设置页。</string>
+    <string name="perm_granted">已授权</string>
+    <string name="perm_denied">未授权</string>
+    <string name="perm_request">请求</string>
+
+    <!-- Plugins -->
+    <string name="plugins">Plugins</string>
+    <string name="plugins_subtitle">Manage installed plugins</string>
+
+    <!-- Libraries -->
+    <string name="library_manager">库管理</string>
+    <string name="library_manager_subtitle">管理已安装的 Java 库</string>
+    <string name="install_library">安装库</string>
+    <string name="no_libraries">暂无已安装的库</string>
+    <string name="library_hint">从存储中安装 JAR/DEX 文件</string>
+    <string name="go_to_library_manager">管理库</string>
+    <string name="java_libraries">Java 库</string>
+    <string name="project_local_libs">项目本地 libs/</string>
+    <string name="lua_modules">Lua 模块</string>
+    <string name="module_manager">模块管理</string>
+    <string name="module_manager_subtitle">管理已安装的 Lua 模块</string>
+    <string name="install_module">安装模块</string>
+    <string name="no_modules">暂无已安装的模块</string>
+    <string name="module_hint">从存储中安装 .lua 文件</string>
+    <string name="go_to_module_manager">管理模块</string>
+
+    <!-- Project dependencies -->
+    <string name="dependencies">依赖管理</string>
+    <string name="dependencies_title">依赖管理 — %1$s</string>
+    <string name="save_dependencies">保存</string>
+    <string name="dependencies_saved">依赖已保存</string>
+    <string name="dependencies_save_failed">保存依赖失败</string>
+    <string name="no_dep_available">暂无可用项</string>
+
+    <!-- Editor search -->
+    <string name="search_hint">查找…</string>
+    <string name="replace_hint">替换…</string>
+    <string name="replace">替换</string>
+    <string name="replace_all">全部替换</string>
+    <string name="case_sensitive">区分大小写</string>
+    <string name="regex">正则表达式</string>
+
+    <!-- Editor storage permission -->
+    <string name="editor_storage_permission_warning">未授予存储权限，更改将无法保存</string>
+    <string name="editor_storage_permission_grant">去授权</string>
 
     <!-- Content descriptions -->
     <string name="cd_new_project">新建项目</string>
@@ -51,4 +115,11 @@
     <string name="cd_undo">撤销</string>
     <string name="cd_redo">重做</string>
     <string name="cd_run">运行</string>
+    <string name="cd_search">搜索</string>
+    <string name="cd_search_next">下一个匹配</string>
+    <string name="cd_search_prev">上一个匹配</string>
+    <string name="cd_search_close">关闭搜索</string>
+    <string name="cd_replace">替换</string>
+    <string name="cd_replace_all">全部替换</string>
+    <string name="cd_copy_output">复制输出</string>
 </resources>

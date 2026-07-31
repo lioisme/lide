@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">delua</string>
 
     <!-- Common -->
+    <string name="app_name">delua</string>
     <string name="back">Back</string>
     <string name="cancel">Cancel</string>
     <string name="create">Create</string>
@@ -13,6 +13,12 @@
     <string name="new_project">New Project</string>
     <string name="no_projects">No projects yet</string>
     <string name="tap_to_create">Tap + to create one</string>
+    <string name="import_alp">Import .alp</string>
+    <string name="import_success">Project imported from .alp</string>
+    <string name="import_failed">Failed to import .alp</string>
+    <string name="export_alp">Export as .alp</string>
+    <string name="export_success">Project exported as .alp</string>
+    <string name="export_failed">Failed to export project</string>
 
     <!-- Run -->
     <string name="run_title">Run: %1$s/%2$s</string>
@@ -23,6 +29,7 @@
     <string name="settings">Settings</string>
     <string name="display">Display</string>
     <string name="general">General</string>
+    <string name="editor">Editor</string>
 
     <!-- Settings items -->
     <string name="appearance">Appearance</string>
@@ -34,15 +41,72 @@
     <string name="custom_accent">Custom accent</string>
     <string name="language">Language</string>
     <string name="system_default">System default</string>
+    <string name="word_wrap">Word Wrap</string>
+    <string name="word_wrap_on">On</string>
+    <string name="word_wrap_off">Off</string>
+    <string name="show_whitespace">Show Whitespace</string>
+    <string name="whitespace_on">Visible</string>
+    <string name="whitespace_off">Hidden</string>
+    <string name="font_size">Font Size</string>
+    <string name="tab_size">Tab Size</string>
     <string name="about">About</string>
     <string name="version">delua v1.0</string>
     <string name="system_wallpaper">System wallpaper</string>
     <string name="wallpaper_desc">Dynamic color from wallpaper</string>
     <string name="pick_accent">Pick an accent color</string>
-
-    <!-- Language names (endonyms) -->
     <string name="lang_en">English</string>
     <string name="lang_zh">中文</string>
+
+    <!-- Permissions -->
+    <string name="permission_management">Permissions</string>
+    <string name="perm_subtitle">Manage app permissions</string>
+    <string name="perm_special_section">Special Access</string>
+    <string name="perm_regular_section">Regular Permissions</string>
+    <string name="perm_note">Some permissions require going to System Settings to enable. Tap \"Request\" to open Settings.</string>
+    <string name="perm_granted">Granted</string>
+    <string name="perm_denied">Denied</string>
+    <string name="perm_request">Request</string>
+
+    <!-- Plugins -->
+    <string name="plugins">Plugins</string>
+    <string name="plugins_subtitle">Manage installed plugins</string>
+
+    <!-- Libraries -->
+    <string name="library_manager">Library Manager</string>
+    <string name="library_manager_subtitle">Manage installed Java libraries</string>
+    <string name="install_library">Install Library</string>
+    <string name="no_libraries">No libraries installed</string>
+    <string name="library_hint">Install JAR/DEX files from storage</string>
+    <string name="go_to_library_manager">Manage Libraries</string>
+    <string name="java_libraries">Java Libraries</string>
+    <string name="project_local_libs">Project local libs/</string>
+    <string name="lua_modules">Lua Modules</string>
+    <string name="module_manager">Module Manager</string>
+    <string name="module_manager_subtitle">Manage installed Lua modules</string>
+    <string name="install_module">Install Module</string>
+    <string name="no_modules">No modules installed</string>
+    <string name="module_hint">Install .lua files from storage</string>
+    <string name="go_to_module_manager">Manage Modules</string>
+
+    <!-- Project dependencies -->
+    <string name="dependencies">Dependencies</string>
+    <string name="dependencies_title">Dependencies — %1$s</string>
+    <string name="save_dependencies">Save</string>
+    <string name="dependencies_saved">Dependencies saved</string>
+    <string name="dependencies_save_failed">Failed to save dependencies</string>
+    <string name="no_dep_available">Nothing available</string>
+
+    <!-- Editor search -->
+    <string name="search_hint">Find…</string>
+    <string name="replace_hint">Replace…</string>
+    <string name="replace">Replace</string>
+    <string name="replace_all">Replace All</string>
+    <string name="case_sensitive">Case sensitive</string>
+    <string name="regex">Regex</string>
+
+    <!-- Editor storage permission -->
+    <string name="editor_storage_permission_warning">No storage permission - changes will not be saved</string>
+    <string name="editor_storage_permission_grant">Grant</string>
 
     <!-- Content descriptions -->
     <string name="cd_new_project">New Project</string>
@@ -51,4 +115,11 @@
     <string name="cd_undo">Undo</string>
     <string name="cd_redo">Redo</string>
     <string name="cd_run">Run</string>
+    <string name="cd_search">Search</string>
+    <string name="cd_search_next">Next match</string>
+    <string name="cd_search_prev">Previous match</string>
+    <string name="cd_search_close">Close search</string>
+    <string name="cd_replace">Replace</string>
+    <string name="cd_replace_all">Replace all</string>
+    <string name="cd_copy_output">Copy output</string>
 </resources>

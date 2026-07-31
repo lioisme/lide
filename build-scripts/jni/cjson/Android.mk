@@ -8,5 +8,5 @@ LOCAL_SRC_FILES := \
 	fpconv.c \
 	strbuf.c
 LOCAL_CFLAGS := -Wno-unused-parameter -Wno-unused-variable
-LOCAL_STATIC_LIBRARIES := luajava
+LOCAL_SHARED_LIBRARIES := luajava
 include $(BUILD_SHARED_LIBRARY)

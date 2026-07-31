@@ -14,6 +14,9 @@ private data class LuaSnippet(
 
 object LuaSnippetManager {
 
+    private val PLACEHOLDER_WITH_DEFAULT = Regex("""\$\{\d+:([^}]*)\}""")
+    private val PLACEHOLDER = Regex("""\$\{\d+\}""")
+
     private val snippets: List<LuaSnippet> = listOf(
         LuaSnippet("fun", "function", """function ${'$'}{1:name}(${'$'}{2:args})
     ${'$'}{3:-- body}
@@ -62,13 +65,13 @@ end${'$'}{0}""", "Table-based OOP pattern"),
     )
 
     fun clearSnippetSyntax(body: String): String {
-        return body.replace(Regex("""\$\{\d+:([^}]*)\}""")) { match ->
+        return body.replace(PLACEHOLDER_WITH_DEFAULT) { match ->
             match.groupValues[1]
-        }.replace(Regex("""\$\{\d+\}"""), "")
+        }.replace(PLACEHOLDER, "")
     }
 
-    fun toCompletionItems(editor: CodeEditor): List<CompletionItem> {
-        return snippets.map { snippet ->
+    private val completionItems: List<CompletionItem> by lazy {
+        snippets.map { snippet ->
             object : SimpleCompletionItem(
                 snippet.label,
                 snippet.description,
@@ -104,5 +107,9 @@ end${'$'}{0}""", "Table-based OOP pattern"),
                 }
             }
         }
+    }
+
+    fun toCompletionItems(): List<CompletionItem> {
+        return completionItems
     }
 }

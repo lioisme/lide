@@ -44,6 +44,6 @@ LOCAL_SRC_FILES  := uv/unix/android-ifaddrs.c\
                     luv/luv.c
 
 LOCAL_CFLAGS := -Wno-unused-parameter -Wno-unused-variable
-LOCAL_STATIC_LIBRARIES := luajava
+LOCAL_SHARED_LIBRARIES := luajava
 
 include $(BUILD_SHARED_LIBRARY)

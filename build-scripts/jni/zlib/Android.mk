@@ -7,6 +7,6 @@ LOCAL_MODULE     := zlib
 LOCAL_SRC_FILES  := lua_zlib.c
 LOCAL_CFLAGS     := -Wno-unused-parameter -Wno-unused-variable
 LOCAL_LDLIBS    := -lz
-LOCAL_STATIC_LIBRARIES := luajava
+LOCAL_SHARED_LIBRARIES := luajava
 
 include $(BUILD_SHARED_LIBRARY)

@@ -17,7 +17,7 @@ LOCAL_SRC_FILES := \
 	except.c \
 	select.c \
 	usocket.c
-LOCAL_STATIC_LIBRARIES := luajava
+LOCAL_SHARED_LIBRARIES := luajava
 include $(BUILD_SHARED_LIBRARY)
 
 include $(CLEAR_VARS)
@@ -25,5 +25,5 @@ LOCAL_C_INCLUDES += $(LOCAL_PATH)/../lua
 LOCAL_MODULE := mime
 LOCAL_CFLAGS := -Wno-unused-parameter -Wno-unused-variable
 LOCAL_SRC_FILES := mime.c
-LOCAL_STATIC_LIBRARIES := luajava
+LOCAL_SHARED_LIBRARIES := luajava
 include $(BUILD_SHARED_LIBRARY)

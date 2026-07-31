@@ -12,11 +12,11 @@ val keystoreProperties = Properties().apply {
 }
 
 android {
-    namespace = "com.delua"
+    namespace = "com.lioisme.delua"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.delua"
+        applicationId = "com.lioisme.delua"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
@@ -81,6 +81,18 @@ android {
     buildFeatures {
         compose = true
     }
+
+    sourceSets {
+        getByName("main") {
+            jniLibs.srcDirs("src/main/jniLibs")
+        }
+    }
+
+    packaging {
+        jniLibs {
+            useLegacyPackaging = true
+        }
+    }
 }
 
 repositories {
@@ -93,8 +105,6 @@ repositories {
 dependencies {
     implementation(fileTree("libs") { include("*.jar") })
     implementation(project(":androlua"))
-    implementation("org.luaj:luaj-jse:3.0.1")
-
     implementation(platform("androidx.compose:compose-bom:2024.09.00"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")

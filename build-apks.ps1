@@ -4,7 +4,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-$Gradle = "D:\Gradle\gradle-9.5.1\bin\gradle.bat"
+$Gradle = ".\gradlew.bat"
 
 $WorkDir = $PSScriptRoot
 

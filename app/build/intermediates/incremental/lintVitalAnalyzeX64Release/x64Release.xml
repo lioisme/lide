@@ -1,6 +1,6 @@
 <variant
     name="x64Release"
-    package="com.delua"
+    package="com.lioisme.delua"
     minSdkVersion="24"
     targetSdkVersion="36"
     mergedManifest="build\intermediates\merged_manifest\x64Release\processX64ReleaseMainManifest\AndroidManifest.xml"
@@ -23,7 +23,7 @@
   <artifact
       classOutputs="build\intermediates\javac\x64Release\compileX64ReleaseJavaWithJavac\classes;build\tmp\kotlin-classes\x64Release;build\kotlinToolingMetadata;build\intermediates\compile_and_runtime_not_namespaced_r_class_jar\x64Release\processX64ReleaseResources\R.jar"
       type="MAIN"
-      applicationId="com.delua"
+      applicationId="com.lioisme.delua"
       generatedSourceFolders="build\generated\ap_generated_sources\x64Release\out"
       generatedResourceFolders="build\generated\res\resValues\x64\release"
       desugaredMethodsFiles="C:\Users\liois\.gradle\caches\9.5.1\transforms\0112830acabfc50918a82fea0a1c449b\transformed\D8BackportedDesugaredMethods.txt">

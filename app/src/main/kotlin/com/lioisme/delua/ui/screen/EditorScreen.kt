@@ -1,14 +1,16 @@
 package com.lioisme.delua.ui.screen
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.Settings
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.platform.LocalContext
@@ -16,14 +18,26 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.lioisme.delua.R
-import com.androlua.LuaApplication
 import com.lioisme.delua.model.Project
 import com.lioisme.delua.project.ProjectManager
 import com.lioisme.delua.ui.editor.EditorToolbar
 import com.lioisme.delua.ui.editor.LuaEditor
 import com.lioisme.delua.ui.editor.SearchBar
-import io.github.rosemoe.sora.widget.EditorSearcher
+import io.github.rosemoe.sora.event.PublishSearchResultEvent
 import io.github.rosemoe.sora.widget.CodeEditor
+import io.github.rosemoe.sora.widget.EditorSearcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+
+private data class SearchResultState(
+    val matchCount: Int = 0,
+    val currentMatch: Int = 0,
+)
+
+private const val AUTO_SAVE_DELAY_MS = 500L
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,13 +49,13 @@ fun EditorScreen(
     onDependencies: () -> Unit = {},
 ) {
     val context = LocalContext.current
-    val files = remember { projectManager.listProjectFiles(project) }
-    var currentFile by remember {
-        mutableStateOf(if (files.contains(project.mainFile)) project.mainFile else (files.firstOrNull() ?: project.mainFile))
-    }
-    var content by remember {
-        mutableStateOf(projectManager.getProjectScript(project, currentFile))
-    }
+    val scope = rememberCoroutineScope()
+
+    var files by remember { mutableStateOf<List<String>>(emptyList()) }
+    var currentFile by remember { mutableStateOf(project.mainFile) }
+    var loadedText by remember { mutableStateOf<String?>(null) }
+    var dirty by remember { mutableStateOf(false) }
+    var editVersion by remember { mutableStateOf(0) }
     var canUndo by remember { mutableStateOf(false) }
     var canRedo by remember { mutableStateOf(false) }
     var showFileMenu by remember { mutableStateOf(false) }
@@ -53,44 +67,110 @@ fun EditorScreen(
     var isCaseSensitive by remember { mutableStateOf(false) }
     var isRegex by remember { mutableStateOf(false) }
     var showReplace by remember { mutableStateOf(false) }
-    var matchCount by remember { mutableStateOf(0) }
+    val searchResult = remember { MutableStateFlow(SearchResultState()) }
+    val searchResultState by searchResult.collectAsState()
 
-    LaunchedEffect(currentFile) {
-        content = projectManager.getProjectScript(project, currentFile)
+    LaunchedEffect(Unit) {
+        val loaded = withContext(Dispatchers.IO) { projectManager.listProjectFiles(project) }
+        files = loaded
+        if (loaded.isNotEmpty() && !loaded.contains(currentFile) && !dirty) {
+            currentFile = loaded.first()
+        }
     }
 
-    val extPermissionMissing = !hasStoragePermission(context)
+    LaunchedEffect(currentFile) {
+        loadedText = withContext(Dispatchers.IO) {
+            projectManager.getProjectScript(project, currentFile)
+        }
+    }
 
-    val autoSave: () -> Unit = {
-        if (!extPermissionMissing) {
-            projectManager.saveProjectScript(project, currentFile, content)
+    val extPermissionMissing = remember {
+        mutableStateOf(!hasStoragePermission(context))
+    }
+
+    val manageStorageLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        extPermissionMissing.value = !hasStoragePermission(context)
+    }
+
+    val saveNow: () -> Unit = {
+        val editor = editorRef.value
+        if (editor != null && dirty && !extPermissionMissing.value) {
+            val file = currentFile
+            val content = editor.text.toString()
+            dirty = false
+            scope.launch(Dispatchers.IO) {
+                projectManager.saveProjectScript(project, file, content)
+            }
+        }
+    }
+
+    LaunchedEffect(editVersion) {
+        if (editVersion == 0) return@LaunchedEffect
+        delay(AUTO_SAVE_DELAY_MS)
+        val editor = editorRef.value ?: return@LaunchedEffect
+        if (dirty && !extPermissionMissing.value) {
+            val file = currentFile
+            val content = editor.text.toString()
+            dirty = false
+            withContext(Dispatchers.IO) {
+                projectManager.saveProjectScript(project, file, content)
+            }
+        }
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            val editor = editorRef.value
+            if (editor != null && dirty && !extPermissionMissing.value) {
+                val file = currentFile
+                val content = editor.text.toString()
+                scope.launch(Dispatchers.IO) {
+                    projectManager.saveProjectScript(project, file, content)
+                }
+            }
+        }
+    }
+
+    DisposableEffect(editorRef.value) {
+        val editor = editorRef.value
+        if (editor == null) {
+            onDispose { }
+        } else {
+            val receipt = editor.subscribeAlways(PublishSearchResultEvent::class.java) { _ ->
+                val searcher = editor.getSearcher()
+                if (searcher.hasQuery()) {
+                    val index = searcher.getCurrentMatchedPositionIndex()
+                    searchResult.value = SearchResultState(
+                        matchCount = searcher.getMatchedPositionCount(),
+                        currentMatch = if (index >= 0) index + 1 else 0,
+                    )
+                } else {
+                    searchResult.value = SearchResultState()
+                }
+            }
+            onDispose { receipt.unsubscribe() }
         }
     }
 
     fun performSearch() {
         val editor = editorRef.value ?: return
+        val searcher = editor.getSearcher()
         if (searchQuery.isBlank()) {
-            editor.getSearcher().stopSearch()
-            matchCount = 0
+            if (searcher.hasQuery()) {
+                searcher.stopSearch()
+            }
+            searchResult.value = SearchResultState()
             return
         }
         val searchType = if (isRegex) EditorSearcher.SearchOptions.TYPE_REGULAR_EXPRESSION
                          else EditorSearcher.SearchOptions.TYPE_NORMAL
         val options = EditorSearcher.SearchOptions(searchType, !isCaseSensitive)
-        editor.getSearcher().search(searchQuery, options)
-        val text = editor.text.toString()
-        matchCount = if (isCaseSensitive) {
-            if (isRegex) {
-                try { Regex(searchQuery).findAll(text).count() } catch (_: Exception) { 0 }
-            } else {
-                text.split(searchQuery).size - 1
-            }
-        } else {
-            if (isRegex) {
-                try { Regex(searchQuery, RegexOption.IGNORE_CASE).findAll(text).count() } catch (_: Exception) { 0 }
-            } else {
-                text.split(searchQuery, ignoreCase = true).size - 1
-            }
+        try {
+            searcher.search(searchQuery, options)
+        } catch (_: Exception) {
+            searchResult.value = SearchResultState()
         }
     }
 
@@ -109,7 +189,7 @@ fun EditorScreen(
                     if (!isSearchVisible) {
                         getSearcher()?.stopSearch()
                         searchQuery = ""
-                        matchCount = 0
+                        searchResult.value = SearchResultState()
                     }
                     true
                 } else false
@@ -121,10 +201,10 @@ fun EditorScreen(
                     fileName = currentFile,
                     canUndo = canUndo,
                     canRedo = canRedo,
-                    onBack = { autoSave(); onBack() },
+                    onBack = { saveNow(); onBack() },
                     onUndo = { editorRef.value?.undo() },
                     onRedo = { editorRef.value?.redo() },
-                    onRun = { autoSave(); onRun(project.mainFile) },
+                    onRun = { saveNow(); onRun(project.mainFile) },
                     onSearch = { isSearchVisible = true },
                     onDependencies = onDependencies,
                 )
@@ -135,46 +215,70 @@ fun EditorScreen(
                     .fillMaxSize()
                     .padding(padding)
             ) {
-                LuaEditor(
-                    content = content,
-                    onContentChanged = { content = it },
-                    onUndoRedoStateChanged = { u, r -> canUndo = u; canRedo = r },
-                    editorRef = editorRef,
-                    modifier = Modifier.fillMaxSize(),
-                )
-
-                if (isSearchVisible) {
-                    SearchBar(
-                        query = searchQuery,
-                        replaceQuery = replaceQuery,
-                        matchCount = matchCount,
-                        currentMatch = 0,
-                        isCaseSensitive = isCaseSensitive,
-                        isRegex = isRegex,
-                        showReplace = showReplace,
-                        onQueryChange = { searchQuery = it },
-                        onReplaceQueryChange = { replaceQuery = it },
-                        onNext = { getSearcher()?.gotoNext() },
-                        onPrev = { getSearcher()?.gotoPrevious() },
-                        onReplace = {
-                            val searcher = getSearcher() ?: return@SearchBar
-                            searcher.replaceCurrentMatch(replaceQuery)
+                val text = loadedText
+                if (text != null) {
+                    LuaEditor(
+                        text = text,
+                        onContentModified = {
+                            dirty = true
+                            editVersion++
                         },
-                        onReplaceAll = {
-                            val searcher = getSearcher() ?: return@SearchBar
-                            searcher.replaceAll(replaceQuery) { performSearch() }
-                        },
-                        onToggleCaseSensitive = { isCaseSensitive = !isCaseSensitive },
-                        onToggleRegex = { isRegex = !isRegex },
-                        onToggleReplace = { showReplace = !showReplace },
-                        onClose = {
-                            isSearchVisible = false
-                            getSearcher()?.stopSearch()
-                            matchCount = 0
-                            searchQuery = ""
-                        },
-                        modifier = Modifier.align(androidx.compose.ui.Alignment.TopCenter).fillMaxWidth(),
+                        onUndoRedoStateChanged = { u, r -> canUndo = u; canRedo = r },
+                        editorRef = editorRef,
+                        modifier = Modifier.fillMaxSize(),
                     )
+                } else {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator()
+                    }
+                }
+
+                Column(Modifier.align(Alignment.TopCenter)) {
+                    if (extPermissionMissing.value) {
+                        StoragePermissionBanner(
+                            onGrant = {
+                                manageStorageLauncher.launch(
+                                    Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION).apply {
+                                        data = Uri.parse("package:${context.packageName}")
+                                    }
+                                )
+                            },
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+                    }
+                    if (isSearchVisible) {
+                        SearchBar(
+                            query = searchQuery,
+                            replaceQuery = replaceQuery,
+                            matchCount = searchResultState.matchCount,
+                            currentMatch = searchResultState.currentMatch,
+                            isCaseSensitive = isCaseSensitive,
+                            isRegex = isRegex,
+                            showReplace = showReplace,
+                            onQueryChange = { searchQuery = it },
+                            onReplaceQueryChange = { replaceQuery = it },
+                            onNext = { getSearcher()?.gotoNext() },
+                            onPrev = { getSearcher()?.gotoPrevious() },
+                            onReplace = {
+                                val searcher = getSearcher() ?: return@SearchBar
+                                searcher.replaceCurrentMatch(replaceQuery)
+                            },
+                            onReplaceAll = {
+                                val searcher = getSearcher() ?: return@SearchBar
+                                searcher.replaceAll(replaceQuery)
+                            },
+                            onToggleCaseSensitive = { isCaseSensitive = !isCaseSensitive },
+                            onToggleRegex = { isRegex = !isRegex },
+                            onToggleReplace = { showReplace = !showReplace },
+                            onClose = {
+                                isSearchVisible = false
+                                getSearcher()?.stopSearch()
+                                searchQuery = ""
+                                searchResult.value = SearchResultState()
+                            },
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+                    }
                 }
             }
         }
@@ -188,9 +292,7 @@ fun EditorScreen(
                         files.forEach { file ->
                             TextButton(
                                 onClick = {
-                                    if (!extPermissionMissing) {
-                                        projectManager.saveProjectScript(project, currentFile, content)
-                                    }
+                                    saveNow()
                                     currentFile = file
                                     showFileMenu = false
                                 },
@@ -223,4 +325,30 @@ private fun hasStoragePermission(context: android.content.Context): Boolean {
         return Environment.isExternalStorageManager()
     }
     return true
+}
+
+@Composable
+private fun StoragePermissionBanner(
+    onGrant: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Surface(
+        color = MaterialTheme.colorScheme.errorContainer,
+        modifier = modifier,
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                stringResource(R.string.editor_storage_permission_warning),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onErrorContainer,
+                modifier = Modifier.weight(1f),
+            )
+            TextButton(onClick = onGrant) {
+                Text(stringResource(R.string.editor_storage_permission_grant))
+            }
+        }
+    }
 }

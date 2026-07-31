@@ -1,62 +1,25 @@
 package com.lioisme.delua.ui.editor
 
-import android.content.Context
+import android.util.TypedValue
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import com.lioisme.delua.ui.theme.LocalIsDarkTheme
 import com.lioisme.delua.ui.theme.SettingsManager
 import io.github.rosemoe.sora.event.ContentChangeEvent
-import io.github.rosemoe.sora.lang.diagnostic.DiagnosticDetail
 import io.github.rosemoe.sora.lang.diagnostic.DiagnosticRegion
 import io.github.rosemoe.sora.lang.diagnostic.DiagnosticsContainer
 import io.github.rosemoe.sora.langs.textmate.TextMateColorScheme
-import io.github.rosemoe.sora.langs.textmate.registry.FileProviderRegistry
-import io.github.rosemoe.sora.langs.textmate.registry.GrammarRegistry
 import io.github.rosemoe.sora.langs.textmate.registry.ThemeRegistry
-import io.github.rosemoe.sora.langs.textmate.registry.dsl.languages
-import io.github.rosemoe.sora.langs.textmate.registry.model.ThemeModel
-import io.github.rosemoe.sora.langs.textmate.registry.provider.AssetsFileResolver
 import io.github.rosemoe.sora.widget.CodeEditor
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
-import org.eclipse.tm4e.core.registry.IThemeSource
-
-private object TextMateInitializer {
-    private var initialized = false
-
-    fun initialize(context: Context) {
-        if (initialized) return
-        initialized = true
-
-        FileProviderRegistry.getInstance().addFileProvider(
-            AssetsFileResolver(context.assets)
-        )
-
-        val themeRegistry = ThemeRegistry.getInstance()
-        for (name in listOf("quietlight", "darcula")) {
-            val path = "textmate/$name.json"
-            try {
-                val input = FileProviderRegistry.getInstance().tryGetInputStream(path)
-                if (input != null) {
-                    themeRegistry.loadTheme(
-                        ThemeModel(IThemeSource.fromInputStream(input, path, null), name)
-                    )
-                }
-            } catch (_: Exception) { }
-        }
-        themeRegistry.setTheme("quietlight")
-
-        GrammarRegistry.getInstance().loadGrammars(languages {
-            language("lua") {
-                grammar = "textmate/lua/syntaxes/lua.tmLanguage.json"
-                scopeName = "source.lua"
-                languageConfiguration = "textmate/lua/language-configuration.json"
-            }
-        })
-    }
-}
 
 @Composable
 fun rememberTextMateInitializer(): Boolean {
@@ -71,36 +34,48 @@ fun rememberTextMateInitializer(): Boolean {
     return ready
 }
 
+private const val LARGE_FILE_THRESHOLD = 200 * 1024
+
 @Composable
 fun LuaEditor(
-    content: String,
-    onContentChanged: (String) -> Unit,
+    text: String,
+    onContentModified: () -> Unit,
     onUndoRedoStateChanged: (canUndo: Boolean, canRedo: Boolean) -> Unit,
     editorRef: MutableState<CodeEditor?>,
     modifier: Modifier = Modifier,
 ) {
     val isDarkMode = LocalIsDarkTheme.current
     val initReady = rememberTextMateInitializer()
-    val currentContent by rememberUpdatedState(content)
-    val currentOnContentChanged by rememberUpdatedState(onContentChanged)
+    val currentText by rememberUpdatedState(text)
+    val currentOnContentModified by rememberUpdatedState(onContentModified)
     val currentOnUndoRedoStateChanged by rememberUpdatedState(onUndoRedoStateChanged)
-    var lastTheme by remember { mutableStateOf<String?>(null) }
     val editorConfig by SettingsManager.editorConfig.collectAsState()
+    var diagVersion by remember { mutableStateOf(0) }
+    var lastDiagSignature by remember { mutableStateOf("") }
 
-    if (initReady) {
-        val targetTheme = if (isDarkMode) "darcula" else "quietlight"
-        if (lastTheme != targetTheme) {
-            lastTheme = targetTheme
-            ThemeRegistry.getInstance().setTheme(targetTheme)
+    LaunchedEffect(isDarkMode, initReady) {
+        if (initReady) {
+            ThemeRegistry.getInstance().setTheme(if (isDarkMode) "darcula" else "quietlight")
         }
     }
 
-    if (!initReady) return
+    if (!initReady) {
+        Box(modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator()
+        }
+        return
+    }
 
     AndroidView(
         factory = { ctx ->
             CodeEditor(ctx).apply outer@{
-                val lang = LuaLanguage(true).apply {
+                val isLargeFile = currentText.length > LARGE_FILE_THRESHOLD
+
+                // 官方 demo 顺序：colorScheme → language → setText，
+                // 使分析器重启都发生在空文本阶段，setText 成为唯一一次全量分析。
+                colorScheme = TextMateColorScheme.create(ThemeRegistry.getInstance())
+
+                val lang = LuaLanguage(collectIdentifiers = false).apply {
                     setAutoCompleteEnabled(true)
                     setCompleterKeywords(
                         arrayOf(
@@ -115,57 +90,100 @@ fun LuaEditor(
                 }
                 setEditorLanguage(lang)
 
-                colorScheme = TextMateColorScheme.create(ThemeRegistry.getInstance())
                 isLineNumberEnabled = true
                 isHighlightCurrentLine = true
-                isHighlightBracketPair = true
+                isHighlightBracketPair = !isLargeFile
                 tabWidth = editorConfig.tabSize
 
-                isHighlightCurrentBlock = true
-                setHighlightCurrentBlock(true)
+                isHighlightCurrentBlock = !isLargeFile
                 setBlockLineWidth(3f)
 
-                props.stickyScroll = true
-                props.stickyScrollMaxLines = 3
-                props.stickyScrollPreferInnerScope = true
-                props.stickyScrollAutoCollapse = true
-
                 isUndoEnabled = true
-                text.undoManager.maxUndoStackSize = 2500
+                this@outer.text.undoManager.setMaxUndoStackSize(2500)
 
-                isWordwrap = editorConfig.wordWrap
+                isWordwrap = editorConfig.wordWrap && !isLargeFile
 
                 applyNonPrintableFlags(editorConfig)
 
                 setTextSize(editorConfig.fontSize.toFloat())
 
-                setText(content)
-
-                subscribeEvent(ContentChangeEvent::class.java) { _, _ ->
-                    val newText = text.toString()
-                    if (newText != currentContent) {
-                        currentOnContentChanged(newText)
+                var lastCanUndo = false
+                var lastCanRedo = false
+                subscribeEvent(ContentChangeEvent::class.java) { event, _ ->
+                    when (event.action) {
+                        ContentChangeEvent.ACTION_INSERT, ContentChangeEvent.ACTION_DELETE -> {
+                            currentOnContentModified()
+                            if (!isLargeFile) diagVersion++
+                        }
+                        ContentChangeEvent.ACTION_SET_NEW_TEXT -> {
+                            diagnostics = null
+                            if (!isLargeFile) diagVersion++
+                        }
                     }
-                    currentOnUndoRedoStateChanged(canUndo(), canRedo())
+                    val canU = canUndo()
+                    val canR = canRedo()
+                    if (canU != lastCanUndo || canR != lastCanRedo) {
+                        lastCanUndo = canU
+                        lastCanRedo = canR
+                        currentOnUndoRedoStateChanged(canU, canR)
+                    }
                 }
 
                 editorRef.value = this
+
+                setText(currentText)
             }
         },
         update = { editor ->
-            editor.colorScheme = TextMateColorScheme.create(ThemeRegistry.getInstance())
-            if (editor.text.toString() != content) {
-                editor.setText(content)
+            val config = editorConfig
+            val isLargeFile = currentText.length > LARGE_FILE_THRESHOLD
+            val expectedWordWrap = config.wordWrap && !isLargeFile
+            if (editor.isWordwrap != expectedWordWrap) {
+                editor.isWordwrap = expectedWordWrap
             }
-            if (editor.isWordwrap != editorConfig.wordWrap) {
-                editor.isWordwrap = editorConfig.wordWrap
+            if (editor.tabWidth != config.tabSize) {
+                editor.tabWidth = config.tabSize
             }
-            editor.applyNonPrintableFlags(editorConfig)
-            editor.tabWidth = editorConfig.tabSize
-            editor.setTextSize(editorConfig.fontSize.toFloat())
+            val expectedFlags = nonPrintableFlags(config)
+            if (editor.nonPrintablePaintingFlags != expectedFlags) {
+                editor.nonPrintablePaintingFlags = expectedFlags
+            }
+            val expectedTextSizePx = TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_SP,
+                config.fontSize.toFloat(),
+                editor.resources.displayMetrics,
+            )
+            if (editor.textSizePx != expectedTextSizePx) {
+                editor.setTextSize(config.fontSize.toFloat())
+            }
         },
         modifier = modifier,
     )
+
+    LaunchedEffect(text) {
+        val editor = editorRef.value ?: return@LaunchedEffect
+        if (editor.text.toString() != text) {
+            editor.setText(text)
+        }
+    }
+
+    LaunchedEffect(diagVersion) {
+        if (diagVersion == 0) return@LaunchedEffect
+        delay(500)
+        val editor = editorRef.value ?: return@LaunchedEffect
+        val source = editor.text.toString()
+        if (source.length > LARGE_FILE_THRESHOLD) return@LaunchedEffect
+        val (regions, signature) = withContext(Dispatchers.Default) {
+            val result = LuaDiagnostics.checkSyntax(source)
+            result to diagnosticSignature(result)
+        }
+        if (signature == lastDiagSignature) return@LaunchedEffect
+        lastDiagSignature = signature
+        editor.diagnostics = if (regions.isEmpty()) null
+        else DiagnosticsContainer().apply {
+            addDiagnostics(regions)
+        }
+    }
 
     DisposableEffect(Unit) {
         onDispose {
@@ -174,20 +192,27 @@ fun LuaEditor(
     }
 }
 
-private fun CodeEditor.applyNonPrintableFlags(config: SettingsManager.EditorConfig) {
-    setNonPrintablePaintingFlags(
-        if (config.showWhitespace)
-            CodeEditor.FLAG_DRAW_WHITESPACE_LEADING or
-            CodeEditor.FLAG_DRAW_WHITESPACE_INNER or
-            CodeEditor.FLAG_DRAW_WHITESPACE_TRAILING or
-            CodeEditor.FLAG_DRAW_WHITESPACE_FOR_EMPTY_LINE or
-            CodeEditor.FLAG_DRAW_LINE_SEPARATOR or
-            CodeEditor.FLAG_DRAW_WHITESPACE_IN_SELECTION or
-            (if (config.wordWrap) CodeEditor.FLAG_DRAW_SOFT_WRAP else 0)
-        else 0
-    )
+private fun diagnosticSignature(regions: List<DiagnosticRegion>): String = buildString {
+    for (r in regions) {
+        append(r.startIndex).append(':')
+        append(r.endIndex).append(':')
+        append(r.severity).append(':')
+        append(r.detail?.briefMessage).append('|')
+    }
 }
 
-fun updateDiagnostics(editor: CodeEditor, source: String) {
-    editor.diagnostics = null
+private fun nonPrintableFlags(config: SettingsManager.EditorConfig): Int {
+    return if (config.showWhitespace)
+        CodeEditor.FLAG_DRAW_WHITESPACE_LEADING or
+        CodeEditor.FLAG_DRAW_WHITESPACE_INNER or
+        CodeEditor.FLAG_DRAW_WHITESPACE_TRAILING or
+        CodeEditor.FLAG_DRAW_WHITESPACE_FOR_EMPTY_LINE or
+        CodeEditor.FLAG_DRAW_LINE_SEPARATOR or
+        CodeEditor.FLAG_DRAW_WHITESPACE_IN_SELECTION or
+        (if (config.wordWrap) CodeEditor.FLAG_DRAW_SOFT_WRAP else 0)
+    else 0
+}
+
+private fun CodeEditor.applyNonPrintableFlags(config: SettingsManager.EditorConfig) {
+    setNonPrintablePaintingFlags(nonPrintableFlags(config))
 }

@@ -43,7 +43,7 @@ class LuaLanguage(collectIdentifiers: Boolean) :
         } else ""
 
         if (prefix.length >= 1) {
-            LuaSnippetManager.toCompletionItems(editor)
+            LuaSnippetManager.toCompletionItems()
                 .filter { it.label.startsWith(prefix, ignoreCase = true) }
                 .forEach { publisher.addItem(it) }
         }
