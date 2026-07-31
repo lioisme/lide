@@ -19,6 +19,10 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
+
+    testOptions {
+        unitTests.isReturnDefaultValues = true
+    }
 }
 
 dependencies {
@@ -26,6 +30,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-common:2.8.7")
     implementation("androidx.annotation:annotation:1.9.1")
     implementation("androidx.core:core:1.15.0")
+    testImplementation("junit:junit:4.13.2")
 }
 
 repositories {

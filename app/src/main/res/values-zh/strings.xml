@@ -67,6 +67,10 @@
     <string name="perm_granted">已授权</string>
     <string name="perm_denied">未授权</string>
     <string name="perm_request">请求</string>
+    <string name="perm_project_section">当前工程声明权限（%1$s）</string>
+    <string name="perm_project_empty">该工程在 init.lua 中未声明 user_permission</string>
+    <string name="drawer_permissions">工程权限</string>
+    <string name="run_permission_denied_hint">已拒绝 %1$d 项权限，继续运行</string>
 
     <!-- Plugins -->
     <string name="plugins">插件</string>

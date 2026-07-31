@@ -66,11 +66,28 @@ private val SPECIAL_PERMISSIONS: List<Pair<String, String>> = listOf(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PermissionScreen(onBack: () -> Unit) {
+fun PermissionScreen(
+    onBack: () -> Unit,
+    project: com.lioisme.delua.model.Project? = null,
+) {
     val context = LocalContext.current
     var permissions: List<PermissionItem> by remember {
         mutableStateOf(buildPermissionList(context))
     }
+
+    // 工程声明权限：后台 IO 读取 init.lua（大文件防护：小文件读一次，无阻塞风险）。
+    val projectManager = remember { com.lioisme.delua.project.ProjectManager(context) }
+    var declaredPermissions by remember(project) {
+        mutableStateOf<List<String>?>(if (project == null) emptyList() else null)
+    }
+    LaunchedEffect(project) {
+        val p = project ?: return@LaunchedEffect
+        declaredPermissions = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+            projectManager.loadUserPermissions(p)
+        }
+    }
+    val declared = declaredPermissions ?: emptyList()
+    val declaredLoaded = declaredPermissions != null
 
     val permLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -81,6 +98,13 @@ fun PermissionScreen(onBack: () -> Unit) {
     val manageStorageLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { _: androidx.activity.result.ActivityResult ->
+        permissions = buildPermissionList(context)
+    }
+
+    // 单权限请求：权限页条目各自独立请求（区别于运行前的一次性批量请求）。
+    val singlePermLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { _: Map<String, Boolean> ->
         permissions = buildPermissionList(context)
     }
 
@@ -107,6 +131,68 @@ fun PermissionScreen(onBack: () -> Unit) {
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
+            if (project != null) {
+                item {
+                    Spacer(Modifier.height(8.dp))
+                    Text(
+                        stringResource(R.string.perm_project_section, project.name),
+                        style = MaterialTheme.typography.titleSmall,
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.SemiBold,
+                        modifier = Modifier.padding(start = 4.dp, bottom = 8.dp)
+                    )
+                }
+                if (declared.isEmpty() && declaredLoaded) {
+                    item {
+                        Text(
+                            stringResource(R.string.perm_project_empty),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(horizontal = 4.dp, vertical = 4.dp)
+                        )
+                    }
+                } else if (!declaredLoaded) {
+                    item {
+                        Box(Modifier.fillMaxWidth().padding(vertical = 8.dp), contentAlignment = Alignment.Center) {
+                            CircularProgressIndicator(modifier = Modifier.size(24.dp))
+                        }
+                    }
+                } else {
+                    declared.forEach { name ->
+                        val label = labelOf(name)
+                        val isSpecial = SPECIAL_PERMISSIONS.any { (perm, _) -> perm == name }
+                        val granted = if (isSpecial) {
+                            Build.VERSION.SDK_INT >= Build.VERSION_CODES.R &&
+                                Environment.isExternalStorageManager()
+                        } else {
+                            ContextCompat.checkSelfPermission(context, name) ==
+                                android.content.pm.PackageManager.PERMISSION_GRANTED
+                        }
+                        item(key = "declared_$name") {
+                            PermissionRow(
+                                label = label,
+                                granted = granted,
+                                isSpecial = isSpecial,
+                                onRequest = {
+                                    if (isSpecial) {
+                                        manageStorageLauncher.launch(
+                                            Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION).apply {
+                                                data = android.net.Uri.parse("package:${context.packageName}")
+                                            }
+                                        )
+                                    } else {
+                                        singlePermLauncher.launch(arrayOf(name))
+                                    }
+                                }
+                            )
+                        }
+                    }
+                }
+                item {
+                    Spacer(Modifier.height(16.dp))
+                }
+            }
+
             item {
                 Spacer(Modifier.height(8.dp))
                 Text(
@@ -225,4 +311,11 @@ private fun buildPermissionList(ctx: android.content.Context): List<PermissionIt
         val granted = ContextCompat.checkSelfPermission(ctx, name) == android.content.pm.PackageManager.PERMISSION_GRANTED
         PermissionItem(name, label, granted)
     }
+}
+
+/** 权限名 → 可读标签；未知权限原样展示。 */
+private fun labelOf(name: String): String {
+    ALL_PERMISSIONS.forEach { (perm, label) -> if (perm == name) return label }
+    SPECIAL_PERMISSIONS.forEach { (perm, label) -> if (perm == name) return label }
+    return name
 }

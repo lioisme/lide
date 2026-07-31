@@ -477,3 +477,49 @@ CI 包含四个 Job：
 **验收**：`:app:assembleArm64Debug` ✅（BUILD SUCCESSFUL）、`:editor` R1 边界 grep 零命中 ✅、真机矩阵 V-01~V-10 全绿 ✅（日志 `%TEMP%\delua-verify\matrix-final*.txt`）。
 
 **剩余**：无强制项（V-04 中 `require "lluv"`/`"tcc"` 按差异声明不提供；mytest 库为验证专用不在仓库）。
+
+---
+
+## 工作单 WP-001：工作区编译修复（已完成）
+
+**目标**：按 docs/PARITY_COMPLETION_WORK_ORDER.md 打通工作区编译与设备回归基线。
+
+**完成内容**：
+- 抽屉重构已由 commit 3e2878f 落地；验证 :app:compileArm64DebugKotlin 与 :app:assembleX64Debug 全绿；:editor R1 门禁（luajava|androlua|loadLibrary）零命中。
+- 设备回归（emulator-5554 / API 34）：抽屉打开/关闭、返回键先关抽屉、转屏后抽屉保持关闭、宽屏（3200x2560@360dpi）树常驻+汉堡隐藏，全部通过。
+
+---
+
+## 工作单 WP-019：自动化测试骨架（已完成）
+
+**目标**：建立单元测试 + ADB 回归矩阵基架。
+
+**完成内容**：
+- app/editor 加 junit 4.13.2 + unitTests.isReturnDefaultValues；新增 ZipUtilTest（zip-slip）、AlpNamingTest、LuaDiagnosticsTest（14 例）；AlpNaming.kt 抽取纯函数（dedupeName 支持 WP-015）。
+- LuaDiagnostics 修复：do 不再占 for/while 的 end；end/until 前优先报未闭合括号。
+- scripts/adb_regress.ps1 四工程回归矩阵 6/6 PASS；CI 加 unit-test job。
+
+---
+
+## 工作单 WP-017：init.lua 解析结构化（已完成）
+
+**目标**：以结构化 LuaConfigParser 替换正则读法。
+
+**完成内容**：
+- LuaConfigParser.kt（纯 Kotlin）入 :androlua：parse/field/stringField/stringArrayField/setField/setStringArrayField；扫描收敛防护（guardLimit 抛 IllegalStateException）。
+- ProjectManager.loadProject 与 PluginManager.loadPlugin 改结构化读；删 MainActivity 收养模板 dependencies 死块。
+- LuaConfigParserTest 13 例全绿；修复 scanValueEnd '{' 分支漏 i++ 死循环（jstack 定位）。
+
+---
+
+## 工作单 WP-003：user_permission 语义（已完成）
+
+**目标**：对齐 pro：工程 init.lua 声明权限 → 运行前一次性请求 + 权限页联动展示。
+
+**完成内容**：
+- androlua 新增 PermissionResolver.kt（纯函数）：declared/runtimeRequestable/isRuntimeRequestable（特殊权限过滤），单测 7 例。
+- ProjectManager.loadUserPermissions(project)：LuaConfigParser 读 init.lua 的 user_permission，失败降级空表。
+- EditorScreen 运行前权限门：未授予声明权限时 RequestMultiplePermissions 一次性请求，拒绝仅 Toast（run_permission_denied_hint）仍继续运行（pro 行为）。
+- PermissionScreen 新增「当前工程声明权限」区块（后台 IO 读声明，条目独立请求/特殊权限走设置页）；EditorScreen 抽屉新增「工程权限」入口；PERMISSIONS 路由支持可选工程参数。
+
+**验收**：单测全绿（app/editor/androlua）；设备验证 emulator-5554：ACC-1 声明 CAMERA 工程运行弹系统对话框 ✅；ACC-2 授予后二次运行不再弹框直接进引擎 ✅；ACC-3 权限页显示声明项与授予状态（permtest 相机已授权 / nopermtest 未声明提示）✅；ACC-4 未声明工程运行不受影响 ✅；:app:compileArm64DebugKotlin ✅；:editor R1 门禁零命中 ✅。

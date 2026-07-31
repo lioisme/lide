@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import com.androlua.LuaApplication
 import com.lioisme.delua.androlua.LuaConfigParser
+import com.lioisme.delua.androlua.PermissionResolver
 import com.lioisme.delua.editor.FileNode
 import com.lioisme.delua.model.Project
 import java.io.File
@@ -96,6 +97,21 @@ class ProjectManager(private val context: Context) {
         dirs.sortBy { it.name }
         files.sortBy { it.name }
         return dirs + files
+    }
+
+    /**
+     * 读取工程 init.lua 声明的 user_permission（WP-003）。
+     * 读失败/缺省 → 空集合（降级，不抛）。
+     */
+    fun loadUserPermissions(project: Project): List<String> {
+        return try {
+            val initFile = File(project.path, "init.lua")
+            if (initFile.exists()) {
+                PermissionResolver.declared(initFile.readText())
+            } else emptyList()
+        } catch (_: Exception) {
+            emptyList()
+        }
     }
 
     fun getProjectScript(project: Project, fileName: String = project.mainFile): String {

@@ -24,6 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.lioisme.delua.R
+import com.lioisme.delua.androlua.PermissionResolver
 import com.lioisme.delua.editor.EditorConfig
 import com.lioisme.delua.editor.EditorTab
 import com.lioisme.delua.editor.EditorTabs
@@ -67,6 +68,7 @@ fun EditorScreen(
     project: Project,
     projectManager: ProjectManager,
     onBack: () -> Unit,
+    onPermissions: () -> Unit = {},
     onRun: (fileName: String) -> Unit,
 ) {
     val context = LocalContext.current
@@ -104,6 +106,43 @@ fun EditorScreen(
         ActivityResultContracts.StartActivityForResult()
     ) {
         extPermissionMissing.value = !hasStoragePermission(context)
+    }
+
+    // WP-003 运行前权限门：工程 init.lua 声明而尚未授予的运行时权限，
+    // 经系统对话框一次性请求；回调里无论授予与否都继续运行（pro 行为：
+    // 拒绝仅 Toast 提示，不阻断脚本执行）。
+    val doRun: () -> Unit = {
+        scope.launch {
+            session.flushSelectedDirty()
+            onRun(project.mainFile)
+        }
+    }
+
+    val runPermissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { granted: Map<String, Boolean> ->
+        val denied = granted.filterValues { !it }.keys
+        if (denied.isNotEmpty()) {
+            android.widget.Toast.makeText(
+                context,
+                context.getString(R.string.run_permission_denied_hint, denied.size),
+                android.widget.Toast.LENGTH_SHORT,
+            ).show()
+        }
+        doRun()
+    }
+
+    val requestRun: () -> Unit = {
+        val declared = projectManager.loadUserPermissions(project)
+        val ungranted = PermissionResolver.runtimeRequestable(declared).filter {
+            androidx.core.content.ContextCompat.checkSelfPermission(context, it) !=
+                android.content.pm.PackageManager.PERMISSION_GRANTED
+        }
+        if (ungranted.isEmpty()) {
+            doRun()
+        } else {
+            runPermissionLauncher.launch(ungranted.toTypedArray())
+        }
     }
 
     LaunchedEffect(Unit) {
@@ -168,10 +207,7 @@ fun EditorScreen(
                     onUndo = { editorRef.value?.undo() },
                     onRedo = { editorRef.value?.redo() },
                     onRun = {
-                        scope.launch {
-                            session.flushSelectedDirty()
-                            onRun(project.mainFile)
-                        }
+                        requestRun()
                     },
                     onSearch = { isSearchVisible = true },
                     showDrawerToggle = !isWide,
@@ -188,6 +224,10 @@ fun EditorScreen(
                         treeRoot = treeRoot,
                         selectedPath = selectedFile?.let { File(project.path, it).absolutePath },
                         onFileClick = { openFileFromTree(it) },
+                        onPermissionsClick = {
+                            scope.launch { drawerState.close() }
+                            onPermissions()
+                        },
                     )
                 },
             ) {
@@ -290,6 +330,7 @@ private fun DrawerContent(
     treeRoot: FileNode?,
     selectedPath: String?,
     onFileClick: (FileNode) -> Unit,
+    onPermissionsClick: () -> Unit,
 ) {
     Column(Modifier.fillMaxSize()) {
         Column(Modifier.fillMaxWidth().padding(16.dp)) {
@@ -304,6 +345,12 @@ private fun DrawerContent(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 maxLines = 1,
             )
+        }
+        TextButton(
+            onClick = onPermissionsClick,
+            modifier = Modifier.padding(start = 4.dp),
+        ) {
+            Text(stringResource(R.string.drawer_permissions))
         }
         HorizontalDivider()
         val root = treeRoot

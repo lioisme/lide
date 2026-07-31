@@ -25,12 +25,20 @@ object Routes {
     const val PROJECT_LIST = "projects"
     const val EDITOR = "editor/{projectName}/{projectPath}?fileName={fileName}"
     const val SETTINGS = "settings"
-    const val PERMISSIONS = "permissions"
+    const val PERMISSIONS = "permissions?projectName={projectName}&projectPath={projectPath}"
     const val PLUGINS = "plugins"
     const val MANUAL = "manual"
 
     fun editor(project: Project): String {
         return "editor/${enc(project.name)}/${enc(project.path)}?fileName=${enc(project.mainFile)}"
+    }
+
+    fun permissions(project: Project? = null): String {
+        return if (project == null) {
+            PERMISSIONS.replace("?projectName={projectName}&projectPath={projectPath}", "")
+        } else {
+            "permissions?projectName=${enc(project.name)}&projectPath=${enc(project.path)}"
+        }
     }
 
     fun enc(s: String) = URLEncoder.encode(s, "UTF-8")
@@ -110,6 +118,9 @@ fun DeluaNavHost(
                 project = project,
                 projectManager = projectManager,
                 onBack = { navController.popBackStack() },
+                onPermissions = {
+                    navController.navigate(Routes.permissions(project))
+                },
                 onRun = { fileName ->
                     engineLauncher.launch(project.path, fileName)
                 },
@@ -128,9 +139,25 @@ fun DeluaNavHost(
                 onBack = { navController.popBackStack() }
             )
         }
-        slideComposable(route = Routes.PERMISSIONS) {
+        slideComposable(
+            route = Routes.PERMISSIONS,
+            arguments = listOf(
+                navArgument("projectName") {
+                    type = NavType.StringType
+                    defaultValue = ""
+                },
+                navArgument("projectPath") {
+                    type = NavType.StringType
+                    defaultValue = ""
+                }
+            ),
+        ) { backStackEntry ->
+            val name = Routes.dec(backStackEntry.arguments?.getString("projectName"))
+            val path = Routes.dec(backStackEntry.arguments?.getString("projectPath"))
+            val project = if (path.isNotBlank()) Project(name = name, path = path, mainFile = "main.lua") else null
             PermissionScreen(
-                onBack = { navController.popBackStack() }
+                onBack = { navController.popBackStack() },
+                project = project,
             )
         }
         slideComposable(route = Routes.PLUGINS) {

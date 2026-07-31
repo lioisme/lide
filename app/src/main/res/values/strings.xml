@@ -67,6 +67,10 @@
     <string name="perm_granted">Granted</string>
     <string name="perm_denied">Denied</string>
     <string name="perm_request">Request</string>
+    <string name="perm_project_section">Project-declared Permissions (%1$s)</string>
+    <string name="perm_project_empty">This project declares no user_permission in init.lua</string>
+    <string name="drawer_permissions">Project Permissions</string>
+    <string name="run_permission_denied_hint">%1$d permission(s) denied - running anyway</string>
 
     <!-- Plugins -->
     <string name="plugins">Plugins</string>
