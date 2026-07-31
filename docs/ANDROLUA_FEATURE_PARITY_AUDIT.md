@@ -134,7 +134,7 @@ delua 在 `androlua` 模块 Kotlin 侧新增 5 个管理组件，构建了一套
 
 另有 **2 处工程链路残缺（P1）**：
 
-4. **运行结果回传死链**：`RunScreen.kt` 已删除，`EngineBridge.collectResult()` 无调用方；`EngineActivity.onDestroy` 仍写 `engine_result.json`（无人读）；`EngineActivity` 的 `mScriptError` 只写文件不上报。→ 当前"运行"= 裸启动 EngineActivity，输出在引擎自带控制台（status/ListView），**宿主 IDE 看不到输出/错误**。
+4. **运行结果回传死链（已按用户决定收口）**：宿主结果页 `RunScreen` 经真机验证出现"两个界面"（宿主页先展示 `run_no_result` 误导文案、引擎随后全屏运行），判定为冗余中间页后**移除**（见 §8 状态 #2）。当前"运行"= `RunEngineLauncher` 物化依赖 → 直启 `EngineActivity`，输出/错误由引擎自带控制台（status/ListView）展示，宿主不做结果回传。
 5. **`common/` 目录与工程 libs/ 机制并存但互不感知**：pro 的工程内 `<project>/libs/` 机制（`LuaDexLoader.loadLibs`）delua **完整保留且可用**（DemoProject 样例也以此说明），但全局仓库与其零交互——两套模型并存、用户侧割裂。
 
 ### 3.6 🔴 Manifest / 组件注册差异
@@ -214,9 +214,31 @@ delua 在 `androlua` 模块 Kotlin 侧新增 5 个管理组件，构建了一套
 ## 6. 附：关键文件速查
 
 - delua 管理组件：`androlua/src/main/kotlin/com/lioisme/delua/androlua/{AlpManager,PluginManager,ZipUtil}.kt`、`common/{DependencyManager,LibraryRegistry,ModuleRegistry}.kt`
-- 引擎桥接：`androlua/.../engine/{EngineBridge,EngineResult}.kt`、`app/src/main/java/com/lioisme/delua/engine/EngineActivity.java`
+- 引擎桥接：`androlua/.../engine/EngineBridge.kt`、`app/src/main/{java/com/lioisme/delua/engine/EngineActivity.java, kotlin/com/lioisme/delua/engine/RunEngineLauncher.kt}`
 - 运行时入口：`androlua/src/main/java/com/androlua/{LuaActivity,LuaApplication,LuaDexLoader}.java`
 - 比对基线：`docs/reference/androlua/AndroLua_pro-master/app/src/main/{java,assets,resources/lua,jni}`
+
+---
+
+## 8. 行动项执行状态（2026-07-31 更新）
+
+| # | 级别 | 行动 | 状态 |
+|---|---|---|---|
+| 3 | P0 | Manifest 注册三组件 + 权限/largeHeap | ✅ 完成（LuaService、LuaAccessibilityService + config xml、FileProvider + file_paths xml、LuaActivityX、ScreenCaptureActivity；12 项权限 + largeHeap） |
+| 4 | P1 | 补齐缺失 Java 类（widget 19 + FloatWindow/AlertDialogBuilder + multidex 3） | ✅ 完成（SplitEditView 依赖 textwarrior 编辑链，被 sora-editor 合理替代，未移植） |
+| 5 | P1 | 补齐 `com.nirenr.*` + 恢复 LuaAccessibilityService 截图 API | ✅ 完成（Color/ColorFinder/ColorPoint/Point + screencapture 4 文件；截图/点击 API 逐块恢复） |
+| 2 | P0 | 结果回传闭环 | ✅→🔄 完成又移除（2026-07-31 用户决定）：真机"两个界面"问题（RunScreen 先显示 `run_no_result` 失败回显、引擎随后运行）判定为冗余中间页；删除 RunScreen/EngineResult，恢复 `RunEngineLauncher` 直启引擎（物化保留在启动链路），输出由引擎自带控制台展示 |
+| 1 | P0 | 依赖物化 | ✅ 完成（`materializeProjectDependencies`：libs→`<project>/libs/`、modules→`<project>/lua/`(+`/lua/<name>/`)，含完整性校验，运行前调用） |
+| 6 | P1 | 插件系统对齐 | ✅ 完成（init.lua 元数据 fallback + main.lua 入口；installFromAlp 接入 PluginScreen "+" 按钮；点击卡片直启引擎运行插件 main.lua（原经 RunScreen，随结果页一并简化）） |
+| 7 | P1 | 资产补齐（layouthelper 族） | ✅ 完成（`androlua/src/main/assets/lua/`：loadlayout2/loadlayout3/xml2table，经 extractLuaScripts → luaMdDir，`require "loadlayout2"` 可用；xml2table 依赖 `require "import"`，由 assets/lua/import.lua 提供 ✅） |
+| 9 | P1 | extractLuaScripts 版本化更新 | ✅ 完成（MD5 比对，变更才覆盖） |
+| 8 | P1 | 权限补齐 | ✅ 完成（见 #3） |
+| 10 | P2 | `.lua` 文件关联 / `androlua://` scheme | ✅ 完成（MainActivity 三类拉起：.alp 导入、.lua 打开编辑（独立文件自动收养为工程）、androlua:// 拉起运行/编辑；editor 路由支持 fileName） |
+| 11 | P2 | luadoc/ 离线文档 | ✅ 完成（`assets/luadoc/` 4 文件 + 启动提取至 filesDir + 设置页"Lua Manual"入口（WebView 离线渲染）） |
+| 12 | P2 | 管理模型终态决策 | ✅ 决策：**保留全局仓库 + 物化同步为终态**——common/ 仓库负责集中安装/版本/卸载，`materializeProjectDependencies`（P0-1）在运行前把声明依赖物化为 `<project>/libs/` 与 `<project>/lua/`，与 pro 的"工程内自行管理"模型在运行时归一（LuaDexLoader/package.path 感知的仍是工程目录）；delua.json/init.lua 声明即同步入口。两套模型不再割裂：全局仓库 = 安装/管理面，工程目录 = 运行时面，物化是唯一的桥 |
+
+> 注：P1-4 中 `MultiDex.java` 已就位但保持 pro 同款注释态（`//MultiDex.installLibs(this)`），未启用。
+> 所有改动已通过 `:app:compileArm64DebugKotlin` 与 `:app:assembleArm64Debug`（BUILD SUCCESSFUL）。
 
 ---
 

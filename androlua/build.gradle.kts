@@ -1,0 +1,36 @@
+plugins {
+    id("com.android.library")
+    id("org.jetbrains.kotlin.android")
+}
+
+android {
+    namespace = "com.lioisme.delua.androlua"
+    compileSdk = 35
+
+    defaultConfig {
+        minSdk = 24
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+}
+
+dependencies {
+    implementation(fileTree("libs") { include("*.jar") })
+    implementation("androidx.lifecycle:lifecycle-common:2.8.7")
+    implementation("androidx.annotation:annotation:1.9.1")
+    implementation("androidx.core:core:1.15.0")
+}
+
+repositories {
+    maven { url = uri("https://maven.aliyun.com/repository/public") }
+    maven { url = uri("https://maven.aliyun.com/repository/google") }
+    google()
+    mavenCentral()
+}

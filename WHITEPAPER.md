@@ -50,15 +50,13 @@ delua 的核心设计原则：
 │  │  │  IDE Layer (Jetpack Compose + Material 3)                │  │  │
 │  │  │  ├── ProjectListScreen   项目管理                          │  │  │
 │  │  │  ├── EditorScreen        代码编辑器 + 语法高亮              │  │  │
-│  │  │  ├── RunScreen           运行结果展示                      │  │  │
 │  │  │  ├── SettingsScreen      设置/主题/权限                    │  │  │
 │  │  │  └── PermissionScreen    运行时权限管理                     │  │  │
 │  │  └─────────────────────────────────────────────────────────┘  │  │
 │  │                                                               │  │
 │  │  ┌─────────────────────────────────────────────────────────┐  │  │
-│  │  │  EngineBridge (Kotlin, ~50 lines)                       │  │  │
-│  │  │  ├── createEngineIntent() 构建 → EngineActivity           │  │  │
-│  │  │  └── collectResult()     读取文件缓存的结果               │  │  │
+│  │  │  EngineBridge (Kotlin, ~20 lines)                       │  │  │
+│  │  │  └── createEngineIntent() 构建 → EngineActivity           │  │  │
 │  │  └─────────────────────────────────────────────────────────┘  │  │
 │  └──────────────────────────────┬────────────────────────────────┘  │
 │                                 │                                    │
@@ -98,10 +96,10 @@ delua 的核心设计原则：
 引擎与宿主通过 EngineBridge 交互，运行在独立 Activity 栈：
 
 ```
-RunScreen → EngineBridge.createEngineIntent(projectDir) → Intent → EngineActivity
-EngineActivity.onDestroy() → write {cacheDir}/engine_result.json
-RunScreen → EngineBridge.collectResult() → read JSON → EngineResult
+RunEngineLauncher → 物化依赖(后台) → EngineBridge.createEngineIntent(projectDir, mainFile) → EngineActivity
 ```
+
+引擎输出/错误由引擎自带控制台（LuaActivity 默认布局）直接展示，宿主不做结果回传页；物化失败仅 Toast 提示。
 
 Java 运行时类（`com.luajava.*`、`com.androlua.*`）通过 `androlua` 模块编译进宿主 APK 主 DEX，`EngineActivity` 直接继承 `LuaActivity`，无需反射或 ClassLoader 隔离。
 
@@ -208,10 +206,12 @@ project.alp
 用户点击"运行"
     │
     ▼
-RunScreen → EngineBridge.createEngineIntent(projectDir, mainFile)
+RunEngineLauncher → 物化依赖(后台线程)
+    │
     ▼
-RunScreen → startActivityForResult(intent)
-    │ Intent Extra: projectDir, mainFile
+EngineBridge.createEngineIntent(projectDir, mainFile)
+    ▼
+startActivity(intent)  │ Intent Extra: projectDir, mainFile
     ▼
 EngineActivity (extends LuaActivity, 独立 Activity 栈)
     │ 继承自 androlua 模块的 LuaActivity
@@ -220,14 +220,7 @@ EngineActivity (extends LuaActivity, 独立 Activity 栈)
     │ pushJavaObject(this) → setGlobal("activity")
     │ setPackagePath(projectDir/?.lua + cacheDir/lua/?.lua)
     │ doFile(init.lua) → doFile(main.lua)
-    │ 脚本执行
-    │ onDestroy → write engine_result.json
-    ▼
-RunScreen ← onActivityResult
-    │ EngineBridge.collectResult()
-    │ 读取 engine_result.json + engine_output.txt
-    ▼
-    显示输出/错误信息
+    │ 脚本执行（输出/错误在引擎控制台直接展示）
 ```
 
 **语法检查**：由 sora-editor 的 CodeEditor 内置实现，无需宿主干预。
@@ -345,7 +338,7 @@ RunScreen ← onActivityResult
 
 - AndroLua C 原生引擎（`import` / `loadlayout` / 所有 API）
 - EngineActivity 执行引擎（Intent 驱动）
-- 运行结果展示（RunScreen）
+- 运行入口（RunEngineLauncher：物化依赖 → 直启引擎，输出由引擎控制台展示）
 - Lua 运行时脚本（25 个 `.lua` 文件）
 
 ### 阶段四：构建系统（规划中）

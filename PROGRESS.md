@@ -296,6 +296,86 @@ CI 包含四个 Job：
 
 ---
 
+## WP-007：AndroLua pro 特性一致性修复（P0/P1/P2 全部完成）
+
+**目标**：按 `docs/ANDROLUA_FEATURE_PARITY_AUDIT.md` 第 5 节行动项 P0→P1→P2 修复与 pro 的差距，全部通过 `:app:assembleArm64Debug`。
+
+**完成内容**：
+
+### 模块还原
+- `:androlua` 模块从 `docs/reference/androlua/` 移回根目录 `androlua/`（`settings.gradle.kts` 一直引用它）。
+
+### P0-3 Manifest 与权限（`app/src/main/AndroidManifest.xml`）
+- `android:largeHeap="true"`；注册 `com.androlua.LuaService`、`LuaAccessibilityService`（+meta-data + intent-filter）、`androidx.core.content.FileProvider`（authorities=${applicationId} + `res/xml/androlua_filepaths.xml`）、`com.androlua.LuaActivityX`、`com.nirenr.screencapture.ScreenCaptureActivity`；EngineActivity 加 configChanges。
+- 补齐 12 项权限（WRITE_CALL_LOG / WRITE_SMS / READ_FRAME_BUFFER / BATTERY_STATS / CLEAR_APP_CACHE / GET_PACKAGE_SIZE / SYSTEM_ALERT_WINDOW / SET_WALLPAPER / DOWNLOAD_WITHOUT_NOTIFICATION / ANSWER_PHONE_CALLS / CHANGE_NETWORK_STATE / INSTALL_SHORTCUT）。
+- 新增 `res/xml/{accessibility_service_config.xml,androlua_filepaths.xml}` 与 `accessibility_service_description` 字符串（values + values-zh）。
+
+### P1-4/5 类补齐（`androlua/src/main/java/`）
+- `android.widget/` 19 个控件类（CardView 族、DrawerLayout 族、FloatButton、ToolBar、HorizontalListView、PullingLayout、Ripple 族、SlidingLayout、ViewDragHelper、PageLayout、PageAdapter、CircleImageView、ArrayExpandableListAdapter…）；`android/app/{AlertDialogBuilder,FloatWindow}`；`android/support/multidex/` 3 文件；`com/nirenr/{Color,ColorFinder,ColorPoint,Point}` + `com/nirenr/screencapture/` 4 文件。
+- FloatButton/ToolBar 的 `R.drawable.icon` → `android.R.drawable.sym_def_app_icon`。
+- 恢复 `LuaAccessibilityService` 的 nirenr/截图 API（字段 + click/longClick/press/swipe/startScreenshot/getScreenshot/stopScreenshot）。
+- SplitEditView 依赖 textwarrior 编辑链（已被 sora-editor 合理替代），未移植。
+
+### P0-2 结果回传闭环
+- `EngineActivity.java`：`sendMsg` 追加 `outputBuffer`；`writeResult()` 写 `cacheDir/engine_result.json` + `engine_output.txt`。
+- `EngineBridge.kt`：`collectResult()` 读 JSON 并合入 output、读后删除；新增 `clearResult()`（启动引擎前清残留）。
+- `RunScreen.kt`（重建）：Preparing/Running/Failed/Finished 四态；依赖物化 → `clearResult` → `startActivityForResult` → 展示 success/error/duration/output + 一键复制；新增字符串（values + values-zh）。
+- `DeluaNavHost.kt`：新增 `run` 路由（projectName/projectPath/fileName），EditorScreen onRun 改导航；去掉旧 startActivity 直启。
+
+### P0-1 依赖物化（`DependencyManager.kt`）
+- `materializeProjectDependencies(projectDir)`：libs → `<project>/libs/`（LuaDexLoader 自动加载），modules → `<project>/lua/`（+ 含 init.lua 时 `<project>/lua/<name>/`）；先 `validateDependencies` 完整校验（含 jar 有效性），失败即报错并拒绝运行。
+
+### P1-6 插件系统对齐（`PluginManager.kt` + `PluginScreen.kt`）
+- `loadPlugin` 增加 pro 风格 fallback：无 plugin.json 时读 init.lua 的 `appname/appver/description` 字段（正则解析），入口 main.lua。
+- PluginScreen：`+` 按钮安装 .alp（GetContent → 缓存 → installFromAlp → 重扫）；卡片点击 → RunScreen 运行插件 main.lua（复用 run 路由，插件按工程对待，依赖物化同样生效）。
+
+### P1-7 布局助手资产
+- 复制 `loadlayout2.lua / loadlayout3.lua / xml2table.lua` → `androlua/src/main/assets/lua/`（extractLuaScripts → luaMdDir → `require "loadlayout2"` 可用；xml2table 的 `require "import"` 由 assets/lua/import.lua 满足）。
+
+### P1-9 资产版本化更新（`LuaApplication.extractLuaScripts`）
+- 由"存在即跳过"改为 MD5 比对：内置脚本升级后自动覆盖。
+
+### R1 边界
+- `editor/src` 对 `luajava|androlua|loadLibrary` 零命中（含注释）。
+
+### P2-10 `.lua` 文件关联 + `androlua://` scheme（MainActivity.kt + AndroidManifest.xml）
+- Manifest：新增 `.lua` VIEW/EDIT intent-filter（file + content，`.*\.lua`）；`androlua://` scheme（host = `com.lioisme.delua` + pro 兼容 `com.androlua`）。
+- MainActivity 三类拉起：
+  - `.alp` → 导入（原有）
+  - `.lua` → 定位所在工程（向上找含 init.lua 的目录）→ 打开编辑；独立文件自动收养为单文件工程（复制 + 生成 init.lua）再打开
+  - `androlua://<host>/<相对 luaExtDir 路径>` → main.lua 直接运行（脚本拉起）、目录取 main.lua 运行、其他 .lua 打开编辑
+- 路由扩展：`editor` 路由增加 `fileName`（optional，默认 main.lua）；NavHost 新增 `pendingOpenFiles/pendingRunFiles` 一次性消费。
+
+### P2-11 luadoc 离线文档
+- `docs/reference` 的 `assets/luadoc/`（manual.html 457KB、contents.html、glossary.html、logo.gif）→ `app/src/main/assets/luadoc/`。
+- `DeluaApp` 启动提取至 `filesDir/luadoc/`（存在即跳过）。
+- 新增 `LuaManualScreen`（WebView 离线渲染 + 缺失兜底文案）；Settings "About" 从 TODO 接线到该页；新增 `manual` 路由；新增字符串（values + values-zh）。
+
+### P2-12 管理模型终态决策（已收口）
+- **决策：保留全局仓库 + 物化同步为终态**。common/ 仓库 = 安装/管理面（集中安装、版本、卸载），`materializeProjectDependencies`（P0-1）= 运行时桥，把声明依赖物化为 `<project>/libs/` 与 `<project>/lua/`，引擎感知的仍是工程目录（与 pro 运行时模型归一）。delua.json/init.lua 声明即同步入口，两套模型不再割裂。
+
+**剩余（可选项）**：无强制项。真机回归（运行闭环、无障碍/截图 API、.lua 拉起、手册渲染）待设备验证。
+
+**验收**：`:app:compileArm64DebugKotlin` ✅、`:app:assembleArm64Debug` ✅（BUILD SUCCESSFUL）。
+
+---
+
+## 运行链路简化（RunScreen 移除）
+
+**决策**：真机发现"点运行"出现两个界面——先是一个「运行：xxx/main.lua」的宿主结果页（依赖物化/结果收集失败时展示 `run_no_result` 误导文案），随后才是真正的引擎界面。该宿主中间页被判定为冗余（引擎自带控制台已展示输出/错误），按用户要求删除，恢复 pro 式"运行 → 引擎全屏直启"。
+
+**改动**：
+- 删除 `RunScreen.kt`（Preparing/Running/Failed/Finished 四态 + startActivityForResult + collectResult 展示）、`EngineResult.kt`。
+- 新增 `RunEngineLauncher.kt`（:app，`com.lioisme.delua.engine`）：后台线程物化依赖（沿用 P0-1）→ 主线程直启 EngineActivity；物化失败仅 Toast（`run_materialize_failed`），不启动。
+- `EngineBridge.kt` 精简为仅 `createEngineIntent`（删 collectResult/clearResult/REQUEST_CODE_ENGINE）。
+- `EngineActivity.java` 精简为纯 LuaActivity 子类（删 writeResult/escapeJson/outputBuffer/hasContentView/startTime）。
+- `DeluaNavHost.kt`：删除 `run` 路由与 `pendingRunFiles`；EditorScreen/PluginScreen 的 onRun 直启引擎。
+- `MainActivity.kt`：`androlua://` 拉起 main.lua → 直启引擎（不再进 pendingRunFiles）。
+- 删除 run_title/running/run_success/run_error/run_failed/run_duration/run_output/run_copy_output/run_no_result/no_output/cd_copy_output 字符串（保留 run_materialize_failed）。
+- 引擎侧 `libluajava.so`/控制台能力不受影响；`:editor` R1 边界不变。
+
+---
+
 ## 整体验收状态
 
 | 编号 | 标准 | 状态 |

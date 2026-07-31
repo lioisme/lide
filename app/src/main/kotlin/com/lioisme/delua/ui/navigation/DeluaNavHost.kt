@@ -4,6 +4,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
@@ -11,17 +12,19 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.lioisme.delua.androlua.engine.EngineBridge
+import com.lioisme.delua.engine.RunEngineLauncher
 import com.lioisme.delua.model.Project
 import com.lioisme.delua.project.ProjectManager
 import com.lioisme.delua.ui.screen.EditorScreen
 import com.lioisme.delua.ui.screen.LibraryManagerScreen
+import com.lioisme.delua.ui.screen.LuaManualScreen
 import com.lioisme.delua.ui.screen.ModuleManagerScreen
 import com.lioisme.delua.ui.screen.PermissionScreen
 import com.lioisme.delua.ui.screen.ProjectDependenciesScreen
 import com.lioisme.delua.ui.screen.ProjectListScreen
 import com.lioisme.delua.ui.screen.PluginScreen
 import com.lioisme.delua.ui.screen.SettingsScreen
+import java.io.File
 import java.net.URLDecoder
 import java.net.URLEncoder
 
@@ -29,16 +32,17 @@ private const val ANIM_DURATION = 300
 
 object Routes {
     const val PROJECT_LIST = "projects"
-    const val EDITOR = "editor/{projectName}/{projectPath}"
+    const val EDITOR = "editor/{projectName}/{projectPath}?fileName={fileName}"
     const val SETTINGS = "settings"
     const val PERMISSIONS = "permissions"
     const val PLUGINS = "plugins"
     const val LIBRARIES = "libraries"
     const val MODULES = "modules"
     const val DEPENDENCIES = "dependencies/{projectName}/{projectPath}"
+    const val MANUAL = "manual"
 
     fun editor(project: Project): String {
-        return "editor/${enc(project.name)}/${enc(project.path)}"
+        return "editor/${enc(project.name)}/${enc(project.path)}?fileName=${enc(project.mainFile)}"
     }
 
     fun dependencies(project: Project): String {
@@ -50,10 +54,26 @@ object Routes {
 }
 
 @Composable
-fun DeluaNavHost(navController: NavHostController, pendingImportPaths: List<String> = emptyList()) {
+fun DeluaNavHost(
+    navController: NavHostController,
+    pendingImportPaths: List<String> = emptyList(),
+    pendingOpenFiles: List<Pair<String, String>> = emptyList(),
+) {
     val context = LocalContext.current
     val projectManager = remember { ProjectManager(context) }
-    val engineBridge = remember { EngineBridge(context) }
+    val engineLauncher = remember { RunEngineLauncher(context) }
+
+    LaunchedEffect(navController, pendingOpenFiles) {
+        val open = pendingOpenFiles.firstOrNull()
+        if (open != null) {
+            val dir = File(open.first)
+            navController.navigate(
+                Routes.editor(
+                    Project(name = dir.name, path = dir.absolutePath, mainFile = open.second)
+                )
+            )
+        }
+    }
 
     NavHost(navController = navController, startDestination = Routes.PROJECT_LIST) {
         composable(
@@ -86,7 +106,11 @@ fun DeluaNavHost(navController: NavHostController, pendingImportPaths: List<Stri
             route = Routes.EDITOR,
             arguments = listOf(
                 navArgument("projectName") { type = NavType.StringType },
-                navArgument("projectPath") { type = NavType.StringType }
+                navArgument("projectPath") { type = NavType.StringType },
+                navArgument("fileName") {
+                    type = NavType.StringType
+                    defaultValue = "main.lua"
+                }
             ),
             enterTransition = {
                 slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(ANIM_DURATION))
@@ -101,15 +125,17 @@ fun DeluaNavHost(navController: NavHostController, pendingImportPaths: List<Stri
                 slideOutHorizontally(targetOffsetX = { it }, animationSpec = tween(ANIM_DURATION))
             }
         ) { backStackEntry ->
-            val project = rememberProject(backStackEntry.arguments?.getString("projectName"),
-                backStackEntry.arguments?.getString("projectPath"))
+            val project = rememberProject(
+                backStackEntry.arguments?.getString("projectName"),
+                backStackEntry.arguments?.getString("projectPath"),
+                backStackEntry.arguments?.getString("fileName") ?: "main.lua",
+            )
             EditorScreen(
                 project = project,
                 projectManager = projectManager,
                 onBack = { navController.popBackStack() },
                 onRun = { fileName ->
-                    val intent = engineBridge.createEngineIntent(project.path, fileName)
-                    context.startActivity(intent)
+                    engineLauncher.launch(project.path, fileName)
                 },
                 onDependencies = {
                     navController.navigate(Routes.dependencies(project))
@@ -137,6 +163,12 @@ fun DeluaNavHost(navController: NavHostController, pendingImportPaths: List<Stri
                 onPluginsClick = { navController.navigate(Routes.PLUGINS) },
                 onLibrariesClick = { navController.navigate(Routes.LIBRARIES) },
                 onModulesClick = { navController.navigate(Routes.MODULES) },
+                onManualClick = { navController.navigate(Routes.MANUAL) },
+            )
+        }
+        composable(route = Routes.MANUAL) {
+            LuaManualScreen(
+                onBack = { navController.popBackStack() }
             )
         }
         composable(route = Routes.PERMISSIONS) {
@@ -146,6 +178,9 @@ fun DeluaNavHost(navController: NavHostController, pendingImportPaths: List<Stri
         }
         composable(route = Routes.PLUGINS) {
             PluginScreen(
+                onRun = { plugin ->
+                    engineLauncher.launch(plugin.dir, plugin.main)
+                },
                 onBack = { navController.popBackStack() }
             )
         }
@@ -184,8 +219,9 @@ fun DeluaNavHost(navController: NavHostController, pendingImportPaths: List<Stri
 }
 
 @Composable
-private fun rememberProject(name: String?, path: String?): Project {
+private fun rememberProject(name: String?, path: String?, fileName: String = "main.lua"): Project {
     val n = Routes.dec(name)
     val p = Routes.dec(path)
-    return remember(n, p) { Project(name = n, path = p) }
+    val f = Routes.dec(fileName)
+    return remember(n, p, f) { Project(name = n, path = p, mainFile = f) }
 }

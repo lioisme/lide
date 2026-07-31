@@ -14,6 +14,7 @@ class DeluaApp : LuaApplication() {
         LocaleManager.init(this)
         com.lioisme.delua.androlua.common.DependencyManager(this).ensureDirsExist()
         extractSamples()
+        extractLuadoc()
         preloadTextMate()
     }
 
@@ -66,6 +67,21 @@ class DeluaApp : LuaApplication() {
                 }
             }
         } catch (_: Exception) {
+        }
+    }
+
+    private fun extractLuadoc() {
+        try {
+            val outDir = File(filesDir, "luadoc")
+            outDir.mkdirs()
+            val names = assets.list("luadoc") ?: return
+            for (name in names) {
+                val outFile = File(outDir, name)
+                if (outFile.exists() && outFile.length() > 0) continue
+                copyAsset("luadoc/$name", outFile)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 }

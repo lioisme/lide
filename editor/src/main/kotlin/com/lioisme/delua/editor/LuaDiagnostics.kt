@@ -7,7 +7,7 @@ import io.github.rosemoe.sora.lang.diagnostic.DiagnosticRegion
  * 纯 Kotlin 单遍词法校验器。
  *
  * 用途：编辑器进程内的行级语法诊断（括号配对、块闭合、字符串/注释完整性）。
- * 设计约束：零原生依赖（不触碰 libluajava.so）、单遍 O(n)、无每词字符串分配。
+ * 设计约束：零原生依赖（编辑器进程不加载任何 .so）、单遍 O(n)、无每词字符串分配。
  * 深层次语法（表达式、运算符优先级等）不属于本类职责，由运行时引擎在编译期兜底。
  */
 object LuaDiagnostics {

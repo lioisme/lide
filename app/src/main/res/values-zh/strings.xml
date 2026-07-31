@@ -21,9 +21,7 @@
     <string name="export_failed">导出失败</string>
 
     <!-- Run -->
-    <string name="run_title">运行: %1$s/%2$s</string>
-    <string name="running">运行中…</string>
-    <string name="no_output">(无输出)</string>
+    <string name="run_materialize_failed">依赖准备失败</string>
 
     <!-- Settings sections -->
     <string name="settings">设置</string>
@@ -51,6 +49,8 @@
     <string name="tab_size">制表符大小</string>
     <string name="about">关于</string>
     <string name="version">delua v1.0</string>
+    <string name="lua_manual">Lua 手册</string>
+    <string name="lua_manual_missing">未找到离线手册。</string>
     <string name="system_wallpaper">系统壁纸</string>
     <string name="wallpaper_desc">壁纸动态取色</string>
     <string name="pick_accent">选择强调色</string>
@@ -106,5 +106,5 @@
     <string name="cd_back">返回</string>
     <string name="cd_replace">替换</string>
     <string name="cd_replace_all">全部替换</string>
-    <string name="cd_copy_output">复制输出</string>
+    <string name="accessibility_service_description">Delua 无障碍服务：为 Lua 脚本提供自动化能力（点击、滑动、截图）。</string>
 </resources>

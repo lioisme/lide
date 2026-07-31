@@ -21,9 +21,7 @@
     <string name="export_failed">Failed to export project</string>
 
     <!-- Run -->
-    <string name="run_title">Run: %1$s/%2$s</string>
-    <string name="running">Running…</string>
-    <string name="no_output">(no output)</string>
+    <string name="run_materialize_failed">Failed to prepare dependencies</string>
 
     <!-- Settings sections -->
     <string name="settings">Settings</string>
@@ -51,6 +49,8 @@
     <string name="tab_size">Tab Size</string>
     <string name="about">About</string>
     <string name="version">delua v1.0</string>
+    <string name="lua_manual">Lua Manual</string>
+    <string name="lua_manual_missing">Offline manual not found.</string>
     <string name="system_wallpaper">System wallpaper</string>
     <string name="wallpaper_desc">Dynamic color from wallpaper</string>
     <string name="pick_accent">Pick an accent color</string>
@@ -106,5 +106,5 @@
     <string name="cd_back">Back</string>
     <string name="cd_replace">Replace</string>
     <string name="cd_replace_all">Replace all</string>
-    <string name="cd_copy_output">Copy output</string>
+    <string name="accessibility_service_description">Delua 无障碍服务：为 Lua 脚本提供自动化能力（点击、滑动、截图）。</string>
 </resources>

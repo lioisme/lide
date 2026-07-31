@@ -54,7 +54,7 @@ private val colorOptions = listOf(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen(onBack: () -> Unit, onPermissionsClick: () -> Unit = {}, onPluginsClick: () -> Unit = {}, onLibrariesClick: () -> Unit = {}, onModulesClick: () -> Unit = {}) {
+fun SettingsScreen(onBack: () -> Unit, onPermissionsClick: () -> Unit = {}, onPluginsClick: () -> Unit = {}, onLibrariesClick: () -> Unit = {}, onModulesClick: () -> Unit = {}, onManualClick: () -> Unit = {}) {
     val context = LocalContext.current
     val activity = context.resolveActivity()
     val config by SettingsManager.themeConfig.collectAsState()
@@ -156,7 +156,7 @@ fun SettingsScreen(onBack: () -> Unit, onPermissionsClick: () -> Unit = {}, onPl
                     icon = Icons.Default.Info,
                     title = stringResource(R.string.about),
                     subtitle = stringResource(R.string.version),
-                    onClick = { /* TODO */ },
+                    onClick = onManualClick,
                 )
                 SettingsItem(
                     icon = Icons.Default.Lock,
