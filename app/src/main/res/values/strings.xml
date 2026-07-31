@@ -77,6 +77,31 @@
     <string name="run_insert_import">Insert import \"%1$s\"</string>
     <string name="run_import_suggestion">Tip: try import \"%1$s\"</string>
 
+    <!-- Project info (WP-004) -->
+    <string name="info_title">Project Info</string>
+    <string name="info_basic_group">Basic</string>
+    <string name="info_appname">App name</string>
+    <string name="info_appver">App version</string>
+    <string name="info_appcode">Version code</string>
+    <string name="info_appsdk">Target SDK</string>
+    <string name="info_path_pattern">Screen orientation</string>
+    <string name="info_packagename">Package name</string>
+    <string name="info_theme">Theme</string>
+    <string name="info_app_key">App key</string>
+    <string name="info_app_channel">Channel</string>
+    <string name="info_developer">Developer</string>
+    <string name="info_description">Description</string>
+    <string name="info_debugmode">Debug mode</string>
+    <string name="info_permissions_btn">User permissions (%1$d)</string>
+    <string name="info_permissions_title">Select user permissions</string>
+    <string name="info_permissions_confirm">Done</string>
+    <string name="info_save">Save</string>
+    <string name="info_save_success">Saved</string>
+    <string name="info_save_failed">Save failed</string>
+    <string name="info_load_failed">No init.lua found</string>
+    <string name="drawer_project_info">Project Info</string>
+    <string name="project_info_menu">Project Info</string>
+
     <!-- Plugins -->
     <string name="plugins">Plugins</string>
     <string name="plugins_subtitle">Manage installed plugins</string>

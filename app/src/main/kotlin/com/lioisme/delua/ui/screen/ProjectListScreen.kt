@@ -39,7 +39,9 @@ import kotlinx.coroutines.delay
 fun ProjectListScreen(
     projectManager: ProjectManager,
     onProjectClick: (Project) -> Unit,
+    onProjectInfoClick: (Project) -> Unit = {},
     onSettingsClick: () -> Unit,
+    refreshKey: Int = 0,
     pendingImportPaths: List<String> = emptyList(),
 ) {
     var projects by remember { mutableStateOf(listOf<Project>()) }
@@ -49,6 +51,7 @@ fun ProjectListScreen(
     var errorMsg by remember { mutableStateOf<String?>(null) }
     var pendingExportProject by remember { mutableStateOf<Project?>(null) }
     var pendingDeleteProject by remember { mutableStateOf<Project?>(null) }
+    var menuProject by remember { mutableStateOf<Project?>(null) }
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
     val strImportSuccess = stringResource(R.string.import_success)
@@ -61,6 +64,11 @@ fun ProjectListScreen(
     }
 
     LaunchedEffect(Unit) { loadProjects() }
+
+    // WP-004：工程属性保存后回列表刷新（appname 等字段可能已变）。
+    LaunchedEffect(refreshKey) {
+        if (refreshKey > 0) loadProjects()
+    }
 
     LaunchedEffect(pendingImportPaths) {
         if (pendingImportPaths.isNotEmpty()) {
@@ -200,45 +208,74 @@ fun ProjectListScreen(
                 LazyColumn(modifier = Modifier.fillMaxSize()) {
                     item { Spacer(Modifier.height(4.dp)) }
                     itemsIndexed(projects) { index, project ->
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .combinedClickable(
-                                    onClick = { onProjectClick(project) },
-                                    onLongClick = { pendingDeleteProject = project },
+                        Box {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .combinedClickable(
+                                        onClick = { onProjectClick(project) },
+                                        onLongClick = { menuProject = project },
+                                    )
+                                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Folder,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(32.dp),
+                                    tint = MaterialTheme.colorScheme.primary,
                                 )
-                                .padding(horizontal = 16.dp, vertical = 12.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Folder,
-                                contentDescription = null,
-                                modifier = Modifier.size(32.dp),
-                                tint = MaterialTheme.colorScheme.primary,
-                            )
-                            Spacer(Modifier.width(16.dp))
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text(
-                                    text = project.name,
-                                    style = MaterialTheme.typography.bodyLarge,
-                                    fontWeight = FontWeight.Medium,
-                                )
-                                if (project.packageName.isNotBlank()) {
+                                Spacer(Modifier.width(16.dp))
+                                Column(modifier = Modifier.weight(1f)) {
                                     Text(
-                                        text = project.packageName,
-                                        style = MaterialTheme.typography.bodySmall,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        text = project.name,
+                                        style = MaterialTheme.typography.bodyLarge,
+                                        fontWeight = FontWeight.Medium,
+                                    )
+                                    if (project.packageName.isNotBlank()) {
+                                        Text(
+                                            text = project.packageName,
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        )
+                                    }
+                                }
+                                IconButton(onClick = {
+                                    pendingExportProject = project
+                                    exportLauncher.launch("${project.name}.alp")
+                                }) {
+                                    Icon(
+                                        Icons.Default.FileUpload,
+                                        contentDescription = stringResource(R.string.export_alp),
+                                        tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
                                     )
                                 }
                             }
-                            IconButton(onClick = {
-                                pendingExportProject = project
-                                exportLauncher.launch("${project.name}.alp")
-                            }) {
-                                Icon(
-                                    Icons.Default.FileUpload,
-                                    contentDescription = stringResource(R.string.export_alp),
-                                    tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+                            DropdownMenu(
+                                expanded = menuProject == project,
+                                onDismissRequest = { menuProject = null },
+                            ) {
+                                DropdownMenuItem(
+                                    text = { Text(stringResource(R.string.project_info_menu)) },
+                                    onClick = {
+                                        menuProject = null
+                                        onProjectInfoClick(project)
+                                    },
+                                )
+                                DropdownMenuItem(
+                                    text = { Text(stringResource(R.string.export_alp)) },
+                                    onClick = {
+                                        menuProject = null
+                                        pendingExportProject = project
+                                        exportLauncher.launch("${project.name}.alp")
+                                    },
+                                )
+                                DropdownMenuItem(
+                                    text = { Text(stringResource(R.string.project_delete)) },
+                                    onClick = {
+                                        menuProject = null
+                                        pendingDeleteProject = project
+                                    },
                                 )
                             }
                         }

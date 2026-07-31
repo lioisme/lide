@@ -2,7 +2,10 @@ package com.lioisme.delua.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -14,6 +17,7 @@ import com.lioisme.delua.project.ProjectManager
 import com.lioisme.delua.ui.screen.EditorScreen
 import com.lioisme.delua.ui.screen.LuaManualScreen
 import com.lioisme.delua.ui.screen.PermissionScreen
+import com.lioisme.delua.ui.screen.ProjectInfoScreen
 import com.lioisme.delua.ui.screen.ProjectListScreen
 import com.lioisme.delua.ui.screen.PluginScreen
 import com.lioisme.delua.ui.screen.SettingsScreen
@@ -26,6 +30,7 @@ object Routes {
     const val EDITOR = "editor/{projectName}/{projectPath}?fileName={fileName}"
     const val SETTINGS = "settings"
     const val PERMISSIONS = "permissions?projectName={projectName}&projectPath={projectPath}"
+    const val PROJECT_INFO = "projectinfo?projectName={projectName}&projectPath={projectPath}"
     const val PLUGINS = "plugins"
     const val MANUAL = "manual"
 
@@ -39,6 +44,10 @@ object Routes {
         } else {
             "permissions?projectName=${enc(project.name)}&projectPath=${enc(project.path)}"
         }
+    }
+
+    fun projectInfo(project: Project): String {
+        return "projectinfo?projectName=${enc(project.name)}&projectPath=${enc(project.path)}"
     }
 
     fun enc(s: String) = URLEncoder.encode(s, "UTF-8")
@@ -55,6 +64,8 @@ fun DeluaNavHost(
     val context = LocalContext.current
     val projectManager = remember { ProjectManager(context) }
     val engineLauncher = remember { RunEngineLauncher(context) }
+    // WP-004：工程属性保存后自增，驱动列表刷新与编辑器抽屉工程名更新。
+    var projectInfoVersion by remember { mutableIntStateOf(0) }
 
     LaunchedEffect(navController, pendingOpenFiles) {
         val open = pendingOpenFiles.firstOrNull()
@@ -84,9 +95,13 @@ fun DeluaNavHost(
                 onProjectClick = { project ->
                     navController.navigate(Routes.editor(project))
                 },
+                onProjectInfoClick = { project ->
+                    navController.navigate(Routes.projectInfo(project))
+                },
                 onSettingsClick = {
                     navController.navigate(Routes.SETTINGS)
                 },
+                refreshKey = projectInfoVersion,
                 pendingImportPaths = pendingImportPaths,
             )
         }
@@ -121,9 +136,13 @@ fun DeluaNavHost(
                 onPermissions = {
                     navController.navigate(Routes.permissions(project))
                 },
+                onProjectInfo = {
+                    navController.navigate(Routes.projectInfo(project))
+                },
                 onRun = { fileName ->
                     engineLauncher.launch(project.path, fileName)
                 },
+                projectInfoVersion = projectInfoVersion,
             )
         }
         slideComposable(route = Routes.SETTINGS) {
@@ -174,6 +193,35 @@ fun DeluaNavHost(
                     )
                 },
                 onBack = { navController.popBackStack() }
+            )
+        }
+        slideComposable(
+            route = Routes.PROJECT_INFO,
+            arguments = listOf(
+                navArgument("projectName") {
+                    type = NavType.StringType
+                    defaultValue = ""
+                },
+                navArgument("projectPath") {
+                    type = NavType.StringType
+                    defaultValue = ""
+                }
+            ),
+        ) { backStackEntry ->
+            val name = Routes.dec(backStackEntry.arguments?.getString("projectName"))
+            val path = Routes.dec(backStackEntry.arguments?.getString("projectPath"))
+            val project = if (path.isNotBlank()) Project(name = name, path = path, mainFile = "main.lua") else null
+            if (project == null) {
+                LaunchedEffect(Unit) { navController.popBackStack() }
+                return@slideComposable
+            }
+            ProjectInfoScreen(
+                project = project,
+                onBack = { navController.popBackStack() },
+                onSaved = {
+                    projectInfoVersion++
+                    navController.popBackStack()
+                },
             )
         }
     }

@@ -20,12 +20,14 @@ import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.foundation.background
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.lioisme.delua.R
+import com.lioisme.delua.androlua.LuaConfigParser
 import com.lioisme.delua.androlua.PermissionResolver
 import com.lioisme.delua.engine.EngineActivity
 import com.lioisme.delua.engine.EngineResultParser
@@ -80,7 +82,9 @@ fun EditorScreen(
     projectManager: ProjectManager,
     onBack: () -> Unit,
     onPermissions: () -> Unit = {},
+    onProjectInfo: () -> Unit = {},
     onRun: (fileName: String) -> Unit,
+    projectInfoVersion: Int = 0,
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -96,6 +100,7 @@ fun EditorScreen(
     val tabs by session.tabs.collectAsState()
     val selectedFile by session.selectedFile.collectAsState()
     val content by session.selectedContent.collectAsState()
+    android.util.Log.d("DeluaDebug", "EditorScreen project.name=${project.name} path=${project.path} main=${project.mainFile} infoV=$projectInfoVersion")
 
     val editorRef = remember { mutableStateOf<CodeEditor?>(null) }
     val snackbarHostState = remember { SnackbarHostState() }
@@ -262,56 +267,63 @@ fun EditorScreen(
                 } else false
             }
     ) {
-        Scaffold(
-            topBar = {
-                EditorToolbar(
-                    fileName = selectedFile.orEmpty(),
-                    canUndo = selectedTab?.canUndo == true,
-                    canRedo = selectedTab?.canRedo == true,
-                    onBack = {
-                        // 退出契约：先关抽屉再退出。close() 对已关闭状态立即返回（零延迟），
-                        // 对开启状态先收起再 pop，杜绝「满屏抽屉随退出转场滑出」。
-                        session.flushSelectedDirtyAsync()
-                        scope.launch {
-                            drawerState.close()
-                            onBack()
-                        }
+        // 抽屉策略：宽屏常驻并排（顶栏隐藏汉堡键）；窄屏经典 Modal 侧边抽屉。
+        // 抽屉容器在 Scaffold 外层：Modal 抽屉打开时整屏（含顶栏）被 sheet+scrim 覆盖，
+        // 否则 Scaffold 顶栏（z 序高于 content）会把抽屉顶部内容裁掉。
+        NavigationDrawerPanel(
+            isWide = isWide,
+            drawerState = drawerState,
+            drawerContent = {
+                DrawerContent(
+                    project = project,
+                    projectInfoVersion = projectInfoVersion,
+                    treeRoot = treeRoot,
+                    selectedPath = selectedFile?.let { File(project.path, it).absolutePath },
+                    onFileClick = { openFileFromTree(it) },
+                    onPermissionsClick = {
+                        scope.launch { drawerState.close() }
+                        onPermissions()
                     },
-                    onToggleDrawer = {
-                        scope.launch {
-                            if (drawerState.isOpen) drawerState.close() else drawerState.open()
-                        }
+                    onProjectInfoClick = {
+                        scope.launch { drawerState.close() }
+                        onProjectInfo()
                     },
-                    onUndo = { editorRef.value?.undo() },
-                    onRedo = { editorRef.value?.redo() },
-                    onRun = {
-                        requestRun()
-                    },
-                    onSearch = { isSearchVisible = true },
-                    showDrawerToggle = !isWide,
                 )
             },
-            snackbarHost = {
-                SnackbarHost(hostState = snackbarHostState)
-            },
-        ) { padding ->
-            // 抽屉策略：宽屏常驻并排（顶栏隐藏汉堡键）；窄屏经典 Modal 侧边抽屉。
-            NavigationDrawerPanel(
-                isWide = isWide,
-                drawerState = drawerState,
-                drawerContent = {
-                    DrawerContent(
-                        project = project,
-                        treeRoot = treeRoot,
-                        selectedPath = selectedFile?.let { File(project.path, it).absolutePath },
-                        onFileClick = { openFileFromTree(it) },
-                        onPermissionsClick = {
-                            scope.launch { drawerState.close() }
-                            onPermissions()
+        ) {
+            Scaffold(
+                topBar = {
+                    EditorToolbar(
+                        fileName = selectedFile.orEmpty(),
+                        canUndo = selectedTab?.canUndo == true,
+                        canRedo = selectedTab?.canRedo == true,
+                        onBack = {
+                            // 退出契约：先关抽屉再退出。close() 对已关闭状态立即返回（零延迟），
+                            // 对开启状态先收起再 pop，杜绝「满屏抽屉随退出转场滑出」。
+                            session.flushSelectedDirtyAsync()
+                            scope.launch {
+                                drawerState.close()
+                                onBack()
+                            }
                         },
+                        onToggleDrawer = {
+                            scope.launch {
+                                if (drawerState.isOpen) drawerState.close() else drawerState.open()
+                            }
+                        },
+                        onUndo = { editorRef.value?.undo() },
+                        onRedo = { editorRef.value?.redo() },
+                        onRun = {
+                            requestRun()
+                        },
+                        onSearch = { isSearchVisible = true },
+                        showDrawerToggle = !isWide,
                     )
                 },
-            ) {
+                snackbarHost = {
+                    SnackbarHost(hostState = snackbarHostState)
+                },
+            ) { padding ->
                 EditorBody(
                     session = session,
                     contentPadding = padding,
@@ -458,15 +470,32 @@ private tailrec fun Context.findActivity(): Activity {
 @Composable
 private fun DrawerContent(
     project: Project,
+    projectInfoVersion: Int,
     treeRoot: FileNode?,
     selectedPath: String?,
     onFileClick: (FileNode) -> Unit,
     onPermissionsClick: () -> Unit,
+    onProjectInfoClick: () -> Unit,
 ) {
+    // WP-004：工程属性保存后（版本自增）重读 init.lua appname，抽屉工程名即时更新。
+    var displayName by remember(project, projectInfoVersion) { mutableStateOf(project.name) }
+    LaunchedEffect(project, projectInfoVersion) {
+        if (projectInfoVersion > 0) {
+            displayName = withContext(Dispatchers.IO) {
+                val file = File(project.path, "init.lua")
+                if (file.exists()) {
+                    val appname = LuaConfigParser.stringField(file.readText(), "appname")
+                    appname?.takeIf { it.isNotBlank() } ?: project.name
+                } else {
+                    project.name
+                }
+            }
+        }
+    }
     Column(Modifier.fillMaxSize()) {
         Column(Modifier.fillMaxWidth().padding(16.dp)) {
             Text(
-                project.name,
+                displayName,
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Medium,
             )
@@ -477,11 +506,17 @@ private fun DrawerContent(
                 maxLines = 1,
             )
         }
-        TextButton(
-            onClick = onPermissionsClick,
-            modifier = Modifier.padding(start = 4.dp),
-        ) {
-            Text(stringResource(R.string.drawer_permissions))
+        Row(Modifier.padding(start = 4.dp)) {
+            TextButton(
+                onClick = onPermissionsClick,
+            ) {
+                Text(stringResource(R.string.drawer_permissions))
+            }
+            TextButton(
+                onClick = onProjectInfoClick,
+            ) {
+                Text(stringResource(R.string.drawer_project_info))
+            }
         }
         HorizontalDivider()
         val root = treeRoot
@@ -528,12 +563,13 @@ private fun StoragePermissionBanner(
 
 /**
  * 抽屉容器策略（官方组件二选一）：
- * - 窄屏（默认）：[ModalNavigationDrawer] 经典侧边抽屉。抽屉内嵌于内容区（顶栏之下），
- *   顶栏常驻可见；`ModalDrawerSheet(drawerState)` 内置官方返回处理
- *   （PredictiveBackHandler，enabled 仅在抽屉打开时生效）——抽屉关闭时不注册，
- *   返回事件自然归 NavHost；Android 14+ 带预测性返回动画，与 navigation-compose 2.8.5
- *   的 pop 转场无竞争，无需手写 BackHandler。打开状态可拖拽关闭；不启用边缘滑开
- *   （避免与编辑器触摸交互冲突）。
+ * - 窄屏（默认）：[ModalNavigationDrawer] 经典侧边抽屉。抽屉容器位于 Scaffold 外层，
+ *   打开时整屏（含顶栏与状态栏）被 sheet + scrim 覆盖——若放在 Scaffold content 槽内，
+ *   顶栏 z 序高于 content，会裁掉抽屉顶部内容（实测 topBar 遮挡 sheet 顶部 256px）。
+ *   `ModalDrawerSheet(drawerState)` 内置官方返回处理（PredictiveBackHandler，
+ *   enabled 仅在抽屉打开时生效）——抽屉关闭时不注册，返回事件自然归 NavHost；
+ *   Android 14+ 带预测性返回动画，与 navigation-compose 2.8.5 的 pop 转场无竞争，
+ *   无需手写 BackHandler。打开状态可拖拽关闭；不启用边缘滑开（避免与编辑器触摸交互冲突）。
  * - 宽屏（≥840dp）：[PermanentNavigationDrawer] 常驻并排，抽屉恒可见。
  */
 @OptIn(ExperimentalMaterial3Api::class)

@@ -190,6 +190,28 @@ object LuaConfigParser {
         return setField(content, name, if (items.isEmpty()) "{ }" else "{ $formatted }")
     }
 
+    /**
+     * Lua `%q` 等价转义（带引号字符串）。仅转义双引号/反斜杠/换行/回车/制表符与
+     * 控制字符（\0-\x1F、\x7F，Lua 5.3 `\u{XX}` 形式），其余字节原样（UTF-8 安全）。
+     */
+    fun quoteLuaString(s: String): String {
+        val sb = StringBuilder(s.length + 2)
+        sb.append('"')
+        for (c in s) {
+            when {
+                c == '"' -> sb.append("\\\"")
+                c == '\\' -> sb.append("\\\\")
+                c == '\n' -> sb.append("\\n")
+                c == '\r' -> sb.append("\\r")
+                c == '\t' -> sb.append("\\t")
+                c < ' ' || c == '\u007F' -> sb.append("\\u{%02x}".format(c.code))
+                else -> sb.append(c)
+            }
+        }
+        sb.append('"')
+        return sb.toString()
+    }
+
     // ---- 内部工具 ----
 
     private fun skipWhitespace(s: String, from: Int, n: Int): Int {
