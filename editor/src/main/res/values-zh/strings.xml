@@ -13,7 +13,7 @@
 
     <!-- Editor tabs -->
     <string name="cd_close_tab">关闭标签</string>
-    <string name="cd_toggle_tree">切换文件树</string>
+    <string name="cd_open_file_tree">打开文件树</string>
     <string name="dirty_marker">• </string>
     <string name="menu_close_tab">关闭</string>
     <string name="menu_close_others">关闭其他</string>

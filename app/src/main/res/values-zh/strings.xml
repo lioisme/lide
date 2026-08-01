@@ -8,6 +8,8 @@
     <string name="create">创建</string>
     <string name="project_name">项目名称</string>
     <string name="select_file">选择文件</string>
+    <string name="cd_go_up">上一级</string>
+    <string name="cd_close">关闭</string>
 
     <!-- Project List -->
     <string name="new_project">新建项目</string>
@@ -71,8 +73,8 @@
     <string name="perm_project_save">保存</string>
     <string name="perm_project_saved">已保存</string>
     <string name="perm_project_save_failed">保存失败</string>
-    <string name="drawer_permissions">工程权限</string>
-    <string name="drawer_project_info">工程信息</string>
+    <string name="project_permissions">工程权限</string>
+    <string name="project_info">工程信息</string>
     <string name="build_apk">构建 APK</string>
 
     <!-- Build APK (WP-005) -->

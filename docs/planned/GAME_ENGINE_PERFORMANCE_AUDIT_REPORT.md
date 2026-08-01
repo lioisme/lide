@@ -117,41 +117,4 @@
 
 运行期每次调用：Lua VM → C 函数指针（`lua_CFunction`），**栈上没有 Java 帧**。Java 只参与：一次性文件复制（`LuaDexLoader.loadLib`）、`getLibrarys()` 路径查询（`LuaActivity.java:153-155`）、以及 `libsloader` 注册——都是加载期动作，不是调用期动作。
 
-验证事实：`docs/LIBS_SUPPORT_WORK_ORDER.md` V-03 已用 NDK 编的 `libmytest.so`（导出 `luaopen_mytest`）在真机验证 `require "mytest"` 走此路径 PASS；`prebuilt/` + `app/src/main/jniLibs/` 已内置 15 个此类 .so（lfs、zip、cjson、sqlite3 等，3 ABI）。
-
-对照：`luaCpath` 通道（`LuaActivity.java:1355-1359`，`package.cpath = luaCpath`）同样是 `?` 模板直连 .so 的纯 C 路径。**两条路都不存在 Lua → Java → C 的中间层。**
-
-唯一需要 JNI 回 Java 的场景：C 库要调用 Android 框架服务（GL 渲染上下文、Bitmap、传感器、Activity 生命周期）——那是 C 主动向上调 Java，与"Lua 调 C"的调用方向相反，且只发生在需要系统服务的边界。
-
----
-
-## 6. 优化建议（按性价比排序）
-
-### 石头（不动引擎）
-1. 传感器改 `SENSOR_DELAY_GAME`/`UI` 并做 **dt 累积**（真实 elapsed / 0.02 次数），主循环改为 `Choreographer` 或 `Ticker` 按 vsync 驱动（`Ticker` 已存在于 `com.androlua`）。
-2. Lua 侧热路径改造：`pos.x/pos.y` 换成已缓存 getter（如 `body.getPosition()` 后直接读——或在 Java 侧加 `getPositionX/Y` 桥接方法），把 6 个视图的同步从"每视图 8 次桥调用"批成"1 次 Java 批处理调用"。
-3. `debugmode=false`（`init.lua:10`）、关掉 `status` 打印。
-
-### 看板娘（不动引擎）
-4. `LAppView` 改 `RENDERMODE_WHEN_DIRTY` + 模型更新节流；`main.lua` 里在 `onPause/onResume` 正确挂起 GL 循环（现有代码未绑定生命周期）。
-
-### 通用 / 长期
-5. 引擎 .so 化（第 4 节）：box2d 用原生 C + Lua 绑定；Live2D 用 Cubism 原生 SDK。工程 `libs/libbox2d.so` 放 `libs/` 即可被 `libsloader` 加载，宿主内置则走 `jniLibs` + `package.cpath`。
-6. 评估给 `LuaDexLoader.loadDex` 的 in-memory dex 加"预编译缓存"（JIT profile 持久化）或对引擎类走 `DexClassLoader`+`odexDir`（API<26）以消除冷启动解释期——受 W^X 限制，8+ 只能靠 JIT profile 缓解。
-
----
-
-## 7. 证据索引
-
-| 事实 | 位置 |
-|---|---|
-| 传感器 FASTEST、主线程回调、无 dt 累积 | `石头/main.lua:277-291, 81-86` |
-| 每视图 8 次桥调用 + 未缓存字段读 | `石头/main.lua:203-218`；`LuaJavaAPI.java:1080-1121`（checkField 每次 `getField`） |
-| 方法调用慢路径（≥2 参无缓存） | `LuaJavaAPI.java:121-277` |
-| 所有 JNI 方法 synchronized | `LuaState.java:930-1004` |
-| 动态代理每事件 pcall | `LuaInvocationHandler.java:52-96` |
-| in-memory dex 无 AOT | `LuaDexLoader.java:138-150` |
-| Live2D 纯 Java 引擎、CONTINUOUSLY、GL 线程主循环 | `live2D.dex`：`LAppRenderer.onDrawFrame`（020ddc）、`LAppView extends GLSurfaceView`、无 `setRenderMode` |
-| libs .so 加载路径 | `import.lua:17-26`；`LuaDexLoader.java:74-106`；`LuaActivity.java:234` |
-| libs 机制真机验证 | `docs/LIBS_SUPPORT_WORK_ORDER.md` V-03 |
-| 引擎 dex 反编译证据 | `dexdump` 输出（135 类 live2D / `ee.*` JBox2D 全套） |
+验证事实：`docs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.md

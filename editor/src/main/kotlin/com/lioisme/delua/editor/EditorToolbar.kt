@@ -5,7 +5,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Redo
 import androidx.compose.material.icons.automirrored.filled.Undo
-import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.FolderOpen
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Search
@@ -33,13 +33,11 @@ fun EditorToolbar(
     canUndo: Boolean,
     canRedo: Boolean,
     onBack: () -> Unit,
-    onToggleDrawer: () -> Unit,
+    onOpenFileTree: () -> Unit,
     onUndo: () -> Unit,
     onRedo: () -> Unit,
     onRun: () -> Unit,
     onSearch: () -> Unit = {},
-    // 宽屏常驻抽屉场景下汉堡键无意义（抽屉恒可见），由宿主注入关闭。
-    showDrawerToggle: Boolean = true,
     // 右上角更多（⋮）菜单：工程属性/工程权限/打包 APK 等宿主动作入口。
     moreActions: List<EditorMoreAction> = emptyList(),
     modifier: Modifier = Modifier,
@@ -55,28 +53,29 @@ fun EditorToolbar(
         },
         navigationIcon = {
             Row {
-                if (showDrawerToggle) {
-                    IconButton(onClick = onToggleDrawer) {
-                        Icon(Icons.Default.Menu, contentDescription = stringResource(R.string.cd_toggle_tree))
-                    }
-                }
                 IconButton(onClick = onBack) {
                     Icon(
                         Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = stringResource(R.string.cd_back),
                     )
                 }
+                IconButton(onClick = onOpenFileTree) {
+                    Icon(
+                        Icons.Default.FolderOpen,
+                        contentDescription = stringResource(R.string.cd_open_file_tree),
+                    )
+                }
             }
         },
         actions = {
-            IconButton(onClick = onSearch) {
-                Icon(Icons.Default.Search, contentDescription = stringResource(R.string.cd_search))
-            }
             IconButton(onClick = onUndo, enabled = canUndo) {
                 Icon(Icons.AutoMirrored.Filled.Undo, contentDescription = stringResource(R.string.cd_undo))
             }
             IconButton(onClick = onRedo, enabled = canRedo) {
                 Icon(Icons.AutoMirrored.Filled.Redo, contentDescription = stringResource(R.string.cd_redo))
+            }
+            IconButton(onClick = onSearch) {
+                Icon(Icons.Default.Search, contentDescription = stringResource(R.string.cd_search))
             }
             IconButton(onClick = onRun) {
                 Icon(Icons.Default.PlayArrow, contentDescription = stringResource(R.string.cd_run))

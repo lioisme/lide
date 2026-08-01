@@ -8,6 +8,8 @@
     <string name="create">Create</string>
     <string name="project_name">Project name</string>
     <string name="select_file">Select File</string>
+    <string name="cd_go_up">Go up one level</string>
+    <string name="cd_close">Close</string>
 
     <!-- Project List -->
     <string name="new_project">New Project</string>
@@ -76,7 +78,7 @@
     <string name="perm_host_section">Host App Permissions</string>
     <string name="perm_host_hint">Permissions of the delua host app itself. They apply to the IDE and to scripts running inside the host.</string>
     <string name="perm_package_only">Written into packaged APK only</string>
-    <string name="drawer_permissions">Project Permissions</string>
+    <string name="project_permissions">Project Permissions</string>
     <string name="run_permission_denied_hint">%1$d permission(s) denied - running anyway</string>
     <string name="run_finished">Run finished</string>
     <string name="run_error_title">Run error</string>
@@ -106,7 +108,7 @@
     <string name="info_save_success">Saved</string>
     <string name="info_save_failed">Save failed</string>
     <string name="info_load_failed">No init.lua found</string>
-    <string name="drawer_project_info">Project Info</string>
+    <string name="project_info">Project Info</string>
     <string name="project_info_menu">Project Info</string>
     <string name="build_apk">Build APK</string>
 

@@ -1,8 +1,5 @@
 package com.lioisme.delua.ui.screen
 
-import android.app.Activity
-import android.content.Context
-import android.content.ContextWrapper
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -10,24 +7,23 @@ import android.os.Environment
 import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.*
-import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
-import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.foundation.background
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import com.lioisme.delua.R
-import com.lioisme.delua.androlua.LuaConfigParser
 import com.lioisme.delua.androlua.PermissionResolver
 import com.lioisme.delua.engine.EngineActivity
 import com.lioisme.delua.engine.EngineResultParser
@@ -37,9 +33,9 @@ import com.lioisme.delua.editor.EditorMoreAction
 import com.lioisme.delua.editor.EditorTab
 import com.lioisme.delua.editor.EditorTabs
 import com.lioisme.delua.editor.EditorToolbar
+import com.lioisme.delua.editor.FileBrowser
 import com.lioisme.delua.editor.FileNode
 import com.lioisme.delua.editor.LuaEditor
-import com.lioisme.delua.editor.ProjectFileTree
 import com.lioisme.delua.editor.SearchBar
 import com.lioisme.delua.model.Project
 import com.lioisme.delua.project.ProjectManager
@@ -73,10 +69,9 @@ private data class RunResult(
  * - 搜索面板自持全部状态，打字与搜索结果只重组 SearchBar 子树；
  * - 文件切换走 [Content] 缓存复用，零读盘、零 O(n) 重建（除首次打开）。
  *
- * 布局：Scaffold（工具栏常驻顶栏）→ 抽屉内嵌内容区（经典侧边抽屉，位于顶栏之下，
- * 不覆盖状态栏/顶栏）→ 标签行 + 编辑器。窄屏 Modal 抽屉；宽屏（≥840dp）Permanent 常驻并排。
+ * 布局：Scaffold（工具栏常驻顶栏）→ 标签行 + 编辑器；工程文件树经顶栏文件夹键打开对话框展示。
  */
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3WindowSizeClassApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditorScreen(
     project: Project,
@@ -93,11 +88,6 @@ fun EditorScreen(
     val isDarkTheme = LocalIsDarkTheme.current
     val appEditorConfig by SettingsManager.editorConfig.collectAsState()
 
-    // 宽屏判定（官方 WindowSizeClass）：Expanded ≥840dp 启用常驻抽屉，窄屏经典 Modal。
-    // 本工程未引入 activity 1.10+ 的 LocalActivity，经 Context 链解包宿主 Activity（确定性）。
-    val windowSizeClass = calculateWindowSizeClass(LocalContext.current.findActivity())
-    val isWide = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Expanded
-
     val session = remember(project) { EditorSession(project, projectManager) }
     val tabs by session.tabs.collectAsState()
     val selectedFile by session.selectedFile.collectAsState()
@@ -106,12 +96,8 @@ fun EditorScreen(
 
     val editorRef = remember { mutableStateOf<CodeEditor?>(null) }
     val snackbarHostState = remember { SnackbarHostState() }
-    // 非 saveable 抽屉状态：抽屉必须每次进入页面均为关闭态。
-    // rememberDrawerState 是 rememberSaveable 实现（Saver 保存 currentValue），
-    // 转屏/进程重建会把 Open 复活并产生可见「展开→收起」闪烁，故此处用官方裸构造。
-    val drawerState = remember { DrawerState(DrawerValue.Closed) }
 
-    var treeRoot by remember { mutableStateOf<FileNode?>(null) }
+    var isFileTreeVisible by remember { mutableStateOf(false) }
     var isSearchVisible by remember { mutableStateOf(false) }
     // 脏文件待确认队列：单标签关闭时为单元素列表；「关闭其他/全部」时为批量队列，
     // 逐个确认后经 saveAndClose/discardAndClose 出队，取消即放弃剩余批次。
@@ -238,7 +224,6 @@ fun EditorScreen(
 
     LaunchedEffect(Unit) {
         session.initialize()
-        treeRoot = withContext(Dispatchers.IO) { projectManager.listProjectTree(project) }
     }
 
     // 自动保存：500ms 防抖。editTick 为 StateFlow，收集过程不触发重组。
@@ -262,8 +247,8 @@ fun EditorScreen(
         if (node.isDirectory) return
         val prefix = project.path + File.separator
         val relative = if (node.path.startsWith(prefix)) node.path.removePrefix(prefix) else node.name
-        // 抽屉关闭与文件打开互不依赖：关闭立即执行（杜绝「IO 期间敞开」窗口），打开保持原异步语义。
-        scope.launch { drawerState.close() }
+        // 文件打开后关闭对话框（对话框与打开保持原异步语义）。
+        isFileTreeVisible = false
         scope.launch { session.openTab(relative) }
     }
 
@@ -282,110 +267,85 @@ fun EditorScreen(
                 } else false
             }
     ) {
-        // 抽屉策略：宽屏常驻并排（顶栏隐藏汉堡键）；窄屏经典 Modal 侧边抽屉。
-        // 抽屉容器在 Scaffold 外层：Modal 抽屉打开时整屏（含顶栏）被 sheet+scrim 覆盖，
-        // 否则 Scaffold 顶栏（z 序高于 content）会把抽屉顶部内容裁掉。
-        NavigationDrawerPanel(
-            isWide = isWide,
-            drawerState = drawerState,
-            drawerContent = {
-                DrawerContent(
-                    project = project,
-                    projectInfoVersion = projectInfoVersion,
-                    treeRoot = treeRoot,
-                    selectedPath = selectedFile?.let { File(project.path, it).absolutePath },
-                    onFileClick = { openFileFromTree(it) },
-                    onPermissionsClick = {
-                        scope.launch { drawerState.close() }
-                        onPermissions()
+        Scaffold(
+            topBar = {
+                EditorToolbar(
+                    fileName = selectedFile.orEmpty(),
+                    canUndo = selectedTab?.canUndo == true,
+                    canRedo = selectedTab?.canRedo == true,
+                    onBack = {
+                        session.flushSelectedDirtyAsync()
+                        onBack()
                     },
-                    onProjectInfoClick = {
-                        scope.launch { drawerState.close() }
-                        onProjectInfo()
+                    onOpenFileTree = { isFileTreeVisible = true },
+                    onUndo = { editorRef.value?.undo() },
+                    onRedo = { editorRef.value?.redo() },
+                    onRun = {
+                        requestRun()
                     },
+                    onSearch = { isSearchVisible = true },
+                    // 工程级操作统一入口：右上角更多（⋮）菜单。
+                    moreActions = listOf(
+                        EditorMoreAction(stringResource(R.string.project_info)) {
+                            onProjectInfo()
+                        },
+                        EditorMoreAction(stringResource(R.string.project_permissions)) {
+                            onPermissions()
+                        },
+                        EditorMoreAction(stringResource(R.string.build_apk)) {
+                            onBuildApk()
+                        },
+                    ),
                 )
             },
-        ) {
-            Scaffold(
-                topBar = {
-                    EditorToolbar(
-                        fileName = selectedFile.orEmpty(),
-                        canUndo = selectedTab?.canUndo == true,
-                        canRedo = selectedTab?.canRedo == true,
-                        onBack = {
-                            // 退出契约：先关抽屉再退出。close() 对已关闭状态立即返回（零延迟），
-                            // 对开启状态先收起再 pop，杜绝「满屏抽屉随退出转场滑出」。
-                            session.flushSelectedDirtyAsync()
-                            scope.launch {
-                                drawerState.close()
-                                onBack()
-                            }
-                        },
-                        onToggleDrawer = {
-                            scope.launch {
-                                if (drawerState.isOpen) drawerState.close() else drawerState.open()
-                            }
-                        },
-                        onUndo = { editorRef.value?.undo() },
-                        onRedo = { editorRef.value?.redo() },
-                        onRun = {
-                            requestRun()
-                        },
-                        onSearch = { isSearchVisible = true },
-                        showDrawerToggle = !isWide,
-                        // 工程级操作统一入口：右上角更多（⋮）菜单。
-                        moreActions = listOf(
-                            EditorMoreAction(stringResource(R.string.drawer_project_info)) {
-                                onProjectInfo()
-                            },
-                            EditorMoreAction(stringResource(R.string.drawer_permissions)) {
-                                onPermissions()
-                            },
-                            EditorMoreAction(stringResource(R.string.build_apk)) {
-                                onBuildApk()
-                            },
-                        ),
+            snackbarHost = {
+                SnackbarHost(hostState = snackbarHostState)
+            },
+        ) { padding ->
+            EditorBody(
+                session = session,
+                contentPadding = padding,
+                tabs = tabs.map { it.tab },
+                selectedFile = selectedFile,
+                content = content,
+                isDarkTheme = isDarkTheme,
+                editorConfig = appEditorConfig,
+                editorRef = editorRef,
+                storagePermissionMissing = extPermissionMissing.value,
+                isSearchVisible = isSearchVisible,
+                onTabClose = { file ->
+                    if (session.requestClose(file)) closeQueue = listOf(file)
+                },
+                onCloseOthers = { file ->
+                    val dirty = session.closeOthers(file)
+                    if (dirty.isNotEmpty()) closeQueue = dirty
+                },
+                onCloseAll = {
+                    val dirty = session.closeAll()
+                    if (dirty.isNotEmpty()) closeQueue = dirty
+                },
+                onGrantStorage = {
+                    manageStorageLauncher.launch(
+                        Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION).apply {
+                            data = Uri.parse("package:${context.packageName}")
+                        }
                     )
                 },
-                snackbarHost = {
-                    SnackbarHost(hostState = snackbarHostState)
+                onSearchClose = {
+                    isSearchVisible = false
+                    getSearcher()?.stopSearch()
                 },
-            ) { padding ->
-                EditorBody(
-                    session = session,
-                    contentPadding = padding,
-                    tabs = tabs.map { it.tab },
-                    selectedFile = selectedFile,
-                    content = content,
-                    isDarkTheme = isDarkTheme,
-                    editorConfig = appEditorConfig,
-                    editorRef = editorRef,
-                    storagePermissionMissing = extPermissionMissing.value,
-                    isSearchVisible = isSearchVisible,
-                    onTabClose = { file ->
-                        if (session.requestClose(file)) closeQueue = listOf(file)
-                    },
-                    onCloseOthers = { file ->
-                        val dirty = session.closeOthers(file)
-                        if (dirty.isNotEmpty()) closeQueue = dirty
-                    },
-                    onCloseAll = {
-                        val dirty = session.closeAll()
-                        if (dirty.isNotEmpty()) closeQueue = dirty
-                    },
-                    onGrantStorage = {
-                        manageStorageLauncher.launch(
-                            Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION).apply {
-                                data = Uri.parse("package:${context.packageName}")
-                            }
-                        )
-                    },
-                    onSearchClose = {
-                        isSearchVisible = false
-                        getSearcher()?.stopSearch()
-                    },
-                )
-            }
+            )
+        }
+
+        // 工程文件目录对话框（文件系统风格）：顶栏文件夹键打开，选中文件即打开并关闭。
+        if (isFileTreeVisible) {
+            ProjectFileBrowserDialog(
+                project = project,
+                selectedPath = selectedFile?.let { File(project.path, it).absolutePath },
+                onFileOpen = { openFileFromTree(it) },
+                onDismiss = { isFileTreeVisible = false },
+            )
         }
 
         val pendingFile = closeQueue.firstOrNull()
@@ -474,6 +434,7 @@ fun EditorScreen(
     }
 }
 
+/** 宿主存储权限门：Android 11+ 需要「所有文件访问」授权。 */
 private fun hasStoragePermission(context: android.content.Context): Boolean {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
         return Environment.isExternalStorageManager()
@@ -481,82 +442,113 @@ private fun hasStoragePermission(context: android.content.Context): Boolean {
     return true
 }
 
-/** 沿 ContextWrapper 链解包出宿主 Activity（Compose 环境恒可命中）。 */
-private tailrec fun Context.findActivity(): Activity {
-    return when (this) {
-        is Activity -> this
-        is ContextWrapper -> baseContext.findActivity()
-        else -> error("无法解析宿主 Activity：context=$this")
-    }
-}
-
 /**
- * 抽屉面板（工程名 + 文件树）。纯展示组件：树数据与选中态由宿主注入，
- * 点击回调上报宿主（宿主负责关闭抽屉并打开文件）。
+ * 工程文件目录对话框（文件系统风格，替代原侧边抽屉）：面包屑 + 上下级目录导航 + 条目列表。
+ * 目录点击进入，文件点击打开（宿主负责关闭对话框）；仅含目录浏览，无其他工程级操作入口。
  */
 @Composable
-private fun DrawerContent(
+private fun ProjectFileBrowserDialog(
     project: Project,
-    projectInfoVersion: Int,
-    treeRoot: FileNode?,
     selectedPath: String?,
-    onFileClick: (FileNode) -> Unit,
-    onPermissionsClick: () -> Unit,
-    onProjectInfoClick: () -> Unit,
+    onFileOpen: (FileNode) -> Unit,
+    onDismiss: () -> Unit,
 ) {
-    // WP-004：工程属性保存后（版本自增）重读 init.lua appname，抽屉工程名即时更新。
-    var displayName by remember(project, projectInfoVersion) { mutableStateOf(project.name) }
-    LaunchedEffect(project, projectInfoVersion) {
-        if (projectInfoVersion > 0) {
-            displayName = withContext(Dispatchers.IO) {
-                val file = File(project.path, "init.lua")
-                if (file.exists()) {
-                    val appname = LuaConfigParser.stringField(file.readText(), "appname")
-                    appname?.takeIf { it.isNotBlank() } ?: project.name
-                } else {
-                    project.name
-                }
-            }
+    val rootDir = remember(project) { File(project.path) }
+    var currentDir by remember(project) { mutableStateOf(rootDir) }
+    var entries by remember { mutableStateOf<List<FileNode>>(emptyList()) }
+
+    // 目录内容按需读取（IO 线程）：目录恒展示，文件仅收 .lua。
+    LaunchedEffect(currentDir) {
+        entries = withContext(Dispatchers.IO) {
+            currentDir.listFiles()
+                ?.filter { it.isDirectory || (it.isFile && it.name.endsWith(".lua", ignoreCase = true)) }
+                ?.map { FileNode(it.name, it.absolutePath, it.isDirectory) }
+                ?: emptyList()
         }
     }
-    Column(Modifier.fillMaxSize()) {
-        Column(Modifier.fillMaxWidth().padding(16.dp)) {
-            Text(
-                displayName,
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Medium,
-            )
-            Text(
-                project.path,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                maxLines = 1,
-            )
+
+    // 面包屑路径段：工程根目录 → 当前目录（逐级可点）。
+    val segments = remember(currentDir) {
+        val list = mutableListOf<File>()
+        var cursor: File? = currentDir
+        while (cursor != null && cursor != rootDir) {
+            list.add(0, cursor)
+            cursor = cursor.parentFile
         }
-        Row(Modifier.padding(start = 4.dp)) {
-            TextButton(
-                onClick = onPermissionsClick,
-            ) {
-                Text(stringResource(R.string.drawer_permissions))
-            }
-            TextButton(
-                onClick = onProjectInfoClick,
-            ) {
-                Text(stringResource(R.string.drawer_project_info))
-            }
-        }
-        HorizontalDivider()
-        val root = treeRoot
-        if (root != null) {
-            ProjectFileTree(
-                root = root,
-                selectedPath = selectedPath,
-                onFileClick = onFileClick,
-                modifier = Modifier.fillMaxWidth().weight(1f),
-            )
-        } else {
-            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
+        list.add(0, rootDir)
+        list
+    }
+
+    Dialog(onDismissRequest = onDismiss) {
+        Surface(
+            shape = MaterialTheme.shapes.extraLarge,
+            color = MaterialTheme.colorScheme.surface,
+            tonalElevation = 6.dp,
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(max = 520.dp),
+        ) {
+            Column(Modifier.fillMaxWidth()) {
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(start = 4.dp, end = 4.dp, top = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    IconButton(
+                        onClick = { currentDir = currentDir.parentFile ?: rootDir },
+                        enabled = currentDir != rootDir,
+                    ) {
+                        Icon(
+                            Icons.Default.KeyboardArrowUp,
+                            contentDescription = stringResource(R.string.cd_go_up),
+                        )
+                    }
+                    Row(
+                        Modifier
+                            .weight(1f)
+                            .horizontalScroll(rememberScrollState()),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        segments.forEach { segment ->
+                            TextButton(onClick = { currentDir = segment }) {
+                                Text(
+                                    segment.name,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = if (segment == currentDir) {
+                                        MaterialTheme.colorScheme.primary
+                                    } else {
+                                        MaterialTheme.colorScheme.onSurfaceVariant
+                                    },
+                                    maxLines = 1,
+                                )
+                            }
+                            if (segment != currentDir) {
+                                Text(
+                                    "/",
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                )
+                            }
+                        }
+                    }
+                    IconButton(onClick = onDismiss) {
+                        Icon(
+                            Icons.Default.Close,
+                            contentDescription = stringResource(R.string.cd_close),
+                        )
+                    }
+                }
+                HorizontalDivider()
+                FileBrowser(
+                    entries = entries,
+                    selectedPath = selectedPath,
+                    onOpenDirectory = { currentDir = File(it.path) },
+                    onOpenFile = onFileOpen,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
+                )
             }
         }
     }
@@ -589,51 +581,7 @@ private fun StoragePermissionBanner(
 }
 
 /**
- * 抽屉容器策略（官方组件二选一）：
- * - 窄屏（默认）：[ModalNavigationDrawer] 经典侧边抽屉。抽屉容器位于 Scaffold 外层，
- *   打开时整屏（含顶栏与状态栏）被 sheet + scrim 覆盖——若放在 Scaffold content 槽内，
- *   顶栏 z 序高于 content，会裁掉抽屉顶部内容（实测 topBar 遮挡 sheet 顶部 256px）。
- *   `ModalDrawerSheet(drawerState)` 内置官方返回处理（PredictiveBackHandler，
- *   enabled 仅在抽屉打开时生效）——抽屉关闭时不注册，返回事件自然归 NavHost；
- *   Android 14+ 带预测性返回动画，与 navigation-compose 2.8.5 的 pop 转场无竞争，
- *   无需手写 BackHandler。打开状态可拖拽关闭；不启用边缘滑开（避免与编辑器触摸交互冲突）。
- * - 宽屏（≥840dp）：[PermanentNavigationDrawer] 常驻并排，抽屉恒可见。
- */
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun NavigationDrawerPanel(
-    isWide: Boolean,
-    drawerState: DrawerState,
-    drawerContent: @Composable () -> Unit,
-    content: @Composable () -> Unit,
-) {
-    if (isWide) {
-        PermanentNavigationDrawer(
-            drawerContent = {
-                PermanentDrawerSheet {
-                    drawerContent()
-                }
-            },
-        ) {
-            content()
-        }
-    } else {
-        ModalNavigationDrawer(
-            drawerState = drawerState,
-            gesturesEnabled = drawerState.isOpen,
-            drawerContent = {
-                ModalDrawerSheet(drawerState) {
-                    drawerContent()
-                }
-            },
-        ) {
-            content()
-        }
-    }
-}
-
-/**
- * 编辑器主体（标签行 + 编辑器 + 权限横幅 + 搜索面板）。与抽屉容器解耦：
+ * 编辑器主体（标签行 + 编辑器 + 权限横幅 + 搜索面板）。与文件目录对话框解耦：
  * 状态全部经参数注入，仅依赖会话回调上报宿主。
  */
 @Composable
