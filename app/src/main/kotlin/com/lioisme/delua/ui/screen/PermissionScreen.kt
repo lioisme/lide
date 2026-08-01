@@ -32,6 +32,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.lioisme.delua.R
+import com.lioisme.delua.editor.TipIconButton
 import kotlinx.coroutines.launch
 
 /**
@@ -77,7 +78,7 @@ fun HostPermissionScreen(
             TopAppBar(
                 title = { Text(stringResource(R.string.permission_management)) },
                 navigationIcon = {
-                    IconButton(onClick = onBack) {
+                    TipIconButton(tooltip = stringResource(R.string.cd_back), onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.cd_back))
                     }
                 },
@@ -235,7 +236,7 @@ fun ProjectPermissionScreen(
             TopAppBar(
                 title = { Text(stringResource(R.string.perm_project_title)) },
                 navigationIcon = {
-                    IconButton(onClick = onBack) {
+                    TipIconButton(tooltip = stringResource(R.string.cd_back), onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.cd_back))
                     }
                 },

@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import com.lioisme.delua.R
 import com.lioisme.delua.androlua.LuaConfigParser
+import com.lioisme.delua.editor.TipIconButton
 import com.lioisme.delua.build.ApkBuilder
 import com.lioisme.delua.model.Project
 import kotlinx.coroutines.Dispatchers
@@ -136,7 +137,7 @@ fun BuildApkScreen(
             TopAppBar(
                 title = { Text(stringResource(R.string.build_title)) },
                 navigationIcon = {
-                    IconButton(onClick = onBack) {
+                    TipIconButton(tooltip = stringResource(R.string.cd_back), onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
                 },

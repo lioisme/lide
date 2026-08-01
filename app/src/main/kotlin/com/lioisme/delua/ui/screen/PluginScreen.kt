@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.androlua.LuaApplication
 import com.lioisme.delua.R
 import com.lioisme.delua.androlua.PluginInfo
+import com.lioisme.delua.editor.TipIconButton
 import com.lioisme.delua.androlua.PluginManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -108,12 +109,15 @@ fun PluginScreen(
             TopAppBar(
                 title = { Text(stringResource(R.string.plugins)) },
                 navigationIcon = {
-                    IconButton(onClick = onBack) {
+                    TipIconButton(tooltip = stringResource(R.string.cd_back), onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.cd_back))
                     }
                 },
                 actions = {
-                    IconButton(onClick = { alpPickerLauncher.launch("*/*") }) {
+                    TipIconButton(
+                        tooltip = stringResource(R.string.plugin_install_alp),
+                        onClick = { alpPickerLauncher.launch("*/*") },
+                    ) {
                         Icon(Icons.Default.Add, contentDescription = stringResource(R.string.plugin_install_alp))
                     }
                 },

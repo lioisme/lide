@@ -160,5 +160,9 @@
     <string name="cd_back">返回</string>
     <string name="cd_replace">替换</string>
     <string name="cd_replace_all">全部替换</string>
+    <string name="menu_category_file">文件</string>
+    <string name="menu_category_project">工程</string>
+    <string name="cd_open_file_tree">打开文件树</string>
+    <string name="cd_search">搜索</string>
     <string name="accessibility_service_description">Delua 无障碍服务：为 Lua 脚本提供自动化能力（点击、滑动、截图）。</string>
 </resources>

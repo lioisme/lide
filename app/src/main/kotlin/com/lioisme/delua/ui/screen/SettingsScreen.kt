@@ -39,6 +39,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.lioisme.delua.R
+import com.lioisme.delua.editor.TipIconButton
 import com.lioisme.delua.i18n.LocaleManager
 import com.lioisme.delua.ui.theme.*
 import androidx.compose.material.icons.filled.Extension
@@ -77,7 +78,7 @@ fun SettingsScreen(onBack: () -> Unit, onPermissionsClick: () -> Unit = {}, onPl
             TopAppBar(
                 title = { Text(stringResource(R.string.settings)) },
                 navigationIcon = {
-                    IconButton(onClick = onBack) {
+                    TipIconButton(tooltip = stringResource(R.string.cd_back), onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.cd_back))
                     }
                 },

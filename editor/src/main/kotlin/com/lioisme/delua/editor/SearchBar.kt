@@ -148,21 +148,31 @@ fun SearchBar(
                         modifier = Modifier.padding(horizontal = 8.dp),
                     )
 
-                    IconButton(onClick = { editorProvider()?.getSearcher()?.gotoPrevious() },
-                        modifier = Modifier.size(32.dp)) {
+                    TipIconButton(
+                        tooltip = stringResource(R.string.cd_search_prev),
+                        onClick = { editorProvider()?.getSearcher()?.gotoPrevious() },
+                        modifier = Modifier.size(32.dp),
+                    ) {
                         Icon(Icons.Default.KeyboardArrowUp,
                             stringResource(R.string.cd_search_prev),
                             modifier = Modifier.size(20.dp))
                     }
-                    IconButton(onClick = { editorProvider()?.getSearcher()?.gotoNext() },
-                        modifier = Modifier.size(32.dp)) {
+                    TipIconButton(
+                        tooltip = stringResource(R.string.cd_search_next),
+                        onClick = { editorProvider()?.getSearcher()?.gotoNext() },
+                        modifier = Modifier.size(32.dp),
+                    ) {
                         Icon(Icons.Default.KeyboardArrowDown,
                             stringResource(R.string.cd_search_next),
                             modifier = Modifier.size(20.dp))
                     }
                 }
 
-                IconButton(onClick = onClose, modifier = Modifier.size(32.dp)) {
+                TipIconButton(
+                    tooltip = stringResource(R.string.cd_search_close),
+                    onClick = onClose,
+                    modifier = Modifier.size(32.dp),
+                ) {
                     Icon(Icons.Default.Close,
                         stringResource(R.string.cd_search_close),
                         modifier = Modifier.size(20.dp))

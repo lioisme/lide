@@ -37,6 +37,7 @@ import com.lioisme.delua.editor.FileBrowser
 import com.lioisme.delua.editor.FileNode
 import com.lioisme.delua.editor.LuaEditor
 import com.lioisme.delua.editor.SearchBar
+import com.lioisme.delua.editor.TipIconButton
 import com.lioisme.delua.model.Project
 import com.lioisme.delua.project.ProjectManager
 import com.lioisme.delua.session.EditorSession
@@ -280,24 +281,34 @@ fun EditorScreen(
                         session.flushSelectedDirtyAsync()
                         onBack()
                     },
-                    onOpenFileTree = { isFileTreeVisible = true },
                     onUndo = { editorRef.value?.undo() },
                     onRedo = { editorRef.value?.redo() },
                     onRun = {
                         requestRun()
                     },
-                    onSearch = { isSearchVisible = true },
-                    // 工程级操作统一入口：右上角更多（⋮）菜单。
+                    // 文件树 / 搜索与工程级操作统一收进右上角更多（⋮）分类菜单：
+                    // Appbar 常驻按钮（含返回）恒为 5 个 —— 返回 / 运行 / 撤销 / 重做 / 更多。
                     moreActions = listOf(
-                        EditorMoreAction(stringResource(R.string.project_info)) {
-                            onProjectInfo()
-                        },
-                        EditorMoreAction(stringResource(R.string.project_permissions)) {
-                            onPermissions()
-                        },
-                        EditorMoreAction(stringResource(R.string.build_apk)) {
-                            onBuildApk()
-                        },
+                        EditorMoreAction(
+                            category = stringResource(R.string.menu_category_file),
+                            label = stringResource(R.string.cd_open_file_tree),
+                        ) { isFileTreeVisible = true },
+                        EditorMoreAction(
+                            category = stringResource(R.string.menu_category_file),
+                            label = stringResource(R.string.cd_search),
+                        ) { isSearchVisible = true },
+                        EditorMoreAction(
+                            category = stringResource(R.string.menu_category_project),
+                            label = stringResource(R.string.project_info),
+                        ) { onProjectInfo() },
+                        EditorMoreAction(
+                            category = stringResource(R.string.menu_category_project),
+                            label = stringResource(R.string.project_permissions),
+                        ) { onPermissions() },
+                        EditorMoreAction(
+                            category = stringResource(R.string.menu_category_project),
+                            label = stringResource(R.string.build_apk),
+                        ) { onBuildApk() },
                     ),
                 )
             },
@@ -511,7 +522,8 @@ private fun ProjectFileBrowserDialog(
                         .padding(start = 4.dp, end = 4.dp, top = 4.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    IconButton(
+                    TipIconButton(
+                        tooltip = stringResource(R.string.cd_go_up),
                         onClick = { currentDir = currentDir.parentFile ?: rootDir },
                         enabled = currentDir != rootDir,
                     ) {
@@ -548,7 +560,10 @@ private fun ProjectFileBrowserDialog(
                             }
                         }
                     }
-                    IconButton(onClick = onDismiss) {
+                    TipIconButton(
+                        tooltip = stringResource(R.string.cd_close),
+                        onClick = onDismiss,
+                    ) {
                         Icon(
                             Icons.Default.Close,
                             contentDescription = stringResource(R.string.cd_close),

@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.androlua.LuaApplication
 import com.lioisme.delua.R
 import com.lioisme.delua.androlua.AlpManager
+import com.lioisme.delua.editor.TipIconButton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -105,7 +106,7 @@ fun ExamplesScreen(onBack: () -> Unit) {
             TopAppBar(
                 title = { Text(stringResource(R.string.examples)) },
                 navigationIcon = {
-                    IconButton(onClick = onBack) {
+                    TipIconButton(tooltip = stringResource(R.string.cd_back), onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.cd_back))
                     }
                 },

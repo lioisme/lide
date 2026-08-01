@@ -4,6 +4,7 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,6 +15,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.FileDownload
 import androidx.compose.material.icons.filled.FileUpload
 import androidx.compose.material.icons.filled.Folder
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
@@ -30,6 +32,7 @@ import com.lioisme.delua.androlua.AlpManager
 import com.lioisme.delua.androlua.AlpManager.AlpKind
 import com.lioisme.delua.model.Project
 import com.lioisme.delua.project.ProjectManager
+import com.lioisme.delua.editor.TipIconButton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -54,7 +57,8 @@ fun ProjectListScreen(
     var errorMsg by remember { mutableStateOf<String?>(null) }
     var pendingExportProject by remember { mutableStateOf<Project?>(null) }
     var pendingDeleteProject by remember { mutableStateOf<Project?>(null) }
-    var menuProject by remember { mutableStateOf<Project?>(null) }
+    // 长按 item 弹出的底部对话框（工程信息 / 导出 .alp / 删除统一收口于此）。
+    var sheetProject by remember { mutableStateOf<Project?>(null) }
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
     val strImportSuccess = stringResource(R.string.import_success)
@@ -146,18 +150,30 @@ fun ProjectListScreen(
             TopAppBar(
                 title = { Text("delua", fontWeight = FontWeight.Medium) },
                 actions = {
-                    IconButton(onClick = onExamplesClick) {
+                    TipIconButton(
+                        tooltip = stringResource(R.string.examples),
+                        onClick = onExamplesClick,
+                    ) {
                         Icon(Icons.Default.MenuBook, contentDescription = stringResource(R.string.examples))
                     }
-                    IconButton(onClick = {
-                        importLauncher.launch(arrayOf("application/zip", "application/octet-stream"))
-                    }) {
+                    TipIconButton(
+                        tooltip = stringResource(R.string.import_alp),
+                        onClick = {
+                            importLauncher.launch(arrayOf("application/zip", "application/octet-stream"))
+                        },
+                    ) {
                         Icon(Icons.Default.FileDownload, contentDescription = stringResource(R.string.import_alp))
                     }
-                    IconButton(onClick = { showCreateDialog = true }) {
+                    TipIconButton(
+                        tooltip = stringResource(R.string.cd_new_project),
+                        onClick = { showCreateDialog = true },
+                    ) {
                         Icon(Icons.Default.Add, contentDescription = stringResource(R.string.cd_new_project))
                     }
-                    IconButton(onClick = onSettingsClick) {
+                    TipIconButton(
+                        tooltip = stringResource(R.string.cd_settings),
+                        onClick = onSettingsClick,
+                    ) {
                         Icon(Icons.Default.Settings, contentDescription = stringResource(R.string.settings))
                     }
                 },
@@ -205,75 +221,37 @@ fun ProjectListScreen(
                 LazyColumn(modifier = Modifier.fillMaxSize()) {
                     item { Spacer(Modifier.height(4.dp)) }
                     itemsIndexed(projects, key = { _, project -> project.path }) { index, project ->
-                        Box {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .combinedClickable(
-                                        onClick = { onProjectClick(project) },
-                                        onLongClick = { menuProject = project },
-                                    )
-                                    .padding(horizontal = 16.dp, vertical = 12.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Folder,
-                                    contentDescription = null,
-                                    modifier = Modifier.size(32.dp),
-                                    tint = MaterialTheme.colorScheme.primary,
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .combinedClickable(
+                                    onClick = { onProjectClick(project) },
+                                    // 需求 1：长按 item 调出底部对话框，功能全部收进对话框。
+                                    onLongClick = { sheetProject = project },
                                 )
-                                Spacer(Modifier.width(16.dp))
-                                Column(modifier = Modifier.weight(1f)) {
+                                .padding(horizontal = 16.dp, vertical = 12.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Folder,
+                                contentDescription = null,
+                                modifier = Modifier.size(32.dp),
+                                tint = MaterialTheme.colorScheme.primary,
+                            )
+                            Spacer(Modifier.width(16.dp))
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(
+                                    text = project.name,
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    fontWeight = FontWeight.Medium,
+                                )
+                                if (project.packageName.isNotBlank()) {
                                     Text(
-                                        text = project.name,
-                                        style = MaterialTheme.typography.bodyLarge,
-                                        fontWeight = FontWeight.Medium,
-                                    )
-                                    if (project.packageName.isNotBlank()) {
-                                        Text(
-                                            text = project.packageName,
-                                            style = MaterialTheme.typography.bodySmall,
-                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                        )
-                                    }
-                                }
-                                IconButton(onClick = {
-                                    pendingExportProject = project
-                                    exportLauncher.launch("${project.name}.alp")
-                                }) {
-                                    Icon(
-                                        Icons.Default.FileUpload,
-                                        contentDescription = stringResource(R.string.export_alp),
-                                        tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+                                        text = project.packageName,
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     )
                                 }
-                            }
-                            DropdownMenu(
-                                expanded = menuProject == project,
-                                onDismissRequest = { menuProject = null },
-                            ) {
-                                DropdownMenuItem(
-                                    text = { Text(stringResource(R.string.project_info_menu)) },
-                                    onClick = {
-                                        menuProject = null
-                                        onProjectInfoClick(project)
-                                    },
-                                )
-                                DropdownMenuItem(
-                                    text = { Text(stringResource(R.string.export_alp)) },
-                                    onClick = {
-                                        menuProject = null
-                                        pendingExportProject = project
-                                        exportLauncher.launch("${project.name}.alp")
-                                    },
-                                )
-                                DropdownMenuItem(
-                                    text = { Text(stringResource(R.string.project_delete)) },
-                                    onClick = {
-                                        menuProject = null
-                                        pendingDeleteProject = project
-                                    },
-                                )
                             }
                         }
                         if (index < projects.lastIndex) {
@@ -324,6 +302,76 @@ fun ProjectListScreen(
                 TextButton(onClick = { showCreateDialog = false }) { Text(stringResource(R.string.cancel)) }
             },
         )
+    }
+
+    // 长按工程 item 的底部对话框：工程信息 / 导出 .alp / 删除。
+    sheetProject?.let { project ->
+        ModalBottomSheet(
+            onDismissRequest = { sheetProject = null },
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 24.dp),
+            ) {
+                Text(
+                    text = project.name,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Medium,
+                    modifier = Modifier.padding(horizontal = 24.dp),
+                )
+                if (project.packageName.isNotBlank()) {
+                    Text(
+                        text = project.packageName,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(horizontal = 24.dp, vertical = 4.dp),
+                    )
+                }
+                Spacer(Modifier.height(12.dp))
+                HorizontalDivider()
+                ListItem(
+                    leadingContent = {
+                        Icon(Icons.Default.Info, contentDescription = null)
+                    },
+                    headlineContent = { Text(stringResource(R.string.project_info_menu)) },
+                    modifier = Modifier.clickable {
+                        sheetProject = null
+                        onProjectInfoClick(project)
+                    },
+                )
+                ListItem(
+                    leadingContent = {
+                        Icon(Icons.Default.FileUpload, contentDescription = null)
+                    },
+                    headlineContent = { Text(stringResource(R.string.export_alp)) },
+                    modifier = Modifier.clickable {
+                        sheetProject = null
+                        pendingExportProject = project
+                        exportLauncher.launch("${project.name}.alp")
+                    },
+                )
+                ListItem(
+                    leadingContent = {
+                        Icon(
+                            Icons.Default.Delete,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.error,
+                        )
+                    },
+                    headlineContent = {
+                        Text(
+                            stringResource(R.string.project_delete),
+                            color = MaterialTheme.colorScheme.error,
+                        )
+                    },
+                    modifier = Modifier.clickable {
+                        sheetProject = null
+                        pendingDeleteProject = project
+                    },
+                )
+            }
+        }
     }
 
     pendingDeleteProject?.let { project ->

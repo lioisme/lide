@@ -85,8 +85,11 @@ fun EditorTabs(
 
     LazyRow(
         state = state,
-        modifier = modifier.fillMaxWidth(),
-        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
+        modifier = modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.surfaceContainer),
+        // 产品规范：标签与标签栏之间无距离（垂直内边距为 0，标签贴满条带）。
+        contentPadding = PaddingValues(horizontal = 8.dp),
         horizontalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         items(tabs, key = { it.fileName }) { tab ->
@@ -160,7 +163,8 @@ private fun EditorTabItem(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
-            IconButton(
+            TipIconButton(
+                tooltip = stringResource(R.string.cd_close_tab),
                 onClick = onClose,
                 modifier = Modifier.size(26.dp),
             ) {
