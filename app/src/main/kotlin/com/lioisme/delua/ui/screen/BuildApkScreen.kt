@@ -57,6 +57,7 @@ fun BuildApkScreen(
     val scope = rememberCoroutineScope()
     var state by remember { mutableStateOf<BuildState?>(null) }
     var building by remember { mutableStateOf(false) }
+    var buildStage by remember { mutableStateOf<ApkBuilder.BuildStage?>(null) }
     var result by remember { mutableStateOf<BuildResult?>(null) }
     val strLoadFailed = stringResource(R.string.info_load_failed)
     val strBuildFail = stringResource(R.string.build_fail)
@@ -91,18 +92,43 @@ fun BuildApkScreen(
             return
         }
         building = true
+        buildStage = null
         result = null
         scope.launch {
-            val res = withContext(Dispatchers.IO) { doBuild(context, project, s) }
+            val res = withContext(Dispatchers.IO) {
+                doBuild(context, project, s) { stage -> buildStage = stage }
+            }
             building = false
+            buildStage = null
             result = res
             when (res) {
-                is BuildResult.Success ->
+                is BuildResult.Success -> {
                     Toast.makeText(context, strBuildSuccess, Toast.LENGTH_SHORT).show()
+                    // 与 AndroLua Pro 一致：打包完成后自动调起系统安装器。
+                    installApk(context, res.apkFile)
+                }
                 is BuildResult.Failure ->
                     Toast.makeText(context, String.format(strBuildFail, res.message), Toast.LENGTH_LONG).show()
             }
         }
+    }
+
+    // 构建进度对话框：阶段文本 + 不确定进度条，不可取消。
+    if (building) {
+        AlertDialog(
+            onDismissRequest = { },
+            title = { Text(stringResource(R.string.build_title)) },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                    Text(
+                        stringResource(stageLabelRes(buildStage)),
+                        style = MaterialTheme.typography.bodyMedium,
+                    )
+                    LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+                }
+            },
+            confirmButton = { },
+        )
     }
 
     Scaffold(
@@ -206,8 +232,14 @@ fun BuildApkScreen(
 }
 
 /** 装配 + 签名 + 写盘（IO 线程）。失败返回可读信息（编译错误带行号）。 */
-private fun doBuild(context: android.content.Context, project: Project, s: BuildState): BuildResult {
+private fun doBuild(
+    context: android.content.Context,
+    project: Project,
+    s: BuildState,
+    onStage: (ApkBuilder.BuildStage) -> Unit,
+): BuildResult {
     return try {
+        onStage(ApkBuilder.BuildStage.READ_HOST)
         val pm = context.packageManager
         val sourceDir = pm.getApplicationInfo(context.packageName, 0).sourceDir
         val hostApk = File(sourceDir).readBytes()
@@ -219,6 +251,7 @@ private fun doBuild(context: android.content.Context, project: Project, s: Build
         val cert = CertificateFactory.getInstance("X.509")
             .generateCertificate(pemBytes.inputStream()) as java.security.cert.X509Certificate
 
+        onStage(ApkBuilder.BuildStage.COLLECT_LUA)
         val sources = LinkedHashMap<String, ByteArray>()
         collectLuaFiles(File(project.path), "", sources)
 
@@ -230,15 +263,46 @@ private fun doBuild(context: android.content.Context, project: Project, s: Build
             declaredPermissions = declaredPermissions(project),
             luaSources = sources,
         )
-        val apkBytes = ApkBuilder.build(hostApk, input, key, cert)
+        val apkBytes = ApkBuilder.build(hostApk, input, key, cert, onStage = onStage)
 
-        val outDir = File(context.getExternalFilesDir(null), "apks").apply { mkdirs() }
+        // 产物位置与 AndroLua Pro 一致：<luaExtDir>/apk/（即 /storage/emulated/0/AndroLua/apk/）。
+        val luaExtDir = com.androlua.LuaApplication.getInstance().getLuaExtDir()
+        val outDir = File(luaExtDir, "apk").apply { mkdirs() }
         val fileName = "${sanitizeName(s.packageName)}-${sanitizeName(s.version)}.apk"
         val outFile = File(outDir, fileName)
         outFile.writeBytes(apkBytes)
         BuildResult.Success(outFile)
     } catch (e: Exception) {
         BuildResult.Failure(e.message ?: e.javaClass.simpleName)
+    }
+}
+
+/** 构建阶段 → 文案资源。 */
+private fun stageLabelRes(stage: ApkBuilder.BuildStage?): Int = when (stage) {
+    null, ApkBuilder.BuildStage.READ_HOST -> R.string.build_stage_read_host
+    ApkBuilder.BuildStage.COLLECT_LUA -> R.string.build_stage_collect
+    ApkBuilder.BuildStage.COMPILE_LUA -> R.string.build_stage_compile
+    ApkBuilder.BuildStage.ASSEMBLE -> R.string.build_stage_assemble
+    ApkBuilder.BuildStage.SIGN -> R.string.build_stage_sign
+}
+
+/**
+ * 自动安装：ACTION_INSTALL_PACKAGE 直连系统安装器（InstallStart）。
+ * 不用 ACTION_VIEW——宿主自身的 .alp/.lua 导入过滤会匹配任何 content:// 文件，
+ * 会弹出"打开方式"选择器而非直接安装。
+ * 未授予"安装未知来源应用"时系统会先弹授权页，授予后直达安装确认。
+ */
+private fun installApk(context: android.content.Context, apkFile: File) {
+    try {
+        val uri: Uri = FileProvider.getUriForFile(context, context.packageName, apkFile)
+        val intent = Intent(Intent.ACTION_INSTALL_PACKAGE).apply {
+            setDataAndType(uri, "application/vnd.android.package-archive")
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
+        context.startActivity(intent)
+    } catch (e: Exception) {
+        Toast.makeText(context, e.message ?: "install failed", Toast.LENGTH_LONG).show()
     }
 }
 

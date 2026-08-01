@@ -18,6 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Error
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -28,26 +29,299 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.lioisme.delua.R
-import com.lioisme.delua.androlua.PermissionResolver
 
 /**
- * 权限页。审计修正（宿主权限 vs 工程权限混淆）：
- * - 区块明确区分「宿主权限」与「工程声明权限」（`user_permission`）；
- * - 每个权限独立的授予状态判断：特殊权限走各自系统检查
- *   （悬浮窗/系统设置/外部存储/电池优化/安装未知来源），不再统一套用
- *   `Environment.isExternalStorageManager()`；
- * - 工程声明权限统一归一化（裸名 → `android.permission.` 全名）后再检查/请求；
- *   宿主 manifest 未声明的权限视为「打包时写入」（工程权限的目标是打包产物
- *   manifest，见 WP-014），不尝试向宿主运行时请求。
+ * 宿主权限管理页（与工程声明权限分离）。
+ *
+ * 仅展示宿主自身运行时权限：特殊权限（悬浮窗/系统设置/外部存储/电池优化/
+ * 安装未知来源/使用情况访问）走各自系统检查与设置入口；常规权限按宿主
+ * manifest 声明列表展示，未声明的不出现。工程声明权限（打包写入）不在此页。
  */
-private data class PermissionItem(
-    val name: String,
-    val label: String,
-    val granted: Boolean,
-    val isSpecial: Boolean = false,
-    /** 宿主 manifest 未声明的工程权限：仅在打包时写入产物 manifest。 */
-    val packageOnly: Boolean = false,
-)
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HostPermissionScreen(
+    onBack: () -> Unit,
+) {
+    val context = LocalContext.current
+    var permissions: List<PermissionItem> by remember {
+        mutableStateOf(buildHostPermissionList(context))
+    }
+
+    val permLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { _: Map<String, Boolean> ->
+        permissions = buildHostPermissionList(context)
+    }
+
+    val manageStorageLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { _: androidx.activity.result.ActivityResult ->
+        permissions = buildHostPermissionList(context)
+    }
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(stringResource(R.string.permission_management)) },
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.cd_back))
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface
+                )
+            )
+        }
+    ) { padding ->
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            item {
+                Spacer(Modifier.height(8.dp))
+                Text(
+                    stringResource(R.string.perm_host_hint),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(horizontal = 4.dp, vertical = 8.dp)
+                )
+            }
+            item {
+                Text(
+                    stringResource(R.string.perm_special_section),
+                    style = MaterialTheme.typography.titleSmall,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier.padding(start = 4.dp, bottom = 8.dp)
+                )
+            }
+            items(SPECIAL_PERMISSIONS) { special ->
+                PermissionRow(
+                    label = special.label,
+                    granted = special.isGranted(context),
+                    isSpecial = true,
+                    onRequest = {
+                        manageStorageLauncher.launch(special.settingsIntent(context))
+                    }
+                )
+            }
+
+            item {
+                Spacer(Modifier.height(16.dp))
+                Text(
+                    stringResource(R.string.perm_regular_section),
+                    style = MaterialTheme.typography.titleSmall,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier.padding(start = 4.dp, bottom = 8.dp)
+                )
+            }
+            items(permissions) { perm ->
+                PermissionRow(
+                    label = perm.label,
+                    granted = perm.granted,
+                    isSpecial = false,
+                    onRequest = {
+                        permLauncher.launch(PermissionCatalog.ALL.map { it.first }.toTypedArray())
+                    }
+                )
+            }
+
+            item {
+                Spacer(Modifier.height(16.dp))
+                Text(
+                    stringResource(R.string.perm_note),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(4.dp)
+                )
+                Spacer(Modifier.height(80.dp))
+            }
+        }
+    }
+}
+
+/**
+ * 工程声明权限页（与宿主权限管理分离）。
+ *
+ * 仅展示工程 init.lua 声明的 user_permission：这些权限在打包时写入产物
+ * manifest（白名单 = 声明 ∩ 宿主 + 宿主自声明），与宿主运行时权限无关，
+ * 因此不提供请求按钮、不展示宿主授予状态。
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ProjectPermissionScreen(
+    project: com.lioisme.delua.model.Project,
+    onBack: () -> Unit,
+) {
+    val context = LocalContext.current
+    val projectManager = remember { com.lioisme.delua.project.ProjectManager(context) }
+    var declared by remember(project) { mutableStateOf<List<String>?>(null) }
+    LaunchedEffect(project) {
+        declared = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+            projectManager.loadUserPermissions(project).map { com.lioisme.delua.androlua.PermissionResolver.normalize(it) }
+        }
+    }
+    val perms = declared ?: emptyList()
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(stringResource(R.string.perm_project_title)) },
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.cd_back))
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface
+                )
+            )
+        }
+    ) { padding ->
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            item {
+                Spacer(Modifier.height(8.dp))
+                Text(
+                    stringResource(R.string.perm_project_section, project.name),
+                    style = MaterialTheme.typography.titleSmall,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier.padding(start = 4.dp, bottom = 2.dp)
+                )
+                Text(
+                    stringResource(R.string.perm_project_hint),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(start = 4.dp, end = 4.dp, bottom = 8.dp)
+                )
+            }
+            if (declared == null) {
+                item {
+                    Box(Modifier.fillMaxWidth().padding(vertical = 8.dp), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator(modifier = Modifier.size(24.dp))
+                    }
+                }
+            } else if (perms.isEmpty()) {
+                item {
+                    Text(
+                        stringResource(R.string.perm_project_empty),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(horizontal = 4.dp, vertical = 4.dp)
+                    )
+                }
+            } else {
+                items(perms) { name ->
+                    ProjectPermissionRow(label = labelOf(name))
+                }
+            }
+            item {
+                Spacer(Modifier.height(80.dp))
+            }
+        }
+    }
+}
+
+@Composable
+private fun ProjectPermissionRow(label: String) {
+    Card(
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
+        ),
+        shape = MaterialTheme.shapes.medium
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                Icons.Default.Info,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(24.dp)
+            )
+            Spacer(Modifier.width(12.dp))
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    label,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Text(
+                    stringResource(R.string.perm_package_only),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun PermissionRow(
+    label: String,
+    granted: Boolean,
+    isSpecial: Boolean,
+    onRequest: () -> Unit,
+) {
+    Card(
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
+        ),
+        shape = MaterialTheme.shapes.medium
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                if (granted) Icons.Default.CheckCircle else Icons.Default.Error,
+                contentDescription = null,
+                tint = if (granted) MaterialTheme.colorScheme.primary
+                       else MaterialTheme.colorScheme.error,
+                modifier = Modifier.size(24.dp)
+            )
+            Spacer(Modifier.width(12.dp))
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    label,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Text(
+                    if (granted) stringResource(R.string.perm_granted)
+                    else stringResource(R.string.perm_denied),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = if (granted) MaterialTheme.colorScheme.primary
+                            else MaterialTheme.colorScheme.error
+                )
+            }
+            if (!granted) {
+                Spacer(Modifier.width(8.dp))
+                FilledTonalButton(onClick = onRequest) {
+                    Text(stringResource(R.string.perm_request))
+                }
+            }
+        }
+    }
+}
 
 /** 特殊权限描述：独立授予检查 + 系统设置入口。 */
 private data class SpecialPerm(
@@ -128,267 +402,18 @@ private val SPECIAL_PERMISSIONS: List<SpecialPerm> = listOf(
     ),
 )
 
-private val ALL_PERMISSIONS = PermissionCatalog.ALL
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun PermissionScreen(
-    onBack: () -> Unit,
-    project: com.lioisme.delua.model.Project? = null,
-) {
-    val context = LocalContext.current
-    var permissions: List<PermissionItem> by remember {
-        mutableStateOf(buildHostPermissionList(context))
-    }
-    // 宿主 manifest 实际声明的权限集合（请求目标必须在此集合内，否则系统静默拒绝）。
-    val hostDeclared = remember { hostDeclaredPermissions(context) }
-
-    // 工程声明权限：后台 IO 读取 init.lua（大文件防护：小文件读一次，无阻塞风险）。
-    val projectManager = remember { com.lioisme.delua.project.ProjectManager(context) }
-    var declaredPermissions by remember(project) {
-        mutableStateOf<List<String>?>(if (project == null) emptyList() else null)
-    }
-    LaunchedEffect(project) {
-        val p = project ?: return@LaunchedEffect
-        declaredPermissions = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
-            projectManager.loadUserPermissions(p).map { PermissionResolver.normalize(it) }
-        }
-    }
-    val declared = declaredPermissions ?: emptyList()
-    val declaredLoaded = declaredPermissions != null
-
-    val permLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions()
-    ) { _: Map<String, Boolean> ->
-        permissions = buildHostPermissionList(context)
-    }
-
-    // 单权限请求：权限页条目各自独立请求（区别于运行前的一次性批量请求）。
-    val singlePermLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions()
-    ) { _: Map<String, Boolean> ->
-        permissions = buildHostPermissionList(context)
-    }
-
-    val manageStorageLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { _: androidx.activity.result.ActivityResult ->
-        permissions = buildHostPermissionList(context)
-    }
-
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.permission_management)) },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.cd_back))
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                    titleContentColor = MaterialTheme.colorScheme.onSurface
-                )
-            )
-        }
-    ) { padding ->
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            if (project != null) {
-                item {
-                    Spacer(Modifier.height(8.dp))
-                    Text(
-                        stringResource(R.string.perm_project_section, project.name),
-                        style = MaterialTheme.typography.titleSmall,
-                        color = MaterialTheme.colorScheme.primary,
-                        fontWeight = FontWeight.SemiBold,
-                        modifier = Modifier.padding(start = 4.dp, bottom = 2.dp)
-                    )
-                    Text(
-                        stringResource(R.string.perm_project_hint),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(start = 4.dp, end = 4.dp, bottom = 8.dp)
-                    )
-                }
-                if (declared.isEmpty() && declaredLoaded) {
-                    item {
-                        Text(
-                            stringResource(R.string.perm_project_empty),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier.padding(horizontal = 4.dp, vertical = 4.dp)
-                        )
-                    }
-                } else if (!declaredLoaded) {
-                    item {
-                        Box(Modifier.fillMaxWidth().padding(vertical = 8.dp), contentAlignment = Alignment.Center) {
-                            CircularProgressIndicator(modifier = Modifier.size(24.dp))
-                        }
-                    }
-                } else {
-                    declared.forEach { name ->
-                        val special = SPECIAL_PERMISSIONS.firstOrNull { it.name == name }
-                        val packageOnly = name !in hostDeclared
-                        item(key = "declared_$name") {
-                            PermissionRow(
-                                label = special?.label ?: labelOf(name),
-                                granted = special != null || checkGranted(context, name),
-                                isSpecial = special != null,
-                                packageOnly = packageOnly,
-                                onRequest = {
-                                    if (special != null) {
-                                        manageStorageLauncher.launch(special.settingsIntent(context))
-                                    } else if (!packageOnly) {
-                                        singlePermLauncher.launch(arrayOf(name))
-                                    }
-                                }
-                            )
-                        }
-                    }
-                }
-                item {
-                    Spacer(Modifier.height(16.dp))
-                }
-            }
-
-            item {
-                Spacer(Modifier.height(8.dp))
-                Text(
-                    stringResource(R.string.perm_host_section),
-                    style = MaterialTheme.typography.titleSmall,
-                    color = MaterialTheme.colorScheme.primary,
-                    fontWeight = FontWeight.SemiBold,
-                    modifier = Modifier.padding(start = 4.dp, bottom = 2.dp)
-                )
-                Text(
-                    stringResource(R.string.perm_host_hint),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(start = 4.dp, end = 4.dp, bottom = 8.dp)
-                )
-            }
-            item {
-                Text(
-                    stringResource(R.string.perm_special_section),
-                    style = MaterialTheme.typography.titleSmall,
-                    color = MaterialTheme.colorScheme.primary,
-                    fontWeight = FontWeight.SemiBold,
-                    modifier = Modifier.padding(start = 4.dp, bottom = 8.dp)
-                )
-            }
-            items(SPECIAL_PERMISSIONS) { special ->
-                PermissionRow(
-                    label = special.label,
-                    granted = special.isGranted(context),
-                    isSpecial = true,
-                    onRequest = {
-                        manageStorageLauncher.launch(special.settingsIntent(context))
-                    }
-                )
-            }
-
-            item {
-                Spacer(Modifier.height(16.dp))
-                Text(
-                    stringResource(R.string.perm_regular_section),
-                    style = MaterialTheme.typography.titleSmall,
-                    color = MaterialTheme.colorScheme.primary,
-                    fontWeight = FontWeight.SemiBold,
-                    modifier = Modifier.padding(start = 4.dp, bottom = 8.dp)
-                )
-            }
-            items(permissions) { perm ->
-                PermissionRow(
-                    label = perm.label,
-                    granted = perm.granted,
-                    isSpecial = false,
-                    onRequest = {
-                        permLauncher.launch(ALL_PERMISSIONS.map { it.first }.toTypedArray())
-                    }
-                )
-            }
-
-            item {
-                Spacer(Modifier.height(16.dp))
-                Text(
-                    stringResource(R.string.perm_note),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(4.dp)
-                )
-                Spacer(Modifier.height(80.dp))
-            }
-        }
-    }
-}
-
-@Composable
-private fun PermissionRow(
-    label: String,
-    granted: Boolean,
-    isSpecial: Boolean,
-    onRequest: () -> Unit,
-    packageOnly: Boolean = false,
-) {
-    Card(
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
-        ),
-        shape = MaterialTheme.shapes.medium
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 12.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                if (granted) Icons.Default.CheckCircle else Icons.Default.Error,
-                contentDescription = null,
-                tint = if (granted) MaterialTheme.colorScheme.primary
-                       else MaterialTheme.colorScheme.error,
-                modifier = Modifier.size(24.dp)
-            )
-            Spacer(Modifier.width(12.dp))
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    label,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-                Text(
-                    when {
-                        packageOnly -> stringResource(R.string.perm_package_only)
-                        granted -> stringResource(R.string.perm_granted)
-                        else -> stringResource(R.string.perm_denied)
-                    },
-                    style = MaterialTheme.typography.bodySmall,
-                    color = if (granted || packageOnly) MaterialTheme.colorScheme.primary
-                            else MaterialTheme.colorScheme.error
-                )
-            }
-            if (!granted && !packageOnly) {
-                Spacer(Modifier.width(8.dp))
-                FilledTonalButton(onClick = onRequest) {
-                    Text(stringResource(R.string.perm_request))
-                }
-            }
-        }
-    }
-}
+private data class PermissionItem(
+    val name: String,
+    val label: String,
+    val granted: Boolean,
+)
 
 private fun checkGranted(ctx: Context, name: String): Boolean =
     ContextCompat.checkSelfPermission(ctx, name) == PackageManager.PERMISSION_GRANTED
 
 private fun buildHostPermissionList(ctx: Context): List<PermissionItem> {
     val declared = hostDeclaredPermissions(ctx)
-    return ALL_PERMISSIONS
+    return PermissionCatalog.ALL
         .filter { (name, _) -> name in declared }
         .map { (name, label) ->
             PermissionItem(name, label, checkGranted(ctx, name))
@@ -407,7 +432,7 @@ private fun hostDeclaredPermissions(ctx: Context): Set<String> {
 
 /** 权限名 → 可读标签；未知权限原样展示。 */
 private fun labelOf(name: String): String {
-    ALL_PERMISSIONS.forEach { (perm, label) -> if (perm == name) return label }
-    SPECIAL_PERMISSIONS.forEach { it.let { sp -> if (sp.name == name) return sp.label } }
+    PermissionCatalog.ALL.forEach { (perm, label) -> if (perm == name) return label }
+    SPECIAL_PERMISSIONS.forEach { sp -> if (sp.name == name) return sp.label }
     return name
 }

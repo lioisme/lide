@@ -16,10 +16,11 @@ import com.lioisme.delua.model.Project
 import com.lioisme.delua.project.ProjectManager
 import com.lioisme.delua.ui.screen.BuildApkScreen
 import com.lioisme.delua.ui.screen.EditorScreen
+import com.lioisme.delua.ui.screen.HostPermissionScreen
 import com.lioisme.delua.ui.screen.LuaManualScreen
-import com.lioisme.delua.ui.screen.PermissionScreen
 import com.lioisme.delua.ui.screen.ProjectInfoScreen
 import com.lioisme.delua.ui.screen.ProjectListScreen
+import com.lioisme.delua.ui.screen.ProjectPermissionScreen
 import com.lioisme.delua.ui.screen.PluginScreen
 import com.lioisme.delua.ui.screen.SettingsScreen
 import java.io.File
@@ -30,7 +31,8 @@ object Routes {
     const val PROJECT_LIST = "projects"
     const val EDITOR = "editor/{projectName}/{projectPath}?fileName={fileName}"
     const val SETTINGS = "settings"
-    const val PERMISSIONS = "permissions?projectName={projectName}&projectPath={projectPath}"
+    const val PERMISSIONS = "permissions"
+    const val PROJECT_PERMISSIONS = "projectpermissions?projectName={projectName}&projectPath={projectPath}"
     const val PROJECT_INFO = "projectinfo?projectName={projectName}&projectPath={projectPath}"
     const val BUILD_APK = "buildapk?projectName={projectName}&projectPath={projectPath}"
     const val PLUGINS = "plugins"
@@ -40,12 +42,8 @@ object Routes {
         return "editor/${enc(project.name)}/${enc(project.path)}?fileName=${enc(project.mainFile)}"
     }
 
-    fun permissions(project: Project? = null): String {
-        return if (project == null) {
-            PERMISSIONS.replace("?projectName={projectName}&projectPath={projectPath}", "")
-        } else {
-            "permissions?projectName=${enc(project.name)}&projectPath=${enc(project.path)}"
-        }
+    fun projectPermissions(project: Project): String {
+        return "projectpermissions?projectName=${enc(project.name)}&projectPath=${enc(project.path)}"
     }
 
     fun projectInfo(project: Project): String {
@@ -140,7 +138,7 @@ fun DeluaNavHost(
                 projectManager = projectManager,
                 onBack = { navController.popBackStack() },
                 onPermissions = {
-                    navController.navigate(Routes.permissions(project))
+                    navController.navigate(Routes.projectPermissions(project))
                 },
                 onProjectInfo = {
                     navController.navigate(Routes.projectInfo(project))
@@ -167,8 +165,13 @@ fun DeluaNavHost(
                 onBack = { navController.popBackStack() }
             )
         }
+        slideComposable(route = Routes.PERMISSIONS) {
+            HostPermissionScreen(
+                onBack = { navController.popBackStack() },
+            )
+        }
         slideComposable(
-            route = Routes.PERMISSIONS,
+            route = Routes.PROJECT_PERMISSIONS,
             arguments = listOf(
                 navArgument("projectName") {
                     type = NavType.StringType
@@ -183,9 +186,13 @@ fun DeluaNavHost(
             val name = Routes.dec(backStackEntry.arguments?.getString("projectName"))
             val path = Routes.dec(backStackEntry.arguments?.getString("projectPath"))
             val project = if (path.isNotBlank()) Project(name = name, path = path, mainFile = "main.lua") else null
-            PermissionScreen(
-                onBack = { navController.popBackStack() },
+            if (project == null) {
+                LaunchedEffect(Unit) { navController.popBackStack() }
+                return@slideComposable
+            }
+            ProjectPermissionScreen(
                 project = project,
+                onBack = { navController.popBackStack() },
             )
         }
         slideComposable(route = Routes.PLUGINS) {
