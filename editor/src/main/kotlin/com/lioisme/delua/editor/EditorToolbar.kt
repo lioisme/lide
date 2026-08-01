@@ -38,12 +38,14 @@ data class EditorMoreAction(
  *
  * 布局约束（产品规范）：含返回键在内最多 5 个按钮 —— 返回 / 运行 / 撤销 /
  * 重做 / 更多；文件树、搜索等其余功能一律收进「更多」分类菜单。
+ * 标题显示工程名（[title]，由宿主注入），不显示当前文件路径；
+ * 文件身份信息由标签行（[EditorTabs]）承载。
  * 更多菜单经 Box 包裹锚定在 ⋮ 按钮正下方（菜单不得移位）。
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditorToolbar(
-    fileName: String,
+    title: String,
     canUndo: Boolean,
     canRedo: Boolean,
     onBack: () -> Unit,
@@ -58,7 +60,7 @@ fun EditorToolbar(
     TopAppBar(
         title = {
             Text(
-                text = fileName,
+                text = title,
                 maxLines = 1,
                 fontWeight = FontWeight.Medium,
             )

@@ -89,6 +89,19 @@ class EditorSession(
         select(fileName, content)
     }
 
+    /**
+     * 拖拽排序（WP-003）：仅重排标签列表；选中按 fileName 语义自动跟随，
+     * Content 缓存按文件名键控，重排不触碰。仅主线程调用。
+     */
+    fun moveTab(from: Int, to: Int) {
+        val current = _tabs.value
+        if (from !in current.indices || to !in current.indices || from == to) return
+        val mutable = current.toMutableList()
+        val moved = mutable.removeAt(from)
+        mutable.add(to, moved)
+        _tabs.value = mutable
+    }
+
     private fun select(fileName: String, content: Content) {
         _selection.value = Selection(fileName, content)
     }

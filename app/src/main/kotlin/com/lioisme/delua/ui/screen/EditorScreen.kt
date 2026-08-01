@@ -5,14 +5,13 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.Settings
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -22,7 +21,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.material3.BasicAlertDialog
 import com.lioisme.delua.R
 import com.lioisme.delua.androlua.PermissionResolver
 import com.lioisme.delua.engine.EngineActivity
@@ -275,7 +273,8 @@ fun EditorScreen(
         Scaffold(
             topBar = {
                 EditorToolbar(
-                    fileName = selectedFile.orEmpty(),
+                    // 标题显示工程名，不显示当前打开文件的路径（文件身份由标签行承载）。
+                    title = project.name,
                     canUndo = selectedTab?.canUndo == true,
                     canRedo = selectedTab?.canRedo == true,
                     onBack = {
@@ -333,6 +332,7 @@ fun EditorScreen(
                 onTabClose = { file ->
                     if (session.requestClose(file)) closeQueue = listOf(file)
                 },
+                onTabMoved = { from, to -> session.moveTab(from, to) },
                 onCloseOthers = { file ->
                     val dirty = session.closeOthers(file)
                     if (dirty.isNotEmpty()) closeQueue = dirty
@@ -473,9 +473,10 @@ private fun hasStoragePermission(context: android.content.Context): Boolean {
 }
 
 /**
- * 工程文件目录对话框（文件系统风格，替代原侧边抽屉）：「返回上一目录」按钮 +
- * 当前目录名 + 条目列表。目录点击进入，文件点击打开（宿主负责关闭对话框）；
- * 仅含目录浏览，无其他工程级操作入口。
+ * 工程文件目录对话框（对齐工程信息「用户权限」对话框风格）：AlertDialog 标准骨架
+ * （标题 = 当前目录，正文 = 仅文件列表，按钮 = 返回上一目录 / 取消）。
+ * 目录点击进入，文档文件点击打开（宿主负责关闭对话框），非文档文件点击提示「不支持打开」。
+ * 列表展示全部文件（不按扩展名过滤）。
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -484,19 +485,22 @@ private fun ProjectFileBrowserDialog(
     onFileOpen: (FileNode) -> Unit,
     onDismiss: () -> Unit,
 ) {
+    val context = LocalContext.current
+    val strNotSupported = stringResource(R.string.file_not_supported_open)
     val rootDir = remember(project) { File(project.path) }
     var currentDir by remember(project) { mutableStateOf(rootDir) }
     var entries by remember { mutableStateOf<List<FileNode>>(emptyList()) }
     var isRefreshing by remember { mutableStateOf(false) }
 
     suspend fun loadEntries(dir: File): List<FileNode> = withContext(Dispatchers.IO) {
+        // 全量展示：目录 + 所有文件（非文档文件在点击时提示，不在列表层过滤）。
         dir.listFiles()
-            ?.filter { it.isDirectory || (it.isFile && it.name.endsWith(".lua", ignoreCase = true)) }
+            ?.filter { it.isDirectory || it.isFile }
             ?.map { FileNode(it.name, it.absolutePath, it.isDirectory) }
             ?: emptyList()
     }
 
-    // 目录内容按需读取（IO 线程）：目录恒展示，文件仅收 .lua。
+    // 目录内容按需读取（IO 线程）。
     LaunchedEffect(currentDir) {
         entries = loadEntries(currentDir)
     }
@@ -509,74 +513,79 @@ private fun ProjectFileBrowserDialog(
         }
     }
 
-    BasicAlertDialog(onDismissRequest = onDismiss) {
-        Surface(
-            shape = MaterialTheme.shapes.extraLarge,
-            color = MaterialTheme.colorScheme.surface,
-            tonalElevation = 6.dp,
-            modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(max = 520.dp),
-        ) {
-            Column(Modifier.fillMaxWidth()) {
-                Row(
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(start = 4.dp, end = 4.dp, top = 4.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    // 「返回上一目录」导航（替代原面包屑）：根部禁用，其余可逐级返回。
-                    TextButton(
-                        onClick = { currentDir = currentDir.parentFile ?: rootDir },
-                        enabled = currentDir != rootDir,
-                        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
-                        modifier = Modifier.pressAndHoldHapticFeedback(),
-                    ) {
-                        Icon(
-                            Icons.Default.KeyboardArrowUp,
-                            contentDescription = null,
-                            modifier = Modifier.size(18.dp),
-                        )
-                        Spacer(Modifier.width(4.dp))
-                        Text(
-                            stringResource(R.string.back_to_parent),
-                            style = MaterialTheme.typography.bodyMedium,
-                        )
-                    }
-                    Text(
-                        text = currentDir.name,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(horizontal = 4.dp),
-                    )
-                    TipIconButton(
-                        tooltip = stringResource(R.string.cd_close),
-                        onClick = onDismiss,
-                    ) {
-                        Icon(
-                            Icons.Default.Close,
-                            contentDescription = stringResource(R.string.cd_close),
-                        )
-                    }
-                }
-                HorizontalDivider()
-                FileBrowser(
-                    entries = entries,
-                    onOpenDirectory = { currentDir = File(it.path) },
-                    onOpenFile = onFileOpen,
-                    isRefreshing = isRefreshing,
-                    onRefresh = { isRefreshing = true },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f),
-                )
-            }
+    // 标题 = 当前目录相对工程的路径（根目录显示工程名），辅助定位。
+    val title = remember(currentDir, rootDir) {
+        val rel = try {
+            currentDir.relativeTo(rootDir).invariantSeparatorsPath
+        } catch (_: Throwable) {
+            currentDir.name
         }
+        rel.ifBlank { project.name }
     }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleMedium,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        },
+        text = {
+            FileBrowser(
+                entries = entries,
+                onOpenDirectory = { currentDir = File(it.path) },
+                onOpenFile = { node ->
+                    if (isDocumentFile(node.name)) {
+                        onFileOpen(node)
+                    } else {
+                        Toast.makeText(context, strNotSupported, Toast.LENGTH_SHORT).show()
+                    }
+                },
+                isRefreshing = isRefreshing,
+                onRefresh = { isRefreshing = true },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(max = 480.dp),
+            )
+        },
+        confirmButton = {
+            TextButton(
+                onClick = { currentDir = currentDir.parentFile ?: rootDir },
+                enabled = currentDir != rootDir,
+                modifier = Modifier.pressAndHoldHapticFeedback(),
+            ) {
+                Text(stringResource(R.string.back_to_parent))
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = onDismiss,
+                modifier = Modifier.pressAndHoldHapticFeedback(),
+            ) {
+                Text(stringResource(R.string.cancel))
+            }
+        },
+    )
+}
+
+/**
+ * 可打开编辑的文档扩展名白名单（不含扩展名的文件视为文档，如 Makefile / LICENSE）。
+ * 白名单之外的文件（二进制、归档、图片等）点击提示「不支持打开」。
+ */
+private val DOCUMENT_EXTENSIONS = setOf(
+    "lua", "txt", "md", "markdown", "json", "xml", "yml", "yaml",
+    "html", "htm", "css", "js", "mjs", "ts", "java", "kt", "kts",
+    "c", "h", "cc", "cpp", "hpp", "cs", "go", "py", "rb", "php",
+    "sh", "bat", "ps1", "ini", "cfg", "conf", "properties", "csv", "log",
+    "gradle", "toml", "sql", "env", "svg",
+)
+
+private fun isDocumentFile(name: String): Boolean {
+    val ext = name.substringAfterLast('.', "")
+    return ext.isEmpty() || ext.lowercase() in DOCUMENT_EXTENSIONS
 }
 
 @Composable
@@ -625,6 +634,7 @@ private fun EditorBody(
     storagePermissionMissing: Boolean,
     isSearchVisible: Boolean,
     onTabClose: (String) -> Unit,
+    onTabMoved: (from: Int, to: Int) -> Unit,
     onCloseOthers: (String) -> Unit,
     onCloseAll: () -> Unit,
     onGrantStorage: () -> Unit,
@@ -644,6 +654,7 @@ private fun EditorBody(
                 selectedFile = selectedFile,
                 onTabClick = { session.select(it) },
                 onTabClose = onTabClose,
+                onTabMoved = onTabMoved,
                 onCloseOthers = onCloseOthers,
                 onCloseAll = onCloseAll,
                 modifier = Modifier.fillMaxWidth(),

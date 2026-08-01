@@ -227,6 +227,7 @@
     <string name="close_file_message">Save changes to %1$s before closing?</string>
     <string name="save">Save</string>
     <string name="discard">Discard</string>
+    <string name="file_not_supported_open">Unsupported file type - cannot open</string>
 
     <!-- Content descriptions -->
     <string name="cd_new_project">New Project</string>

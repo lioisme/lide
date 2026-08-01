@@ -227,6 +227,7 @@
     <string name="close_file_message">关闭前保存 %1$s 的修改？</string>
     <string name="save">保存</string>
     <string name="discard">放弃</string>
+    <string name="file_not_supported_open">不支持打开该文件</string>
 
     <!-- Content descriptions -->
     <string name="cd_new_project">新建项目</string>

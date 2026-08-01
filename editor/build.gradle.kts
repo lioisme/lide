@@ -45,6 +45,9 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended")
     implementation("androidx.core:core-ktx:1.15.0")
 
+    // Tab 拖拽排序（WP-003，Squircle 同款固定版本；POM 实证与 Compose 1.7.3 二进制兼容）。
+    implementation("sh.calvin.reorderable:reorderable:3.0.0")
+
     // sora-editor - 专业代码编辑器
     implementation("io.github.rosemoe:editor:0.24.6")
     // TextMate 语法高亮支持
