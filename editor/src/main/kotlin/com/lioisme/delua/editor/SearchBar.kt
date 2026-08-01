@@ -22,6 +22,9 @@ import io.github.rosemoe.sora.event.PublishSearchResultEvent
 import io.github.rosemoe.sora.widget.CodeEditor
 import io.github.rosemoe.sora.widget.EditorSearcher
 import io.github.rosemoe.sora.widget.subscribeAlways
+import kotlinx.coroutines.delay
+
+private const val SEARCH_DEBOUNCE_MS = 150L
 
 /**
  * 自包含搜索面板：查询 / 替换 / 匹配计数等全部状态内聚在本组件内，
@@ -91,7 +94,11 @@ fun SearchBar(
         }
     }
 
+    // 防抖：连续键入只触发一次搜索。sora `EditorSearcher.search` 的全文快照
+    // （content.toStringBuilder）发生在调用线程（主线程），大文件下每键 O(n) 拷贝
+    // 必须抑制；防抖由 LaunchedEffect 重启语义天然提供取消。
     LaunchedEffect(query, isCaseSensitive, isRegex) {
+        delay(SEARCH_DEBOUNCE_MS)
         performSearch()
     }
 

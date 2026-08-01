@@ -90,9 +90,9 @@ fun EditorScreen(
 
     val session = remember(project) { EditorSession(project, projectManager) }
     val tabs by session.tabs.collectAsState()
-    val selectedFile by session.selectedFile.collectAsState()
-    val content by session.selectedContent.collectAsState()
-    android.util.Log.d("DeluaDebug", "EditorScreen project.name=${project.name} path=${project.path} main=${project.mainFile} infoV=$projectInfoVersion")
+    val selection by session.selection.collectAsState()
+    val selectedFile = selection.file
+    val content = selection.content
 
     val editorRef = remember { mutableStateOf<CodeEditor?>(null) }
     val snackbarHostState = remember { SnackbarHostState() }
@@ -176,7 +176,7 @@ fun EditorScreen(
         runResult = null
         scope.launch {
             session.openTab(target)
-            val content = session.selectedContent.value ?: return@launch
+            val content = session.selection.value.content ?: return@launch
             content.insert(0, 0, "import \"$globalName\"\n")
             session.onContentModified()
         }
@@ -196,20 +196,23 @@ fun EditorScreen(
         doRun()
     }
 
+    // 宿主 manifest 声明的权限集合：安装周期内不变，只查询一次。
+    val hostDeclared = remember {
+        try {
+            context.packageManager.getPackageInfo(
+                context.packageName,
+                android.content.pm.PackageManager.GET_PERMISSIONS,
+            ).requestedPermissions?.toSet() ?: emptySet()
+        } catch (_: Throwable) {
+            emptySet()
+        }
+    }
+
     val requestRun: () -> Unit = {
         // 审计修正：工程声明权限先归一化（裸名 → android.permission. 全名），
         // 且只请求宿主 manifest 已声明的权限（宿主未声明的仅在打包时写入产物 manifest）。
         val declared = projectManager.loadUserPermissions(project)
             .map { PermissionResolver.normalize(it) }
-        val hostDeclared = try {
-            val info = context.packageManager.getPackageInfo(
-                context.packageName,
-                android.content.pm.PackageManager.GET_PERMISSIONS,
-            )
-            info.requestedPermissions?.toSet() ?: emptySet()
-        } catch (_: Throwable) {
-            emptySet()
-        }
         val ungranted = PermissionResolver.runtimeRequestable(declared).filter { it in hostDeclared }
             .filter {
                 androidx.core.content.ContextCompat.checkSelfPermission(context, it) !=
@@ -302,10 +305,12 @@ fun EditorScreen(
                 SnackbarHost(hostState = snackbarHostState)
             },
         ) { padding ->
+            // 标签视图列表：仅在标签数据实际变化时重建（避免每次重组分配新列表）。
+            val tabViews = remember(tabs) { tabs.map { it.tab } }
             EditorBody(
                 session = session,
                 contentPadding = padding,
-                tabs = tabs.map { it.tab },
+                tabs = tabViews,
                 selectedFile = selectedFile,
                 content = content,
                 isDarkTheme = isDarkTheme,
@@ -634,7 +639,7 @@ private fun EditorBody(
                     onContentModified = { session.onContentModified() },
                     onUndoRedoStateChanged = { u, r -> session.onUndoRedoChanged(u, r) },
                     onRelease = {
-                        // 兜底保存：编辑内容最后一次快照交回会话（会话作用域存活，安全）。
+                        // 兜底保存：编辑内容由会话缓存持有，宿主经会话异步落盘。
                         session.flushSelectedDirtyAsync()
                     },
                     editorRef = editorRef,

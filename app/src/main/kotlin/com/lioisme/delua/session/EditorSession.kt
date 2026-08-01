@@ -23,7 +23,7 @@ import kotlinx.coroutines.withContext
  *   稳态打字期间 Compose 零重组（首个字符置脏后不再发射）；
  * - 编辑内容实体（[Content]）留在此处缓存，切换标签零读盘、零 O(n) 重建
  *   （编辑器侧 `setText(Content)` 复用路径）；
- * - 高频信号（[editTick]）与低频状态（[tabs] / [selectedFile] / [selectedContent]）
+ * - 高频信号（[editTick]）与低频状态（[tabs] / [selection]）
  *   分离，编辑节奏不触发任何页面重组。
  *
  * 线程模型：标签/选中/脏标记变更只发生在主线程（sora 事件回调与 UI 点击均在主线程）；
@@ -44,6 +44,12 @@ class EditorSession(
         val tab: EditorTab get() = EditorTab(fileName, dirty)
     }
 
+    /** 当前选中：文件与内容原子发射，文件切换只触发一次重组。 */
+    data class Selection(
+        val file: String? = null,
+        val content: Content? = null,
+    )
+
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private val cacheLock = Any()
     private val contents = LinkedHashMap<String, Content>(16)
@@ -51,11 +57,8 @@ class EditorSession(
     private val _tabs = MutableStateFlow<List<TabState>>(emptyList())
     val tabs: StateFlow<List<TabState>> = _tabs.asStateFlow()
 
-    private val _selectedFile = MutableStateFlow<String?>(null)
-    val selectedFile: StateFlow<String?> = _selectedFile.asStateFlow()
-
-    private val _selectedContent = MutableStateFlow<Content?>(null)
-    val selectedContent: StateFlow<Content?> = _selectedContent.asStateFlow()
+    private val _selection = MutableStateFlow(Selection())
+    val selection: StateFlow<Selection> = _selection.asStateFlow()
 
     /** 自动保存节流信号：每键 +1，不触发重组；宿主经 collectLatest 防抖消费。 */
     private val _editTick = MutableStateFlow(0L)
@@ -68,8 +71,7 @@ class EditorSession(
         val main = project.mainFile.takeIf { it in files } ?: files.first()
         val content = loadContent(main)
         _tabs.value = listOf(TabState(main, dirty = false, canUndo = false, canRedo = false))
-        _selectedFile.value = main
-        _selectedContent.value = content
+        _selection.value = Selection(main, content)
     }
 
     /** 打开（或选中）标签：IO 读盘 + IO 线程构造 Content 后入缓存，再切换。 */
@@ -88,15 +90,14 @@ class EditorSession(
     }
 
     private fun select(fileName: String, content: Content) {
-        _selectedFile.value = fileName
-        _selectedContent.value = content
+        _selection.value = Selection(fileName, content)
     }
 
     /**
      * 编辑事件（每键）：脏标记仅在「首次变脏」时发射，其余仅递增节流信号。
      */
     fun onContentModified() {
-        val selected = _selectedFile.value ?: return
+        val selected = _selection.value.file ?: return
         val current = _tabs.value
         val index = current.indexOfFirst { it.fileName == selected }
         if (index < 0) return
@@ -109,7 +110,7 @@ class EditorSession(
 
     /** undo/redo 能力变化：仅在值变化时发射（needsUpdate 判定）。 */
     fun onUndoRedoChanged(canUndo: Boolean, canRedo: Boolean) {
-        val selected = _selectedFile.value ?: return
+        val selected = _selection.value.file ?: return
         val current = _tabs.value
         val index = current.indexOfFirst { it.fileName == selected }
         if (index < 0) return
@@ -171,12 +172,12 @@ class EditorSession(
 
     /** 兜底保存（onRelease / onBack）：在会话作用域上异步执行，不随页面销毁取消。 */
     fun flushSelectedDirtyAsync() {
-        flushDirtyAsync(_selectedFile.value)
+        flushDirtyAsync(_selection.value.file)
     }
 
     /** 自动保存 / 运行前落盘：刷新当前选中标签的脏内容。 */
     suspend fun flushSelectedDirty() {
-        flushDirty(_selectedFile.value ?: return)
+        flushDirty(_selection.value.file ?: return)
     }
 
     fun flushDirtyAsync(fileName: String?) {
@@ -211,13 +212,12 @@ class EditorSession(
         val nextTabs = current.filterNot { it.fileName == fileName }
         _tabs.value = nextTabs
         synchronized(cacheLock) { contents.remove(fileName) }
-        if (_selectedFile.value == fileName) {
+        if (_selection.value.file == fileName) {
             val next = nextTabs.getOrNull(index.coerceAtMost(nextTabs.size - 1))
             if (next != null) {
                 select(next.fileName)
             } else {
-                _selectedFile.value = null
-                _selectedContent.value = null
+                _selection.value = Selection()
             }
         }
     }

@@ -1,6 +1,7 @@
 package com.lioisme.delua.editor
 
 import android.content.Context
+import android.os.SystemClock
 import android.util.Log
 import io.github.rosemoe.sora.lang.analysis.AsyncIncrementalAnalyzeManager
 import io.github.rosemoe.sora.langs.textmate.registry.FileProviderRegistry
@@ -34,6 +35,7 @@ object TextMateInitializer {
      */
     fun initialize(context: Context) {
         val appContext = context.applicationContext
+        val callerStart = SystemClock.elapsedRealtime()
         if (started.compareAndSet(false, true)) {
             Thread {
                 try {
@@ -42,6 +44,7 @@ object TextMateInitializer {
                     Log.e(TAG, "textmate initialization failed", t)
                 } finally {
                     done.countDown()
+                    Log.d(TAG, "init total ${SystemClock.elapsedRealtime() - initStart}ms")
                 }
             }.apply {
                 name = PRELOAD_THREAD_NAME
@@ -49,9 +52,16 @@ object TextMateInitializer {
             }.start()
         }
         done.await()
+        Log.d(TAG, "caller wait ${SystemClock.elapsedRealtime() - callerStart}ms")
     }
 
+    /**
+     * 是否已完成初始化（进程级快照查询，不阻塞；未完成时为 false）。
+     */
+    fun isReady(): Boolean = done.count == 0L
+
     private fun runInit(context: Context) {
+        initStart = SystemClock.elapsedRealtime()
         AsyncIncrementalAnalyzeManager.setUseShallowCopyByDefault(true)
 
         FileProviderRegistry.getInstance().addFileProvider(
@@ -85,4 +95,5 @@ object TextMateInitializer {
     private const val TAG = "TextMateInitializer"
     private const val PRELOAD_THREAD_NAME = "TextMatePreload"
     private val THEMES = arrayOf("quietlight", "darcula")
+    private var initStart = 0L
 }

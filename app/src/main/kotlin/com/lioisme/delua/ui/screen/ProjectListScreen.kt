@@ -65,21 +65,15 @@ fun ProjectListScreen(
         projects = withContext(Dispatchers.IO) { projectManager.listProjects() }
     }
 
-    LaunchedEffect(Unit) { loadProjects() }
-
-    // WP-004：工程属性保存后回列表刷新（appname 等字段可能已变）。
-    LaunchedEffect(refreshKey) {
-        if (refreshKey > 0) loadProjects()
+    // 单一加载入口：首次进入 / 工程属性保存（refreshKey 自增）/ 导入完成后各触发一次；
+    // 键值组合天然去重，避免并发重复读盘（同一列表反复重建）。
+    LaunchedEffect(Unit, refreshKey, pendingImportPaths.size) {
+        loadProjects()
     }
 
-    LaunchedEffect(pendingImportPaths) {
-        if (pendingImportPaths.isNotEmpty()) {
-            projects = withContext(Dispatchers.IO) { projectManager.listProjects() }
-        }
-    }
-
-    if (isRefreshing) {
-        LaunchedEffect(Unit) {
+    // 下拉刷新：键控效应替代组合期条件副作用。
+    LaunchedEffect(isRefreshing) {
+        if (isRefreshing) {
             loadProjects()
             isRefreshing = false
         }
@@ -212,7 +206,7 @@ fun ProjectListScreen(
             } else {
                 LazyColumn(modifier = Modifier.fillMaxSize()) {
                     item { Spacer(Modifier.height(4.dp)) }
-                    itemsIndexed(projects) { index, project ->
+                    itemsIndexed(projects, key = { _, project -> project.path }) { index, project ->
                         Box {
                             Row(
                                 modifier = Modifier
