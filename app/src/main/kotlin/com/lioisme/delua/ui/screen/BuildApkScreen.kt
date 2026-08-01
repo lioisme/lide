@@ -252,8 +252,10 @@ private fun doBuild(
             .generateCertificate(pemBytes.inputStream()) as java.security.cert.X509Certificate
 
         onStage(ApkBuilder.BuildStage.COLLECT_LUA)
-        val sources = LinkedHashMap<String, ByteArray>()
-        collectLuaFiles(File(project.path), "", sources)
+        val projectFiles = LinkedHashMap<String, ByteArray>()
+        val usingFiles = ArrayList<File>()
+        collectProjectFiles(File(project.path), "", projectFiles, usingFiles)
+        val engineLibs = engineLuaLibs(projectFiles, usingFiles, hostLuaAssets(context))
 
         val input = ApkBuilder.ProjectInput(
             packageName = s.packageName,
@@ -261,7 +263,8 @@ private fun doBuild(
             versionName = s.version,
             versionCode = s.versionCode.toIntOrNull() ?: 1,
             declaredPermissions = declaredPermissions(project),
-            luaSources = sources,
+            luaSources = projectFiles,
+            engineLuaLibs = engineLibs,
         )
         val apkBytes = ApkBuilder.build(hostApk, input, key, cert, onStage = onStage)
 
@@ -315,16 +318,107 @@ private fun declaredPermissions(project: Project): List<String> = try {
     emptyList()
 }
 
-private fun collectLuaFiles(dir: File, relPrefix: String, out: MutableMap<String, ByteArray>) {
+/**
+ * 收集工程目录全部文件（注入 assets/lua/<相对路径>，打包后即工程目录）：
+ * 跳过隐藏项（`.` 开头）与中间产物（.apk/.luac/.odex/.vdex，pro 口径）。
+ * `.using` 文件不打包，但内容送入 [usingFiles] 参与依赖扫描。
+ */
+internal fun collectProjectFiles(
+    dir: File,
+    relPrefix: String,
+    out: MutableMap<String, ByteArray>,
+    usingFiles: MutableList<File>,
+) {
     val entries = dir.listFiles() ?: return
     for (entry in entries) {
-        val rel = if (relPrefix.isEmpty()) entry.name else "$relPrefix/${entry.name}"
+        val name = entry.name
+        if (entry.isFile && name == ".using") {
+            usingFiles += entry
+            continue
+        }
+        if (name.startsWith(".")) continue
+        if (entry.isFile) {
+            val lower = name.lowercase()
+            if (lower.endsWith(".apk") || lower.endsWith(".luac") ||
+                lower.endsWith(".odex") || lower.endsWith(".vdex")
+            ) {
+                continue
+            }
+        }
+        val rel = if (relPrefix.isEmpty()) name else "$relPrefix/$name"
         if (entry.isDirectory) {
-            collectLuaFiles(entry, rel, out)
-        } else if (entry.isFile && entry.name.endsWith(".lua", ignoreCase = true)) {
+            collectProjectFiles(entry, rel, out, usingFiles)
+        } else if (entry.isFile) {
             out[rel] = entry.readBytes()
         }
     }
+}
+
+/** 打包必须保留的宿主引擎 Lua 库（import.lua 无条件加载这三者，permission 供权限提示）。 */
+private val ENGINE_LUA_WHITELIST = setOf(
+    "import.lua",
+    "loadlayout.lua",
+    "loadlayout2.lua",
+    "loadlayout3.lua",
+    "loadbitmap.lua",
+    "loadmenu.lua",
+    "permission.lua",
+)
+
+/** 宿主 assets/lua 下的全部库相对名（目录无点则递归，与 LuaApplication.extractLuaDir 同口径）。 */
+private fun hostLuaAssets(context: android.content.Context): Set<String> {
+    val out = HashSet<String>()
+    fun walk(assetDir: String, relPrefix: String) {
+        val names = try {
+            context.assets.list(assetDir) ?: emptyArray()
+        } catch (_: Throwable) {
+            return
+        }
+        for (n in names) {
+            val rel = if (relPrefix.isEmpty()) n else "$relPrefix/$n"
+            if (n.contains('.')) out += rel else walk("$assetDir/$n", rel)
+        }
+    }
+    walk("lua", "")
+    return out
+}
+
+/**
+ * 计算打包 APK 需要的宿主引擎 Lua 库：
+ * 静态白名单 ∪ 工程源码/`.using` 中 `require "x"`、`import "x.y"` 命中的模块
+ * （与 pro bin.lua 的 checklib 同口径；x.y → x/y.lua），
+ * 过滤掉工程自带同名文件（工程优先）与宿主不存在的模块。
+ */
+internal fun engineLuaLibs(
+    projectFiles: Map<String, ByteArray>,
+    usingFiles: List<File>,
+    hostLua: Set<String>,
+): List<String> {
+    val required = HashSet(ENGINE_LUA_WHITELIST)
+    val srcs = ArrayList<String>(projectFiles.size + usingFiles.size)
+    for ((rel, bytes) in projectFiles) {
+        if (rel.endsWith(".lua", ignoreCase = true)) {
+            srcs += String(bytes, Charsets.UTF_8)
+        }
+    }
+    for (f in usingFiles) {
+        try {
+            srcs += f.readText()
+        } catch (_: Throwable) {
+        }
+    }
+    val re = Regex("(?:require|import)\\s*\\(?\\s*['\"]([A-Za-z0-9_]+)\\.?([A-Za-z0-9_]*)['\"]")
+    for (src in srcs) {
+        for (m in re.findAll(src)) {
+            val a = m.groupValues[1]
+            val b = m.groupValues[2]
+            required += if (b.isEmpty()) "$a.lua" else "$a/$b.lua"
+        }
+    }
+    val projectNames = projectFiles.keys.mapTo(HashSet()) { it.replace('\\', '/') }
+    return required
+        .filter { it !in projectNames && it in hostLua }
+        .sorted()
 }
 
 private fun sanitizeName(s: String): String =

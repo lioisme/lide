@@ -205,7 +205,10 @@ public class LuaApplication extends Application implements LuaContext {
             for (String name : names) {
                 try {
                     File outFile = new File(destDir, name);
-                    if (name.indexOf('.') == -1) {
+                    // 目录判断改用 AssetManager.list：含点目录（如 res/live2d/haru/haru_01.1024）
+                    // 会被旧的 indexOf('.') 启发式误判为文件导致整棵子树静默丢失。
+                    String[] sub = getAssets().list(assetDir + "/" + name);
+                    if (sub != null && sub.length > 0) {
                         extractLuaDir(assetDir + "/" + name, outFile);
                         continue;
                     }

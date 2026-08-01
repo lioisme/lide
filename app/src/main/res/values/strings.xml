@@ -69,8 +69,10 @@
     <string name="perm_request">Request</string>
     <string name="perm_project_title">Project Permissions</string>
     <string name="perm_project_section">Declared in init.lua (%1$s)</string>
-    <string name="perm_project_hint">Permissions declared in this project\'s init.lua (user_permission). They are written into the packaged APK\'s manifest when building.</string>
-    <string name="perm_project_empty">This project declares no user_permission in init.lua</string>
+    <string name="perm_project_hint">Check which permissions this project requests. They are saved to init.lua (user_permission) and written into the packaged APK\'s manifest on build.</string>
+    <string name="perm_project_save">Save</string>
+    <string name="perm_project_saved">Saved</string>
+    <string name="perm_project_save_failed">Save failed</string>
     <string name="perm_host_section">Host App Permissions</string>
     <string name="perm_host_hint">Permissions of the delua host app itself. They apply to the IDE and to scripts running inside the host.</string>
     <string name="perm_package_only">Written into packaged APK only</string>

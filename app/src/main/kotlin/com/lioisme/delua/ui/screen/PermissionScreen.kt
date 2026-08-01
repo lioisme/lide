@@ -2,6 +2,7 @@ package com.lioisme.delua.ui.screen
 
 import android.Manifest
 import android.app.AppOpsManager
+import android.widget.Toast
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -11,6 +12,7 @@ import android.os.PowerManager
 import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -29,6 +31,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.lioisme.delua.R
+import kotlinx.coroutines.launch
 
 /**
  * 宿主权限管理页（与工程声明权限分离）。
@@ -149,9 +152,10 @@ fun HostPermissionScreen(
 /**
  * 工程声明权限页（与宿主权限管理分离）。
  *
- * 仅展示工程 init.lua 声明的 user_permission：这些权限在打包时写入产物
- * manifest（白名单 = 声明 ∩ 宿主 + 宿主自声明），与宿主运行时权限无关，
- * 因此不提供请求按钮、不展示宿主授予状态。
+ * 勾选清单：池 = 权限目录（PermissionCatalog）+ 工程已声明但目录外的权限。
+ * 勾选结果写回 init.lua 的 user_permission（与 pro projectinfo 行为一致），
+ * 打包时按白名单（声明 ∩ 宿主 + 宿主自声明）写入产物 manifest。
+ * 与宿主运行时权限无关，因此不提供请求按钮、不展示宿主授予状态。
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -161,13 +165,53 @@ fun ProjectPermissionScreen(
 ) {
     val context = LocalContext.current
     val projectManager = remember { com.lioisme.delua.project.ProjectManager(context) }
-    var declared by remember(project) { mutableStateOf<List<String>?>(null) }
+    var state by remember(project) { mutableStateOf<ProjectPermState?>(null) }
+    val scope = rememberCoroutineScope()
+    val strSaved = stringResource(R.string.perm_project_saved)
+    val strSaveFailed = stringResource(R.string.perm_project_save_failed)
+
     LaunchedEffect(project) {
-        declared = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
-            projectManager.loadUserPermissions(project).map { com.lioisme.delua.androlua.PermissionResolver.normalize(it) }
+        state = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+            val declared = projectManager.loadUserPermissions(project)
+                .map { com.lioisme.delua.androlua.PermissionResolver.normalize(it) }
+                .toSet()
+            val known = PermissionCatalog.ALL.map { it.first }.toSet()
+            ProjectPermState(
+                pool = PermissionCatalog.ALL + (declared - known).sorted().map { it to it },
+                selected = declared.toMutableSet(),
+                original = declared,
+            )
         }
     }
-    val perms = declared ?: emptyList()
+
+    fun save() {
+        val s = state ?: return
+        scope.launch {
+            val ok = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+                try {
+                    val file = java.io.File(project.path, "init.lua")
+                    if (!file.exists()) return@withContext false
+                    val checked = s.pool
+                        .filter { (perm, _) -> perm in s.selected }
+                        .map { (perm, _) -> perm }
+                    file.writeText(
+                        com.lioisme.delua.androlua.LuaConfigParser.setStringArrayField(
+                            file.readText(), "user_permission", checked
+                        )
+                    )
+                    true
+                } catch (_: Throwable) {
+                    false
+                }
+            }
+            if (ok) {
+                state = state?.let { it.copy(original = it.selected.toSet()) }
+                Toast.makeText(context, strSaved, Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(context, strSaveFailed, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -176,6 +220,15 @@ fun ProjectPermissionScreen(
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.cd_back))
+                    }
+                },
+                actions = {
+                    val s = state
+                    TextButton(
+                        onClick = { save() },
+                        enabled = s != null && s.selected != s.original,
+                    ) {
+                        Text(stringResource(R.string.perm_project_save))
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -208,24 +261,24 @@ fun ProjectPermissionScreen(
                     modifier = Modifier.padding(start = 4.dp, end = 4.dp, bottom = 8.dp)
                 )
             }
-            if (declared == null) {
+            val s = state
+            if (s == null) {
                 item {
                     Box(Modifier.fillMaxWidth().padding(vertical = 8.dp), contentAlignment = Alignment.Center) {
                         CircularProgressIndicator(modifier = Modifier.size(24.dp))
                     }
                 }
-            } else if (perms.isEmpty()) {
-                item {
-                    Text(
-                        stringResource(R.string.perm_project_empty),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(horizontal = 4.dp, vertical = 4.dp)
-                    )
-                }
             } else {
-                items(perms) { name ->
-                    ProjectPermissionRow(label = labelOf(name))
+                items(s.pool) { (perm, label) ->
+                    ProjectPermissionRow(
+                        label = label,
+                        checked = perm in s.selected,
+                        onToggle = {
+                            state = s.copy(
+                                selected = if (perm in s.selected) s.selected - perm else s.selected + perm
+                            )
+                        },
+                    )
                 }
             }
             item {
@@ -235,8 +288,19 @@ fun ProjectPermissionScreen(
     }
 }
 
+/** 工程权限编辑状态：勾选池 + 当前勾选 + 已保存基线。 */
+private data class ProjectPermState(
+    val pool: List<Pair<String, String>>,
+    val selected: Set<String>,
+    val original: Set<String>,
+)
+
 @Composable
-private fun ProjectPermissionRow(label: String) {
+private fun ProjectPermissionRow(
+    label: String,
+    checked: Boolean,
+    onToggle: () -> Unit,
+) {
     Card(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
@@ -246,16 +310,10 @@ private fun ProjectPermissionRow(label: String) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
+                .clickable(onClick = onToggle)
                 .padding(horizontal = 16.dp, vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                Icons.Default.Info,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.size(24.dp)
-            )
-            Spacer(Modifier.width(12.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     label,
@@ -268,6 +326,10 @@ private fun ProjectPermissionRow(label: String) {
                     color = MaterialTheme.colorScheme.primary
                 )
             }
+            Checkbox(
+                checked = checked,
+                onCheckedChange = { onToggle() },
+            )
         }
     }
 }

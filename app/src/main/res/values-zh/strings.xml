@@ -68,7 +68,9 @@
     <string name="perm_denied">未授权</string>
     <string name="perm_request">请求</string>
     <string name="perm_project_section">当前工程声明权限（%1$s）</string>
-    <string name="perm_project_empty">该工程在 init.lua 中未声明 user_permission</string>
+    <string name="perm_project_save">保存</string>
+    <string name="perm_project_saved">已保存</string>
+    <string name="perm_project_save_failed">保存失败</string>
     <string name="drawer_permissions">工程权限</string>
     <string name="drawer_project_info">工程信息</string>
     <string name="build_apk">构建 APK</string>
