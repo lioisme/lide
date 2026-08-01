@@ -204,13 +204,13 @@ fun ProjectInfoScreen(
         val s = state ?: return
         var draft by remember { mutableStateOf(s.permissions.toSet()) }
         val known = PermissionCatalog.ALL.map { it.first }.toSet()
-        val allOptions = (PermissionCatalog.ALL + (s.permissions - known).map { it to it })
+        val allOptions = (PermissionCatalog.ALL + (s.permissions - known).map { it to null })
         AlertDialog(
             onDismissRequest = { showPermissionDialog = false },
             title = { Text(stringResource(R.string.info_permissions_title)) },
             text = {
                 LazyColumn(Modifier.heightIn(max = 420.dp)) {
-                    items(allOptions) { (perm, label) ->
+                    items(allOptions) { (perm, labelRes) ->
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -225,7 +225,10 @@ fun ProjectInfoScreen(
                                 },
                             )
                             Spacer(Modifier.width(8.dp))
-                            Text(label, style = MaterialTheme.typography.bodyMedium)
+                            Text(
+                                labelRes?.let { stringResource(it) } ?: perm,
+                                style = MaterialTheme.typography.bodyMedium,
+                            )
                         }
                     }
                 }

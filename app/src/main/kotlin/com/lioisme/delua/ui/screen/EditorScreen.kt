@@ -7,7 +7,6 @@ import android.os.Environment
 import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -21,8 +20,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
+import androidx.compose.material3.BasicAlertDialog
 import com.lioisme.delua.R
 import com.lioisme.delua.androlua.PermissionResolver
 import com.lioisme.delua.engine.EngineActivity
@@ -38,6 +38,7 @@ import com.lioisme.delua.editor.FileNode
 import com.lioisme.delua.editor.LuaEditor
 import com.lioisme.delua.editor.SearchBar
 import com.lioisme.delua.editor.TipIconButton
+import com.lioisme.delua.editor.pressAndHoldHapticFeedback
 import com.lioisme.delua.model.Project
 import com.lioisme.delua.project.ProjectManager
 import com.lioisme.delua.session.EditorSession
@@ -358,7 +359,6 @@ fun EditorScreen(
         if (isFileTreeVisible) {
             ProjectFileBrowserDialog(
                 project = project,
-                selectedPath = selectedFile?.let { File(project.path, it).absolutePath },
                 onFileOpen = { openFileFromTree(it) },
                 onDismiss = { isFileTreeVisible = false },
             )
@@ -376,7 +376,8 @@ fun EditorScreen(
                             onClick = {
                                 session.discardAndClose(pendingFile)
                                 closeQueue = closeQueue.drop(1)
-                            }
+                            },
+                            modifier = Modifier.pressAndHoldHapticFeedback(),
                         ) {
                             Text(stringResource(R.string.discard))
                         }
@@ -384,14 +385,18 @@ fun EditorScreen(
                             onClick = {
                                 session.saveAndClose(pendingFile)
                                 closeQueue = closeQueue.drop(1)
-                            }
+                            },
+                            modifier = Modifier.pressAndHoldHapticFeedback(),
                         ) {
                             Text(stringResource(R.string.save))
                         }
                     }
                 },
                 dismissButton = {
-                    TextButton(onClick = { closeQueue = emptyList() }) {
+                    TextButton(
+                        onClick = { closeQueue = emptyList() },
+                        modifier = Modifier.pressAndHoldHapticFeedback(),
+                    ) {
                         Text(stringResource(R.string.cancel))
                     }
                 },
@@ -429,19 +434,28 @@ fun EditorScreen(
                 confirmButton = {
                     Row {
                         if (result.location != null) {
-                            TextButton(onClick = { jumpToError() }) {
+                            TextButton(
+                                onClick = { jumpToError() },
+                                modifier = Modifier.pressAndHoldHapticFeedback(),
+                            ) {
                                 Text(stringResource(R.string.run_jump_to_line))
                             }
                         }
                         if (nilGlobal != null) {
-                            TextButton(onClick = { insertImport(nilGlobal) }) {
+                            TextButton(
+                                onClick = { insertImport(nilGlobal) },
+                                modifier = Modifier.pressAndHoldHapticFeedback(),
+                            ) {
                                 Text(stringResource(R.string.run_insert_import, nilGlobal))
                             }
                         }
                     }
                 },
                 dismissButton = {
-                    TextButton(onClick = { runResult = null }) {
+                    TextButton(
+                        onClick = { runResult = null },
+                        modifier = Modifier.pressAndHoldHapticFeedback(),
+                    ) {
                         Text(stringResource(R.string.cancel))
                     }
                 },
@@ -459,13 +473,14 @@ private fun hasStoragePermission(context: android.content.Context): Boolean {
 }
 
 /**
- * 工程文件目录对话框（文件系统风格，替代原侧边抽屉）：面包屑 + 上下级目录导航 + 条目列表。
- * 目录点击进入，文件点击打开（宿主负责关闭对话框）；仅含目录浏览，无其他工程级操作入口。
+ * 工程文件目录对话框（文件系统风格，替代原侧边抽屉）：「返回上一目录」按钮 +
+ * 当前目录名 + 条目列表。目录点击进入，文件点击打开（宿主负责关闭对话框）；
+ * 仅含目录浏览，无其他工程级操作入口。
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ProjectFileBrowserDialog(
     project: Project,
-    selectedPath: String?,
     onFileOpen: (FileNode) -> Unit,
     onDismiss: () -> Unit,
 ) {
@@ -494,19 +509,7 @@ private fun ProjectFileBrowserDialog(
         }
     }
 
-    // 面包屑路径段：工程根目录 → 当前目录（逐级可点）。
-    val segments = remember(currentDir) {
-        val list = mutableListOf<File>()
-        var cursor: File? = currentDir
-        while (cursor != null && cursor != rootDir) {
-            list.add(0, cursor)
-            cursor = cursor.parentFile
-        }
-        list.add(0, rootDir)
-        list
-    }
-
-    Dialog(onDismissRequest = onDismiss) {
+    BasicAlertDialog(onDismissRequest = onDismiss) {
         Surface(
             shape = MaterialTheme.shapes.extraLarge,
             color = MaterialTheme.colorScheme.surface,
@@ -522,44 +525,34 @@ private fun ProjectFileBrowserDialog(
                         .padding(start = 4.dp, end = 4.dp, top = 4.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    TipIconButton(
-                        tooltip = stringResource(R.string.cd_go_up),
+                    // 「返回上一目录」导航（替代原面包屑）：根部禁用，其余可逐级返回。
+                    TextButton(
                         onClick = { currentDir = currentDir.parentFile ?: rootDir },
                         enabled = currentDir != rootDir,
+                        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
+                        modifier = Modifier.pressAndHoldHapticFeedback(),
                     ) {
                         Icon(
                             Icons.Default.KeyboardArrowUp,
-                            contentDescription = stringResource(R.string.cd_go_up),
+                            contentDescription = null,
+                            modifier = Modifier.size(18.dp),
+                        )
+                        Spacer(Modifier.width(4.dp))
+                        Text(
+                            stringResource(R.string.back_to_parent),
+                            style = MaterialTheme.typography.bodyMedium,
                         )
                     }
-                    Row(
-                        Modifier
+                    Text(
+                        text = currentDir.name,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier
                             .weight(1f)
-                            .horizontalScroll(rememberScrollState()),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        segments.forEach { segment ->
-                            TextButton(onClick = { currentDir = segment }) {
-                                Text(
-                                    segment.name,
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = if (segment == currentDir) {
-                                        MaterialTheme.colorScheme.primary
-                                    } else {
-                                        MaterialTheme.colorScheme.onSurfaceVariant
-                                    },
-                                    maxLines = 1,
-                                )
-                            }
-                            if (segment != currentDir) {
-                                Text(
-                                    "/",
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    style = MaterialTheme.typography.bodyMedium,
-                                )
-                            }
-                        }
-                    }
+                            .padding(horizontal = 4.dp),
+                    )
                     TipIconButton(
                         tooltip = stringResource(R.string.cd_close),
                         onClick = onDismiss,
@@ -573,7 +566,6 @@ private fun ProjectFileBrowserDialog(
                 HorizontalDivider()
                 FileBrowser(
                     entries = entries,
-                    selectedPath = selectedPath,
                     onOpenDirectory = { currentDir = File(it.path) },
                     onOpenFile = onFileOpen,
                     isRefreshing = isRefreshing,
@@ -606,7 +598,10 @@ private fun StoragePermissionBanner(
                 color = MaterialTheme.colorScheme.onErrorContainer,
                 modifier = Modifier.weight(1f),
             )
-            TextButton(onClick = onGrant) {
+            TextButton(
+                onClick = onGrant,
+                modifier = Modifier.pressAndHoldHapticFeedback(),
+            ) {
                 Text(stringResource(R.string.editor_storage_permission_grant))
             }
         }
@@ -638,6 +633,9 @@ private fun EditorBody(
     Column(
         Modifier
             .fillMaxSize()
+            // 输入法遮挡处理：IME 弹出时收缩编辑区（M3 Scaffold 已消费 contentWindowInsets，
+            // imePadding = ime.union(systemBars) − consumed，键盘收起时不产生额外间距）。
+            .imePadding()
             .padding(contentPadding)
     ) {
         if (tabs.isNotEmpty()) {
@@ -646,10 +644,12 @@ private fun EditorBody(
                 selectedFile = selectedFile,
                 onTabClick = { session.select(it) },
                 onTabClose = onTabClose,
-                onTabMoved = { from, to -> session.moveTab(from, to) },
                 onCloseOthers = onCloseOthers,
                 onCloseAll = onCloseAll,
                 modifier = Modifier.fillMaxWidth(),
+            )
+            HorizontalDivider(
+                color = MaterialTheme.colorScheme.outlineVariant,
             )
         }
 

@@ -306,7 +306,7 @@ private fun installApk(context: android.content.Context, apkFile: File) {
         }
         context.startActivity(intent)
     } catch (e: Exception) {
-        Toast.makeText(context, e.message ?: "install failed", Toast.LENGTH_LONG).show()
+        Toast.makeText(context, e.message ?: context.getString(R.string.build_install_failed), Toast.LENGTH_LONG).show()
     }
 }
 
@@ -435,6 +435,6 @@ private fun shareApk(context: android.content.Context, apkFile: File) {
         }
         context.startActivity(Intent.createChooser(intent, null))
     } catch (e: Exception) {
-        Toast.makeText(context, e.message ?: "share failed", Toast.LENGTH_LONG).show()
+        Toast.makeText(context, e.message ?: context.getString(R.string.build_share_failed), Toast.LENGTH_LONG).show()
     }
 }

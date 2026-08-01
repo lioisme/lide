@@ -1,9 +1,8 @@
 package com.lioisme.delua.editor
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.background
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -16,6 +15,7 @@ import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -23,8 +23,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.lioisme.delua.editor.R
 
@@ -39,10 +40,10 @@ data class FileNode(
 )
 
 /**
- * 工程文件浏览器（文件系统风格，纯 Compose，零宿主依赖）。
+ * 工程文件浏览器（MD3 对话框列表风格，纯 Compose，零宿主依赖）。
  *
  * 展示当前目录条目：目录在前、按名排序；目录点击回调上级（宿主负责导航），
- * 文件点击回调宿主打开。选中态按 [selectedPath] 高亮。
+ * 文件点击回调宿主打开。
  *
  * [onRefresh] 非空时启用下拉刷新（触发宿主重扫当前目录）；为空则保持纯展示组件。
  */
@@ -50,7 +51,6 @@ data class FileNode(
 @Composable
 fun FileBrowser(
     entries: List<FileNode>,
-    selectedPath: String?,
     onOpenDirectory: (FileNode) -> Unit,
     onOpenFile: (FileNode) -> Unit,
     modifier: Modifier = Modifier,
@@ -75,14 +75,13 @@ fun FileBrowser(
             }
         } else {
             LazyColumn(
-                modifier = Modifier
+                modifier = modifier
                     .fillMaxSize()
                     .widthIn(min = 300.dp),
             ) {
                 items(sorted, key = { it.path }) { entry ->
                     FileBrowserRow(
                         entry = entry,
-                        selected = !entry.isDirectory && entry.path == selectedPath,
                         onClick = {
                             if (entry.isDirectory) onOpenDirectory(entry) else onOpenFile(entry)
                         },
@@ -105,45 +104,35 @@ fun FileBrowser(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 private fun FileBrowserRow(
     entry: FileNode,
-    selected: Boolean,
     onClick: () -> Unit,
 ) {
-    val background = if (selected) {
-        MaterialTheme.colorScheme.secondaryContainer
-    } else {
-        MaterialTheme.colorScheme.surface
-    }
-    val contentColor = if (selected) {
-        MaterialTheme.colorScheme.onSecondaryContainer
-    } else {
-        MaterialTheme.colorScheme.onSurface
-    }
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(background)
-            .clickable(onClick = onClick)
-            .padding(horizontal = 16.dp, vertical = 12.dp),
-    ) {
-        Icon(
-            if (entry.isDirectory) Icons.Default.Folder else Icons.Default.Description,
-            contentDescription = null,
-            tint = if (entry.isDirectory) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.size(20.dp),
-        )
-        Text(
-            text = entry.name,
-            style = MaterialTheme.typography.bodyMedium,
-            color = contentColor,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            modifier = Modifier
-                .padding(start = 12.dp)
-                .weight(1f),
-        )
-    }
+    val haptics = LocalHapticFeedback.current
+    ListItem(
+        headlineContent = {
+            Text(
+                text = entry.name,
+                style = MaterialTheme.typography.bodyMedium,
+                maxLines = 1,
+            )
+        },
+        leadingContent = {
+            Icon(
+                if (entry.isDirectory) Icons.Default.Folder else Icons.Default.Description,
+                contentDescription = null,
+                tint = if (entry.isDirectory) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.size(20.dp),
+            )
+        },
+        // 长按原生振动（与主界面工程列表同源），单击仍为打开/进入。
+        modifier = Modifier.combinedClickable(
+            onClick = onClick,
+            onLongClick = {
+                haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+            },
+        ),
+    )
 }

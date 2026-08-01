@@ -209,7 +209,9 @@ fun SearchBar(
                     },
                     enabled = query.isNotEmpty() && matchCount > 0,
                     contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
-                    modifier = Modifier.height(32.dp),
+                    modifier = Modifier
+                        .height(32.dp)
+                        .pressAndHoldHapticFeedback(),
                 ) {
                     Text(stringResource(R.string.replace), style = MaterialTheme.typography.labelSmall)
                 }
@@ -220,7 +222,9 @@ fun SearchBar(
                     },
                     enabled = query.isNotEmpty() && matchCount > 0,
                     contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
-                    modifier = Modifier.height(32.dp),
+                    modifier = Modifier
+                        .height(32.dp)
+                        .pressAndHoldHapticFeedback(),
                 ) {
                     Text(stringResource(R.string.replace_all), style = MaterialTheme.typography.labelSmall)
                 }
@@ -234,13 +238,17 @@ fun SearchBar(
                     selected = isCaseSensitive,
                     onClick = { isCaseSensitive = !isCaseSensitive },
                     label = { Text(stringResource(R.string.case_sensitive), style = MaterialTheme.typography.labelSmall) },
-                    modifier = Modifier.height(28.dp),
+                    modifier = Modifier
+                        .height(28.dp)
+                        .pressAndHoldHapticFeedback(),
                 )
                 FilterChip(
                     selected = isRegex,
                     onClick = { isRegex = !isRegex },
                     label = { Text(stringResource(R.string.regex), style = MaterialTheme.typography.labelSmall) },
-                    modifier = Modifier.height(28.dp),
+                    modifier = Modifier
+                        .height(28.dp)
+                        .pressAndHoldHapticFeedback(),
                 )
             }
         }

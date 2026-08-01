@@ -23,7 +23,9 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -61,6 +63,7 @@ fun ProjectListScreen(
     var sheetProject by remember { mutableStateOf<Project?>(null) }
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
+    val haptics = LocalHapticFeedback.current
     val strImportSuccess = stringResource(R.string.import_success)
     val strImportFailed = stringResource(R.string.import_failed)
     val strExportSuccess = stringResource(R.string.export_success)
@@ -226,8 +229,10 @@ fun ProjectListScreen(
                                 .fillMaxWidth()
                                 .combinedClickable(
                                     onClick = { onProjectClick(project) },
-                                    // 需求 1：长按 item 调出底部对话框，功能全部收进对话框。
-                                    onLongClick = { sheetProject = project },
+                                    onLongClick = {
+                                        haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+                                        sheetProject = project
+                                    },
                                 )
                                 .padding(horizontal = 16.dp, vertical = 12.dp),
                             verticalAlignment = Alignment.CenterVertically,
@@ -312,13 +317,13 @@ fun ProjectListScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 24.dp),
+                    .padding(bottom = 32.dp),
             ) {
                 Text(
                     text = project.name,
                     style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Medium,
-                    modifier = Modifier.padding(horizontal = 24.dp),
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
                 )
                 if (project.packageName.isNotBlank()) {
                     Text(
@@ -328,48 +333,56 @@ fun ProjectListScreen(
                         modifier = Modifier.padding(horizontal = 24.dp, vertical = 4.dp),
                     )
                 }
-                Spacer(Modifier.height(12.dp))
-                HorizontalDivider()
-                ListItem(
-                    leadingContent = {
-                        Icon(Icons.Default.Info, contentDescription = null)
-                    },
-                    headlineContent = { Text(stringResource(R.string.project_info_menu)) },
-                    modifier = Modifier.clickable {
+                Spacer(Modifier.height(8.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth().clickable {
                         sheetProject = null
                         onProjectInfoClick(project)
-                    },
-                )
-                ListItem(
-                    leadingContent = {
-                        Icon(Icons.Default.FileUpload, contentDescription = null)
-                    },
-                    headlineContent = { Text(stringResource(R.string.export_alp)) },
-                    modifier = Modifier.clickable {
+                    }.padding(horizontal = 24.dp, vertical = 14.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Icon(Icons.Default.Info, null, tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(24.dp))
+                    Spacer(Modifier.width(16.dp))
+                    Text(
+                        stringResource(R.string.project_info_menu),
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier.weight(1f),
+                    )
+                }
+                Row(
+                    modifier = Modifier.fillMaxWidth().clickable {
                         sheetProject = null
                         pendingExportProject = project
                         exportLauncher.launch("${project.name}.alp")
-                    },
-                )
-                ListItem(
-                    leadingContent = {
-                        Icon(
-                            Icons.Default.Delete,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.error,
-                        )
-                    },
-                    headlineContent = {
-                        Text(
-                            stringResource(R.string.project_delete),
-                            color = MaterialTheme.colorScheme.error,
-                        )
-                    },
-                    modifier = Modifier.clickable {
+                    }.padding(horizontal = 24.dp, vertical = 14.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Icon(Icons.Default.FileUpload, null, tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(24.dp))
+                    Spacer(Modifier.width(16.dp))
+                    Text(
+                        stringResource(R.string.export_alp),
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier.weight(1f),
+                    )
+                }
+                Row(
+                    modifier = Modifier.fillMaxWidth().clickable {
                         sheetProject = null
                         pendingDeleteProject = project
-                    },
-                )
+                    }.padding(horizontal = 24.dp, vertical = 14.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Icon(Icons.Default.Delete, null, tint = MaterialTheme.colorScheme.error, modifier = Modifier.size(24.dp))
+                    Spacer(Modifier.width(16.dp))
+                    Text(
+                        stringResource(R.string.project_delete),
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.weight(1f),
+                    )
+                }
             }
         }
     }

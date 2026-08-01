@@ -122,7 +122,7 @@ fun HostPermissionScreen(
             }
             items(SPECIAL_PERMISSIONS) { special ->
                 PermissionRow(
-                    label = special.label,
+                    label = stringResource(special.labelRes),
                     granted = special.isGranted(context),
                     isSpecial = true,
                     onRequest = {
@@ -143,7 +143,7 @@ fun HostPermissionScreen(
             }
             items(permissions) { perm ->
                 PermissionRow(
-                    label = perm.label,
+                    label = stringResource(perm.labelRes),
                     granted = perm.granted,
                     isSpecial = false,
                     onRequest = {
@@ -195,7 +195,7 @@ fun ProjectPermissionScreen(
                 .toSet()
             val known = PermissionCatalog.ALL.map { it.first }.toSet()
             ProjectPermState(
-                pool = PermissionCatalog.ALL + (declared - known).sorted().map { it to it },
+                pool = PermissionCatalog.ALL + (declared - known).sorted().map { it to null },
                 selected = declared.toMutableSet(),
                 original = declared,
             )
@@ -287,9 +287,9 @@ fun ProjectPermissionScreen(
                     }
                 }
             } else {
-                items(s.pool) { (perm, label) ->
+                items(s.pool) { (perm, labelRes) ->
                     ProjectPermissionRow(
-                        label = label,
+                        label = labelRes?.let { stringResource(it) } ?: perm,
                         checked = perm in s.selected,
                         onToggle = {
                             state = s.copy(
@@ -308,7 +308,7 @@ fun ProjectPermissionScreen(
 
 /** 工程权限编辑状态：勾选池 + 当前勾选 + 已保存基线。 */
 private data class ProjectPermState(
-    val pool: List<Pair<String, String>>,
+    val pool: List<Pair<String, Int?>>,
     val selected: Set<String>,
     val original: Set<String>,
 )
@@ -406,7 +406,7 @@ private fun PermissionRow(
 /** 特殊权限描述：独立授予检查 + 系统设置入口。 */
 private data class SpecialPerm(
     val name: String,
-    val label: String,
+    val labelRes: Int,
     val isGranted: (Context) -> Boolean,
     val settingsIntent: (Context) -> Intent,
 )
@@ -414,7 +414,7 @@ private data class SpecialPerm(
 private val SPECIAL_PERMISSIONS: List<SpecialPerm> = listOf(
     SpecialPerm(
         name = Manifest.permission.SYSTEM_ALERT_WINDOW,
-        label = "悬浮窗",
+        labelRes = R.string.perm_special_overlay,
         isGranted = { Settings.canDrawOverlays(it) },
         settingsIntent = {
             Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:${it.packageName}"))
@@ -422,7 +422,7 @@ private val SPECIAL_PERMISSIONS: List<SpecialPerm> = listOf(
     ),
     SpecialPerm(
         name = Manifest.permission.WRITE_SETTINGS,
-        label = "修改系统设置",
+        labelRes = R.string.perm_special_write_settings,
         isGranted = { Settings.System.canWrite(it) },
         settingsIntent = {
             Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS, Uri.parse("package:${it.packageName}"))
@@ -430,7 +430,7 @@ private val SPECIAL_PERMISSIONS: List<SpecialPerm> = listOf(
     ),
     SpecialPerm(
         name = Manifest.permission.MANAGE_EXTERNAL_STORAGE,
-        label = "管理所有文件",
+        labelRes = R.string.perm_special_all_files,
         isGranted = { ctx ->
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.R &&
                 android.os.Environment.isExternalStorageManager()
@@ -442,7 +442,7 @@ private val SPECIAL_PERMISSIONS: List<SpecialPerm> = listOf(
     ),
     SpecialPerm(
         name = Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS,
-        label = "忽略电池优化",
+        labelRes = R.string.perm_special_battery,
         isGranted = { ctx ->
             val pm = ctx.getSystemService(Context.POWER_SERVICE) as? PowerManager ?: return@SpecialPerm false
             pm.isIgnoringBatteryOptimizations(ctx.packageName)
@@ -454,7 +454,7 @@ private val SPECIAL_PERMISSIONS: List<SpecialPerm> = listOf(
     ),
     SpecialPerm(
         name = Manifest.permission.REQUEST_INSTALL_PACKAGES,
-        label = "安装未知来源应用",
+        labelRes = R.string.perm_special_install_unknown,
         isGranted = { ctx ->
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
                 ctx.packageManager.canRequestPackageInstalls()
@@ -466,7 +466,7 @@ private val SPECIAL_PERMISSIONS: List<SpecialPerm> = listOf(
     ),
     SpecialPerm(
         name = Manifest.permission.PACKAGE_USAGE_STATS,
-        label = "使用情况访问权限",
+        labelRes = R.string.perm_special_usage_stats,
         isGranted = { ctx ->
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return@SpecialPerm true
             val appOps = ctx.getSystemService(Context.APP_OPS_SERVICE) as? AppOpsManager ?: return@SpecialPerm false
@@ -484,7 +484,7 @@ private val SPECIAL_PERMISSIONS: List<SpecialPerm> = listOf(
 
 private data class PermissionItem(
     val name: String,
-    val label: String,
+    val labelRes: Int,
     val granted: Boolean,
 )
 
@@ -495,8 +495,8 @@ private fun buildHostPermissionList(ctx: Context): List<PermissionItem> {
     val declared = hostDeclaredPermissions(ctx)
     return PermissionCatalog.ALL
         .filter { (name, _) -> name in declared }
-        .map { (name, label) ->
-            PermissionItem(name, label, checkGranted(ctx, name))
+        .map { (name, labelRes) ->
+            PermissionItem(name, labelRes, checkGranted(ctx, name))
         }
 }
 
@@ -508,11 +508,4 @@ private fun hostDeclaredPermissions(ctx: Context): Set<String> {
     } catch (_: Throwable) {
         emptySet()
     }
-}
-
-/** 权限名 → 可读标签；未知权限原样展示。 */
-private fun labelOf(name: String): String {
-    PermissionCatalog.ALL.forEach { (perm, label) -> if (perm == name) return label }
-    SPECIAL_PERMISSIONS.forEach { sp -> if (sp.name == name) return sp.label }
-    return name
 }

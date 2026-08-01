@@ -10,6 +10,7 @@
     <string name="select_file">Select File</string>
     <string name="cd_go_up">Go up one level</string>
     <string name="cd_close">Close</string>
+    <string name="back_to_parent">Back to parent</string>
 
     <!-- Project List -->
     <string name="new_project">New Project</string>
@@ -168,6 +169,45 @@
 
     <string name="cannot_read_file">Cannot read file</string>
     <string name="error_prefix">Error: %1$s</string>
+
+    <!-- Permission catalog -->
+    <string name="perm_read_external_storage">Read external storage</string>
+    <string name="perm_write_external_storage">Write external storage</string>
+    <string name="perm_internet">Internet</string>
+    <string name="perm_access_network_state">Network state</string>
+    <string name="perm_access_wifi_state">WiFi status</string>
+    <string name="perm_camera">Camera</string>
+    <string name="perm_record_audio">Record audio</string>
+    <string name="perm_read_contacts">Read contacts</string>
+    <string name="perm_write_contacts">Write contacts</string>
+    <string name="perm_read_calendar">Read calendar</string>
+    <string name="perm_write_calendar">Write calendar</string>
+    <string name="perm_access_fine_location">Precise location</string>
+    <string name="perm_access_coarse_location">Approximate location</string>
+    <string name="perm_read_phone_state">Read device info</string>
+    <string name="perm_call_phone">Call phone</string>
+    <string name="perm_send_sms">Send SMS</string>
+    <string name="perm_read_sms">Read SMS</string>
+    <string name="perm_receive_sms">Receive SMS</string>
+    <string name="perm_bluetooth">Bluetooth</string>
+    <string name="perm_bluetooth_admin">Bluetooth management</string>
+    <string name="perm_nfc">NFC</string>
+    <string name="perm_post_notifications">Notifications</string>
+    <string name="perm_foreground_service">Foreground service</string>
+    <string name="perm_vibrate">Vibrate</string>
+    <string name="perm_wake_lock">Wake lock</string>
+
+    <!-- Special permissions -->
+    <string name="perm_special_overlay">Display over other apps</string>
+    <string name="perm_special_write_settings">Modify system settings</string>
+    <string name="perm_special_all_files">Manage all files</string>
+    <string name="perm_special_battery">Ignore battery optimizations</string>
+    <string name="perm_special_install_unknown">Install unknown apps</string>
+    <string name="perm_special_usage_stats">Usage access</string>
+
+    <!-- Build APK fallbacks -->
+    <string name="build_install_failed">Install failed</string>
+    <string name="build_share_failed">Share failed</string>
 
 
     <!-- Project list -->

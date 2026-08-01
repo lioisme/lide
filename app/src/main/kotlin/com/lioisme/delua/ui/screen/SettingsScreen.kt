@@ -440,14 +440,14 @@ private fun ColorSheet(
                             .background(color)
                             .then(
                                 if (isSelected) Modifier.border(3.dp, MaterialTheme.colorScheme.onSurface, CircleShape)
-                                else Modifier.border(1.dp, Color.White.copy(alpha = 0.2f), CircleShape)
+                                else Modifier.border(1.dp, MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f), CircleShape)
                             )
                             .clickable { onSelectColor(argb) },
                         contentAlignment = Alignment.Center,
                     ) {
                         if (isSelected) {
                             Icon(Icons.Default.Check, null,
-                                tint = if (color.luminance() > 0.5f) Color(0xFF1A1C1E) else Color.White,
+                                tint = if (color.luminance() > 0.5f) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.surface,
                                 modifier = Modifier.size(20.dp))
                         }
                     }

@@ -131,16 +131,6 @@ class EditorSession(
         return false
     }
 
-    /** 拖拽排序：仅重排标签列表；选中按 fileName 语义自动跟随，无需调整选中索引。 */
-    fun moveTab(from: Int, to: Int) {
-        val current = _tabs.value
-        if (from !in current.indices || to !in current.indices || from == to) return
-        val mutable = current.toMutableList()
-        val moved = mutable.removeAt(from)
-        mutable.add(to, moved)
-        _tabs.value = mutable
-    }
-
     /**
      * 关闭除 [anchor] 外的所有标签。非脏标签立即关闭；脏标签不关闭，
      * 作为待确认队列返回，由宿主逐个确认后经 [saveAndClose] / [discardAndClose] 关闭。

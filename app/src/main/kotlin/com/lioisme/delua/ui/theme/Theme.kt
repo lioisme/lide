@@ -123,6 +123,12 @@ internal fun generateLightScheme(primary: Color): ColorScheme {
         inverseOnSurface = Color(0xFFF1F0F4),
         inversePrimary = lighten(primary, 0.4f),
         surfaceTint = primary,
+        surfaceDim = Color(0xFFD8DAE0),
+        surfaceBright = Color(0xFFFDFCFF),
+        surfaceContainerLowest = Color(0xFFFFFFFF),
+        surfaceContainerLow = Color(0xFFF2F2F7),
+        surfaceContainer = Color(0xFFECECF1),
+        surfaceContainerHigh = Color(0xFFE6E7EC),
     )
 }
 
@@ -161,6 +167,12 @@ internal fun generateDarkScheme(primary: Color): ColorScheme {
         inverseOnSurface = Color(ON_BG_LIGHT),
         inversePrimary = primary,
         surfaceTint = dp,
+        surfaceDim = Color(0xFF141518),
+        surfaceBright = Color(0xFF3A3B3E),
+        surfaceContainerLowest = Color(0xFF0F1013),
+        surfaceContainerLow = Color(0xFF1C1D21),
+        surfaceContainer = Color(0xFF1A1C1E),
+        surfaceContainerHigh = Color(0xFF252629),
     )
 }
 
