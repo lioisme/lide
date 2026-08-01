@@ -68,7 +68,11 @@
     <string name="perm_denied">Denied</string>
     <string name="perm_request">Request</string>
     <string name="perm_project_section">Project-declared Permissions (%1$s)</string>
+    <string name="perm_project_hint">Permissions declared in this project\'s init.lua (user_permission). They are written into the packaged APK\'s manifest and requested before running.</string>
     <string name="perm_project_empty">This project declares no user_permission in init.lua</string>
+    <string name="perm_host_section">Host App Permissions</string>
+    <string name="perm_host_hint">Permissions of the delua host app itself. They apply to the IDE and to scripts running inside the host.</string>
+    <string name="perm_package_only">Written into packaged APK only</string>
     <string name="drawer_permissions">Project Permissions</string>
     <string name="run_permission_denied_hint">%1$d permission(s) denied - running anyway</string>
     <string name="run_finished">Run finished</string>
@@ -101,6 +105,23 @@
     <string name="info_load_failed">No init.lua found</string>
     <string name="drawer_project_info">Project Info</string>
     <string name="project_info_menu">Project Info</string>
+    <string name="build_apk">Build APK</string>
+
+    <!-- Build APK (WP-005) -->
+    <string name="build_title">Build APK</string>
+    <string name="build_summary_group">Package Settings</string>
+    <string name="build_hint">Settings are read from the project\'s init.lua</string>
+    <string name="build_appname">App name</string>
+    <string name="build_package">Package name</string>
+    <string name="build_version">Version %1$s (%2$s)</string>
+    <string name="build_permissions">Permissions (%1$d)</string>
+    <string name="build_button">Build</string>
+    <string name="build_not_ready">Build is not available yet</string>
+    <string name="build_working">Building…</string>
+    <string name="build_success">Build complete</string>
+    <string name="build_fail">Build failed: %1$s</string>
+    <string name="build_share">Share APK</string>
+    <string name="build_need_package">Set packagename in init.lua first</string>
 
     <!-- Plugins -->
     <string name="plugins">Plugins</string>

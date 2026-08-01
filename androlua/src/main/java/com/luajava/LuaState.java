@@ -140,7 +140,8 @@ public class LuaState {
     protected void finalize() {
         Log.i("luaState", "finalize: "+luaState);
         try {
-           close();
+           if (luaState != 0)
+               close();
         }
         catch (Exception e) {
             System.err.println("Unable to release luaState " + luaState);

@@ -27,6 +27,7 @@
     <string name="cd_undo">撤销</string>
     <string name="cd_redo">重做</string>
     <string name="cd_run">运行</string>
+    <string name="cd_more">更多操作</string>
     <string name="cd_search">搜索</string>
     <string name="cd_search_next">下一个匹配</string>
     <string name="cd_search_prev">上一个匹配</string>

@@ -70,6 +70,24 @@
     <string name="perm_project_section">当前工程声明权限（%1$s）</string>
     <string name="perm_project_empty">该工程在 init.lua 中未声明 user_permission</string>
     <string name="drawer_permissions">工程权限</string>
+    <string name="drawer_project_info">工程信息</string>
+    <string name="build_apk">构建 APK</string>
+
+    <!-- Build APK (WP-005) -->
+    <string name="build_title">构建 APK</string>
+    <string name="build_summary_group">打包配置</string>
+    <string name="build_hint">以下配置读取自工程 init.lua</string>
+    <string name="build_appname">应用名称</string>
+    <string name="build_package">包名</string>
+    <string name="build_version">版本 %1$s（%2$s）</string>
+    <string name="build_permissions">权限（%1$d 项）</string>
+    <string name="build_button">构建</string>
+    <string name="build_not_ready">构建功能尚未完成</string>
+    <string name="build_working">构建中…</string>
+    <string name="build_success">构建完成</string>
+    <string name="build_fail">构建失败：%1$s</string>
+    <string name="build_share">分享 APK</string>
+    <string name="build_need_package">请先在 init.lua 中填写 packagename</string>
     <string name="run_permission_denied_hint">已拒绝 %1$d 项权限，继续运行</string>
     <string name="run_finished">运行结束</string>
     <string name="run_error_title">运行出错</string>

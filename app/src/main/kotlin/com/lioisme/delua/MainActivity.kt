@@ -13,6 +13,7 @@ import androidx.navigation.compose.rememberNavController
 import com.androlua.LuaApplication
 import com.lioisme.delua.androlua.AlpManager
 import com.lioisme.delua.androlua.AlpManager.AlpKind
+import com.lioisme.delua.engine.EngineActivity
 import com.lioisme.delua.engine.RunEngineLauncher
 import com.lioisme.delua.i18n.LocaleManager
 import com.lioisme.delua.ui.navigation.DeluaNavHost
@@ -28,6 +29,15 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // 打包模式（WP-005 产物）：运行时包名已被补丁为工程 packagename，与宿主
+        // BuildConfig 包名不一致 → 直入引擎页（无 projectDir → EngineActivity 回退
+        // filesDir/lua 运行 assets 内工程）。宿主安装包二者恒等，编辑器正常展示。
+        // super.onCreate 必须先调用，否则 Android 会抛 SuperNotCalledException 杀进程。
+        if (packageName != BuildConfig.APPLICATION_ID) {
+            startActivity(Intent(this, EngineActivity::class.java))
+            finish()
+            return
+        }
         enableEdgeToEdge()
 
         handleLaunchIntent(intent)

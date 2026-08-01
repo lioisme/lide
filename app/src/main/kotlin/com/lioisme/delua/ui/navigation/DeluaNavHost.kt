@@ -14,6 +14,7 @@ import androidx.navigation.navArgument
 import com.lioisme.delua.engine.RunEngineLauncher
 import com.lioisme.delua.model.Project
 import com.lioisme.delua.project.ProjectManager
+import com.lioisme.delua.ui.screen.BuildApkScreen
 import com.lioisme.delua.ui.screen.EditorScreen
 import com.lioisme.delua.ui.screen.LuaManualScreen
 import com.lioisme.delua.ui.screen.PermissionScreen
@@ -31,6 +32,7 @@ object Routes {
     const val SETTINGS = "settings"
     const val PERMISSIONS = "permissions?projectName={projectName}&projectPath={projectPath}"
     const val PROJECT_INFO = "projectinfo?projectName={projectName}&projectPath={projectPath}"
+    const val BUILD_APK = "buildapk?projectName={projectName}&projectPath={projectPath}"
     const val PLUGINS = "plugins"
     const val MANUAL = "manual"
 
@@ -48,6 +50,10 @@ object Routes {
 
     fun projectInfo(project: Project): String {
         return "projectinfo?projectName=${enc(project.name)}&projectPath=${enc(project.path)}"
+    }
+
+    fun buildApk(project: Project): String {
+        return "buildapk?projectName=${enc(project.name)}&projectPath=${enc(project.path)}"
     }
 
     fun enc(s: String) = URLEncoder.encode(s, "UTF-8")
@@ -139,6 +145,9 @@ fun DeluaNavHost(
                 onProjectInfo = {
                     navController.navigate(Routes.projectInfo(project))
                 },
+                onBuildApk = {
+                    navController.navigate(Routes.buildApk(project))
+                },
                 onRun = { fileName ->
                     engineLauncher.launch(project.path, fileName)
                 },
@@ -222,6 +231,31 @@ fun DeluaNavHost(
                     projectInfoVersion++
                     navController.popBackStack()
                 },
+            )
+        }
+        slideComposable(
+            route = Routes.BUILD_APK,
+            arguments = listOf(
+                navArgument("projectName") {
+                    type = NavType.StringType
+                    defaultValue = ""
+                },
+                navArgument("projectPath") {
+                    type = NavType.StringType
+                    defaultValue = ""
+                }
+            ),
+        ) { backStackEntry ->
+            val name = Routes.dec(backStackEntry.arguments?.getString("projectName"))
+            val path = Routes.dec(backStackEntry.arguments?.getString("projectPath"))
+            val project = if (path.isNotBlank()) Project(name = name, path = path, mainFile = "main.lua") else null
+            if (project == null) {
+                LaunchedEffect(Unit) { navController.popBackStack() }
+                return@slideComposable
+            }
+            BuildApkScreen(
+                project = project,
+                onBack = { navController.popBackStack() },
             )
         }
     }

@@ -40,6 +40,11 @@ public class EngineActivity extends LuaActivity {
     public void onCreate(Bundle savedInstanceState) {
         Intent intent = getIntent();
         projectDir = intent.getStringExtra("projectDir");
+        if (projectDir == null) {
+            // 打包模式（WP-005）：assets/lua 已由 LuaApplication.extractLuaScripts
+            // 解出到 filesDir/lua（getDir("lua", MODE_PRIVATE) 同路径），以其为工程目录。
+            projectDir = getDir("lua", MODE_PRIVATE).getAbsolutePath();
+        }
         mainFile = intent.getStringExtra("mainFile");
         if (mainFile == null) mainFile = "main.lua";
         super.onCreate(savedInstanceState);

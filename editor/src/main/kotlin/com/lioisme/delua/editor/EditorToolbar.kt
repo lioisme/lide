@@ -6,14 +6,25 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Redo
 import androidx.compose.material.icons.automirrored.filled.Undo
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import com.lioisme.delua.editor.R
+
+/** 右上角更多菜单项（纯 UI 数据：标签 + 点击回调）。 */
+data class EditorMoreAction(
+    val label: String,
+    val onClick: () -> Unit,
+)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -29,8 +40,11 @@ fun EditorToolbar(
     onSearch: () -> Unit = {},
     // 宽屏常驻抽屉场景下汉堡键无意义（抽屉恒可见），由宿主注入关闭。
     showDrawerToggle: Boolean = true,
+    // 右上角更多（⋮）菜单：工程属性/工程权限/打包 APK 等宿主动作入口。
+    moreActions: List<EditorMoreAction> = emptyList(),
     modifier: Modifier = Modifier,
 ) {
+    var menuExpanded by remember { mutableStateOf(false) }
     TopAppBar(
         title = {
             Text(
@@ -66,6 +80,25 @@ fun EditorToolbar(
             }
             IconButton(onClick = onRun) {
                 Icon(Icons.Default.PlayArrow, contentDescription = stringResource(R.string.cd_run))
+            }
+            if (moreActions.isNotEmpty()) {
+                IconButton(onClick = { menuExpanded = true }) {
+                    Icon(Icons.Default.MoreVert, contentDescription = stringResource(R.string.cd_more))
+                }
+                DropdownMenu(
+                    expanded = menuExpanded,
+                    onDismissRequest = { menuExpanded = false },
+                ) {
+                    moreActions.forEach { action ->
+                        DropdownMenuItem(
+                            text = { Text(action.label) },
+                            onClick = {
+                                menuExpanded = false
+                                action.onClick()
+                            },
+                        )
+                    }
+                }
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(

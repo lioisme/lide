@@ -112,7 +112,7 @@ fun ProjectInfoScreen(
                         content, "debugmode", if (s.debugMode) "true" else "false"
                     )
                     content = LuaConfigParser.setStringArrayField(
-                        content, "user_permission", s.permissions
+                        content, "user_permission", s.permissions.map { com.lioisme.delua.androlua.PermissionResolver.normalize(it) }
                     )
                     file.writeText(content)
                     true

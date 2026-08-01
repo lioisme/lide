@@ -34,14 +34,4 @@ internal object PermissionCatalog {
         Manifest.permission.VIBRATE to "振动",
         Manifest.permission.WAKE_LOCK to "唤醒锁",
     )
-
-    val SPECIAL: List<Pair<String, String>> = listOf(
-        "android.permission.MANAGE_EXTERNAL_STORAGE" to "管理所有文件"
-    )
-
-    fun labelOf(name: String): String {
-        ALL.forEach { (perm, label) -> if (perm == name) return label }
-        SPECIAL.forEach { (perm, label) -> if (perm == name) return label }
-        return name
-    }
 }

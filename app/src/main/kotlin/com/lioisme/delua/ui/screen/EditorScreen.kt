@@ -33,6 +33,7 @@ import com.lioisme.delua.engine.EngineActivity
 import com.lioisme.delua.engine.EngineResultParser
 import com.lioisme.delua.engine.RunEngineLauncher
 import com.lioisme.delua.editor.EditorConfig
+import com.lioisme.delua.editor.EditorMoreAction
 import com.lioisme.delua.editor.EditorTab
 import com.lioisme.delua.editor.EditorTabs
 import com.lioisme.delua.editor.EditorToolbar
@@ -83,6 +84,7 @@ fun EditorScreen(
     onBack: () -> Unit,
     onPermissions: () -> Unit = {},
     onProjectInfo: () -> Unit = {},
+    onBuildApk: () -> Unit = {},
     onRun: (fileName: String) -> Unit,
     projectInfoVersion: Int = 0,
 ) {
@@ -209,11 +211,24 @@ fun EditorScreen(
     }
 
     val requestRun: () -> Unit = {
+        // 审计修正：工程声明权限先归一化（裸名 → android.permission. 全名），
+        // 且只请求宿主 manifest 已声明的权限（宿主未声明的仅在打包时写入产物 manifest）。
         val declared = projectManager.loadUserPermissions(project)
-        val ungranted = PermissionResolver.runtimeRequestable(declared).filter {
-            androidx.core.content.ContextCompat.checkSelfPermission(context, it) !=
-                android.content.pm.PackageManager.PERMISSION_GRANTED
+            .map { PermissionResolver.normalize(it) }
+        val hostDeclared = try {
+            val info = context.packageManager.getPackageInfo(
+                context.packageName,
+                android.content.pm.PackageManager.GET_PERMISSIONS,
+            )
+            info.requestedPermissions?.toSet() ?: emptySet()
+        } catch (_: Throwable) {
+            emptySet()
         }
+        val ungranted = PermissionResolver.runtimeRequestable(declared).filter { it in hostDeclared }
+            .filter {
+                androidx.core.content.ContextCompat.checkSelfPermission(context, it) !=
+                    android.content.pm.PackageManager.PERMISSION_GRANTED
+            }
         if (ungranted.isEmpty()) {
             doRun()
         } else {
@@ -318,6 +333,18 @@ fun EditorScreen(
                         },
                         onSearch = { isSearchVisible = true },
                         showDrawerToggle = !isWide,
+                        // 工程级操作统一入口：右上角更多（⋮）菜单。
+                        moreActions = listOf(
+                            EditorMoreAction(stringResource(R.string.drawer_project_info)) {
+                                onProjectInfo()
+                            },
+                            EditorMoreAction(stringResource(R.string.drawer_permissions)) {
+                                onPermissions()
+                            },
+                            EditorMoreAction(stringResource(R.string.build_apk)) {
+                                onBuildApk()
+                            },
+                        ),
                     )
                 },
                 snackbarHost = {
