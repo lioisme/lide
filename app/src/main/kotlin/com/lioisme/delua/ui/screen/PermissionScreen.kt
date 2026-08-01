@@ -22,6 +22,7 @@ import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.*
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,6 +49,15 @@ fun HostPermissionScreen(
     val context = LocalContext.current
     var permissions: List<PermissionItem> by remember {
         mutableStateOf(buildHostPermissionList(context))
+    }
+    var isRefreshing by remember { mutableStateOf(false) }
+
+    // 下拉刷新：重查全部宿主权限授予状态（覆盖去系统设置授予后返回的陈旧展示）。
+    LaunchedEffect(isRefreshing) {
+        if (isRefreshing) {
+            permissions = buildHostPermissionList(context)
+            isRefreshing = false
+        }
     }
 
     val permLauncher = rememberLauncherForActivityResult(
@@ -78,10 +88,16 @@ fun HostPermissionScreen(
             )
         }
     ) { padding ->
+        PullToRefreshBox(
+            isRefreshing = isRefreshing,
+            onRefresh = { isRefreshing = true },
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding),
+        ) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding)
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
@@ -145,6 +161,7 @@ fun HostPermissionScreen(
                 )
                 Spacer(Modifier.height(80.dp))
             }
+        }
         }
     }
 }

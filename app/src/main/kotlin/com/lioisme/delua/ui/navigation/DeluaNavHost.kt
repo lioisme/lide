@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
@@ -11,6 +12,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.navArgument
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import com.lioisme.delua.engine.RunEngineLauncher
 import com.lioisme.delua.model.Project
 import com.lioisme.delua.project.ProjectManager
@@ -73,6 +76,15 @@ fun DeluaNavHost(
     // WP-004：工程属性保存后自增，驱动列表刷新与编辑器抽屉工程名更新。
     var projectInfoVersion by remember { mutableIntStateOf(0) }
 
+    // 工程列表缓存：状态提升至 NavHost 层（导航往返不销毁）。
+    // Compose 导航会销毁非当前目的地的组合，列表状态若留在页面内，
+    // 每次从设置/编辑器返回都会重置为空 → 空态闪烁 + 全量磁盘重扫；
+    // 提升后返回时先渲染缓存，再由页面触发式后台刷新。
+    var projects by remember { mutableStateOf(listOf<Project>()) }
+    val refreshProjects: suspend () -> Unit = {
+        projects = withContext(Dispatchers.IO) { projectManager.listProjects() }
+    }
+
     LaunchedEffect(navController, pendingOpenFiles) {
         val open = pendingOpenFiles.firstOrNull()
         if (open != null) {
@@ -98,6 +110,8 @@ fun DeluaNavHost(
         ) {
             ProjectListScreen(
                 projectManager = projectManager,
+                projects = projects,
+                refresh = refreshProjects,
                 onProjectClick = { project ->
                     navController.navigate(Routes.editor(project))
                 },

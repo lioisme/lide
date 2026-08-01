@@ -461,14 +461,25 @@ private fun ProjectFileBrowserDialog(
     val rootDir = remember(project) { File(project.path) }
     var currentDir by remember(project) { mutableStateOf(rootDir) }
     var entries by remember { mutableStateOf<List<FileNode>>(emptyList()) }
+    var isRefreshing by remember { mutableStateOf(false) }
+
+    suspend fun loadEntries(dir: File): List<FileNode> = withContext(Dispatchers.IO) {
+        dir.listFiles()
+            ?.filter { it.isDirectory || (it.isFile && it.name.endsWith(".lua", ignoreCase = true)) }
+            ?.map { FileNode(it.name, it.absolutePath, it.isDirectory) }
+            ?: emptyList()
+    }
 
     // 目录内容按需读取（IO 线程）：目录恒展示，文件仅收 .lua。
     LaunchedEffect(currentDir) {
-        entries = withContext(Dispatchers.IO) {
-            currentDir.listFiles()
-                ?.filter { it.isDirectory || (it.isFile && it.name.endsWith(".lua", ignoreCase = true)) }
-                ?.map { FileNode(it.name, it.absolutePath, it.isDirectory) }
-                ?: emptyList()
+        entries = loadEntries(currentDir)
+    }
+
+    // 下拉刷新：重扫当前目录（覆盖外部改动，如 adb push 新文件）。
+    LaunchedEffect(isRefreshing) {
+        if (isRefreshing) {
+            entries = loadEntries(currentDir)
+            isRefreshing = false
         }
     }
 
@@ -550,6 +561,8 @@ private fun ProjectFileBrowserDialog(
                     selectedPath = selectedPath,
                     onOpenDirectory = { currentDir = File(it.path) },
                     onOpenFile = onFileOpen,
+                    isRefreshing = isRefreshing,
+                    onRefresh = { isRefreshing = true },
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f),

@@ -14,9 +14,11 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Folder
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -41,7 +43,10 @@ data class FileNode(
  *
  * 展示当前目录条目：目录在前、按名排序；目录点击回调上级（宿主负责导航），
  * 文件点击回调宿主打开。选中态按 [selectedPath] 高亮。
+ *
+ * [onRefresh] 非空时启用下拉刷新（触发宿主重扫当前目录）；为空则保持纯展示组件。
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FileBrowser(
     entries: List<FileNode>,
@@ -49,6 +54,8 @@ fun FileBrowser(
     onOpenDirectory: (FileNode) -> Unit,
     onOpenFile: (FileNode) -> Unit,
     modifier: Modifier = Modifier,
+    isRefreshing: Boolean = false,
+    onRefresh: (() -> Unit)? = null,
 ) {
     val sorted = remember(entries) {
         entries.sortedWith(
@@ -57,31 +64,44 @@ fun FileBrowser(
         )
     }
 
-    if (sorted.isEmpty()) {
-        Box(modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text(
-                stringResource(R.string.file_tree_empty),
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
+    val content: @Composable () -> Unit = {
+        if (sorted.isEmpty()) {
+            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text(
+                    stringResource(R.string.file_tree_empty),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .widthIn(min = 300.dp),
+            ) {
+                items(sorted, key = { it.path }) { entry ->
+                    FileBrowserRow(
+                        entry = entry,
+                        selected = !entry.isDirectory && entry.path == selectedPath,
+                        onClick = {
+                            if (entry.isDirectory) onOpenDirectory(entry) else onOpenFile(entry)
+                        },
+                    )
+                }
+            }
         }
-        return
     }
 
-    LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .widthIn(min = 300.dp),
-    ) {
-        items(sorted, key = { it.path }) { entry ->
-            FileBrowserRow(
-                entry = entry,
-                selected = !entry.isDirectory && entry.path == selectedPath,
-                onClick = {
-                    if (entry.isDirectory) onOpenDirectory(entry) else onOpenFile(entry)
-                },
-            )
-        }
+    if (onRefresh != null) {
+        PullToRefreshBox(
+            isRefreshing = isRefreshing,
+            onRefresh = onRefresh,
+            modifier = modifier
+                .fillMaxSize()
+                .widthIn(min = 300.dp),
+        ) { content() }
+    } else {
+        content()
     }
 }
 

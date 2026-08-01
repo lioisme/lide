@@ -13,6 +13,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Extension
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.*
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,6 +39,7 @@ fun PluginScreen(
     val context = LocalContext.current
     val pluginManager = remember { PluginManager() }
     var plugins by remember { mutableStateOf(listOf<PluginInfo>()) }
+    var isRefreshing by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val strCannotReadFile = stringResource(R.string.cannot_read_file)
@@ -45,9 +47,14 @@ fun PluginScreen(
 
     fun refresh() {
         scope.launch {
-            plugins = withContext(Dispatchers.IO) {
-                val extDir = LuaApplication.getInstance().luaExtDir
-                pluginManager.scan("$extDir/plugin")
+            isRefreshing = true
+            try {
+                plugins = withContext(Dispatchers.IO) {
+                    val extDir = LuaApplication.getInstance().luaExtDir
+                    pluginManager.scan("$extDir/plugin")
+                }
+            } finally {
+                isRefreshing = false
             }
         }
     }
@@ -117,11 +124,18 @@ fun PluginScreen(
             )
         },
     ) { padding ->
-        if (plugins.isEmpty()) {
-            Box(
-                modifier = Modifier.fillMaxSize().padding(padding),
-                contentAlignment = Alignment.Center,
-            ) {
+        PullToRefreshBox(
+            isRefreshing = isRefreshing,
+            onRefresh = { refresh() },
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding),
+        ) {
+            if (plugins.isEmpty()) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center,
+                ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Icon(
                         Icons.Default.Extension,
@@ -145,7 +159,7 @@ fun PluginScreen(
             }
         } else {
             LazyColumn(
-                modifier = Modifier.fillMaxSize().padding(padding),
+                modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(vertical = 8.dp),
             ) {
                 itemsIndexed(plugins) { _, plugin ->
@@ -200,6 +214,7 @@ fun PluginScreen(
                         }
                     }
                 }
+            }
             }
         }
     }

@@ -9,6 +9,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.material3.*
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,6 +49,7 @@ fun ExamplesScreen(onBack: () -> Unit) {
     val snackbarHostState = remember { SnackbarHostState() }
     var installed by remember { mutableStateOf(emptySet<String>()) }
     var importing by remember { mutableStateOf(false) }
+    var isRefreshing by remember { mutableStateOf(false) }
     val strImportFailed = stringResource(R.string.import_failed)
     val strImportSuccess = stringResource(R.string.examples_import_success)
 
@@ -57,6 +59,14 @@ fun ExamplesScreen(onBack: () -> Unit) {
             .filter { File(projectDir, it.dir).isDirectory }
             .map { it.dir }
             .toSet()
+    }
+
+    // 下拉刷新：重查各示例的已安装状态（触发式，无需重列静态示例列表）。
+    LaunchedEffect(isRefreshing) {
+        if (isRefreshing) {
+            refreshInstalled()
+            isRefreshing = false
+        }
     }
 
     fun importExample(example: BuiltinExample) {
@@ -106,10 +116,17 @@ fun ExamplesScreen(onBack: () -> Unit) {
             )
         },
     ) { padding ->
-        LazyColumn(
-            modifier = Modifier.fillMaxSize().padding(padding),
-            contentPadding = PaddingValues(vertical = 8.dp),
+        PullToRefreshBox(
+            isRefreshing = isRefreshing,
+            onRefresh = { isRefreshing = true },
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding),
         ) {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(vertical = 8.dp),
+            ) {
             item {
                 Text(
                     stringResource(R.string.examples_subtitle),
@@ -183,6 +200,7 @@ fun ExamplesScreen(onBack: () -> Unit) {
                 }
             }
             item { Spacer(Modifier.height(24.dp)) }
+            }
         }
     }
 }

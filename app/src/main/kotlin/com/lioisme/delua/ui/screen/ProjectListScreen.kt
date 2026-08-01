@@ -39,6 +39,8 @@ import kotlinx.coroutines.delay
 @Composable
 fun ProjectListScreen(
     projectManager: ProjectManager,
+    projects: List<Project>,
+    refresh: suspend () -> Unit,
     onProjectClick: (Project) -> Unit,
     onProjectInfoClick: (Project) -> Unit = {},
     onSettingsClick: () -> Unit,
@@ -46,7 +48,6 @@ fun ProjectListScreen(
     refreshKey: Int = 0,
     pendingImportPaths: List<String> = emptyList(),
 ) {
-    var projects by remember { mutableStateOf(listOf<Project>()) }
     var showCreateDialog by remember { mutableStateOf(false) }
     var isRefreshing by remember { mutableStateOf(false) }
     var newName by remember { mutableStateOf("") }
@@ -61,20 +62,17 @@ fun ProjectListScreen(
     val strExportSuccess = stringResource(R.string.export_success)
     val strExportFailed = stringResource(R.string.export_failed)
 
-    suspend fun loadProjects() {
-        projects = withContext(Dispatchers.IO) { projectManager.listProjects() }
-    }
-
-    // 单一加载入口：首次进入 / 工程属性保存（refreshKey 自增）/ 导入完成后各触发一次；
+    // 单一刷新入口：首次进入 / 工程属性保存（refreshKey 自增）/ 导入完成后各触发一次；
+    // 列表数据为 NavHost 层缓存（导航往返不销毁），刷新期间先展示缓存，无空态闪烁；
     // 键值组合天然去重，避免并发重复读盘（同一列表反复重建）。
     LaunchedEffect(Unit, refreshKey, pendingImportPaths.size) {
-        loadProjects()
+        refresh()
     }
 
     // 下拉刷新：键控效应替代组合期条件副作用。
     LaunchedEffect(isRefreshing) {
         if (isRefreshing) {
-            loadProjects()
+            refresh()
             isRefreshing = false
         }
     }
@@ -135,7 +133,7 @@ fun ProjectListScreen(
                         context.getString(R.string.import_mixed_success, projectCount, pluginCount)
                 }
                 Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-                loadProjects()
+                scope.launch { refresh() }
             } else {
                 errorMsg = strImportFailed
             }
@@ -313,7 +311,7 @@ fun ProjectListScreen(
                         scope.launch {
                             val created = withContext(Dispatchers.IO) { projectManager.createProject(name) }
                             if (created != null) {
-                                loadProjects()
+                                scope.launch { refresh() }
                             } else {
                                 errorMsg = context.getString(R.string.project_create_failed, name)
                             }
@@ -342,7 +340,7 @@ fun ProjectListScreen(
                             projectManager.deleteProject(project)
                         }
                         if (deleted) {
-                            loadProjects()
+                            scope.launch { refresh() }
                         } else {
                             errorMsg = context.getString(R.string.project_delete_failed, project.name)
                         }

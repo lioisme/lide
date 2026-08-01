@@ -162,3 +162,52 @@ interrupt 旧任务、分析线程空闲即退出并释放 shadowed 文本、Tex
 ```
 rg -n "luajava|androlua|loadLibrary" editor/src
 ```
+
+## 6. 列表加载专项（Phase C · 全列表惰性/触发式/下拉刷新）
+
+### 6.1 背景与根因
+
+用户反馈：从设置 / 编辑器返回工程列表时可能出现列表重建，伴随卡顿与空态闪烁。
+
+根因：Compose 导航（`NavHost`）会销毁非当前目的地的组合；`ProjectListScreen` 的
+`projects` 状态为页面级 `remember`，每次返回都重置为空 → 先渲染空态，再经
+`LaunchedEffect` 触发 `ProjectManager.listProjects()`（IO 全量扫盘 + 逐个读 init.lua）
+后弹出列表。即「返回 = 空态闪烁 + 重建」。
+
+### 6.2 全列表审计矩阵（修复后）
+
+| 列表 | 屏幕 | 惰性加载 | 触发式加载 | 下拉刷新 | 处理 |
+|---|---|---|---|---|---|
+| 工程列表 | ProjectListScreen | ✅ LazyColumn+key | ✅ 缓存提升 NavHost | ✅ 已有 | **状态提升至 NavHost 层** |
+| 内置示例 | ExamplesScreen | ✅ LazyColumn | ✅ 进入时 | ✅ 新增 | +PullToRefreshBox |
+| 插件列表 | PluginScreen | ✅ LazyColumn | ✅ 进入时 | ✅ 新增 | +PullToRefreshBox |
+| 宿主权限 | HostPermissionScreen | ✅ LazyColumn | ✅ 进入时 | ✅ 新增 | +PullToRefreshBox（覆盖系统设置返回后的陈旧状态） |
+| 文件树 | FileBrowser（:editor） | ✅ LazyColumn | ✅ 目录切换时 | ✅ 新增 | 可选 onRefresh 参数，宿主对话框接线 |
+| 设置页 | SettingsScreen | ✅ Grid/Column | 静态配置 UI | — | 非数据列表，不做（记录） |
+| 工程属性 | ProjectInfoScreen | ✅ LazyColumn | 静态表单 | — | 非数据列表，不做（记录） |
+| 工程权限池 | ProjectPermissionScreen | ✅ LazyColumn | 进入时 IO | — | 编辑表单，不做（记录） |
+| 构建日志 | BuildApkScreen | ✅ LazyColumn | 流式追加 | — | 日志流，不做（记录） |
+| Lua 手册 | LuaManualScreen | WebView | — | — | 非列表，不做（记录） |
+
+### 6.3 修复清单
+
+1. **工程列表缓存提升**（核心）`DeluaNavHost.kt` + `ProjectListScreen.kt`：
+   `projects` 状态与 `refreshProjects`（suspend，IO 读盘）提升至 NavHost 层，
+   导航往返不销毁；页面改为纯消费方，保留唯一触发点
+   `LaunchedEffect(Unit, refreshKey, pendingImportPaths.size) { refresh() }`，
+   下拉刷新 / 创建 / 删除 / 导入完成共用同一 `refresh`。
+   返回列表时先渲染缓存，后台触发式刷新，空态闪烁与重复全量扫描消除。
+2. **示例页** `ExamplesScreen.kt`：`PullToRefreshBox` 包裹列表，下拉重查已安装状态（isDirectory 检查，同步廉价）。
+3. **插件页** `PluginScreen.kt`：`PullToRefreshBox` 包裹列表与空态；`refresh()` 内 try/finally 驱动 `isRefreshing`。
+4. **宿主权限页** `PermissionScreen.kt`：`PullToRefreshBox` 包裹列表，下拉重建 `buildHostPermissionList`（重查授予状态）。
+5. **文件树** `FileBrowser.kt`（:editor，纯组件）：新增可选 `isRefreshing` / `onRefresh` 参数，非空时启用 `PullToRefreshBox`，缺省保持纯展示；`EditorScreen.kt` 文件对话框接线：抽取 `loadEntries(dir)`，`LaunchedEffect(currentDir)` 与下拉共用，下拉重扫当前目录。
+6. **R1 边界**：`:editor` 的 FileBrowser 改动零宿主依赖（刷新回调由宿主注入），`rg` 验证零命中。
+
+### 6.4 设备验证（x64 模拟器，`assembleX64Debug` 新装）
+
+- **设置往返**（列表 → 设置 → 返回）：83 帧，2 帧超 16.7ms（18.7 / 20.9ms，转场动画帧），
+  无重建帧；修复前返回帧含空态渲染 + IO 全量重扫。
+- **编辑器往返**（列表 → demo → 返回）：72 帧，0 卡顿，max 3.7ms。
+- **下拉刷新**：工程列表 / 示例 / 插件 / 宿主权限 / 文件树对话框五处逐一滑动触发，
+  `AndroidRuntime` 全空（零崩溃）；插件页空态下拉、文件树对话框（dkjson.lua/init.lua/main.lua）下拉均正常。
+- 返回列表后 uiautomator 断言 6 个工程行完整渲染（demo/kleinbottle/DemoProject/TestJson/hello/listview）。
