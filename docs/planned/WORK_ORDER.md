@@ -234,6 +234,39 @@
 | ACC-003 | APK 中不包含样例工程文件 | `unzip -l app/build/outputs/apk/*.apk \| grep samples` 无输出 |
 | ACC-004 | 首次安装并启动后，`/storage/emulated/0/AndroLua/project/` 目录为空 | 设备上 `ls /storage/emulated/0/AndroLua/project/` 为空 |
 
+##### 验收记录（2026-08-01 完成）
+
+| # | 结果 | 说明 |
+|---|------|------|
+| ACC-001 | ✅ | `Test-Path app/src/main/assets/samples` → `False`（目录已删除） |
+| ACC-002 | ✅ | `DeluaApp.kt` 无 `extractSamples` |
+| ACC-003 | ✅ | APK 内仅 `assets/examples/*.alp`（6 个），无 `samples` 条目 |
+| ACC-004 | ✅ | 全新安装启动后 `project/` 为空（随后由示例界面导入产生 6 工程） |
+
+##### 扩展范围（本工单执行时新增）
+
+原工单仅要求"删除内置样例工程"。实际落地为**示例资产化 + 示例导入界面**，见 WP-003+（同批次）：
+
+- 新增 `build-scripts/examples-src/`（示例源，4 个迁移 + 2 个新增：hello、listview）
+- 新增 `build-scripts/make-examples.ps1`（`.alp` 生成脚本，PowerShell .NET zip）
+- `app/src/main/assets/examples/`：6 个内置 `.alp`（demo / DemoProject / kleinbottle / TestJson / hello / listview）
+- 新增 `ExamplesScreen.kt`：示例列表、已导入徽标、导入/重新导入按钮（复用 `AlpManager.import`）
+- `DeluaNavHost.kt` 新增 `Routes.EXAMPLES`；`ProjectListScreen.kt` 顶栏新增示例入口（MenuBook 图标）
+- 中英文字符串（`values/strings.xml`、`values-zh/strings.xml`）
+
+双端验证（pro / delua，x64 模拟器 ADB）：6 示例全部导入成功并运行对比，日志逐字一致：
+
+| 示例 | delua 结果 | pro 对比 |
+|------|-----------|---------|
+| demo | `Runtime error: length=16; index=16`（工程自身 md5 越界 bug） | 逐字一致（含行号） |
+| DemoProject | 19 行输出（含信息页动态数据） | 逐字一致 |
+| hello | layout loaded + button clicked | 逐字一致 |
+| listview | adapter set, 20 items + clicked Item 4 | 逐字一致 |
+| kleinbottle | OpenGL 静默渲染，25s+ 无崩溃 | 一致 |
+| TestJson | JSON 树查看器静默运行 + 交互冒烟 | 一致 |
+
+**过程教训（写入知识库 ENVIRONMENT.md）**：listview 首版数据元素为字符串导致 `LuaAdapter` 双端 ClassCastException，修复为 LuaTable 后需**重新生成 .alp 并重装**（首次导入过旧包）；模拟器写 /sdcard 需 `appops set ... MANAGE_EXTERNAL_STORAGE allow`。
+
 ---
 
 #### WP-004 修复构建脚本错误处理

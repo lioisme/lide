@@ -14,6 +14,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.FileDownload
 import androidx.compose.material.icons.filled.FileUpload
 import androidx.compose.material.icons.filled.Folder
+import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -41,6 +42,7 @@ fun ProjectListScreen(
     onProjectClick: (Project) -> Unit,
     onProjectInfoClick: (Project) -> Unit = {},
     onSettingsClick: () -> Unit,
+    onExamplesClick: () -> Unit = {},
     refreshKey: Int = 0,
     pendingImportPaths: List<String> = emptyList(),
 ) {
@@ -152,6 +154,9 @@ fun ProjectListScreen(
             TopAppBar(
                 title = { Text("delua", fontWeight = FontWeight.Medium) },
                 actions = {
+                    IconButton(onClick = onExamplesClick) {
+                        Icon(Icons.Default.MenuBook, contentDescription = stringResource(R.string.examples))
+                    }
                     IconButton(onClick = {
                         importLauncher.launch(arrayOf("application/zip", "application/octet-stream"))
                     }) {

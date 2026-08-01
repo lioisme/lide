@@ -64,3 +64,21 @@ adb shell am start -a android.intent.action.VIEW -d "file:///storage/emulated/0/
 
 `docs/reference/libs/`：BaiduMTJ、SmartRefreshLayout、umeng 等。
 编译方法见 `TECHNIQUES.md §5`。
+
+## 8. 模拟器坑位（2026-08-01 实测）
+
+- **写 /sdcard 报 EPERM = 缺 `MANAGE_EXTERNAL_STORAGE`**（appops 默认 `default`，应用不可写共享存储任意路径）。重装（`adb install -r`）或首次安装后必须：
+  `adb shell appops set com.lioisme.delua MANAGE_EXTERNAL_STORAGE allow`
+  症状：`ZipUtil` 解包文件 `FileOutputStream` 抛 `EPERM`（目录能建、文件写不进），`appops get` 可见 `rejectTime`。Android 11+ 共享存储文件属主 `u0_a99`（media_provider）属正常现象，**不是**属主 bug。
+- **`adb exec-out screencap -p > file` 在 Windows 下损坏 PNG**（socket 二进制损坏）。改用两步：`adb shell screencap -p /sdcard/x.png; adb pull /sdcard/x.png`。
+- **`adb uninstall <pkg>` 可能报 `DELETE_FAILED_INTERNAL_ERROR`**（模拟器状态问题）。用 `adb install -r` 覆盖安装即可。
+- **`adb install -r` 保留 appops 与 /sdcard 工程数据**（数据隔离，卸载才清）。实测重装后 `MANAGE_EXTERNAL_STORAGE` 仍为 allow。
+- **uiautomator dump 中文文本在 PowerShell 控制台乱码**，但 `bounds` 可用；文本定位不可靠时按坐标点击。大截图无法内嵌模型分析，验证以 UI dump + logcat 为准。
+- **删除 host 测试工件**：PowerShell 非交互模式 `Remove-Item` 受限，用 `cmd /c "del /q <path> 2>nul"`。
+
+## 9. 示例 .alp 资产与导入
+
+- 资产源：`build-scripts/examples-src/`（6 工程）；生成：`build-scripts/make-examples.ps1` → `app/src/main/assets/examples/*.alp`。
+- **改了示例源必须重新生成 .alp 并重建 APK 重装**，否则导入的是旧内容（实测教训：listview 数据元素修成 LuaTable 后未重新生成，delua 端复现 pro 同款 ClassCastException；重新生成 + 重装 + 重新导入后双端一致）。
+- 导入目录名由 init.lua 的 `appname` 决定，与 .alp 文件名无关（例：`TestJson.alp` → 工程目录 `TestJson/`，appname `com.mycompany.myapp3`）。
+- 导入覆盖语义：重新导入会覆盖已存在目录内容（实测 listview 覆盖导入生效）。

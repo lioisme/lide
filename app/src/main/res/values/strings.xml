@@ -145,6 +145,26 @@
     <string name="plugin_version">v%1$s</string>
     <string name="plugin_version_author">v%1$s by %2$s</string>
 
+    <!-- Examples -->
+    <string name="examples">Examples</string>
+    <string name="examples_subtitle">Built-in .alp examples. Import one to add it to your project list.</string>
+    <string name="examples_import">Import</string>
+    <string name="examples_reimport">Re-import</string>
+    <string name="examples_installed">Installed</string>
+    <string name="examples_import_success">Example imported</string>
+    <string name="example_name_demo">demo</string>
+    <string name="example_desc_demo">ListView + dkjson HTTP request demo</string>
+    <string name="example_name_demoproject">DemoProject</string>
+    <string name="example_desc_demoproject">Multi-page project with libs/ dex loading</string>
+    <string name="example_name_hello">hello</string>
+    <string name="example_desc_hello">Hello world with loadlayout</string>
+    <string name="example_name_kleinbottle">kleinbottle</string>
+    <string name="example_desc_kleinbottle">OpenGL Klein bottle 3D rendering</string>
+    <string name="example_name_listview">listview</string>
+    <string name="example_desc_listview">ListView with LuaAdapter</string>
+    <string name="example_name_testjson">TestJson</string>
+    <string name="example_desc_testjson">dkjson encode/decode tests</string>
+
 
     <string name="cannot_read_file">Cannot read file</string>
     <string name="error_prefix">Error: %1$s</string>

@@ -12,7 +12,6 @@ class DeluaApp : LuaApplication() {
         super.onCreate()
         SettingsManager.init(this)
         LocaleManager.init(this)
-        extractSamples()
         extractExamplePlugin()
         extractLayoutTemplates()
         extractLuadoc()
@@ -31,26 +30,6 @@ class DeluaApp : LuaApplication() {
     override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
         super.onConfigurationChanged(newConfig)
         LocaleManager.init(this)
-    }
-
-    /**
-     * 内置示例工程：目标目录已存在即跳过（不覆盖用户修改；用户删除后也不再复活）。
-     * 版本化更新由宿主发版时的"改名 + 新示例"策略承担，避免无条件覆盖。
-     */
-    private fun extractSamples() {
-        val projectDir = File(luaExtDir, "project")
-        projectDir.mkdirs()
-        try {
-            val sampleNames = assets.list("samples") ?: return
-            for (sampleName in sampleNames) {
-                val outDir = File(projectDir, sampleName)
-                if (outDir.exists()) continue
-                outDir.mkdirs()
-                copyAssetDir("samples/$sampleName", outDir)
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
     }
 
     /** 示例插件（G4 收口）：asset 中的 plugin.json 配套 main.lua 提取到 plugin/example/，已存在即跳过。 */
@@ -83,7 +62,7 @@ class DeluaApp : LuaApplication() {
         }
     }
 
-    /** 递归复制 assets 目录（"子目录"判定与 extractSamples 历史逻辑一致）。 */
+    /** 递归复制 assets 目录。 */
     private fun copyAssetDir(assetDir: String, outDir: File) {
         val entries = assets.list(assetDir) ?: return
         outDir.mkdirs()

@@ -111,6 +111,26 @@
     <string name="plugin_version">v%1$s</string>
     <string name="plugin_version_author">v%1$s，作者 %2$s</string>
 
+    <!-- Examples -->
+    <string name="examples">示例</string>
+    <string name="examples_subtitle">内置 .alp 示例，导入后即可出现在工程列表中。</string>
+    <string name="examples_import">导入</string>
+    <string name="examples_reimport">重新导入</string>
+    <string name="examples_installed">已导入</string>
+    <string name="examples_import_success">示例已导入</string>
+    <string name="example_name_demo">demo</string>
+    <string name="example_desc_demo">ListView + dkjson 网络请求示例</string>
+    <string name="example_name_demoproject">DemoProject</string>
+    <string name="example_desc_demoproject">多页面工程 + libs 目录 dex 加载示例</string>
+    <string name="example_name_hello">hello</string>
+    <string name="example_desc_hello">loadlayout 入门示例</string>
+    <string name="example_name_kleinbottle">kleinbottle</string>
+    <string name="example_desc_kleinbottle">OpenGL 克莱因瓶 3D 渲染示例</string>
+    <string name="example_name_listview">listview</string>
+    <string name="example_desc_listview">LuaAdapter 列表绑定示例</string>
+    <string name="example_name_testjson">TestJson</string>
+    <string name="example_desc_testjson">dkjson 编解码测试</string>
+
 
     <string name="cannot_read_file">无法读取文件</string>
     <string name="error_prefix">错误：%1$s</string>

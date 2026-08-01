@@ -16,6 +16,7 @@ import com.lioisme.delua.model.Project
 import com.lioisme.delua.project.ProjectManager
 import com.lioisme.delua.ui.screen.BuildApkScreen
 import com.lioisme.delua.ui.screen.EditorScreen
+import com.lioisme.delua.ui.screen.ExamplesScreen
 import com.lioisme.delua.ui.screen.HostPermissionScreen
 import com.lioisme.delua.ui.screen.LuaManualScreen
 import com.lioisme.delua.ui.screen.ProjectInfoScreen
@@ -37,6 +38,7 @@ object Routes {
     const val BUILD_APK = "buildapk?projectName={projectName}&projectPath={projectPath}"
     const val PLUGINS = "plugins"
     const val MANUAL = "manual"
+    const val EXAMPLES = "examples"
 
     fun editor(project: Project): String {
         return "editor/${enc(project.name)}/${enc(project.path)}?fileName=${enc(project.mainFile)}"
@@ -105,6 +107,9 @@ fun DeluaNavHost(
                 onSettingsClick = {
                     navController.navigate(Routes.SETTINGS)
                 },
+                onExamplesClick = {
+                    navController.navigate(Routes.EXAMPLES)
+                },
                 refreshKey = projectInfoVersion,
                 pendingImportPaths = pendingImportPaths,
             )
@@ -162,6 +167,11 @@ fun DeluaNavHost(
         }
         slideComposable(route = Routes.MANUAL) {
             LuaManualScreen(
+                onBack = { navController.popBackStack() }
+            )
+        }
+        slideComposable(route = Routes.EXAMPLES) {
+            ExamplesScreen(
                 onBack = { navController.popBackStack() }
             )
         }

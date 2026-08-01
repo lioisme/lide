@@ -86,7 +86,15 @@ object ZipUtil {
             }
             true
         } catch (e: Exception) {
-            android.util.Log.e("ZipUtil", "unzipFromStream failed: ${e.message}")
+            val snapshot = try {
+                val children = destDir.listFiles()?.joinToString { f ->
+                    "${f.name} dir=${f.isDirectory} len=${f.length()}"
+                } ?: "null"
+                "dest=$destDir exists=${destDir.exists()} isDir=${destDir.isDirectory} children=[$children]"
+            } catch (ex: Exception) {
+                "snapshot failed: ${ex.message}"
+            }
+            android.util.Log.e("ZipUtil", "unzipFromStream failed: ${e.message}; $snapshot", e)
             false
         }
     }
