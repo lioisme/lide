@@ -1,0 +1,23 @@
+{
+ "manual_id": 643,
+ "type_name": "JS教程",
+ "manual_name": "屏蔽js自定义UA脚本",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 131,
+ "up": 0,
+ "favorite": 2,
+ "comment": 0,
+ "source_file": "JS教程\\643_屏蔽js自定义UA脚本.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 1,
+ "char_count": 162,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 2250,
+ "type_name": "布局教程",
+ "manual_name": "仿MIUI图库删除dialog",
+ "author": "奥姆",
+ "platform": "Fusion App2",
+ "source_date": "2022年12月26日 10:51:03",
+ "hits": 382,
+ "up": 6,
+ "favorite": 20,
+ "comment": 0,
+ "source_file": "布局教程\\2250_仿MIUI图库删除dialog.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 12,
+ "char_count": 300,
+ "confidence": "static_review"
+}

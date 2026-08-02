@@ -1,0 +1,23 @@
+{
+ "manual_id": 752,
+ "type_name": "Androlua教程",
+ "manual_name": "SM.MS上传图片",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 470,
+ "up": 2,
+ "favorite": 16,
+ "comment": 3,
+ "source_file": "Androlua教程\\752_SM.MS上传图片.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

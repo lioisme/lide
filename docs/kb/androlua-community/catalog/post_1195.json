@@ -1,0 +1,21 @@
+{
+ "manual_id": 1195,
+ "type_name": "实用代码",
+ "manual_name": "判断系统是否开启夜间模式",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年08月28日 10:52:31",
+ "hits": 442,
+ "up": 11,
+ "favorite": 26,
+ "comment": 3,
+ "source_file": "实用代码\\1195_判断系统是否开启夜间模式.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 6,
+ "char_count": 300,
+ "confidence": "static_review"
+}

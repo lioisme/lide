@@ -1,0 +1,21 @@
+{
+ "manual_id": 2422,
+ "type_name": "Lua代码",
+ "manual_name": "Dkjson",
+ "author": "ㄛㄙ飞ㄋ",
+ "platform": "所有环境",
+ "source_date": "2023年02月03日 15:38:16",
+ "hits": 432,
+ "up": 1,
+ "favorite": 7,
+ "comment": 4,
+ "source_file": "Lua代码\\2422_Dkjson.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 17,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 2414,
+ "type_name": "浏览器",
+ "manual_name": "获取网页证书信息",
+ "author": "奥姆",
+ "platform": "所有环境",
+ "source_date": "2023年02月02日 13:30:18",
+ "hits": 347,
+ "up": 7,
+ "favorite": 15,
+ "comment": 6,
+ "source_file": "浏览器\\2414_获取网页证书信息.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 8,
+ "char_count": 300,
+ "confidence": "static_review"
+}

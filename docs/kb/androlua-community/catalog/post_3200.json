@@ -1,0 +1,21 @@
+{
+ "manual_id": 3200,
+ "type_name": "小游戏",
+ "manual_name": "生姜生日~",
+ "author": "智",
+ "platform": "所有环境",
+ "source_date": "2023年08月05日 06:31:59",
+ "hits": 272,
+ "up": 4,
+ "favorite": 6,
+ "comment": 9,
+ "source_file": "小游戏\\3200_生姜生日~.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 10,
+ "char_count": 300,
+ "confidence": "static_review"
+}

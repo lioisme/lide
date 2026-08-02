@@ -1,0 +1,23 @@
+{
+ "manual_id": 2883,
+ "type_name": "布局教程",
+ "manual_name": "歌词滚动滑动显示",
+ "author": "雪子机器人开发",
+ "platform": "Fusion App1",
+ "source_date": "2023年05月31日 18:49:42",
+ "hits": 544,
+ "up": 3,
+ "favorite": 12,
+ "comment": 1,
+ "source_file": "布局教程\\2883_歌词滚动滑动显示.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 20,
+ "char_count": 300,
+ "confidence": "static_review"
+}

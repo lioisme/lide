@@ -1,0 +1,23 @@
+{
+ "manual_id": 2248,
+ "type_name": "Intent通信",
+ "manual_name": "调用特定程序打开链接",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2022年12月25日 13:29:15",
+ "hits": 393,
+ "up": 10,
+ "favorite": 27,
+ "comment": 4,
+ "source_file": "Intent通信\\2248_调用特定程序打开链接.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 12,
+ "char_count": 300,
+ "confidence": "static_review"
+}

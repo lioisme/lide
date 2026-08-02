@@ -1,0 +1,21 @@
+{
+ "manual_id": 2249,
+ "type_name": "布局教程",
+ "manual_name": "简单的多功能布局",
+ "author": "奥姆",
+ "platform": "所有环境",
+ "source_date": "2022年12月26日 00:19:18",
+ "hits": 631,
+ "up": 10,
+ "favorite": 38,
+ "comment": 2,
+ "source_file": "布局教程\\2249_简单的多功能布局.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 11,
+ "char_count": 300,
+ "confidence": "static_review"
+}

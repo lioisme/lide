@@ -1,0 +1,21 @@
+{
+ "manual_id": 2814,
+ "type_name": "Lua代码",
+ "manual_name": "debug.getInfo",
+ "author": "Cheese",
+ "platform": "所有环境",
+ "source_date": "2023年05月18日 14:00:04",
+ "hits": 150,
+ "up": 0,
+ "favorite": 3,
+ "comment": 5,
+ "source_file": "Lua代码\\2814_debug.getInfo.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 6,
+ "char_count": 107,
+ "confidence": "static_review"
+}

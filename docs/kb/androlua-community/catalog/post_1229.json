@@ -1,0 +1,21 @@
+{
+ "manual_id": 1229,
+ "type_name": "控件属性",
+ "manual_name": "自定义ViewPager左右滑动",
+ "author": "jies辰",
+ "platform": "",
+ "source_date": "2021年12月19日 18:08:02",
+ "hits": 468,
+ "up": 4,
+ "favorite": 12,
+ "comment": 0,
+ "source_file": "控件属性\\1229_自定义ViewPager左右滑动.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 11,
+ "char_count": 270,
+ "confidence": "static_review"
+}

@@ -1,0 +1,23 @@
+{
+ "manual_id": 2826,
+ "type_name": "Androlua教程",
+ "manual_name": "获取现在运行的是什么程序",
+ "author": "诶害",
+ "platform": "所有环境",
+ "source_date": "2023年05月21日 02:21:27",
+ "hits": 270,
+ "up": 4,
+ "favorite": 15,
+ "comment": 2,
+ "source_file": "Androlua教程\\2826_获取现在运行的是什么程序.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 5,
+ "char_count": 300,
+ "confidence": "static_review"
+}

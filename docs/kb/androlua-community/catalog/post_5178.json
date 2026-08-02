@@ -1,0 +1,21 @@
+{
+ "manual_id": 5178,
+ "type_name": "消息通知",
+ "manual_name": "发送短信",
+ "author": "鸡汤",
+ "platform": "AndLua",
+ "source_date": "2026年01月18日 10:56:21",
+ "hits": 131,
+ "up": 0,
+ "favorite": 0,
+ "comment": 0,
+ "source_file": "消息通知\\5178_发送短信.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 15,
+ "char_count": 300,
+ "confidence": "static_review"
+}

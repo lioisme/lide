@@ -1,0 +1,21 @@
+{
+ "manual_id": 1698,
+ "type_name": "网络操作",
+ "manual_name": "壁纸",
+ "author": "碳昔",
+ "platform": "所有环境",
+ "source_date": "2022年08月11日 07:40:38",
+ "hits": 1157,
+ "up": 7,
+ "favorite": 28,
+ "comment": 5,
+ "source_file": "网络操作\\1698_壁纸.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 11,
+ "char_count": 300,
+ "confidence": "static_review"
+}

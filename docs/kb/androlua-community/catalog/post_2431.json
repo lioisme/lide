@@ -1,0 +1,21 @@
+{
+ "manual_id": 2431,
+ "type_name": "字符处理",
+ "manual_name": "Lua string.split 分割字符串实现",
+ "author": "ABVerterX",
+ "platform": "所有环境",
+ "source_date": "2023年02月04日 15:22:02",
+ "hits": 170,
+ "up": 2,
+ "favorite": 3,
+ "comment": 0,
+ "source_file": "字符处理\\2431_Lua_string.split_分割字符串实现.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 14,
+ "char_count": 300,
+ "confidence": "static_review"
+}

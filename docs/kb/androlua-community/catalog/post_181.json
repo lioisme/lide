@@ -1,0 +1,21 @@
+{
+ "manual_id": 181,
+ "type_name": "控件属性",
+ "manual_name": "设置activity背景颜色",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 78,
+ "up": 0,
+ "favorite": 0,
+ "comment": 0,
+ "source_file": "控件属性\\181_设置activity背景颜色.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 7,
+ "char_count": 300,
+ "confidence": "static_review"
+}

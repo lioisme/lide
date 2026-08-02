@@ -1,0 +1,21 @@
+{
+ "manual_id": 5094,
+ "type_name": "网络爬虫",
+ "manual_name": "Pexels无版权4K图片解析封装",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2025年10月18日 13:29:07",
+ "hits": 215,
+ "up": 0,
+ "favorite": 1,
+ "comment": 0,
+ "source_file": "网络爬虫\\5094_Pexels无版权4K图片解析封装.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 17,
+ "char_count": 300,
+ "confidence": "static_review"
+}

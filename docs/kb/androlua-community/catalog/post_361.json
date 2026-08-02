@@ -1,0 +1,23 @@
+{
+ "manual_id": 361,
+ "type_name": "Lua代码",
+ "manual_name": "比较操作符",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 56,
+ "up": 0,
+ "favorite": 2,
+ "comment": 0,
+ "source_file": "Lua代码\\361_比较操作符.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 9,
+ "char_count": 86,
+ "confidence": "static_review"
+}

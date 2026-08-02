@@ -1,0 +1,21 @@
+{
+ "manual_id": 3804,
+ "type_name": "Lua代码",
+ "manual_name": "进制转换",
+ "author": "清风",
+ "platform": "所有环境",
+ "source_date": "2024年01月28日 08:39:12",
+ "hits": 144,
+ "up": 3,
+ "favorite": 4,
+ "comment": 0,
+ "source_file": "Lua代码\\3804_进制转换.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 14,
+ "char_count": 300,
+ "confidence": "static_review"
+}

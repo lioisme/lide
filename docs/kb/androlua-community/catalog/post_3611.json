@@ -1,0 +1,24 @@
+{
+ "manual_id": 3611,
+ "type_name": "网络请求",
+ "manual_name": "123云盘直链解析",
+ "author": "慕尘空.",
+ "platform": "所有环境",
+ "source_date": "2023年11月28日 16:33:23",
+ "hits": 349,
+ "up": 3,
+ "favorite": 17,
+ "comment": 1,
+ "source_file": "网络请求\\3611_123云盘直链解析.lua",
+ "kind": "fragment",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "truncated_tail",
+  "incomplete_fragment"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 17,
+ "char_count": 300,
+ "confidence": "static_review"
+}

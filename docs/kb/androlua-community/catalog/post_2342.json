@@ -1,0 +1,21 @@
+{
+ "manual_id": 2342,
+ "type_name": "小工具",
+ "manual_name": "动能手电",
+ "author": "智",
+ "platform": "所有环境",
+ "source_date": "2023年01月18日 17:38:19",
+ "hits": 432,
+ "up": 13,
+ "favorite": 22,
+ "comment": 13,
+ "source_file": "小工具\\2342_动能手电.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 8,
+ "char_count": 300,
+ "confidence": "static_review"
+}

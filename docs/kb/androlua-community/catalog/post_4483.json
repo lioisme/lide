@@ -1,0 +1,21 @@
+{
+ "manual_id": 4483,
+ "type_name": "安卓教程",
+ "manual_name": "WindowInsets 之 输入法适配",
+ "author": "⑨φZL",
+ "platform": "所有环境",
+ "source_date": "2025年01月24日 11:21:46",
+ "hits": 530,
+ "up": 6,
+ "favorite": 18,
+ "comment": 2,
+ "source_file": "安卓教程\\4483_WindowInsets_之_输入法适配.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 5,
+ "char_count": 300,
+ "confidence": "static_review"
+}

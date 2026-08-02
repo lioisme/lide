@@ -41,13 +41,14 @@ public:
 
     const std::vector<std::string>& getClipIDList() const { return mClipIDList; }
     int getAverageDrawOrder() const { return mAverageDrawOrder; }
+    const std::vector<int>& getPivotDrawOrders() const { return mPivotDrawOrders; }
 
 
 protected:
 
     const Id* mId = nullptr;
     const Id* mTargetId = nullptr;
-    std::unique_ptr<PivotManager> mPivotMgr;
+    PivotManager* mPivotMgr = nullptr;
     int mAverageDrawOrder = 0;
     std::vector<int> mPivotDrawOrders;
     std::vector<float> mPivotOpacities;

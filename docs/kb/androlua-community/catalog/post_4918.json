@@ -1,0 +1,24 @@
+{
+ "manual_id": 4918,
+ "type_name": "Lua代码",
+ "manual_name": "函数的ContextReceiver",
+ "author": "NekoLaska",
+ "platform": "所有环境",
+ "source_date": "2025年07月14日 12:08:42",
+ "hits": 174,
+ "up": 0,
+ "favorite": 0,
+ "comment": 0,
+ "source_file": "Lua代码\\4918_函数的ContextReceiver.lua",
+ "kind": "fragment",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "truncated_tail",
+  "incomplete_fragment"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

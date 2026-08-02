@@ -330,7 +330,9 @@ void LAppModel::drag(float x, float y) {
     float h = (float)mMatrixManager.getHeight();
     float sx = (x - w * 0.5f) * 2.0f / h;
     float sy = (y - h * 0.5f) * -2.0f / h;
-    mDragMgr.set(sx, sy);
+    // Lua 侧驱动 setDrag 逐帧（自带 TargetPoint 平滑），这里直接落地，避免
+    // update() 再用内部 mDragMgr 覆盖（内部目标无法被 LAppModel 经 Lua 喂入）。
+    setDrag(sx, sy);
 }
 bool LAppModel::isMotionFinished() const { return mMainMotionMgr->isFinished(); }
 void LAppModel::setOffset(float dx, float dy) { mMatrixManager.setOffset(dx, dy); }
@@ -364,9 +366,10 @@ void LAppModel::setPartOpacity(int index, float val) {
     mLive2DModel->getModelContext()->setPartsOpacity(index, val);
 }
 void LAppModel::update() {
-    // Drag smoothing lives in C++ (Lua drives setDrag per frame via dragMgr)
-    mDragMgr.update(0.016f);
-    setDrag(mDragMgr.getX(), mDragMgr.getY());
+    // 注意：drag 平滑由 Lua 侧 TargetPoint 复刻并在每帧 native.update 之前
+    // setDrag 推入（live2dapp.lua:521）。此处不得再用内部 mDragMgr 覆盖：
+    // mDragMgr 目标只能经 LAppModel::drag() 喂入，Lua 路径从不调用 → 一覆盖
+    // 就把 Lua 的拖动值清零（模型不动）。已删除（2026-08-02 修复）。
 
     // Match v2 Python update() flow
     bool updated = false;

@@ -1,0 +1,21 @@
+{
+ "manual_id": 4128,
+ "type_name": "适配器",
+ "manual_name": "Recyclerview嵌套的展开内容例子",
+ "author": "Haoming",
+ "platform": "所有环境",
+ "source_date": "2024年07月07日 18:28:42",
+ "hits": 800,
+ "up": 9,
+ "favorite": 27,
+ "comment": 0,
+ "source_file": "适配器\\4128_Recyclerview嵌套的展开内容例子.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 12,
+ "char_count": 300,
+ "confidence": "static_review"
+}

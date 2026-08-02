@@ -1,0 +1,21 @@
+{
+ "manual_id": 3109,
+ "type_name": "Lua代码",
+ "manual_name": "线性筛素数",
+ "author": "kamihitoe",
+ "platform": "所有环境",
+ "source_date": "2023年07月20日 20:58:22",
+ "hits": 103,
+ "up": 1,
+ "favorite": 4,
+ "comment": 3,
+ "source_file": "Lua代码\\3109_线性筛素数.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 17,
+ "char_count": 300,
+ "confidence": "static_review"
+}

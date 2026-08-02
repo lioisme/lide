@@ -1,0 +1,23 @@
+{
+ "manual_id": 724,
+ "type_name": "浏览器",
+ "manual_name": "塞班ua屏蔽广告",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 193,
+ "up": 2,
+ "favorite": 10,
+ "comment": 0,
+ "source_file": "浏览器\\724_塞班ua屏蔽广告.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 14,
+ "char_count": 300,
+ "confidence": "static_review"
+}

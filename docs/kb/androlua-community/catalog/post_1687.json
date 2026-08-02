@@ -1,0 +1,24 @@
+{
+ "manual_id": 1687,
+ "type_name": "布局教程",
+ "manual_name": "密码进入子页面",
+ "author": "🌇",
+ "platform": "所有环境",
+ "source_date": "2022年08月08日 21:51:58",
+ "hits": 514,
+ "up": 2,
+ "favorite": 10,
+ "comment": 1,
+ "source_file": "布局教程\\1687_密码进入子页面.lua",
+ "kind": "fragment",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "truncated_tail",
+  "incomplete_fragment"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 16,
+ "char_count": 300,
+ "confidence": "static_review"
+}

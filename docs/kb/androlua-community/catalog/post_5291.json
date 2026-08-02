@@ -1,0 +1,21 @@
+{
+ "manual_id": 5291,
+ "type_name": "小工具",
+ "manual_name": "兴许是一个优雅简约的图片浏览器",
+ "author": "海纳百氚，有容乃大",
+ "platform": "Fusion App2,reOpenLua,OpenLuaX",
+ "source_date": "2026年04月10日 20:39:49",
+ "hits": 450,
+ "up": 5,
+ "favorite": 8,
+ "comment": 1,
+ "source_file": "小工具\\5291_兴许是一个优雅简约的图片浏览器.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 3209,
+ "type_name": "小工具",
+ "manual_name": "使用socket类获取当前设备IP地址（一次优化）",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2023年08月06日 12:56:34",
+ "hits": 315,
+ "up": 2,
+ "favorite": 17,
+ "comment": 9,
+ "source_file": "小工具\\3209_使用socket类获取当前设备IP地址（一次优化）.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 16,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,23 @@
+{
+ "manual_id": 1367,
+ "type_name": "JS教程",
+ "manual_name": "js 网页上文本URL转超链接",
+ "author": "小白·马",
+ "platform": "所有环境",
+ "source_date": "2022年02月10日 10:02:30",
+ "hits": 429,
+ "up": 5,
+ "favorite": 8,
+ "comment": 3,
+ "source_file": "JS教程\\1367_js_网页上文本URL转超链接.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 10,
+ "char_count": 300,
+ "confidence": "static_review"
+}

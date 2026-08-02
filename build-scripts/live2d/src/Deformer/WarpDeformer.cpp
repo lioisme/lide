@@ -17,7 +17,7 @@ void WarpDeformer::read(BinaryReader& br) {
     Deformer::read(br);
     mCol = br.readInt32();
     mRow = br.readInt32();
-    mPivotMgr.reset(br.readObject<PivotManager*>());
+    mPivotMgr = br.readObject<PivotManager*>();
     mPivotPoints = br.readObject<std::vector<std::vector<float>>>();
     Deformer::readOpacity(br);
 }
@@ -33,10 +33,10 @@ void WarpDeformer::setupInterpolate(ModelContext* mc, DeformerContext* dc) {
 
     int pointCount = getPointCount();
     bool success = false;
-    UtInterpolate::interpolatePoints(mc, mPivotMgr.get(), success, pointCount,
+    UtInterpolate::interpolatePoints(mc, mPivotMgr, success, pointCount,
                                      mPivotPoints, wctx->mInterpolatedPoints, 0, 2);
     wctx->setOutsideParam(success);
-    interpolateOpacity(mc, mPivotMgr.get(), wctx, success);
+    interpolateOpacity(mc, mPivotMgr, wctx, success);
 }
 
 bool WarpDeformer::setupTransform(ModelContext* mc, DeformerContext* dc) {

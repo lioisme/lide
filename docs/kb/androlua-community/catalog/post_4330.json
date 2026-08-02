@@ -1,0 +1,21 @@
+{
+ "manual_id": 4330,
+ "type_name": "文件操作",
+ "manual_name": "判断压缩文件(高精度, I guess)",
+ "author": "⁧拾玖⁧‭",
+ "platform": "所有环境",
+ "source_date": "2024年10月26日 19:13:33",
+ "hits": 216,
+ "up": 1,
+ "favorite": 6,
+ "comment": 1,
+ "source_file": "文件操作\\4330_判断压缩文件(高精度,_I_guess).lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 10,
+ "char_count": 300,
+ "confidence": "static_review"
+}

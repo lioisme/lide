@@ -1,0 +1,21 @@
+{
+ "manual_id": 1393,
+ "type_name": "table表",
+ "manual_name": "[合并表] 合并多个顺序 key 的 table",
+ "author": "jies辰",
+ "platform": "所有环境",
+ "source_date": "2022年03月09日 21:59:43",
+ "hits": 140,
+ "up": 1,
+ "favorite": 1,
+ "comment": 0,
+ "source_file": "table表\\1393_[合并表]_合并多个顺序_key_的_table.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 11,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 2898,
+ "type_name": "小工具",
+ "manual_name": "加载直链 lib 库(LuaFileSystem_1.8.0)",
+ "author": "迷糊.",
+ "platform": "Fusion App2",
+ "source_date": "2023年06月04日 12:14:36",
+ "hits": 343,
+ "up": 3,
+ "favorite": 16,
+ "comment": 1,
+ "source_file": "小工具\\2898_加载直链_lib_库(LuaFileSystem_1.8.0).lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 18,
+ "char_count": 300,
+ "confidence": "static_review"
+}

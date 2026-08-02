@@ -1,0 +1,21 @@
+{
+ "manual_id": 3477,
+ "type_name": "Intent通信",
+ "manual_name": "Intent打开应用，并跳转到指定界面(附加Data)",
+ "author": "•⤙•/k",
+ "platform": "所有环境",
+ "source_date": "2023年10月07日 19:35:32",
+ "hits": 528,
+ "up": 9,
+ "favorite": 34,
+ "comment": 4,
+ "source_file": "Intent通信\\3477_Intent打开应用，并跳转到指定界面(附加Data).lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 9,
+ "char_count": 300,
+ "confidence": "static_review"
+}

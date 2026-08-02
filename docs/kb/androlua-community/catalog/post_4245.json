@@ -1,0 +1,21 @@
+{
+ "manual_id": 4245,
+ "type_name": "小工具",
+ "manual_name": "应用缓存管理（水贴重构）",
+ "author": "海纳百氚，有容乃大",
+ "platform": "Fusion App2",
+ "source_date": "2024年09月13日 03:02:56",
+ "hits": 695,
+ "up": 11,
+ "favorite": 36,
+ "comment": 4,
+ "source_file": "小工具\\4245_应用缓存管理（水贴重构）.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 9,
+ "char_count": 300,
+ "confidence": "static_review"
+}

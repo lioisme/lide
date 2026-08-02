@@ -1,0 +1,21 @@
+{
+ "manual_id": 4392,
+ "type_name": "自绘制",
+ "manual_name": "绘制星空和圆缺变化的月亮",
+ "author": "美窝框艺/专业裱画做框",
+ "platform": "所有环境",
+ "source_date": "2024年12月06日 11:16:58",
+ "hits": 699,
+ "up": 10,
+ "favorite": 12,
+ "comment": 8,
+ "source_file": "自绘制\\4392_绘制星空和圆缺变化的月亮.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 8,
+ "char_count": 300,
+ "confidence": "static_review"
+}

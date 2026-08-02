@@ -1,0 +1,21 @@
+{
+ "manual_id": 3706,
+ "type_name": "网络操作",
+ "manual_name": "抖音图集解析",
+ "author": "云梦",
+ "platform": "Fusion App2",
+ "source_date": "2024年01月01日 00:01:53",
+ "hits": 720,
+ "up": 7,
+ "favorite": 28,
+ "comment": 6,
+ "source_file": "网络操作\\3706_抖音图集解析.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 9,
+ "char_count": 300,
+ "confidence": "static_review"
+}

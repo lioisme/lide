@@ -1,0 +1,24 @@
+{
+ "manual_id": 5318,
+ "type_name": "公告",
+ "manual_name": "禁止将陈年旧帖拉到论坛顶部",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2026年05月22日 22:12:59",
+ "hits": 494,
+ "up": 0,
+ "favorite": 1,
+ "comment": 6,
+ "source_file": "公告\\5318_禁止将陈年旧帖拉到论坛顶部.lua",
+ "kind": "announce",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "announcement_no_code",
+  "announcement"
+ ],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 11,
+ "char_count": 300,
+ "confidence": "static_review"
+}

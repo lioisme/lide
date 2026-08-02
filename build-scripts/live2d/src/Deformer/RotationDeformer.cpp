@@ -15,7 +15,7 @@ RotationDeformer::~RotationDeformer() = default;
 
 void RotationDeformer::read(BinaryReader& br) {
     Deformer::read(br);
-    mPivotManager.reset(br.readObject<PivotManager*>());
+    mPivotManager = br.readObject<PivotManager*>();
     auto rawAffines = br.readObject<std::vector<AffineEnt*>>();
     mAffines.reserve(rawAffines.size());
     for (auto* a : rawAffines) mAffines.emplace_back(a);
@@ -34,14 +34,14 @@ void RotationDeformer::setupInterpolate(ModelContext* mc, DeformerContext* dc) {
     bool success = false;
     int pivotCount = mPivotManager->calcPivotValues(mc, success);
     rctx->setOutsideParam(success);
-    interpolateOpacity(mc, mPivotManager.get(), rctx, success);
+    interpolateOpacity(mc, mPivotManager, rctx, success);
 
     auto& pivotIndices = mc->getTempPivotTableIndices();
     auto& pivotT = mc->getTempT();
     mPivotManager->calcPivotIndices(pivotIndices, pivotT, pivotCount);
 
     if (pivotCount <= 0) {
-        auto* a = mAffines[pivotIndices[0]].get();
+        auto* a = mAffines[pivotIndices[0]];
         rctx->mInterpolatedAffine->mOriginX = a->mOriginX;
         rctx->mInterpolatedAffine->mOriginY = a->mOriginY;
         rctx->mInterpolatedAffine->mScaleX = a->mScaleX;
@@ -60,7 +60,7 @@ void RotationDeformer::setupInterpolate(ModelContext* mc, DeformerContext* dc) {
         }
         float ox = 0, oy = 0, sx = 0, sy = 0, rot = 0;
         for (int i = 0; i < tableSize; i++) {
-            auto* a = mAffines[pivotIndices[i]].get();
+            auto* a = mAffines[pivotIndices[i]];
             ox += weights[i] * a->mOriginX; oy += weights[i] * a->mOriginY;
             sx += weights[i] * a->mScaleX; sy += weights[i] * a->mScaleY;
             rot += weights[i] * a->mRotationDeg;
@@ -69,7 +69,7 @@ void RotationDeformer::setupInterpolate(ModelContext* mc, DeformerContext* dc) {
         rctx->mInterpolatedAffine->mScaleX = sx; rctx->mInterpolatedAffine->mScaleY = sy;
         rctx->mInterpolatedAffine->mRotationDeg = rot;
     }
-    auto* ref = mAffines[pivotIndices[0]].get();
+    auto* ref = mAffines[pivotIndices[0]];
     rctx->mInterpolatedAffine->mReflectX = ref->mReflectX;
     rctx->mInterpolatedAffine->mReflectY = ref->mReflectY;
 }

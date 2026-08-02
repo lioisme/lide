@@ -1,0 +1,21 @@
+{
+ "manual_id": 4175,
+ "type_name": "实用代码",
+ "manual_name": "删除iapp病毒文件（修复版）",
+ "author": "Genouka",
+ "platform": "所有环境",
+ "source_date": "2024年08月11日 21:59:42",
+ "hits": 193,
+ "up": 2,
+ "favorite": 4,
+ "comment": 0,
+ "source_file": "实用代码\\4175_删除iapp病毒文件（修复版）.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 9,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 2858,
+ "type_name": "实用代码",
+ "manual_name": "Bitmap设置ColorFilter",
+ "author": "NekoLaska",
+ "platform": "所有环境",
+ "source_date": "2023年05月25日 22:05:46",
+ "hits": 409,
+ "up": 5,
+ "favorite": 10,
+ "comment": 4,
+ "source_file": "实用代码\\2858_Bitmap设置ColorFilter.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 6,
+ "char_count": 300,
+ "confidence": "static_review"
+}

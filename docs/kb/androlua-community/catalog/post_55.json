@@ -1,0 +1,21 @@
+{
+ "manual_id": 55,
+ "type_name": "编码转换",
+ "manual_name": "Base64编码解码",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 297,
+ "up": 1,
+ "favorite": 15,
+ "comment": 0,
+ "source_file": "编码转换\\55_Base64编码解码.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 9,
+ "char_count": 300,
+ "confidence": "static_review"
+}

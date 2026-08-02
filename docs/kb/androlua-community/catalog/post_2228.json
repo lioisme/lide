@@ -1,0 +1,21 @@
+{
+ "manual_id": 2228,
+ "type_name": "布局教程",
+ "manual_name": "两个仿MIUIDialog （三次优化）",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2022年12月20日 12:56:54",
+ "hits": 1626,
+ "up": 32,
+ "favorite": 95,
+ "comment": 9,
+ "source_file": "布局教程\\2228_两个仿MIUIDialog_（三次优化）.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 16,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,23 @@
+{
+ "manual_id": 1216,
+ "type_name": "布局教程",
+ "manual_name": "图片框控件属性",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2021年12月12日 14:25:42",
+ "hits": 203,
+ "up": 0,
+ "favorite": 6,
+ "comment": 0,
+ "source_file": "布局教程\\1216_图片框控件属性.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 12,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 4888,
+ "type_name": "Lua代码",
+ "manual_name": "滚动数字",
+ "author": "易富焙",
+ "platform": "所有环境",
+ "source_date": "2025年07月07日 11:48:48",
+ "hits": 321,
+ "up": 3,
+ "favorite": 11,
+ "comment": 0,
+ "source_file": "Lua代码\\4888_滚动数字.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 15,
+ "char_count": 300,
+ "confidence": "static_review"
+}

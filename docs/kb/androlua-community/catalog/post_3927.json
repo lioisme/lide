@@ -1,0 +1,24 @@
+{
+ "manual_id": 3927,
+ "type_name": "Lua代码",
+ "manual_name": "主题色切换动画",
+ "author": "琪琪子",
+ "platform": "AndLua",
+ "source_date": "2024年02月25日 22:07:06",
+ "hits": 697,
+ "up": 17,
+ "favorite": 56,
+ "comment": 4,
+ "source_file": "Lua代码\\3927_主题色切换动画.lua",
+ "kind": "text_note",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "short_text",
+  "global_pollution"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 15,
+ "char_count": 300,
+ "confidence": "static_review"
+}

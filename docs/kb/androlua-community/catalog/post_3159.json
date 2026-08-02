@@ -1,0 +1,21 @@
+{
+ "manual_id": 3159,
+ "type_name": "实用代码",
+ "manual_name": "仿EMUI9的认证标识",
+ "author": "Rain·澜",
+ "platform": "所有环境",
+ "source_date": "2023年07月28日 22:42:56",
+ "hits": 234,
+ "up": 3,
+ "favorite": 7,
+ "comment": 6,
+ "source_file": "实用代码\\3159_仿EMUI9的认证标识.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 16,
+ "char_count": 300,
+ "confidence": "static_review"
+}

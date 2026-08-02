@@ -1,0 +1,24 @@
+{
+ "manual_id": 3598,
+ "type_name": "基础代码",
+ "manual_name": "string元方法扩展",
+ "author": "kamihitoe",
+ "platform": "所有环境",
+ "source_date": "2023年11月20日 09:00:39",
+ "hits": 224,
+ "up": 3,
+ "favorite": 6,
+ "comment": 1,
+ "source_file": "基础代码\\3598_string元方法扩展.lua",
+ "kind": "fragment",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "truncated_tail",
+  "incomplete_fragment"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 12,
+ "char_count": 300,
+ "confidence": "static_review"
+}

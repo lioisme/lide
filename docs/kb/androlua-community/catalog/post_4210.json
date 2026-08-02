@@ -1,0 +1,25 @@
+{
+ "manual_id": 4210,
+ "type_name": "网络爬虫",
+ "manual_name": "豆瓣2026热播排行榜",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "Fusion App2",
+ "source_date": "2024年08月22日 18:19:39",
+ "hits": 1452,
+ "up": 9,
+ "favorite": 31,
+ "comment": 5,
+ "source_file": "网络爬虫\\4210_豆瓣2026热播排行榜.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound",
+  "chinese_identifier"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 9,
+ "char_count": 300,
+ "confidence": "static_review"
+}

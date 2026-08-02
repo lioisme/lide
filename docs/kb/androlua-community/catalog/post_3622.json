@@ -1,0 +1,23 @@
+{
+ "manual_id": 3622,
+ "type_name": "Lua教程",
+ "manual_name": " 倡议:合理使用元表和debug库",
+ "author": "",
+ "platform": "所有环境",
+ "source_date": "2023年12月02日 11:51:24",
+ "hits": 223,
+ "up": 4,
+ "favorite": 0,
+ "comment": 3,
+ "source_file": "Lua教程\\3622_倡议_合理使用元表和debug库.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 18,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 3103,
+ "type_name": "小工具",
+ "manual_name": "一个关于时间的语录小卡片（优化重制）",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2023年07月19日 16:23:43",
+ "hits": 1046,
+ "up": 19,
+ "favorite": 63,
+ "comment": 13,
+ "source_file": "小工具\\3103_一个关于时间的语录小卡片（优化重制）.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 15,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,24 @@
+{
+ "manual_id": 2639,
+ "type_name": "Lua代码",
+ "manual_name": "抽人",
+ "author": "奥姆",
+ "platform": "所有环境",
+ "source_date": "2023年04月09日 15:52:46",
+ "hits": 280,
+ "up": 4,
+ "favorite": 6,
+ "comment": 8,
+ "source_file": "Lua代码\\2639_抽人.lua",
+ "kind": "text_note",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "short_text",
+  "global_pollution"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 17,
+ "char_count": 300,
+ "confidence": "static_review"
+}

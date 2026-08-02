@@ -1,0 +1,23 @@
+{
+ "manual_id": 1341,
+ "type_name": "安卓教程",
+ "manual_name": "Snackbar消息栏组件",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "Fusion App2",
+ "source_date": "2022年01月29日 16:49:54",
+ "hits": 695,
+ "up": 8,
+ "favorite": 27,
+ "comment": 9,
+ "source_file": "安卓教程\\1341_Snackbar消息栏组件.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 12,
+ "char_count": 300,
+ "confidence": "static_review"
+}

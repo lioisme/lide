@@ -1,0 +1,23 @@
+{
+ "manual_id": 3143,
+ "type_name": "小工具",
+ "manual_name": "永久图床的可行方法",
+ "author": "小孩，别闹！",
+ "platform": "Fusion App2",
+ "source_date": "2023年07月25日 11:18:55",
+ "hits": 490,
+ "up": 6,
+ "favorite": 26,
+ "comment": 6,
+ "source_file": "小工具\\3143_永久图床的可行方法.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "obsolete",
+ "flags": [
+  "obsolete"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 19,
+ "char_count": 300,
+ "confidence": "static_review"
+}

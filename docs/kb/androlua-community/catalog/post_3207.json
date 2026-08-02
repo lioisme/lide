@@ -1,0 +1,24 @@
+{
+ "manual_id": 3207,
+ "type_name": "小工具",
+ "manual_name": "正则匹配可视化工具",
+ "author": "苦小怕",
+ "platform": "Fusion App2,reOpenLua",
+ "source_date": "2023年08月05日 21:48:18",
+ "hits": 822,
+ "up": 13,
+ "favorite": 47,
+ "comment": 11,
+ "source_file": "小工具\\3207_正则匹配可视化工具.lua",
+ "kind": "fragment",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "truncated_tail",
+  "incomplete_fragment"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

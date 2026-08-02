@@ -1,0 +1,21 @@
+{
+ "manual_id": 1202,
+ "type_name": "字符处理",
+ "manual_name": "string.sub截取UTF8 中英混合字符",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2021年04月11日 11:41:14",
+ "hits": 200,
+ "up": 1,
+ "favorite": 4,
+ "comment": 0,
+ "source_file": "字符处理\\1202_string.sub截取UTF8_中英混合字符.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 6,
+ "char_count": 300,
+ "confidence": "static_review"
+}

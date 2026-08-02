@@ -1,0 +1,21 @@
+{
+ "manual_id": 5106,
+ "type_name": "网络爬虫",
+ "manual_name": "SaveTwitter视频图集文章解析工具",
+ "author": "海纳百氚，有容乃大",
+ "platform": "Fusion App2,reOpenLua,OpenLuaX",
+ "source_date": "2025年10月21日 16:41:10",
+ "hits": 324,
+ "up": 0,
+ "favorite": 8,
+ "comment": 0,
+ "source_file": "网络爬虫\\5106_SaveTwitter视频图集文章解析工具.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 16,
+ "char_count": 300,
+ "confidence": "static_review"
+}

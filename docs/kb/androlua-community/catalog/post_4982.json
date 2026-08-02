@@ -1,0 +1,24 @@
+{
+ "manual_id": 4982,
+ "type_name": "Layout布局",
+ "manual_name": "播放弹幕",
+ "author": "清风与酒。",
+ "platform": "Fusion App2",
+ "source_date": "2025年08月13日 23:32:18",
+ "hits": 384,
+ "up": 7,
+ "favorite": 20,
+ "comment": 0,
+ "source_file": "Layout布局\\4982_播放弹幕.lua",
+ "kind": "fragment",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "truncated_tail",
+  "incomplete_fragment"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 16,
+ "char_count": 300,
+ "confidence": "static_review"
+}

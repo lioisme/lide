@@ -1,0 +1,21 @@
+{
+ "manual_id": 3448,
+ "type_name": "布局教程",
+ "manual_name": "ViewPager与TabLayout联动v2",
+ "author": "海纳百氚，有容乃大",
+ "platform": "AndroLua,Fusion App2,reOpenLua,OpenLuaX",
+ "source_date": "2023年10月02日 08:16:11",
+ "hits": 1147,
+ "up": 10,
+ "favorite": 28,
+ "comment": 0,
+ "source_file": "布局教程\\3448_ViewPager与TabLayout联动v2.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 9,
+ "char_count": 300,
+ "confidence": "static_review"
+}

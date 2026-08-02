@@ -1,0 +1,24 @@
+{
+ "manual_id": 4321,
+ "type_name": "小工具",
+ "manual_name": "FileDialogSelect 弹窗文件选择器",
+ "author": "海纳百氚，有容乃大",
+ "platform": "AndroLua,Fusion App2,reOpenLua,OpenLuaX",
+ "source_date": "2024年10月23日 16:44:51",
+ "hits": 737,
+ "up": 7,
+ "favorite": 17,
+ "comment": 3,
+ "source_file": "小工具\\4321_FileDialogSelect_弹窗文件选择器.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 9,
+ "char_count": 300,
+ "confidence": "static_review"
+}

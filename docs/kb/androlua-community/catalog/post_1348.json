@@ -1,0 +1,21 @@
+{
+ "manual_id": 1348,
+ "type_name": "布局教程",
+ "manual_name": "Glide 完全禁用缓存",
+ "author": "jies辰",
+ "platform": "Fusion App2",
+ "source_date": "2022年01月31日 16:41:26",
+ "hits": 261,
+ "up": 2,
+ "favorite": 7,
+ "comment": 2,
+ "source_file": "布局教程\\1348_Glide_完全禁用缓存.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 11,
+ "char_count": 300,
+ "confidence": "static_review"
+}

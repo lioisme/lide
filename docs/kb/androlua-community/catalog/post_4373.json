@@ -1,0 +1,21 @@
+{
+ "manual_id": 4373,
+ "type_name": "Layout布局",
+ "manual_name": "悬浮球自动开启",
+ "author": "只想做你🌼的女王",
+ "platform": "Fusion App1",
+ "source_date": "2024年11月23日 21:34:13",
+ "hits": 611,
+ "up": 5,
+ "favorite": 7,
+ "comment": 0,
+ "source_file": "Layout布局\\4373_悬浮球自动开启.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 8,
+ "char_count": 300,
+ "confidence": "static_review"
+}

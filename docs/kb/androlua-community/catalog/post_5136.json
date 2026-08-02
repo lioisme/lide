@@ -1,0 +1,21 @@
+{
+ "manual_id": 5136,
+ "type_name": "浏览器",
+ "manual_name": "Aurora Toast 组件演示",
+ "author": "•⤙•/k",
+ "platform": "AndLua",
+ "source_date": "2025年11月23日 19:43:33",
+ "hits": 696,
+ "up": 17,
+ "favorite": 28,
+ "comment": 2,
+ "source_file": "浏览器\\5136_Aurora_Toast_组件演示.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,23 @@
+{
+ "manual_id": 3330,
+ "type_name": "手册公告",
+ "manual_name": "关于代码求助分区的一些事宜",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2023年08月29日 05:45:01",
+ "hits": 436,
+ "up": 5,
+ "favorite": 0,
+ "comment": 10,
+ "source_file": "手册公告\\3330_关于代码求助分区的一些事宜.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 16,
+ "char_count": 242,
+ "confidence": "static_review"
+}

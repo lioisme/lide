@@ -18,14 +18,14 @@ public:
 
     void read(class BinaryReader& br) override;
 
-    std::vector<std::unique_ptr<Deformer>>& getDeformer() { return mDeformerList; }
-    std::vector<std::unique_ptr<IDrawData>>& getDrawDataList() { return mDrawDataList; }
+    std::vector<Deformer*>& getDeformer() { return mDeformerList; }
+    std::vector<IDrawData*>& getDrawDataList() { return mDrawDataList; }
     void replacePartsData(PartsData* parts);
 
 private:
     const Id* mId = nullptr;
-    std::vector<std::unique_ptr<Deformer>> mDeformerList;
-    std::vector<std::unique_ptr<IDrawData>> mDrawDataList;
+    std::vector<Deformer*> mDeformerList;
+    std::vector<IDrawData*> mDrawDataList;
 };
 
 } // namespace live2d

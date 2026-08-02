@@ -1,0 +1,21 @@
+{
+ "manual_id": 2316,
+ "type_name": "实用代码",
+ "manual_name": "远程验证客户端",
+ "author": "老黑",
+ "platform": "AndroLua,AppLua,AndLua,LuaApp",
+ "source_date": "2023年01月14日 10:24:14",
+ "hits": 647,
+ "up": 10,
+ "favorite": 45,
+ "comment": 17,
+ "source_file": "实用代码\\2316_远程验证客户端.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 17,
+ "char_count": 300,
+ "confidence": "static_review"
+}

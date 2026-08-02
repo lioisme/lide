@@ -5,6 +5,7 @@
 #include "DEF.hpp"
 #include <cstdio>
 #include <stdexcept>
+#include <android/log.h>
 
 namespace live2d {
 
@@ -97,6 +98,9 @@ int PivotManager::calcPivotValues(ModelContext* modelContext, bool& outRet) {
         pp->setTmpPivotIndex(pivotIndex);
         pp->setTmpT(t);
     }
+    // clamp（防御）：插值计数不得越出 MAX_INTERPOLATION，防止 calcPivotIndices
+    // 的 tArray/indexArray 越界写（历史上 5+ 参数 deformer 曾把它推过上限）。
+    if (interpolationCount > MAX_INTERPOLATION) interpolationCount = MAX_INTERPOLATION;
     return interpolationCount;
 }
 
@@ -104,9 +108,15 @@ void PivotManager::calcPivotIndices(std::vector<int16_t>& indexArray,
                                    std::vector<float>& tArray,
                                    int interpolationCount) {
     int tableSize = 1 << interpolationCount;
-    if (tableSize + 1 > PIVOT_TABLE_SIZE) {
-        printf("err 23245\n");
+    if (tableSize + 1 > (int)indexArray.size() || tableSize + 1 > (int)tArray.size()) {
+        __android_log_print(ANDROID_LOG_ERROR, "live2d-diag",
+            "PIVOT_INDEX_OOB interp=%d tableSize=%d indexSize=%zu tArraySize=%zu",
+            interpolationCount, tableSize, indexArray.size(), tArray.size());
+        return; // 绝不越界写：宁可跳过本帧插值
     }
+    if (interpolationCount > MAX_INTERPOLATION)
+        __android_log_print(ANDROID_LOG_ERROR, "live2d-diag",
+            "PIVOT_INTERP_OVERFLOW interp=%d max=%d", interpolationCount, MAX_INTERPOLATION);
 
     int paramCount = static_cast<int>(mParamPivotTable.size());
     int stride = 1, divisor = 1, tIndex = 0;

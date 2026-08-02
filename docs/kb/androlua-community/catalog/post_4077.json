@@ -1,0 +1,21 @@
+{
+ "manual_id": 4077,
+ "type_name": "网络请求",
+ "manual_name": "微云图床(理论永久)",
+ "author": "帕帝天秀",
+ "platform": "所有环境",
+ "source_date": "2024年05月23日 17:31:30",
+ "hits": 418,
+ "up": 1,
+ "favorite": 12,
+ "comment": 2,
+ "source_file": "网络请求\\4077_微云图床(理论永久).lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 10,
+ "char_count": 300,
+ "confidence": "static_review"
+}

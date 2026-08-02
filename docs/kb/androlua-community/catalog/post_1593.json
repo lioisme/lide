@@ -1,0 +1,21 @@
+{
+ "manual_id": 1593,
+ "type_name": "系统",
+ "manual_name": "判断应用是否处于后台",
+ "author": "Adam·Eva",
+ "platform": "所有环境",
+ "source_date": "2022年07月17日 23:04:08",
+ "hits": 443,
+ "up": 16,
+ "favorite": 39,
+ "comment": 0,
+ "source_file": "系统\\1593_判断应用是否处于后台.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 6,
+ "char_count": 300,
+ "confidence": "static_review"
+}

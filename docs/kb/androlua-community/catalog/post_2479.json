@@ -1,0 +1,21 @@
+{
+ "manual_id": 2479,
+ "type_name": "实用代码",
+ "manual_name": "本地网页抽奖",
+ "author": "小白·马",
+ "platform": "所有环境",
+ "source_date": "2023年02月18日 19:48:37",
+ "hits": 1218,
+ "up": 14,
+ "favorite": 60,
+ "comment": 15,
+ "source_file": "实用代码\\2479_本地网页抽奖.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 18,
+ "char_count": 300,
+ "confidence": "static_review"
+}

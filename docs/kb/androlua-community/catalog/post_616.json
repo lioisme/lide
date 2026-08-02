@@ -1,0 +1,23 @@
+{
+ "manual_id": 616,
+ "type_name": "Intent通信",
+ "manual_name": "打开指定应用",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 119,
+ "up": 0,
+ "favorite": 7,
+ "comment": 0,
+ "source_file": "Intent通信\\616_打开指定应用.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 6,
+ "char_count": 192,
+ "confidence": "static_review"
+}

@@ -1,0 +1,23 @@
+{
+ "manual_id": 5120,
+ "type_name": "UI控件",
+ "manual_name": "ColorPicker颜色选择器",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "Fusion App2",
+ "source_date": "2025年11月10日 12:12:32",
+ "hits": 883,
+ "up": 6,
+ "favorite": 21,
+ "comment": 1,
+ "source_file": "UI控件\\5120_ColorPicker颜色选择器.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 7,
+ "char_count": 300,
+ "confidence": "static_review"
+}

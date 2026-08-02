@@ -210,7 +210,14 @@ void* BinaryReader::readKnownTypeObject(int type) {
         auto obj = Live2DObjectFactory::create(type);
         obj->read(*this);                  // may throw — unique_ptr still owns
         ISerializable* rawPtr = obj.release();
-        return rawPtr;                     // ownership transferred to caller
+        // 归属权修复（2026-08-02，tombstone_15/16 实证）：.moc 用 OBJECT_REF
+        // 共享对象（同一 PartsData/Deformer/DrawData/PivotManager 多次引用），
+        // 若由模型图 unique_ptr 各自持有 → 同一指针双删 → 析构崩溃。改为
+        // BinaryReader 全权拥有全部工厂对象（mDeleters 恰好每对象只登记一次，
+        // OBJECT_REF 不再新增 deleter），模型图只持非拥有裸指针；reader 由
+        // L2DBaseModel::mMocReader 保管到模型析构之后。
+        mDeleters.push_back([rawPtr]() { delete rawPtr; });
+        return rawPtr;                     // 非拥有指针交给模型图
     }
     // Primitive types
     if (type == 1) {

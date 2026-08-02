@@ -1,0 +1,21 @@
+{
+ "manual_id": 3604,
+ "type_name": "Lua代码",
+ "manual_name": "Levenshtein 模糊匹配",
+ "author": "胡斯凯",
+ "platform": "所有环境",
+ "source_date": "2023年11月23日 00:58:19",
+ "hits": 265,
+ "up": 1,
+ "favorite": 6,
+ "comment": 0,
+ "source_file": "Lua代码\\3604_Levenshtein_模糊匹配.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 20,
+ "char_count": 300,
+ "confidence": "static_review"
+}

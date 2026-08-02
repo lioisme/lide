@@ -1,0 +1,23 @@
+{
+ "manual_id": 1238,
+ "type_name": "实用代码",
+ "manual_name": "对话框可选中复制 获取对话框内容ID",
+ "author": "jies辰",
+ "platform": "",
+ "source_date": "2021年12月19日 18:24:40",
+ "hits": 214,
+ "up": 2,
+ "favorite": 9,
+ "comment": 0,
+ "source_file": "实用代码\\1238_对话框可选中复制_获取对话框内容ID.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 6,
+ "char_count": 182,
+ "confidence": "static_review"
+}

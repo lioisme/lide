@@ -1,0 +1,21 @@
+{
+ "manual_id": 3123,
+ "type_name": "布局教程",
+ "manual_name": "ViewTree",
+ "author": "Adam·Eva",
+ "platform": "所有环境",
+ "source_date": "2023年07月22日 23:38:15",
+ "hits": 244,
+ "up": 1,
+ "favorite": 5,
+ "comment": 1,
+ "source_file": "布局教程\\3123_ViewTree.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 9,
+ "char_count": 300,
+ "confidence": "static_review"
+}

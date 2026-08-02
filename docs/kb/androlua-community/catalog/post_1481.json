@@ -1,0 +1,21 @@
+{
+ "manual_id": 1481,
+ "type_name": "控件属性",
+ "manual_name": "TooltipText",
+ "author": "苦小怕",
+ "platform": "Fusion App2",
+ "source_date": "2022年05月22日 13:19:33",
+ "hits": 557,
+ "up": 8,
+ "favorite": 30,
+ "comment": 0,
+ "source_file": "控件属性\\1481_TooltipText.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 8,
+ "char_count": 300,
+ "confidence": "static_review"
+}

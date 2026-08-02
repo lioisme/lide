@@ -1,0 +1,21 @@
+{
+ "manual_id": 4301,
+ "type_name": "系统",
+ "manual_name": "Android SDK判断",
+ "author": "-𝕏-",
+ "platform": "所有环境",
+ "source_date": "2024年10月13日 23:08:01",
+ "hits": 420,
+ "up": 0,
+ "favorite": 2,
+ "comment": 16,
+ "source_file": "系统\\4301_Android_SDK判断.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 9,
+ "char_count": 249,
+ "confidence": "static_review"
+}

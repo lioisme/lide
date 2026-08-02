@@ -1,0 +1,23 @@
+{
+ "manual_id": 1945,
+ "type_name": "小工具",
+ "manual_name": "Translate 翻译",
+ "author": "Duo",
+ "platform": "所有环境",
+ "source_date": "2022年10月03日 15:26:11",
+ "hits": 443,
+ "up": 8,
+ "favorite": 30,
+ "comment": 2,
+ "source_file": "小工具\\1945_Translate_翻译.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 11,
+ "char_count": 300,
+ "confidence": "static_review"
+}

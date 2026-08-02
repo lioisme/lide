@@ -1,0 +1,21 @@
+{
+ "manual_id": 57,
+ "type_name": "系统",
+ "manual_name": "WiFi是否连接",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 123,
+ "up": 0,
+ "favorite": 1,
+ "comment": 0,
+ "source_file": "系统\\57_WiFi是否连接.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 8,
+ "char_count": 232,
+ "confidence": "static_review"
+}

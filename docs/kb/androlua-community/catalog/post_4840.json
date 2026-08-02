@@ -1,0 +1,24 @@
+{
+ "manual_id": 4840,
+ "type_name": "Lua代码",
+ "manual_name": "百度视频解析",
+ "author": "琪琪子",
+ "platform": "AndLua",
+ "source_date": "2025年06月18日 07:48:40",
+ "hits": 202,
+ "up": 3,
+ "favorite": 8,
+ "comment": 0,
+ "source_file": "Lua代码\\4840_百度视频解析.lua",
+ "kind": "fragment",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "truncated_tail",
+  "incomplete_fragment"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 15,
+ "char_count": 300,
+ "confidence": "static_review"
+}

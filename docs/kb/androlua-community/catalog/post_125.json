@@ -1,0 +1,23 @@
+{
+ "manual_id": 125,
+ "type_name": "系统",
+ "manual_name": "物理浏览模式",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 90,
+ "up": 1,
+ "favorite": 3,
+ "comment": 0,
+ "source_file": "系统\\125_物理浏览模式.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 14,
+ "char_count": 300,
+ "confidence": "static_review"
+}

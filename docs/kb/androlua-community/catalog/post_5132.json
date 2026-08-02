@@ -1,0 +1,21 @@
+{
+ "manual_id": 5132,
+ "type_name": "小工具",
+ "manual_name": "Fuck New Theme Style Manager",
+ "author": "海纳百氚，有容乃大",
+ "platform": "Fusion App2",
+ "source_date": "2025年11月17日 09:57:13",
+ "hits": 661,
+ "up": 2,
+ "favorite": 3,
+ "comment": 0,
+ "source_file": "小工具\\5132_Fuck_New_Theme_Style_Manager.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

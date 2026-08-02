@@ -1,0 +1,24 @@
+{
+ "manual_id": 3284,
+ "type_name": "安卓教程",
+ "manual_name": "ScrollView到顶/到底",
+ "author": "Adam·Eva",
+ "platform": "所有环境",
+ "source_date": "2023年08月18日 10:24:05",
+ "hits": 323,
+ "up": 7,
+ "favorite": 18,
+ "comment": 5,
+ "source_file": "安卓教程\\3284_ScrollView到顶_到底.lua",
+ "kind": "text_note",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "short_text",
+  "global_pollution"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 15,
+ "char_count": 300,
+ "confidence": "static_review"
+}

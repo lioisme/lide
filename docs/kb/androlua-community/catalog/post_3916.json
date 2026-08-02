@@ -1,0 +1,21 @@
+{
+ "manual_id": 3916,
+ "type_name": "Layout布局",
+ "manual_name": "DrawerLayout 滑动效果",
+ "author": "UyCode工作室-叶无尘",
+ "platform": "reOpenLua",
+ "source_date": "2024年02月22日 21:42:23",
+ "hits": 375,
+ "up": 1,
+ "favorite": 1,
+ "comment": 0,
+ "source_file": "Layout布局\\3916_DrawerLayout_滑动效果.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,23 @@
+{
+ "manual_id": 2147,
+ "type_name": "小工具",
+ "manual_name": "蓝奏云目录加载",
+ "author": "智",
+ "platform": "所有环境",
+ "source_date": "2022年12月04日 09:01:03",
+ "hits": 342,
+ "up": 3,
+ "favorite": 6,
+ "comment": 3,
+ "source_file": "小工具\\2147_蓝奏云目录加载.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 32,
+ "char_count": 300,
+ "confidence": "static_review"
+}

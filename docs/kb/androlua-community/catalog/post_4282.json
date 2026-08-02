@@ -1,0 +1,21 @@
+{
+ "manual_id": 4282,
+ "type_name": "设备系统",
+ "manual_name": "获取系统动画倍数",
+ "author": "刃痛",
+ "platform": "所有环境",
+ "source_date": "2024年09月29日 21:40:38",
+ "hits": 311,
+ "up": 3,
+ "favorite": 11,
+ "comment": 1,
+ "source_file": "设备系统\\4282_获取系统动画倍数.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 8,
+ "char_count": 300,
+ "confidence": "static_review"
+}

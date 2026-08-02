@@ -1,0 +1,21 @@
+{
+ "manual_id": 1531,
+ "type_name": "UI控件",
+ "manual_name": "Slider",
+ "author": "苦小怕",
+ "platform": "Fusion App2",
+ "source_date": "2022年06月08日 18:10:30",
+ "hits": 1429,
+ "up": 30,
+ "favorite": 73,
+ "comment": 13,
+ "source_file": "UI控件\\1531_Slider.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 11,
+ "char_count": 300,
+ "confidence": "static_review"
+}

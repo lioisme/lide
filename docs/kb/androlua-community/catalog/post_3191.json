@@ -1,0 +1,23 @@
+{
+ "manual_id": 3191,
+ "type_name": "布局代码",
+ "manual_name": "一个简洁美观的主页BottomView界面布局",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2023年08月03日 20:58:22",
+ "hits": 3043,
+ "up": 48,
+ "favorite": 146,
+ "comment": 34,
+ "source_file": "布局代码\\3191_一个简洁美观的主页BottomView界面布局.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 15,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,26 @@
+{
+ "manual_id": 1222,
+ "type_name": "浏览器",
+ "manual_name": "监听全部浏览器的事件",
+ "author": "Adam·Eva",
+ "platform": "",
+ "source_date": "2021年12月19日 17:59:19",
+ "hits": 414,
+ "up": 2,
+ "favorite": 20,
+ "comment": 0,
+ "source_file": "浏览器\\1222_监听全部浏览器的事件.lua",
+ "kind": "fragment",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "truncated_tail",
+  "editor_bound",
+  "editor_bound",
+  "incomplete_fragment"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 9,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 4399,
+ "type_name": "UI控件",
+ "manual_name": "NavigationRailView的简单使用",
+ "author": "程国荣",
+ "platform": "OpenLuaX",
+ "source_date": "2024年12月08日 14:37:34",
+ "hits": 459,
+ "up": 2,
+ "favorite": 8,
+ "comment": 0,
+ "source_file": "UI控件\\4399_NavigationRailView的简单使用.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 16,
+ "char_count": 300,
+ "confidence": "static_review"
+}

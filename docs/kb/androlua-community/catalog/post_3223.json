@@ -1,0 +1,21 @@
+{
+ "manual_id": 3223,
+ "type_name": "table表",
+ "manual_name": "__pairs元方法重写",
+ "author": "kamihitoe",
+ "platform": "所有环境",
+ "source_date": "2023年08月08日 14:38:08",
+ "hits": 139,
+ "up": 1,
+ "favorite": 2,
+ "comment": 0,
+ "source_file": "table表\\3223_pairs元方法重写.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 22,
+ "char_count": 300,
+ "confidence": "static_review"
+}

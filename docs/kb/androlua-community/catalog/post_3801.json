@@ -1,0 +1,23 @@
+{
+ "manual_id": 3801,
+ "type_name": "文件操作",
+ "manual_name": "地址/范围性16进制修改",
+ "author": "System.out.print",
+ "platform": "所有环境",
+ "source_date": "2024年01月27日 17:12:51",
+ "hits": 267,
+ "up": 4,
+ "favorite": 10,
+ "comment": 12,
+ "source_file": "文件操作\\3801_地址_范围性16进制修改.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 6,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 379,
+ "type_name": "Intent通信",
+ "manual_name": "发送邮件",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 102,
+ "up": 1,
+ "favorite": 4,
+ "comment": 0,
+ "source_file": "Intent通信\\379_发送邮件.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 7,
+ "char_count": 285,
+ "confidence": "static_review"
+}

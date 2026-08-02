@@ -1,0 +1,21 @@
+{
+ "manual_id": 1178,
+ "type_name": "网络操作",
+ "manual_name": "抓取ajax数据实战",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 384,
+ "up": 2,
+ "favorite": 13,
+ "comment": 1,
+ "source_file": "网络操作\\1178_抓取ajax数据实战.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 15,
+ "char_count": 300,
+ "confidence": "static_review"
+}

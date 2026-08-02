@@ -1,0 +1,21 @@
+{
+ "manual_id": 4014,
+ "type_name": "布局代码",
+ "manual_name": "仿OPPO开关2.0",
+ "author": "喵Miao..͇͉͔̖",
+ "platform": "AndLua",
+ "source_date": "2024年04月14日 00:11:22",
+ "hits": 1196,
+ "up": 14,
+ "favorite": 29,
+ "comment": 4,
+ "source_file": "布局代码\\4014_仿OPPO开关2.0.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 12,
+ "char_count": 300,
+ "confidence": "static_review"
+}

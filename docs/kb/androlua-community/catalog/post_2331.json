@@ -1,0 +1,21 @@
+{
+ "manual_id": 2331,
+ "type_name": "Androlua教程",
+ "manual_name": "Instrumentation模拟键盘输入",
+ "author": "奥姆",
+ "platform": "所有环境",
+ "source_date": "2023年01月16日 17:33:13",
+ "hits": 230,
+ "up": 3,
+ "favorite": 3,
+ "comment": 0,
+ "source_file": "Androlua教程\\2331_Instrumentation模拟键盘输入.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 19,
+ "char_count": 300,
+ "confidence": "static_review"
+}

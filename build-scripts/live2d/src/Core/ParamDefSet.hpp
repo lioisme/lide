@@ -15,10 +15,10 @@ public:
 
     void read(class BinaryReader& br) override;
 
-    const std::vector<std::unique_ptr<ParamDefFloat>>& getParamDefFloatList() const { return mParamDefList; }
+    const std::vector<ParamDefFloat*>& getParamDefFloatList() const { return mParamDefList; }
 
 private:
-    std::vector<std::unique_ptr<ParamDefFloat>> mParamDefList;
+    std::vector<ParamDefFloat*> mParamDefList;
 };
 
 } // namespace live2d

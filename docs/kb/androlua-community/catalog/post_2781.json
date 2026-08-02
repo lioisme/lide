@@ -1,0 +1,21 @@
+{
+ "manual_id": 2781,
+ "type_name": "Lua代码",
+ "manual_name": "迪杰特拉算法",
+ "author": "YONGLE-永乐",
+ "platform": "所有环境",
+ "source_date": "2023年05月07日 22:03:40",
+ "hits": 654,
+ "up": 0,
+ "favorite": 0,
+ "comment": 0,
+ "source_file": "Lua代码\\2781_迪杰特拉算法.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 14,
+ "char_count": 300,
+ "confidence": "static_review"
+}

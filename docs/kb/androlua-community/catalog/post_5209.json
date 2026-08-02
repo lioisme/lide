@@ -1,0 +1,21 @@
+{
+ "manual_id": 5209,
+ "type_name": "小游戏",
+ "manual_name": "数字华容道",
+ "author": "琪琪子",
+ "platform": "AndLua",
+ "source_date": "2026年02月02日 19:22:54",
+ "hits": 179,
+ "up": 3,
+ "favorite": 6,
+ "comment": 1,
+ "source_file": "小游戏\\5209_数字华容道.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 17,
+ "char_count": 300,
+ "confidence": "static_review"
+}

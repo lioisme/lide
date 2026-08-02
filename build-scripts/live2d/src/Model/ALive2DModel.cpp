@@ -9,10 +9,7 @@ ALive2DModel::ALive2DModel()
 ALive2DModel::~ALive2DModel() = default;
 
 ModelImpl* ALive2DModel::getModelImpl() {
-    if (!mModelImpl) {
-        mModelImpl = std::make_unique<ModelImpl>();
-    }
-    return mModelImpl.get();
+    return mModelImpl;
 }
 
 int ALive2DModel::getCanvasWidth() const {

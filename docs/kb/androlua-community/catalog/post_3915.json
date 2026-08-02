@@ -1,0 +1,21 @@
+{
+ "manual_id": 3915,
+ "type_name": "Lua代码",
+ "manual_name": "一个在 ALua 和 LuaJ 都能用的 Lua Class（半成品）",
+ "author": "ABVerterX",
+ "platform": "所有环境",
+ "source_date": "2024年02月21日 22:43:49",
+ "hits": 256,
+ "up": 2,
+ "favorite": 3,
+ "comment": 1,
+ "source_file": "Lua代码\\3915_一个在_ALua_和_LuaJ_都能用的_Lua_Class（半成品）.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

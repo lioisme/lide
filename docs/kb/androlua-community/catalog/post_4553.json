@@ -1,0 +1,21 @@
+{
+ "manual_id": 4553,
+ "type_name": "基础代码",
+ "manual_name": "伪3D_2.0",
+ "author": "关",
+ "platform": "所有环境",
+ "source_date": "2025年02月22日 00:14:11",
+ "hits": 649,
+ "up": 9,
+ "favorite": 17,
+ "comment": 7,
+ "source_file": "基础代码\\4553_伪3D_2.0.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 14,
+ "char_count": 300,
+ "confidence": "static_review"
+}

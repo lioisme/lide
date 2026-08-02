@@ -1,0 +1,21 @@
+{
+ "manual_id": 2456,
+ "type_name": "字符处理",
+ "manual_name": "最简单的string.split实现",
+ "author": "机不可失🅥",
+ "platform": "所有环境",
+ "source_date": "2023年02月11日 21:18:55",
+ "hits": 386,
+ "up": 1,
+ "favorite": 7,
+ "comment": 9,
+ "source_file": "字符处理\\2456_最简单的string.split实现.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 12,
+ "char_count": 300,
+ "confidence": "static_review"
+}

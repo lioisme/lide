@@ -1,0 +1,21 @@
+{
+ "manual_id": 3158,
+ "type_name": "Lua代码",
+ "manual_name": "极坐标绘图",
+ "author": "Duo",
+ "platform": "所有环境",
+ "source_date": "2023年07月28日 22:39:25",
+ "hits": 243,
+ "up": 6,
+ "favorite": 5,
+ "comment": 3,
+ "source_file": "Lua代码\\3158_极坐标绘图.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 20,
+ "char_count": 300,
+ "confidence": "static_review"
+}

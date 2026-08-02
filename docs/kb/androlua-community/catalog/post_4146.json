@@ -1,0 +1,23 @@
+{
+ "manual_id": 4146,
+ "type_name": "Lua代码",
+ "manual_name": "一个简单可推的侧滑栏实例V2",
+ "author": "海纳百氚，有容乃大",
+ "platform": "AndroLua,Fusion App2,reOpenLua,OpenLuaX",
+ "source_date": "2024年07月28日 10:17:33",
+ "hits": 1244,
+ "up": 12,
+ "favorite": 42,
+ "comment": 0,
+ "source_file": "Lua代码\\4146_一个简单可推的侧滑栏实例V2.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 18,
+ "char_count": 300,
+ "confidence": "static_review"
+}

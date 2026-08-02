@@ -1,0 +1,21 @@
+{
+ "manual_id": 2265,
+ "type_name": "Androlua教程",
+ "manual_name": "申请忽略电池优化",
+ "author": "智",
+ "platform": "所有环境",
+ "source_date": "2022年12月31日 16:25:46",
+ "hits": 322,
+ "up": 12,
+ "favorite": 24,
+ "comment": 5,
+ "source_file": "Androlua教程\\2265_申请忽略电池优化.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 9,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,25 @@
+{
+ "manual_id": 4251,
+ "type_name": "加密解密",
+ "manual_name": "凯撒_密码",
+ "author": "雾栖.",
+ "platform": "所有环境",
+ "source_date": "2024年09月16日 19:06:10",
+ "hits": 417,
+ "up": 3,
+ "favorite": 9,
+ "comment": 0,
+ "source_file": "加密解密\\4251_凯撒_密码.lua",
+ "kind": "fragment",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "truncated_tail",
+  "chinese_identifier",
+  "incomplete_fragment"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 12,
+ "char_count": 300,
+ "confidence": "static_review"
+}

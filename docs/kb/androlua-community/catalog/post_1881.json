@@ -1,0 +1,21 @@
+{
+ "manual_id": 1881,
+ "type_name": "实用代码",
+ "manual_name": "获取应用列表",
+ "author": "苦小怕",
+ "platform": "Fusion App2",
+ "source_date": "2022年09月13日 20:51:49",
+ "hits": 792,
+ "up": 7,
+ "favorite": 23,
+ "comment": 16,
+ "source_file": "实用代码\\1881_获取应用列表.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 11,
+ "char_count": 300,
+ "confidence": "static_review"
+}

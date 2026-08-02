@@ -1,0 +1,21 @@
+{
+ "manual_id": 5289,
+ "type_name": "基础代码",
+ "manual_name": "星空背景",
+ "author": "˶ᵒ ᵕ ˂˶",
+ "platform": "所有环境",
+ "source_date": "2026年04月07日 04:00:57",
+ "hits": 582,
+ "up": 4,
+ "favorite": 10,
+ "comment": 1,
+ "source_file": "基础代码\\5289_星空背景.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 17,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,23 @@
+{
+ "manual_id": 2251,
+ "type_name": "布局教程",
+ "manual_name": "美化PopMenu实例",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2022年12月26日 11:22:21",
+ "hits": 1038,
+ "up": 11,
+ "favorite": 25,
+ "comment": 7,
+ "source_file": "布局教程\\2251_美化PopMenu实例.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 16,
+ "char_count": 300,
+ "confidence": "static_review"
+}

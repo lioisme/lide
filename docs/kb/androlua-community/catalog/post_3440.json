@@ -1,0 +1,21 @@
+{
+ "manual_id": 3440,
+ "type_name": "Activity活动",
+ "manual_name": "仿MIUI系统更新主界面检查更新布局v3",
+ "author": "海纳百氚，有容乃大",
+ "platform": "AndroLua,Fusion App2,reOpenLua",
+ "source_date": "2023年09月30日 13:02:03",
+ "hits": 1008,
+ "up": 12,
+ "favorite": 50,
+ "comment": 5,
+ "source_file": "Activity活动\\3440_仿MIUI系统更新主界面检查更新布局v3.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 17,
+ "char_count": 300,
+ "confidence": "static_review"
+}

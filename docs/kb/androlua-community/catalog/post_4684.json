@@ -1,0 +1,21 @@
+{
+ "manual_id": 4684,
+ "type_name": "网络爬虫",
+ "manual_name": "优*视频 SVIP邀请协议",
+ "author": "-𝕏-",
+ "platform": "所有环境",
+ "source_date": "2025年04月09日 21:30:30",
+ "hits": 417,
+ "up": 1,
+ "favorite": 1,
+ "comment": 3,
+ "source_file": "网络爬虫\\4684_优_视频_SVIP邀请协议.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 17,
+ "char_count": 300,
+ "confidence": "static_review"
+}

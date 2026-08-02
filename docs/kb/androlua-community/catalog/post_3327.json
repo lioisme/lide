@@ -1,0 +1,21 @@
+{
+ "manual_id": 3327,
+ "type_name": "小游戏",
+ "manual_name": "吞噬黑洞(小游戏)",
+ "author": "Duo",
+ "platform": "所有环境",
+ "source_date": "2023年08月28日 09:01:28",
+ "hits": 827,
+ "up": 20,
+ "favorite": 28,
+ "comment": 40,
+ "source_file": "小游戏\\3327_吞噬黑洞(小游戏).lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 19,
+ "char_count": 300,
+ "confidence": "static_review"
+}

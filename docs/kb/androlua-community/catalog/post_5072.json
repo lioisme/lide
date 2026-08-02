@@ -1,0 +1,23 @@
+{
+ "manual_id": 5072,
+ "type_name": "网络操作",
+ "manual_name": "QQ空间相册解析",
+ "author": "月牙",
+ "platform": "Fusion App2",
+ "source_date": "2025年10月10日 23:56:18",
+ "hits": 777,
+ "up": 7,
+ "favorite": 25,
+ "comment": 9,
+ "source_file": "网络操作\\5072_QQ空间相册解析.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 12,
+ "char_count": 300,
+ "confidence": "static_review"
+}

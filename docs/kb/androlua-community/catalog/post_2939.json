@@ -1,0 +1,23 @@
+{
+ "manual_id": 2939,
+ "type_name": "小工具",
+ "manual_name": "TextChangedListener限制EditText输入字符数",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2023年06月14日 07:33:54",
+ "hits": 431,
+ "up": 3,
+ "favorite": 19,
+ "comment": 9,
+ "source_file": "小工具\\2939_TextChangedListener限制EditText输入字符数.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

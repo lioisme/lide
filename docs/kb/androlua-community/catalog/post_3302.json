@@ -1,0 +1,21 @@
+{
+ "manual_id": 3302,
+ "type_name": "网络操作",
+ "manual_name": "不容易失效的蓝奏云解析",
+ "author": "█████",
+ "platform": "所有环境",
+ "source_date": "2023年08月23日 00:47:30",
+ "hits": 776,
+ "up": 6,
+ "favorite": 34,
+ "comment": 17,
+ "source_file": "网络操作\\3302_不容易失效的蓝奏云解析.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 8,
+ "char_count": 300,
+ "confidence": "static_review"
+}

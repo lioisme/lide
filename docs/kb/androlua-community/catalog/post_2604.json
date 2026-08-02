@@ -1,0 +1,21 @@
+{
+ "manual_id": 2604,
+ "type_name": "xpath",
+ "manual_name": "RecyclerView应用及xpath实战应用",
+ "author": "挽风",
+ "platform": "所有环境",
+ "source_date": "2023年03月25日 12:09:41",
+ "hits": 653,
+ "up": 5,
+ "favorite": 24,
+ "comment": 1,
+ "source_file": "xpath\\2604_RecyclerView应用及xpath实战应用.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 7,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,23 @@
+{
+ "manual_id": 5288,
+ "type_name": "编码转换",
+ "manual_name": "受限常量数字混淆编码工具",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2026年04月06日 23:00:55",
+ "hits": 319,
+ "up": 0,
+ "favorite": 1,
+ "comment": 1,
+ "source_file": "编码转换\\5288_受限常量数字混淆编码工具.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 11,
+ "char_count": 300,
+ "confidence": "static_review"
+}

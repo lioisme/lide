@@ -1,0 +1,23 @@
+{
+ "manual_id": 1340,
+ "type_name": "UI控件",
+ "manual_name": "CardView卡片控件",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2022年01月28日 19:27:16",
+ "hits": 655,
+ "up": 9,
+ "favorite": 18,
+ "comment": 2,
+ "source_file": "UI控件\\1340_CardView卡片控件.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 14,
+ "char_count": 300,
+ "confidence": "static_review"
+}

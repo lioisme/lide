@@ -1,0 +1,21 @@
+{
+ "manual_id": 1480,
+ "type_name": "实用代码",
+ "manual_name": "语法高亮",
+ "author": "苦小怕",
+ "platform": "Fusion App2",
+ "source_date": "2022年05月20日 23:01:27",
+ "hits": 708,
+ "up": 19,
+ "favorite": 40,
+ "comment": 9,
+ "source_file": "实用代码\\1480_语法高亮.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 7,
+ "char_count": 300,
+ "confidence": "static_review"
+}

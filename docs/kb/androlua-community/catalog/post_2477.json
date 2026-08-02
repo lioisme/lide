@@ -1,0 +1,21 @@
+{
+ "manual_id": 2477,
+ "type_name": "Androlua教程",
+ "manual_name": "自定义进度条",
+ "author": "2498709027",
+ "platform": "所有环境",
+ "source_date": "2023年02月18日 16:40:59",
+ "hits": 377,
+ "up": 4,
+ "favorite": 10,
+ "comment": 4,
+ "source_file": "Androlua教程\\2477_自定义进度条.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 16,
+ "char_count": 300,
+ "confidence": "static_review"
+}

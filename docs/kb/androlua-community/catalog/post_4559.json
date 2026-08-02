@@ -1,0 +1,21 @@
+{
+ "manual_id": 4559,
+ "type_name": "基础代码",
+ "manual_name": "gps定位(优化2.0版)",
+ "author": "ᅟᅠ        ‌",
+ "platform": "OpenLuaX",
+ "source_date": "2025年02月26日 20:54:02",
+ "hits": 460,
+ "up": 6,
+ "favorite": 13,
+ "comment": 6,
+ "source_file": "基础代码\\4559_gps定位(优化2.0版).lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 14,
+ "char_count": 300,
+ "confidence": "static_review"
+}

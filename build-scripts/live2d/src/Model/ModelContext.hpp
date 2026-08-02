@@ -102,6 +102,15 @@ public:
     DrawParamOpenGL* mDpGL = nullptr;
     std::unique_ptr<ClippingManagerOpenGL> mClipManager;
 
+    // Global draw-order extremes across ALL draws' pivot tables (computed in
+    // init()). Interpolated draw orders are convex combinations of pivot
+    // values, so they always stay inside [mMinDrawOrder, mMaxDrawOrder].
+    // Using per-draw averages here previously allowed interpolated orders
+    // below the global average min -> negative bucket index -> heap OOB
+    // writes (tombstone_20/21/23/25, DRAWORDER_OOB order=-19).
+    int mMinDrawOrder = 0;
+    int mMaxDrawOrder = 0;
+
     std::vector<int16_t> mOrderListFirstDrawIndex;
     std::vector<int16_t> mOrderListLastDrawIndex;
     std::vector<int16_t> mNextListDrawIndex;

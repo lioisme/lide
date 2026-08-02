@@ -1,0 +1,24 @@
+{
+ "manual_id": 5243,
+ "type_name": "安卓教程",
+ "manual_name": "agsl实现liquidglass性能不错",
+ "author": "😈",
+ "platform": "所有环境",
+ "source_date": "2026年02月21日 10:19:59",
+ "hits": 395,
+ "up": 6,
+ "favorite": 13,
+ "comment": 1,
+ "source_file": "安卓教程\\5243_agsl实现liquidglass性能不错.lua",
+ "kind": "fragment",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "truncated_tail",
+  "incomplete_fragment"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,24 @@
+{
+ "manual_id": 4458,
+ "type_name": "基础代码",
+ "manual_name": "fa2浏览页ViewPager自定义布局",
+ "author": "海纳百氚，有容乃大",
+ "platform": "Fusion App2",
+ "source_date": "2025年01月10日 13:08:00",
+ "hits": 575,
+ "up": 0,
+ "favorite": 2,
+ "comment": 0,
+ "source_file": "基础代码\\4458_fa2浏览页ViewPager自定义布局.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 12,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 2426,
+ "type_name": "字符处理",
+ "manual_name": "BCD压缩与展开",
+ "author": "碳昔",
+ "platform": "所有环境",
+ "source_date": "2023年02月03日 21:48:25",
+ "hits": 215,
+ "up": 2,
+ "favorite": 10,
+ "comment": 0,
+ "source_file": "字符处理\\2426_BCD压缩与展开.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 15,
+ "char_count": 300,
+ "confidence": "static_review"
+}

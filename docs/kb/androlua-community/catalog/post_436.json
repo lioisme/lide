@@ -1,0 +1,21 @@
+{
+ "manual_id": 436,
+ "type_name": "动画教程",
+ "manual_name": "动画结束回调",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 92,
+ "up": 1,
+ "favorite": 1,
+ "comment": 0,
+ "source_file": "动画教程\\436_动画结束回调.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 8,
+ "char_count": 266,
+ "confidence": "static_review"
+}

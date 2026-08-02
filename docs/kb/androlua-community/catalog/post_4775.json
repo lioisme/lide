@@ -1,0 +1,23 @@
+{
+ "manual_id": 4775,
+ "type_name": "实用代码",
+ "manual_name": "PDF预览-PDF阅读器-PDF查看器",
+ "author": "小白·马",
+ "platform": "Fusion App2,reOpenLua,OpenLuaX",
+ "source_date": "2025年05月20日 00:26:21",
+ "hits": 526,
+ "up": 8,
+ "favorite": 24,
+ "comment": 5,
+ "source_file": "实用代码\\4775_PDF预览-PDF阅读器-PDF查看器.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 12,
+ "char_count": 300,
+ "confidence": "static_review"
+}

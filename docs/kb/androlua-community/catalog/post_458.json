@@ -1,0 +1,24 @@
+{
+ "manual_id": 458,
+ "type_name": "实用代码",
+ "manual_name": "各种事件",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 411,
+ "up": 3,
+ "favorite": 24,
+ "comment": 0,
+ "source_file": "实用代码\\458_各种事件.lua",
+ "kind": "fragment",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "truncated_tail",
+  "incomplete_fragment"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 27,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 3188,
+ "type_name": "自绘制",
+ "manual_name": "自定义方形绘图(点击屏幕运行)",
+ "author": "煙雨舊時光",
+ "platform": "AndroLua,AndLua",
+ "source_date": "2023年08月02日 13:47:22",
+ "hits": 270,
+ "up": 0,
+ "favorite": 4,
+ "comment": 0,
+ "source_file": "自绘制\\3188_自定义方形绘图(点击屏幕运行).lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 12,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,26 @@
+{
+ "manual_id": 5123,
+ "type_name": "自绘制",
+ "manual_name": "悬浮框绘制",
+ "author": "•⤙•/k",
+ "platform": "AndLua",
+ "source_date": "2025年11月13日 17:14:37",
+ "hits": 405,
+ "up": 3,
+ "favorite": 2,
+ "comment": 0,
+ "source_file": "自绘制\\5123_悬浮框绘制.lua",
+ "kind": "fragment",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "truncated_tail",
+  "androlua_private",
+  "private_api",
+  "incomplete_fragment"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 14,
+ "char_count": 300,
+ "confidence": "static_review"
+}

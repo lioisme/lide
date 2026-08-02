@@ -1,0 +1,21 @@
+{
+ "manual_id": 1292,
+ "type_name": "Layout布局",
+ "manual_name": "DrawerLayout侧滑栏",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2022年01月04日 11:25:07",
+ "hits": 942,
+ "up": 16,
+ "favorite": 45,
+ "comment": 0,
+ "source_file": "Layout布局\\1292_DrawerLayout侧滑栏.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

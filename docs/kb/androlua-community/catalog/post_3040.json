@@ -1,0 +1,24 @@
+{
+ "manual_id": 3040,
+ "type_name": "Androlua教程",
+ "manual_name": "AndroLua+语法糖和特性",
+ "author": "NekoLaska",
+ "platform": "所有环境",
+ "source_date": "2023年07月07日 20:29:36",
+ "hits": 1453,
+ "up": 13,
+ "favorite": 27,
+ "comment": 6,
+ "source_file": "Androlua教程\\3040_AndroLua+语法糖和特性.lua",
+ "kind": "fragment",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "truncated_tail",
+  "incomplete_fragment"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

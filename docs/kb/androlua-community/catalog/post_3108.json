@@ -1,0 +1,21 @@
+{
+ "manual_id": 3108,
+ "type_name": "小工具",
+ "manual_name": "素数判断",
+ "author": "Adam·Eva",
+ "platform": "所有环境",
+ "source_date": "2023年07月20日 17:32:21",
+ "hits": 121,
+ "up": 0,
+ "favorite": 0,
+ "comment": 0,
+ "source_file": "小工具\\3108_素数判断.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

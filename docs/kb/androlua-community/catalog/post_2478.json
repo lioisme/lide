@@ -1,0 +1,21 @@
+{
+ "manual_id": 2478,
+ "type_name": "文件操作",
+ "manual_name": "获取指定目录下的文件路径",
+ "author": "Adam·Eva",
+ "platform": "所有环境",
+ "source_date": "2023年02月18日 19:21:04",
+ "hits": 511,
+ "up": 5,
+ "favorite": 17,
+ "comment": 2,
+ "source_file": "文件操作\\2478_获取指定目录下的文件路径.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 16,
+ "char_count": 300,
+ "confidence": "static_review"
+}

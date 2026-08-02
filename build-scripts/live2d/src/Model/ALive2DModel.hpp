@@ -13,7 +13,7 @@ public:
     ALive2DModel();
     virtual ~ALive2DModel();
 
-    void setModelImpl(ModelImpl* impl) { mModelImpl.reset(impl); }
+    void setModelImpl(ModelImpl* impl) { mModelImpl = impl; }
     ModelImpl* getModelImpl();
     ModelContext* getModelContext() const { return mModelContext.get(); }
     virtual DrawParamOpenGL* getDrawParam() = 0;
@@ -25,7 +25,9 @@ public:
     void setParamFloat(int index, float value, float weight = 1.0f);
 
 protected:
-    std::unique_ptr<ModelImpl> mModelImpl;
+    // 非拥有指针：对象图由 L2DBaseModel::mMocReader（BinaryReader）全权拥有
+    // （见 BinaryReader::readKnownTypeObject 注释）。只引用，不 delete。
+    ModelImpl* mModelImpl = nullptr;
     std::unique_ptr<ModelContext> mModelContext;
 };
 

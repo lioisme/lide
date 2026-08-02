@@ -1,0 +1,21 @@
+{
+ "manual_id": 4457,
+ "type_name": "table表",
+ "manual_name": "LangY_Game: 字符游戏",
+ "author": "关",
+ "platform": "AndLua",
+ "source_date": "2025年01月10日 10:59:53",
+ "hits": 309,
+ "up": 2,
+ "favorite": 3,
+ "comment": 1,
+ "source_file": "table表\\4457_LangY_Game__字符游戏.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 15,
+ "char_count": 300,
+ "confidence": "static_review"
+}

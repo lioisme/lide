@@ -1,0 +1,21 @@
+{
+ "manual_id": 3841,
+ "type_name": "UI控件",
+ "manual_name": "Snackbar",
+ "author": "由风",
+ "platform": "Fusion App1,Fusion App2,reOpenLua,OpenLuaX",
+ "source_date": "2024年02月03日 17:21:18",
+ "hits": 266,
+ "up": 3,
+ "favorite": 16,
+ "comment": 0,
+ "source_file": "UI控件\\3841_Snackbar.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 8,
+ "char_count": 300,
+ "confidence": "static_review"
+}

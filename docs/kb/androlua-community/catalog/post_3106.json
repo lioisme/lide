@@ -1,0 +1,21 @@
+{
+ "manual_id": 3106,
+ "type_name": "Lua代码",
+ "manual_name": "冒号调用number",
+ "author": "kamihitoe",
+ "platform": "所有环境",
+ "source_date": "2023年07月20日 16:38:27",
+ "hits": 101,
+ "up": 2,
+ "favorite": 4,
+ "comment": 1,
+ "source_file": "Lua代码\\3106_冒号调用number.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 7,
+ "char_count": 87,
+ "confidence": "static_review"
+}

@@ -1,0 +1,24 @@
+{
+ "manual_id": 2032,
+ "type_name": "布局教程",
+ "manual_name": "仿夸克UA选择",
+ "author": "苦小怕",
+ "platform": "Fusion App2",
+ "source_date": "2022年11月03日 20:27:56",
+ "hits": 1059,
+ "up": 22,
+ "favorite": 69,
+ "comment": 6,
+ "source_file": "布局教程\\2032_仿夸克UA选择.lua",
+ "kind": "fragment",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "truncated_tail",
+  "incomplete_fragment"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 9,
+ "char_count": 300,
+ "confidence": "static_review"
+}

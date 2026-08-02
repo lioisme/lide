@@ -1,0 +1,23 @@
+{
+ "manual_id": 2319,
+ "type_name": "UI控件",
+ "manual_name": "MaterialButton",
+ "author": "智",
+ "platform": "所有环境",
+ "source_date": "2023年01月14日 17:46:53",
+ "hits": 767,
+ "up": 14,
+ "favorite": 29,
+ "comment": 12,
+ "source_file": "UI控件\\2319_MaterialButton.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 8,
+ "char_count": 300,
+ "confidence": "static_review"
+}

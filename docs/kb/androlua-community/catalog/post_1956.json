@@ -1,0 +1,26 @@
+{
+ "manual_id": 1956,
+ "type_name": "系统",
+ "manual_name": "留言板有人在讨论的内存问题",
+ "author": "Adam·Eva",
+ "platform": "Fusion App2",
+ "source_date": "2022年10月05日 18:28:32",
+ "hits": 465,
+ "up": 2,
+ "favorite": 5,
+ "comment": 2,
+ "source_file": "系统\\1956_留言板有人在讨论的内存问题.lua",
+ "kind": "fragment",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "truncated_tail",
+  "editor_bound",
+  "editor_bound",
+  "incomplete_fragment"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 9,
+ "char_count": 300,
+ "confidence": "static_review"
+}

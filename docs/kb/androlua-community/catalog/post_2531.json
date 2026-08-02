@@ -1,0 +1,21 @@
+{
+ "manual_id": 2531,
+ "type_name": "Lua代码",
+ "manual_name": "Lua链式调用",
+ "author": "NekoLaska",
+ "platform": "所有环境",
+ "source_date": "2023年03月03日 00:27:35",
+ "hits": 154,
+ "up": 2,
+ "favorite": 2,
+ "comment": 8,
+ "source_file": "Lua代码\\2531_Lua链式调用.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 19,
+ "char_count": 300,
+ "confidence": "static_review"
+}

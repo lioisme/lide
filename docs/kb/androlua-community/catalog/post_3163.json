@@ -1,0 +1,24 @@
+{
+ "manual_id": 3163,
+ "type_name": "实用代码",
+ "manual_name": "滑动屏幕更改亮度和音量",
+ "author": "•⤙•/k",
+ "platform": "AndLua",
+ "source_date": "2023年07月29日 23:28:03",
+ "hits": 383,
+ "up": 7,
+ "favorite": 16,
+ "comment": 5,
+ "source_file": "实用代码\\3163_滑动屏幕更改亮度和音量.lua",
+ "kind": "text_note",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "short_text",
+  "global_pollution"
+ ],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 19,
+ "char_count": 300,
+ "confidence": "static_review"
+}

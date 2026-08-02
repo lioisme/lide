@@ -1,0 +1,21 @@
+{
+ "manual_id": 3889,
+ "type_name": "浏览器",
+ "manual_name": "Lua控制Js调节音量大小",
+ "author": "•⤙•/k",
+ "platform": "AndLua",
+ "source_date": "2024年02月15日 12:26:22",
+ "hits": 376,
+ "up": 4,
+ "favorite": 13,
+ "comment": 7,
+ "source_file": "浏览器\\3889_Lua控制Js调节音量大小.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 20,
+ "char_count": 300,
+ "confidence": "static_review"
+}

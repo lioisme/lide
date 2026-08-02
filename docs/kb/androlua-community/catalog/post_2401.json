@@ -1,0 +1,23 @@
+{
+ "manual_id": 2401,
+ "type_name": "系统",
+ "manual_name": "Lua安全沙盒实现-方法1",
+ "author": "壹影",
+ "platform": "所有环境",
+ "source_date": "2023年01月30日 21:17:46",
+ "hits": 463,
+ "up": 7,
+ "favorite": 17,
+ "comment": 9,
+ "source_file": "系统\\2401_Lua安全沙盒实现-方法1.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 7,
+ "char_count": 300,
+ "confidence": "static_review"
+}

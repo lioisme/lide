@@ -1,0 +1,23 @@
+{
+ "manual_id": 730,
+ "type_name": "JS教程",
+ "manual_name": "去除网页浮动广告",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 179,
+ "up": 0,
+ "favorite": 4,
+ "comment": 1,
+ "source_file": "JS教程\\730_去除网页浮动广告.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 2,
+ "char_count": 175,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 3679,
+ "type_name": "控件属性",
+ "manual_name": "放大镜（Magnifier）",
+ "author": "kamihitoe",
+ "platform": "所有环境",
+ "source_date": "2023年12月22日 14:33:24",
+ "hits": 314,
+ "up": 6,
+ "favorite": 23,
+ "comment": 2,
+ "source_file": "控件属性\\3679_放大镜（Magnifier）.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 8,
+ "char_count": 300,
+ "confidence": "static_review"
+}

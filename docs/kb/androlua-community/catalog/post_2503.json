@@ -1,0 +1,21 @@
+{
+ "manual_id": 2503,
+ "type_name": "Activity活动",
+ "manual_name": "仿Windows框选器",
+ "author": "Cheese",
+ "platform": "所有环境",
+ "source_date": "2023年02月23日 18:57:35",
+ "hits": 271,
+ "up": 9,
+ "favorite": 22,
+ "comment": 0,
+ "source_file": "Activity活动\\2503_仿Windows框选器.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 11,
+ "char_count": 300,
+ "confidence": "static_review"
+}

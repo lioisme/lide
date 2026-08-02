@@ -1,0 +1,21 @@
+{
+ "manual_id": 3422,
+ "type_name": "小游戏",
+ "manual_name": "小球单体物理模拟(随手做的)",
+ "author": "AstarLC",
+ "platform": "所有环境",
+ "source_date": "2023年09月23日 21:19:17",
+ "hits": 333,
+ "up": 4,
+ "favorite": 9,
+ "comment": 5,
+ "source_file": "小游戏\\3422_小球单体物理模拟(随手做的).lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 14,
+ "char_count": 300,
+ "confidence": "static_review"
+}

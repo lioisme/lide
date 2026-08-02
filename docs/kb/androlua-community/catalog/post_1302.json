@@ -1,0 +1,23 @@
+{
+ "manual_id": 1302,
+ "type_name": "实用代码",
+ "manual_name": "可作为正则的全部顶级域名",
+ "author": "jies辰",
+ "platform": "所有环境",
+ "source_date": "2022年01月09日 15:19:15",
+ "hits": 228,
+ "up": 1,
+ "favorite": 1,
+ "comment": 0,
+ "source_file": "实用代码\\1302_可作为正则的全部顶级域名.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 6,
+ "char_count": 300,
+ "confidence": "static_review"
+}

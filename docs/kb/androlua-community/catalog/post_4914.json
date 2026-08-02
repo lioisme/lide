@@ -1,0 +1,21 @@
+{
+ "manual_id": 4914,
+ "type_name": "Layout布局",
+ "manual_name": "通讯录，右侧滑动快速查找和搜索查找联系人",
+ "author": "清风与酒。",
+ "platform": "Fusion App2",
+ "source_date": "2025年07月13日 19:23:23",
+ "hits": 293,
+ "up": 4,
+ "favorite": 13,
+ "comment": 0,
+ "source_file": "Layout布局\\4914_通讯录，右侧滑动快速查找和搜索查找联系人.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 14,
+ "char_count": 300,
+ "confidence": "static_review"
+}

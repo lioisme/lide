@@ -1,0 +1,21 @@
+{
+ "manual_id": 2137,
+ "type_name": "网络请求",
+ "manual_name": "okHttp请求封装函数",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2022年12月02日 18:23:01",
+ "hits": 1092,
+ "up": 9,
+ "favorite": 36,
+ "comment": 4,
+ "source_file": "网络请求\\2137_okHttp请求封装函数.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 9,
+ "char_count": 300,
+ "confidence": "static_review"
+}

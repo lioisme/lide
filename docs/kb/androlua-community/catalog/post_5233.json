@@ -1,0 +1,21 @@
+{
+ "manual_id": 5233,
+ "type_name": "小游戏",
+ "manual_name": "扫雷游戏",
+ "author": "琪琪子",
+ "platform": "AndLua",
+ "source_date": "2026年02月06日 11:01:56",
+ "hits": 197,
+ "up": 2,
+ "favorite": 6,
+ "comment": 1,
+ "source_file": "小游戏\\5233_扫雷游戏.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 16,
+ "char_count": 300,
+ "confidence": "static_review"
+}

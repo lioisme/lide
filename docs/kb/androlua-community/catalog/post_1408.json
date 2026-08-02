@@ -1,0 +1,24 @@
+{
+ "manual_id": 1408,
+ "type_name": "小工具",
+ "manual_name": "随机一文",
+ "author": "YONGLE-永乐",
+ "platform": "所有环境",
+ "source_date": "2022年03月16日 17:26:24",
+ "hits": 307,
+ "up": 3,
+ "favorite": 13,
+ "comment": 1,
+ "source_file": "小工具\\1408_随机一文.lua",
+ "kind": "text_note",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "short_text",
+  "global_pollution"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 17,
+ "char_count": 300,
+ "confidence": "static_review"
+}

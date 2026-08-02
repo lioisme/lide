@@ -1,0 +1,23 @@
+{
+ "manual_id": 1234,
+ "type_name": "控件属性",
+ "manual_name": "开关、单选框、复选框颜色修改",
+ "author": "jies辰",
+ "platform": "",
+ "source_date": "2021年12月19日 18:15:16",
+ "hits": 497,
+ "up": 7,
+ "favorite": 16,
+ "comment": 0,
+ "source_file": "控件属性\\1234_开关、单选框、复选框颜色修改.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 5,
+ "char_count": 300,
+ "confidence": "static_review"
+}

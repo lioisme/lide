@@ -1,0 +1,21 @@
+{
+ "manual_id": 4270,
+ "type_name": "小工具",
+ "manual_name": "我能活好久",
+ "author": "繁事",
+ "platform": "所有环境",
+ "source_date": "2024年09月26日 23:15:56",
+ "hits": 331,
+ "up": 2,
+ "favorite": 8,
+ "comment": 2,
+ "source_file": "小工具\\4270_我能活好久.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 16,
+ "char_count": 300,
+ "confidence": "static_review"
+}

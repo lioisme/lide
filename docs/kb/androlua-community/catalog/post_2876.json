@@ -1,0 +1,21 @@
+{
+ "manual_id": 2876,
+ "type_name": "布局教程",
+ "manual_name": "侧滑栏背景音乐开关【二改】",
+ "author": "QQ少年",
+ "platform": "Fusion App1",
+ "source_date": "2023年05月29日 21:21:06",
+ "hits": 524,
+ "up": 1,
+ "favorite": 5,
+ "comment": 1,
+ "source_file": "布局教程\\2876_侧滑栏背景音乐开关【二改】.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 11,
+ "char_count": 300,
+ "confidence": "static_review"
+}

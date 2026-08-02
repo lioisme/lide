@@ -1,0 +1,23 @@
+{
+ "manual_id": 3473,
+ "type_name": "自绘制",
+ "manual_name": "写的不怎么规范，大家随便瞅瞅",
+ "author": "煙雨舊時光",
+ "platform": "所有环境",
+ "source_date": "2023年10月07日 13:05:45",
+ "hits": 290,
+ "up": 2,
+ "favorite": 2,
+ "comment": 0,
+ "source_file": "自绘制\\3473_写的不怎么规范，大家随便瞅瞅.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

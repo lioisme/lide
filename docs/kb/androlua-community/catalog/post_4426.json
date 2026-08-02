@@ -1,0 +1,21 @@
+{
+ "manual_id": 4426,
+ "type_name": "基础代码",
+ "manual_name": "异或加密(ai版)",
+ "author": "ᅟᅠ        ‌",
+ "platform": "所有环境",
+ "source_date": "2024年12月25日 07:39:38",
+ "hits": 532,
+ "up": 5,
+ "favorite": 14,
+ "comment": 3,
+ "source_file": "基础代码\\4426_异或加密(ai版).lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 10,
+ "char_count": 300,
+ "confidence": "static_review"
+}

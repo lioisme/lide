@@ -1,0 +1,21 @@
+{
+ "manual_id": 2293,
+ "type_name": "布局教程",
+ "manual_name": "设置MaterialCardView的RippleColor",
+ "author": "智",
+ "platform": "所有环境",
+ "source_date": "2023年01月07日 21:35:26",
+ "hits": 262,
+ "up": 3,
+ "favorite": 11,
+ "comment": 2,
+ "source_file": "布局教程\\2293_设置MaterialCardView的RippleColor.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 9,
+ "char_count": 300,
+ "confidence": "static_review"
+}

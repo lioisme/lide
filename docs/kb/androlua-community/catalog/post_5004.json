@@ -1,0 +1,23 @@
+{
+ "manual_id": 5004,
+ "type_name": "系统",
+ "manual_name": "电量伪装",
+ "author": "听风诉说",
+ "platform": "所有环境",
+ "source_date": "2025年08月25日 01:53:36",
+ "hits": 358,
+ "up": 1,
+ "favorite": 5,
+ "comment": 3,
+ "source_file": "系统\\5004_电量伪装.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 7,
+ "char_count": 150,
+ "confidence": "static_review"
+}

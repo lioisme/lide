@@ -1,0 +1,24 @@
+{
+ "manual_id": 3362,
+ "type_name": "文件操作",
+ "manual_name": "lua zip4j 带密码压缩 （手册首发）",
+ "author": "Genouka",
+ "platform": "所有环境",
+ "source_date": "2023年09月02日 16:15:03",
+ "hits": 699,
+ "up": 11,
+ "favorite": 32,
+ "comment": 5,
+ "source_file": "文件操作\\3362_lua_zip4j_带密码压缩_（手册首发）.lua",
+ "kind": "fragment",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "truncated_tail",
+  "incomplete_fragment"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 14,
+ "char_count": 300,
+ "confidence": "static_review"
+}

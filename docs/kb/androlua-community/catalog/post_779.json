@@ -1,0 +1,21 @@
+{
+ "manual_id": 779,
+ "type_name": "自绘制",
+ "manual_name": "绘制多边形实例",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 146,
+ "up": 2,
+ "favorite": 5,
+ "comment": 0,
+ "source_file": "自绘制\\779_绘制多边形实例.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 14,
+ "char_count": 300,
+ "confidence": "static_review"
+}

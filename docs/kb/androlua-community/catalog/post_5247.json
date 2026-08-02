@@ -1,0 +1,24 @@
+{
+ "manual_id": 5247,
+ "type_name": "小工具",
+ "manual_name": "聚合音乐搜索（第二次测试）",
+ "author": "海纳百氚，有容乃大",
+ "platform": "Fusion App2,reOpenLua,OpenLuaX",
+ "source_date": "2026年02月26日 09:56:14",
+ "hits": 679,
+ "up": 4,
+ "favorite": 13,
+ "comment": 4,
+ "source_file": "小工具\\5247_聚合音乐搜索（第二次测试）.lua",
+ "kind": "announce",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "announcement_no_code",
+  "announcement"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 12,
+ "char_count": 300,
+ "confidence": "static_review"
+}

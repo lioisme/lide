@@ -1,0 +1,21 @@
+{
+ "manual_id": 5100,
+ "type_name": "网络请求",
+ "manual_name": "YouTube视频解析演示用例测试实例",
+ "author": "海纳百氚，有容乃大",
+ "platform": "Fusion App2,reOpenLua,OpenLuaX",
+ "source_date": "2025年10月20日 01:42:07",
+ "hits": 356,
+ "up": 1,
+ "favorite": 6,
+ "comment": 0,
+ "source_file": "网络请求\\5100_YouTube视频解析演示用例测试实例.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 14,
+ "char_count": 300,
+ "confidence": "static_review"
+}

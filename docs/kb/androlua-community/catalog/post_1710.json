@@ -1,0 +1,21 @@
+{
+ "manual_id": 1710,
+ "type_name": "小工具",
+ "manual_name": "手电筒",
+ "author": "智",
+ "platform": "所有环境",
+ "source_date": "2022年08月12日 10:15:29",
+ "hits": 671,
+ "up": 10,
+ "favorite": 44,
+ "comment": 15,
+ "source_file": "小工具\\1710_手电筒.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 19,
+ "char_count": 300,
+ "confidence": "static_review"
+}

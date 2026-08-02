@@ -1,0 +1,21 @@
+{
+ "manual_id": 4882,
+ "type_name": "编码转换",
+ "manual_name": "混淆代码",
+ "author": "合成河取.exe",
+ "platform": "AndroLua",
+ "source_date": "2025年07月05日 14:52:46",
+ "hits": 319,
+ "up": 2,
+ "favorite": 12,
+ "comment": 0,
+ "source_file": "编码转换\\4882_混淆代码.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 16,
+ "char_count": 300,
+ "confidence": "static_review"
+}

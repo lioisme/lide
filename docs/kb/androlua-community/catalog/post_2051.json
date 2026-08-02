@@ -1,0 +1,21 @@
+{
+ "manual_id": 2051,
+ "type_name": "自绘制",
+ "manual_name": "颜色模型转换",
+ "author": "狸猫🐱",
+ "platform": "所有环境",
+ "source_date": "2022年11月08日 01:54:28",
+ "hits": 261,
+ "up": 5,
+ "favorite": 8,
+ "comment": 0,
+ "source_file": "自绘制\\2051_颜色模型转换.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 14,
+ "char_count": 300,
+ "confidence": "static_review"
+}

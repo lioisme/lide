@@ -1,0 +1,24 @@
+{
+ "manual_id": 1301,
+ "type_name": "Adapter容器",
+ "manual_name": "RecyclerView列表视图",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "Fusion App2",
+ "source_date": "2022年01月09日 13:02:08",
+ "hits": 2815,
+ "up": 25,
+ "favorite": 82,
+ "comment": 12,
+ "source_file": "Adapter容器\\1301_RecyclerView列表视图.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 11,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,23 @@
+{
+ "manual_id": 3489,
+ "type_name": "自绘制",
+ "manual_name": "反弹球，完善阻拦条下面反弹",
+ "author": "煙雨舊時光",
+ "platform": "所有环境",
+ "source_date": "2023年10月13日 14:38:49",
+ "hits": 618,
+ "up": 1,
+ "favorite": 3,
+ "comment": 5,
+ "source_file": "自绘制\\3489_反弹球，完善阻拦条下面反弹.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 17,
+ "char_count": 300,
+ "confidence": "static_review"
+}

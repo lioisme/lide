@@ -1,0 +1,21 @@
+{
+ "manual_id": 5176,
+ "type_name": "消息通知",
+ "manual_name": "拨打电话",
+ "author": "鸡汤",
+ "platform": "AndLua",
+ "source_date": "2026年01月18日 10:53:40",
+ "hits": 106,
+ "up": 0,
+ "favorite": 0,
+ "comment": 0,
+ "source_file": "消息通知\\5176_拨打电话.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 14,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 3086,
+ "type_name": "Java教程",
+ "manual_name": "正则表达式的灾难性回溯",
+ "author": "Adam·Eva",
+ "platform": "所有环境",
+ "source_date": "2023年07月16日 04:36:43",
+ "hits": 178,
+ "up": 1,
+ "favorite": 1,
+ "comment": 0,
+ "source_file": "Java教程\\3086_正则表达式的灾难性回溯.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 6,
+ "char_count": 206,
+ "confidence": "static_review"
+}

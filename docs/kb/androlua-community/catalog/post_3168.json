@@ -1,0 +1,21 @@
+{
+ "manual_id": 3168,
+ "type_name": "小工具",
+ "manual_name": "随机姓名生成器",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2023年07月31日 10:37:30",
+ "hits": 298,
+ "up": 4,
+ "favorite": 7,
+ "comment": 19,
+ "source_file": "小工具\\3168_随机姓名生成器.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 15,
+ "char_count": 300,
+ "confidence": "static_review"
+}

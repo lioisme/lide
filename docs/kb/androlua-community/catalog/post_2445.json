@@ -1,0 +1,21 @@
+{
+ "manual_id": 2445,
+ "type_name": "小工具",
+ "manual_name": "ClipBoardService",
+ "author": "智",
+ "platform": "所有环境",
+ "source_date": "2023年02月08日 22:08:54",
+ "hits": 266,
+ "up": 5,
+ "favorite": 10,
+ "comment": 1,
+ "source_file": "小工具\\2445_ClipBoardService.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 11,
+ "char_count": 206,
+ "confidence": "static_review"
+}

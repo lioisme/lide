@@ -1,0 +1,21 @@
+{
+ "manual_id": 5264,
+ "type_name": "Lua代码",
+ "manual_name": "五个圆点加载动画",
+ "author": "琪琪子",
+ "platform": "AndLua",
+ "source_date": "2026年03月10日 16:46:10",
+ "hits": 499,
+ "up": 8,
+ "favorite": 14,
+ "comment": 2,
+ "source_file": "Lua代码\\5264_五个圆点加载动画.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 17,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 5019,
+ "type_name": "Layout布局",
+ "manual_name": "LayoutInflater（自用布局加载模块）",
+ "author": "⁣​",
+ "platform": "OpenLuaX",
+ "source_date": "2025年08月30日 20:30:40",
+ "hits": 300,
+ "up": 1,
+ "favorite": 0,
+ "comment": 0,
+ "source_file": "Layout布局\\5019_LayoutInflater（自用布局加载模块）.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 14,
+ "char_count": 300,
+ "confidence": "static_review"
+}

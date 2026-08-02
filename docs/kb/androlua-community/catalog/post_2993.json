@@ -1,0 +1,21 @@
+{
+ "manual_id": 2993,
+ "type_name": "编码转换",
+ "manual_name": "仿数码管显示",
+ "author": "鲲宝",
+ "platform": "所有环境",
+ "source_date": "2023年06月30日 10:48:05",
+ "hits": 599,
+ "up": 6,
+ "favorite": 2,
+ "comment": 7,
+ "source_file": "编码转换\\2993_仿数码管显示.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 10,
+ "char_count": 300,
+ "confidence": "static_review"
+}

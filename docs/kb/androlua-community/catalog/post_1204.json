@@ -1,0 +1,21 @@
+{
+ "manual_id": 1204,
+ "type_name": "布局教程",
+ "manual_name": "EditText封装",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2021年10月10日 05:18:08",
+ "hits": 295,
+ "up": 3,
+ "favorite": 2,
+ "comment": 0,
+ "source_file": "布局教程\\1204_EditText封装.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 14,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 2134,
+ "type_name": "自绘制",
+ "manual_name": "函数绘制-七彩进度条",
+ "author": "博士",
+ "platform": "所有环境",
+ "source_date": "2022年12月02日 14:51:40",
+ "hits": 390,
+ "up": 8,
+ "favorite": 23,
+ "comment": 2,
+ "source_file": "自绘制\\2134_函数绘制-七彩进度条.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 16,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 3465,
+ "type_name": "远程更新",
+ "manual_name": "好看的远程启动图十对接",
+ "author": "辉.",
+ "platform": "AndroLua,AndLua",
+ "source_date": "2023年10月06日 01:38:41",
+ "hits": 663,
+ "up": 0,
+ "favorite": 8,
+ "comment": 5,
+ "source_file": "远程更新\\3465_好看的远程启动图十对接.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 16,
+ "char_count": 300,
+ "confidence": "static_review"
+}

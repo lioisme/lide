@@ -33,6 +33,9 @@ public:
     void setInitialized(bool v) { mInitialized = v; }
     bool isUpdating() const { return mUpdating; }
     void setUpdating(bool v) { mUpdating = v; }
+    // .moc 对象图唯一所有者（归属权修复 2026-08-02）：必须声明在 mLive2DModel
+    // 之前 → 成员逆序析构 → 模型（引用对象图）先销毁，reader（拥有对象图）后销毁。
+    std::unique_ptr<class BinaryReader> mMocReader;
     std::unique_ptr<Live2DModelOpenGL> mLive2DModel;
     L2DModelMatrix mModelMatrix;
     std::unique_ptr<L2DEyeBlink> mEyeBlink;

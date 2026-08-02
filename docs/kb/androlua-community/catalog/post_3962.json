@@ -1,0 +1,21 @@
+{
+ "manual_id": 3962,
+ "type_name": "基础代码",
+ "manual_name": "播放文件夹序列帧动图",
+ "author": "小孩，别闹！",
+ "platform": "Fusion App2",
+ "source_date": "2024年03月11日 09:41:32",
+ "hits": 378,
+ "up": 6,
+ "favorite": 13,
+ "comment": 3,
+ "source_file": "基础代码\\3962_播放文件夹序列帧动图.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 4148,
+ "type_name": "小工具",
+ "manual_name": "图片加水印",
+ "author": "小白·马",
+ "platform": "所有环境",
+ "source_date": "2024年07月29日 23:08:52",
+ "hits": 680,
+ "up": 9,
+ "favorite": 28,
+ "comment": 16,
+ "source_file": "小工具\\4148_图片加水印.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 9,
+ "char_count": 300,
+ "confidence": "static_review"
+}

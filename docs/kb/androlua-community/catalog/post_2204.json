@@ -1,0 +1,21 @@
+{
+ "manual_id": 2204,
+ "type_name": "布局教程",
+ "manual_name": "全局设置控件样式",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2022年12月18日 15:38:06",
+ "hits": 620,
+ "up": 9,
+ "favorite": 26,
+ "comment": 3,
+ "source_file": "布局教程\\2204_全局设置控件样式.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 20,
+ "char_count": 300,
+ "confidence": "static_review"
+}

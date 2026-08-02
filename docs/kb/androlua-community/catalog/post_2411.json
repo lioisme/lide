@@ -1,0 +1,21 @@
+{
+ "manual_id": 2411,
+ "type_name": "布局教程",
+ "manual_name": "易于STMP发信的一个ui",
+ "author": "白咲花",
+ "platform": "所有环境",
+ "source_date": "2023年01月31日 21:49:18",
+ "hits": 561,
+ "up": 4,
+ "favorite": 19,
+ "comment": 3,
+ "source_file": "布局教程\\2411_易于STMP发信的一个ui.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 12,
+ "char_count": 300,
+ "confidence": "static_review"
+}

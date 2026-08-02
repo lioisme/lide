@@ -1,0 +1,23 @@
+{
+ "manual_id": 1663,
+ "type_name": "字符处理",
+ "manual_name": "Lua语言代码规范",
+ "author": "帕帝天秀",
+ "platform": "所有环境",
+ "source_date": "2022年08月05日 21:33:07",
+ "hits": 429,
+ "up": 11,
+ "favorite": 19,
+ "comment": 0,
+ "source_file": "字符处理\\1663_Lua语言代码规范.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 21,
+ "char_count": 300,
+ "confidence": "static_review"
+}

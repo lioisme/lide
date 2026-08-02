@@ -1,0 +1,21 @@
+{
+ "manual_id": 5008,
+ "type_name": "基础代码",
+ "manual_name": "通过MediaStore保存Bitmap对象",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2025年08月27日 14:12:07",
+ "hits": 218,
+ "up": 0,
+ "favorite": 6,
+ "comment": 0,
+ "source_file": "基础代码\\5008_通过MediaStore保存Bitmap对象.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 11,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,23 @@
+{
+ "manual_id": 5290,
+ "type_name": "小工具",
+ "manual_name": "小米/红米电池健康报告解析工具",
+ "author": "海纳百氚，有容乃大",
+ "platform": "reOpenLua,OpenLuaX",
+ "source_date": "2026年04月09日 06:06:19",
+ "hits": 202,
+ "up": 3,
+ "favorite": 4,
+ "comment": 0,
+ "source_file": "小工具\\5290_小米_红米电池健康报告解析工具.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

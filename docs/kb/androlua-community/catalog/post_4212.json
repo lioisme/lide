@@ -1,0 +1,24 @@
+{
+ "manual_id": 4212,
+ "type_name": "小游戏",
+ "manual_name": "看表情猜成语",
+ "author": "⁧拾玖⁧‭",
+ "platform": "所有环境",
+ "source_date": "2024年08月22日 19:52:01",
+ "hits": 252,
+ "up": 0,
+ "favorite": 7,
+ "comment": 7,
+ "source_file": "小游戏\\4212_看表情猜成语.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 11,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,24 @@
+{
+ "manual_id": 3528,
+ "type_name": "数据存储",
+ "manual_name": "存储应用数据封装",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2023年10月28日 08:27:42",
+ "hits": 819,
+ "up": 16,
+ "favorite": 54,
+ "comment": 1,
+ "source_file": "数据存储\\3528_存储应用数据封装.lua",
+ "kind": "text_note",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "short_text",
+  "global_pollution"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 15,
+ "char_count": 300,
+ "confidence": "static_review"
+}

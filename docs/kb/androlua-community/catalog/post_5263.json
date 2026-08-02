@@ -1,0 +1,21 @@
+{
+ "manual_id": 5263,
+ "type_name": "Lua代码",
+ "manual_name": "Loading动画",
+ "author": "琪琪子",
+ "platform": "AndLua",
+ "source_date": "2026年03月10日 16:33:27",
+ "hits": 289,
+ "up": 6,
+ "favorite": 10,
+ "comment": 1,
+ "source_file": "Lua代码\\5263_Loading动画.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 17,
+ "char_count": 300,
+ "confidence": "static_review"
+}

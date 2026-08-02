@@ -1,0 +1,21 @@
+{
+ "manual_id": 2375,
+ "type_name": "小工具",
+ "manual_name": "magiskSU检测",
+ "author": "老黑",
+ "platform": "所有环境",
+ "source_date": "2023年01月25日 08:59:28",
+ "hits": 261,
+ "up": 2,
+ "favorite": 6,
+ "comment": 1,
+ "source_file": "小工具\\2375_magiskSU检测.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 20,
+ "char_count": 300,
+ "confidence": "static_review"
+}

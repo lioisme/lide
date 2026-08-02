@@ -1,0 +1,21 @@
+{
+ "manual_id": 4297,
+ "type_name": "小工具",
+ "manual_name": "坤坤语音包(更新) ",
+ "author": "清风与酒。",
+ "platform": "Fusion App2",
+ "source_date": "2024年10月13日 00:27:54",
+ "hits": 851,
+ "up": 9,
+ "favorite": 30,
+ "comment": 2,
+ "source_file": "小工具\\4297_坤坤语音包(更新).lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 15,
+ "char_count": 300,
+ "confidence": "static_review"
+}

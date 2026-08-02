@@ -1,0 +1,21 @@
+{
+ "manual_id": 3054,
+ "type_name": "Lua代码",
+ "manual_name": "实现for循环",
+ "author": "NekoLaska",
+ "platform": "所有环境",
+ "source_date": "2023年07月12日 12:28:22",
+ "hits": 213,
+ "up": 3,
+ "favorite": 4,
+ "comment": 0,
+ "source_file": "Lua代码\\3054_实现for循环.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 19,
+ "char_count": 300,
+ "confidence": "static_review"
+}

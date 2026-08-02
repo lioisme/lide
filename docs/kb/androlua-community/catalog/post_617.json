@@ -1,0 +1,23 @@
+{
+ "manual_id": 617,
+ "type_name": "字符处理",
+ "manual_name": "取文件后缀",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 139,
+ "up": 0,
+ "favorite": 3,
+ "comment": 0,
+ "source_file": "字符处理\\617_取文件后缀.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 4,
+ "char_count": 67,
+ "confidence": "static_review"
+}

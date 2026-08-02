@@ -1,0 +1,24 @@
+{
+ "manual_id": 3177,
+ "type_name": "实用代码",
+ "manual_name": "双击返回列表顶部",
+ "author": "Li",
+ "platform": "所有环境",
+ "source_date": "2023年08月01日 17:12:38",
+ "hits": 210,
+ "up": 6,
+ "favorite": 13,
+ "comment": 0,
+ "source_file": "实用代码\\3177_双击返回列表顶部.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 15,
+ "char_count": 285,
+ "confidence": "static_review"
+}

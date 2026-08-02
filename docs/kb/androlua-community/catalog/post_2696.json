@@ -1,0 +1,21 @@
+{
+ "manual_id": 2696,
+ "type_name": "Lua代码",
+ "manual_name": "随机颜色",
+ "author": "狸猫🐱",
+ "platform": "所有环境",
+ "source_date": "2023年04月22日 20:08:41",
+ "hits": 391,
+ "up": 6,
+ "favorite": 15,
+ "comment": 6,
+ "source_file": "Lua代码\\2696_随机颜色.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 16,
+ "char_count": 300,
+ "confidence": "static_review"
+}

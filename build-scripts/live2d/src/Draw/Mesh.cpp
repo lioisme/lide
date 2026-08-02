@@ -13,6 +13,7 @@
 #include "../Util/UtInterpolate.hpp"
 #include <cstdio>
 #include "../Common/Log.hpp"
+#include <android/log.h>
 
 namespace live2d {
 
@@ -32,6 +33,20 @@ void Mesh::read(BinaryReader& br) {
 
     auto obj = br.readObject<std::vector<int32_t>>();
     mIndexArray.resize(mPolygonCount * 3);
+    if ((size_t)(mPolygonCount * 3) > obj.size())
+        __android_log_print(ANDROID_LOG_ERROR, "live2d-diag",
+            "MESH_INDEX_READ_OOB poly*3=%d objSize=%zu", mPolygonCount * 3, obj.size());
+    {
+        int minI = 0, maxI = 0;
+        for (int i = 0; i < (int)obj.size(); i++) {
+            if (obj[i] < minI) minI = obj[i];
+            if (obj[i] > maxI) maxI = obj[i];
+        }
+        if (maxI >= mPointCount || minI < 0 || maxI > 32767)
+            __android_log_print(ANDROID_LOG_ERROR, "live2d-diag",
+                "MESH_INDEX_RANGE min=%d max=%d pointCount=%d idxCount=%d",
+                minI, maxI, mPointCount, (int)obj.size());
+    }
     for (int i = mPolygonCount * 3 - 1; i >= 0; i--) {
         mIndexArray[i] = static_cast<int16_t>(obj[i]);
     }
@@ -100,7 +115,7 @@ void Mesh::setupInterpolate(ModelContext* modelContext, MeshContext* meshContext
     if (meshContext->mParamOutside) return;
 
     bool paramOutside = false;
-    UtInterpolate::interpolatePoints(modelContext, mPivotMgr.get(), paramOutside,
+    UtInterpolate::interpolatePoints(modelContext, mPivotMgr, paramOutside,
                                      mPointCount, mPivotPoints,
                                      meshContext->mInterpolatedPoints,
                                      VERTEX_OFFSET, VERTEX_STEP);

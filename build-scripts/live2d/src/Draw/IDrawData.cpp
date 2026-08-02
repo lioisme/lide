@@ -15,7 +15,7 @@ IDrawData::~IDrawData() = default;
 void IDrawData::read(BinaryReader& br) {
     mId = br.readObject<const Id*>();
     mTargetId = br.readObject<const Id*>();
-    mPivotMgr.reset(br.readObject<PivotManager*>());
+    mPivotMgr = br.readObject<PivotManager*>();
     mAverageDrawOrder = br.readInt32();
     mPivotDrawOrders = br.readInt32Array();
     mPivotOpacities = br.readFloat32Array();
@@ -37,11 +37,11 @@ void IDrawData::read(BinaryReader& br) {
 void IDrawData::setupInterpolate(ModelContext* mc, MeshContext* ctx) {
     ctx->mParamOutside = false;
     ctx->mInterpolatedDrawOrder = UtInterpolate::interpolateInt(
-        mc, mPivotMgr.get(), ctx->mParamOutside, mPivotDrawOrders);
+        mc, mPivotMgr, ctx->mParamOutside, mPivotDrawOrders);
     // Match Python: skip opacity interpolation if outside param
     if (ctx->mParamOutside) return;
     ctx->mInterpolatedOpacity = UtInterpolate::interpolateFloat(
-        mc, mPivotMgr.get(), ctx->mParamOutside, mPivotOpacities);
+        mc, mPivotMgr, ctx->mParamOutside, mPivotOpacities);
 }
 
 float IDrawData::getOpacity(MeshContext* ctx) {

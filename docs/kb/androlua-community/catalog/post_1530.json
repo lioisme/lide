@@ -1,0 +1,21 @@
+{
+ "manual_id": 1530,
+ "type_name": "实用代码",
+ "manual_name": "随机字符打印hello world？",
+ "author": "苦小怕",
+ "platform": "所有环境",
+ "source_date": "2022年06月08日 12:09:46",
+ "hits": 245,
+ "up": 4,
+ "favorite": 3,
+ "comment": 0,
+ "source_file": "实用代码\\1530_随机字符打印hello_world？.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 41,
+ "char_count": 300,
+ "confidence": "static_review"
+}

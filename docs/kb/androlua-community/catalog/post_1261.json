@@ -1,0 +1,24 @@
+{
+ "manual_id": 1261,
+ "type_name": "控件属性",
+ "manual_name": "进度条隐藏",
+ "author": "秋歌",
+ "platform": "",
+ "source_date": "2021年12月23日 22:15:10",
+ "hits": 241,
+ "up": 5,
+ "favorite": 11,
+ "comment": 0,
+ "source_file": "控件属性\\1261_进度条隐藏.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 7,
+ "char_count": 204,
+ "confidence": "static_review"
+}

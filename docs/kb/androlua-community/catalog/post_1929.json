@@ -1,0 +1,23 @@
+{
+ "manual_id": 1929,
+ "type_name": "小工具",
+ "manual_name": "百度热搜demo",
+ "author": "智",
+ "platform": "所有环境",
+ "source_date": "2022年10月01日 12:25:48",
+ "hits": 230,
+ "up": 5,
+ "favorite": 7,
+ "comment": 0,
+ "source_file": "小工具\\1929_百度热搜demo.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 21,
+ "char_count": 300,
+ "confidence": "static_review"
+}

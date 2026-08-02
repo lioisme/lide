@@ -1,0 +1,23 @@
+{
+ "manual_id": 1344,
+ "type_name": "Activity活动",
+ "manual_name": "Activity部分函数",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2022年01月29日 19:34:57",
+ "hits": 1283,
+ "up": 20,
+ "favorite": 82,
+ "comment": 1,
+ "source_file": "Activity活动\\1344_Activity部分函数.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 9,
+ "char_count": 300,
+ "confidence": "static_review"
+}

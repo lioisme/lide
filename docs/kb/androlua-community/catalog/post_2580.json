@@ -1,0 +1,24 @@
+{
+ "manual_id": 2580,
+ "type_name": "浏览器",
+ "manual_name": "加载魔方—求大佬添加加载网页完毕后关闭",
+ "author": "往事如烟",
+ "platform": "Fusion App2",
+ "source_date": "2023年03月16日 14:05:27",
+ "hits": 326,
+ "up": 9,
+ "favorite": 26,
+ "comment": 4,
+ "source_file": "浏览器\\2580_加载魔方—求大佬添加加载网页完毕后关闭.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 16,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 663,
+ "type_name": "控件属性",
+ "manual_name": "底栏滑动视图条",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 337,
+ "up": 1,
+ "favorite": 3,
+ "comment": 0,
+ "source_file": "控件属性\\663_底栏滑动视图条.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 21,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,25 @@
+{
+ "manual_id": 1275,
+ "type_name": "Activity活动",
+ "manual_name": "关闭/展开侧滑栏",
+ "author": "小白·马",
+ "platform": "Fusion App2",
+ "source_date": "2021年12月25日 21:35:56",
+ "hits": 376,
+ "up": 4,
+ "favorite": 14,
+ "comment": 0,
+ "source_file": "Activity活动\\1275_关闭_展开侧滑栏.lua",
+ "kind": "text_note",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "short_text",
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 18,
+ "char_count": 300,
+ "confidence": "static_review"
+}

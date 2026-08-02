@@ -1,0 +1,24 @@
+{
+ "manual_id": 2091,
+ "type_name": "远程更新",
+ "manual_name": "远程一次性通知",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2022年11月20日 22:44:33",
+ "hits": 776,
+ "up": 5,
+ "favorite": 19,
+ "comment": 7,
+ "source_file": "远程更新\\2091_远程一次性通知.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 17,
+ "char_count": 300,
+ "confidence": "static_review"
+}

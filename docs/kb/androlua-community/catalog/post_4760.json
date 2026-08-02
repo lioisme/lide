@@ -1,0 +1,23 @@
+{
+ "manual_id": 4760,
+ "type_name": "小工具",
+ "manual_name": "新·蓝奏云直链解析(官方Api解析 + 文件(夹)解析 + 适配器演示) v1.3",
+ "author": "迷糊.",
+ "platform": "Fusion App2,reOpenLua,OpenLuaX",
+ "source_date": "2025年05月12日 21:53:36",
+ "hits": 1086,
+ "up": 11,
+ "favorite": 23,
+ "comment": 16,
+ "source_file": "小工具\\4760_新·蓝奏云直链解析(官方Api解析_+_文件(夹)解析_+_适配器演示)_v1.3.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 10,
+ "char_count": 300,
+ "confidence": "static_review"
+}

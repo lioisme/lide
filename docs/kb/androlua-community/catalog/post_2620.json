@@ -1,0 +1,21 @@
+{
+ "manual_id": 2620,
+ "type_name": "实用代码",
+ "manual_name": "Lua加载xml布局",
+ "author": "2498709027",
+ "platform": "所有环境",
+ "source_date": "2023年04月02日 16:12:18",
+ "hits": 533,
+ "up": 7,
+ "favorite": 25,
+ "comment": 8,
+ "source_file": "实用代码\\2620_Lua加载xml布局.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 15,
+ "char_count": 300,
+ "confidence": "static_review"
+}

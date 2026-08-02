@@ -1,0 +1,21 @@
+{
+ "manual_id": 4460,
+ "type_name": "基础代码",
+ "manual_name": "改 · 一键爬取iMyShare工具站工具V2",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2025年01月12日 09:02:19",
+ "hits": 1909,
+ "up": 7,
+ "favorite": 25,
+ "comment": 8,
+ "source_file": "基础代码\\4460_改_·_一键爬取iMyShare工具站工具V2.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 17,
+ "char_count": 300,
+ "confidence": "static_review"
+}

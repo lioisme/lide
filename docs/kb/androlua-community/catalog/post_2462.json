@@ -1,0 +1,23 @@
+{
+ "manual_id": 2462,
+ "type_name": "字符处理",
+ "manual_name": "BaseSalt加密开源 基于Base64的加密",
+ "author": "Cheese",
+ "platform": "所有环境",
+ "source_date": "2023年02月13日 14:05:47",
+ "hits": 390,
+ "up": 7,
+ "favorite": 21,
+ "comment": 3,
+ "source_file": "字符处理\\2462_BaseSalt加密开源_基于Base64的加密.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 12,
+ "char_count": 300,
+ "confidence": "static_review"
+}

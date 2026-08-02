@@ -1,0 +1,21 @@
+{
+ "manual_id": 1297,
+ "type_name": "table表",
+ "manual_name": "Table倒序",
+ "author": "jies辰",
+ "platform": "所有环境",
+ "source_date": "2022年01月09日 10:52:46",
+ "hits": 118,
+ "up": 0,
+ "favorite": 5,
+ "comment": 0,
+ "source_file": "table表\\1297_Table倒序.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 11,
+ "char_count": 208,
+ "confidence": "static_review"
+}

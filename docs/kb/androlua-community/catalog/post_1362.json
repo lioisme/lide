@@ -1,0 +1,21 @@
+{
+ "manual_id": 1362,
+ "type_name": "浏览器",
+ "manual_name": "SSL证书异常处理",
+ "author": "Adam·Eva",
+ "platform": "Fusion App2",
+ "source_date": "2022年02月08日 15:38:58",
+ "hits": 280,
+ "up": 4,
+ "favorite": 13,
+ "comment": 0,
+ "source_file": "浏览器\\1362_SSL证书异常处理.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 18,
+ "char_count": 300,
+ "confidence": "static_review"
+}

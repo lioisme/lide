@@ -1,0 +1,21 @@
+{
+ "manual_id": 3891,
+ "type_name": "Lua代码",
+ "manual_name": "霓虹灯文字",
+ "author": "琪琪子",
+ "platform": "AndLua",
+ "source_date": "2024年02月16日 13:51:54",
+ "hits": 484,
+ "up": 16,
+ "favorite": 45,
+ "comment": 1,
+ "source_file": "Lua代码\\3891_霓虹灯文字.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 18,
+ "char_count": 300,
+ "confidence": "static_review"
+}

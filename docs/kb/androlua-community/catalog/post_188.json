@@ -1,0 +1,23 @@
+{
+ "manual_id": 188,
+ "type_name": "Activity活动",
+ "manual_name": "五大布局",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 167,
+ "up": 1,
+ "favorite": 1,
+ "comment": 0,
+ "source_file": "Activity活动\\188_五大布局.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 10,
+ "char_count": 300,
+ "confidence": "static_review"
+}

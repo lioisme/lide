@@ -1,0 +1,21 @@
+{
+ "manual_id": 2189,
+ "type_name": "安卓教程",
+ "manual_name": "ProgressBar",
+ "author": "Duo",
+ "platform": "所有环境",
+ "source_date": "2022年12月16日 12:23:17",
+ "hits": 1603,
+ "up": 41,
+ "favorite": 93,
+ "comment": 13,
+ "source_file": "安卓教程\\2189_ProgressBar.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 16,
+ "char_count": 300,
+ "confidence": "static_review"
+}

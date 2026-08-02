@@ -1,0 +1,21 @@
+{
+ "manual_id": 4393,
+ "type_name": "小工具",
+ "manual_name": "table去重",
+ "author": "⁧拾玖⁧‭",
+ "platform": "所有环境",
+ "source_date": "2024年12月06日 20:29:45",
+ "hits": 175,
+ "up": 1,
+ "favorite": 2,
+ "comment": 0,
+ "source_file": "小工具\\4393_table去重.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 12,
+ "char_count": 300,
+ "confidence": "static_review"
+}

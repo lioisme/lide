@@ -1,0 +1,21 @@
+{
+ "manual_id": 3989,
+ "type_name": "基础代码",
+ "manual_name": "百度搜图",
+ "author": "兜兜转转，又回到原点！",
+ "platform": "所有环境",
+ "source_date": "2024年03月24日 13:37:11",
+ "hits": 805,
+ "up": 9,
+ "favorite": 34,
+ "comment": 5,
+ "source_file": "基础代码\\3989_百度搜图.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 7,
+ "char_count": 300,
+ "confidence": "static_review"
+}

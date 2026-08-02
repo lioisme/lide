@@ -1,0 +1,21 @@
+{
+ "manual_id": 3032,
+ "type_name": "小游戏",
+ "manual_name": "Flappy Bird",
+ "author": "北极づ莜蓝",
+ "platform": "所有环境",
+ "source_date": "2023年07月05日 20:16:17",
+ "hits": 249,
+ "up": 2,
+ "favorite": 2,
+ "comment": 4,
+ "source_file": "小游戏\\3032_Flappy_Bird.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 24,
+ "char_count": 300,
+ "confidence": "static_review"
+}

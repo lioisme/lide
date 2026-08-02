@@ -1,0 +1,21 @@
+{
+ "manual_id": 5156,
+ "type_name": "Androlua教程",
+ "manual_name": "调用打印机",
+ "author": "橘猫",
+ "platform": "AndroLua,reOpenLua,OpenLuaX,AndLua",
+ "source_date": "2025年12月25日 02:36:20",
+ "hits": 342,
+ "up": 5,
+ "favorite": 16,
+ "comment": 2,
+ "source_file": "Androlua教程\\5156_调用打印机.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 6,
+ "char_count": 300,
+ "confidence": "static_review"
+}

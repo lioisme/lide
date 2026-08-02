@@ -1,0 +1,21 @@
+{
+ "manual_id": 2264,
+ "type_name": "布局教程",
+ "manual_name": "适配器嵌套RecyclerView",
+ "author": "水水水水水水水水水水水水",
+ "platform": "AndroLua,Fusion App2",
+ "source_date": "2022年12月31日 11:01:32",
+ "hits": 678,
+ "up": 10,
+ "favorite": 35,
+ "comment": 8,
+ "source_file": "布局教程\\2264_适配器嵌套RecyclerView.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 11,
+ "char_count": 300,
+ "confidence": "static_review"
+}

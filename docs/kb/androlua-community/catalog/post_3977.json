@@ -1,0 +1,21 @@
+{
+ "manual_id": 3977,
+ "type_name": "Lua代码",
+ "manual_name": "点九图",
+ "author": "今夜良辰",
+ "platform": "所有环境",
+ "source_date": "2024年03月17日 16:30:54",
+ "hits": 199,
+ "up": 2,
+ "favorite": 6,
+ "comment": 0,
+ "source_file": "Lua代码\\3977_点九图.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 7,
+ "char_count": 300,
+ "confidence": "static_review"
+}

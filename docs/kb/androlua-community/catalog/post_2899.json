@@ -1,0 +1,23 @@
+{
+ "manual_id": 2899,
+ "type_name": "实用代码",
+ "manual_name": "黄点追踪（暗点追踪）",
+ "author": "小白·马",
+ "platform": "所有环境",
+ "source_date": "2023年06月04日 14:31:51",
+ "hits": 362,
+ "up": 3,
+ "favorite": 12,
+ "comment": 4,
+ "source_file": "实用代码\\2899_黄点追踪（暗点追踪）.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 20,
+ "char_count": 300,
+ "confidence": "static_review"
+}

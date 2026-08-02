@@ -1,0 +1,21 @@
+{
+ "manual_id": 4912,
+ "type_name": "Lua代码",
+ "manual_name": "拓展函数和拓展属性",
+ "author": "NekoLaska",
+ "platform": "所有环境",
+ "source_date": "2025年07月13日 01:36:23",
+ "hits": 410,
+ "up": 5,
+ "favorite": 4,
+ "comment": 2,
+ "source_file": "Lua代码\\4912_拓展函数和拓展属性.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 12,
+ "char_count": 300,
+ "confidence": "static_review"
+}

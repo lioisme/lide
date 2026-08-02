@@ -1,0 +1,24 @@
+{
+ "manual_id": 4696,
+ "type_name": "安卓教程",
+ "manual_name": "音乐通知栏(正确取消广播监听 三次修复)",
+ "author": "。。",
+ "platform": "所有环境",
+ "source_date": "2025年04月14日 17:10:54",
+ "hits": 1508,
+ "up": 19,
+ "favorite": 56,
+ "comment": 12,
+ "source_file": "安卓教程\\4696_音乐通知栏(正确取消广播监听_三次修复).lua",
+ "kind": "fragment",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "truncated_tail",
+  "incomplete_fragment"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 10,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,24 @@
+{
+ "manual_id": 4012,
+ "type_name": "小工具",
+ "manual_name": "音乐频谱",
+ "author": "清ོ風༼",
+ "platform": "AndLua",
+ "source_date": "2024年04月12日 19:19:38",
+ "hits": 544,
+ "up": 6,
+ "favorite": 15,
+ "comment": 3,
+ "source_file": "小工具\\4012_音乐频谱.lua",
+ "kind": "fragment",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "truncated_tail",
+  "incomplete_fragment"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 14,
+ "char_count": 300,
+ "confidence": "static_review"
+}

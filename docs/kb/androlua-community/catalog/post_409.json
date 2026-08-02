@@ -1,0 +1,21 @@
+{
+ "manual_id": 409,
+ "type_name": "UI控件",
+ "manual_name": "CheckView(检查控件)",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 496,
+ "up": 1,
+ "favorite": 3,
+ "comment": 1,
+ "source_file": "UI控件\\409_CheckView(检查控件).lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 13,
+ "char_count": 287,
+ "confidence": "static_review"
+}

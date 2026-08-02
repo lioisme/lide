@@ -1,0 +1,21 @@
+{
+ "manual_id": 1245,
+ "type_name": "加密解密",
+ "manual_name": "字符串MD5加密",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2021年12月19日 18:34:07",
+ "hits": 350,
+ "up": 1,
+ "favorite": 10,
+ "comment": 0,
+ "source_file": "加密解密\\1245_字符串MD5加密.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

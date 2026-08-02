@@ -1,0 +1,21 @@
+{
+ "manual_id": 4977,
+ "type_name": "适配器",
+ "manual_name": "封装RecyclerView Adapter",
+ "author": "⁣​",
+ "platform": "Fusion App2,reOpenLua,OpenLuaX",
+ "source_date": "2025年08月09日 18:17:33",
+ "hits": 498,
+ "up": 5,
+ "favorite": 10,
+ "comment": 2,
+ "source_file": "适配器\\4977_封装RecyclerView_Adapter.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 12,
+ "char_count": 300,
+ "confidence": "static_review"
+}

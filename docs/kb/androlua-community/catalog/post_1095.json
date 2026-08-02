@@ -1,0 +1,23 @@
+{
+ "manual_id": 1095,
+ "type_name": "动画教程",
+ "manual_name": "布局动画控制器",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 222,
+ "up": 3,
+ "favorite": 13,
+ "comment": 0,
+ "source_file": "动画教程\\1095_布局动画控制器.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

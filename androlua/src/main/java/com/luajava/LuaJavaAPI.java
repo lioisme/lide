@@ -1816,8 +1816,12 @@ public final class LuaJavaAPI {
     }
 
     public static void pushJavaObject() {
-        if(sJavaObjectIdx.addAndGet(1)>50000)
-            throw new RuntimeException("Out of JavaObject");
+        // 计数器防泄漏（javaGc 回收时 -1）。实证：__gc 链路不触发时只增不减，
+        // 抛异常会把长时间运行的 Lua-Java 应用直接打死（看板娘 120fps 约 10s 崩溃）。
+        // 降级为周期告警，泄漏与否由 Lua 侧方法缓存控制。
+        int n = sJavaObjectIdx.addAndGet(1);
+        if (n > 50000 && n % 1000 == 0)
+            android.util.Log.w("luajava", "pushJavaObject count=" + n + " (JavaObject 未回收，疑似泄漏)");
     }
 }
 

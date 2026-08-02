@@ -1,0 +1,24 @@
+{
+ "manual_id": 3417,
+ "type_name": "小工具",
+ "manual_name": "无聊做的个计算器",
+ "author": "ㄛㄙ飞ㄋ",
+ "platform": "Fusion App2,reOpenLua",
+ "source_date": "2023年09月22日 01:21:48",
+ "hits": 341,
+ "up": 0,
+ "favorite": 4,
+ "comment": 5,
+ "source_file": "小工具\\3417_无聊做的个计算器.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 8,
+ "char_count": 300,
+ "confidence": "static_review"
+}

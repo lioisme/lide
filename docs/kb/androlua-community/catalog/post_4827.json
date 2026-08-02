@@ -1,0 +1,21 @@
+{
+ "manual_id": 4827,
+ "type_name": "Lua代码",
+ "manual_name": "获取手机屏幕DPI",
+ "author": "程国荣",
+ "platform": "所有环境",
+ "source_date": "2025年06月14日 15:09:56",
+ "hits": 218,
+ "up": 1,
+ "favorite": 5,
+ "comment": 0,
+ "source_file": "Lua代码\\4827_获取手机屏幕DPI.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 12,
+ "char_count": 300,
+ "confidence": "static_review"
+}

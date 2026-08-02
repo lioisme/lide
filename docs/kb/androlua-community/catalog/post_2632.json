@@ -1,0 +1,21 @@
+{
+ "manual_id": 2632,
+ "type_name": "系统",
+ "manual_name": "启动App每天执行一次事件",
+ "author": "迷糊.",
+ "platform": "所有环境",
+ "source_date": "2023年04月05日 15:09:18",
+ "hits": 798,
+ "up": 19,
+ "favorite": 76,
+ "comment": 6,
+ "source_file": "系统\\2632_启动App每天执行一次事件.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

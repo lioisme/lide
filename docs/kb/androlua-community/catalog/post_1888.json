@@ -1,0 +1,21 @@
+{
+ "manual_id": 1888,
+ "type_name": "数据存储",
+ "manual_name": "读取sharedData的全部数据",
+ "author": "苦小怕",
+ "platform": "Fusion App2",
+ "source_date": "2022年09月15日 14:05:29",
+ "hits": 472,
+ "up": 11,
+ "favorite": 17,
+ "comment": 0,
+ "source_file": "数据存储\\1888_读取sharedData的全部数据.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 14,
+ "char_count": 300,
+ "confidence": "static_review"
+}

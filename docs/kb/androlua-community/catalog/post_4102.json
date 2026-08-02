@@ -1,0 +1,21 @@
+{
+ "manual_id": 4102,
+ "type_name": "文件操作",
+ "manual_name": "Resource模块<1.2.1>",
+ "author": "诺~",
+ "platform": "所有环境",
+ "source_date": "2024年06月07日 18:47:18",
+ "hits": 804,
+ "up": 2,
+ "favorite": 14,
+ "comment": 12,
+ "source_file": "文件操作\\4102_Resource模块_1.2.1.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 9,
+ "char_count": 300,
+ "confidence": "static_review"
+}

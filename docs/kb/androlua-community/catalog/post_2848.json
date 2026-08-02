@@ -1,0 +1,21 @@
+{
+ "manual_id": 2848,
+ "type_name": "Lua代码",
+ "manual_name": "Lua 元表",
+ "author": "Cheese",
+ "platform": "所有环境",
+ "source_date": "2023年05月24日 06:35:22",
+ "hits": 102,
+ "up": 0,
+ "favorite": 0,
+ "comment": 0,
+ "source_file": "Lua代码\\2848_Lua_元表.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 11,
+ "char_count": 211,
+ "confidence": "static_review"
+}

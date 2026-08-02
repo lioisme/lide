@@ -1,0 +1,21 @@
+{
+ "manual_id": 4115,
+ "type_name": "Layout布局",
+ "manual_name": "修改应用内dpi",
+ "author": "⑨φZL",
+ "platform": "所有环境",
+ "source_date": "2024年06月23日 13:54:15",
+ "hits": 702,
+ "up": 7,
+ "favorite": 23,
+ "comment": 3,
+ "source_file": "Layout布局\\4115_修改应用内dpi.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 6,
+ "char_count": 256,
+ "confidence": "static_review"
+}

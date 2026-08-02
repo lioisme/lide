@@ -1,0 +1,21 @@
+{
+ "manual_id": 4830,
+ "type_name": "文件操作",
+ "manual_name": "lfs文件操作模块",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2025年06月15日 14:34:33",
+ "hits": 278,
+ "up": 2,
+ "favorite": 4,
+ "comment": 0,
+ "source_file": "文件操作\\4830_lfs文件操作模块.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 14,
+ "char_count": 300,
+ "confidence": "static_review"
+}

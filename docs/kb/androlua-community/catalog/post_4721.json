@@ -1,0 +1,21 @@
+{
+ "manual_id": 4721,
+ "type_name": "系统",
+ "manual_name": "获取自身Pid",
+ "author": "-𝕏-",
+ "platform": "所有环境",
+ "source_date": "2025年04月28日 14:04:08",
+ "hits": 201,
+ "up": 2,
+ "favorite": 1,
+ "comment": 0,
+ "source_file": "系统\\4721_获取自身Pid.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 5,
+ "char_count": 96,
+ "confidence": "static_review"
+}

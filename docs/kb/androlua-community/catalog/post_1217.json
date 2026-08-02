@@ -1,0 +1,23 @@
+{
+ "manual_id": 1217,
+ "type_name": "布局教程",
+ "manual_name": "线性布局属性",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2021年12月12日 14:27:16",
+ "hits": 146,
+ "up": 0,
+ "favorite": 7,
+ "comment": 0,
+ "source_file": "布局教程\\1217_线性布局属性.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 11,
+ "char_count": 300,
+ "confidence": "static_review"
+}

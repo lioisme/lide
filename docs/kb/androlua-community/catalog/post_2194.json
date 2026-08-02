@@ -1,0 +1,21 @@
+{
+ "manual_id": 2194,
+ "type_name": "小工具",
+ "manual_name": "搜索隐藏群聊",
+ "author": "祁画",
+ "platform": "Fusion App1,AppLua",
+ "source_date": "2022年12月17日 17:23:14",
+ "hits": 702,
+ "up": 11,
+ "favorite": 36,
+ "comment": 7,
+ "source_file": "小工具\\2194_搜索隐藏群聊.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 12,
+ "char_count": 300,
+ "confidence": "static_review"
+}

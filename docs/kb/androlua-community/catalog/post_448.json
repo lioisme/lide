@@ -1,0 +1,23 @@
+{
+ "manual_id": 448,
+ "type_name": "系统",
+ "manual_name": "IP地址",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 122,
+ "up": 0,
+ "favorite": 1,
+ "comment": 0,
+ "source_file": "系统\\448_IP地址.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 9,
+ "char_count": 240,
+ "confidence": "static_review"
+}

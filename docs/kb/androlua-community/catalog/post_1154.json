@@ -1,0 +1,23 @@
+{
+ "manual_id": 1154,
+ "type_name": "布局教程",
+ "manual_name": "Wave波浪球视图研究",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 108,
+ "up": 0,
+ "favorite": 0,
+ "comment": 0,
+ "source_file": "布局教程\\1154_Wave波浪球视图研究.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "global_pollution"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

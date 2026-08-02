@@ -1,0 +1,21 @@
+{
+ "manual_id": 2210,
+ "type_name": "对话框",
+ "manual_name": "BottomSheetDialog底部对话框",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "Fusion App2",
+ "source_date": "2022年12月18日 17:25:49",
+ "hits": 1238,
+ "up": 21,
+ "favorite": 66,
+ "comment": 4,
+ "source_file": "对话框\\2210_BottomSheetDialog底部对话框.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 19,
+ "char_count": 300,
+ "confidence": "static_review"
+}

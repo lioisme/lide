@@ -1,0 +1,21 @@
+{
+ "manual_id": 3331,
+ "type_name": "网络请求",
+ "manual_name": "com.android.okhttp",
+ "author": "kamihitoe",
+ "platform": "所有环境",
+ "source_date": "2023年08月29日 08:44:20",
+ "hits": 226,
+ "up": 1,
+ "favorite": 6,
+ "comment": 0,
+ "source_file": "网络请求\\3331_com.android.okhttp.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 10,
+ "char_count": 300,
+ "confidence": "static_review"
+}

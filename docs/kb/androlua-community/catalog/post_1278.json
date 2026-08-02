@@ -1,0 +1,24 @@
+{
+ "manual_id": 1278,
+ "type_name": "UI控件",
+ "manual_name": "TextView文本控件",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2021年12月28日 20:01:16",
+ "hits": 1046,
+ "up": 15,
+ "favorite": 60,
+ "comment": 4,
+ "source_file": "UI控件\\1278_TextView文本控件.lua",
+ "kind": "text_note",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "short_text",
+  "global_pollution"
+ ],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 14,
+ "char_count": 300,
+ "confidence": "static_review"
+}

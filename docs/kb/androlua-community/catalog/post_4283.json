@@ -1,0 +1,21 @@
+{
+ "manual_id": 4283,
+ "type_name": "Intent通信",
+ "manual_name": "一个最简单的检查权限方法",
+ "author": "⁧拾玖⁧‭",
+ "platform": "所有环境",
+ "source_date": "2024年09月30日 21:32:49",
+ "hits": 337,
+ "up": 3,
+ "favorite": 21,
+ "comment": 2,
+ "source_file": "Intent通信\\4283_一个最简单的检查权限方法.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 11,
+ "char_count": 300,
+ "confidence": "static_review"
+}

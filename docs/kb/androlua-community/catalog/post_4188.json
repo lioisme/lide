@@ -1,0 +1,24 @@
+{
+ "manual_id": 4188,
+ "type_name": "Layout布局",
+ "manual_name": "editText光标 把柄 选中颜色更改",
+ "author": "1111",
+ "platform": "所有环境",
+ "source_date": "2024年08月17日 17:55:46",
+ "hits": 651,
+ "up": 6,
+ "favorite": 14,
+ "comment": 3,
+ "source_file": "Layout布局\\4188_editText光标_把柄_选中颜色更改.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 8,
+ "char_count": 300,
+ "confidence": "static_review"
+}

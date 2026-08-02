@@ -1,0 +1,23 @@
+{
+ "manual_id": 499,
+ "type_name": "字符处理",
+ "manual_name": "取字符串中间",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 94,
+ "up": 0,
+ "favorite": 0,
+ "comment": 0,
+ "source_file": "字符处理\\499_取字符串中间.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 1,
+ "char_count": 31,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 3474,
+ "type_name": "小工具",
+ "manual_name": "看图猜成语2.1",
+ "author": "热爱从不降温",
+ "platform": "所有环境",
+ "source_date": "2023年10月07日 14:57:57",
+ "hits": 797,
+ "up": 8,
+ "favorite": 40,
+ "comment": 24,
+ "source_file": "小工具\\3474_看图猜成语2.1.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 10,
+ "char_count": 300,
+ "confidence": "static_review"
+}

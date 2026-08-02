@@ -1,0 +1,21 @@
+{
+ "manual_id": 5309,
+ "type_name": "Lua代码",
+ "manual_name": "情侣飞行棋",
+ "author": "热爱从不降温",
+ "platform": "所有环境",
+ "source_date": "2026年05月03日 04:25:19",
+ "hits": 264,
+ "up": 1,
+ "favorite": 3,
+ "comment": 0,
+ "source_file": "Lua代码\\5309_情侣飞行棋.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 10,
+ "char_count": 300,
+ "confidence": "static_review"
+}

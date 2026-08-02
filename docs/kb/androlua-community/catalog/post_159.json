@@ -1,0 +1,23 @@
+{
+ "manual_id": 159,
+ "type_name": "Lua代码",
+ "manual_name": "android权限大全",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 716,
+ "up": 15,
+ "favorite": 43,
+ "comment": 3,
+ "source_file": "Lua代码\\159_android权限大全.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 4,
+ "char_count": 300,
+ "confidence": "static_review"
+}

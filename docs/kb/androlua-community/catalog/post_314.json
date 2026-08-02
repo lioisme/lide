@@ -1,0 +1,21 @@
+{
+ "manual_id": 314,
+ "type_name": "JS教程",
+ "manual_name": "翻译网页",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 403,
+ "up": 0,
+ "favorite": 15,
+ "comment": 2,
+ "source_file": "JS教程\\314_翻译网页.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

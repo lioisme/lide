@@ -1,0 +1,23 @@
+{
+ "manual_id": 2419,
+ "type_name": "编码转换",
+ "manual_name": "base64编码解码",
+ "author": "小白·马",
+ "platform": "所有环境",
+ "source_date": "2023年02月03日 00:32:22",
+ "hits": 332,
+ "up": 1,
+ "favorite": 8,
+ "comment": 2,
+ "source_file": "编码转换\\2419_base64编码解码.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

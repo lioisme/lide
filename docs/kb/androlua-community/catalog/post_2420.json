@@ -1,0 +1,26 @@
+{
+ "manual_id": 2420,
+ "type_name": "Activity活动",
+ "manual_name": "MIUI开启忽略电池优化弹窗(权限)",
+ "author": "Cталин",
+ "platform": "AndroLua,Fusion App2,AppLua,AndLua,LuaApp",
+ "source_date": "2023年02月03日 11:21:57",
+ "hits": 1275,
+ "up": 18,
+ "favorite": 56,
+ "comment": 11,
+ "source_file": "Activity活动\\2420_MIUI开启忽略电池优化弹窗(权限).lua",
+ "kind": "fragment",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "truncated_tail",
+  "editor_bound",
+  "editor_bound",
+  "incomplete_fragment"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 26,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 2607,
+ "type_name": "实用代码",
+ "manual_name": "弹窗点击按钮不关闭(整合)",
+ "author": "Aqora",
+ "platform": "所有环境",
+ "source_date": "2023年03月26日 17:42:01",
+ "hits": 544,
+ "up": 12,
+ "favorite": 19,
+ "comment": 4,
+ "source_file": "实用代码\\2607_弹窗点击按钮不关闭(整合).lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 10,
+ "char_count": 300,
+ "confidence": "static_review"
+}

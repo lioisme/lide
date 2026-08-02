@@ -1,0 +1,24 @@
+{
+ "manual_id": 2190,
+ "type_name": "实用代码",
+ "manual_name": "获取屏幕分辨率",
+ "author": "迷糊.",
+ "platform": "所有环境",
+ "source_date": "2022年12月16日 15:29:12",
+ "hits": 209,
+ "up": 3,
+ "favorite": 4,
+ "comment": 3,
+ "source_file": "实用代码\\2190_获取屏幕分辨率.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 14,
+ "char_count": 300,
+ "confidence": "static_review"
+}

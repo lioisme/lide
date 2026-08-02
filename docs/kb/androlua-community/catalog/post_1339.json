@@ -1,0 +1,23 @@
+{
+ "manual_id": 1339,
+ "type_name": "Layout布局",
+ "manual_name": "LinearLayout线性布局",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2022年01月28日 19:14:09",
+ "hits": 353,
+ "up": 2,
+ "favorite": 10,
+ "comment": 1,
+ "source_file": "Layout布局\\1339_LinearLayout线性布局.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 14,
+ "char_count": 300,
+ "confidence": "static_review"
+}

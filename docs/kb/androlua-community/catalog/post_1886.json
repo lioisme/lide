@@ -1,0 +1,23 @@
+{
+ "manual_id": 1886,
+ "type_name": "实用代码",
+ "manual_name": "调节屏幕亮度",
+ "author": "安宁",
+ "platform": "所有环境",
+ "source_date": "2022年09月14日 20:23:34",
+ "hits": 134,
+ "up": 4,
+ "favorite": 11,
+ "comment": 0,
+ "source_file": "实用代码\\1886_调节屏幕亮度.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 10,
+ "char_count": 162,
+ "confidence": "static_review"
+}

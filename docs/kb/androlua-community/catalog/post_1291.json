@@ -1,0 +1,21 @@
+{
+ "manual_id": 1291,
+ "type_name": "布局教程",
+ "manual_name": "边框圆角[自定义]",
+ "author": "祁画",
+ "platform": "Fusion App1,AndLua",
+ "source_date": "2022年01月03日 20:33:24",
+ "hits": 920,
+ "up": 17,
+ "favorite": 32,
+ "comment": 9,
+ "source_file": "布局教程\\1291_边框圆角[自定义].lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 8,
+ "char_count": 300,
+ "confidence": "static_review"
+}

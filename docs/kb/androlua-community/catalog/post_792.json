@@ -1,0 +1,21 @@
+{
+ "manual_id": 792,
+ "type_name": "浏览器",
+ "manual_name": "浏览器控件js",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 189,
+ "up": 1,
+ "favorite": 10,
+ "comment": 0,
+ "source_file": "浏览器\\792_浏览器控件js.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 4,
+ "char_count": 118,
+ "confidence": "static_review"
+}

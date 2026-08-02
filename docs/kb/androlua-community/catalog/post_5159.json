@@ -1,0 +1,21 @@
+{
+ "manual_id": 5159,
+ "type_name": "网络爬虫",
+ "manual_name": "一坨蓝奏云直链获取",
+ "author": "晓阳",
+ "platform": "所有环境",
+ "source_date": "2025年12月30日 16:15:19",
+ "hits": 622,
+ "up": 3,
+ "favorite": 9,
+ "comment": 9,
+ "source_file": "网络爬虫\\5159_一坨蓝奏云直链获取.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 10,
+ "char_count": 300,
+ "confidence": "static_review"
+}

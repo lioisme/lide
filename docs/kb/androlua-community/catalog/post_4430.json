@@ -1,0 +1,21 @@
+{
+ "manual_id": 4430,
+ "type_name": "小工具",
+ "manual_name": "一个简洁美观的设备信息查看功能V2",
+ "author": "海纳百氚，有容乃大",
+ "platform": "Fusion App2,reOpenLua,OpenLuaX",
+ "source_date": "2024年12月26日 13:48:16",
+ "hits": 986,
+ "up": 10,
+ "favorite": 47,
+ "comment": 2,
+ "source_file": "小工具\\4430_一个简洁美观的设备信息查看功能V2.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 18,
+ "char_count": 300,
+ "confidence": "static_review"
+}

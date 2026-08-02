@@ -1,0 +1,21 @@
+{
+ "manual_id": 4904,
+ "type_name": "布局代码",
+ "manual_name": "仿微信服务",
+ "author": ".",
+ "platform": "AndLua",
+ "source_date": "2025年07月10日 15:06:02",
+ "hits": 541,
+ "up": 2,
+ "favorite": 6,
+ "comment": 9,
+ "source_file": "布局代码\\4904_仿微信服务.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 15,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 4584,
+ "type_name": "小工具",
+ "manual_name": "PixelTimer像素计时器优化V2",
+ "author": "海纳百氚，有容乃大",
+ "platform": "Fusion App2,reOpenLua,OpenLuaX",
+ "source_date": "2025年03月10日 10:49:22",
+ "hits": 274,
+ "up": 2,
+ "favorite": 5,
+ "comment": 0,
+ "source_file": "小工具\\4584_PixelTimer像素计时器优化V2.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

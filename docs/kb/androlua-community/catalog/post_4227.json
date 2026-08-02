@@ -1,0 +1,21 @@
+{
+ "manual_id": 4227,
+ "type_name": "安卓教程",
+ "manual_name": "使用 ItemDecoration 添加间距",
+ "author": "胡斯凯",
+ "platform": "reOpenLua,OpenLuaX",
+ "source_date": "2024年09月01日 13:37:02",
+ "hits": 346,
+ "up": 2,
+ "favorite": 5,
+ "comment": 0,
+ "source_file": "安卓教程\\4227_使用_ItemDecoration_添加间距.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 6,
+ "char_count": 300,
+ "confidence": "static_review"
+}

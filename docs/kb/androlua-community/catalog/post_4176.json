@@ -1,0 +1,23 @@
+{
+ "manual_id": 4176,
+ "type_name": "动画教程",
+ "manual_name": "元素共享动画",
+ "author": "小白·马",
+ "platform": "Fusion App2,reOpenLua,OpenLuaX",
+ "source_date": "2024年08月12日 19:06:10",
+ "hits": 987,
+ "up": 13,
+ "favorite": 35,
+ "comment": 3,
+ "source_file": "动画教程\\4176_元素共享动画.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 8,
+ "char_count": 300,
+ "confidence": "static_review"
+}

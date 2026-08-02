@@ -1,0 +1,23 @@
+{
+ "manual_id": 1926,
+ "type_name": "实用代码",
+ "manual_name": "计算圆周率近似值",
+ "author": "Duo",
+ "platform": "所有环境",
+ "source_date": "2022年10月01日 09:42:50",
+ "hits": 219,
+ "up": 5,
+ "favorite": 4,
+ "comment": 2,
+ "source_file": "实用代码\\1926_计算圆周率近似值.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 26,
+ "char_count": 300,
+ "confidence": "static_review"
+}

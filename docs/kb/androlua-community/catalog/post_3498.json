@@ -1,0 +1,21 @@
+{
+ "manual_id": 3498,
+ "type_name": "小工具",
+ "manual_name": "粒子时钟",
+ "author": "诺~",
+ "platform": "所有环境",
+ "source_date": "2023年10月16日 14:44:56",
+ "hits": 864,
+ "up": 15,
+ "favorite": 41,
+ "comment": 19,
+ "source_file": "小工具\\3498_粒子时钟.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 11,
+ "char_count": 300,
+ "confidence": "static_review"
+}

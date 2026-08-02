@@ -1,0 +1,23 @@
+{
+ "manual_id": 4560,
+ "type_name": "Lua代码",
+ "manual_name": "krc歌词适配",
+ "author": "青柠(YouCun)",
+ "platform": "所有环境",
+ "source_date": "2025年02月27日 11:16:15",
+ "hits": 464,
+ "up": 3,
+ "favorite": 5,
+ "comment": 1,
+ "source_file": "Lua代码\\4560_krc歌词适配.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 12,
+ "char_count": 300,
+ "confidence": "static_review"
+}

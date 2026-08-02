@@ -1,0 +1,23 @@
+{
+ "manual_id": 3725,
+ "type_name": "Intent通信",
+ "manual_name": "使用UDP实现单播",
+ "author": "破晓",
+ "platform": "所有环境",
+ "source_date": "2024年01月14日 19:42:39",
+ "hits": 134,
+ "up": 1,
+ "favorite": 4,
+ "comment": 0,
+ "source_file": "Intent通信\\3725_使用UDP实现单播.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 8,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 4858,
+ "type_name": "网络爬虫",
+ "manual_name": "知乎app km_paid_content获取原始链接 白盒aes加密算法还原zse96参数生成示例",
+ "author": "。。",
+ "platform": "所有环境",
+ "source_date": "2025年06月22日 19:13:29",
+ "hits": 286,
+ "up": 4,
+ "favorite": 3,
+ "comment": 2,
+ "source_file": "网络爬虫\\4858_知乎app_km_paid_content获取原始链接_白盒aes加密算法还原zse96参数生成示例.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 11,
+ "char_count": 300,
+ "confidence": "static_review"
+}

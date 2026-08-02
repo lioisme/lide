@@ -1,0 +1,24 @@
+{
+ "manual_id": 3069,
+ "type_name": "自绘制",
+ "manual_name": "绘制正n边形",
+ "author": "北极づ莜蓝",
+ "platform": "所有环境",
+ "source_date": "2023年07月13日 17:01:25",
+ "hits": 197,
+ "up": 2,
+ "favorite": 2,
+ "comment": 2,
+ "source_file": "自绘制\\3069_绘制正n边形.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 8,
+ "char_count": 300,
+ "confidence": "static_review"
+}

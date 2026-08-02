@@ -1,0 +1,21 @@
+{
+ "manual_id": 434,
+ "type_name": "动画教程",
+ "manual_name": "仿QQ顶部提示动画实例",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 198,
+ "up": 3,
+ "favorite": 6,
+ "comment": 0,
+ "source_file": "动画教程\\434_仿QQ顶部提示动画实例.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 16,
+ "char_count": 300,
+ "confidence": "static_review"
+}

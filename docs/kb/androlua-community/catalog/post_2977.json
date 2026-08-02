@@ -1,0 +1,23 @@
+{
+ "manual_id": 2977,
+ "type_name": "网络操作",
+ "manual_name": "123云盘链接解析",
+ "author": "赤ゆ鯶᭄",
+ "platform": "AndLua",
+ "source_date": "2023年06月25日 23:46:14",
+ "hits": 494,
+ "up": 5,
+ "favorite": 18,
+ "comment": 9,
+ "source_file": "网络操作\\2977_123云盘链接解析.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 11,
+ "char_count": 300,
+ "confidence": "static_review"
+}

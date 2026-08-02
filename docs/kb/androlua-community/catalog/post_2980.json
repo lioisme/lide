@@ -1,0 +1,21 @@
+{
+ "manual_id": 2980,
+ "type_name": "小工具",
+ "manual_name": "OneTwoThree解析(JavaScript)",
+ "author": "智",
+ "platform": "所有环境",
+ "source_date": "2023年06月26日 19:09:50",
+ "hits": 314,
+ "up": 1,
+ "favorite": 11,
+ "comment": 7,
+ "source_file": "小工具\\2980_OneTwoThree解析(JavaScript).lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 14,
+ "char_count": 300,
+ "confidence": "static_review"
+}

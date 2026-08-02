@@ -1,0 +1,21 @@
+{
+ "manual_id": 404,
+ "type_name": "Intent通信",
+ "manual_name": "查询本地所有视频",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 159,
+ "up": 0,
+ "favorite": 3,
+ "comment": 0,
+ "source_file": "Intent通信\\404_查询本地所有视频.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 8,
+ "char_count": 300,
+ "confidence": "static_review"
+}

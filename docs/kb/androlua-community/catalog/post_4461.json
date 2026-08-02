@@ -1,0 +1,21 @@
+{
+ "manual_id": 4461,
+ "type_name": "Layout布局",
+ "manual_name": "驾考题选择布局",
+ "author": "橘猫",
+ "platform": "所有环境",
+ "source_date": "2025年01月12日 18:27:16",
+ "hits": 776,
+ "up": 5,
+ "favorite": 11,
+ "comment": 3,
+ "source_file": "Layout布局\\4461_驾考题选择布局.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 20,
+ "char_count": 300,
+ "confidence": "static_review"
+}

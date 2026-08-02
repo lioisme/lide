@@ -1,0 +1,21 @@
+{
+ "manual_id": 2353,
+ "type_name": "小工具",
+ "manual_name": "全屏时钟_BLACK",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2023年01月20日 13:52:18",
+ "hits": 765,
+ "up": 15,
+ "favorite": 54,
+ "comment": 17,
+ "source_file": "小工具\\2353_全屏时钟_BLACK.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

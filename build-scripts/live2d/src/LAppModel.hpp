@@ -64,7 +64,6 @@ public:
     std::vector<float> getPartMultiplyColor(int index) const;
     std::vector<std::string> hitPart(float x, float y, bool topOnly);
     void setTexture(int no, int texId);
-    L2DTargetPoint mDragMgr;
     MatrixManager mMatrixManager;
     bool mAutoBreath = true, mAutoBlink = true;
     bool mClearFlag = false;

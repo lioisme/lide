@@ -1,0 +1,23 @@
+{
+ "manual_id": 3210,
+ "type_name": "小工具",
+ "manual_name": "正则表达式在线测试 | 菜鸟工具",
+ "author": "Cheese",
+ "platform": "所有环境",
+ "source_date": "2023年08月06日 14:38:34",
+ "hits": 218,
+ "up": 0,
+ "favorite": 10,
+ "comment": 0,
+ "source_file": "小工具\\3210_正则表达式在线测试___菜鸟工具.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 11,
+ "char_count": 300,
+ "confidence": "static_review"
+}

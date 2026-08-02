@@ -1,0 +1,24 @@
+{
+ "manual_id": 2205,
+ "type_name": "布局教程",
+ "manual_name": "下拉刷新布局",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2022年12月18日 15:41:50",
+ "hits": 833,
+ "up": 9,
+ "favorite": 48,
+ "comment": 4,
+ "source_file": "布局教程\\2205_下拉刷新布局.lua",
+ "kind": "text_note",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "short_text",
+  "global_pollution"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 18,
+ "char_count": 300,
+ "confidence": "static_review"
+}

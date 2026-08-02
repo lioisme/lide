@@ -1,0 +1,21 @@
+{
+ "manual_id": 2409,
+ "type_name": "自绘制",
+ "manual_name": "绘制拖动",
+ "author": "•⤙•/k",
+ "platform": "AndLua",
+ "source_date": "2023年01月31日 16:44:03",
+ "hits": 1109,
+ "up": 8,
+ "favorite": 16,
+ "comment": 12,
+ "source_file": "自绘制\\2409_绘制拖动.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 12,
+ "char_count": 300,
+ "confidence": "static_review"
+}

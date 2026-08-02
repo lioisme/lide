@@ -1,0 +1,21 @@
+{
+ "manual_id": 4049,
+ "type_name": "编码转换",
+ "manual_name": "找到合适的随机种子",
+ "author": "青柠(YouCun)",
+ "platform": "所有环境",
+ "source_date": "2024年05月10日 03:00:29",
+ "hits": 252,
+ "up": 1,
+ "favorite": 2,
+ "comment": 2,
+ "source_file": "编码转换\\4049_找到合适的随机种子.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 15,
+ "char_count": 300,
+ "confidence": "static_review"
+}

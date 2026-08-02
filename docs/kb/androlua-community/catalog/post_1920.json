@@ -1,0 +1,24 @@
+{
+ "manual_id": 1920,
+ "type_name": "网络操作",
+ "manual_name": "扇贝每日一句接口封装",
+ "author": "⑨φZL",
+ "platform": "所有环境",
+ "source_date": "2022年09月26日 16:31:05",
+ "hits": 316,
+ "up": 6,
+ "favorite": 17,
+ "comment": 3,
+ "source_file": "网络操作\\1920_扇贝每日一句接口封装.lua",
+ "kind": "text_note",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "short_text",
+  "global_pollution"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 18,
+ "char_count": 300,
+ "confidence": "static_review"
+}

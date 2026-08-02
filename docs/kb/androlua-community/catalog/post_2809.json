@@ -1,0 +1,23 @@
+{
+ "manual_id": 2809,
+ "type_name": "Androlua教程",
+ "manual_name": "获取当前APP安装包路径",
+ "author": "Cheese",
+ "platform": "所有环境",
+ "source_date": "2023年05月17日 20:21:07",
+ "hits": 324,
+ "up": 1,
+ "favorite": 9,
+ "comment": 2,
+ "source_file": "Androlua教程\\2809_获取当前APP安装包路径.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 2,
+ "char_count": 56,
+ "confidence": "static_review"
+}

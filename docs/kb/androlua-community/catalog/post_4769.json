@@ -1,0 +1,21 @@
+{
+ "manual_id": 4769,
+ "type_name": "Lua代码",
+ "manual_name": "文字波浪加载动画",
+ "author": "琪琪子",
+ "platform": "AndLua",
+ "source_date": "2025年05月16日 23:08:29",
+ "hits": 615,
+ "up": 15,
+ "favorite": 42,
+ "comment": 3,
+ "source_file": "Lua代码\\4769_文字波浪加载动画.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 16,
+ "char_count": 300,
+ "confidence": "static_review"
+}

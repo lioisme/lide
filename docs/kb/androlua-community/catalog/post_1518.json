@@ -1,0 +1,23 @@
+{
+ "manual_id": 1518,
+ "type_name": "文件操作",
+ "manual_name": "冒泡算法",
+ "author": "碳昔",
+ "platform": "所有环境",
+ "source_date": "2022年06月04日 13:30:12",
+ "hits": 218,
+ "up": 3,
+ "favorite": 5,
+ "comment": 0,
+ "source_file": "文件操作\\1518_冒泡算法.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 3,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,24 @@
+{
+ "manual_id": 3552,
+ "type_name": "实用代码",
+ "manual_name": "像素计时器",
+ "author": "初陌",
+ "platform": "AndLua",
+ "source_date": "2023年11月04日 13:01:27",
+ "hits": 165,
+ "up": 1,
+ "favorite": 4,
+ "comment": 1,
+ "source_file": "实用代码\\3552_像素计时器.lua",
+ "kind": "text_note",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "short_text",
+  "global_pollution"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 16,
+ "char_count": 300,
+ "confidence": "static_review"
+}

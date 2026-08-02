@@ -1,0 +1,21 @@
+{
+ "manual_id": 2625,
+ "type_name": "Lua代码",
+ "manual_name": "蒙特卡洛法计算自然常数e",
+ "author": "Duo",
+ "platform": "所有环境",
+ "source_date": "2023年04月03日 00:26:02",
+ "hits": 116,
+ "up": 4,
+ "favorite": 3,
+ "comment": 0,
+ "source_file": "Lua代码\\2625_蒙特卡洛法计算自然常数e.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 22,
+ "char_count": 295,
+ "confidence": "static_review"
+}

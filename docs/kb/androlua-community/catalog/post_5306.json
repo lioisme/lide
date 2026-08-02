@@ -1,0 +1,21 @@
+{
+ "manual_id": 5306,
+ "type_name": "自绘制",
+ "manual_name": "简约自绘制编辑框",
+ "author": "˶ᵒ ᵕ ˂˶",
+ "platform": "AndroLua,AndLua",
+ "source_date": "2026年04月27日 08:39:45",
+ "hits": 422,
+ "up": 1,
+ "favorite": 1,
+ "comment": 0,
+ "source_file": "自绘制\\5306_简约自绘制编辑框.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 9,
+ "char_count": 300,
+ "confidence": "static_review"
+}

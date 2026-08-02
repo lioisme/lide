@@ -1,0 +1,24 @@
+{
+ "manual_id": 1581,
+ "type_name": "实用代码",
+ "manual_name": "最屑的EditText撤销恢复方式",
+ "author": "一個冬瓜",
+ "platform": "所有环境",
+ "source_date": "2022年07月13日 10:54:54",
+ "hits": 219,
+ "up": 9,
+ "favorite": 14,
+ "comment": 1,
+ "source_file": "实用代码\\1581_最屑的EditText撤销恢复方式.lua",
+ "kind": "fragment",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "truncated_tail",
+  "incomplete_fragment"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 17,
+ "char_count": 300,
+ "confidence": "static_review"
+}

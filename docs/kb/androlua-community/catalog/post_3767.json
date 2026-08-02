@@ -1,0 +1,21 @@
+{
+ "manual_id": 3767,
+ "type_name": "小工具",
+ "manual_name": "安卓sqlcipher解密微信聊天记录数据库",
+ "author": "阙月",
+ "platform": "OpenLuaX",
+ "source_date": "2024年01月21日 18:27:34",
+ "hits": 535,
+ "up": 0,
+ "favorite": 10,
+ "comment": 1,
+ "source_file": "小工具\\3767_安卓sqlcipher解密微信聊天记录数据库.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 12,
+ "char_count": 300,
+ "confidence": "static_review"
+}

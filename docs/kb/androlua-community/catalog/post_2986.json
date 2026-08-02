@@ -1,0 +1,24 @@
+{
+ "manual_id": 2986,
+ "type_name": "系统",
+ "manual_name": "调用密码锁屏校验",
+ "author": "迷糊.",
+ "platform": "所有环境",
+ "source_date": "2023年06月28日 20:24:48",
+ "hits": 388,
+ "up": 12,
+ "favorite": 52,
+ "comment": 6,
+ "source_file": "系统\\2986_调用密码锁屏校验.lua",
+ "kind": "fragment",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "truncated_tail",
+  "incomplete_fragment"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 10,
+ "char_count": 300,
+ "confidence": "static_review"
+}

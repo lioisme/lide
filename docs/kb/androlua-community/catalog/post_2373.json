@@ -1,0 +1,23 @@
+{
+ "manual_id": 2373,
+ "type_name": "Lua代码",
+ "manual_name": "遗传算法训练ai",
+ "author": "Duo",
+ "platform": "Fusion App2",
+ "source_date": "2023年01月24日 17:58:15",
+ "hits": 369,
+ "up": 8,
+ "favorite": 9,
+ "comment": 6,
+ "source_file": "Lua代码\\2373_遗传算法训练ai.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 15,
+ "char_count": 300,
+ "confidence": "static_review"
+}

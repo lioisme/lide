@@ -1,0 +1,21 @@
+{
+ "manual_id": 4340,
+ "type_name": "自绘制",
+ "manual_name": "动态几何(触摸跟踪版)",
+ "author": "fo",
+ "platform": "AndroLua,OpenLuaX,AndLua",
+ "source_date": "2024年11月02日 06:11:49",
+ "hits": 800,
+ "up": 10,
+ "favorite": 32,
+ "comment": 4,
+ "source_file": "自绘制\\4340_动态几何(触摸跟踪版).lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 19,
+ "char_count": 300,
+ "confidence": "static_review"
+}

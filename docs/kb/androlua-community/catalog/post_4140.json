@@ -1,0 +1,21 @@
+{
+ "manual_id": 4140,
+ "type_name": "Lua代码",
+ "manual_name": "编辑器不卡顿读取文件",
+ "author": "沐风 - MFCompany",
+ "platform": "所有环境",
+ "source_date": "2024年07月22日 11:22:35",
+ "hits": 394,
+ "up": 2,
+ "favorite": 6,
+ "comment": 2,
+ "source_file": "Lua代码\\4140_编辑器不卡顿读取文件.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 16,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 3695,
+ "type_name": "基础代码",
+ "manual_name": "去除语法注释",
+ "author": "青柠(YouCun)",
+ "platform": "所有环境",
+ "source_date": "2023年12月27日 14:35:54",
+ "hits": 372,
+ "up": 7,
+ "favorite": 10,
+ "comment": 4,
+ "source_file": "基础代码\\3695_去除语法注释.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 19,
+ "char_count": 300,
+ "confidence": "static_review"
+}

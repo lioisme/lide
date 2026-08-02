@@ -1,0 +1,21 @@
+{
+ "manual_id": 2385,
+ "type_name": "实用代码",
+ "manual_name": "百度图床接口",
+ "author": "█████",
+ "platform": "AndroLua,AndLua",
+ "source_date": "2023年01月27日 19:53:57",
+ "hits": 386,
+ "up": 2,
+ "favorite": 17,
+ "comment": 2,
+ "source_file": "实用代码\\2385_百度图床接口.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 18,
+ "char_count": 300,
+ "confidence": "static_review"
+}

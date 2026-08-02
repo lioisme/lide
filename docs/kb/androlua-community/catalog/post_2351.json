@@ -1,0 +1,23 @@
+{
+ "manual_id": 2351,
+ "type_name": "布局教程",
+ "manual_name": "梦-简约登录注册页面",
+ "author": "水水水水水水水水水水水水",
+ "platform": "所有环境",
+ "source_date": "2023年01月20日 00:25:05",
+ "hits": 798,
+ "up": 7,
+ "favorite": 19,
+ "comment": 6,
+ "source_file": "布局教程\\2351_梦-简约登录注册页面.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 16,
+ "char_count": 300,
+ "confidence": "static_review"
+}

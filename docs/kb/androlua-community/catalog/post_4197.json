@@ -1,0 +1,21 @@
+{
+ "manual_id": 4197,
+ "type_name": "Layout布局",
+ "manual_name": "关于丝滑这件事",
+ "author": "Duo",
+ "platform": "所有环境",
+ "source_date": "2024年08月21日 15:30:19",
+ "hits": 1141,
+ "up": 13,
+ "favorite": 28,
+ "comment": 8,
+ "source_file": "Layout布局\\4197_关于丝滑这件事.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 11,
+ "char_count": 300,
+ "confidence": "static_review"
+}

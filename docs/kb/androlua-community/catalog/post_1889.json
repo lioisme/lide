@@ -1,0 +1,25 @@
+{
+ "manual_id": 1889,
+ "type_name": "小工具",
+ "manual_name": "UID生成器",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2022年09月15日 22:57:25",
+ "hits": 529,
+ "up": 5,
+ "favorite": 15,
+ "comment": 3,
+ "source_file": "小工具\\1889_UID生成器.lua",
+ "kind": "fragment",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "truncated_tail",
+  "chinese_identifier",
+  "incomplete_fragment"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 11,
+ "char_count": 300,
+ "confidence": "static_review"
+}

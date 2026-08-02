@@ -1,0 +1,23 @@
+{
+ "manual_id": 1016,
+ "type_name": "Intent通信",
+ "manual_name": "调用系统播放视频",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 368,
+ "up": 0,
+ "favorite": 16,
+ "comment": 1,
+ "source_file": "Intent通信\\1016_调用系统播放视频.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 9,
+ "char_count": 218,
+ "confidence": "static_review"
+}

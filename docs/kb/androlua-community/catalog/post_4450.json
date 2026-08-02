@@ -1,0 +1,24 @@
+{
+ "manual_id": 4450,
+ "type_name": "系统",
+ "manual_name": "图标快捷方式的创建与删除",
+ "author": "Pa",
+ "platform": "OpenLuaX",
+ "source_date": "2025年01月07日 17:30:47",
+ "hits": 220,
+ "up": 0,
+ "favorite": 5,
+ "comment": 0,
+ "source_file": "系统\\4450_图标快捷方式的创建与删除.lua",
+ "kind": "fragment",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "truncated_tail",
+  "incomplete_fragment"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 6,
+ "char_count": 300,
+ "confidence": "static_review"
+}

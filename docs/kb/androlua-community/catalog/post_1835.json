@@ -1,0 +1,21 @@
+{
+ "manual_id": 1835,
+ "type_name": "实用代码",
+ "manual_name": "获取文件CRC32",
+ "author": "迷糊.",
+ "platform": "所有环境",
+ "source_date": "2022年08月29日 04:52:02",
+ "hits": 139,
+ "up": 2,
+ "favorite": 4,
+ "comment": 2,
+ "source_file": "实用代码\\1835_获取文件CRC32.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 6,
+ "char_count": 300,
+ "confidence": "static_review"
+}

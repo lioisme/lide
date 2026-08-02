@@ -1,0 +1,25 @@
+{
+ "manual_id": 1669,
+ "type_name": "Androlua教程",
+ "manual_name": "AndLua调用shizuku rish",
+ "author": "W. by",
+ "platform": "AndLua",
+ "source_date": "2022年08月06日 04:28:56",
+ "hits": 352,
+ "up": 1,
+ "favorite": 4,
+ "comment": 4,
+ "source_file": "Androlua教程\\1669_AndLua调用shizuku_rish.lua",
+ "kind": "text_note",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "short_text",
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

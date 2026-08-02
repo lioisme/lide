@@ -1,0 +1,24 @@
+{
+ "manual_id": 5218,
+ "type_name": "小工具",
+ "manual_name": "录音机",
+ "author": "琪琪子",
+ "platform": "AndLua",
+ "source_date": "2026年02月03日 15:02:21",
+ "hits": 137,
+ "up": 1,
+ "favorite": 1,
+ "comment": 0,
+ "source_file": "小工具\\5218_录音机.lua",
+ "kind": "fragment",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "truncated_tail",
+  "incomplete_fragment"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 15,
+ "char_count": 300,
+ "confidence": "static_review"
+}

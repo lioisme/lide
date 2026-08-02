@@ -1,0 +1,21 @@
+{
+ "manual_id": 2276,
+ "type_name": "JS教程",
+ "manual_name": "混合加密(不可逆)卡密验证-密文",
+ "author": "壹影",
+ "platform": "所有环境",
+ "source_date": "2023年01月03日 16:20:37",
+ "hits": 1293,
+ "up": 14,
+ "favorite": 49,
+ "comment": 19,
+ "source_file": "JS教程\\2276_混合加密(不可逆)卡密验证-密文.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 16,
+ "char_count": 300,
+ "confidence": "static_review"
+}

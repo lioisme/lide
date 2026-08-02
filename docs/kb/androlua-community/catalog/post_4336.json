@@ -1,0 +1,24 @@
+{
+ "manual_id": 4336,
+ "type_name": "系统",
+ "manual_name": "调用谷歌登录",
+ "author": "🌟",
+ "platform": "所有环境",
+ "source_date": "2024年10月29日 08:46:59",
+ "hits": 335,
+ "up": 3,
+ "favorite": 7,
+ "comment": 1,
+ "source_file": "系统\\4336_调用谷歌登录.lua",
+ "kind": "fragment",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "truncated_tail",
+  "incomplete_fragment"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

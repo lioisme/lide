@@ -1,0 +1,21 @@
+{
+ "manual_id": 2538,
+ "type_name": "小工具",
+ "manual_name": "利用TableUtil与JSON实现数据库",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2023年03月03日 22:54:40",
+ "hits": 383,
+ "up": 7,
+ "favorite": 12,
+ "comment": 6,
+ "source_file": "小工具\\2538_利用TableUtil与JSON实现数据库.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 18,
+ "char_count": 300,
+ "confidence": "static_review"
+}

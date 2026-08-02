@@ -1,0 +1,23 @@
+{
+ "manual_id": 1775,
+ "type_name": "实用代码",
+ "manual_name": "地球高质量免费API网站整理",
+ "author": "碳昔",
+ "platform": "所有环境",
+ "source_date": "2022年08月20日 20:01:22",
+ "hits": 488,
+ "up": 21,
+ "favorite": 55,
+ "comment": 3,
+ "source_file": "实用代码\\1775_地球高质量免费API网站整理.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 20,
+ "char_count": 300,
+ "confidence": "static_review"
+}

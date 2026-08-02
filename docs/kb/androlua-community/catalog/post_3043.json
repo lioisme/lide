@@ -1,0 +1,24 @@
+{
+ "manual_id": 3043,
+ "type_name": "网络操作",
+ "manual_name": "com.androlua.Http同步请求",
+ "author": "kamihitoe",
+ "platform": "所有环境",
+ "source_date": "2023年07月08日 10:51:25",
+ "hits": 267,
+ "up": 2,
+ "favorite": 10,
+ "comment": 4,
+ "source_file": "网络操作\\3043_com.androlua.Http同步请求.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 7,
+ "char_count": 300,
+ "confidence": "static_review"
+}

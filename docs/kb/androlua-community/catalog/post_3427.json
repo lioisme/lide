@@ -1,0 +1,21 @@
+{
+ "manual_id": 3427,
+ "type_name": "JS教程",
+ "manual_name": "Js实现函数追踪",
+ "author": "壹影",
+ "platform": "所有环境",
+ "source_date": "2023年09月24日 22:53:14",
+ "hits": 186,
+ "up": 1,
+ "favorite": 2,
+ "comment": 0,
+ "source_file": "JS教程\\3427_Js实现函数追踪.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 6,
+ "char_count": 300,
+ "confidence": "static_review"
+}

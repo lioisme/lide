@@ -1,0 +1,21 @@
+{
+ "manual_id": 4421,
+ "type_name": "小工具",
+ "manual_name": "格式化代码",
+ "author": "清风",
+ "platform": "AndLua",
+ "source_date": "2024年12月22日 10:36:13",
+ "hits": 327,
+ "up": 3,
+ "favorite": 5,
+ "comment": 0,
+ "source_file": "小工具\\4421_格式化代码.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 16,
+ "char_count": 300,
+ "confidence": "static_review"
+}

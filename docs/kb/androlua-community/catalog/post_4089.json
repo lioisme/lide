@@ -1,0 +1,21 @@
+{
+ "manual_id": 4089,
+ "type_name": "小工具",
+ "manual_name": "手册扩展面板",
+ "author": "破晓",
+ "platform": "Fusion App2",
+ "source_date": "2024年06月01日 22:59:17",
+ "hits": 1364,
+ "up": 17,
+ "favorite": 54,
+ "comment": 8,
+ "source_file": "小工具\\4089_手册扩展面板.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,23 @@
+{
+ "manual_id": 2540,
+ "type_name": "文件操作",
+ "manual_name": "SimpleDataStore",
+ "author": "NekoLaska",
+ "platform": "所有环境",
+ "source_date": "2023年03月04日 12:28:52",
+ "hits": 443,
+ "up": 1,
+ "favorite": 4,
+ "comment": 1,
+ "source_file": "文件操作\\2540_SimpleDataStore.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "syntax_hint"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 16,
+ "char_count": 300,
+ "confidence": "static_review"
+}

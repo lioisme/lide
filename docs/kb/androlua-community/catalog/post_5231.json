@@ -1,0 +1,24 @@
+{
+ "manual_id": 5231,
+ "type_name": "小工具",
+ "manual_name": "滑块验证码",
+ "author": "琪琪子",
+ "platform": "AndLua",
+ "source_date": "2026年02月05日 12:09:16",
+ "hits": 330,
+ "up": 9,
+ "favorite": 25,
+ "comment": 1,
+ "source_file": "小工具\\5231_滑块验证码.lua",
+ "kind": "fragment",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "truncated_tail",
+  "incomplete_fragment"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 14,
+ "char_count": 300,
+ "confidence": "static_review"
+}

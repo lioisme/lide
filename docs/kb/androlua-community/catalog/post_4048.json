@@ -1,0 +1,21 @@
+{
+ "manual_id": 4048,
+ "type_name": "jsoup",
+ "manual_name": "LanzouScraper",
+ "author": "ㄛㄙ飞ㄋ",
+ "platform": "所有环境",
+ "source_date": "2024年05月10日 01:17:08",
+ "hits": 428,
+ "up": 1,
+ "favorite": 6,
+ "comment": 0,
+ "source_file": "jsoup\\4048_LanzouScraper.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 19,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 4865,
+ "type_name": "Lua代码",
+ "manual_name": "获取TextView选中的文字",
+ "author": "⁧拾玖⁧‭",
+ "platform": "所有环境",
+ "source_date": "2025年06月26日 22:00:18",
+ "hits": 374,
+ "up": 11,
+ "favorite": 23,
+ "comment": 7,
+ "source_file": "Lua代码\\4865_获取TextView选中的文字.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 9,
+ "char_count": 300,
+ "confidence": "static_review"
+}

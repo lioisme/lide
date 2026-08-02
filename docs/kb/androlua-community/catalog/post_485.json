@@ -1,0 +1,21 @@
+{
+ "manual_id": 485,
+ "type_name": "适配器",
+ "manual_name": "折叠父列表点击事项",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 186,
+ "up": 0,
+ "favorite": 2,
+ "comment": 0,
+ "source_file": "适配器\\485_折叠父列表点击事项.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 3,
+ "char_count": 78,
+ "confidence": "static_review"
+}

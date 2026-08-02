@@ -1,0 +1,24 @@
+{
+ "manual_id": 2527,
+ "type_name": "小工具",
+ "manual_name": "中文转拼音 可视化",
+ "author": "•⤙•/k",
+ "platform": "AndLua",
+ "source_date": "2023年02月28日 23:30:25",
+ "hits": 457,
+ "up": 11,
+ "favorite": 35,
+ "comment": 6,
+ "source_file": "小工具\\2527_中文转拼音_可视化.lua",
+ "kind": "text_note",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "short_text",
+  "global_pollution"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 17,
+ "char_count": 300,
+ "confidence": "static_review"
+}

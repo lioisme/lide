@@ -1,0 +1,21 @@
+{
+ "manual_id": 3511,
+ "type_name": "数据存储",
+ "manual_name": "LuaSQLite数据库连贯操作",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2023年10月18日 22:10:47",
+ "hits": 845,
+ "up": 10,
+ "favorite": 25,
+ "comment": 3,
+ "source_file": "数据存储\\3511_LuaSQLite数据库连贯操作.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 15,
+ "char_count": 300,
+ "confidence": "static_review"
+}

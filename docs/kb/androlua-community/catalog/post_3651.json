@@ -1,0 +1,23 @@
+{
+ "manual_id": 3651,
+ "type_name": "Activity活动",
+ "manual_name": "一个简洁美观的氚布局（二次优化）",
+ "author": "海纳百氚，有容乃大",
+ "platform": "OpenLuaX",
+ "source_date": "2023年12月11日 20:21:54",
+ "hits": 1036,
+ "up": 2,
+ "favorite": 18,
+ "comment": 5,
+ "source_file": "Activity活动\\3651_一个简洁美观的氚布局（二次优化）.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 16,
+ "char_count": 300,
+ "confidence": "static_review"
+}

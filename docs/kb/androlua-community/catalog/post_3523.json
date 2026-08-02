@@ -1,0 +1,24 @@
+{
+ "manual_id": 3523,
+ "type_name": "布局教程",
+ "manual_name": "侧边伸缩导航栏",
+ "author": "•⤙•/k",
+ "platform": "AndLua",
+ "source_date": "2023年10月22日 19:49:01",
+ "hits": 536,
+ "up": 6,
+ "favorite": 23,
+ "comment": 9,
+ "source_file": "布局教程\\3523_侧边伸缩导航栏.lua",
+ "kind": "fragment",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "truncated_tail",
+  "incomplete_fragment"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 14,
+ "char_count": 300,
+ "confidence": "static_review"
+}

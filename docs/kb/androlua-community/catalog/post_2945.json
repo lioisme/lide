@@ -1,0 +1,21 @@
+{
+ "manual_id": 2945,
+ "type_name": "布局教程",
+ "manual_name": "仿QQ添加账号布局做应用注册登录",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2023年06月16日 16:52:38",
+ "hits": 1360,
+ "up": 26,
+ "favorite": 64,
+ "comment": 12,
+ "source_file": "布局教程\\2945_仿QQ添加账号布局做应用注册登录.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 17,
+ "char_count": 300,
+ "confidence": "static_review"
+}

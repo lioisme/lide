@@ -1,0 +1,21 @@
+{
+ "manual_id": 256,
+ "type_name": "实用代码",
+ "manual_name": "遍历设置字体",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 273,
+ "up": 1,
+ "favorite": 2,
+ "comment": 0,
+ "source_file": "实用代码\\256_遍历设置字体.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 9,
+ "char_count": 300,
+ "confidence": "static_review"
+}

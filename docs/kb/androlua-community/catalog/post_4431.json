@@ -1,0 +1,21 @@
+{
+ "manual_id": 4431,
+ "type_name": "小工具",
+ "manual_name": "一个简洁美观的全屏时钟功能V2",
+ "author": "海纳百氚，有容乃大",
+ "platform": "Fusion App2,reOpenLua,OpenLuaX",
+ "source_date": "2024年12月26日 22:22:35",
+ "hits": 644,
+ "up": 4,
+ "favorite": 27,
+ "comment": 3,
+ "source_file": "小工具\\4431_一个简洁美观的全屏时钟功能V2.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 19,
+ "char_count": 300,
+ "confidence": "static_review"
+}

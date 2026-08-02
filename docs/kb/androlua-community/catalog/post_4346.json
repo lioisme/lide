@@ -1,0 +1,24 @@
+{
+ "manual_id": 4346,
+ "type_name": "小游戏",
+ "manual_name": "迷宫",
+ "author": "呱呱",
+ "platform": "AndroLua",
+ "source_date": "2024年11月08日 00:02:27",
+ "hits": 262,
+ "up": 7,
+ "favorite": 11,
+ "comment": 2,
+ "source_file": "小游戏\\4346_迷宫.lua",
+ "kind": "fragment",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "incomplete_mark",
+  "incomplete_fragment"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 22,
+ "char_count": 300,
+ "confidence": "static_review"
+}

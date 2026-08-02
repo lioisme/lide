@@ -1,0 +1,23 @@
+{
+ "manual_id": 2042,
+ "type_name": "实用代码",
+ "manual_name": "随机图片框架实例（三次优化）",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2022年11月07日 00:41:06",
+ "hits": 662,
+ "up": 7,
+ "favorite": 16,
+ "comment": 5,
+ "source_file": "实用代码\\2042_随机图片框架实例（三次优化）.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

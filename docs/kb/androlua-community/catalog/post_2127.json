@@ -1,0 +1,21 @@
+{
+ "manual_id": 2127,
+ "type_name": "动画教程",
+ "manual_name": "字符雨特效",
+ "author": "博士",
+ "platform": "所有环境",
+ "source_date": "2022年12月02日 00:32:06",
+ "hits": 456,
+ "up": 9,
+ "favorite": 25,
+ "comment": 1,
+ "source_file": "动画教程\\2127_字符雨特效.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 12,
+ "char_count": 300,
+ "confidence": "static_review"
+}

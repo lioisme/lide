@@ -1,0 +1,26 @@
+{
+ "manual_id": 4003,
+ "type_name": "Layout布局",
+ "manual_name": "ExpandableListView折叠列表，重写BaseExpandableListAdapter",
+ "author": "破晓",
+ "platform": "AndroLua,reOpenLua,OpenLuaX,AndLua",
+ "source_date": "2024年04月03日 22:08:15",
+ "hits": 650,
+ "up": 0,
+ "favorite": 2,
+ "comment": 0,
+ "source_file": "Layout布局\\4003_ExpandableListView折叠列表，重写BaseExpandableListAdapter.lua",
+ "kind": "fragment",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "truncated_tail",
+  "editor_bound",
+  "editor_bound",
+  "incomplete_fragment"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 11,
+ "char_count": 300,
+ "confidence": "static_review"
+}

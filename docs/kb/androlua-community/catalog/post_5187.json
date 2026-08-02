@@ -1,0 +1,21 @@
+{
+ "manual_id": 5187,
+ "type_name": "动画教程",
+ "manual_name": "瞎写的动画",
+ "author": "归鸿",
+ "platform": "所有环境",
+ "source_date": "2026年01月26日 11:38:26",
+ "hits": 703,
+ "up": 6,
+ "favorite": 20,
+ "comment": 6,
+ "source_file": "动画教程\\5187_瞎写的动画.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 8,
+ "char_count": 300,
+ "confidence": "static_review"
+}

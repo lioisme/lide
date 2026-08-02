@@ -1,0 +1,21 @@
+{
+ "manual_id": 5356,
+ "type_name": "小工具",
+ "manual_name": "钢化膜黑边检测",
+ "author": "伊藤诚",
+ "platform": "所有环境",
+ "source_date": "2026年07月18日 22:39:56",
+ "hits": 194,
+ "up": 1,
+ "favorite": 1,
+ "comment": 0,
+ "source_file": "小工具\\5356_钢化膜黑边检测.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 10,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 3463,
+ "type_name": "小工具",
+ "manual_name": "利用DigitsKeyListener限制EditText字符输入",
+ "author": "氕-Protium",
+ "platform": "所有环境",
+ "source_date": "2023年10月05日 20:26:26",
+ "hits": 224,
+ "up": 3,
+ "favorite": 8,
+ "comment": 4,
+ "source_file": "小工具\\3463_利用DigitsKeyListener限制EditText字符输入.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 15,
+ "char_count": 300,
+ "confidence": "static_review"
+}

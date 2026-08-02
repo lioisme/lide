@@ -1,0 +1,23 @@
+{
+ "manual_id": 1118,
+ "type_name": "动画教程",
+ "manual_name": "平移动画",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 173,
+ "up": 0,
+ "favorite": 1,
+ "comment": 0,
+ "source_file": "动画教程\\1118_平移动画.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 15,
+ "char_count": 300,
+ "confidence": "static_review"
+}

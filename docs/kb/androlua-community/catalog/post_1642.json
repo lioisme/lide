@@ -1,0 +1,24 @@
+{
+ "manual_id": 1642,
+ "type_name": "实用代码",
+ "manual_name": "网易云热歌榜api对接",
+ "author": "邪默",
+ "platform": "AndLua",
+ "source_date": "2022年08月01日 15:35:03",
+ "hits": 966,
+ "up": 4,
+ "favorite": 22,
+ "comment": 5,
+ "source_file": "实用代码\\1642_网易云热歌榜api对接.lua",
+ "kind": "fragment",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "truncated_tail",
+  "incomplete_fragment"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 17,
+ "char_count": 300,
+ "confidence": "static_review"
+}

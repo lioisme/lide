@@ -1,0 +1,23 @@
+{
+ "manual_id": 2290,
+ "type_name": "Activity活动",
+ "manual_name": "一文 2.0 Plus（兼容修改）发布应用",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2023年01月07日 17:21:52",
+ "hits": 753,
+ "up": 15,
+ "favorite": 35,
+ "comment": 18,
+ "source_file": "Activity活动\\2290_一文_2.0_Plus（兼容修改）发布应用.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 15,
+ "char_count": 300,
+ "confidence": "static_review"
+}

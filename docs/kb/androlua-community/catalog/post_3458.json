@@ -1,0 +1,21 @@
+{
+ "manual_id": 3458,
+ "type_name": "浏览器",
+ "manual_name": "WebView提示框内容上限",
+ "author": "壹影",
+ "platform": "所有环境",
+ "source_date": "2023年10月04日 10:38:30",
+ "hits": 352,
+ "up": 0,
+ "favorite": 9,
+ "comment": 0,
+ "source_file": "浏览器\\3458_WebView提示框内容上限.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 6,
+ "char_count": 300,
+ "confidence": "static_review"
+}

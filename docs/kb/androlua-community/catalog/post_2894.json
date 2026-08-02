@@ -1,0 +1,21 @@
+{
+ "manual_id": 2894,
+ "type_name": "小游戏",
+ "manual_name": "文字游戏",
+ "author": "鲲宝",
+ "platform": "所有环境",
+ "source_date": "2023年06月03日 20:59:48",
+ "hits": 298,
+ "up": 4,
+ "favorite": 5,
+ "comment": 0,
+ "source_file": "小游戏\\2894_文字游戏.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 16,
+ "char_count": 300,
+ "confidence": "static_review"
+}

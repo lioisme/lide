@@ -1,0 +1,21 @@
+{
+ "manual_id": 5213,
+ "type_name": "小工具",
+ "manual_name": "SlideBlock滑块时计",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2026年02月03日 08:46:18",
+ "hits": 265,
+ "up": 3,
+ "favorite": 10,
+ "comment": 1,
+ "source_file": "小工具\\5213_SlideBlock滑块时计.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

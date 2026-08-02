@@ -1,0 +1,21 @@
+{
+ "manual_id": 5000,
+ "type_name": "对话框",
+ "manual_name": "BottomSheetDialog代码添加器",
+ "author": "海纳百氚，有容乃大",
+ "platform": "Fusion App2,reOpenLua,OpenLuaX",
+ "source_date": "2025年08月22日 15:55:06",
+ "hits": 910,
+ "up": 4,
+ "favorite": 9,
+ "comment": 0,
+ "source_file": "对话框\\5000_BottomSheetDialog代码添加器.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 10,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 319,
+ "type_name": "Lua代码",
+ "manual_name": "从1计算到100打印最终值",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 70,
+ "up": 0,
+ "favorite": 0,
+ "comment": 0,
+ "source_file": "Lua代码\\319_从1计算到100打印最终值.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 8,
+ "char_count": 88,
+ "confidence": "static_review"
+}

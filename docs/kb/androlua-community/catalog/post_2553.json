@@ -1,0 +1,21 @@
+{
+ "manual_id": 2553,
+ "type_name": "小工具",
+ "manual_name": "获取应用本身的权限列表",
+ "author": "智",
+ "platform": "所有环境",
+ "source_date": "2023年03月05日 20:56:57",
+ "hits": 384,
+ "up": 6,
+ "favorite": 29,
+ "comment": 8,
+ "source_file": "小工具\\2553_获取应用本身的权限列表.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 18,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 1383,
+ "type_name": "实用代码",
+ "manual_name": "rgba转hex",
+ "author": "迷糊.",
+ "platform": "所有环境",
+ "source_date": "2022年02月28日 09:05:26",
+ "hits": 100,
+ "up": 0,
+ "favorite": 3,
+ "comment": 0,
+ "source_file": "实用代码\\1383_rgba转hex.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 11,
+ "char_count": 285,
+ "confidence": "static_review"
+}

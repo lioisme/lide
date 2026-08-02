@@ -1,0 +1,21 @@
+{
+ "manual_id": 3713,
+ "type_name": "网络请求",
+ "manual_name": "允许或禁止明文网络流量",
+ "author": "kamihitoe",
+ "platform": "所有环境",
+ "source_date": "2024年01月08日 09:36:02",
+ "hits": 245,
+ "up": 3,
+ "favorite": 6,
+ "comment": 0,
+ "source_file": "网络请求\\3713_允许或禁止明文网络流量.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 9,
+ "char_count": 300,
+ "confidence": "static_review"
+}

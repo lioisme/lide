@@ -1,0 +1,24 @@
+{
+ "manual_id": 1423,
+ "type_name": "实用代码",
+ "manual_name": "解决 WebView 返回处理无效",
+ "author": "jies辰",
+ "platform": "Fusion App2",
+ "source_date": "2022年03月29日 08:36:58",
+ "hits": 139,
+ "up": 1,
+ "favorite": 3,
+ "comment": 0,
+ "source_file": "实用代码\\1423_解决_WebView_返回处理无效.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 14,
+ "char_count": 300,
+ "confidence": "static_review"
+}

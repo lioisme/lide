@@ -1,0 +1,21 @@
+{
+ "manual_id": 3883,
+ "type_name": "基础代码",
+ "manual_name": "组合(Composition)在Lua中的简单实现",
+ "author": "",
+ "platform": "AndroLua",
+ "source_date": "2024年02月14日 13:30:02",
+ "hits": 209,
+ "up": 1,
+ "favorite": 3,
+ "comment": 0,
+ "source_file": "基础代码\\3883_组合(Composition)在Lua中的简单实现.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 8,
+ "char_count": 300,
+ "confidence": "static_review"
+}

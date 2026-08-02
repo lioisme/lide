@@ -1,0 +1,21 @@
+{
+ "manual_id": 4806,
+ "type_name": "Lua代码",
+ "manual_name": "伪3D模拟球体",
+ "author": "榆次",
+ "platform": "AndroLua,AndLua",
+ "source_date": "2025年06月02日 13:13:33",
+ "hits": 239,
+ "up": 3,
+ "favorite": 2,
+ "comment": 0,
+ "source_file": "Lua代码\\4806_伪3D模拟球体.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 16,
+ "char_count": 300,
+ "confidence": "static_review"
+}

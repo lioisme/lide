@@ -1,0 +1,23 @@
+{
+ "manual_id": 3919,
+ "type_name": "Activity活动",
+ "manual_name": "屏幕旋转更多的应用方式",
+ "author": "•⤙•/k",
+ "platform": "所有环境",
+ "source_date": "2024年02月23日 22:55:20",
+ "hits": 371,
+ "up": 4,
+ "favorite": 16,
+ "comment": 0,
+ "source_file": "Activity活动\\3919_屏幕旋转更多的应用方式.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 7,
+ "char_count": 300,
+ "confidence": "static_review"
+}

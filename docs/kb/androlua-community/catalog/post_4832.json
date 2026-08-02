@@ -1,0 +1,23 @@
+{
+ "manual_id": 4832,
+ "type_name": "布局代码",
+ "manual_name": "碰撞判断",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2025年06月15日 15:00:40",
+ "hits": 361,
+ "up": 10,
+ "favorite": 8,
+ "comment": 0,
+ "source_file": "布局代码\\4832_碰撞判断.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "global_pollution"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 20,
+ "char_count": 300,
+ "confidence": "static_review"
+}

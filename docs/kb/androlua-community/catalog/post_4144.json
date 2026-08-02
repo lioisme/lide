@@ -1,0 +1,24 @@
+{
+ "manual_id": 4144,
+ "type_name": "基础代码",
+ "manual_name": "一个简单的可推动侧滑栏",
+ "author": "程国荣",
+ "platform": "所有环境",
+ "source_date": "2024年07月26日 13:18:34",
+ "hits": 1167,
+ "up": 12,
+ "favorite": 33,
+ "comment": 8,
+ "source_file": "基础代码\\4144_一个简单的可推动侧滑栏.lua",
+ "kind": "text_note",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "short_text",
+  "global_pollution"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 17,
+ "char_count": 300,
+ "confidence": "static_review"
+}

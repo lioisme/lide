@@ -1,0 +1,21 @@
+{
+ "manual_id": 3649,
+ "type_name": "Lua代码",
+ "manual_name": "屏幕雪花飘落",
+ "author": "琪琪子",
+ "platform": "AndLua",
+ "source_date": "2023年12月10日 16:09:48",
+ "hits": 661,
+ "up": 22,
+ "favorite": 61,
+ "comment": 4,
+ "source_file": "Lua代码\\3649_屏幕雪花飘落.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 17,
+ "char_count": 300,
+ "confidence": "static_review"
+}

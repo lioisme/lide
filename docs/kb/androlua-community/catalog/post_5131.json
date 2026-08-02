@@ -1,0 +1,21 @@
+{
+ "manual_id": 5131,
+ "type_name": "数据存储",
+ "manual_name": "手册浅色主题替换旧版(不得不说新版真丑)",
+ "author": "迷糊.",
+ "platform": "Fusion App2",
+ "source_date": "2025年11月17日 09:55:34",
+ "hits": 451,
+ "up": 0,
+ "favorite": 6,
+ "comment": 3,
+ "source_file": "数据存储\\5131_手册浅色主题替换旧版(不得不说新版真丑).lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 15,
+ "char_count": 300,
+ "confidence": "static_review"
+}

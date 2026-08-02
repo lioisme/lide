@@ -1,0 +1,21 @@
+{
+ "manual_id": 2328,
+ "type_name": "实用代码",
+ "manual_name": "MaterialButtonToggle（使用实例_捐赠弹窗）",
+ "author": "小白·马",
+ "platform": "Fusion App2",
+ "source_date": "2023年01月15日 18:09:56",
+ "hits": 1136,
+ "up": 15,
+ "favorite": 71,
+ "comment": 7,
+ "source_file": "实用代码\\2328_MaterialButtonToggle（使用实例_捐赠弹窗）.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 15,
+ "char_count": 300,
+ "confidence": "static_review"
+}

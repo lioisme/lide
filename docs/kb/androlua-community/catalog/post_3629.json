@@ -1,0 +1,21 @@
+{
+ "manual_id": 3629,
+ "type_name": "Adapter容器",
+ "manual_name": "常见的App数据路径",
+ "author": "破晓",
+ "platform": "所有环境",
+ "source_date": "2023年12月03日 13:20:28",
+ "hits": 569,
+ "up": 8,
+ "favorite": 34,
+ "comment": 0,
+ "source_file": "Adapter容器\\3629_常见的App数据路径.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 10,
+ "char_count": 300,
+ "confidence": "static_review"
+}

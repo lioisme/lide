@@ -1,0 +1,24 @@
+{
+ "manual_id": 2773,
+ "type_name": "小游戏",
+ "manual_name": "飞机大作战",
+ "author": "秦风",
+ "platform": "AndLua",
+ "source_date": "2023年05月06日 20:01:54",
+ "hits": 323,
+ "up": 5,
+ "favorite": 9,
+ "comment": 7,
+ "source_file": "小游戏\\2773_飞机大作战.lua",
+ "kind": "fragment",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "truncated_tail",
+  "incomplete_fragment"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 14,
+ "char_count": 300,
+ "confidence": "static_review"
+}

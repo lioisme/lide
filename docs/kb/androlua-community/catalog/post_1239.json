@@ -1,0 +1,21 @@
+{
+ "manual_id": 1239,
+ "type_name": "实用代码",
+ "manual_name": "应用全局黑白",
+ "author": "jies辰",
+ "platform": "",
+ "source_date": "2021年12月19日 18:26:34",
+ "hits": 112,
+ "up": 1,
+ "favorite": 8,
+ "comment": 0,
+ "source_file": "实用代码\\1239_应用全局黑白.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 7,
+ "char_count": 300,
+ "confidence": "static_review"
+}

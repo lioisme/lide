@@ -1,0 +1,24 @@
+{
+ "manual_id": 3953,
+ "type_name": "基础代码",
+ "manual_name": "文字游戏「战斗系统」",
+ "author": "兜兜转转，又回到原点！",
+ "platform": "所有环境",
+ "source_date": "2024年03月08日 04:04:48",
+ "hits": 381,
+ "up": 7,
+ "favorite": 11,
+ "comment": 9,
+ "source_file": "基础代码\\3953_文字游戏「战斗系统」.lua",
+ "kind": "fragment",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "truncated_tail",
+  "incomplete_fragment"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 12,
+ "char_count": 300,
+ "confidence": "static_review"
+}

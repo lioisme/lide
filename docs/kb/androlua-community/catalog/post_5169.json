@@ -1,0 +1,21 @@
+{
+ "manual_id": 5169,
+ "type_name": "Lua代码",
+ "manual_name": "页面效果",
+ "author": "琪琪子",
+ "platform": "AndLua",
+ "source_date": "2026年01月10日 15:39:42",
+ "hits": 605,
+ "up": 11,
+ "favorite": 20,
+ "comment": 2,
+ "source_file": "Lua代码\\5169_页面效果.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 15,
+ "char_count": 300,
+ "confidence": "static_review"
+}

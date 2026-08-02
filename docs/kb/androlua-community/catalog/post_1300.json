@@ -1,0 +1,21 @@
+{
+ "manual_id": 1300,
+ "type_name": "实用代码",
+ "manual_name": "小鸡词典编辑器格式转HTML",
+ "author": "jies辰",
+ "platform": "所有环境",
+ "source_date": "2022年01月09日 11:04:00",
+ "hits": 150,
+ "up": 1,
+ "favorite": 1,
+ "comment": 0,
+ "source_file": "实用代码\\1300_小鸡词典编辑器格式转HTML.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 8,
+ "char_count": 300,
+ "confidence": "static_review"
+}

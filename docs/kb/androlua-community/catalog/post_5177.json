@@ -1,0 +1,21 @@
+{
+ "manual_id": 5177,
+ "type_name": "设备系统",
+ "manual_name": "读取日程",
+ "author": "鸡汤",
+ "platform": "AndLua",
+ "source_date": "2026年01月18日 10:54:14",
+ "hits": 208,
+ "up": 0,
+ "favorite": 0,
+ "comment": 0,
+ "source_file": "设备系统\\5177_读取日程.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 12,
+ "char_count": 300,
+ "confidence": "static_review"
+}

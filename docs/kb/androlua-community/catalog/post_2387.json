@@ -1,0 +1,21 @@
+{
+ "manual_id": 2387,
+ "type_name": "Lua代码",
+ "manual_name": "Tomohiko Sakamoto 算法",
+ "author": "机不可失🅥",
+ "platform": "所有环境",
+ "source_date": "2023年01月28日 13:43:01",
+ "hits": 126,
+ "up": 0,
+ "favorite": 1,
+ "comment": 3,
+ "source_file": "Lua代码\\2387_Tomohiko_Sakamoto_算法.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

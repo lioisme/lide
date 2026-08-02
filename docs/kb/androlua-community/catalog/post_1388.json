@@ -1,0 +1,24 @@
+{
+ "manual_id": 1388,
+ "type_name": "系统",
+ "manual_name": "判断网络状态并提醒",
+ "author": "海纳百氚，有容乃大",
+ "platform": "Fusion App2",
+ "source_date": "2022年03月05日 21:10:16",
+ "hits": 324,
+ "up": 6,
+ "favorite": 25,
+ "comment": 0,
+ "source_file": "系统\\1388_判断网络状态并提醒.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 14,
+ "char_count": 300,
+ "confidence": "static_review"
+}

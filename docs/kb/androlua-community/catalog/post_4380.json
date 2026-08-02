@@ -1,0 +1,21 @@
+{
+ "manual_id": 4380,
+ "type_name": "实用代码",
+ "manual_name": "数据雷达图",
+ "author": "fo",
+ "platform": "AndroLua,OpenLuaX,AndLua",
+ "source_date": "2024年11月29日 19:11:40",
+ "hits": 365,
+ "up": 10,
+ "favorite": 20,
+ "comment": 1,
+ "source_file": "实用代码\\4380_数据雷达图.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 19,
+ "char_count": 300,
+ "confidence": "static_review"
+}

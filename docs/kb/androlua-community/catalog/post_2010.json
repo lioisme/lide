@@ -1,0 +1,21 @@
+{
+ "manual_id": 2010,
+ "type_name": "table表",
+ "manual_name": "数组打乱",
+ "author": "迷糊.",
+ "platform": "所有环境",
+ "source_date": "2022年10月29日 12:13:28",
+ "hits": 172,
+ "up": 2,
+ "favorite": 4,
+ "comment": 2,
+ "source_file": "table表\\2010_数组打乱.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 12,
+ "char_count": 250,
+ "confidence": "static_review"
+}

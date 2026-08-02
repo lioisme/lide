@@ -1,0 +1,21 @@
+{
+ "manual_id": 4473,
+ "type_name": "小工具",
+ "manual_name": "仿新版MT管理器音乐播放器(Runnable&Handler实现)",
+ "author": "⁧拾玖⁧‭",
+ "platform": "所有环境",
+ "source_date": "2025年01月18日 15:20:48",
+ "hits": 1114,
+ "up": 2,
+ "favorite": 16,
+ "comment": 1,
+ "source_file": "小工具\\4473_仿新版MT管理器音乐播放器(Runnable&Handler实现).lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 11,
+ "char_count": 300,
+ "confidence": "static_review"
+}

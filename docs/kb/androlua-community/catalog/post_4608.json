@@ -1,0 +1,21 @@
+{
+ "manual_id": 4608,
+ "type_name": "系统",
+ "manual_name": "内存报告",
+ "author": "呱呱",
+ "platform": "AndroLua",
+ "source_date": "2025年03月18日 21:01:48",
+ "hits": 626,
+ "up": 3,
+ "favorite": 13,
+ "comment": 6,
+ "source_file": "系统\\4608_内存报告.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

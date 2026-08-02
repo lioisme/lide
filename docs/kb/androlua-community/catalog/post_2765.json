@@ -1,0 +1,21 @@
+{
+ "manual_id": 2765,
+ "type_name": "控件属性",
+ "manual_name": "LuaEditText",
+ "author": "NekoLaska",
+ "platform": "Fusion App2",
+ "source_date": "2023年05月05日 20:26:37",
+ "hits": 676,
+ "up": 4,
+ "favorite": 7,
+ "comment": 8,
+ "source_file": "控件属性\\2765_LuaEditText.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 9,
+ "char_count": 300,
+ "confidence": "static_review"
+}

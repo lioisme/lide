@@ -1,0 +1,24 @@
+{
+ "manual_id": 5126,
+ "type_name": "Lua教程",
+ "manual_name": "入机认证(包含图片与文字)",
+ "author": "ㅤ",
+ "platform": "所有环境",
+ "source_date": "2025年11月15日 14:31:59",
+ "hits": 396,
+ "up": 5,
+ "favorite": 8,
+ "comment": 3,
+ "source_file": "Lua教程\\5126_入机认证(包含图片与文字).lua",
+ "kind": "fragment",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "truncated_tail",
+  "incomplete_fragment"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 15,
+ "char_count": 300,
+ "confidence": "static_review"
+}

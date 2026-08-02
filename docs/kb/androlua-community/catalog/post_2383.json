@@ -1,0 +1,25 @@
+{
+ "manual_id": 2383,
+ "type_name": "浏览器",
+ "manual_name": "WebView渲染机制",
+ "author": "壹影",
+ "platform": "所有环境",
+ "source_date": "2023年01月27日 16:22:58",
+ "hits": 406,
+ "up": 8,
+ "favorite": 15,
+ "comment": 4,
+ "source_file": "浏览器\\2383_WebView渲染机制.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text",
+  "manual_downgraded"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 8,
+ "char_count": 300,
+ "confidence": "static_review",
+ "note": "人工复核 2026-08-02：研究性文字帖，无恶意载荷，从 harmful 降级为 neutral"
+}

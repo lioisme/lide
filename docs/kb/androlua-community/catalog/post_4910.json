@@ -1,0 +1,21 @@
+{
+ "manual_id": 4910,
+ "type_name": "Layout布局",
+ "manual_name": "DrawerLayout侧滑栏全屏手势",
+ "author": "。。",
+ "platform": "所有环境",
+ "source_date": "2025年07月12日 21:07:21",
+ "hits": 366,
+ "up": 1,
+ "favorite": 9,
+ "comment": 0,
+ "source_file": "Layout布局\\4910_DrawerLayout侧滑栏全屏手势.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

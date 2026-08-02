@@ -1,0 +1,23 @@
+{
+ "manual_id": 2746,
+ "type_name": "布局教程",
+ "manual_name": "TableLayout属性",
+ "author": "诶害",
+ "platform": "所有环境",
+ "source_date": "2023年05月03日 09:52:46",
+ "hits": 184,
+ "up": 0,
+ "favorite": 2,
+ "comment": 0,
+ "source_file": "布局教程\\2746_TableLayout属性.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 14,
+ "char_count": 300,
+ "confidence": "static_review"
+}

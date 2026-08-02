@@ -1,0 +1,21 @@
+{
+ "manual_id": 2825,
+ "type_name": "Androlua教程",
+ "manual_name": "检测系统是否root",
+ "author": "诶害",
+ "platform": "所有环境",
+ "source_date": "2023年05月21日 02:00:01",
+ "hits": 218,
+ "up": 1,
+ "favorite": 7,
+ "comment": 2,
+ "source_file": "Androlua教程\\2825_检测系统是否root.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 18,
+ "char_count": 300,
+ "confidence": "static_review"
+}

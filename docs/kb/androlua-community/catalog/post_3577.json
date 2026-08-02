@@ -1,0 +1,24 @@
+{
+ "manual_id": 3577,
+ "type_name": "网络请求",
+ "manual_name": "QQ音乐增加听歌时长",
+ "author": "辉.",
+ "platform": "所有环境",
+ "source_date": "2023年11月11日 23:42:04",
+ "hits": 227,
+ "up": 4,
+ "favorite": 9,
+ "comment": 1,
+ "source_file": "网络请求\\3577_QQ音乐增加听歌时长.lua",
+ "kind": "fragment",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "truncated_tail",
+  "incomplete_fragment"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 21,
+ "char_count": 300,
+ "confidence": "static_review"
+}

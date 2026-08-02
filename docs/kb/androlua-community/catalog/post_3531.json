@@ -1,0 +1,21 @@
+{
+ "manual_id": 3531,
+ "type_name": "布局代码",
+ "manual_name": "更适合安卓宝宝灵动岛(半成品x2)",
+ "author": "•⤙•/k",
+ "platform": "AndLua",
+ "source_date": "2023年10月28日 13:44:39",
+ "hits": 1178,
+ "up": 10,
+ "favorite": 37,
+ "comment": 9,
+ "source_file": "布局代码\\3531_更适合安卓宝宝灵动岛(半成品x2).lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

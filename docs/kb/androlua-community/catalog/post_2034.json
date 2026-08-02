@@ -1,0 +1,24 @@
+{
+ "manual_id": 2034,
+ "type_name": "系统",
+ "manual_name": "SSID&密码 连接WiFi",
+ "author": "TwO",
+ "platform": "所有环境",
+ "source_date": "2022年11月05日 01:17:06",
+ "hits": 534,
+ "up": 8,
+ "favorite": 16,
+ "comment": 6,
+ "source_file": "系统\\2034_SSID&密码_连接WiFi.lua",
+ "kind": "fragment",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "truncated_tail",
+  "incomplete_fragment"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 11,
+ "char_count": 300,
+ "confidence": "static_review"
+}

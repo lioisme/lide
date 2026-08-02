@@ -1,0 +1,23 @@
+{
+ "manual_id": 2487,
+ "type_name": "实用代码",
+ "manual_name": "一个开关(非原创)+网络加载dex(ChatGPT优化版)",
+ "author": "迷糊.",
+ "platform": "所有环境",
+ "source_date": "2023年02月19日 21:31:36",
+ "hits": 466,
+ "up": 5,
+ "favorite": 15,
+ "comment": 1,
+ "source_file": "实用代码\\2487_一个开关(非原创)+网络加载dex(ChatGPT优化版).lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 9,
+ "char_count": 300,
+ "confidence": "static_review"
+}

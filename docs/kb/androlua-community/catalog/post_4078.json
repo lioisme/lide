@@ -1,0 +1,24 @@
+{
+ "manual_id": 4078,
+ "type_name": "文件操作",
+ "manual_name": "软件文件管理器",
+ "author": "•⤙•/k",
+ "platform": "所有环境",
+ "source_date": "2024年05月26日 11:20:02",
+ "hits": 1210,
+ "up": 11,
+ "favorite": 27,
+ "comment": 6,
+ "source_file": "文件操作\\4078_软件文件管理器.lua",
+ "kind": "fragment",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "truncated_tail",
+  "incomplete_fragment"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

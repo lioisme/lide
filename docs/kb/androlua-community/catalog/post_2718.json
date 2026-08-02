@@ -1,0 +1,23 @@
+{
+ "manual_id": 2718,
+ "type_name": "Lua代码",
+ "manual_name": "提取字符串里的Url链接",
+ "author": "诶害",
+ "platform": "所有环境",
+ "source_date": "2023年05月01日 02:10:43",
+ "hits": 233,
+ "up": 5,
+ "favorite": 25,
+ "comment": 1,
+ "source_file": "Lua代码\\2718_提取字符串里的Url链接.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 14,
+ "char_count": 300,
+ "confidence": "static_review"
+}

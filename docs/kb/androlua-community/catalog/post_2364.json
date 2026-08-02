@@ -1,0 +1,23 @@
+{
+ "manual_id": 2364,
+ "type_name": "远程更新",
+ "manual_name": "远程在线更新，增加网盘跳转",
+ "author": "𓆡",
+ "platform": "AndroLua",
+ "source_date": "2023年01月22日 22:49:07",
+ "hits": 530,
+ "up": 0,
+ "favorite": 13,
+ "comment": 0,
+ "source_file": "远程更新\\2364_远程在线更新，增加网盘跳转.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 8,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 3524,
+ "type_name": "文件操作",
+ "manual_name": "获取文件md5",
+ "author": "夜白1007",
+ "platform": "所有环境",
+ "source_date": "2023年10月24日 03:20:11",
+ "hits": 208,
+ "up": 0,
+ "favorite": 6,
+ "comment": 0,
+ "source_file": "文件操作\\3524_获取文件md5.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 9,
+ "char_count": 300,
+ "confidence": "static_review"
+}

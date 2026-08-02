@@ -1,0 +1,21 @@
+{
+ "manual_id": 4029,
+ "type_name": "基础代码",
+ "manual_name": "okhttp3上传图片到图床",
+ "author": "ᅟᅠ        ‌",
+ "platform": "AndLua",
+ "source_date": "2024年04月22日 20:02:29",
+ "hits": 667,
+ "up": 5,
+ "favorite": 20,
+ "comment": 12,
+ "source_file": "基础代码\\4029_okhttp3上传图片到图床.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

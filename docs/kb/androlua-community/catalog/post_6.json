@@ -1,0 +1,21 @@
+{
+ "manual_id": 6,
+ "type_name": "Activity活动",
+ "manual_name": "获取状态栏和导航栏高度",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 228,
+ "up": 2,
+ "favorite": 6,
+ "comment": 0,
+ "source_file": "Activity活动\\6_获取状态栏和导航栏高度.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 10,
+ "char_count": 300,
+ "confidence": "static_review"
+}

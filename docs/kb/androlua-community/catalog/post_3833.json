@@ -1,0 +1,23 @@
+{
+ "manual_id": 3833,
+ "type_name": "UI控件",
+ "manual_name": "弹窗背景模糊优化版",
+ "author": "池⁧~喵⁧‭",
+ "platform": "所有环境",
+ "source_date": "2024年02月01日 12:00:28",
+ "hits": 1386,
+ "up": 18,
+ "favorite": 58,
+ "comment": 7,
+ "source_file": "UI控件\\3833_弹窗背景模糊优化版.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 10,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 5089,
+ "type_name": "小工具",
+ "manual_name": "安全便捷的调用1DM+下载文件",
+ "author": "海纳百氚，有容乃大",
+ "platform": "Fusion App2,reOpenLua,OpenLuaX",
+ "source_date": "2025年10月15日 14:46:59",
+ "hits": 206,
+ "up": 1,
+ "favorite": 5,
+ "comment": 0,
+ "source_file": "小工具\\5089_安全便捷的调用1DM+下载文件.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 10,
+ "char_count": 300,
+ "confidence": "static_review"
+}

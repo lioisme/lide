@@ -1,0 +1,21 @@
+{
+ "manual_id": 2967,
+ "type_name": "Intent通信",
+ "manual_name": "QQ登录（修改了，可行）",
+ "author": "清汀琉璃",
+ "platform": "Fusion App2",
+ "source_date": "2023年06月22日 22:28:59",
+ "hits": 1453,
+ "up": 30,
+ "favorite": 74,
+ "comment": 14,
+ "source_file": "Intent通信\\2967_QQ登录（修改了，可行）.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,23 @@
+{
+ "manual_id": 2815,
+ "type_name": "小工具",
+ "manual_name": "自己手搓流光效果",
+ "author": "•⤙•/k",
+ "platform": "AndLua",
+ "source_date": "2023年05月18日 15:02:38",
+ "hits": 322,
+ "up": 17,
+ "favorite": 31,
+ "comment": 2,
+ "source_file": "小工具\\2815_自己手搓流光效果.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 16,
+ "char_count": 300,
+ "confidence": "static_review"
+}

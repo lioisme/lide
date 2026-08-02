@@ -1,0 +1,21 @@
+{
+ "manual_id": 4890,
+ "type_name": "网络爬虫",
+ "manual_name": "酷我音乐排行榜",
+ "author": "琪琪子",
+ "platform": "AndLua",
+ "source_date": "2025年07月08日 07:03:58",
+ "hits": 281,
+ "up": 3,
+ "favorite": 10,
+ "comment": 0,
+ "source_file": "网络爬虫\\4890_酷我音乐排行榜.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 21,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 541,
+ "type_name": "实用代码",
+ "manual_name": "简单的防修改",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 1197,
+ "up": 20,
+ "favorite": 78,
+ "comment": 3,
+ "source_file": "实用代码\\541_简单的防修改.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 11,
+ "char_count": 300,
+ "confidence": "static_review"
+}

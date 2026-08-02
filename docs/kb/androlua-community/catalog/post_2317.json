@@ -1,0 +1,23 @@
+{
+ "manual_id": 2317,
+ "type_name": "实用代码",
+ "manual_name": "远程验证分发端",
+ "author": "老黑",
+ "platform": "AndroLua,AppLua,AndLua,LuaApp",
+ "source_date": "2023年01月14日 10:24:47",
+ "hits": 880,
+ "up": 9,
+ "favorite": 37,
+ "comment": 19,
+ "source_file": "实用代码\\2317_远程验证分发端.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 18,
+ "char_count": 300,
+ "confidence": "static_review"
+}

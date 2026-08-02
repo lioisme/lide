@@ -1,0 +1,21 @@
+{
+ "manual_id": 4814,
+ "type_name": "基础代码",
+ "manual_name": "搜索词建议",
+ "author": "zzzzzxxx",
+ "platform": "所有环境",
+ "source_date": "2025年06月06日 04:57:48",
+ "hits": 314,
+ "up": 0,
+ "favorite": 7,
+ "comment": 0,
+ "source_file": "基础代码\\4814_搜索词建议.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 10,
+ "char_count": 300,
+ "confidence": "static_review"
+}

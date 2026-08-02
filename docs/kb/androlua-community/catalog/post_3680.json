@@ -1,0 +1,23 @@
+{
+ "manual_id": 3680,
+ "type_name": "小工具",
+ "manual_name": "录屏",
+ "author": "琪琪子",
+ "platform": "AndLua",
+ "source_date": "2023年12月22日 15:19:46",
+ "hits": 509,
+ "up": 9,
+ "favorite": 30,
+ "comment": 15,
+ "source_file": "小工具\\3680_录屏.lua",
+ "kind": "reference_sheet",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "xml_list"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 7,
+ "char_count": 300,
+ "confidence": "static_review"
+}

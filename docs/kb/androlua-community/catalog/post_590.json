@@ -1,0 +1,21 @@
+{
+ "manual_id": 590,
+ "type_name": "浏览器",
+ "manual_name": "浏览器切换UA列表",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 307,
+ "up": 4,
+ "favorite": 24,
+ "comment": 4,
+ "source_file": "浏览器\\590_浏览器切换UA列表.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 10,
+ "char_count": 300,
+ "confidence": "static_review"
+}

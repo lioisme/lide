@@ -1,0 +1,23 @@
+{
+ "manual_id": 3594,
+ "type_name": "Lua代码",
+ "manual_name": "解析简单数学题",
+ "author": "清风",
+ "platform": "所有环境",
+ "source_date": "2023年11月18日 17:49:16",
+ "hits": 195,
+ "up": 2,
+ "favorite": 4,
+ "comment": 1,
+ "source_file": "Lua代码\\3594_解析简单数学题.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 15,
+ "char_count": 300,
+ "confidence": "static_review"
+}

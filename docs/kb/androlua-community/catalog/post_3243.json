@@ -1,0 +1,25 @@
+{
+ "manual_id": 3243,
+ "type_name": "实用代码",
+ "manual_name": "文件分享_配适安卓7+和FA2",
+ "author": "小孩，别闹！",
+ "platform": "Fusion App2",
+ "source_date": "2023年08月13日 09:53:24",
+ "hits": 417,
+ "up": 6,
+ "favorite": 21,
+ "comment": 5,
+ "source_file": "实用代码\\3243_文件分享_配适安卓7+和FA2.lua",
+ "kind": "text_note",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "short_text",
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 10,
+ "char_count": 300,
+ "confidence": "static_review"
+}

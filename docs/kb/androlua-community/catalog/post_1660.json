@@ -1,0 +1,21 @@
+{
+ "manual_id": 1660,
+ "type_name": "自绘制",
+ "manual_name": "二次函数绘制(几年前写的代码很蠢)",
+ "author": "帕帝天秀",
+ "platform": "所有环境",
+ "source_date": "2022年08月05日 21:23:12",
+ "hits": 371,
+ "up": 8,
+ "favorite": 9,
+ "comment": 5,
+ "source_file": "自绘制\\1660_二次函数绘制(几年前写的代码很蠢).lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 16,
+ "char_count": 300,
+ "confidence": "static_review"
+}

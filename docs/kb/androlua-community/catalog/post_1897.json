@@ -1,0 +1,23 @@
+{
+ "manual_id": 1897,
+ "type_name": "Activity活动",
+ "manual_name": "使用SharedPreferences设置主题",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2022年09月19日 18:06:29",
+ "hits": 1341,
+ "up": 29,
+ "favorite": 75,
+ "comment": 16,
+ "source_file": "Activity活动\\1897_使用SharedPreferences设置主题.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 11,
+ "char_count": 300,
+ "confidence": "static_review"
+}

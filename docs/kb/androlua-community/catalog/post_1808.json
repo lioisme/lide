@@ -1,0 +1,25 @@
+{
+ "manual_id": 1808,
+ "type_name": "控件属性",
+ "manual_name": "fa2 设置应用栏搜索框(Search)背景颜色",
+ "author": "小白·马",
+ "platform": "Fusion App2",
+ "source_date": "2022年08月23日 19:31:23",
+ "hits": 340,
+ "up": 0,
+ "favorite": 11,
+ "comment": 0,
+ "source_file": "控件属性\\1808_fa2_设置应用栏搜索框(Search)背景颜色.lua",
+ "kind": "text_note",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "short_text",
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 17,
+ "char_count": 300,
+ "confidence": "static_review"
+}

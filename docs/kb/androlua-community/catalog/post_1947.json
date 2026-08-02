@@ -1,0 +1,21 @@
+{
+ "manual_id": 1947,
+ "type_name": "xpath",
+ "manual_name": "Xpath爬取网页演示",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2022年10月03日 21:58:28",
+ "hits": 1248,
+ "up": 15,
+ "favorite": 46,
+ "comment": 14,
+ "source_file": "xpath\\1947_Xpath爬取网页演示.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 15,
+ "char_count": 300,
+ "confidence": "static_review"
+}

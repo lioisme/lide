@@ -1,0 +1,26 @@
+{
+ "manual_id": 3862,
+ "type_name": "自绘制",
+ "manual_name": "上一步",
+ "author": "清风",
+ "platform": "所有环境",
+ "source_date": "2024年02月08日 09:12:45",
+ "hits": 606,
+ "up": 5,
+ "favorite": 16,
+ "comment": 7,
+ "source_file": "自绘制\\3862_上一步.lua",
+ "kind": "fragment",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "truncated_tail",
+  "androlua_private",
+  "private_api",
+  "incomplete_fragment"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

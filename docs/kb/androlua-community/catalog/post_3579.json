@@ -1,0 +1,21 @@
+{
+ "manual_id": 3579,
+ "type_name": "Androlua教程",
+ "manual_name": "悬浮球渐变",
+ "author": "壹影",
+ "platform": "Fusion App2",
+ "source_date": "2023年11月12日 21:57:14",
+ "hits": 579,
+ "up": 6,
+ "favorite": 30,
+ "comment": 4,
+ "source_file": "Androlua教程\\3579_悬浮球渐变.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 8,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,23 @@
+{
+ "manual_id": 5088,
+ "type_name": "Intent通信",
+ "manual_name": "调用IDM下载文件",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2025年10月15日 12:45:59",
+ "hits": 235,
+ "up": 0,
+ "favorite": 10,
+ "comment": 0,
+ "source_file": "Intent通信\\5088_调用IDM下载文件.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 9,
+ "char_count": 300,
+ "confidence": "static_review"
+}

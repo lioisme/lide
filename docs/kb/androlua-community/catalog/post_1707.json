@@ -1,0 +1,23 @@
+{
+ "manual_id": 1707,
+ "type_name": "Activity活动",
+ "manual_name": "仿香肠派对弹窗提示",
+ "author": "归鸿",
+ "platform": "所有环境",
+ "source_date": "2022年08月11日 20:07:35",
+ "hits": 1007,
+ "up": 18,
+ "favorite": 42,
+ "comment": 23,
+ "source_file": "Activity活动\\1707_仿香肠派对弹窗提示.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

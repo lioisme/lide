@@ -1,0 +1,21 @@
+{
+ "manual_id": 218,
+ "type_name": "系统",
+ "manual_name": "开启关闭WiFi",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 69,
+ "up": 0,
+ "favorite": 1,
+ "comment": 0,
+ "source_file": "系统\\218_开启关闭WiFi.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 3,
+ "char_count": 131,
+ "confidence": "static_review"
+}

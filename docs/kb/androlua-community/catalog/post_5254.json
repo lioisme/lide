@@ -1,0 +1,25 @@
+{
+ "manual_id": 5254,
+ "type_name": "小工具",
+ "manual_name": "视频图集聚合无水印解析下载工具",
+ "author": "海纳百氚，有容乃大",
+ "platform": "Fusion App2,reOpenLua,OpenLuaX",
+ "source_date": "2026年03月02日 15:51:27",
+ "hits": 905,
+ "up": 10,
+ "favorite": 23,
+ "comment": 0,
+ "source_file": "小工具\\5254_视频图集聚合无水印解析下载工具.lua",
+ "kind": "text_note",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "short_text",
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 11,
+ "char_count": 300,
+ "confidence": "static_review"
+}

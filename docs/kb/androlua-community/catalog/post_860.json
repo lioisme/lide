@@ -1,0 +1,23 @@
+{
+ "manual_id": 860,
+ "type_name": "动画教程",
+ "manual_name": "属性动画",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 144,
+ "up": 0,
+ "favorite": 3,
+ "comment": 0,
+ "source_file": "动画教程\\860_属性动画.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 14,
+ "char_count": 300,
+ "confidence": "static_review"
+}

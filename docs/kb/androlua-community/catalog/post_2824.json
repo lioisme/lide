@@ -1,0 +1,21 @@
+{
+ "manual_id": 2824,
+ "type_name": "Androlua教程",
+ "manual_name": "lua执行错误重试",
+ "author": "诶害",
+ "platform": "所有环境",
+ "source_date": "2023年05月21日 01:51:09",
+ "hits": 122,
+ "up": 1,
+ "favorite": 3,
+ "comment": 0,
+ "source_file": "Androlua教程\\2824_lua执行错误重试.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

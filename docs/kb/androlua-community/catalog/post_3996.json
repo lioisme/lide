@@ -1,0 +1,24 @@
+{
+ "manual_id": 3996,
+ "type_name": "xpath",
+ "manual_name": "一个检查更新方法",
+ "author": "ㄛㄙ飞ㄋ",
+ "platform": "所有环境",
+ "source_date": "2024年03月29日 00:56:52",
+ "hits": 868,
+ "up": 5,
+ "favorite": 41,
+ "comment": 23,
+ "source_file": "xpath\\3996_一个检查更新方法.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 12,
+ "char_count": 300,
+ "confidence": "static_review"
+}

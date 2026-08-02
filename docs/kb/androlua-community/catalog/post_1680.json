@@ -1,0 +1,23 @@
+{
+ "manual_id": 1680,
+ "type_name": "Androlua教程",
+ "manual_name": "关机或者重启",
+ "author": "W. by",
+ "platform": "所有环境",
+ "source_date": "2022年08月08日 12:26:15",
+ "hits": 219,
+ "up": 3,
+ "favorite": 5,
+ "comment": 1,
+ "source_file": "Androlua教程\\1680_关机或者重启.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "global_pollution"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 19,
+ "char_count": 300,
+ "confidence": "static_review"
+}

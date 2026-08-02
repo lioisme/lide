@@ -1,0 +1,21 @@
+{
+ "manual_id": 2928,
+ "type_name": "实用代码",
+ "manual_name": "主线程同步网络请求",
+ "author": "NekoLaska",
+ "platform": "Fusion App2",
+ "source_date": "2023年06月12日 13:27:06",
+ "hits": 422,
+ "up": 3,
+ "favorite": 10,
+ "comment": 0,
+ "source_file": "实用代码\\2928_主线程同步网络请求.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 10,
+ "char_count": 300,
+ "confidence": "static_review"
+}

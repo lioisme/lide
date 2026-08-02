@@ -1,0 +1,21 @@
+{
+ "manual_id": 1675,
+ "type_name": "文件操作",
+ "manual_name": "原生文件上传",
+ "author": "Adam·Eva",
+ "platform": "所有环境",
+ "source_date": "2022年08月07日 02:45:59",
+ "hits": 864,
+ "up": 13,
+ "favorite": 35,
+ "comment": 15,
+ "source_file": "文件操作\\1675_原生文件上传.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 9,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 2891,
+ "type_name": "Lua代码",
+ "manual_name": "Node",
+ "author": "NekoLaska",
+ "platform": "所有环境",
+ "source_date": "2023年06月02日 23:24:36",
+ "hits": 319,
+ "up": 2,
+ "favorite": 3,
+ "comment": 2,
+ "source_file": "Lua代码\\2891_Node.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 6,
+ "char_count": 300,
+ "confidence": "static_review"
+}

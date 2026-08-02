@@ -1,0 +1,24 @@
+{
+ "manual_id": 4579,
+ "type_name": "JS教程",
+ "manual_name": "AndLua+易支付开源",
+ "author": "ипц",
+ "platform": "AndLua",
+ "source_date": "2025年03月09日 08:58:14",
+ "hits": 557,
+ "up": 8,
+ "favorite": 19,
+ "comment": 0,
+ "source_file": "JS教程\\4579_AndLua+易支付开源.lua",
+ "kind": "fragment",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "truncated_tail",
+  "incomplete_fragment"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 19,
+ "char_count": 300,
+ "confidence": "static_review"
+}

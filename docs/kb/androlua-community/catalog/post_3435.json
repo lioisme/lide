@@ -1,0 +1,24 @@
+{
+ "manual_id": 3435,
+ "type_name": "布局教程",
+ "manual_name": "一个简单的md风格主页界面布局v3",
+ "author": "氘-Deuterium",
+ "platform": "AndroLua,Fusion App2,reOpenLua",
+ "source_date": "2023年09月28日 11:16:57",
+ "hits": 3828,
+ "up": 29,
+ "favorite": 98,
+ "comment": 27,
+ "source_file": "布局教程\\3435_一个简单的md风格主页界面布局v3.lua",
+ "kind": "fragment",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "incomplete_mark",
+  "incomplete_fragment"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

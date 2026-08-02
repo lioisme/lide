@@ -24,12 +24,16 @@ L2DBaseModel::L2DBaseModel()
 L2DBaseModel::~L2DBaseModel() = default;
 
 void L2DBaseModel::loadModelData(const std::vector<uint8_t>& data, int version) {
-    BinaryReader br(data);
-    br.readByte(); br.readByte(); br.readByte();
-    version = br.readByte();
-    br.setFormatVersion(version);
-    auto* impl = static_cast<ModelImpl*>(br.readObjectRaw());
+    // 先建新 reader（新对象图）再交接：
+    // 旧图必须在 ALive2DModel::mModelImpl 换新指针之后才销毁，
+    // 因此 setModelImpl 先执行，随后 mMocReader = move(newReader) 才释放旧图。
+    auto newReader = std::make_unique<BinaryReader>(data);
+    newReader->readByte(); newReader->readByte(); newReader->readByte();
+    version = newReader->readByte();
+    newReader->setFormatVersion(version);
+    auto* impl = static_cast<ModelImpl*>(newReader->readObjectRaw());
     mLive2DModel->setModelImpl(impl);
+    mMocReader = std::move(newReader);
     mLive2DModel->getModelContext()->setDrawParam(mLive2DModel->getDrawParam());
     mLive2DModel->getModelContext()->init();
     mModelMatrix = L2DModelMatrix(

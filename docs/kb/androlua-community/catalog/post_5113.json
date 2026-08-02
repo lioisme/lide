@@ -1,0 +1,21 @@
+{
+ "manual_id": 5113,
+ "type_name": "编码转换",
+ "manual_name": "CaseFormat",
+ "author": "雅典娜",
+ "platform": "",
+ "source_date": "2025年10月31日 20:24:18",
+ "hits": 389,
+ "up": 1,
+ "favorite": 1,
+ "comment": 2,
+ "source_file": "编码转换\\5113_CaseFormat.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 9,
+ "char_count": 300,
+ "confidence": "static_review"
+}

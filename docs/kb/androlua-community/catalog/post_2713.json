@@ -1,0 +1,21 @@
+{
+ "manual_id": 2713,
+ "type_name": "Lua代码",
+ "manual_name": "Mathjax",
+ "author": "Duo",
+ "platform": "所有环境",
+ "source_date": "2023年04月30日 08:34:34",
+ "hits": 208,
+ "up": 3,
+ "favorite": 7,
+ "comment": 1,
+ "source_file": "Lua代码\\2713_Mathjax.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 17,
+ "char_count": 300,
+ "confidence": "static_review"
+}

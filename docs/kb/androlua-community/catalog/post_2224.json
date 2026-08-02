@@ -1,0 +1,21 @@
+{
+ "manual_id": 2224,
+ "type_name": "Lua代码",
+ "manual_name": "水仙后台注册对接(2)",
+ "author": "邪默",
+ "platform": "AndLua,LuaApp",
+ "source_date": "2022年12月19日 19:22:29",
+ "hits": 679,
+ "up": 6,
+ "favorite": 17,
+ "comment": 9,
+ "source_file": "Lua代码\\2224_水仙后台注册对接(2).lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 14,
+ "char_count": 300,
+ "confidence": "static_review"
+}

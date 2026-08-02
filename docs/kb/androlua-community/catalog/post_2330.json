@@ -1,0 +1,21 @@
+{
+ "manual_id": 2330,
+ "type_name": "控件属性",
+ "manual_name": "一个列表分类布局",
+ "author": "ㄛㄙ飞ㄋ",
+ "platform": "Fusion App2",
+ "source_date": "2023年01月16日 16:21:06",
+ "hits": 1516,
+ "up": 14,
+ "favorite": 52,
+ "comment": 4,
+ "source_file": "控件属性\\2330_一个列表分类布局.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 20,
+ "char_count": 300,
+ "confidence": "static_review"
+}

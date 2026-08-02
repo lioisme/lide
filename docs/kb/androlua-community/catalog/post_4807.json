@@ -1,0 +1,21 @@
+{
+ "manual_id": 4807,
+ "type_name": "Lua代码",
+ "manual_name": "伪3D模拟地月系",
+ "author": "榆次",
+ "platform": "所有环境",
+ "source_date": "2025年06月02日 13:18:10",
+ "hits": 396,
+ "up": 4,
+ "favorite": 8,
+ "comment": 5,
+ "source_file": "Lua代码\\4807_伪3D模拟地月系.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 16,
+ "char_count": 300,
+ "confidence": "static_review"
+}

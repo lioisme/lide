@@ -1,0 +1,23 @@
+{
+ "manual_id": 2721,
+ "type_name": "小工具",
+ "manual_name": "蓝奏云直链解析(官方Api解析+密码解析)_v7.3",
+ "author": "迷糊.",
+ "platform": "所有环境",
+ "source_date": "2023年05月01日 14:40:16",
+ "hits": 2902,
+ "up": 17,
+ "favorite": 61,
+ "comment": 77,
+ "source_file": "小工具\\2721_蓝奏云直链解析(官方Api解析+密码解析)_v7.3.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 24,
+ "char_count": 300,
+ "confidence": "static_review"
+}

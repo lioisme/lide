@@ -24,7 +24,7 @@ public:
     int getParamCount() const { return static_cast<int>(mParamPivotTable.size()); }
 
 private:
-    std::vector<std::unique_ptr<ParamPivots>> mParamPivotTable;
+    std::vector<ParamPivots*> mParamPivotTable;
 };
 
 } // namespace live2d

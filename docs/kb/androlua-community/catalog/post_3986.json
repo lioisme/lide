@@ -1,0 +1,21 @@
+{
+ "manual_id": 3986,
+ "type_name": "Androlua教程",
+ "manual_name": "LuaAccessibilityService常用方法概览",
+ "author": "kamihitoe",
+ "platform": "AndroLua,reOpenLua,OpenLuaX,AndLua",
+ "source_date": "2024年03月23日 15:57:00",
+ "hits": 805,
+ "up": 11,
+ "favorite": 41,
+ "comment": 9,
+ "source_file": "Androlua教程\\3986_LuaAccessibilityService常用方法概览.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 12,
+ "char_count": 300,
+ "confidence": "static_review"
+}

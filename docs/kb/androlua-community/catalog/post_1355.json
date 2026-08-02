@@ -1,0 +1,23 @@
+{
+ "manual_id": 1355,
+ "type_name": "Androlua教程",
+ "manual_name": "AndroLua常用函数",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2022年02月03日 14:14:35",
+ "hits": 517,
+ "up": 6,
+ "favorite": 13,
+ "comment": 3,
+ "source_file": "Androlua教程\\1355_AndroLua常用函数.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 10,
+ "char_count": 300,
+ "confidence": "static_review"
+}

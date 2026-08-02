@@ -1,0 +1,21 @@
+{
+ "manual_id": 1941,
+ "type_name": "jsoup",
+ "manual_name": "jsoup爬虫",
+ "author": "一键爬",
+ "platform": "Fusion App2",
+ "source_date": "2022年10月03日 00:58:51",
+ "hits": 503,
+ "up": 4,
+ "favorite": 5,
+ "comment": 1,
+ "source_file": "jsoup\\1941_jsoup爬虫.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 10,
+ "char_count": 300,
+ "confidence": "static_review"
+}

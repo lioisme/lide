@@ -1,0 +1,23 @@
+{
+ "manual_id": 2379,
+ "type_name": "Lua代码",
+ "manual_name": "让代码更好看（闲聊、建议）（新手向）",
+ "author": "奥姆",
+ "platform": "所有环境",
+ "source_date": "2023年01月25日 22:41:11",
+ "hits": 600,
+ "up": 8,
+ "favorite": 8,
+ "comment": 16,
+ "source_file": "Lua代码\\2379_让代码更好看（闲聊、建议）（新手向）.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 18,
+ "char_count": 300,
+ "confidence": "static_review"
+}

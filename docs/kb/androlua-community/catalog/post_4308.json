@@ -1,0 +1,23 @@
+{
+ "manual_id": 4308,
+ "type_name": "网络请求",
+ "manual_name": "简单的 Web 服务器 优化修复",
+ "author": "青柠(YouCun)",
+ "platform": "所有环境",
+ "source_date": "2024年10月17日 21:24:18",
+ "hits": 508,
+ "up": 6,
+ "favorite": 10,
+ "comment": 6,
+ "source_file": "网络请求\\4308_简单的_Web_服务器_优化修复.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 18,
+ "char_count": 300,
+ "confidence": "static_review"
+}

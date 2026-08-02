@@ -1,0 +1,23 @@
+{
+ "manual_id": 2340,
+ "type_name": "系统",
+ "manual_name": "Android权限",
+ "author": "智",
+ "platform": "所有环境",
+ "source_date": "2023年01月18日 11:15:04",
+ "hits": 1879,
+ "up": 37,
+ "favorite": 97,
+ "comment": 30,
+ "source_file": "系统\\2340_Android权限.lua",
+ "kind": "reference_sheet",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "xml_list"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 15,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 4511,
+ "type_name": "Lua代码",
+ "manual_name": "math.random扩展",
+ "author": "⁧拾玖⁧‭",
+ "platform": "所有环境",
+ "source_date": "2025年02月01日 21:33:18",
+ "hits": 207,
+ "up": 0,
+ "favorite": 2,
+ "comment": 0,
+ "source_file": "Lua代码\\4511_math.random扩展.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 10,
+ "char_count": 300,
+ "confidence": "static_review"
+}

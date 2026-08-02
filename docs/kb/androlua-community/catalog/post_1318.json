@@ -1,0 +1,23 @@
+{
+ "manual_id": 1318,
+ "type_name": "编码转换",
+ "manual_name": "JSON编码解码",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2022年01月13日 17:09:52",
+ "hits": 349,
+ "up": 1,
+ "favorite": 13,
+ "comment": 1,
+ "source_file": "编码转换\\1318_JSON编码解码.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 17,
+ "char_count": 300,
+ "confidence": "static_review"
+}

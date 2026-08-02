@@ -1,0 +1,21 @@
+{
+ "manual_id": 3307,
+ "type_name": "Lua代码",
+ "manual_name": "Kahan求和",
+ "author": "kamihitoe",
+ "platform": "所有环境",
+ "source_date": "2023年08月23日 20:39:47",
+ "hits": 99,
+ "up": 0,
+ "favorite": 0,
+ "comment": 1,
+ "source_file": "Lua代码\\3307_Kahan求和.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 15,
+ "char_count": 235,
+ "confidence": "static_review"
+}

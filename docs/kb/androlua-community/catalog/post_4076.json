@@ -1,0 +1,21 @@
+{
+ "manual_id": 4076,
+ "type_name": "Layout布局",
+ "manual_name": "BottomAppBar",
+ "author": "ㄛㄙ飞ㄋ",
+ "platform": "Fusion App1,Fusion App2,reOpenLua,OpenLuaX",
+ "source_date": "2024年05月22日 22:06:19",
+ "hits": 519,
+ "up": 6,
+ "favorite": 13,
+ "comment": 2,
+ "source_file": "Layout布局\\4076_BottomAppBar.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 8,
+ "char_count": 300,
+ "confidence": "static_review"
+}

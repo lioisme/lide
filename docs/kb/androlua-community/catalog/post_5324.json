@@ -1,0 +1,23 @@
+{
+ "manual_id": 5324,
+ "type_name": "UI控件",
+ "manual_name": "LuaCodeEditor",
+ "author": "⁧拾玖⁧‭",
+ "platform": "所有环境",
+ "source_date": "2026年05月31日 15:27:37",
+ "hits": 847,
+ "up": 1,
+ "favorite": 3,
+ "comment": 2,
+ "source_file": "UI控件\\5324_LuaCodeEditor.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "text_only"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 16,
+ "char_count": 300,
+ "confidence": "static_review"
+}

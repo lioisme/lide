@@ -28,6 +28,7 @@ docs/
 | `DECISIONS.md` | 关键决策记录（按时间线，含反转决策） | 全部决策性文档 |
 | `ROADMAP.md` | 计划中 / 进行中工作与文档维护事项 | PARITY_COMPLETION_WORK_ORDER / XPOSED_MODULE_FEASIBILITY_REPORT / 各审计报告行动项 |
 | `androlua-lua/` | **Lua 工程开发知识库**（独立子库）：环境/特性/坑/方法/代码写法，双端验证流程落库处 | 见其 `README.md`；由 SKILL `androlua-project-validation` §9 驱动维护 |
+| `androlua-community/` | **社区帖子训练知识库**（独立子库，2026-08-02 立项）：`代码手册社区` 2144 篇帖子三轴评注 + 正负面主题卡 + LLM 微调语料 | 见其 `TASK_ORDER.md` / `README.md`；初始批：全量初筛 + 人工复核第一批 |
 
 ---
 
@@ -62,6 +63,7 @@ docs/
 | `PARITY_COMPLETION_WORK_ORDER.md` | 2026-08-01 | 19 个 WP 补齐 pro 宿主 IDE 功能（对齐度 ~6 成 → 目标全齐） | **6/19 完成**：WP-001 编译修复、WP-002 运行诊断闭环、WP-003 user_permission、WP-004 工程属性页、WP-017 解析结构化、WP-019 测试骨架 | 剩余 WP-005~016、WP-018（详见 ROADMAP.md） |
 | `EDITOR_PERFORMANCE_AUDIT_V2_REPORT.md` | 2026-07-31 | 确认 V1 的 P0 已修复；剩余差距：每键整屏重组（P0-B）、首帧初始化（P0-A）、功能缺失 | 阶段 B 部分落地（EditorTabs / EditorSession / ProjectFileTree 已存在）；阶段 A 未全执行；阶段 C 未开始 | 以 Squircle-CE 为标杆 |
 | `EDITOR_UI_ALIGNMENT_WORK_ORDER.md` | 基线 c7b35dd | 10 WP 对齐 Squircle-CE 抽屉/Tab/文件树（禁手搓、仅官方组件） | WP-001/002/008 已被抽屉审计以官方 API 落地；Tab 卡/文件树组件已建，WP-003~007/009/010 未完成 | 草案待批准；内部 WP 编号与 PROGRESS 编号是两套体系 |
+| `androlua-community/`（子库） | 2026-08-02 | 社区帖子训练知识库：2144 篇初筛完成；正负面主题卡第一批 + 训练语料 seed 已产出 | catalog 全量完成；positives 9 卡 / negatives 5 卡 + harmful 专项 1 目录；training seed 11 条 + batch 工具就绪 | 关键事实：语料为 300 字符预览（1740/2144 截断），verdict 均 `static_review`，未实测 |
 | `PROGRESS.md`（根） | 实时 | 工作进度台账（WP-001~010 + 工作单 WP-001~004/017/019） | 进行中 | **最新条目未登记打包器进展**（见 2.4） |
 | `WHITEPAPER.md`（根） | 实时 | 白皮书 v2.0：架构/路线图/原生模块差异声明 §7.1 | 进行中 | 阶段四仍写「规划中」，但打包器代码已落地（见 2.4） |
 | `AGENTS.md`（根） | 实时 | 评审硬门槛：R1~R4 边界、构建验证命令、编辑器约定、/libs 机制约定 | 进行中 | 评审门禁，改动前必读 |

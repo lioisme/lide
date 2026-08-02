@@ -1,0 +1,24 @@
+{
+ "manual_id": 3227,
+ "type_name": "小工具",
+ "manual_name": "Ping工具",
+ "author": "Basic",
+ "platform": "AndLua",
+ "source_date": "2023年08月10日 11:17:48",
+ "hits": 362,
+ "up": 2,
+ "favorite": 6,
+ "comment": 4,
+ "source_file": "小工具\\3227_Ping工具.lua",
+ "kind": "fragment",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "truncated_tail",
+  "incomplete_fragment"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 14,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,23 @@
+{
+ "manual_id": 3098,
+ "type_name": "实用代码",
+ "manual_name": "打开微信小程序",
+ "author": "█████",
+ "platform": "AndroLua,AndLua",
+ "source_date": "2023年07月18日 16:35:11",
+ "hits": 622,
+ "up": 6,
+ "favorite": 28,
+ "comment": 7,
+ "source_file": "实用代码\\3098_打开微信小程序.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 8,
+ "char_count": 300,
+ "confidence": "static_review"
+}

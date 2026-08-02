@@ -1,0 +1,21 @@
+{
+ "manual_id": 5204,
+ "type_name": "Lua代码",
+ "manual_name": "弹幕趋势图",
+ "author": "琪琪子",
+ "platform": "AndLua",
+ "source_date": "2026年02月01日 16:39:20",
+ "hits": 260,
+ "up": 1,
+ "favorite": 4,
+ "comment": 0,
+ "source_file": "Lua代码\\5204_弹幕趋势图.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 14,
+ "char_count": 300,
+ "confidence": "static_review"
+}

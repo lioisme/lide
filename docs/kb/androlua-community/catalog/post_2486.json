@@ -1,0 +1,23 @@
+{
+ "manual_id": 2486,
+ "type_name": "实用代码",
+ "manual_name": "点击事件与多次点击",
+ "author": "୧⍤⃝@№小笨蛋べ",
+ "platform": "所有环境",
+ "source_date": "2023年02月19日 19:47:31",
+ "hits": 280,
+ "up": 6,
+ "favorite": 15,
+ "comment": 2,
+ "source_file": "实用代码\\2486_点击事件与多次点击.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 12,
+ "char_count": 300,
+ "confidence": "static_review"
+}

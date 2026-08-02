@@ -1,0 +1,21 @@
+{
+ "manual_id": 5305,
+ "type_name": "Lua教程",
+ "manual_name": "Math 库全量性能测试",
+ "author": "YONGLE-永乐",
+ "platform": "所有环境",
+ "source_date": "2026年04月22日 19:01:50",
+ "hits": 250,
+ "up": 0,
+ "favorite": 0,
+ "comment": 0,
+ "source_file": "Lua教程\\5305_Math_库全量性能测试.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 11,
+ "char_count": 300,
+ "confidence": "static_review"
+}

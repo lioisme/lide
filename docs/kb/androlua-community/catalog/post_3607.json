@@ -1,0 +1,21 @@
+{
+ "manual_id": 3607,
+ "type_name": "小工具",
+ "manual_name": "基于自制函数绘制器的泰勒展开拟合cos x函数",
+ "author": "AstarLC",
+ "platform": "所有环境",
+ "source_date": "2023年11月25日 15:33:16",
+ "hits": 182,
+ "up": 1,
+ "favorite": 1,
+ "comment": 2,
+ "source_file": "小工具\\3607_基于自制函数绘制器的泰勒展开拟合cos_x函数.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 16,
+ "char_count": 300,
+ "confidence": "static_review"
+}

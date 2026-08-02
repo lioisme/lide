@@ -1,0 +1,21 @@
+{
+ "manual_id": 4970,
+ "type_name": "布局教程",
+ "manual_name": "跨RecyclerView拖拽放置Item",
+ "author": "⁣​",
+ "platform": "Fusion App2,reOpenLua,OpenLuaX",
+ "source_date": "2025年08月06日 12:44:05",
+ "hits": 568,
+ "up": 14,
+ "favorite": 24,
+ "comment": 6,
+ "source_file": "布局教程\\4970_跨RecyclerView拖拽放置Item.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 4,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 2142,
+ "type_name": "实用代码",
+ "manual_name": "调用QQ打开网页",
+ "author": "博士",
+ "platform": "所有环境",
+ "source_date": "2022年12月03日 17:45:26",
+ "hits": 487,
+ "up": 5,
+ "favorite": 19,
+ "comment": 15,
+ "source_file": "实用代码\\2142_调用QQ打开网页.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 8,
+ "char_count": 200,
+ "confidence": "static_review"
+}

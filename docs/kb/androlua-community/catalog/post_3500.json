@@ -1,0 +1,21 @@
+{
+ "manual_id": 3500,
+ "type_name": "小工具",
+ "manual_name": "MuMu模拟器共享调试",
+ "author": "壹影",
+ "platform": "所有环境",
+ "source_date": "2023年10月16日 16:39:54",
+ "hits": 197,
+ "up": 3,
+ "favorite": 1,
+ "comment": 0,
+ "source_file": "小工具\\3500_MuMu模拟器共享调试.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 15,
+ "char_count": 300,
+ "confidence": "static_review"
+}

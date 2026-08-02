@@ -1,0 +1,21 @@
+{
+ "manual_id": 4315,
+ "type_name": "小游戏",
+ "manual_name": "2048 游戏+带主题",
+ "author": "青柠(YouCun)",
+ "platform": "所有环境",
+ "source_date": "2024年10月20日 05:56:52",
+ "hits": 734,
+ "up": 13,
+ "favorite": 20,
+ "comment": 9,
+ "source_file": "小游戏\\4315_2048_游戏+带主题.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 7,
+ "char_count": 300,
+ "confidence": "static_review"
+}

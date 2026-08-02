@@ -1,0 +1,21 @@
+{
+ "manual_id": 2012,
+ "type_name": "UI控件",
+ "manual_name": "SwipeRefreshLayout下拉刷新控件",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "Fusion App2",
+ "source_date": "2022年10月30日 07:59:36",
+ "hits": 733,
+ "up": 11,
+ "favorite": 36,
+ "comment": 5,
+ "source_file": "UI控件\\2012_SwipeRefreshLayout下拉刷新控件.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

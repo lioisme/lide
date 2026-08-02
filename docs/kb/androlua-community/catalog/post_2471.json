@@ -1,0 +1,21 @@
+{
+ "manual_id": 2471,
+ "type_name": "自绘制",
+ "manual_name": "游戏摇杆",
+ "author": "诺~",
+ "platform": "所有环境",
+ "source_date": "2023年02月15日 22:07:25",
+ "hits": 503,
+ "up": 9,
+ "favorite": 23,
+ "comment": 6,
+ "source_file": "自绘制\\2471_游戏摇杆.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 17,
+ "char_count": 300,
+ "confidence": "static_review"
+}

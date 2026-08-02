@@ -1,0 +1,23 @@
+{
+ "manual_id": 3140,
+ "type_name": "实用代码",
+ "manual_name": "用mediaPlayer构建视频播放器（四次迭代）",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2023年07月24日 07:01:03",
+ "hits": 2778,
+ "up": 34,
+ "favorite": 91,
+ "comment": 44,
+ "source_file": "实用代码\\3140_用mediaPlayer构建视频播放器（四次迭代）.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 11,
+ "char_count": 300,
+ "confidence": "static_review"
+}

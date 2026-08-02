@@ -1,0 +1,21 @@
+{
+ "manual_id": 2865,
+ "type_name": "浏览器",
+ "manual_name": "安卓UA随机生成(UserAgent)",
+ "author": "迷糊.",
+ "platform": "所有环境",
+ "source_date": "2023年05月27日 08:56:50",
+ "hits": 263,
+ "up": 4,
+ "favorite": 12,
+ "comment": 6,
+ "source_file": "浏览器\\2865_安卓UA随机生成(UserAgent).lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

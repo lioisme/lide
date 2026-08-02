@@ -180,3 +180,31 @@
 - 现象（修复前）：delua 的 `LuaAccessibilityService.onDestroy()` 缺少 `stopScreenshot()`，与 pro 源码不一致（pro 在 `sAccessibilityServiceCallbacks.onDestroy` 之后、`super.onDestroy()` 之前调用）。
 - 修复（2026-08-02 已落地）：`androlua/src/main/java/com/androlua/LuaAccessibilityService.java` onDestroy 补齐 `stopScreenshot()`。
 - 验证：该文件与 pro 源逐行 diff 仅剩注释/import 中立差异。
+
+## 30. 引擎内 PLT 符号的 GOT 槽可能加载期固化为坏值（glBlendFunc 崩溃，Live2D 实测）
+
+- 现象：新 `liblive2d.so` 部署后 GLThread 数秒内 SIGSEGV，tombstone 定位 `lua_drawBg`（`lua_live2d.cpp:407`）`glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA)`；崩溃点 `callq glBlendFunc@plt`，其 GOT 槽（.got.plt，GNU_RELRO 只读段，RELRO 下加载期写死）指向从未映射的地址 `0x7a16003634a0`。
+- 根因：该 GOT 槽的值在库加载解析时（默认 lazy）被固化；调用点存在某次占到不可执行/未映射区域直接 SIGSEGV。同一 .so 里模型路径每帧调用的 `glBlendFuncSeparate` 从未崩，而 `glBlendFunc` 一次即崩——疑似该符号的绑定在本机环境损坏（模拟器 codec 对绑定做特殊处理）。
+- 规避：改用**语义等价的稳定符号**——`glBlendFuncSeparate(GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA)`（对背景铺全屏是严格等价）；并加注释说明为何不用 glBlendFunc。
+- 验证：替换后 8+ 分钟不崩、glErr=0；反汇编确认调用点、GOT 槽地址与崩溃 PC 逐一对应。
+
+## 31. GL 对象必须在该对象的 GL 线程内销毁：禁止 __gc 回收模型（Live2D 实测）
+
+- 现象：稳定运行 ~3 分钟后模拟器 SIGSEGV（tombstone `SI_KERNEL code 128`），栈为 `GLSharedGroup::deleteProgramDataLocked` ← `~DrawParamOpenGL` ← `~Live2DModelOpenGL`，调用者来自 **主线程 Lua lua_gc**。
+- 根因：Lua GC 的可重入（`__gc`）在主线程回收 Live2D 模型 userdata → C++ 析构调用 `glDeleteProgram`，而程序/纹理的 GL 上下文是 GLSurfaceView 的 GLThread 创建——跨线程删 GL 对象，模拟器（`libOpenglCodecCommon.so`）崩溃。
+- 规避：**`luaopen_live2d` 不注册 `__gc`**；模型删除只走显式 `live2d.free`（Lua 侧仅 GL 线程内 reload 路径调用）；`live2d.gc` 文档注明「GC 回收不安全，须显式 free」。
+- 验证：去掉 `__gc` 后连续 8+ 分钟稳定（中途含 6+ 次 reload、双模型分支反复加载卸载），无新 tombstone 生成。
+
+## 32. LuaActivity 启动必须走 `-d file://` data URI；`--es luaPath` 无效
+
+- 现象：`am start --es luaPath /sdcard/.../main.lua` 启动后进程立刻崩溃；`/storage/emulated/0/androlua/crash/` 有 `sendMsg(null)` NPE。
+- 根因：`LuaActivity.getLuaPath()` 只读 intent **data URI**，不读 `luaPath` extra；无 data 时返回 null，后续 `com.android.internal.util` Android 14 下 `sendMsg(null)` → `Log.i("lua", null)` NPE。
+- 规避：`am start -n <pkg>/com.androlua.LuaActivity -d "file:///sdcard/AndroLua/project/<name>/main.lua"`（data 必须是 file:// 绝对路径）。
+
+## 33. DrawOrder 桶索引用「单绘制平均」极值会越界写堆（Live2D 视图顺序错乱 + 延迟崩溃）
+
+- 现象：滑动中触摸模型 → 出现**资源缺失/绘制顺序移位**；叠加模型切换后长滑累积崩溃，且崩溃发生在**离开绘制路径之后**（GLThread 的 `je_free` ← `~BinaryReader`/`~L2DBaseModel`/`~LAppModel`，栈见 tombstone 20/21/23/25）——症状程远离根因。
+- 根因：`LAppView.draw` 复刻的 draw-order 桶需要每绘制单元先算平均、再用全局平均的 min/max 归一化成桶索引。原实现按**每绘制分组各自的平均 min/max** 建桶，而插值阶段的**最终 order** 会跌破全局平均下限 → `bucketIdx` 为**负数** → `mOrderListLastDrawIndex[负数]` 堆越界写。堆腐败当日不崩、数分钟后在无关析构点崩（模拟器 `je_free` 特征），同时污染相邻桶链 → 渲染顺序错乱。
+- 实证：诊断日志 `DRAWDER_OOB order=-19 range=685 min=266 max=951 i=54 interpOrder=247`（插值 order 247 < 全局平均下限 266）；修复后 12 轮 × 20 滑 + 12 次换装零命中、零 tombstone。
+- 规避：桶极值必须取自**全局**（对所有绘制（含 pivot 极值的插值界：插值是凸组合，永不出 pivot 范围）；保留防御性 clamp。相关代码见 `build-scripts/live2d/src/Model/ModelContext.cpp /* 桶 */`。
+- 验证：拖拽+换装组合复现脚本（每轮 15 步 swipe + 换装键 tap），`adb logcat -d -s live2d-diag:*` 零命中。

@@ -1,0 +1,24 @@
+{
+ "manual_id": 3269,
+ "type_name": "小工具",
+ "manual_name": "alua的xor随机算法加密",
+ "author": "初叶",
+ "platform": "所有环境",
+ "source_date": "2023年08月16日 09:11:23",
+ "hits": 237,
+ "up": 3,
+ "favorite": 6,
+ "comment": 3,
+ "source_file": "小工具\\3269_alua的xor随机算法加密.lua",
+ "kind": "fragment",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "truncated_tail",
+  "incomplete_fragment"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 15,
+ "char_count": 300,
+ "confidence": "static_review"
+}

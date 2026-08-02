@@ -1,0 +1,21 @@
+{
+ "manual_id": 1284,
+ "type_name": "网络操作",
+ "manual_name": "Json解析有道翻译",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2021年12月29日 21:52:52",
+ "hits": 273,
+ "up": 3,
+ "favorite": 5,
+ "comment": 0,
+ "source_file": "网络操作\\1284_Json解析有道翻译.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 11,
+ "char_count": 300,
+ "confidence": "static_review"
+}

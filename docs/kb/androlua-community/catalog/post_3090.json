@@ -1,0 +1,23 @@
+{
+ "manual_id": 3090,
+ "type_name": "系统",
+ "manual_name": "固定屏幕v2",
+ "author": "⑨φZL",
+ "platform": "所有环境",
+ "source_date": "2023年07月16日 17:48:32",
+ "hits": 790,
+ "up": 22,
+ "favorite": 49,
+ "comment": 10,
+ "source_file": "系统\\3090_固定屏幕v2.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 14,
+ "char_count": 300,
+ "confidence": "static_review"
+}

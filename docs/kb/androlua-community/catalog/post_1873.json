@@ -1,0 +1,23 @@
+{
+ "manual_id": 1873,
+ "type_name": "系统",
+ "manual_name": "Notification补充",
+ "author": "苦小怕",
+ "platform": "所有环境",
+ "source_date": "2022年09月11日 12:08:38",
+ "hits": 906,
+ "up": 27,
+ "favorite": 64,
+ "comment": 2,
+ "source_file": "系统\\1873_Notification补充.lua",
+ "kind": "reference_sheet",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "xml_list"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

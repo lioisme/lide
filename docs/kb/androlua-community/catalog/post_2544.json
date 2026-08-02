@@ -1,0 +1,21 @@
+{
+ "manual_id": 2544,
+ "type_name": "实用代码",
+ "manual_name": "aly2lua (?)",
+ "author": "dingyi",
+ "platform": "所有环境",
+ "source_date": "2023年03月04日 16:34:45",
+ "hits": 324,
+ "up": 2,
+ "favorite": 4,
+ "comment": 0,
+ "source_file": "实用代码\\2544_aly2lua_(_).lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

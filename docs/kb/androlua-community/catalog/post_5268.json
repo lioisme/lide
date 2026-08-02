@@ -1,0 +1,21 @@
+{
+ "manual_id": 5268,
+ "type_name": "小工具",
+ "manual_name": "JSON可视化",
+ "author": "琪琪子",
+ "platform": "AndLua",
+ "source_date": "2026年03月12日 13:39:45",
+ "hits": 357,
+ "up": 6,
+ "favorite": 8,
+ "comment": 2,
+ "source_file": "小工具\\5268_JSON可视化.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 14,
+ "char_count": 300,
+ "confidence": "static_review"
+}

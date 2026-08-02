@@ -1,0 +1,23 @@
+{
+ "manual_id": 1294,
+ "type_name": "Adapter容器",
+ "manual_name": "ListView列表适配器",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2022年01月05日 22:41:07",
+ "hits": 1526,
+ "up": 15,
+ "favorite": 58,
+ "comment": 3,
+ "source_file": "Adapter容器\\1294_ListView列表适配器.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 17,
+ "char_count": 300,
+ "confidence": "static_review"
+}

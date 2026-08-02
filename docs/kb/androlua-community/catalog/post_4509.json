@@ -1,0 +1,21 @@
+{
+ "manual_id": 4509,
+ "type_name": "Layout布局",
+ "manual_name": "修复了RecyclerView嵌套",
+ "author": "🐷",
+ "platform": "Fusion App2",
+ "source_date": "2025年01月31日 08:17:30",
+ "hits": 704,
+ "up": 7,
+ "favorite": 21,
+ "comment": 1,
+ "source_file": "Layout布局\\4509_修复了RecyclerView嵌套.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 11,
+ "char_count": 300,
+ "confidence": "static_review"
+}

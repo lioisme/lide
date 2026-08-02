@@ -1,0 +1,24 @@
+{
+ "manual_id": 72,
+ "type_name": "数据存储",
+ "manual_name": "SQLite数据库操作测试",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 597,
+ "up": 10,
+ "favorite": 26,
+ "comment": 2,
+ "source_file": "数据存储\\72_SQLite数据库操作测试.lua",
+ "kind": "text_note",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "short_text",
+  "global_pollution"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 20,
+ "char_count": 300,
+ "confidence": "static_review"
+}

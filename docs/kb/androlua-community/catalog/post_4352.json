@@ -1,0 +1,23 @@
+{
+ "manual_id": 4352,
+ "type_name": "小工具",
+ "manual_name": "LuaEditor选中行",
+ "author": "⁧拾玖⁧‭",
+ "platform": "所有环境",
+ "source_date": "2024年11月10日 17:26:26",
+ "hits": 293,
+ "up": 2,
+ "favorite": 4,
+ "comment": 2,
+ "source_file": "小工具\\4352_LuaEditor选中行.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 10,
+ "char_count": 288,
+ "confidence": "static_review"
+}

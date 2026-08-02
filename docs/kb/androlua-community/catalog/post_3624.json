@@ -1,0 +1,21 @@
+{
+ "manual_id": 3624,
+ "type_name": "小工具",
+ "manual_name": "折线图",
+ "author": "琪琪子",
+ "platform": "AndLua",
+ "source_date": "2023年12月02日 13:30:42",
+ "hits": 362,
+ "up": 5,
+ "favorite": 21,
+ "comment": 11,
+ "source_file": "小工具\\3624_折线图.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 12,
+ "char_count": 300,
+ "confidence": "static_review"
+}

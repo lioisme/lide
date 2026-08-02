@@ -1,0 +1,21 @@
+{
+ "manual_id": 4844,
+ "type_name": "安卓教程",
+ "manual_name": "乐曲演奏，V1.2，(二改)，更新。",
+ "author": "寒雪落花静云月",
+ "platform": "所有环境",
+ "source_date": "2025年06月18日 20:48:00",
+ "hits": 712,
+ "up": 10,
+ "favorite": 17,
+ "comment": 18,
+ "source_file": "安卓教程\\4844_乐曲演奏，V1.2，(二改)，更新。.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 11,
+ "char_count": 300,
+ "confidence": "static_review"
+}

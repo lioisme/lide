@@ -1,0 +1,21 @@
+{
+ "manual_id": 3289,
+ "type_name": "Intent通信",
+ "manual_name": "lua scheme功能",
+ "author": "█████",
+ "platform": "AndroLua,AndLua",
+ "source_date": "2023年08月20日 13:08:48",
+ "hits": 305,
+ "up": 6,
+ "favorite": 12,
+ "comment": 1,
+ "source_file": "Intent通信\\3289_lua_scheme功能.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 10,
+ "char_count": 300,
+ "confidence": "static_review"
+}

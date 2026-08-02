@@ -1,0 +1,24 @@
+{
+ "manual_id": 1219,
+ "type_name": "适配器",
+ "manual_name": "点击ListView子控件中的子控件",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2021年12月16日 20:40:31",
+ "hits": 380,
+ "up": 10,
+ "favorite": 22,
+ "comment": 0,
+ "source_file": "适配器\\1219_点击ListView子控件中的子控件.lua",
+ "kind": "text_note",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "short_text",
+  "global_pollution"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 20,
+ "char_count": 300,
+ "confidence": "static_review"
+}

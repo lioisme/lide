@@ -1,0 +1,21 @@
+{
+ "manual_id": 4074,
+ "type_name": "小工具",
+ "manual_name": "手持弹幕缝合版",
+ "author": "菜，真的",
+ "platform": "Fusion App2",
+ "source_date": "2024年05月20日 01:54:32",
+ "hits": 563,
+ "up": 8,
+ "favorite": 24,
+ "comment": 5,
+ "source_file": "小工具\\4074_手持弹幕缝合版.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 19,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 4602,
+ "type_name": "基础代码",
+ "manual_name": "AndroLua常见的事件归纳存档V2",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2025年03月15日 20:28:15",
+ "hits": 961,
+ "up": 14,
+ "favorite": 38,
+ "comment": 1,
+ "source_file": "基础代码\\4602_AndroLua常见的事件归纳存档V2.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 23,
+ "char_count": 300,
+ "confidence": "static_review"
+}

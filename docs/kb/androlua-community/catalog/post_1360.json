@@ -1,0 +1,21 @@
+{
+ "manual_id": 1360,
+ "type_name": "浏览器",
+ "manual_name": "WebView各种下载：直链下载，网页下载，下载进度监听等",
+ "author": "Adam·Eva",
+ "platform": "Fusion App2",
+ "source_date": "2022年02月08日 14:25:56",
+ "hits": 2706,
+ "up": 30,
+ "favorite": 101,
+ "comment": 32,
+ "source_file": "浏览器\\1360_WebView各种下载：直链下载，网页下载，下载进度监听等.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 16,
+ "char_count": 300,
+ "confidence": "static_review"
+}

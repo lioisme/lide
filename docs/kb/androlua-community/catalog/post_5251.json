@@ -1,0 +1,21 @@
+{
+ "manual_id": 5251,
+ "type_name": "UI控件",
+ "manual_name": "Dynamic Physical Glass（参考liquidglass）",
+ "author": "青柠(YouCun)",
+ "platform": "所有环境",
+ "source_date": "2026年03月01日 12:51:36",
+ "hits": 332,
+ "up": 2,
+ "favorite": 3,
+ "comment": 0,
+ "source_file": "UI控件\\5251_Dynamic_Physical_Glass（参考liquidglass）.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

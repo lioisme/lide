@@ -1,0 +1,21 @@
+{
+ "manual_id": 2542,
+ "type_name": "实用代码",
+ "manual_name": "一种很新的Http封装(未完成只是demo)",
+ "author": "dingyi",
+ "platform": "所有环境",
+ "source_date": "2023年03月04日 16:15:19",
+ "hits": 255,
+ "up": 3,
+ "favorite": 4,
+ "comment": 6,
+ "source_file": "实用代码\\2542_一种很新的Http封装(未完成只是demo).lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

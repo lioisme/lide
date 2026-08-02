@@ -1,0 +1,21 @@
+{
+ "manual_id": 3912,
+ "type_name": "设备系统",
+ "manual_name": "三个实现字符串逐个分割的函数V3",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2024年02月21日 20:23:00",
+ "hits": 435,
+ "up": 2,
+ "favorite": 7,
+ "comment": 5,
+ "source_file": "设备系统\\3912_三个实现字符串逐个分割的函数V3.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 19,
+ "char_count": 300,
+ "confidence": "static_review"
+}

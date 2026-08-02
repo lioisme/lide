@@ -1,0 +1,23 @@
+{
+ "manual_id": 2601,
+ "type_name": "实用代码",
+ "manual_name": "bitmap处理",
+ "author": "机不可失🅥",
+ "platform": "所有环境",
+ "source_date": "2023年03月24日 18:51:37",
+ "hits": 277,
+ "up": 5,
+ "favorite": 16,
+ "comment": 1,
+ "source_file": "实用代码\\2601_bitmap处理.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 12,
+ "char_count": 300,
+ "confidence": "static_review"
+}

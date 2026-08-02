@@ -1,0 +1,21 @@
+{
+ "manual_id": 3609,
+ "type_name": "Lua代码",
+ "manual_name": "JavaScript异步调用Lua",
+ "author": "智",
+ "platform": "所有环境",
+ "source_date": "2023年11月27日 06:10:33",
+ "hits": 292,
+ "up": 6,
+ "favorite": 11,
+ "comment": 4,
+ "source_file": "Lua代码\\3609_JavaScript异步调用Lua.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 14,
+ "char_count": 300,
+ "confidence": "static_review"
+}

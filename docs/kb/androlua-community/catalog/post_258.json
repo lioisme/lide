@@ -1,0 +1,23 @@
+{
+ "manual_id": 258,
+ "type_name": "Lua代码",
+ "manual_name": "Lua字符长度",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 113,
+ "up": 1,
+ "favorite": 3,
+ "comment": 0,
+ "source_file": "Lua代码\\258_Lua字符长度.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 7,
+ "char_count": 103,
+ "confidence": "static_review"
+}

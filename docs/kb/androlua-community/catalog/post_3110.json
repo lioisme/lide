@@ -1,0 +1,21 @@
+{
+ "manual_id": 3110,
+ "type_name": "Lua代码",
+ "manual_name": "☺︎lua num",
+ "author": "Duo",
+ "platform": "所有环境",
+ "source_date": "2023年07月20日 22:32:42",
+ "hits": 184,
+ "up": 3,
+ "favorite": 2,
+ "comment": 1,
+ "source_file": "Lua代码\\3110_☺︎lua_num.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 20,
+ "char_count": 300,
+ "confidence": "static_review"
+}

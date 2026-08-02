@@ -1,0 +1,21 @@
+{
+ "manual_id": 169,
+ "type_name": "基础代码",
+ "manual_name": "Lua数据类型",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 231,
+ "up": 0,
+ "favorite": 2,
+ "comment": 0,
+ "source_file": "基础代码\\169_Lua数据类型.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 11,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,24 @@
+{
+ "manual_id": 4105,
+ "type_name": "网络请求",
+ "manual_name": "一键爬取工具站大全",
+ "author": "归鸿",
+ "platform": "所有环境",
+ "source_date": "2024年06月12日 01:02:51",
+ "hits": 667,
+ "up": 2,
+ "favorite": 14,
+ "comment": 3,
+ "source_file": "网络请求\\4105_一键爬取工具站大全.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 12,
+ "char_count": 300,
+ "confidence": "static_review"
+}

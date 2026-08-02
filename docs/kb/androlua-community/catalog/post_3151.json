@@ -1,0 +1,21 @@
+{
+ "manual_id": 3151,
+ "type_name": "实用代码",
+ "manual_name": "LuaMarkDown",
+ "author": "沐风 - MFCompany",
+ "platform": "所有环境",
+ "source_date": "2023年07月27日 08:47:28",
+ "hits": 365,
+ "up": 2,
+ "favorite": 5,
+ "comment": 1,
+ "source_file": "实用代码\\3151_LuaMarkDown.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 11,
+ "char_count": 300,
+ "confidence": "static_review"
+}

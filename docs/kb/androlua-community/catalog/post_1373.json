@@ -1,0 +1,21 @@
+{
+ "manual_id": 1373,
+ "type_name": "布局教程",
+ "manual_name": "FA2加载图片方法",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "Fusion App2",
+ "source_date": "2022年02月12日 18:58:42",
+ "hits": 594,
+ "up": 7,
+ "favorite": 23,
+ "comment": 1,
+ "source_file": "布局教程\\1373_FA2加载图片方法.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 16,
+ "char_count": 300,
+ "confidence": "static_review"
+}

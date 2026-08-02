@@ -1,0 +1,21 @@
+{
+ "manual_id": 5278,
+ "type_name": "网络请求",
+ "manual_name": "有道翻译音频生成",
+ "author": "琪琪子",
+ "platform": "AndLua",
+ "source_date": "2026年03月20日 15:47:30",
+ "hits": 141,
+ "up": 0,
+ "favorite": 4,
+ "comment": 1,
+ "source_file": "网络请求\\5278_有道翻译音频生成.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 12,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 3068,
+ "type_name": "Java教程",
+ "manual_name": "AES/DES对称加解密",
+ "author": "Adam·Eva",
+ "platform": "所有环境",
+ "source_date": "2023年07月13日 14:31:05",
+ "hits": 556,
+ "up": 8,
+ "favorite": 33,
+ "comment": 0,
+ "source_file": "Java教程\\3068_AES_DES对称加解密.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 11,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 2753,
+ "type_name": "文件操作",
+ "manual_name": "文件秒搜",
+ "author": "Tgaisnen",
+ "platform": "所有环境",
+ "source_date": "2023年05月03日 18:06:34",
+ "hits": 432,
+ "up": 7,
+ "favorite": 23,
+ "comment": 2,
+ "source_file": "文件操作\\2753_文件秒搜.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 15,
+ "char_count": 300,
+ "confidence": "static_review"
+}

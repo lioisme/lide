@@ -1,0 +1,21 @@
+{
+ "manual_id": 4191,
+ "type_name": "Lua代码",
+ "manual_name": "音乐播放器(链式调用示例)",
+ "author": "⁧拾玖⁧‭",
+ "platform": "所有环境",
+ "source_date": "2024年08月19日 07:51:09",
+ "hits": 476,
+ "up": 1,
+ "favorite": 3,
+ "comment": 0,
+ "source_file": "Lua代码\\4191_音乐播放器(链式调用示例).lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 7,
+ "char_count": 300,
+ "confidence": "static_review"
+}

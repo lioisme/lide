@@ -1,0 +1,21 @@
+{
+ "manual_id": 5092,
+ "type_name": "动画教程",
+ "manual_name": "Rotating-Loading-Animation",
+ "author": "程国荣",
+ "platform": "所有环境",
+ "source_date": "2025年10月17日 16:56:42",
+ "hits": 462,
+ "up": 5,
+ "favorite": 14,
+ "comment": 1,
+ "source_file": "动画教程\\5092_Rotating-Loading-Animation.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 18,
+ "char_count": 300,
+ "confidence": "static_review"
+}

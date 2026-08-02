@@ -1,0 +1,21 @@
+{
+ "manual_id": 2548,
+ "type_name": "实用代码",
+ "manual_name": "开机自启",
+ "author": "⁢",
+ "platform": "AndLua",
+ "source_date": "2023年03月04日 18:32:54",
+ "hits": 903,
+ "up": 14,
+ "favorite": 49,
+ "comment": 7,
+ "source_file": "实用代码\\2548_开机自启.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 11,
+ "char_count": 300,
+ "confidence": "static_review"
+}

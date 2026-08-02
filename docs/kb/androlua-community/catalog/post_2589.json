@@ -1,0 +1,24 @@
+{
+ "manual_id": 2589,
+ "type_name": "布局教程",
+ "manual_name": "仿MIUI软件更新弹窗布局",
+ "author": "破晓",
+ "platform": "Fusion App2",
+ "source_date": "2023年03月19日 13:23:14",
+ "hits": 1117,
+ "up": 27,
+ "favorite": 93,
+ "comment": 10,
+ "source_file": "布局教程\\2589_仿MIUI软件更新弹窗布局.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 10,
+ "char_count": 300,
+ "confidence": "static_review"
+}

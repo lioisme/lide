@@ -1,0 +1,21 @@
+{
+ "manual_id": 5099,
+ "type_name": "小工具",
+ "manual_name": "SearchView 的一个简单搜索提示实例",
+ "author": "海纳百氚，有容乃大",
+ "platform": "reOpenLua,OpenLuaX",
+ "source_date": "2025年10月19日 13:00:54",
+ "hits": 533,
+ "up": 0,
+ "favorite": 0,
+ "comment": 0,
+ "source_file": "小工具\\5099_SearchView_的一个简单搜索提示实例.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,23 @@
+{
+ "manual_id": 1218,
+ "type_name": "布局教程",
+ "manual_name": "相对布局属性",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2021年12月12日 14:28:33",
+ "hits": 132,
+ "up": 0,
+ "favorite": 4,
+ "comment": 0,
+ "source_file": "布局教程\\1218_相对布局属性.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

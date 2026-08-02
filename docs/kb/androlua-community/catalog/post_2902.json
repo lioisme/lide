@@ -1,0 +1,21 @@
+{
+ "manual_id": 2902,
+ "type_name": "控件属性",
+ "manual_name": "androidx.palette.graphics.Palette:取壁纸强调色,实现伪动态取色",
+ "author": "智",
+ "platform": "所有环境",
+ "source_date": "2023年06月05日 21:51:20",
+ "hits": 443,
+ "up": 4,
+ "favorite": 7,
+ "comment": 1,
+ "source_file": "控件属性\\2902_androidx.palette.graphics.Palette_取壁纸强调色,实现伪动态取色.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 12,
+ "char_count": 300,
+ "confidence": "static_review"
+}

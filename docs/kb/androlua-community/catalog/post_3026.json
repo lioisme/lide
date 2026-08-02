@@ -1,0 +1,23 @@
+{
+ "manual_id": 3026,
+ "type_name": "小工具",
+ "manual_name": "最简洁的AI-官方ChatGPT",
+ "author": "鲲宝",
+ "platform": "所有环境",
+ "source_date": "2023年07月04日 21:57:42",
+ "hits": 493,
+ "up": 9,
+ "favorite": 16,
+ "comment": 3,
+ "source_file": "小工具\\3026_最简洁的AI-官方ChatGPT.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

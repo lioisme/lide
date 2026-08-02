@@ -1,0 +1,21 @@
+{
+ "manual_id": 3273,
+ "type_name": "自绘制",
+ "manual_name": "旋转加速",
+ "author": "煙雨舊時光",
+ "platform": "所有环境",
+ "source_date": "2023年08月16日 17:46:30",
+ "hits": 245,
+ "up": 1,
+ "favorite": 5,
+ "comment": 3,
+ "source_file": "自绘制\\3273_旋转加速.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 20,
+ "char_count": 300,
+ "confidence": "static_review"
+}

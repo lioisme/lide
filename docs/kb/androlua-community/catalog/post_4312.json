@@ -1,0 +1,21 @@
+{
+ "manual_id": 4312,
+ "type_name": "Lua代码",
+ "manual_name": "二维码解析",
+ "author": "青柠(YouCun)",
+ "platform": "所有环境",
+ "source_date": "2024年10月19日 07:57:20",
+ "hits": 623,
+ "up": 7,
+ "favorite": 16,
+ "comment": 5,
+ "source_file": "Lua代码\\4312_二维码解析.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 8,
+ "char_count": 300,
+ "confidence": "static_review"
+}

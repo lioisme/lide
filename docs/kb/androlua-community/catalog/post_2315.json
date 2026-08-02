@@ -1,0 +1,21 @@
+{
+ "manual_id": 2315,
+ "type_name": "小工具",
+ "manual_name": "应用管理器（整合修改）",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2023年01月13日 20:05:01",
+ "hits": 1534,
+ "up": 20,
+ "favorite": 68,
+ "comment": 11,
+ "source_file": "小工具\\2315_应用管理器（整合修改）.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 17,
+ "char_count": 300,
+ "confidence": "static_review"
+}

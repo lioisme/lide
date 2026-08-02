@@ -1,0 +1,24 @@
+{
+ "manual_id": 3424,
+ "type_name": "Androlua教程",
+ "manual_name": "Glide 携带请求头",
+ "author": "kamihitoe",
+ "platform": "所有环境",
+ "source_date": "2023年09月24日 12:16:49",
+ "hits": 233,
+ "up": 3,
+ "favorite": 15,
+ "comment": 0,
+ "source_file": "Androlua教程\\3424_Glide_携带请求头.lua",
+ "kind": "fragment",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "truncated_tail",
+  "incomplete_fragment"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 9,
+ "char_count": 300,
+ "confidence": "static_review"
+}

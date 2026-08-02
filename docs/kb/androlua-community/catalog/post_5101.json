@@ -1,0 +1,24 @@
+{
+ "manual_id": 5101,
+ "type_name": "Lua代码",
+ "manual_name": "丝滑揭露动画",
+ "author": "喵Miao..͇͉͔̖",
+ "platform": "AndLua",
+ "source_date": "2025年10月20日 14:33:58",
+ "hits": 527,
+ "up": 10,
+ "favorite": 31,
+ "comment": 0,
+ "source_file": "Lua代码\\5101_丝滑揭露动画.lua",
+ "kind": "fragment",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "truncated_tail",
+  "incomplete_fragment"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 15,
+ "char_count": 300,
+ "confidence": "static_review"
+}

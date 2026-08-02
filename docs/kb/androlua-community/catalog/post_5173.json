@@ -1,0 +1,21 @@
+{
+ "manual_id": 5173,
+ "type_name": "UI控件",
+ "manual_name": "SmartRefreshLayout  Api",
+ "author": "许",
+ "platform": "所有环境",
+ "source_date": "2026年01月16日 15:22:47",
+ "hits": 925,
+ "up": 19,
+ "favorite": 32,
+ "comment": 4,
+ "source_file": "UI控件\\5173_SmartRefreshLayout_Api.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 9,
+ "char_count": 300,
+ "confidence": "static_review"
+}

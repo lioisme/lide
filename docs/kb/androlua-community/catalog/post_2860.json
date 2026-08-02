@@ -1,0 +1,21 @@
+{
+ "manual_id": 2860,
+ "type_name": "自绘制",
+ "manual_name": "镜面反射",
+ "author": "诺~",
+ "platform": "所有环境",
+ "source_date": "2023年05月26日 10:11:25",
+ "hits": 271,
+ "up": 0,
+ "favorite": 3,
+ "comment": 5,
+ "source_file": "自绘制\\2860_镜面反射.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 8,
+ "char_count": 300,
+ "confidence": "static_review"
+}

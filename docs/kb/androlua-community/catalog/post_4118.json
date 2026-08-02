@@ -1,0 +1,21 @@
+{
+ "manual_id": 4118,
+ "type_name": "实用代码",
+ "manual_name": "获取WiFi局域网内支持DLNA投屏的设备",
+ "author": "୧⍤⃝@№小笨蛋べ",
+ "platform": "所有环境",
+ "source_date": "2024年06月25日 07:56:51",
+ "hits": 950,
+ "up": 3,
+ "favorite": 22,
+ "comment": 5,
+ "source_file": "实用代码\\4118_获取WiFi局域网内支持DLNA投屏的设备.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 14,
+ "char_count": 300,
+ "confidence": "static_review"
+}

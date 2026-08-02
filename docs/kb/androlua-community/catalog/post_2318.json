@@ -1,0 +1,23 @@
+{
+ "manual_id": 2318,
+ "type_name": "实用代码",
+ "manual_name": "使用TrafficStats获取网速",
+ "author": "智",
+ "platform": "所有环境",
+ "source_date": "2023年01月14日 17:16:45",
+ "hits": 257,
+ "up": 6,
+ "favorite": 10,
+ "comment": 9,
+ "source_file": "实用代码\\2318_使用TrafficStats获取网速.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "global_pollution"
+ ],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 18,
+ "char_count": 300,
+ "confidence": "static_review"
+}

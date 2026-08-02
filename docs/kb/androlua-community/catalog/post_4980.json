@@ -1,0 +1,21 @@
+{
+ "manual_id": 4980,
+ "type_name": "小工具",
+ "manual_name": "Zip4j带密码、进度解压缩函数封装",
+ "author": "⁧拾玖⁧‭",
+ "platform": "所有环境",
+ "source_date": "2025年08月12日 14:05:32",
+ "hits": 612,
+ "up": 3,
+ "favorite": 15,
+ "comment": 1,
+ "source_file": "小工具\\4980_Zip4j带密码、进度解压缩函数封装.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 17,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,23 @@
+{
+ "manual_id": 813,
+ "type_name": "Intent通信",
+ "manual_name": "返回桌面",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 313,
+ "up": 2,
+ "favorite": 17,
+ "comment": 0,
+ "source_file": "Intent通信\\813_返回桌面.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 11,
+ "char_count": 215,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 2766,
+ "type_name": "自绘制",
+ "manual_name": "拟态绘制",
+ "author": "◕ ̯͡◕",
+ "platform": "所有环境",
+ "source_date": "2023年05月05日 20:47:20",
+ "hits": 384,
+ "up": 6,
+ "favorite": 20,
+ "comment": 3,
+ "source_file": "自绘制\\2766_拟态绘制.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 15,
+ "char_count": 300,
+ "confidence": "static_review"
+}

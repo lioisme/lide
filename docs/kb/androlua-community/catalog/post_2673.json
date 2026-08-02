@@ -1,0 +1,23 @@
+{
+ "manual_id": 2673,
+ "type_name": "布局教程",
+ "manual_name": "超好看UI",
+ "author": "水水水水水水水水水水水水",
+ "platform": "所有环境",
+ "source_date": "2023年04月20日 15:27:20",
+ "hits": 957,
+ "up": 13,
+ "favorite": 47,
+ "comment": 3,
+ "source_file": "布局教程\\2673_超好看UI.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 16,
+ "char_count": 300,
+ "confidence": "static_review"
+}

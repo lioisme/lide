@@ -1,0 +1,25 @@
+{
+ "manual_id": 2780,
+ "type_name": "小工具",
+ "manual_name": "高质量壁纸",
+ "author": "YONGLE-永乐",
+ "platform": "所有环境",
+ "source_date": "2023年05月07日 21:51:43",
+ "hits": 651,
+ "up": 2,
+ "favorite": 27,
+ "comment": 2,
+ "source_file": "小工具\\2780_高质量壁纸.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "chinese_identifier"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 10,
+ "char_count": 300,
+ "confidence": "static_review"
+}

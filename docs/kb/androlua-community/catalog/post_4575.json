@@ -1,0 +1,23 @@
+{
+ "manual_id": 4575,
+ "type_name": "安卓教程",
+ "manual_name": "跳转系统设置",
+ "author": "东方沧海",
+ "platform": "AndroLua",
+ "source_date": "2025年03月09日 07:06:22",
+ "hits": 366,
+ "up": 11,
+ "favorite": 28,
+ "comment": 2,
+ "source_file": "安卓教程\\4575_跳转系统设置.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 11,
+ "char_count": 300,
+ "confidence": "static_review"
+}

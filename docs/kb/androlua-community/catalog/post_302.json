@@ -1,0 +1,21 @@
+{
+ "manual_id": 302,
+ "type_name": "实用代码",
+ "manual_name": "播放音乐与视频",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 518,
+ "up": 2,
+ "favorite": 17,
+ "comment": 0,
+ "source_file": "实用代码\\302_播放音乐与视频.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 17,
+ "char_count": 300,
+ "confidence": "static_review"
+}

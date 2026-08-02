@@ -1,0 +1,21 @@
+{
+ "manual_id": 2392,
+ "type_name": "小工具",
+ "manual_name": "Tomohiko Sakamoto 算法输出星期",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2023年01月29日 02:51:32",
+ "hits": 538,
+ "up": 5,
+ "favorite": 12,
+ "comment": 6,
+ "source_file": "小工具\\2392_Tomohiko_Sakamoto_算法输出星期.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

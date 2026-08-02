@@ -1,0 +1,21 @@
+{
+ "manual_id": 395,
+ "type_name": "基础代码",
+ "manual_name": "导入模块",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 282,
+ "up": 0,
+ "favorite": 2,
+ "comment": 0,
+ "source_file": "基础代码\\395_导入模块.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 9,
+ "char_count": 221,
+ "confidence": "static_review"
+}

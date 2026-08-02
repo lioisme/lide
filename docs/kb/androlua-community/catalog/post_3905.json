@@ -1,0 +1,21 @@
+{
+ "manual_id": 3905,
+ "type_name": "Lua代码",
+ "manual_name": "一个非常简单的 ALua try-catch-finally 实现",
+ "author": "ABVerterX",
+ "platform": "所有环境",
+ "source_date": "2024年02月18日 23:38:00",
+ "hits": 134,
+ "up": 3,
+ "favorite": 4,
+ "comment": 0,
+ "source_file": "Lua代码\\3905_一个非常简单的_ALua_try-catch-finally_实现.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 16,
+ "char_count": 300,
+ "confidence": "static_review"
+}

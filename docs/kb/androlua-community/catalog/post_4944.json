@@ -1,0 +1,23 @@
+{
+ "manual_id": 4944,
+ "type_name": "实用代码",
+ "manual_name": "基于media2的新一代视频播放器",
+ "author": "海纳百氚，有容乃大",
+ "platform": "Fusion App2,reOpenLua,OpenLuaX",
+ "source_date": "2025年07月22日 06:27:08",
+ "hits": 1893,
+ "up": 8,
+ "favorite": 14,
+ "comment": 16,
+ "source_file": "实用代码\\4944_基于media2的新一代视频播放器.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 15,
+ "char_count": 300,
+ "confidence": "static_review"
+}

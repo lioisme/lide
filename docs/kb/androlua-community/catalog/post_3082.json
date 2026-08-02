@@ -1,0 +1,24 @@
+{
+ "manual_id": 3082,
+ "type_name": "小工具",
+ "manual_name": "图片转pdf",
+ "author": "小孩，别闹！",
+ "platform": "所有环境",
+ "source_date": "2023年07月15日 21:23:08",
+ "hits": 278,
+ "up": 4,
+ "favorite": 9,
+ "comment": 11,
+ "source_file": "小工具\\3082_图片转pdf.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 15,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,23 @@
+{
+ "manual_id": 3065,
+ "type_name": "Intent通信",
+ "manual_name": "诗词api对接",
+ "author": "邪默",
+ "platform": "所有环境",
+ "source_date": "2023年07月12日 23:26:25",
+ "hits": 193,
+ "up": 2,
+ "favorite": 5,
+ "comment": 2,
+ "source_file": "Intent通信\\3065_诗词api对接.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 10,
+ "char_count": 300,
+ "confidence": "static_review"
+}

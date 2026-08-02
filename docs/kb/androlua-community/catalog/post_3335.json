@@ -1,0 +1,21 @@
+{
+ "manual_id": 3335,
+ "type_name": "Lua代码",
+ "manual_name": "平滑曲线",
+ "author": "诺~",
+ "platform": "所有环境",
+ "source_date": "2023年08月29日 14:01:47",
+ "hits": 335,
+ "up": 3,
+ "favorite": 5,
+ "comment": 3,
+ "source_file": "Lua代码\\3335_平滑曲线.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 12,
+ "char_count": 300,
+ "confidence": "static_review"
+}

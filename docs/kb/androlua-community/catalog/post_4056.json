@@ -1,0 +1,21 @@
+{
+ "manual_id": 4056,
+ "type_name": "Lua教程",
+ "manual_name": "效率不高的『3d建模』--二元函数 3d 绘图器",
+ "author": "Duo",
+ "platform": "所有环境",
+ "source_date": "2024年05月13日 00:24:12",
+ "hits": 1058,
+ "up": 12,
+ "favorite": 17,
+ "comment": 8,
+ "source_file": "Lua教程\\4056_效率不高的『3d建模』--二元函数_3d_绘图器.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 18,
+ "char_count": 300,
+ "confidence": "static_review"
+}

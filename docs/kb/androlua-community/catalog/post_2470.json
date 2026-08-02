@@ -1,0 +1,24 @@
+{
+ "manual_id": 2470,
+ "type_name": "实用代码",
+ "manual_name": "使用fa2内置的图片查看器",
+ "author": "小白·马",
+ "platform": "Fusion App2",
+ "source_date": "2023年02月15日 17:58:23",
+ "hits": 414,
+ "up": 4,
+ "favorite": 18,
+ "comment": 2,
+ "source_file": "实用代码\\2470_使用fa2内置的图片查看器.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 14,
+ "char_count": 300,
+ "confidence": "static_review"
+}

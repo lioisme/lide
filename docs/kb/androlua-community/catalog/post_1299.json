@@ -1,0 +1,21 @@
+{
+ "manual_id": 1299,
+ "type_name": "Java教程",
+ "manual_name": "使用 Java 完整正则表达式",
+ "author": "jies辰",
+ "platform": "Fusion App2",
+ "source_date": "2022年01月09日 11:01:54",
+ "hits": 167,
+ "up": 2,
+ "favorite": 6,
+ "comment": 0,
+ "source_file": "Java教程\\1299_使用_Java_完整正则表达式.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 15,
+ "char_count": 274,
+ "confidence": "static_review"
+}

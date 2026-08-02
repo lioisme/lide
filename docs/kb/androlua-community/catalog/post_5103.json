@@ -1,0 +1,21 @@
+{
+ "manual_id": 5103,
+ "type_name": "小工具",
+ "manual_name": "一个简单的聚合热搜榜实例演示",
+ "author": "海纳百氚，有容乃大",
+ "platform": "Fusion App2,reOpenLua,OpenLuaX",
+ "source_date": "2025年10月20日 23:12:41",
+ "hits": 903,
+ "up": 5,
+ "favorite": 25,
+ "comment": 7,
+ "source_file": "小工具\\5103_一个简单的聚合热搜榜实例演示.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 14,
+ "char_count": 300,
+ "confidence": "static_review"
+}

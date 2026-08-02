@@ -1,0 +1,24 @@
+{
+ "manual_id": 5267,
+ "type_name": "网络请求",
+ "manual_name": "OkHttp3获取重定向最终定向的链接",
+ "author": "海纳百氚，有容乃大",
+ "platform": "reOpenLua,OpenLuaX",
+ "source_date": "2026年03月12日 13:31:05",
+ "hits": 198,
+ "up": 0,
+ "favorite": 2,
+ "comment": 1,
+ "source_file": "网络请求\\5267_OkHttp3获取重定向最终定向的链接.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 15,
+ "char_count": 300,
+ "confidence": "static_review"
+}

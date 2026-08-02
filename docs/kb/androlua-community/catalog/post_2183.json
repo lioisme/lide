@@ -1,0 +1,21 @@
+{
+ "manual_id": 2183,
+ "type_name": "小工具",
+ "manual_name": "中文函数",
+ "author": "智",
+ "platform": "所有环境",
+ "source_date": "2022年12月15日 11:39:14",
+ "hits": 4464,
+ "up": 46,
+ "favorite": 128,
+ "comment": 16,
+ "source_file": "小工具\\2183_中文函数.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 14,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 3699,
+ "type_name": "网络请求",
+ "manual_name": "有道文本翻译api",
+ "author": "阙月",
+ "platform": "所有环境",
+ "source_date": "2023年12月29日 23:04:03",
+ "hits": 577,
+ "up": 1,
+ "favorite": 10,
+ "comment": 3,
+ "source_file": "网络请求\\3699_有道文本翻译api.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 16,
+ "char_count": 300,
+ "confidence": "static_review"
+}

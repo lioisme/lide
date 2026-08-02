@@ -1,0 +1,25 @@
+{
+ "manual_id": 5315,
+ "type_name": "动画教程",
+ "manual_name": "飞溅粒子",
+ "author": "热爱从不降温",
+ "platform": "所有环境",
+ "source_date": "2026年05月14日 20:32:18",
+ "hits": 483,
+ "up": 7,
+ "favorite": 12,
+ "comment": 0,
+ "source_file": "动画教程\\5315_飞溅粒子.lua",
+ "kind": "fragment",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "truncated_tail",
+  "global_pollution",
+  "incomplete_fragment"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 18,
+ "char_count": 300,
+ "confidence": "static_review"
+}

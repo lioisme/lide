@@ -1,0 +1,23 @@
+{
+ "manual_id": 3838,
+ "type_name": "布局教程",
+ "manual_name": "一个BottomSheetBehavior布局",
+ "author": "小白·马",
+ "platform": "Fusion App2",
+ "source_date": "2024年02月02日 11:45:26",
+ "hits": 2513,
+ "up": 26,
+ "favorite": 90,
+ "comment": 14,
+ "source_file": "布局教程\\3838_一个BottomSheetBehavior布局.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 10,
+ "char_count": 300,
+ "confidence": "static_review"
+}

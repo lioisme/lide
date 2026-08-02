@@ -1,0 +1,23 @@
+{
+ "manual_id": 706,
+ "type_name": "实用代码",
+ "manual_name": "解决部分模板网页顶部内容被状态栏遮挡的问题",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 106,
+ "up": 0,
+ "favorite": 2,
+ "comment": 0,
+ "source_file": "实用代码\\706_解决部分模板网页顶部内容被状态栏遮挡的问题.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 8,
+ "char_count": 185,
+ "confidence": "static_review"
+}

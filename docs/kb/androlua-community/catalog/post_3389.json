@@ -1,0 +1,27 @@
+{
+ "manual_id": 3389,
+ "type_name": "Lua代码",
+ "manual_name": "计算web加载时间",
+ "author": "ᅟᅠ        ‌",
+ "platform": "Fusion App2",
+ "source_date": "2023年09月13日 08:00:42",
+ "hits": 229,
+ "up": 1,
+ "favorite": 10,
+ "comment": 0,
+ "source_file": "Lua代码\\3389_计算web加载时间.lua",
+ "kind": "fragment",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "truncated_tail",
+  "editor_bound",
+  "editor_bound",
+  "chinese_identifier",
+  "incomplete_fragment"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 14,
+ "char_count": 300,
+ "confidence": "static_review"
+}

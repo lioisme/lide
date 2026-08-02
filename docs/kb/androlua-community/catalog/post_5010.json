@@ -1,0 +1,23 @@
+{
+ "manual_id": 5010,
+ "type_name": "基础代码",
+ "manual_name": "通知系统更新文件",
+ "author": "海纳百氚，有容乃大",
+ "platform": "Fusion App2,reOpenLua,OpenLuaX",
+ "source_date": "2025年08月28日 05:58:55",
+ "hits": 333,
+ "up": 2,
+ "favorite": 9,
+ "comment": 0,
+ "source_file": "基础代码\\5010_通知系统更新文件.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

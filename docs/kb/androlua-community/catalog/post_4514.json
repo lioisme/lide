@@ -1,0 +1,21 @@
+{
+ "manual_id": 4514,
+ "type_name": "小工具",
+ "manual_name": "打开ShizukuRunner敲adb",
+ "author": "zzzzzxxx",
+ "platform": "所有环境",
+ "source_date": "2025年02月06日 07:26:26",
+ "hits": 422,
+ "up": 0,
+ "favorite": 2,
+ "comment": 0,
+ "source_file": "小工具\\4514_打开ShizukuRunner敲adb.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 8,
+ "char_count": 257,
+ "confidence": "static_review"
+}

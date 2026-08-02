@@ -1,0 +1,24 @@
+{
+ "manual_id": 2716,
+ "type_name": "安卓教程",
+ "manual_name": "当然是模拟点击按钮啦（二次修改）",
+ "author": "Cheese",
+ "platform": "所有环境",
+ "source_date": "2023年04月30日 21:36:23",
+ "hits": 316,
+ "up": 4,
+ "favorite": 11,
+ "comment": 2,
+ "source_file": "安卓教程\\2716_当然是模拟点击按钮啦（二次修改）.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 15,
+ "char_count": 300,
+ "confidence": "static_review"
+}

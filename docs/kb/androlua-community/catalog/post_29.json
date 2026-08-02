@@ -1,0 +1,23 @@
+{
+ "manual_id": 29,
+ "type_name": "动画教程",
+ "manual_name": "overridePendingTransition（设置窗口跳转动画）",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 267,
+ "up": 0,
+ "favorite": 0,
+ "comment": 0,
+ "source_file": "动画教程\\29_overridePendingTransition（设置窗口跳转动画）.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 1,
+ "char_count": 82,
+ "confidence": "static_review"
+}

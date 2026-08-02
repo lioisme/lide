@@ -1,0 +1,21 @@
+{
+ "manual_id": 3034,
+ "type_name": "小工具",
+ "manual_name": "鸡乐盒",
+ "author": "秦风",
+ "platform": "AndLua",
+ "source_date": "2023年07月06日 18:23:15",
+ "hits": 400,
+ "up": 2,
+ "favorite": 6,
+ "comment": 2,
+ "source_file": "小工具\\3034_鸡乐盒.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 21,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,24 @@
+{
+ "manual_id": 2447,
+ "type_name": "小工具",
+ "manual_name": "图片转ASCII字符画",
+ "author": "dingyi",
+ "platform": "所有环境",
+ "source_date": "2023年02月09日 06:58:22",
+ "hits": 336,
+ "up": 5,
+ "favorite": 10,
+ "comment": 7,
+ "source_file": "小工具\\2447_图片转ASCII字符画.lua",
+ "kind": "fragment",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "truncated_tail",
+  "incomplete_fragment"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 11,
+ "char_count": 300,
+ "confidence": "static_review"
+}

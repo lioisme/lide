@@ -1,0 +1,24 @@
+{
+ "manual_id": 3670,
+ "type_name": "Java教程",
+ "manual_name": "TextView新放大镜",
+ "author": "NekoLaska",
+ "platform": "所有环境",
+ "source_date": "2023年12月19日 20:46:31",
+ "hits": 817,
+ "up": 4,
+ "favorite": 13,
+ "comment": 9,
+ "source_file": "Java教程\\3670_TextView新放大镜.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

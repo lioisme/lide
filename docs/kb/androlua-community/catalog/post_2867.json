@@ -1,0 +1,21 @@
+{
+ "manual_id": 2867,
+ "type_name": "自绘制",
+ "manual_name": "海洋",
+ "author": "诺~",
+ "platform": "所有环境",
+ "source_date": "2023年05月27日 09:45:27",
+ "hits": 346,
+ "up": 3,
+ "favorite": 3,
+ "comment": 3,
+ "source_file": "自绘制\\2867_海洋.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 9,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 2791,
+ "type_name": "小工具",
+ "manual_name": "HTML简单编辑（可运行+Web后台服务+语法高亮）",
+ "author": "破晓",
+ "platform": "Fusion App2",
+ "source_date": "2023年05月12日 11:34:49",
+ "hits": 1255,
+ "up": 25,
+ "favorite": 94,
+ "comment": 9,
+ "source_file": "小工具\\2791_HTML简单编辑（可运行+Web后台服务+语法高亮）.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 9,
+ "char_count": 300,
+ "confidence": "static_review"
+}

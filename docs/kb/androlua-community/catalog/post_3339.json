@@ -1,0 +1,24 @@
+{
+ "manual_id": 3339,
+ "type_name": "小工具",
+ "manual_name": "红绿Toast",
+ "author": "Aqora",
+ "platform": "所有环境",
+ "source_date": "2023年08月29日 19:06:00",
+ "hits": 594,
+ "up": 22,
+ "favorite": 50,
+ "comment": 24,
+ "source_file": "小工具\\3339_红绿Toast.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 12,
+ "char_count": 300,
+ "confidence": "static_review"
+}

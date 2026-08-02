@@ -1,0 +1,23 @@
+{
+ "manual_id": 2896,
+ "type_name": "table表",
+ "manual_name": "二分查找",
+ "author": "小白·马",
+ "platform": "所有环境",
+ "source_date": "2023年06月03日 22:57:03",
+ "hits": 185,
+ "up": 2,
+ "favorite": 2,
+ "comment": 1,
+ "source_file": "table表\\2896_二分查找.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 12,
+ "char_count": 300,
+ "confidence": "static_review"
+}

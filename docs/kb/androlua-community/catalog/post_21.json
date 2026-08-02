@@ -1,0 +1,24 @@
+{
+ "manual_id": 21,
+ "type_name": "远程验证",
+ "manual_name": "VIP授权",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 1277,
+ "up": 8,
+ "favorite": 34,
+ "comment": 9,
+ "source_file": "远程验证\\21_VIP授权.lua",
+ "kind": "fragment",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "incomplete_mark",
+  "incomplete_fragment"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 11,
+ "char_count": 300,
+ "confidence": "static_review"
+}

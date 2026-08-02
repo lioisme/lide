@@ -1,0 +1,23 @@
+{
+ "manual_id": 646,
+ "type_name": "JS教程",
+ "manual_name": "去除广告代码复制粘贴放到全局js事件",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 197,
+ "up": 1,
+ "favorite": 4,
+ "comment": 0,
+ "source_file": "JS教程\\646_去除广告代码复制粘贴放到全局js事件.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 3,
+ "char_count": 194,
+ "confidence": "static_review"
+}

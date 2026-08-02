@@ -1,0 +1,23 @@
+{
+ "manual_id": 4147,
+ "type_name": "网络请求",
+ "manual_name": "okhttp 封装方法",
+ "author": "青柠(YouCun)",
+ "platform": "所有环境",
+ "source_date": "2024年07月29日 18:12:41",
+ "hits": 814,
+ "up": 7,
+ "favorite": 23,
+ "comment": 4,
+ "source_file": "网络请求\\4147_okhttp_封装方法.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

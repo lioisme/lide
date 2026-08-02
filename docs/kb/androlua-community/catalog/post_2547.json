@@ -1,0 +1,21 @@
+{
+ "manual_id": 2547,
+ "type_name": "实用代码",
+ "manual_name": "读取手机号",
+ "author": "⁢",
+ "platform": "AndLua",
+ "source_date": "2023年03月04日 18:26:39",
+ "hits": 254,
+ "up": 7,
+ "favorite": 24,
+ "comment": 1,
+ "source_file": "实用代码\\2547_读取手机号.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 9,
+ "char_count": 300,
+ "confidence": "static_review"
+}

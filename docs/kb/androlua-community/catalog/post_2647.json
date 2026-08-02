@@ -1,0 +1,24 @@
+{
+ "manual_id": 2647,
+ "type_name": "实用代码",
+ "manual_name": "或许好看的AlertDialog封装",
+ "author": "NekoLaska",
+ "platform": "所有环境",
+ "source_date": "2023年04月12日 20:06:05",
+ "hits": 453,
+ "up": 3,
+ "favorite": 7,
+ "comment": 2,
+ "source_file": "实用代码\\2647_或许好看的AlertDialog封装.lua",
+ "kind": "fragment",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "truncated_tail",
+  "incomplete_fragment"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 9,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,23 @@
+{
+ "manual_id": 1894,
+ "type_name": "布局教程",
+ "manual_name": "立体感应布局",
+ "author": "归魔",
+ "platform": "Fusion App1",
+ "source_date": "2022年09月18日 02:34:02",
+ "hits": 359,
+ "up": 2,
+ "favorite": 4,
+ "comment": 0,
+ "source_file": "布局教程\\1894_立体感应布局.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 14,
+ "char_count": 300,
+ "confidence": "static_review"
+}

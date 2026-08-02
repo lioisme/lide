@@ -1,0 +1,21 @@
+{
+ "manual_id": 2577,
+ "type_name": "远程更新",
+ "manual_name": "远程更新",
+ "author": "Android黑科技",
+ "platform": "Fusion App2",
+ "source_date": "2023年03月14日 15:33:23",
+ "hits": 814,
+ "up": 25,
+ "favorite": 100,
+ "comment": 19,
+ "source_file": "远程更新\\2577_远程更新.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 10,
+ "char_count": 300,
+ "confidence": "static_review"
+}

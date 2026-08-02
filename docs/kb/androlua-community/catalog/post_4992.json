@@ -1,0 +1,24 @@
+{
+ "manual_id": 4992,
+ "type_name": "Lua代码",
+ "manual_name": "AutoIndent",
+ "author": "⁣​",
+ "platform": "所有环境",
+ "source_date": "2025年08月20日 20:32:52",
+ "hits": 222,
+ "up": 5,
+ "favorite": 3,
+ "comment": 0,
+ "source_file": "Lua代码\\4992_AutoIndent.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 12,
+ "char_count": 300,
+ "confidence": "static_review"
+}

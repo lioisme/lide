@@ -1,0 +1,21 @@
+{
+ "manual_id": 3902,
+ "type_name": "实用代码",
+ "manual_name": "获取屏幕实际方向",
+ "author": "Genouka",
+ "platform": "所有环境",
+ "source_date": "2024年02月18日 00:21:40",
+ "hits": 200,
+ "up": 5,
+ "favorite": 10,
+ "comment": 0,
+ "source_file": "实用代码\\3902_获取屏幕实际方向.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 7,
+ "char_count": 300,
+ "confidence": "static_review"
+}

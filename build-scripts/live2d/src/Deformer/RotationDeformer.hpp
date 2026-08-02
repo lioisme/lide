@@ -23,8 +23,8 @@ public:
                          const std::vector<float>& srcPoints, std::vector<float>& dstPoints,
                          int numPoint, int ptOffset, int ptStep) override;
 
-    std::unique_ptr<PivotManager> mPivotManager;
-    std::vector<std::unique_ptr<AffineEnt>> mAffines;
+    PivotManager* mPivotManager = nullptr;
+    std::vector<AffineEnt*> mAffines;
 };
 
 } // namespace live2d

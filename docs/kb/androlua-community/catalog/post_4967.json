@@ -1,0 +1,21 @@
+{
+ "manual_id": 4967,
+ "type_name": "布局教程",
+ "manual_name": "动态设置Material3主题颜色",
+ "author": "⁣​",
+ "platform": "OpenLuaX",
+ "source_date": "2025年08月05日 23:51:35",
+ "hits": 840,
+ "up": 4,
+ "favorite": 12,
+ "comment": 5,
+ "source_file": "布局教程\\4967_动态设置Material3主题颜色.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 4,
+ "char_count": 300,
+ "confidence": "static_review"
+}

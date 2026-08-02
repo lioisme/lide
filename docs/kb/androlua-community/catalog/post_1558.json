@@ -1,0 +1,21 @@
+{
+ "manual_id": 1558,
+ "type_name": "实用代码",
+ "manual_name": "快捷方式",
+ "author": "小白哥哥",
+ "platform": "所有环境",
+ "source_date": "2022年06月26日 12:08:24",
+ "hits": 467,
+ "up": 4,
+ "favorite": 15,
+ "comment": 4,
+ "source_file": "实用代码\\1558_快捷方式.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 14,
+ "char_count": 300,
+ "confidence": "static_review"
+}

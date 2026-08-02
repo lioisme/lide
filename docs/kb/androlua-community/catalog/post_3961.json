@@ -1,0 +1,23 @@
+{
+ "manual_id": 3961,
+ "type_name": "Lua代码",
+ "manual_name": "本地卡密验证系统",
+ "author": "Mist",
+ "platform": "所有环境",
+ "source_date": "2024年03月10日 12:03:33",
+ "hits": 846,
+ "up": 1,
+ "favorite": 10,
+ "comment": 7,
+ "source_file": "Lua代码\\3961_本地卡密验证系统.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 10,
+ "char_count": 152,
+ "confidence": "static_review"
+}

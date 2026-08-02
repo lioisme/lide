@@ -1,0 +1,21 @@
+{
+ "manual_id": 4611,
+ "type_name": "Intent通信",
+ "manual_name": "Notification我可以发送一条通知吗",
+ "author": "海纳百氚，有容乃大",
+ "platform": "Fusion App2,reOpenLua,OpenLuaX",
+ "source_date": "2025年03月20日 02:07:45",
+ "hits": 726,
+ "up": 14,
+ "favorite": 39,
+ "comment": 6,
+ "source_file": "Intent通信\\4611_Notification我可以发送一条通知吗.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

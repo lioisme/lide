@@ -1,0 +1,21 @@
+{
+ "manual_id": 5047,
+ "type_name": "Adapter容器",
+ "manual_name": "ExetendFlexboxLayoutManager流式布局管理器",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2025年09月27日 13:19:25",
+ "hits": 497,
+ "up": 5,
+ "favorite": 20,
+ "comment": 0,
+ "source_file": "Adapter容器\\5047_ExetendFlexboxLayoutManager流式布局管理器.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 14,
+ "char_count": 300,
+ "confidence": "static_review"
+}

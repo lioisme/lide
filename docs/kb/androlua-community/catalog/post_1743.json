@@ -1,0 +1,23 @@
+{
+ "manual_id": 1743,
+ "type_name": "动画教程",
+ "manual_name": "跳转动画",
+ "author": "苦小怕",
+ "platform": "Fusion App2",
+ "source_date": "2022年08月18日 09:30:13",
+ "hits": 1593,
+ "up": 28,
+ "favorite": 74,
+ "comment": 6,
+ "source_file": "动画教程\\1743_跳转动画.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 10,
+ "char_count": 300,
+ "confidence": "static_review"
+}

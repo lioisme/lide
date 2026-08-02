@@ -1,0 +1,25 @@
+{
+ "manual_id": 5323,
+ "type_name": "小工具",
+ "manual_name": "飞鸟·轻音",
+ "author": "四十次日落",
+ "platform": "Fusion App2",
+ "source_date": "2026年05月27日 11:49:22",
+ "hits": 631,
+ "up": 4,
+ "favorite": 9,
+ "comment": 7,
+ "source_file": "小工具\\5323_飞鸟·轻音.lua",
+ "kind": "text_note",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "short_text",
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 9,
+ "char_count": 300,
+ "confidence": "static_review"
+}

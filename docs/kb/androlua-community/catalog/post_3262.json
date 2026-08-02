@@ -1,0 +1,21 @@
+{
+ "manual_id": 3262,
+ "type_name": "实用代码",
+ "manual_name": "简单DOM解析器",
+ "author": "巴黎小雨",
+ "platform": "所有环境",
+ "source_date": "2023年08月15日 15:02:48",
+ "hits": 164,
+ "up": 0,
+ "favorite": 4,
+ "comment": 0,
+ "source_file": "实用代码\\3262_简单DOM解析器.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 16,
+ "char_count": 300,
+ "confidence": "static_review"
+}

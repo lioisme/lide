@@ -1,0 +1,21 @@
+{
+ "manual_id": 4502,
+ "type_name": "Lua代码",
+ "manual_name": "BrainFuck 解释器",
+ "author": "⁣​",
+ "platform": "所有环境",
+ "source_date": "2025年01月28日 17:36:41",
+ "hits": 210,
+ "up": 2,
+ "favorite": 2,
+ "comment": 2,
+ "source_file": "Lua代码\\4502_BrainFuck_解释器.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 12,
+ "char_count": 300,
+ "confidence": "static_review"
+}

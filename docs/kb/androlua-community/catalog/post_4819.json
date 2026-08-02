@@ -1,0 +1,21 @@
+{
+ "manual_id": 4819,
+ "type_name": "Lua代码",
+ "manual_name": "文本隐写术",
+ "author": "琪琪子",
+ "platform": "AndLua",
+ "source_date": "2025年06月08日 22:48:32",
+ "hits": 299,
+ "up": 5,
+ "favorite": 6,
+ "comment": 0,
+ "source_file": "Lua代码\\4819_文本隐写术.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 11,
+ "char_count": 300,
+ "confidence": "static_review"
+}

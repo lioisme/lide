@@ -1,0 +1,24 @@
+{
+ "manual_id": 4141,
+ "type_name": "UI控件",
+ "manual_name": "修改FA2选项卡点击事件",
+ "author": "小白·马",
+ "platform": "Fusion App2",
+ "source_date": "2024年07月23日 00:30:38",
+ "hits": 379,
+ "up": 0,
+ "favorite": 5,
+ "comment": 0,
+ "source_file": "UI控件\\4141_修改FA2选项卡点击事件.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 8,
+ "char_count": 195,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 1545,
+ "type_name": "安卓教程",
+ "manual_name": "Can I Play This Video Url? 这个视频链接能被播放吗？VideoView示例",
+ "author": "Adam·Eva",
+ "platform": "所有环境",
+ "source_date": "2022年06月12日 22:54:33",
+ "hits": 652,
+ "up": 9,
+ "favorite": 21,
+ "comment": 2,
+ "source_file": "安卓教程\\1545_Can_I_Play_This_Video_Url__这个视频链接能被播放吗？VideoView示例.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

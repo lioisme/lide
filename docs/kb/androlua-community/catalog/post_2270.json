@@ -1,0 +1,23 @@
+{
+ "manual_id": 2270,
+ "type_name": "小工具",
+ "manual_name": "利用TextChangedListener自动翻译",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2023年01月02日 00:25:23",
+ "hits": 508,
+ "up": 6,
+ "favorite": 19,
+ "comment": 8,
+ "source_file": "小工具\\2270_利用TextChangedListener自动翻译.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 10,
+ "char_count": 300,
+ "confidence": "static_review"
+}

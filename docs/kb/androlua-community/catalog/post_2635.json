@@ -1,0 +1,23 @@
+{
+ "manual_id": 2635,
+ "type_name": "字符处理",
+ "manual_name": "蓝奏云文件夹Post参数获取(修复Json数据获取失败)",
+ "author": "迷糊.",
+ "platform": "所有环境",
+ "source_date": "2023年04月08日 08:11:26",
+ "hits": 555,
+ "up": 5,
+ "favorite": 17,
+ "comment": 6,
+ "source_file": "字符处理\\2635_蓝奏云文件夹Post参数获取(修复Json数据获取失败).lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 11,
+ "char_count": 300,
+ "confidence": "static_review"
+}

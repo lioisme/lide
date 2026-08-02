@@ -1,0 +1,21 @@
+{
+ "manual_id": 1380,
+ "type_name": "布局教程",
+ "manual_name": "actionbar非反射获取控件",
+ "author": "如果爱有遗憾",
+ "platform": "AndroLua,AndLua",
+ "source_date": "2022年02月22日 23:09:37",
+ "hits": 225,
+ "up": 3,
+ "favorite": 4,
+ "comment": 2,
+ "source_file": "布局教程\\1380_actionbar非反射获取控件.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 6,
+ "char_count": 129,
+ "confidence": "static_review"
+}

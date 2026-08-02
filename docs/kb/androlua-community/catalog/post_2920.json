@@ -1,0 +1,23 @@
+{
+ "manual_id": 2920,
+ "type_name": "控件属性",
+ "manual_name": "DatePicker日期选择控件实例讲解",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2023年06月10日 22:01:53",
+ "hits": 234,
+ "up": 2,
+ "favorite": 17,
+ "comment": 2,
+ "source_file": "控件属性\\2920_DatePicker日期选择控件实例讲解.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 14,
+ "char_count": 300,
+ "confidence": "static_review"
+}

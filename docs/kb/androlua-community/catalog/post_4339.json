@@ -1,0 +1,21 @@
+{
+ "manual_id": 4339,
+ "type_name": "布局代码",
+ "manual_name": "启动图（圆形倒计时）",
+ "author": "易富焙",
+ "platform": "",
+ "source_date": "2024年10月31日 10:56:37",
+ "hits": 817,
+ "up": 18,
+ "favorite": 46,
+ "comment": 5,
+ "source_file": "布局代码\\4339_启动图（圆形倒计时）.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 18,
+ "char_count": 300,
+ "confidence": "static_review"
+}

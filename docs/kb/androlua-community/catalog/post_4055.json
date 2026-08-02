@@ -1,0 +1,21 @@
+{
+ "manual_id": 4055,
+ "type_name": "基础代码",
+ "manual_name": "判断两段线段是否相交",
+ "author": "淮雾念",
+ "platform": "所有环境",
+ "source_date": "2024年05月12日 19:35:40",
+ "hits": 147,
+ "up": 0,
+ "favorite": 1,
+ "comment": 1,
+ "source_file": "基础代码\\4055_判断两段线段是否相交.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 11,
+ "char_count": 300,
+ "confidence": "static_review"
+}

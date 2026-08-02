@@ -1,0 +1,21 @@
+{
+ "manual_id": 2203,
+ "type_name": "实用代码",
+ "manual_name": "Lua继承Java",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2022年12月18日 15:21:32",
+ "hits": 386,
+ "up": 2,
+ "favorite": 9,
+ "comment": 1,
+ "source_file": "实用代码\\2203_Lua继承Java.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 26,
+ "char_count": 300,
+ "confidence": "static_review"
+}

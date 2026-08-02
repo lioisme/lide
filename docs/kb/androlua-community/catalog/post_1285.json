@@ -1,0 +1,21 @@
+{
+ "manual_id": 1285,
+ "type_name": "布局教程",
+ "manual_name": "Toast带颜色提示",
+ "author": "迷糊.",
+ "platform": "Fusion App2",
+ "source_date": "2022年01月02日 07:34:14",
+ "hits": 272,
+ "up": 3,
+ "favorite": 8,
+ "comment": 0,
+ "source_file": "布局教程\\1285_Toast带颜色提示.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 5,
+ "char_count": 224,
+ "confidence": "static_review"
+}

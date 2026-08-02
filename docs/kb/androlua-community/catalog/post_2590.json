@@ -1,0 +1,21 @@
+{
+ "manual_id": 2590,
+ "type_name": "实用代码",
+ "manual_name": "AlertDialog常见用法",
+ "author": "Adam·Eva",
+ "platform": "所有环境",
+ "source_date": "2023年03月19日 14:14:53",
+ "hits": 420,
+ "up": 7,
+ "favorite": 18,
+ "comment": 1,
+ "source_file": "实用代码\\2590_AlertDialog常见用法.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 13,
+ "char_count": 300,
+ "confidence": "static_review"
+}

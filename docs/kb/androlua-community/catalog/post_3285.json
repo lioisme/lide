@@ -1,0 +1,21 @@
+{
+ "manual_id": 3285,
+ "type_name": "布局代码",
+ "manual_name": "DuoTadpoleSlider-蝌蚪滑动条",
+ "author": "Duo",
+ "platform": "所有环境",
+ "source_date": "2023年08月18日 10:39:50",
+ "hits": 609,
+ "up": 13,
+ "favorite": 39,
+ "comment": 9,
+ "source_file": "布局代码\\3285_DuoTadpoleSlider-蝌蚪滑动条.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 21,
+ "char_count": 300,
+ "confidence": "static_review"
+}

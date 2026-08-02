@@ -1,0 +1,21 @@
+{
+ "manual_id": 4552,
+ "type_name": "安卓教程",
+ "manual_name": "Shizuku对接",
+ "author": "兰皋",
+ "platform": "所有环境",
+ "source_date": "2025年02月21日 18:35:37",
+ "hits": 1073,
+ "up": 10,
+ "favorite": 20,
+ "comment": 31,
+ "source_file": "安卓教程\\4552_Shizuku对接.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 14,
+ "char_count": 300,
+ "confidence": "static_review"
+}

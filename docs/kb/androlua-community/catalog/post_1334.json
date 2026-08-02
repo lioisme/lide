@@ -1,0 +1,24 @@
+{
+ "manual_id": 1334,
+ "type_name": "UI控件",
+ "manual_name": "ImageView图片控件",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2022年01月23日 21:15:59",
+ "hits": 933,
+ "up": 9,
+ "favorite": 26,
+ "comment": 1,
+ "source_file": "UI控件\\1334_ImageView图片控件.lua",
+ "kind": "text_note",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "short_text",
+  "global_pollution"
+ ],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 14,
+ "char_count": 300,
+ "confidence": "static_review"
+}

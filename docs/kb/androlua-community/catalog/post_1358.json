@@ -1,0 +1,21 @@
+{
+ "manual_id": 1358,
+ "type_name": "浏览器",
+ "manual_name": "使用 WebViewClient 监听 WebView 状态",
+ "author": "jies辰",
+ "platform": "Fusion App2",
+ "source_date": "2022年02月07日 11:27:28",
+ "hits": 160,
+ "up": 2,
+ "favorite": 7,
+ "comment": 2,
+ "source_file": "浏览器\\1358_使用_WebViewClient_监听_WebView_状态.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 9,
+ "char_count": 300,
+ "confidence": "static_review"
+}

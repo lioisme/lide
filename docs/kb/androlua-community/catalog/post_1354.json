@@ -1,0 +1,23 @@
+{
+ "manual_id": 1354,
+ "type_name": "table表",
+ "manual_name": "table表操作",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2022年02月03日 13:15:45",
+ "hits": 658,
+ "up": 5,
+ "favorite": 30,
+ "comment": 2,
+ "source_file": "table表\\1354_table表操作.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 11,
+ "char_count": 300,
+ "confidence": "static_review"
+}

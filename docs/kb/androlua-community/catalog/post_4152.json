@@ -1,0 +1,24 @@
+{
+ "manual_id": 4152,
+ "type_name": "小工具",
+ "manual_name": "去除注释、去除空行及格式化导入",
+ "author": "⁧拾玖⁧‭",
+ "platform": "所有环境",
+ "source_date": "2024年08月04日 19:49:58",
+ "hits": 533,
+ "up": 5,
+ "favorite": 12,
+ "comment": 9,
+ "source_file": "小工具\\4152_去除注释、去除空行及格式化导入.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 14,
+ "char_count": 300,
+ "confidence": "static_review"
+}

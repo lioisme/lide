@@ -31,7 +31,7 @@ public:
 
     int mRow = 0;
     int mCol = 0;
-    std::unique_ptr<PivotManager> mPivotMgr;
+    PivotManager* mPivotMgr = nullptr;
     std::vector<std::vector<float>> mPivotPoints;
 };
 

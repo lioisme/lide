@@ -1,0 +1,21 @@
+{
+ "manual_id": 2852,
+ "type_name": "网络操作",
+ "manual_name": "随机生成UA(User Agent)",
+ "author": "青柠(YouCun)",
+ "platform": "所有环境",
+ "source_date": "2023年05月25日 01:51:31",
+ "hits": 405,
+ "up": 4,
+ "favorite": 16,
+ "comment": 0,
+ "source_file": "网络操作\\2852_随机生成UA(User_Agent).lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 12,
+ "char_count": 300,
+ "confidence": "static_review"
+}

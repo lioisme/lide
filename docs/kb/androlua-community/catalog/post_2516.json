@@ -1,0 +1,24 @@
+{
+ "manual_id": 2516,
+ "type_name": "Activity活动",
+ "manual_name": "赞助列表",
+ "author": "老黑",
+ "platform": "所有环境",
+ "source_date": "2023年02月26日 09:09:08",
+ "hits": 565,
+ "up": 4,
+ "favorite": 33,
+ "comment": 15,
+ "source_file": "Activity活动\\2516_赞助列表.lua",
+ "kind": "fragment",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "truncated_tail",
+  "incomplete_fragment"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 15,
+ "char_count": 300,
+ "confidence": "static_review"
+}

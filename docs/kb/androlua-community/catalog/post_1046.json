@@ -1,0 +1,23 @@
+{
+ "manual_id": 1046,
+ "type_name": "系统",
+ "manual_name": "取程序版本信息",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 163,
+ "up": 0,
+ "favorite": 4,
+ "comment": 0,
+ "source_file": "系统\\1046_取程序版本信息.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 2,
+ "char_count": 244,
+ "confidence": "static_review"
+}

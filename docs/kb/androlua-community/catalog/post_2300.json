@@ -1,0 +1,21 @@
+{
+ "manual_id": 2300,
+ "type_name": "实用代码",
+ "manual_name": "仿写布局[无功能]",
+ "author": "祁画",
+ "platform": "AndLua",
+ "source_date": "2023年01月10日 20:32:24",
+ "hits": 927,
+ "up": 13,
+ "favorite": 48,
+ "comment": 11,
+ "source_file": "实用代码\\2300_仿写布局[无功能].lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 12,
+ "char_count": 300,
+ "confidence": "static_review"
+}

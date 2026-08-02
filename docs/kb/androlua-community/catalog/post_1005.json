@@ -1,0 +1,23 @@
+{
+ "manual_id": 1005,
+ "type_name": "文件操作",
+ "manual_name": "解压apk内的压缩包",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 575,
+ "up": 5,
+ "favorite": 13,
+ "comment": 6,
+ "source_file": "文件操作\\1005_解压apk内的压缩包.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 2,
+ "char_count": 97,
+ "confidence": "static_review"
+}

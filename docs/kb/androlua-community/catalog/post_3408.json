@@ -1,0 +1,23 @@
+{
+ "manual_id": 3408,
+ "type_name": "小工具",
+ "manual_name": "关于一个简易关键词搜索功能的实现",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2023年09月18日 20:32:23",
+ "hits": 1671,
+ "up": 24,
+ "favorite": 72,
+ "comment": 6,
+ "source_file": "小工具\\3408_关于一个简易关键词搜索功能的实现.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "complete_or_unverifiable",
+ "line_count": 15,
+ "char_count": 300,
+ "confidence": "static_review"
+}

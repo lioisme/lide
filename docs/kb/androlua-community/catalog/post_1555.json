@@ -1,0 +1,23 @@
+{
+ "manual_id": 1555,
+ "type_name": "实用代码",
+ "manual_name": "Gif，WebP与APNG动图",
+ "author": "Adam·Eva",
+ "platform": "所有环境",
+ "source_date": "2022年06月24日 02:01:05",
+ "hits": 504,
+ "up": 6,
+ "favorite": 25,
+ "comment": 1,
+ "source_file": "实用代码\\1555_Gif，WebP与APNG动图.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "obsolete",
+ "flags": [
+  "obsolete"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 14,
+ "char_count": 300,
+ "confidence": "static_review"
+}

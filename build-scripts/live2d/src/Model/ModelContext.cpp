@@ -18,12 +18,13 @@
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
+#include <android/log.h>
 
 namespace live2d {
 
 ModelContext::ModelContext(ALive2DModel* model) : mModel(model) {
     mTmpPivotTableIndices.resize(PIVOT_TABLE_SIZE);
-    mTempTArray.resize(MAX_INTERPOLATION);
+    mTempTArray.resize(MAX_INTERPOLATION + 1);
 }
 
 ModelContext::~ModelContext() { release(); }
@@ -45,12 +46,12 @@ void ModelContext::init() {
     std::vector<std::unique_ptr<DeformerContext>> allDefCtxs;
 
     for (auto& part : partsDataList) {
-        mPartsDataList.push_back(part.get());
+        mPartsDataList.push_back(part);
         mPartsContextList.emplace_back(part->init());
 
         auto& baseDefs = part->getDeformer();
         for (auto& d : baseDefs) {
-            allDefs.push_back(d.get());
+            allDefs.push_back(d);
             auto ctx = std::unique_ptr<DeformerContext>(d->init(this));
             ctx->mPartsIndex = static_cast<int>(mPartsContextList.size()) - 1;
             allDefCtxs.push_back(std::move(ctx));
@@ -58,7 +59,7 @@ void ModelContext::init() {
 
         auto& drawData = part->getDrawData();
         for (auto& dd : drawData) {
-            auto* mesh = static_cast<Mesh*>(dd.get());
+            auto* mesh = static_cast<Mesh*>(dd);
             auto meshCtx = std::unique_ptr<MeshContext>(mesh->init(this));
             meshCtx->mPartsIndex = static_cast<int>(mPartsContextList.size()) - 1;
             mDrawDataList.push_back(mesh);
@@ -99,6 +100,20 @@ void ModelContext::init() {
     rawDrawCtxs.reserve(mDrawContextList.size());
     for (auto& ctx : mDrawContextList) rawDrawCtxs.push_back(ctx.get());
     mClipManager->init(this, mDrawDataList, rawDrawCtxs);
+
+    // Global draw-order extremes across all draws (average + pivot tables).
+    int gMin = IDrawData::DEFAULT_ORDER, gMax = IDrawData::DEFAULT_ORDER;
+    for (auto* dd : mDrawDataList) {
+        int avg = dd->getAverageDrawOrder();
+        if (avg < gMin) gMin = avg;
+        if (avg > gMax) gMax = avg;
+        for (int v : dd->getPivotDrawOrders()) {
+            if (v < gMin) gMin = v;
+            if (v > gMax) gMax = v;
+        }
+    }
+    mMinDrawOrder = gMin;
+    mMaxDrawOrder = gMax;
     mNeedSetup = true;
 }
 
@@ -112,13 +127,8 @@ void ModelContext::update() {
 
     int nDef = static_cast<int>(mDeformerList.size());
     int nDraw = static_cast<int>(mDrawDataList.size());
-    int minOrder = IDrawData::DEFAULT_ORDER;
-    int maxOrder = IDrawData::DEFAULT_ORDER;
-    for (auto* d : mDrawDataList) {
-        int order = d->getAverageDrawOrder();
-        if (order < minOrder) minOrder = order;
-        else if (order > maxOrder) maxOrder = order;
-    }
+    int minOrder = mMinDrawOrder;
+    int maxOrder = mMaxDrawOrder;
     int range = maxOrder - minOrder + 1;
 
     if (static_cast<int>(mOrderListFirstDrawIndex.size()) < range) {
@@ -147,6 +157,13 @@ void ModelContext::update() {
         dd->setupTransform(this, ctx);
         int order = static_cast<int>(std::floor(
             IDrawData::getDrawOrder(ctx) - minOrder));
+        if (order < 0 || order >= range)
+            __android_log_print(ANDROID_LOG_ERROR, "live2d-diag",
+                "DRAWDER_OOB order=%d range=%d min=%d max=%d i=%d interpOrder=%d",
+                order, range, minOrder, maxOrder, i, IDrawData::getDrawOrder(ctx));
+        // 防御：任何情况下不得越界写 order 桶（历史 DRAWDER_OOB 实证堆损坏源）
+        if (order < 0) order = 0;
+        else if (order >= range) order = range - 1;
         int lastIdx = mOrderListLastDrawIndex[order];
         if (lastIdx == NOT_USED_ORDER) mOrderListFirstDrawIndex[order] = i;
         else mNextListDrawIndex[lastIdx] = i;
@@ -279,6 +296,10 @@ int ModelContext::extendAndAddParam(const Id* paramId, float dv, float maxV, flo
 }
 
 void ModelContext::setParamFloat(int index, float value) {
+    if (index < 0 || index >= (int)mParamMinValues.size())
+        __android_log_print(ANDROID_LOG_ERROR, "live2d-diag",
+            "SETPARAM_OOB index=%d value=%.3f paramCount=%zu",
+            index, value, mParamValues.size());
     if (value < mParamMinValues[index]) value = mParamMinValues[index];
     if (value > mParamMaxValues[index]) value = mParamMaxValues[index];
     mParamValues[index] = value;

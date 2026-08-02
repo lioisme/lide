@@ -1,0 +1,21 @@
+{
+ "manual_id": 5190,
+ "type_name": "Lua代码",
+ "manual_name": "黑胶唱片",
+ "author": "琪琪子",
+ "platform": "AndLua",
+ "source_date": "2026年01月30日 17:59:01",
+ "hits": 278,
+ "up": 2,
+ "favorite": 2,
+ "comment": 0,
+ "source_file": "Lua代码\\5190_黑胶唱片.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 16,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -1,0 +1,25 @@
+{
+ "manual_id": 1270,
+ "type_name": "Activity活动",
+ "manual_name": "隐藏应用栏（AppBar）隐藏/可视/不可视",
+ "author": "小白·马",
+ "platform": "Fusion App2",
+ "source_date": "2021年12月24日 19:08:37",
+ "hits": 344,
+ "up": 4,
+ "favorite": 18,
+ "comment": 1,
+ "source_file": "Activity活动\\1270_隐藏应用栏（AppBar）隐藏_可视_不可视.lua",
+ "kind": "text_note",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "short_text",
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 18,
+ "char_count": 300,
+ "confidence": "static_review"
+}

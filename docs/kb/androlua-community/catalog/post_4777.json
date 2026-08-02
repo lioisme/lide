@@ -1,0 +1,23 @@
+{
+ "manual_id": 4777,
+ "type_name": "Adapter容器",
+ "manual_name": "notifyItemRemoved 移除正确使用方法",
+ "author": "海纳百氚，有容乃大",
+ "platform": "Fusion App2",
+ "source_date": "2025年05月20日 13:01:31",
+ "hits": 596,
+ "up": 7,
+ "favorite": 15,
+ "comment": 1,
+ "source_file": "Adapter容器\\4777_notifyItemRemoved_移除正确使用方法.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 14,
+ "char_count": 300,
+ "confidence": "static_review"
+}

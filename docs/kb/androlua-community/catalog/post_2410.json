@@ -1,0 +1,23 @@
+{
+ "manual_id": 2410,
+ "type_name": "JS教程",
+ "manual_name": "Proxy前端代理",
+ "author": "壹影",
+ "platform": "所有环境",
+ "source_date": "2023年01月31日 19:06:19",
+ "hits": 356,
+ "up": 5,
+ "favorite": 9,
+ "comment": 10,
+ "source_file": "JS教程\\2410_Proxy前端代理.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "preview_truncated",
+ "line_count": 12,
+ "char_count": 300,
+ "confidence": "static_review"
+}

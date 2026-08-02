@@ -1,0 +1,21 @@
+{
+ "manual_id": 4150,
+ "type_name": "小工具",
+ "manual_name": "Glide 获取图片类型",
+ "author": "小白·马",
+ "platform": "Fusion App2,reOpenLua,OpenLuaX",
+ "source_date": "2024年08月01日 16:17:50",
+ "hits": 285,
+ "up": 1,
+ "favorite": 6,
+ "comment": 0,
+ "source_file": "小工具\\4150_Glide_获取图片类型.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "preview_truncated",
+ "line_count": 12,
+ "char_count": 300,
+ "confidence": "static_review"
+}

@@ -19,12 +19,13 @@ public:
     int getCanvasWidth() const { return mCanvasWidth; }
     int getCanvasHeight() const { return mCanvasHeight; }
 
-    ParamDefSet* getParamDefSet() const { return mParamDefSet.get(); }
-    std::vector<std::unique_ptr<PartsData>>& getPartsDataList() { return mPartsDataList; }
+    ParamDefSet* getParamDefSet() const { return mParamDefSet; }
+    std::vector<PartsData*>& getPartsDataList() { return mPartsDataList; }
 
 private:
-    std::unique_ptr<ParamDefSet> mParamDefSet;
-    std::vector<std::unique_ptr<PartsData>> mPartsDataList;
+    // 非拥有指针：对象图由 BinaryReader 全权拥有（见 readKnownTypeObject 注释）
+    ParamDefSet* mParamDefSet = nullptr;
+    std::vector<PartsData*> mPartsDataList;
     int mCanvasWidth = 400;
     int mCanvasHeight = 400;
 };
