@@ -1,24 +1,37 @@
--- live2dapp.lua — 看板娘（Live2D v2）delua 原生引擎封装
+-- live2dapp.lua — 看板娘（Live2D v2）delua 原生引擎封装（多模型版）
 --
--- 语义复刻自 pro 侧 jp.live2d.* dex（dexdump 逐指令实证）：
+-- 仅支持 delua 原生库（liblive2d.so），不携带 pro（jp.live2d.* dex）兼容。
+-- 语义对齐 live2d 官方 v2 引擎（迁移计划 docs/planned/LIVE2D_NATIVE_MIGRATION_PLAN.md）：
 --   LAppView / L2DViewMatrix / L2DModelMatrix / L2DMatrix44 / TouchManager /
---   L2DTargetPoint / Live2DManager（tap/flick/pinch 事件）
+--   L2DTargetPoint / LAppLive2DManager（4 模型轮换 + 双模型分支 + tap/flick/pinch）
+--
+-- 与 live2dtest（单模型）差异：
+--   1) 多模型容器：models[] 共享 viewMatrix/deviceToScreen/touchMgr/dragMgr
+--      （对齐 Java：LAppView 持有共享状态，LAppModel 各自 modelMatrix）
+--   2) reload 分支（dex @01fac4 实证）：modelCount%4
+--      0→haru、1→shizuku、2→wanko、3→haru_01+haru_02（双模型）；初始 -1
+--   3) 每模型 json layout 应用（dex @0203fe 实证）：
+--      width→setWidth、x→setX、y→setY、center_x→centerX、center_y→centerY
+--      （5 个模型实测均有 y 键！模型站立高度定位）
+--   4) 背景图（LAppRenderer.setupBackground 实证）：方案 B 原生原语
+--      native.setupBg/drawBg（liblive2d.so 内 stb_image 解码 + GLES2 shader quad，
+--      零 Java 代理；语义对齐 setDrawRect(-2,2,-2,2)+setUVRect(0,1,0,1)）
+--   5) flickEvent 动作组为 "flick_head"（dex @01f5b4 实证，priority 2）
+--
+-- 已声明差异（白名单）：
+--   D1 淡入：Java feedIn alpha 0→1（10 帧 FBO 半透明）；原生直接显示
+--   D2 音效：sounds/*.wav 不存在于工程 res → 双端均无声
+--   D3 加速度计：AccelHelper（旋转矩阵/方向映射）不移植；模拟器无传感器，
+--      双端行为一致（真机倾斜/摇晃差异）
 --
 -- 坐标系约定（与 Java 完全一致）：
---   屏幕像素 → deviceToScreen(S(2/w,2/w)·T(−w/2,+h/2)) → 视图空间（缩放/平移发生处）
+--   屏幕像素 → deviceToScreen(S(2/w,2/w)·T(−w/2,+h/2)) → 视图空间（缩放/平移）
 --   → modelMatrix 逆变换 → 画布空间（命中）
---   渲染 MVP = Ortho(投影) × viewMatrix × modelMatrix（列主序 16 元表）
---
--- 用法（main.lua）：
---   local app = require "live2dapp"
---   local g = app.new(modelJsonPath)
---   g:setup(w, h)               -- GL surface changed
---   g:loadModel()               -- GL 上下文内
---   g:onFrame(nowMs)            -- 每帧（nowMs = 毫秒时钟）
---   g:touchEvent(action, x, y[, x2, y2])
---   g:onDraw()                  -- 每帧
+--   渲染 MVP = Ortho(±1,±aspect) × viewMatrix × modelMatrix（列主序 16 元表）
 
-local native = require "live2d" -- liblive2d.so（无同名 Lua 文件冲突，命中 cpath）
+require "import"
+
+local native = require "live2d" -- liblive2d.so
 
 -- ==================== 矩阵（列主序 16 元表，索引 1..16） ====================
 
@@ -64,7 +77,7 @@ M.premulScale = function(t, sx, sy)
 end
 -- 就地缩放（L2DMatrix44.scale 语义：直接赋值 tr[0]/tr[5]）
 M.scaleAssign = function(t, sx, sy) t[1] = sx; t[6] = sy end
--- 就地平移（L2DModelMatrix::translate 语义：绝对赋值）
+-- 就地平移（L2DMatrix44.translate 语义：绝对赋值 tr[12]/tr[13]，dex @019800 实证）
 M.translateAssign = function(t, x, y) t[13] = x; t[14] = y end
 -- 仿射变换（XY）
 M.transformX = function(t, x) return x * t[1] + t[13] end
@@ -251,34 +264,64 @@ function TargetPoint:update(nowMs)
     self.y = self.y + self.vy
 end
 
--- ==================== Live2DApp（LAppView + Live2DManager 复刻） ====================
+-- ==================== 模型 json layout 读取（迷你解析） ====================
+-- 看板娘 5 个模型 json 的 layout 均为 "key":number 形式，正则扫描即可
+-- （实测：haru{y:1.2,width:2.9}、haru_01{center_x:0.5,y:1,width:2}、
+--   haru_02{center_x:-0.5,y:1,width:2}、wanko{y:1.8,width:2.9}、
+--   shizuku{y:1.2,width:2.4}）
 
-local Live2DApp = {}
-Live2DApp.__index = Live2DApp
+local LAYOUT_KEYS = { "width", "height", "x", "y", "center_x", "center_y", "top", "bottom", "left", "right" }
+local function jsonLayout(absPath)
+    local f = io.open(absPath, "r")
+    if not f then
+        print("Kanban json open failed: " .. absPath)
+        return {}
+    end
+    local s = f:read("*a"); f:close()
+    local layout = {}
+    for _, key in ipairs(LAYOUT_KEYS) do
+        local num = string.match(s, '"' .. key .. '"%s*:%s*([%-%d%.]+)')
+        if num then layout[key] = tonumber(num) end
+    end
+    return layout
+end
 
--- LAppDefine 对照
-Live2DApp.FLICK_DISTANCE = 100
-Live2DApp.PRIORITY_IDLE = 1
-Live2DApp.PRIORITY_NORMAL = 2
+-- ==================== 背景图（方案 B：liblive2d.so 原生原语） ====================
+--
+-- delua 代理性能红线（17:06 实证）：draw 循环内对 Java 对象做 __index 取方法会
+-- 每个新 JavaObject 用户态对象（50k 上限 → 崩溃），缓存方法引用调用又报
+-- "can not call the function"（LuaState 对方法 wrapper 仅支持隐式 l_i 接口形状）。
+-- 因此背景纹理/程序/quad 全部下沉 native（setupBg/drawBg，stb_image 解码），
+-- draw 循环内对 Java 的调用降为 0（glClear 也在 C 内完成）。
 
-Live2DApp.new = function(modelJsonPath)
-    local s = setmetatable({}, Live2DApp)
-    s.model = native.new()
-    s.loaded = false
-    s.modelPath = modelJsonPath
-    s.canvasW = 0; s.canvasH = 0
-    s.modelMatrix = M.identity()
+-- ==================== KanbanApp（模型容器 + 视图状态） ====================
+
+local KanbanApp = {}
+KanbanApp.__index = KanbanApp
+
+KanbanApp.FLICK_DISTANCE = 100
+KanbanApp.PRIORITY_IDLE = 1
+KanbanApp.PRIORITY_NORMAL = 2
+
+KanbanApp.new = function(baseDir)
+    local s = setmetatable({}, KanbanApp)
+    s.baseDir = baseDir
+    s.models = {}          -- { {ptr=, matrix=, cw=, ch=, name=} }
+    s.modelCount = -1      -- dex <init> @01f4c8：modelCount=-1
+    s.reloadFlg = false
     s.viewMatrix = ViewMatrix.new()
     s.deviceToScreen = M.identity()
     s.touchMgr = TouchManager.new()
     s.dragMgr = TargetPoint.new()
     s.flickAvailable = true
     s.screenW = 0; s.screenH = 0
+    s.bgReady = false
+    s.onFail = nil -- 加载失败回调（main.lua 注入 activity.finish）
     return s
 end
 
-function Live2DApp:setup(w, h)
-    -- LAppView.setupView 复刻（dex @28736 实证）
+function KanbanApp:setup(w, h)
+    -- LAppView.setupView 复刻（dex @0213cc 实证）
     self.screenW = w; self.screenH = h
     local aspect = h / w
     self.viewMatrix:setScreenRect(-1, 1, -aspect, aspect)
@@ -289,46 +332,148 @@ function Live2DApp:setup(w, h)
     self.deviceToScreen = M.identity()
     M.premulTranslate(self.deviceToScreen, -w / 2, h / 2)
     M.premulScale(self.deviceToScreen, 2 / w, 2 / w)
-    if self.loaded then
-        pcall(function() native.resize(self.model, w, h) end)
+    -- dex onSurfaceChanged @01f810：模型数 0 → changeModel（首帧触发）
+    if #self.models == 0 then
+        self:changeModel()
     end
 end
 
-function Live2DApp:loadModel()
-    -- 必须在 GL 上下文内调用（纹理/着色器惰性创建）
-    local ok, err = native.load(self.model, self.modelPath)
+function KanbanApp:changeModel()
+    -- dex @01f55c：reloadFlg=true; modelCount+=1
+    self.reloadFlg = true
+    self.modelCount = self.modelCount + 1
+end
+
+function KanbanApp:releaseModels()
+    -- dex releaseModel @01f88c：逐个 release + clear
+    for _, m in ipairs(self.models) do
+        pcall(native.free, m.ptr)
+    end
+    self.models = {}
+end
+
+-- layout 应用（dex @0203fe 实证顺序：width→height→x→y→center_x→center_y→…）
+-- setWidth(w)=scale(w/cw, -w/cw)；setX/setY=绝对赋值 tr[12]/tr[13]；
+-- centerX(x)=tr[13] = x - w/2（w=布局宽度=canvas·scaleX）
+function KanbanApp:applyLayout(absPath, cw, ch)
+    local t = M.identity()
+    local layout = jsonLayout(absPath)
+    if layout.width then
+        t[1] = layout.width / cw
+        t[6] = -layout.width / cw
+    end
+    if layout.height then
+        t[1] = layout.height / ch
+        t[6] = layout.height / ch
+    end
+    if layout.x then t[13] = layout.x end
+    if layout.y then t[14] = layout.y end
+    if layout.center_x then t[13] = layout.center_x - layout.width * 0.5 end
+    if layout.center_y then t[14] = layout.center_y - layout.height * 0.5 end
+    -- top/bottom/left/right：5 个模型均无此键，略（有则需按 L2DModelMatrix 公式）
+    return t
+end
+
+function KanbanApp:loadOne(absPath)
+    local m = { ptr = native.new(), name = absPath, cw = 0, ch = 0, matrix = M.identity() }
+    local ok, err = native.load(m.ptr, absPath)
     if not ok then
-        print("live2dapp loadModel failed: " .. tostring(err))
-        return false
+        print("Kanban load FAILED: " .. tostring(err))
+        pcall(native.free, m.ptr) -- 防泄漏：load 失败的对象必须释放
+        if self.onFail then pcall(self.onFail) end
+        return
     end
-    self.loaded = true
-    local cw, ch = native.getCanvasSize(self.model)
-    self.canvasW = cw; self.canvasH = ch
-    -- modelMatrix 复刻（L2DBaseModel.cpp:35-39 实证：setWidth(2)+setCenterPosition(0,0)）
-    -- sx = 2/cw, sy = −sx；tr[12] = −cw·sx/2 = −1；tr[13] = −ch·sy/2 = ch/cw
-    local sx = 2.0 / cw
-    self.modelMatrix = { sx, 0, 0, 0, 0, -sx, 0, 0, 0, 0, 1, 0, -1, ch / cw, 0, 1 }
-    if self.screenW > 0 then
-        pcall(function() native.resize(self.model, self.screenW, self.screenH) end)
+    local ok2, cw, ch = pcall(native.getCanvasSize, m.ptr)
+    if ok2 and cw and ch then m.cw, m.ch = cw, ch end
+    m.matrix = self:applyLayout(absPath, m.cw, m.ch)
+    table.insert(self.models, m)
+    -- idle 循环（对齐 live2dtest 已验证行为）
+    pcall(native.startRandomMotion, m.ptr, "idle", KanbanApp.PRIORITY_IDLE)
+    print("Kanban loaded " .. absPath .. " canvas " .. tostring(m.cw) .. "x" .. tostring(m.ch)
+        .. " tr " .. table.concat(m.matrix, ","))
+end
+
+-- reload（GL 线程，dex update @01fac4 实证分支）
+function KanbanApp:reload()
+    self.reloadFlg = false
+    local paths
+    local c = self.modelCount % 4
+    if c == 0 then
+        paths = { "live2d/haru/haru.model.json" }
+    elseif c == 1 then
+        paths = { "live2d/shizuku/shizuku.model.json" }
+    elseif c == 2 then
+        paths = { "live2d/wanko/wanko.model.json" }
+    else
+        paths = { "live2d/haru/haru_01.model.json", "live2d/haru/haru_02.model.json" }
     end
-    -- idle 循环
-    pcall(function() native.startRandomMotion(self.model, "idle", Live2DApp.PRIORITY_IDLE) end)
-    print("live2dapp loaded: canvas " .. cw .. "x" .. ch .. " matrix " .. table.concat(self.modelMatrix, ","))
-    return true
+    self:releaseModels()
+    for _, rel in ipairs(paths) do
+        -- 资源路径约定：<luaDir>/res/<rel>（与宿主 LuaDir 约定一致）
+        self:loadOne(self.baseDir .. "/res/" .. rel)
+    end
 end
 
 -- 视图坐标 ← 屏幕像素（LAppView.transformDeviceToViewX/Y）
-function Live2DApp:toViewX(deviceX)
+function KanbanApp:toViewX(deviceX)
     return M.invertTransformX(self.viewMatrix.tr, M.transformX(self.deviceToScreen, deviceX))
 end
-function Live2DApp:toViewY(deviceY)
+function KanbanApp:toViewY(deviceY)
     return M.invertTransformY(self.viewMatrix.tr, M.transformY(self.deviceToScreen, deviceY))
+end
+
+-- 命中（C++ hitTestArea 无内部变换 → 传 modelMatrix 逆变换后的画布坐标）
+function KanbanApp:hitTestArea(m, area, viewX, viewY)
+    local cx = M.invertTransformX(m.matrix, viewX)
+    local cy = M.invertTransformY(m.matrix, viewY)
+    local ok, hit = pcall(native.hitTest, m.ptr, area, cx, cy)
+    return ok and hit
+end
+
+-- 事件（dex tapEvent @01f9b4 / flickEvent @01f5b4 实证：遍历全部模型，
+-- head/body 独立判定、不提前返回；tap 恒返回 true）
+function KanbanApp:tapEvent(viewX, viewY)
+    print("tapEvent at " .. string.format("%.3f,%.3f", viewX, viewY))
+    for _, m in ipairs(self.models) do
+        if self:hitTestArea(m, "head", viewX, viewY) then
+            print("tapEvent HIT head -> setRandomExpression")
+            pcall(native.setRandomExpression, m.ptr)
+        elseif self:hitTestArea(m, "body", viewX, viewY) then
+            print("tapEvent HIT body -> tap_body")
+            pcall(native.startRandomMotion, m.ptr, "tap_body", KanbanApp.PRIORITY_NORMAL)
+        end
+    end
+    return true
+end
+
+function KanbanApp:flickEvent(viewX, viewY)
+    print("flickEvent at " .. string.format("%.3f,%.3f", viewX, viewY))
+    for _, m in ipairs(self.models) do
+        if self:hitTestArea(m, "head", viewX, viewY) then
+            print("flickEvent HIT head -> flick_head")
+            pcall(native.startRandomMotion, m.ptr, "flick_head", KanbanApp.PRIORITY_NORMAL)
+        end
+    end
+end
+
+function KanbanApp:maxScaleEvent()
+    print("maxScaleEvent -> pinch_out")
+    for _, m in ipairs(self.models) do
+        pcall(native.startRandomMotion, m.ptr, "pinch_out", KanbanApp.PRIORITY_NORMAL)
+    end
+end
+
+function KanbanApp:minScaleEvent()
+    print("minScaleEvent -> pinch_in")
+    for _, m in ipairs(self.models) do
+        pcall(native.startRandomMotion, m.ptr, "pinch_in", KanbanApp.PRIORITY_NORMAL)
+    end
 end
 
 -- action: 0=DOWN 1=UP 2=MOVE；x2,y2 非 nil 表示双指
 -- 注意（dex 实证）：所有 transformDeviceToView 转换直接吃 touchMgr 的屏幕像素
 -- （touchMgr 内部 Y 负存），不得先转视图空间再转一次。
-function Live2DApp:touchEvent(action, x, y, x2, y2)
+function KanbanApp:touchEvent(action, x, y, x2, y2)
     if action == 0 then
         self.flickAvailable = true
         if x2 then
@@ -355,7 +500,7 @@ function Live2DApp:touchEvent(action, x, y, x2, y2)
             if self.touchMgr.touchSingle and self.flickAvailable then
                 local dx = self.touchMgr.lastX - self.touchMgr.startX
                 local dy = self.touchMgr.lastY - self.touchMgr.startY
-                if math.sqrt(dx * dx + dy * dy) > Live2DApp.FLICK_DISTANCE then
+                if math.sqrt(dx * dx + dy * dy) > KanbanApp.FLICK_DISTANCE then
                     pcall(function()
                         self:flickEvent(self:toViewX(self.touchMgr.startX), self:toViewY(self.touchMgr.startY))
                     end)
@@ -364,65 +509,23 @@ function Live2DApp:touchEvent(action, x, y, x2, y2)
             end
         end
     elseif action == 1 then
+        -- Java touchesEnded：dragMgr.set(0,0)
         self.dragMgr:set(0, 0)
     end
 end
 
--- 事件（Java Live2DManager.tapEvent / flickEvent / maxScaleEvent / minScaleEvent 复刻）
--- 命中坐标：画布空间 = modelMatrix.invertTransform(视图坐标)（C++ hitTestArea 无内部变换）
-function Live2DApp:hitTestArea(area, viewX, viewY)
-    local cx = M.invertTransformX(self.modelMatrix, viewX)
-    local cy = M.invertTransformY(self.modelMatrix, viewY)
-    local ok, hit = pcall(native.hitTest, self.model, area, cx, cy)
-    return ok and hit
-end
-
-function Live2DApp:tapEvent(viewX, viewY)
-    print("tapEvent at " .. string.format("%.3f,%.3f", viewX, viewY))
-    if self:hitTestArea("head", viewX, viewY) then
-        print("tapEvent HIT head -> setRandomExpression")
-        pcall(native.setRandomExpression, self.model)
-        return true
-    end
-    if self:hitTestArea("body", viewX, viewY) then
-        print("tapEvent HIT body -> tap_body")
-        pcall(native.startRandomMotion, self.model, "tap_body", Live2DApp.PRIORITY_NORMAL)
-        return true
-    end
-    print("tapEvent miss")
-    return false
-end
-
-function Live2DApp:flickEvent(viewX, viewY)
-    print("flickEvent at " .. string.format("%.3f,%.3f", viewX, viewY))
-    if self:hitTestArea("head", viewX, viewY) then
-        print("flickEvent HIT head -> flick")
-        pcall(native.startRandomMotion, self.model, "flick", 0)
-        return true
-    end
-    return false
-end
-
-function Live2DApp:maxScaleEvent()
-    print("maxScaleEvent -> pinch_out")
-    pcall(native.startRandomMotion, self.model, "pinch_out", Live2DApp.PRIORITY_NORMAL)
-end
-
-function Live2DApp:minScaleEvent()
-    print("minScaleEvent -> pinch_in")
-    pcall(native.startRandomMotion, self.model, "pinch_in", Live2DApp.PRIORITY_NORMAL)
-end
-
-function Live2DApp:onFrame(nowMs)
-    if not self.loaded then return end
-    -- LAppView.update 复刻（dex @021918 实证）：dragMgr 平滑 → setDrag
+-- 每帧（LAppView.update @021918 + LAppLive2DManager.update @01fac4 复刻）
+function KanbanApp:onFrame(nowMs)
     self.dragMgr:update(nowMs)
-    pcall(native.setDrag, self.model, self.dragMgr.x, self.dragMgr.y)
-    pcall(native.update, self.model)
+    if self.reloadFlg then self:reload() end
+    for _, m in ipairs(self.models) do
+        pcall(native.setDrag, m.ptr, self.dragMgr.x, self.dragMgr.y)
+        pcall(native.update, m.ptr)
+    end
 end
 
 -- ortho 投影（Java onSurfaceChanged glOrthof(left,right,bottom,top) 实证）
-function Live2DApp:ortho()
+function KanbanApp:ortho()
     local l = self.viewMatrix.screenLeft; local r = self.viewMatrix.screenRight
     local b = self.viewMatrix.screenBottom; local t = self.viewMatrix.screenTop
     return {
@@ -433,20 +536,39 @@ function Live2DApp:ortho()
     }
 end
 
--- MVP = Ortho × viewMatrix × modelMatrix（Java GL 前乘链，lua_draw 全量接管）
-function Live2DApp:onDraw()
-    if not self.loaded then return end
-    local mvp = M.mul(M.mul(self:ortho(), self.viewMatrix.tr), self.modelMatrix)
-    pcall(native.draw, self.model, mvp)
+-- MVP = Ortho × viewMatrix × modelMatrix（Java GL 前乘链）
+function KanbanApp:modelMvp(m)
+    return M.mul(M.mul(self:ortho(), self.viewMatrix.tr), m.matrix)
 end
 
--- 供 main.lua 或调试使用
-function Live2DApp:modelMvp()
-    return M.mul(M.mul(self:ortho(), self.viewMatrix.tr), self.modelMatrix)
+-- ==================== 背景图（GLES2） ====================
+
+function KanbanApp:initBackground()
+    -- LAppRenderer.setupBackground @020d50 复刻：image/back_class_normal.png
+    -- （原生：stb_image 解码 + 纹理/程序/quad 全在 liblive2d.so 内，GL 线程调用）
+    local path = self.baseDir .. "/res/image/back_class_normal.png"
+    local ok, err = native.setupBg(path)
+    print("Kanban bg setup=" .. tostring(ok) .. (ok and "" or (" err=" .. tostring(err))))
+    self.bgReady = ok
+end
+
+function KanbanApp:drawBackground()
+    if not self.bgReady then return end
+    -- 背景在 viewMatrix 变换内绘制（Java：PushMatrix+MultMatrixf(viewMatrix) 后画 bg）；
+    -- C 侧 drawBg 内含 glClear（dex onDrawFrame @020dcc: glClear(0x4000) 最先执行）
+    native.drawBg(M.mul(self:ortho(), self.viewMatrix.tr))
+end
+
+function KanbanApp:onDraw()
+    if #self.models == 0 then return end
+    self:drawBackground()
+    for _, m in ipairs(self.models) do
+        pcall(native.draw, m.ptr, self:modelMvp(m))
+    end
 end
 
 return {
-    new = Live2DApp.new,
+    new = KanbanApp.new,
     matrix = M,
-    _app = Live2DApp,
+    _app = KanbanApp,
 }

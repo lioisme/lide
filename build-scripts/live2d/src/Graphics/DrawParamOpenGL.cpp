@@ -6,8 +6,14 @@
 namespace live2d {
 
 // GLSL shaders – exact match of Python v2 draw_param_opengl.py
-// Version string (first line of each shader)
-#define SHADER_VER "#version 120\n"
+// Version string (first line of each shader).
+// MUST be GLSL ES 1.00 (#version 100): the context is ES 2.0 (EGL
+// CONTEXT_CLIENT_VERSION=2). Desktop "#version 120" compiles on the emulator
+// SwiftShader (lenient) but is rejected by real GPUs (Adreno: "Invalid
+// #version") — verified on CPH2415 arm64 (kanban board: background only,
+// model invisible). The bg shader in lua_live2d.cpp omits the directive
+// entirely, which ES drivers default to 100 — same effective version.
+#define SHADER_VER "#version 100\n"
 
 // -- Normal vertex (aK in Python) -- v_clipPos = gl_Position
 static const char* sVertNormal = SHADER_VER

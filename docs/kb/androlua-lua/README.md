@@ -51,3 +51,4 @@ docs/kb/androlua-lua/
 | 2026-08-02 | Live2D 看板娘原生引擎验证收尾：GLES2 回调 gl 参数损坏 / 触摸坐标负存与双重变换 / flickAvailable 重置（PITFALLS 24-26）；原生 .so 直调 + 矩阵/手势复刻方法论（TECHNIQUES 8，dex 实证公式） | PITFALLS.md, TECHNIQUES.md |
 | 2026-08-02 | 架构审计：引擎 .so 携带 Java JNI 桥残留（jp_live2d_sample_Live2DNative）已安全恢复（删 jni 桥 + Android.mk + mOwnDrag 死字段，重建 .so 并回归）；红线：引擎模块只允许 luaopen_* 入口（PITFALLS 27） | PITFALLS.md |
 | 2026-08-02 | 运行环境全量对齐终审：L1 脚本（check.lua CRLF 修复、逐字节一致）/ L2 原生库（lfs/lsqlite3 误移除教训：源码树 Android.mk2 不等于官方 APK 打包，以设备 APK 为准；PITFALLS 28）/ L3 Java（LuaAccessibilityService 补 stopScreenshot，PITFALLS 29）/ L4 宿主；x64 双端实测 test 探针 81 项 diff 全为白名单、demo/DemoProject/testjson/kleinbottle 全一致 | PITFALLS.md, README.md |
+| 2026-08-02 | 真机回归（CPH2415 arm64/Adreno）：GLSL #version 120 被拒 → 改 100（PITFALLS 新条目）；看板娘工程去 pro 化（删 jp.live2d.* 分支 + live2D.dex）；真机环境事实 | PITFALLS.md |

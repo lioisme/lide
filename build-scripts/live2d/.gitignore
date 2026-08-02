@@ -1,0 +1,3 @@
+# NDK build output for liblive2d.so (regenerated via ndk-build; binaries never committed)
+libs/
+obj/

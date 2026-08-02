@@ -87,7 +87,12 @@ android {
 
     sourceSets {
         getByName("main") {
-            jniLibs.srcDirs("src/main/jniLibs")
+            jniLibs.srcDirs(
+                "src/main/jniLibs",
+                // live2d 原生库独立目录：产物不与原版库存放一起
+                // （build-scripts/live2d/libs/{abi}/liblive2d.so，三 ABI 交叉编译）
+                "../build-scripts/live2d/libs"
+            )
         }
     }
 

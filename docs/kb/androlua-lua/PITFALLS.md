@@ -208,3 +208,24 @@
 - 实证：诊断日志 `DRAWDER_OOB order=-19 range=685 min=266 max=951 i=54 interpOrder=247`（插值 order 247 < 全局平均下限 266）；修复后 12 轮 × 20 滑 + 12 次换装零命中、零 tombstone。
 - 规避：桶极值必须取自**全局**（对所有绘制（含 pivot 极值的插值界：插值是凸组合，永不出 pivot 范围）；保留防御性 clamp。相关代码见 `build-scripts/live2d/src/Model/ModelContext.cpp /* 桶 */`。
 - 验证：拖拽+换装组合复现脚本（每轮 15 步 swipe + 换装键 tap），`adb logcat -d -s live2d-diag:*` 零命中。
+
+## 真机 GLSL #version 120 被 Adreno 拒绝 → 角色不渲染（⚠仅真机，模拟器不可见）
+
+- 现象：真机（CPH2415, arm64, Adreno）跑看板娘 live2d 引擎，只有背景图、无角色；背景可缩放露出黑边；logcat 出现 8 次 AdrenoGLES-0: ERROR: Invalid #version（恰好 4 个 shader × 2 次编译）。模拟器（SwiftShader 软渲染）正常显示角色。
+- 根因：liblive2d.so 的模型/蒙版 shader 以桌面 GLSL #version 120 开头（uild-scripts/live2d/src/Graphics/DrawParamOpenGL.cpp），而 EGL 上下文是 ES 2.0（CONTEXT_CLIENT_VERSION=2）。ES 驱动只接受 #version 100；SwiftShader 宽容接受 120，真机 Adreno 严格报错 → 模型 shader 编译失败 → 角色不绘制。背景 shader（lua_live2d.cpp）无 #version 指令，ES 默认按 100 编译 → 背景正常，造成"只有背景"假象。
+- 规避/修复：#version 120 → #version 100（已修复，三 ABI 重编）。教训：**GLSL 版本指令必须与 EGL 上下文匹配**；模拟器（SwiftShader/ANGLE）对非法版本宽容，真机 GPU 驱动严格——GL 相关 bug 必须在真机回归。
+- 判定：真机 db logcat -d | grep "Invalid #version" 零命中 + 截图像素含角色色（75697a 紫/436271 蓝/肤色）即修复。
+- 验证命令：真机 arm64 装 pp-arm64-debug.apk → m start -a VIEW -d file:///storage/emulated/0/AndroLua/project/live2d/main.lua -n com.lioisme.delua/com.androlua.LuaActivity → 12s → 截图 + 像素统计（角色色簇 > 1000）。
+
+## 真机环境事实（⚠仅真机）
+
+- 真机 CPH2415（OPPO，Android 15/API 35，arm64-v8a）通过 USB 连接时 db devices 见 5fb6fdc9；模拟器 emulator-5554（x86_64）仍在线，操作必须带 -s 指定设备。
+- 真机 delua 的 EngineActivity **未导出**（Permission Denial ... not exported from uid），只能经导出的 com.androlua.LuaActivity（file:// VIEW + -n）启动；模拟器上 EngineActivity 可直接 m start。
+- 真机安装的 APK 需 arm64 版：.\gradlew.bat :app:assembleArm64Debug（模拟器用 X64）。
+- 真机工程目录 /storage/emulated/0/AndroLua/project/live2d/（由 alp 解包或 db push 同步，务必与 uild-scripts/examples-src/live2d/ 一致后再测）。
+
+## 看板娘工程已去 pro 化（⚠仅 delua）
+
+- docs/reference/project/看板娘/ 与示例 uild-scripts/examples-src/live2d/：已删除 pro 回退代码（import "jp.live2d.*"、SoundManager/FileManager/LAppLive2DManager 分支）与资产（libs/live2D.dex），仅支持 delua 原生库 liblive2d.so（equire "live2dapp" 失败即明确报错退出）。
+- 真机回归全 PASS：haru→shizuku→wanko→haru_01+02 四分支轮换、tap/flick 交互、FPS 60 glErr=0、无 Runtime error。
+- live2dapp.lua 内 dex @xxx 实证 注释为行为来源标注（官方 v2 引擎语义），非 pro 兼容代码，保留。
