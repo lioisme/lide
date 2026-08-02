@@ -103,3 +103,18 @@ adb shell "dumpsys activity activities" | Select-String topResumedActivity
 5. **不带 -n 的裸 VIEW 不可用于自动化**（见 PITFALLS §3）。
 6. **依赖 pro 独有能力前先查 FEATURES §8**（nirenr 自动化、LuaEditor、扩展控件等），避免写完才发现 delua 不可用。
 7. 交付 `.luac` 字节码必须同源引擎编译（PITFALLS §8）。
+
+## 8. 原生 .so 直调 + 手势/矩阵复刻方法论（Live2D 看板娘案例）
+
+Live2D 走 delua 原生引擎（`require "live2d"` → liblive2d.so）时，Lua 侧必须复刻 pro Java 层的**全部矩阵与触摸管线**，因为引擎只暴露原语（load/update/draw/hitTest/startMotion），手势与命中判定在 Java 层（`LAppView`/`TouchManager`/`L2DViewMatrix`/`L2DTargetPoint`/`L2DModelMatrix`）。方法：用 pro APK 的 `jp.live2d.*` dex（baksmali）逐方法实证公式，再在 Lua 复刻。关键实证结论：
+
+- **模型矩阵**：C++ `L2DBaseModel` 构造 `L2DModelMatrix(canvasW, canvasH)` + `setWidth(2)` + `setCenterPosition(0,0)`；`L2DModelMatrix.cpp` 的 setWidth/translate/scale 均为**绝对赋值**（非累乘）→ Lua 等价公式 `scale(2/cw, -2/cw)` + `translate(-1, ch/cw)`。haru 实测矩阵 `[2/2400, -2/2400, -1, 1.3333]` 与公式一致。
+- **deviceToScreen** = `S(2/w, 2/w) · T(-w/2, +h/2)`（前乘链）；`transformY(y) = (y + h/2) · 2/w`。
+- **viewMatrix 初始**：max=2.0 / min=0.8 / maxScreenRect=(-2,2,-2,2) / screenRect=(-1,1,-aspect,aspect)；`adjustScale/adjustTranslate` 的 isMax/isMin 用**严格相等**比较（精确 clamp 后为 2.0/0.8）；单指拖拽平移经 `moveX·deviceToScreen.scaleX` 缩放。
+- **MVP** = `Ortho(±1, ±aspect) · viewMatrix · modelMatrix`（列主序 16 表），传给 `draw(m, mvp)`。
+- **L2DTargetPoint.update**（平滑拖拽）：常量 MAX_A=0.177778、FRAME_TO_MAX_SPEED=4.5、FRAME_RATE=30；theta=dt·30/1000；加速度限幅 a=theta·MAX_A/FRAME_TO_MAX_SPEED；速度限幅 maxV=(√(a²+8a·d)−a)/2；注意 `0.15`/`5.33333` 是死常量不参与运算。
+- **命中判定**：Lua 传**模型空间坐标**（modelMatrix.invertTransform 后）给 `hitTest(m, area, x, y)`（C++ 直接 bbox 比较，注释 "input already transformed"）；Java 的 `hitTestSimple` 才做逆变换，两路径空间语义不同，不要混用。
+- **事件→动作映射**：tap 命中 head→`setRandomExpression`、body→`startRandomMotion("tap_body")`；flick→`startRandomMotion("flick")`；maxScaleEvent→`"pinch_out"`、minScaleEvent→`"pinch_in"`。
+- **双指捏合**：scale = `(dist/prev)^0.75`（**指数 0.75** 不是线性）；`touchBegan2` 首帧中心用旧 lastX1/lastX2（原版 bug 复刻）；`calcShift` 同号→0 否则 sign(v1)·min(|a|,|b|)；moveY 负号。
+- 设备验证：`input tap/swipe` 驱动 + logcat 断言（`tapEvent HIT head/body`、`flickEvent`、`maxScaleEvent/minScaleEvent`）+ 截图像素统计（System.Drawing 采样非黑点）三重证据链。
+- 完整实现：`C:\Users\liois\AppData\Local\Temp\opencode\live2dtest\live2dapp.lua`（17KB，公式逐条带 dex 行号注释）；引擎 API 表见 `build-scripts/live2d/src/lua/lua_live2d.cpp`。

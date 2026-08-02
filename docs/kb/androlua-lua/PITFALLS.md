@@ -139,3 +139,44 @@
 - 现象：`math.maxinteger==2^63-1` 在模拟器 pro 为 `false`（double 模式），而原版 v12 在真机（CPH2415 arm64）为 `true`（int64 模式）。
 - 规避：探针该项降为 level 3 观测（不计分），双端以同值/同口径判定；若需 int64 断言，以真机验证为准。
 - 定性：同一 APK 的 Lua 整数模式与 ABI/构建产物相关，模拟器 x86 变体与真机 arm64 可不同；属环境差异非缺陷。
+
+## 24. GLSurfaceView 渲染器回调的 gl 参数在 ES2 下损坏（Live2D 实测）
+
+- 现象：`GLSurfaceView.Renderer` 代理回调中 `gl` 参数类型异常——`onSurfaceChanged` 里 `gl` 是 number、`onDrawFrame` 里 `gl` 是 nil；`gl.glViewport(...)` 直接报错。
+- 根因：AndroLua luajava 代理对 GLES2 接口的返回绑定不可靠；pro 的 `GLSurfaceView` 包了 `LuaGLSurfaceView`（回调内取 `GLES20` 静态引用），工程自建 Renderer 没这层封装。
+- 规避：回调内**全部走 `android.opengl.GLES20` 静态调用**（`GLES20.glViewport/glClear/glGetError`），不碰 `gl` 参数；尺寸从 `View.getWidth()/getHeight()` 取（回调的 wd/ht 参数不可信，异常时回退 1080x1920）。
+- 验证：`FPS 120 glErr=0` 持续输出即链路健康。
+
+## 25. 触摸坐标一律按 TouchManager 语义：Y 负存、toView 直吃屏幕像素（Live2D 实测）
+
+- 现象：tap 命中 miss——`tapEvent at 0.000,3.244` 超出视图范围（±aspect）判定失败；flick 起点出现双重变换。
+- 根因：pro `LAppView$1.onSingleTapConfirmed` 用 `TouchManager.getX()/getY()`，touchMgr 内部 **Y 负存**（`touchBegan` 存 `-y`）；且 `transformDeviceToViewX/Y` 直接吃 touchMgr 的**屏幕像素**（含负存 Y），**先转 deviceToScreen 再 toView 是双重变换**。
+- 规避：`toViewY` 传参用 `-event.getY()`；`dragMgr:set` / flick 起点的输入一律用 touchMgr.lastX/lastY/startX/startY（已负存），不要在中间多转一次视图空间。
+- 验证：屏幕中心 tap 命中 body、上部 tap 命中 head（`tapEvent HIT head -> setRandomExpression`）。
+
+## 26. `flickAvailable` 需在每次 touchBegan 重置（Live2D 实测）
+
+- 现象：首次 flick 触发后，后续大位移 swipe 不再触发 flickEvent。
+- 根因：`LAppView.onTouchEvent` ACTION_DOWN 时置 `mFlickAvailable=true`；在 touchEvent 入口（DOWN 分支）重置即可。
+- 验证：连续两次 swipe 均输出 `flickEvent`。
+
+## 27. 架构红线：引擎 .so 内禁止携带 Java JNI 桥（Lua 直调原则）
+
+- 现象：delua 原生引擎模块 `liblive2d.so` 曾被编译进 `jp_live2d_sample_Live2DNative.cpp`（12 个 `Java_jp_live2d_sample_Live2DNative_*` JNI 导出符号），而工程内**不存在对应 Java 类**（`jp.live2d.sample.Live2DNative` 零引用）——纯死代码，且违反「Lua 直接调用原生库，Java 不参与运行时」的架构要求。
+- 根因：实现初期同时保留了两条入口（Lua→C 与 Java→C 桥）；Java 桥的配套类从未落地，残留进 .so。
+- 恢复动作（2026-08-02 已执行）：删除 `build-scripts/live2d/src/jni/`；`Android.mk` 移除该编译项；清理桥专用的 `LAppModel::mOwnDrag` 字段（Lua 路径恒 false，`update()` 内部 L2DTargetPoint 平滑拖拽不受影响）；重建 x86_64 `.so`。
+- 验证：`llvm-nm -D liblive2d.so` 确认 `Java_*` 零命中、`luaopen_live2d` 保留；APK 内 `.so` 同检；设备回归（`LIVE2D_PATH native`、load ok、FPS 120、tap body/head、flick 全部通过）。
+- 红线：**delua 引擎模块 .so 只允许 Lua→C 入口**（`luaopen_*`）；任何 Java 侧 JNI 绑定（`Java_*` 符号）必须独立成模块或直接禁止，除非有配套 Java 类并走宿主约定。
+
+## 28. 源码树 ≠ 官方 APK 打包事实（lfs/lsqlite3 误移除教训）✅双端一致
+
+- 现象：delua 曾按源码树 `Android.mk2`（lluv/lsqlite3 标记禁用）误判 lfs/lsqlite3 不在 pro 打包内，将其从 jniLibs/prebuilt/build-scripts 移除；实测设备上 pro 官方 APK（4.4.2）**实际包含** `liblfs.so`、`liblsqlite3.so`（共 17 个 .so），delua 缺库后探针 `lfs`/`lsqlite3` 会变 `[!!]`。
+- 根因：源码树构建配置（`Android.mk2` 的 DISABLED 标记）与官方发布 APK 的实际打包不完全一致；判定库清单以**设备上官方 APK** 为准。
+- 规避：核对原生库清单时先 `adb shell pm path com.androlua` 取 APK 路径 → 解包 `lib/*/` 列全，再对照 delua APK 同名列表（本次 delua 19 = pro 17 + liblive2d + libandroidx.graphics.path）。
+- 验证：探针 `原生库` 组 lfs/lsqlite3 双端 `[OK]`；`git status` 确认已恢复文件（jniLibs/prebuilt/build-scripts/rebuild_engine.ps1）。
+
+## 29. `LuaAccessibilityService.onDestroy` 必须调用 `stopScreenshot()`（delua 修复记录）
+
+- 现象（修复前）：delua 的 `LuaAccessibilityService.onDestroy()` 缺少 `stopScreenshot()`，与 pro 源码不一致（pro 在 `sAccessibilityServiceCallbacks.onDestroy` 之后、`super.onDestroy()` 之前调用）。
+- 修复（2026-08-02 已落地）：`androlua/src/main/java/com/androlua/LuaAccessibilityService.java` onDestroy 补齐 `stopScreenshot()`。
+- 验证：该文件与 pro 源逐行 diff 仅剩注释/import 中立差异。

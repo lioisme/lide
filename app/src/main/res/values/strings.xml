@@ -163,6 +163,8 @@
     <string name="example_desc_kleinbottle">OpenGL Klein bottle 3D rendering</string>
     <string name="example_name_listview">listview</string>
     <string name="example_desc_listview">ListView with LuaAdapter</string>
+    <string name="example_name_live2d">live2d</string>
+    <string name="example_desc_live2d">Live2D mascot on native engine (Lua to C direct)</string>
     <string name="example_name_testjson">TestJson</string>
     <string name="example_desc_testjson">dkjson encode/decode tests</string>
 

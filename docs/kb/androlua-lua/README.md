@@ -1,4 +1,4 @@
-# AndroLua Lua 工程开发知识库
+﻿# AndroLua Lua 工程开发知识库
 
 > 本目录是 **Lua 工程侧**（非 delua 工程侧）开发知识的持久化仓库：
 > 在开发 / 移植 / 验证任何 androlua Lua 工程时发现的一切**能力、已知问题、方法论、环境事实**，
@@ -48,3 +48,6 @@ docs/kb/androlua-lua/
 | 2026-08-01 | 知识库初始化（种子内容来自双端实测 + 审计报告） | 全部 |
 | 2026-08-01 | 新增 AndroLua 语法手册（luajava.c / com.luajava / com.androlua 源码审计 + Lua 5.3 手册核对，未经实测） | SYNTAX_MANUAL.md |
 | 2026-08-01 | 术语规范化：坑→已知问题与规避、特性→能力清单、方法→方法论与最佳实践；修复 PITFALLS.md 编码损坏；SYNTAX_MANUAL.md 增加未经实测声明 | 全部 |
+| 2026-08-02 | Live2D 看板娘原生引擎验证收尾：GLES2 回调 gl 参数损坏 / 触摸坐标负存与双重变换 / flickAvailable 重置（PITFALLS 24-26）；原生 .so 直调 + 矩阵/手势复刻方法论（TECHNIQUES 8，dex 实证公式） | PITFALLS.md, TECHNIQUES.md |
+| 2026-08-02 | 架构审计：引擎 .so 携带 Java JNI 桥残留（jp_live2d_sample_Live2DNative）已安全恢复（删 jni 桥 + Android.mk + mOwnDrag 死字段，重建 .so 并回归）；红线：引擎模块只允许 luaopen_* 入口（PITFALLS 27） | PITFALLS.md |
+| 2026-08-02 | 运行环境全量对齐终审：L1 脚本（check.lua CRLF 修复、逐字节一致）/ L2 原生库（lfs/lsqlite3 误移除教训：源码树 Android.mk2 不等于官方 APK 打包，以设备 APK 为准；PITFALLS 28）/ L3 Java（LuaAccessibilityService 补 stopScreenshot，PITFALLS 29）/ L4 宿主；x64 双端实测 test 探针 81 项 diff 全为白名单、demo/DemoProject/testjson/kleinbottle 全一致 | PITFALLS.md, README.md |

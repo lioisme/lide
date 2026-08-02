@@ -345,6 +345,7 @@ public class LuaAccessibilityService extends AccessibilityService {
     public void onDestroy() {
         if(sAccessibilityServiceCallbacks!=null)
             sAccessibilityServiceCallbacks.onDestroy(this);
+        stopScreenshot();
         super.onDestroy();
     }
 

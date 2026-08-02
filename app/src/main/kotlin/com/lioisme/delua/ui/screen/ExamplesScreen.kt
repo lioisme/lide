@@ -35,6 +35,7 @@ private val builtinExamples = listOf(
     BuiltinExample("hello.alp", "hello", R.string.example_name_hello, R.string.example_desc_hello),
     BuiltinExample("kleinbottle.alp", "kleinbottle", R.string.example_name_kleinbottle, R.string.example_desc_kleinbottle),
     BuiltinExample("listview.alp", "listview", R.string.example_name_listview, R.string.example_desc_listview),
+    BuiltinExample("live2d.alp", "live2d", R.string.example_name_live2d, R.string.example_desc_live2d),
     BuiltinExample("TestJson.alp", "TestJson", R.string.example_name_testjson, R.string.example_desc_testjson),
 )
 
