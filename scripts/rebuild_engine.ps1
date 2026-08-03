@@ -33,15 +33,14 @@ if (-not $LIDE_ROOT) {
     Write-Error "Cannot locate lide project root. Run this script from the project root or scripts/ directory."
     exit 1
 }
-$PREBUILT_DIR = Join-Path $LIDE_ROOT "third_party\prebuilt"
 $JNILIBS_DIR = Join-Path $LIDE_ROOT "app\src\main\jniLibs"
-$JNI_SRC_DIR = Join-Path $LIDE_ROOT "docs\reference\androlua\AndroLua_pro-master\app\src\main\jni"
+$JNI_SRC_DIR = Join-Path $LIDE_ROOT "build-scripts\jni"
 $JNI_CFG_DIR = Join-Path $LIDE_ROOT "build-scripts\jni"
 $BUILD_DIR = Join-Path $env:TEMP "lide-ndk-build"
 $BUILD_LOG = Join-Path $BUILD_DIR "build.log"
 
-# Disabled modules kept in reference tree (Android.mk2 only / no build file)
-# Note: lfs & lsqlite3 are enabled (build-scripts/jni has Android.mk).
+# Disabled modules are NOT vendored into build-scripts/jni (kept out at
+# vendor time; see REPO_HARDENING_WORK_ORDER.md T1):
 # lluv is superseded by luv (already shipped); tcc lacks arm64/x86_64 targets.
 $DISABLED_MODULES = @("lluv", "tcc")
 
@@ -78,8 +77,8 @@ Write-Host "[2/5] Preparing build directory..."
 if (Test-Path $BUILD_DIR) { Remove-Item $BUILD_DIR -Recurse -Force }
 New-Item -ItemType Directory $BUILD_DIR -Force | Out-Null
 
-# Copy reference JNI source tree (docs/AndroLua_pro-master), then overlay
-# lide-managed Android.mk build configs from build-scripts/jni/
+# Copy vendored JNI source tree (build-scripts/jni contains both sources and
+# lide-managed Android.mk build configs), then apply source patches
 $JNI_DIR = Join-Path $BUILD_DIR "jni"
 Copy-Item $JNI_SRC_DIR $JNI_DIR -Recurse -Force
 
@@ -95,7 +94,7 @@ foreach ($d in $DISABLED_MODULES) {
 }
 
 # Apply source patches from build-scripts/patches/ (files overlay the
-# reference tree; keeps docs/ reference pristine)
+# vendored tree; keeps the vendor copy pristine)
 $PATCH_DIR = Join-Path $LIDE_ROOT "build-scripts\patches"
 if (Test-Path $PATCH_DIR) {
     Get-ChildItem $PATCH_DIR -Recurse -File | ForEach-Object {
@@ -155,7 +154,7 @@ if ($hardErrors) {
     $hardErrors | Select-Object -First 20 | ForEach-Object { Write-Host "  $($_.Line)" }
 }
 
-# 5. Copy artifacts to prebuilt/ and jniLibs/
+# 5. Copy artifacts to jniLibs/
 Write-Host "`n[5/5] Copying artifacts..."
 $ABI_LIST = if ($ABI -eq "all") { @("arm64-v8a", "armeabi-v7a", "x86_64") } else { @($ABI) }
 $totalModules = 0
@@ -172,19 +171,12 @@ foreach ($abi in $ABI_LIST) {
     # Build list of produced .so files for this ABI
     $produced = Get-ChildItem $libsDir -Filter "*.so" | ForEach-Object { $_.BaseName -replace "^lib", "" }
 
-    # Copy to prebuilt/
-    $prebuiltAbi = Join-Path $PREBUILT_DIR $abi
-    New-Item -ItemType Directory $prebuiltAbi -Force | Out-Null
-    Get-ChildItem $libsDir -Filter "*.so" | ForEach-Object {
-        Copy-Item $_.FullName (Join-Path $prebuiltAbi $_.Name) -Force
-        Write-Host "  third_party/prebuilt/$abi/$($_.Name)"
-    }
-
     # Copy to jniLibs/
     $jniAbi = Join-Path $JNILIBS_DIR $abi
     New-Item -ItemType Directory $jniAbi -Force | Out-Null
     Get-ChildItem $libsDir -Filter "*.so" | ForEach-Object {
         Copy-Item $_.FullName (Join-Path $jniAbi $_.Name) -Force
+        Write-Host "  app/src/main/jniLibs/$abi/$($_.Name)"
     }
 
     # Validate expected modules
@@ -200,7 +192,7 @@ foreach ($abi in $ABI_LIST) {
 
 # Build summary
 Write-Host "`n=== Build Summary ==="
-Get-ChildItem $PREBUILT_DIR -Recurse -Filter "*.so" | ForEach-Object {
+Get-ChildItem $JNILIBS_DIR -Recurse -Filter "*.so" | ForEach-Object {
     $size = [math]::Round($_.Length / 1KB, 1)
     Write-Host "  $($_.Directory.Name)/$($_.Name)  ${size}KB"
 }

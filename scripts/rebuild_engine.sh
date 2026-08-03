@@ -7,15 +7,14 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 LIDE_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-PREBUILT_DIR="$LIDE_ROOT/third_party/prebuilt"
 JNILIBS_DIR="$LIDE_ROOT/app/src/main/jniLibs"
-JNI_SRC_DIR="$LIDE_ROOT/docs/reference/androlua/AndroLua_pro-master/app/src/main/jni"
+JNI_SRC_DIR="$LIDE_ROOT/build-scripts/jni"
 JNI_CFG_DIR="$LIDE_ROOT/build-scripts/jni"
 BUILD_DIR="${TMPDIR:-/tmp}/lide-ndk-build"
 BUILD_LOG="$BUILD_DIR/build.log"
 
-# Disabled modules kept in reference tree (Android.mk2 only / no build file).
-# Note: lfs & lsqlite3 are enabled (build-scripts/jni has Android.mk).
+# Disabled modules are NOT vendored into build-scripts/jni (kept out at
+# vendor time; see REPO_HARDENING_WORK_ORDER.md T1).
 # lluv is superseded by luv (already shipped); tcc lacks arm64/x86_64 targets.
 DISABLED_MODULES=("lluv" "tcc")
 
@@ -39,7 +38,7 @@ echo "============================================"
 echo " lide Engine Rebuild Script"
 echo " ABI:       $ABI"
 echo " NDK:       $ANDROID_NDK_HOME"
-echo " Output:    $PREBUILT_DIR"
+echo " Output:    $JNILIBS_DIR"
 echo "============================================"
 
 # Step 1: Clean and prepare build directory
@@ -48,8 +47,8 @@ echo "[1/5] Preparing build directory..."
 rm -rf "$BUILD_DIR"
 mkdir -p "$BUILD_DIR"
 
-# Copy reference JNI source tree (docs/AndroLua_pro-master), then overlay
-# lide-managed Android.mk build configs from build-scripts/jni/
+# Copy vendored JNI source tree (build-scripts/jni contains both sources and
+# lide-managed Android.mk build configs), then apply source patches
 cp -R "$JNI_SRC_DIR" "$BUILD_DIR/jni"
 
 while IFS= read -r mk; do
@@ -104,9 +103,9 @@ if [ "${PIPESTATUS[0]}" -ne 0 ]; then
     exit 1
 fi
 
-# Step 4: Copy artifacts to prebuilt/ and jniLibs/
+# Step 4: Copy artifacts to jniLibs/
 echo ""
-echo "[4/5] Copying artifacts to prebuilt/ and jniLibs/..."
+echo "[4/5] Copying artifacts to jniLibs/..."
 
 declare -a ABI_LIST_ARR
 if [ "$ABI" = "all" ]; then
@@ -134,20 +133,12 @@ for abi in "${ABI_LIST_ARR[@]}"; do
         produced+=("$name")
     done
 
-    # Copy to prebuilt/
-    mkdir -p "$PREBUILT_DIR/$abi"
-    for so in "$libs_dir"/*.so; do
-        if [ -f "$so" ]; then
-            cp "$so" "$PREBUILT_DIR/$abi/"
-            echo "  third_party/prebuilt/$abi/$(basename "$so")"
-        fi
-    done
-
     # Copy to jniLibs/
     mkdir -p "$JNILIBS_DIR/$abi"
     for so in "$libs_dir"/*.so; do
         if [ -f "$so" ]; then
             cp "$so" "$JNILIBS_DIR/$abi/"
+            echo "  app/src/main/jniLibs/$abi/$(basename "$so")"
         fi
     done
 
@@ -166,7 +157,7 @@ done
 echo ""
 echo "[5/5] Build Summary"
 echo ""
-find "$PREBUILT_DIR" -name "*.so" -exec ls -lh {} \; 2>/dev/null || true
+find "$JNILIBS_DIR" -name "*.so" -exec ls -lh {} \; 2>/dev/null || true
 echo ""
 echo "Build summary: $SUCCESS_COUNT/$TOTAL_EXPECTED modules succeeded"
 if [ ${#FAILED_MODULES[@]} -gt 0 ]; then

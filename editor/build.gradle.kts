@@ -2,6 +2,7 @@ plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
+    id("org.jlleitschuh.gradle.ktlint") version "14.2.0"
 }
 
 android {
@@ -57,4 +58,16 @@ dependencies {
     implementation("io.github.rosemoe:language-textmate:0.24.6")
 
     testImplementation("junit:junit:4.13.2")
+}
+
+// ktlint（T6）：规则源为根 .editorconfig；只检查本模块，避免全仓超大 diff。
+ktlint {
+    version = "1.8.0"
+    android = false
+    ignoreFailures = false
+}
+
+// 接入 Android lint 门禁：:editor:lint 前置跑 ktlint（基线违规数以报告形式记录，不做全量修复）。
+tasks.named("lint") {
+    dependsOn("ktlintCheck")
 }

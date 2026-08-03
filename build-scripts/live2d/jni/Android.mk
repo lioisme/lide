@@ -13,7 +13,7 @@ LOCAL_PATH := $(call my-dir)
 # Host engine libluajava.so provides the Lua VM (same convention as libcjson.so)
 include $(CLEAR_VARS)
 LOCAL_MODULE := luajava
-LOCAL_SRC_FILES := ../../../third_party/prebuilt/$(TARGET_ARCH_ABI)/libluajava.so
+LOCAL_SRC_FILES := ../../../app/src/main/jniLibs/$(TARGET_ARCH_ABI)/libluajava.so
 include $(PREBUILT_SHARED_LIBRARY)
 
 include $(CLEAR_VARS)
@@ -65,7 +65,7 @@ LOCAL_SRC_FILES := \
     ../src/LAppModel.cpp \
     ../src/lua/lua_live2d.cpp
 
-LOCAL_C_INCLUDES := $(LOCAL_PATH)/../src $(LOCAL_PATH)/../src/Common $(LOCAL_PATH)/../../jni/lua $(LOCAL_PATH)/../../../docs/reference/androlua/AndroLua_pro-master/app/src/main/jni/lua
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/../src $(LOCAL_PATH)/../src/Common $(LOCAL_PATH)/../../jni/lua
 
 LOCAL_CPPFLAGS := -std=c++17 -O2 -Wall -DCSM_TARGET_ANDROID_ES2
 LOCAL_CPP_FEATURES := exceptions

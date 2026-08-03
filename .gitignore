@@ -26,5 +26,9 @@ build-java-errors*.txt
 # Stray artifacts
 classes.jar
 
+# Built-in examples .alp are generated at build time from build-scripts/examples-src/
+# (Gradle task :app:generateExamples); never commit the generated archives.
+app/src/main/assets/examples/*.alp
+
 # Downloaded reference projects (never committed)
 docs/reference/

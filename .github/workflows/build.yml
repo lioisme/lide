@@ -172,7 +172,6 @@ jobs:
       - name: Upload rebuilt artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: prebuilt-artifacts
+          name: native-libs
           path: |
-            third_party/prebuilt/
             app/src/main/jniLibs/

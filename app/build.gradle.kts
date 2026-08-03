@@ -1,4 +1,8 @@
 import java.util.Properties
+import java.util.zip.ZipEntry
+import java.util.zip.ZipOutputStream
+import java.io.BufferedOutputStream
+import java.io.FileOutputStream
 
 plugins {
     id("com.android.application")
@@ -114,6 +118,35 @@ repositories {
     google()
     mavenCentral()
 }
+
+// 内置示例 .alp：构建时从 build-scripts/examples-src/ 重新打包（跨平台，替代仅 Windows
+// 可用的 make-examples.ps1）。产物落 src/main/assets/examples/，并被 Android assets 打进 APK。
+val generateExamples = tasks.register("generateExamples") {
+    group = "build"
+    description = "从 build-scripts/examples-src/ 重新生成内置示例 .alp 文件"
+    val srcRoot = rootProject.file("build-scripts/examples-src")
+    val outDir = layout.projectDirectory.dir("src/main/assets/examples").asFile
+    inputs.dir(srcRoot)
+    outputs.dir(outDir)
+    doLast {
+        outDir.mkdirs()
+        srcRoot.listFiles()?.filter { it.isDirectory }?.sortedBy { it.name }?.forEach { dir ->
+            val outFile = outDir.resolve(dir.name + ".alp")
+            outFile.delete()
+            ZipOutputStream(BufferedOutputStream(FileOutputStream(outFile))).use { zip ->
+                // zip 条目用 '/' 分隔符、UTF-8 文件名，与旧产物兼容
+                dir.walkTopDown().filter { it.isFile }.sortedBy { it.relativeTo(dir).path }.forEach { f ->
+                    val rel = f.relativeTo(dir).invariantSeparatorsPath
+                    zip.putNextEntry(ZipEntry(rel))
+                    f.inputStream().use { it.copyTo(zip) }
+                    zip.closeEntry()
+                }
+            }
+            println("generateExamples: ${outFile.name}")
+        }
+    }
+}
+tasks.named("preBuild").configure { dependsOn(generateExamples) }
 
 dependencies {
     implementation(fileTree("libs") { include("*.jar") })

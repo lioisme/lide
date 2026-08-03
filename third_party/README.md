@@ -5,8 +5,23 @@
 | 目录 | 内容 | 说明 |
 |---|---|---|
 | `androlua/` | AndroLua Java 运行时源码（Gradle 库模块） | 模块名保持 `:androlua`，`settings.gradle.kts` 用 `projectDir` 指向本目录 |
-| `prebuilt/` | Lua 原生库（`libluajava.so` 等，arm64-v8a/armeabi-v7a/x86_64）与 Lua 模块脚本 | 上游引擎产物归档，`scripts/rebuild_engine.*` 重建后同步 `app/src/main/jniLibs/` |
 | `patches/` | 第三方代码补丁（如 `material3_searchbar_patch`） | 实验/历史归档，未接入构建 |
 
 > 上游参考源码 / 参考工程（sora-editor-main、luaj、Squircle-CE、AndroLua_pro 等）仍收纳在
-> `docs/reference/`（文档数据湖，git ignored、只读、不提交；部分被构建链引用）。
+> `docs/reference/`（文档数据湖，git ignored、只读、不提交）。
+>
+> 原生引擎二进制已去重（2026-08 T2）：不再保留 `third_party/prebuilt/`，`.so` 唯一真源为
+> `app/src/main/jniLibs/{arm64-v8a,armeabi-v7a,x86_64}/`，Lua 模块脚本唯一真源为
+> `app/src/main/assets/lua/`，均由 `scripts/rebuild_engine.*` 重建产出。
+
+### 引擎 C 源码（vendored，2026-08 T1 入库）
+
+AndroLua 引擎 JNI C/C++ 源码（上游 `AndroLua_pro` 派生，GPL 许可证，见
+`docs/reference/androlua/` 内 LICENSE）已完整 vendor 到 `build-scripts/jni/`：
+
+- 位置：`build-scripts/jni/<模块>/`（与 lide 定制版 `Android.mk` 同目录，构建直接引用该源码）。
+- 来源：`docs/reference/androlua/ AndroLua_pro-master/app/src/main/jni`（历史参考，构建链已不再引用）。
+- 排除：disabled 模块 `lluv`/`tcc`（luv 已代替 lluv；tcc 无 arm64/x86_64 目标）、独立可执行文件
+  `lua.c`/`luac.c`、上游源码中的 Android.mk/Application.mk/Makefile 等构建配置。
+- 重建入口：`scripts/rebuild_engine.ps1|.sh`（`JNI_SRC_DIR` 指向仓内 `build-scripts/jni`）。
+- 补丁：`build-scripts/patches/` 覆盖 vendor 拷贝（lsqlite3、zip），vendor 副本保持原样。
