@@ -1,12 +1,12 @@
-# delua 与 AndroLua Pro 引擎水平对比报告（修订版）
+# lide 与 AndroLua Pro 引擎水平对比报告（修订版）
 
 - 日期：2026-07-31
-- 依据：`docs/log/delua.log`（2026-07-31 16:01:37，com.lioisme.delua）与 `docs/log/androluapro.log`（2026-07-31 06:00:36，com.androlua），同一测试工程 `docs/project/test`（Universal Lua Probe v20，956 项）在同一环境产出；结合双方 Java/原生源码、构建脚本、APK 产物逐层核对。
-- 前提：delua 为**首次安装后立即测试**，排除旧安装包/残留数据因素。
+- 依据：`docs/log/lide.log`（2026-07-31 16:01:37，com.lioisme.lide）与 `docs/log/androluapro.log`（2026-07-31 06:00:36，com.androlua），同一测试工程 `docs/project/test`（Universal Lua Probe v20，956 项）在同一环境产出；结合双方 Java/原生源码、构建脚本、APK 产物逐层核对。
+- 前提：lide 为**首次安装后立即测试**，排除旧安装包/残留数据因素。
 
 ## 1. 结论摘要
 
-| 指标 | delua | AndroLua Pro |
+| 指标 | lide | AndroLua Pro |
 |---|---|---|
 | 总分 | 878/956 (91%) | 879/956 (91%) |
 | 性能扩展 | 35% (18/51) | 37% (19/51) |
@@ -14,22 +14,22 @@
 
 唯一差异（1/956）为 `require("socket")` 失败（扩展库-网络 20% vs 40%）。
 
-**根因（已定案）：delua 引擎的资产解包逻辑缺陷 —— `LuaApplication.extractLuaScripts()` 用 `getAssets().open()` 逐条打开 `assets/lua/` 下的每一项，其中 "socket" 是子目录，打开目录抛 IOException；try-catch 位于循环外，异常中断剩余全部解包，导致 `socket.lua`、`socket/{url,tp,headers}.lua` 及其后所有脚本（su.lua/test.lua/xml.lua）从未落盘。`require("socket")` 找不到 socket.lua → "模块未找到" → 探针记为"无/超时"。**
+**根因（已定案）：lide 引擎的资产解包逻辑缺陷 —— `LuaApplication.extractLuaScripts()` 用 `getAssets().open()` 逐条打开 `assets/lua/` 下的每一项，其中 "socket" 是子目录，打开目录抛 IOException；try-catch 位于循环外，异常中断剩余全部解包，导致 `socket.lua`、`socket/{url,tp,headers}.lua` 及其后所有脚本（su.lua/test.lua/xml.lua）从未落盘。`require("socket")` 找不到 socket.lua → "模块未找到" → 探针记为"无/超时"。**
 
-这不是性能波动、不是 .so 链接问题、不是设备环境问题，而是 delua 侧可复现、可修复的代码缺陷。
+这不是性能波动、不是 .so 链接问题、不是设备环境问题，而是 lide 侧可复现、可修复的代码缺陷。
 
 ## 2. 日志差异定位
 
 两份日志共 1123 行，实质差异仅一处：
 
-| 位置 | delua | AndroLua Pro | 判定 |
+| 位置 | lide | AndroLua Pro | 判定 |
 |---|---|---|---|
 | L10 / L27 | 878/956；性能扩展 35% | 879/956；37% | 1 分差 |
 | **L1025** | **[--] socket: 无/超时** | **[OK] socket: LuaSocket 3.0-rc1** | **唯一实质差异** |
 | L68/681/691/693/694/941 | 内存/GC 时序微差 | — | 测量噪音 |
 | L708-709 | package.path/cpath 应用目录 | com.androlua 目录 | 预期差异 |
 
-其余逐项一致：cjson/json/zlib/md5/base64/bit32/ltn12 全部一致；性能基准 10/10 一致（`递归(1000)` delua 0.0116s vs AndroLua Pro 0.0002s 为后者低于时钟分辨率的测量伪迹）。
+其余逐项一致：cjson/json/zlib/md5/base64/bit32/ltn12 全部一致；性能基准 10/10 一致（`递归(1000)` lide 0.0116s vs AndroLua Pro 0.0002s 为后者低于时钟分辨率的测量伪迹）。
 
 ## 3. 根因分析与验证链
 
@@ -41,12 +41,12 @@
 | APK↔源码一致性 | APK 内 libsocket.so/socket.lua 与 prebuilt/jniLibs/资产 MD5 全等 | 一致 |
 | .so 可加载性 | NEEDED={libluajava,libc,libm,libdl}；50 个未定义 lua_* 符号全部可解析；导出 luaopen_socket_core；loadlib.c 用 RTLD_NOW | 无链接缺口 |
 | require 解析路径 | `require("socket.core")` → searcher_Lua(无) → searcher_C(libsocket/core.so 无) → **searcher_Croot**（loadlib.c:499）按根名 "socket" 命中 libsocket.so → dlsym luaopen_socket_core；与 AndroLua Pro 同机制 | 机制正确 |
-| 原生源码 | 构建脚本把 AndroLua Pro jni 全树拷贝+delua Android.mk 覆盖+单一 zip 补丁，Lua/loadlib.c/luajava.c/socket.c 与 AndroLua Pro 同源 | 无差异 |
+| 原生源码 | 构建脚本把 AndroLua Pro jni 全树拷贝+lide Android.mk 覆盖+单一 zip 补丁，Lua/loadlib.c/luajava.c/socket.c 与 AndroLua Pro 同源 | 无差异 |
 | **资产解包** | **见 3.2 —— 差异所在** | **缺陷定案** |
 
 ### 3.2 缺陷机理
 
-delua `androlua/src/main/java/com/androlua/LuaApplication.java`（修复前）：
+lide `androlua/src/main/java/com/androlua/LuaApplication.java`（修复前）：
 
 ```java
 String[] files = getAssets().list("lua");        // 含 "socket" 目录项

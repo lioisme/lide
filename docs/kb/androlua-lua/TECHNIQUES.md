@@ -49,9 +49,9 @@ list.setAdapter(adapter)
 ## 3. 双端验证方法（速览，完整流程见 SKILL `androlua-project-validation`）
 
 1. 推工程 → pro 启动（`-n com.androlua/...`）→ 抓 `logcat -s lua:*` + `screencap`。
-2. pro 通过后（含 .alp 打包运行）才进 delua，同一工程同一启动方式抓同一组证据。
+2. pro 通过后（含 .alp 打包运行）才进 lide，同一工程同一启动方式抓同一组证据。
 3. 逐字 diff 两端日志/报错栈；只允许白名单差异（SKILL §6）。
-4. 不一致 → 按 SKILL §5 分层（L0 工程/环境 → L1 脚本 → L2 .so → L3 Java 绑定 → L4 宿主 → L5 语言语义）收敛，修 delua 不修工程。
+4. 不一致 → 按 SKILL §5 分层（L0 工程/环境 → L1 脚本 → L2 .so → L3 Java 绑定 → L4 宿主 → L5 语言语义）收敛，修 lide 不修工程。
 
 ## 4. 探针工程（语言语义差异快速定位）
 
@@ -96,17 +96,17 @@ adb shell "dumpsys activity activities" | Select-String topResumedActivity
 
 ## 7. 最佳实践清单
 
-1. **先 pro 后 delua**：pro 不通就别碰 delua；delua 不一致先查白名单再查分层。
-2. **报错一致 = 正常**：工程自身 bug（如 demo md5）必须在两端同样报错，那不是 delua 缺陷。
+1. **先 pro 后 lide**：pro 不通就别碰 lide；lide 不一致先查白名单再查分层。
+2. **报错一致 = 正常**：工程自身 bug（如 demo md5）必须在两端同样报错，那不是 lide 缺陷。
 3. **工程 libs 双端同份**：dex/jar/so 两端 md5 一致，避免"差异"其实是文件不同。
 4. **每轮落库**：新能力/问题/方法论收尾前写入本知识库（README 维护约定），留证据链。
 5. **不带 -n 的裸 VIEW 不可用于自动化**（见 PITFALLS §3）。
-6. **依赖 pro 独有能力前先查 FEATURES §8**（nirenr 自动化、LuaEditor、扩展控件等），避免写完才发现 delua 不可用。
+6. **依赖 pro 独有能力前先查 FEATURES §8**（nirenr 自动化、LuaEditor、扩展控件等），避免写完才发现 lide 不可用。
 7. 交付 `.luac` 字节码必须同源引擎编译（PITFALLS §8）。
 
 ## 8. 原生 .so 直调 + 手势/矩阵复刻方法论（Live2D 看板娘案例）
 
-Live2D 走 delua 原生引擎（`require "live2d"` → liblive2d.so）时，Lua 侧必须复刻 pro Java 层的**全部矩阵与触摸管线**，因为引擎只暴露原语（load/update/draw/hitTest/startMotion），手势与命中判定在 Java 层（`LAppView`/`TouchManager`/`L2DViewMatrix`/`L2DTargetPoint`/`L2DModelMatrix`）。方法：用 pro APK 的 `jp.live2d.*` dex（baksmali）逐方法实证公式，再在 Lua 复刻。关键实证结论：
+Live2D 走 lide 原生引擎（`require "live2d"` → liblive2d.so）时，Lua 侧必须复刻 pro Java 层的**全部矩阵与触摸管线**，因为引擎只暴露原语（load/update/draw/hitTest/startMotion），手势与命中判定在 Java 层（`LAppView`/`TouchManager`/`L2DViewMatrix`/`L2DTargetPoint`/`L2DModelMatrix`）。方法：用 pro APK 的 `jp.live2d.*` dex（baksmali）逐方法实证公式，再在 Lua 复刻。关键实证结论：
 
 - **模型矩阵**：C++ `L2DBaseModel` 构造 `L2DModelMatrix(canvasW, canvasH)` + `setWidth(2)` + `setCenterPosition(0,0)`；`L2DModelMatrix.cpp` 的 setWidth/translate/scale 均为**绝对赋值**（非累乘）→ Lua 等价公式 `scale(2/cw, -2/cw)` + `translate(-1, ch/cw)`。haru 实测矩阵 `[2/2400, -2/2400, -1, 1.3333]` 与公式一致。
 - **deviceToScreen** = `S(2/w, 2/w) · T(-w/2, +h/2)`（前乘链）；`transformY(y) = (y + h/2) · 2/w`。

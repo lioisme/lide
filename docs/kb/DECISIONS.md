@@ -1,4 +1,4 @@
-# delua 关键决策记录（决策时间线）
+# lide 关键决策记录（决策时间线）
 
 > 决策类结论汇总，含反转决策。阅读原则：**文档结论冲突时，以本表最后状态 + `PROGRESS.md` 为准**。
 
@@ -16,7 +16,7 @@
 | D-10 | 2026-07-31 | **独立 APK 打包 v1.0 暂不支持**（WHITEPAPER 阶段四决策） | ① pro 打包器依赖仓库外的 `mao/sign` 签名 jar；② v1-only 签名 targetSdk≥30 不可安装；③ 宿主模板体积/方法数不可控；④ 与编辑/运行主链路正交 | **随后已立项开工**：`LuaCompiler`/`AXmlManifest`/`ApkBuilder`/`ApkSigner`/`V2Signer`/`BuildApkScreen` 代码已落地（commit 953592b 等），未登记 PROGRESS/白皮书 |
 | D-11 | 2026-08-01 | **lluv / tcc 不预编译**，缺失模块由工程 `libs/` 补偿 | lluv 与 luv 功能重叠；tcc 无 arm64/x86_64 NDK 目标；lfs/lsqlite3 已补齐 | 差异声明入 WHITEPAPER §7.1 |
 | D-12 | 2026-08-01 | **布局助手：资产先行、UI 单独立项** | 5 人日高工作量（P1 最大项） | `javaapi/*.aly` 模板已入 assets/layouts；预览/拖拽/转换器（WP-009 9-A~9-C）待立项 |
-| D-13 | 2026-08-01 | **宿主 UI 一律官方/成熟组件，禁止手搓自研** | Squircle-CE 对齐约束（DELUA-UI-001） | 抽屉用官方 `ModalDrawerSheet(drawerState)`；唯一新增依赖 `reorderable:3.0.0`（Tab 拖拽） |
+| D-13 | 2026-08-01 | **宿主 UI 一律官方/成熟组件，禁止手搓自研** | Squircle-CE 对齐约束（LIDE-UI-001） | 抽屉用官方 `ModalDrawerSheet(drawerState)`；唯一新增依赖 `reorderable:3.0.0`（Tab 拖拽） |
 | D-14 | 2026-08-01 | **user_permission 拒绝后继续运行**（仅 Toast 提示） | 与 pro 行为一致：权限由脚本运行时自行处理 | WP-003 工作单；`PermissionResolver` 纯函数 + 单测 7 例 |
 | D-15 | 2026-08-01 | **Xposed 模块可行性：技术可行但有前提** | 四支柱为真：libluajava 静态链接可注入、Class.forName+setAccessible 匹配、三 ABI 就绪、pro 反 Xposed 代码已清除；约束：v1-only 不可装、native 需自提取、de.robv API compileOnly | 路线图 M1~M5 未启动，前置 = 打包器落地（D-10） |
 | D-16 | 2026-08-01 | **示例资产化：`assets/samples` 首启解包 → `assets/examples/*.alp` + 示例导入界面**（WP-003 扩展） | 需求「不内置工程」+ 开发者需内置示例参考；导入复用 `AlpManager.import`（与用户导入同一路径，支持覆盖重导入） | `ExamplesScreen.kt` / `Routes.EXAMPLES` / `make-examples.ps1` + `examples-src/` 6 示例；**反转 D-03**（原「资产化部署 + 首启提取」） |

@@ -1,14 +1,14 @@
-# delua IDE × AndroLua 环境分离可行性审计报告
+# lide IDE × AndroLua 环境分离可行性审计报告
 
 | 元数据 | 内容 |
 |--------|------|
-| **文档编号** | DELUA-AUDIT-009 |
+| **文档编号** | LIDE-AUDIT-009 |
 | **版本** | 1.0 |
 | **状态** | 审计结论（待决策） |
 | **审计日期** | 2026-08-02 |
 | **审计范围** | `:app`、`:androlua`、`:editor` 三模块全量源码、`app/AndroidManifest.xml`、构建脚本、`docs/completed/*` 审计链、`docs/kb/*`、`docs/reference/androlua/AndroLua_pro-master` 参考树 |
 | **审计方法** | 全量源码逐文件阅读 + 依赖方向 grep + 行数统计 + R1 边界门禁复验 + 既有审计文档交叉核对 |
-| **触发背景** | 用户提出「分离 delua 的 IDE 与 androlua 环境，二者关系对标 VS Code 与 Flutter 插件」 |
+| **触发背景** | 用户提出「分离 lide 的 IDE 与 androlua 环境，二者关系对标 VS Code 与 Flutter 插件」 |
 
 ---
 
@@ -20,7 +20,7 @@
 |--------|------|
 | 方向合理性 | ✅ **合理**。工程演化史上已有三次「宿主与引擎解耦」动作（WP-002 Intent 解耦 → WP-005 删兼容层 → WP-009 删全局仓库），本次分离是同一方向的自然终点；`R1~R4` 架构规则已把 `:editor` 洗成纯文本层，为「编辑器壳」做好了前提 |
 | 技术上可否做到 | ✅ **可以**，分三级深度（§5）：契约层分离（低风险，推荐首做）→ 进程级隔离（中）→ 双 APK 环境即插即用（完全体，高成本） |
-| 类比准确性 | ⚠️ **需修正**。VS Code/Flutter 关系的本质是「编辑器壳 + 独立 SDK + daemon 进程协议」三件套；delua 现状已具备「Intent 启动 + 文件/结果协议」的雏形（约 1.5/3 件），但存在两个本质落差：**同进程继承耦合**（DeluaApp extends LuaApplication / EngineActivity extends LuaActivity）与**打包链依赖引擎字节码**（LuaCompiler 直接调用原生 LuaState） |
+| 类比准确性 | ⚠️ **需修正**。VS Code/Flutter 关系的本质是「编辑器壳 + 独立 SDK + daemon 进程协议」三件套；lide 现状已具备「Intent 启动 + 文件/结果协议」的雏形（约 1.5/3 件），但存在两个本质落差：**同进程继承耦合**（LideApp extends LuaApplication / EngineActivity extends LuaActivity）与**打包链依赖引擎字节码**（LuaCompiler 直接调用原生 LuaState） |
 
 ### 1.2 四个硬约束（任何分离方案都必须遵守）
 
@@ -45,9 +45,9 @@ settings.gradle.kts: :app + :androlua + :editor
 
 | 模块 | 职责 | 代码量 | 包名 |
 |------|------|--------|------|
-| `:app` | IDE 宿主：Compose UI、工程管理、运行拉起、权限、设置、打包器 | Kotlin 5,004 行 + Java 102 行 | `com.lioisme.delua` |
-| `:androlua` | 引擎运行时：AndroLua Pro 4.4.2 Java 全量源码 + delua 工具层 | Java 85,225 行 + Kotlin 1,166 行 | `com.androlua` / `com.luajava` / `com.android.cglib` / `android.widget` 等 |
-| `:editor` | 纯文本编辑器：sora-editor + TextMate 高亮、行级诊断、补全 | Kotlin 1,730 行 | `com.lioisme.delua.editor` |
+| `:app` | IDE 宿主：Compose UI、工程管理、运行拉起、权限、设置、打包器 | Kotlin 5,004 行 + Java 102 行 | `com.lioisme.lide` |
+| `:androlua` | 引擎运行时：AndroLua Pro 4.4.2 Java 全量源码 + lide 工具层 | Java 85,225 行 + Kotlin 1,166 行 | `com.androlua` / `com.luajava` / `com.android.cglib` / `android.widget` 等 |
+| `:editor` | 纯文本编辑器：sora-editor + TextMate 高亮、行级诊断、补全 | Kotlin 1,730 行 | `com.lioisme.lide.editor` |
 
 ### 2.2 当前依赖方向
 
@@ -69,10 +69,10 @@ settings.gradle.kts: :app + :androlua + :editor
 
 | # | 耦合类型 | 位置 | 说明 |
 |---|---------|------|------|
-| C-1 | **继承（Application）** | `DeluaApp.kt:10` `class DeluaApp : LuaApplication()` | 环境初始化（目录、luaCpath/luaLpath、extractLuaScripts、CrashHandler）随 IDE 的 Application 生命周期执行 |
+| C-1 | **继承（Application）** | `LideApp.kt:10` `class LideApp : LuaApplication()` | 环境初始化（目录、luaCpath/luaLpath、extractLuaScripts、CrashHandler）随 IDE 的 Application 生命周期执行 |
 | C-2 | **继承（Activity）** | `EngineActivity.java:19` `extends LuaActivity` | 引擎页是环境 Activity 的子类；`sendMsg/sendError/getLuaPath/doFile` 全走环境实现 |
 | C-3 | 静态 API | `MainActivity.kt:97,145`、`ProjectManager.kt:5`、`ExamplesScreen.kt:20`、`PluginScreen.kt:24` | `LuaApplication.getInstance().luaExtDir`（工程目录约定 `/sdcard/AndroLua`） |
-| C-4 | 模块内 Kotlin 工具 | `androlua/.../com/lioisme/delua/androlua/` 8 类 1,166 行 | `AlpManager/AlpNaming`、`AXmlManifest`、`LuaCompiler`、`LuaConfigParser`、`PermissionResolver`、`PluginManager`、`ZipUtil`、`engine/EngineBridge` |
+| C-4 | 模块内 Kotlin 工具 | `androlua/.../com/lioisme/lide/androlua/` 8 类 1,166 行 | `AlpManager/AlpNaming`、`AXmlManifest`、`LuaCompiler`、`LuaConfigParser`、`PermissionResolver`、`PluginManager`、`ZipUtil`、`engine/EngineBridge` |
 | C-5 | **编译链** | `LuaCompiler.kt` → `com.luajava.LuaStateFactory` | 打包器第一步「Lua→字节码」直接 new 原生 LuaState（`LloadBuffer` + `dump`） |
 | C-6 | 打包器 | `ApkBuilder.kt` 依赖 `AXmlManifest`/`LuaCompiler`/`ManifestEdit` | 打包链（§3-12）跨越两模块 |
 | C-7 | Manifest 组件 | `app/AndroidManifest.xml` 8 处 | `EngineActivity`、`com.androlua.LuaActivity`、`LuaActivityX`、`LuaService`、`LuaAccessibilityService`、`ScreenCaptureActivity`、`FileProvider`（来自 androlua 模块的 `android.content.FileProvider`） |
@@ -87,7 +87,7 @@ settings.gradle.kts: :app + :androlua + :editor
 2. **`LuaApplication.onCreate` 是环境的初始化入口**（`LuaApplication.java:157-194`）：外部存储探测 → 目录四件套（localDir/odexDir/libDir/luaMdDir）→ `luaCpath`/`luaLpath` 构造 → `extractLuaScripts()`（从 **IDE 的 assets** 解包 Lua 脚本，MD5 版本化）。这条链完整定义了「环境自举」逻辑，天然可抽为独立模块/APK 的 Application。
 3. **运行结果协议已存在且可跨进程**：`EngineActivity.finish()` → `setResult(RESULT_OK, Intent)`，extra 携带 output（200KB 截断防 Binder 溢出）+ error 标记；宿主侧 `EngineResultParser`（纯 Kotlin，7 单测）解析。ActivityResult 跨进程天然可用 → 进程级隔离无需重写协议。
 4. **历史文件协议可回退**：WP-002/003 曾用 `engine_result.json` + `engine_output.txt` 文件协议（现已被 setResult 取代），跨 APK 场景可复用该模式。
-5. **pro 参考树自带分离蓝本**：pro 的 `Main.java`/`Welcome.java`（Java IDE）+ `assets/*.lua`（Lua IDE 1913 行）+ `bin.lua`（打包器）+ `assets/project`（内置工程）本身就分层存放；delua 的三模块划分比 pro 更干净，只是资产没归位。
+5. **pro 参考树自带分离蓝本**：pro 的 `Main.java`/`Welcome.java`（Java IDE）+ `assets/*.lua`（Lua IDE 1913 行）+ `bin.lua`（打包器）+ `assets/project`（内置工程）本身就分层存放；lide 的三模块划分比 pro 更干净，只是资产没归位。
 
 ---
 
@@ -100,7 +100,7 @@ settings.gradle.kts: :app + :androlua + :editor
 | 项 | 内容 |
 |----|------|
 | 构成 | `libluajava.so`（魔改 Lua 5.3.3 + JNI 桥，117 个 JNI 导出符号）+ `libgl.so`（GLES 1.0 绑定）+ 15 个附加模块 |
-| 附加模块 | cjson / socket / mime / xml / md5 / crypt / zip / zlib / regex / canvas / bson / luv / sensor / **lfs / lsqlite3**（delua 超集） |
+| 附加模块 | cjson / socket / mime / xml / md5 / crypt / zip / zlib / regex / canvas / bson / luv / sensor / **lfs / lsqlite3**（lide 超集） |
 | 规模 | 17 × 3 ABI（arm64-v8a / armeabi-v7a / x86_64），合计约 1.3 MB |
 | 源码 | `docs/reference/androlua/AndroLua_pro-master/app/src/main/jni/`（398 个 C/C++ 文件，勿改动） |
 | 构建链 | `build-scripts/jni/`（Android.mk 覆盖层 + `patches/`）+ `scripts/rebuild_engine.{ps1,sh}` + `prebuilt/` 产物归档 |
@@ -119,7 +119,7 @@ settings.gradle.kts: :app + :androlua + :editor
 `LuaApplication`（LuaContext 实现，环境自举）、`LuaActivity`（运行入口，初始化时序：`loadLibrary → LuaStateFactory → pushJavaObject(activity) → setPackagePath → initENV → doFile`）、`LuaActivityX`、`LuaService`、`LuaFragment`、`LuaThread`、`LuaTimer`、`LuaTimerTask`、`LuaAsyncTask`、`LuaAdapter`/`LuaArrayAdapter`/`LuaExAdapter`/`LuaMultiAdapter`/`LuaExpandableListAdapter`、`LuaEnhancer`、`LuaDexLoader`（W^X 内存加载）、`LuaDexClassLoader`、`Http`、`Download`、`LuaWebView`、`LuaDialog`、`LuaContext`（接口）、`CrashHandler`、`LuaAccessibilityService`、`LuaClient`、`LuaServer`、`LuaContentObserver`、`LuaFileObserver`、`LuaBroadcastReceiver`、`LuaBitmap`/`LuaBitmapDrawable`/`LuaDrawable`/`LoadingDrawable`/`NineBitmapDrawable`、`LuaAnimation`、`LuaAssetLoader`、`LuaCameraView`、`LuaView`、`LuaResources`、`LuaGcable`、`LuaRunnable`、`LuaPrint`、`LuaUtil`、`Ticker`、`ZipUtil`、`GifDecoder`、`Download`、`LuaPreferenceFragment` 等。
 
 - 宿主依赖：C-1/C-2/C-3（继承 + `getInstance().luaExtDir`）。
-- 分离影响：**这一层是分离的核心难点**——IDE 当前通过继承进入环境（DeluaApp/EngineActivity），需要改造成「IDE 组合环境」或「环境自持 Activity」。
+- 分离影响：**这一层是分离的核心难点**——IDE 当前通过继承进入环境（LideApp/EngineActivity），需要改造成「IDE 组合环境」或「环境自持 Activity」。
 
 ### 3-4 动态代理与字节码生成（com.android.cglib，~280 文件）
 
@@ -192,7 +192,7 @@ C-7 的 8 个组件 + 全部运行时权限声明（app manifest 顶部 ~50 条�
 
 ### 4.1 该关系的三个本质特征
 
-| 特征 | VS Code / Flutter 实现 | delua 现状 |
+| 特征 | VS Code / Flutter 实现 | lide 现状 |
 |------|------------------------|-----------|
 | **① 编辑器壳不认知运行时** | VS Code 是通用编辑器；Dart 语法高亮/编辑由插件提供；插件不装也可编辑 | ✅ **已具备**（R1/R2）：`:editor` 纯文本级，Lua 高亮/诊断/补全零引擎依赖 |
 | **② 独立交付与版本** | Flutter SDK 独立安装/升级；VS Code 与 Flutter 版本各自演进，靠版本探测对齐 | ❌ **未具备**：运行时与 IDE 同 APK 同 DEX 同版本 |
@@ -201,7 +201,7 @@ C-7 的 8 个组件 + 全部运行时权限声明（app manifest 顶部 ~50 条�
 ### 4.2 类比成立与不成立之处
 
 - **成立**：① 已实现；③ 的协议形态（Intent + ActivityResult + 200KB 截断）已具 daemon 雏形；`:editor` 的独立演进能力已由模块边界保障。
-- **不成立**：② 完全缺失；③ 缺进程边界。delua 当前等价于「VS Code 把 Flutter SDK 编译进了自己的二进制」——功能可用，但不是插件关系。
+- **不成立**：② 完全缺失；③ 缺进程边界。lide 当前等价于「VS Code 把 Flutter SDK 编译进了自己的二进制」——功能可用，但不是插件关系。
 - **类比修正**：真正可对标的三级形态：
   - Tier 1 = 「VS Code 内嵌 SDK 但通过接口调用」（可插拔，但同进程同版本）
   - Tier 2 = 「VS Code 内嵌 SDK 但跑在独立进程」（= Flutter daemon 的进程隔离收益，无独立版本）
@@ -219,7 +219,7 @@ C-7 的 8 个组件 + 全部运行时权限声明（app manifest 顶部 ~50 条�
 |------|------|
 | ① 资产归位 | `jniLibs`/`assets/lua`/`keys`/`layouts`/`luadoc` 移入 `:androlua`（或新 `:env` AAR）；AAR 原生支持 jniLibs 与 assets 随包；`:app` 仅 `implementation(project(":androlua"))` 引用 |
 | ② 定义 `engine-api` 契约 | 新增纯 Kotlin 模块（或包）：`EngineRuntime`（初始化/luaExtDir/版本）、`EngineLauncher`（launch→session）、`EngineResult`（output/error/location）、`EngineCompiler`（compile→bytecode/diagnostics）、`EngineInfo`（版本探测）；`:app` 只依赖契约，`:androlua` 实现之（§6 草案） |
-| ③ 继承改造 | `DeluaApp` 改组合：普通 Application + `EngineRuntime.initialize()`（把 `LuaApplication.onCreate` 初始化逻辑收敛为可显式调用的 `LuaEnvironment.initialize(context)`）；`EngineActivity extends LuaActivity` 保留（运行契约），但由 `EngineLauncher` 接口创建，宿主不再直接 new |
+| ③ 继承改造 | `LideApp` 改组合：普通 Application + `EngineRuntime.initialize()`（把 `LuaApplication.onCreate` 初始化逻辑收敛为可显式调用的 `LuaEnvironment.initialize(context)`）；`EngineActivity extends LuaActivity` 保留（运行契约），但由 `EngineLauncher` 接口创建，宿主不再直接 new |
 | ④ 打包链解耦 | `LuaCompiler` 走 `EngineCompiler` 接口（实现仍在引擎内）；`AXmlManifest`/`ApkBuilder` 保持纯 Kotlin |
 | ⑤ 门禁升级 | R1 扩展为「`:app` 对 `com.androlua.*` 的直接 import 面白名单」 |
 
@@ -247,8 +247,8 @@ C-7 的 8 个组件 + 全部运行时权限声明（app manifest 顶部 ~50 条�
 
 | 步骤 | 内容 |
 |------|------|
-| ① 环境 APK | 独立 `applicationId`（如 `com.lioisme.delua.env`），同签名；组件全量自持；AIDL `IEngineService`（launch/compile/getVersion） |
-| ② 发现与版本 | IDE 经 `PackageManager.getPackageInfo` 探测环境安装与版本；版本探测可复用现成 **956 项引擎探针脚本**（delua 878/956 基线） |
+| ① 环境 APK | 独立 `applicationId`（如 `com.lioisme.lide.env`），同签名；组件全量自持；AIDL `IEngineService`（launch/compile/getVersion） |
+| ② 发现与版本 | IDE 经 `PackageManager.getPackageInfo` 探测环境安装与版本；版本探测可复用现成 **956 项引擎探针脚本**（lide 878/956 基线） |
 | ③ 文件共享 | `/sdcard/AndroLua` 外部存储（API 30+ 需 `MANAGE_EXTERNAL_STORAGE`，IDE 已声明）；FileProvider 授权（`grantUriPermission`，`android.content.FileProvider` 已在环境侧） |
 | ④ 打包链 | 打包器改用**环境模板 APK**（= pro `bin.lua` 模型：模板 + luac + manifest 补丁 + 签名）；环境 APK 内置为资产或首次运行时下载 |
 | ⑤ 分发 | 商店双 APK 分发；环境可独立升级（兼容矩阵：IDE≥N ↔ 环境≥M） |
@@ -321,7 +321,7 @@ data class EngineResult(
 | 阶段 | 内容 | 工作量 | 验收 |
 |------|------|--------|------|
 | **P0 资产归位** | jniLibs + 环境 assets 移入 `:androlua`；`:app` 引用收窄 | 0.5 人日 | 6 示例 + 探针 878/956 基线回归 |
-| **P1 契约层**（Tier 1） | `engine-api` 接口 + 继承改造（DeluaApp 组合化）+ R2 修订 | 1.5-2 人日 | `:app` 对 `com.luajava` 直接 import 归零；编译链经 `EngineCompiler` |
+| **P1 契约层**（Tier 1） | `engine-api` 接口 + 继承改造（LideApp 组合化）+ R2 修订 | 1.5-2 人日 | `:app` 对 `com.luajava` 直接 import 归零；编译链经 `EngineCompiler` |
 | **P2 进程隔离**（Tier 2） | `:lua` 进程 + AIDL 编译服务 + 结果协议回退 | 3-5 人日 | 引擎崩溃不影响 IDE（注入崩溃探针验证）；双端探针矩阵全绿 |
 | **P3 双 APK**（Tier 3，可选） | 环境独立 APK + 发现/版本 + 模板打包 | 2-3 周 | 卸载环境后 IDE 仍可编辑；安装环境即运行；新旧环境并存切换 |
 
@@ -333,19 +333,19 @@ data class EngineResult(
 
 > 用户提出三条技术路线：**路线 A** 双 APK 插件化（安装式 + 文件夹式）；**路线 B** 单 APK + 微信小程序技术；**路线 C** 其他路线。本节逐条判定。
 
-### 9.1 路线 A：双 APK 插件化（环境 = delua 的插件）
+### 9.1 路线 A：双 APK 插件化（环境 = lide 的插件）
 
-用户描述「apk 插件可以安装被识别和调用，也可以把 apk 放到插件文件夹里被识别和调用」——这对应 Android 插件化生态的两种成熟形态。delua 能否实现，取决于环境（androlua）的特殊性：**环境不是纯逻辑插件，它带 Activity 组件生态**（LuaActivity 控制台、LuaService、LuaAccessibilityService、ScreenCaptureActivity）。这是判定路线 A 可行性的分水岭。
+用户描述「apk 插件可以安装被识别和调用，也可以把 apk 放到插件文件夹里被识别和调用」——这对应 Android 插件化生态的两种成熟形态。lide 能否实现，取决于环境（androlua）的特殊性：**环境不是纯逻辑插件，它带 Activity 组件生态**（LuaActivity 控制台、LuaService、LuaAccessibilityService、ScreenCaptureActivity）。这是判定路线 A 可行性的分水岭。
 
 #### A-1 安装式插件（APK 安装后被识别和调用）：✅ 完全可行，无技术障碍
 
 | 环节 | 实现机制 | 成熟度 |
 |------|---------|--------|
-| 识别 | 环境 APK 声明唯一 `action`（如 `com.lioisme.delua.ENV`）的 AIDL Service + meta-data 版本号；IDE 经 `PackageManager.queryIntentServices` 发现，`getPackageInfo(pkg, GET_SIGNATURES)` 校验**同签名**防假冒 | 官方 API，Tasker/Termux:API 同款模式，成熟 |
+| 识别 | 环境 APK 声明唯一 `action`（如 `com.lioisme.lide.ENV`）的 AIDL Service + meta-data 版本号；IDE 经 `PackageManager.queryIntentServices` 发现，`getPackageInfo(pkg, GET_SIGNATURES)` 校验**同签名**防假冒 | 官方 API，Tasker/Termux:API 同款模式，成熟 |
 | 调用 | AIDL `IEngineService`（`getVersion` / `compile` / `launch` / `registerCallback`）；运行 UI 用环境 APK 自持的 `EngineActivity`（注册在环境 Manifest，`android:process=":lua"`），IDE `startActivityForResult` 拉结果 | 官方 API，成熟 |
 | 组件 | 环境 APK 自持全部组件（LuaActivity/LuaService/无障碍/FileProvider），`nativeLibraryDir`/assets 自动归属环境 → **继承链、loadlayout、.so 加载全部零改动** | — |
 | 文件共享 | 同 keystore 签名 + `/sdcard/AndroLua` 外部存储（IDE 已声明 MANAGE_EXTERNAL_STORAGE）+ `grantUriPermission` | 需真机回归 |
-| 版本 | 契约版本号（int）+ 956 项探针脚本（delua 878/956 基线）双保险 | 现成资产 |
+| 版本 | 契约版本号（int）+ 956 项探针脚本（lide 878/956 基线）双保险 | 现成资产 |
 
 **结论：安装式 = 上轮报告 Tier 3 的细化，唯一需要新写的代码是 AIDL 服务层（~200 行）与发现/校验逻辑（~100 行）。环境侧运行时零改动。**
 
@@ -411,10 +411,10 @@ EngineActivity（宿主注册）              env.apk
 | 工程难度 | 🔴 **高**（数月~年） | 需要：Lua↔UI 消息桥（协议设计 + 序列化 + 回调用例）、声明式 UI 编译/解释器、渲染层（WebView 或原生自渲染）、双线程生命周期同步、差分更新引擎——等于自研 FinClip |
 | 生态断裂 | 🔴 **致命** | 小程序模型 = **受限 API 面**（沙箱内只能调白名单 API）；AndroLua 的立身之本 = **全量 API 面**（`luajava.bindClass` 任意 Java 类、loadlayout 直操作 View、`import` 任意 dex）。双线程隔离下 Lua 无法直触 View/Java 对象，**现有 .alp 工程、6 个样例、pro 生态脚本全部不兼容** |
 | 性能 | 🔴 倒退 | 双线程 + 消息桥 + 数据同步的每次 UI 更新都有序列化开销；AndroLua 同线程直操作 View 是理论上限 |
-| 解决问题了吗 | ❌ **没有** | 小程序架构的价值 = **沙箱安全隔离**（宿主 App 运行第三方不可信代码）。delua 是本地 IDE 运行**用户自己的代码**，用户代码本来就拥有全量权限——delua 没有「沙箱需求」，却要为它付出生态断裂 + 性能 + 工程量的代价 |
+| 解决问题了吗 | ❌ **没有** | 小程序架构的价值 = **沙箱安全隔离**（宿主 App 运行第三方不可信代码）。lide 是本地 IDE 运行**用户自己的代码**，用户代码本来就拥有全量权限——lide 没有「沙箱需求」，却要为它付出生态断裂 + 性能 + 工程量的代价 |
 | 可借鉴子集 | ✅ | 「逻辑/UI 分离」已有等价物（`LuaThread`/`LuaTimer`/`LuaAsyncTask`）；「数据驱动渲染」若将来要可视化布局设计器，可单独立项（增量式，不动运行时） |
 
-**B 路线结论：不推荐。** 它解决的是 delua 不存在的问题（第三方代码隔离），牺牲的是 delua 的核心资产（全量 API 生态）。除非未来场景变为「delua 作为宿主让第三方小程序运行」（商业模式变化），否则不立项。
+**B 路线结论：不推荐。** 它解决的是 lide 不存在的问题（第三方代码隔离），牺牲的是 lide 的核心资产（全量 API 生态）。除非未来场景变为「lide 作为宿主让第三方小程序运行」（商业模式变化），否则不立项。
 
 ### 9.3 路线 C：其他技术路线
 
@@ -424,7 +424,7 @@ EngineActivity（宿主注册）              env.apk
 | C-2 | **同 APK 进程隔离**（`:lua` 进程，引擎 Activity 或 AIDL EngineService） | ✅ 中成本 | 上轮报告 Tier 2。**变体：Bound Service 形态**——IDE `bindService` 到 `:lua` 进程的 `EngineService`，launch/compile/log 流全走 AIDL（最贴近 Flutter daemon：daemon 是服务不是 UI）；运行 UI 由服务拉起同进程 EngineActivity |
 | C-3 | **运行时下载包**（非 APK 形态的环境 = zip 目录） | ✅ 低成本 | 环境发布为 zip（`runtime.dex` + `lib/*.so` + `lua/` + `plugin.json`），IDE 下载/内置到私有目录 → InMemoryDexClassLoader + System.load + 解包。**与 A-2 文件夹式共享全部边界**（组件不可用 → 运行时库形态），但不需要 APK 格式。适合「环境随 IDE 版本内嵌、可热更新」 |
 | C-4 | **引擎多版本并存**（C-2/C-3/A-2 的增值） | ✅ | 插件目录/私有目录放多版本，IDE 按工程切换——「VS Code 多 Flutter SDK」同款能力；版本契约 + 956 探针现成 |
-| C-5 | **Termux 式**（环境走系统包管理器/终端） | ❌ 排除 | delua 是手机 IDE 场景，与终端工作流错位 |
+| C-5 | **Termux 式**（环境走系统包管理器/终端） | ❌ 排除 | lide 是手机 IDE 场景，与终端工作流错位 |
 | C-6 | **Xposed/Magisk 模块形态**（环境做成 root 模块） | ❌ 排除 | 依赖 root，分发与调试成本不可接受 |
 
 ### 9.4 三路线决策矩阵
@@ -459,7 +459,7 @@ R1 门禁：        rg -n "luajava|androlua|loadLibrary" editor/src          # �
 完整构建：        .\gradlew.bat :app:assembleArm64Debug --console=plain
 单测：            .\gradlew.bat :app:testX64DebugUnitTest :editor:testDebugUnitTest :androlua:testDebugUnitTest
 引擎重建：        scripts\rebuild_engine.ps1
-探针回归：        x64 模拟器 + ADB（双端 pro/delua 对比，基线 878/956）
+探针回归：        x64 模拟器 + ADB（双端 pro/lide 对比，基线 878/956）
 ```
 
 ---

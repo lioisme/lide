@@ -1,6 +1,6 @@
 # 看板娘 Live2D 原生迁移完成报告（Lua 直调 liblive2d.so）
 
-> 日期：2026-08-02 · 范围：delua 宿主内 Lua 工程「看板娘」从 Java（pro 官方 sample）迁移为
+> 日期：2026-08-02 · 范围：lide 宿主内 Lua 工程「看板娘」从 Java（pro 官方 sample）迁移为
 > Lua 直调原生 `liblive2d.so`（`luaopen_live2d` 模块，零 `Java_*` 绑定），行为与
 > AndroLua Pro 4.4.2 官方示例（`jp.live2d.sample.*`）逐项对齐。
 > 设备：emulator-5554（Android 14，x86_64，1440x2560）；构建：ndk-build r29 + Lua 5.3 头。
@@ -57,7 +57,7 @@
 
 ## 4. 双端对照验证（V1–V12，全部 PASS）
 
-| # | 项 | delua 实测证据 |
+| # | 项 | lide 实测证据 |
 |---|----|----------------|
 | V1 | 初始 haru | `Kanban loaded ...haru.model.json`（tr -1.45,1.2，0.001208333） |
 | V2 | 轮换序列 | change 4 次循环 → haru→shizuku→wanko→haru_01+02，logcat 逐模型日志 |
@@ -75,7 +75,7 @@
 ## 5. 操作附录
 
 ### 5.1 启动（重要陷阱）
-`am start -n com.lioisme.delua/com.androlua.LuaActivity -d "file:///sdcard/AndroLua/project/看板娘/main.lua"`
+`am start -n com.lioisme.lide/com.androlua.LuaActivity -d "file:///sdcard/AndroLua/project/看板娘/main.lua"`
 （带 URL 编码中文）
 
 ### 5.2 构建
@@ -84,7 +84,7 @@ APP_STL=c++_static APP_OPTIM=release -j8`；产物 `build-scripts/live2d/libs/x8
 
 ### 5.3 部署
 将 `.so` push 到已装 APK 目录
-`/data/app/~~EuvypZMAjKW9OmDTaEk0uQ==/com.lioisme.delua-nkxb5D7QZTMc0z9WXWc4Ow==/lib/x86_64/`（root 可写；
+`/data/app/~~EuvypZMAjKW9OmDTaEk0uQ==/com.lioisme.lide-nkxb5D7QZTMc0z9WXWc4Ow==/lib/x86_64/`（root 可写；
 旧版已存 `.bak`）。同时同步 `prebuilt/x86_64/` 与 `app/src/main/jniLibs/x86_64/`。
 
 ## 6. 知识库落库
@@ -96,5 +96,5 @@ APP_STL=c++_static APP_OPTIM=release -j8`；产物 `build-scripts/live2d/libs/x8
 ## 7. 遗留 / 限制
 
 - V7 双指缩放无 adb 双指事件方法，逻辑同源已测，标注为环境限制。
-- `require("zip")` 双端同病（外链与 delua 无关）。
+- `require("zip")` 双端同病（外链与 lide 无关）。
 - 全部实测都发生在 x86_64 模拟器；真机 arm64 需要重编 `-arm64` `.so` 后复验（工具链相同）。

@@ -1,8 +1,8 @@
-# delua UI 重构 —— 审计违规清单与解决方案（Audit & Work Order）
+# lide UI 重构 —— 审计违规清单与解决方案（Audit & Work Order）
 
 | Metadata | Value |
 |----------|-------|
-| Document ID | DELUA-UI-002 |
+| Document ID | LIDE-UI-002 |
 | Status | PASS（2026-08-02 设备验证完成） |
 | Author | Audit Team |
 | Priority | P0 —— 5 项 UI 需求均为产品规范硬性要求 |
@@ -20,7 +20,7 @@
 ### 违规 1（P0）：工程列表 item 上存在导出按钮；长按菜单非底部对话框
 
 **现状（设备实测）**：
-- `app/src/main/kotlin/com/lioisme/delua/ui/screen/ProjectListScreen.kt:240-249`
+- `app/src/main/kotlin/com/lioisme/lide/ui/screen/ProjectListScreen.kt:240-249`
   每个 item 右侧常驻「导出为 .alp」IconButton（uiautomator 可见 6 个
   `content-desc="导出为 .alp"`，x=1232..1328）。
 - 长按触发的是 `DropdownMenu`（ProjectListScreen.kt:251-277），非底部对话框。
@@ -42,7 +42,7 @@ item 上的导出按钮移除。
 
 **违反需求 2**：Appbar（含返回）最多 5 个按钮：返回、运行、撤销、重做、更多。
 
-**解决方案**（`editor/src/main/kotlin/com/lioisme/delua/editor/EditorToolbar.kt`）：
+**解决方案**（`editor/src/main/kotlin/com/lioisme/lide/editor/EditorToolbar.kt`）：
 1. actions 区仅保留：运行、撤销、重做、更多（按需求顺序）。
 2. 「打开文件树」「搜索」移入更多菜单。
 3. 更多菜单按分类展示（DropdownMenuHeader）：
@@ -64,7 +64,7 @@ PaddingValues(horizontal = 8.dp, vertical = 4.dp)` —— 上下各 4dp 内边�
 2. 为标签行加 `surfaceContainer` 背景，使标签条成为一体式条带（视觉上标签
    与标签栏贴合），无悬浮间隙。
 
-### 违规 4（P0）：delua 界面按钮普遍无 tip（tooltip）提示
+### 违规 4（P0）：lide 界面按钮普遍无 tip（tooltip）提示
 
 **现状**：全 App 图标按钮仅提供 `contentDescription`（无障碍语义），
 长按无 tooltip 浮层。涉及：

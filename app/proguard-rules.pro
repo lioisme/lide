@@ -9,10 +9,10 @@
 
 # androlua - 运行时反射 / 动态 dex 按类名引用（LuaActivity、LuaApplication 等）
 -keep class com.androlua.** { *; }
--keep class com.lioisme.delua.androlua.** { *; }
+-keep class com.lioisme.lide.androlua.** { *; }
 
 # 宿主应用类 - Lua 脚本 / 插件 dex 可能按类名反射引用
--keep class com.lioisme.delua.** { *; }
+-keep class com.lioisme.lide.** { *; }
 
 # ── Lua 可见 API 面（按类名引用，R8 引用图不可见）────────────────────
 # androlua 框架把扩展类放在 android.* / com.nirenr.* 命名空间，Lua 脚本经

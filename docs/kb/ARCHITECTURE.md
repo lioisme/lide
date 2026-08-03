@@ -1,4 +1,4 @@
-# delua 架构知识库
+# lide 架构知识库
 
 > 来源：`AGENTS.md`、`WHITEPAPER.md`、`ANDROLUA_INTEGRATION_PLAN.md`、`ENGINE_MIGRATION_WORK_ORDER.md`、
 > `EDITOR_CRASH_ANALYSIS_REPORT.md`、`LIBS_SUPPORT_WORK_ORDER.md`、`DEPENDENCY_MODEL_AUDIT_REPORT.md`。
@@ -14,9 +14,9 @@ settings.gradle.kts: :app + :androlua + :editor
 
 | 层 | 模块 | 包 | 职责 |
 |----|------|----|------|
-| IDE 宿主 | `:app` | `com.lioisme.delua` | Compose UI、项目管理、运行拉起、权限、设置持久化、打包器 |
+| IDE 宿主 | `:app` | `com.lioisme.lide` | Compose UI、项目管理、运行拉起、权限、设置持久化、打包器 |
 | 引擎运行时 | `:androlua` | `com.androlua` / `com.luajava` / `com.android.cglib`（Java 源码）+ 少量纯 Kotlin 工具 | Lua 运行时（继承自 AndroLua_pro 4.4.2 源码，编译进主 DEX） |
-| 编辑器 | `:editor` | `com.lioisme.delua.editor` | 纯文本级能力：行级词法诊断、补全、高亮、搜索、标签页、文件树 |
+| 编辑器 | `:editor` | `com.lioisme.lide.editor` | 纯文本级能力：行级词法诊断、补全、高亮、搜索、标签页、文件树 |
 
 运行时模型：**单进程**（`EngineBridge` → `EngineActivity` 同进程 Activity 栈直启），无独立进程、无 engine.dex 动态加载。
 
@@ -63,7 +63,7 @@ EditorScreen (rememberLauncherForActivityResult)
 ```
 colorScheme → setEditorLanguage → setText
 ```
-- TextMate 运行时只经 `TextMateInitializer`（进程级一次性，`DeluaApp` + `CountDownLatch` 预热），**不得在 UI 线程调用**。
+- TextMate 运行时只经 `TextMateInitializer`（进程级一次性，`LideApp` + `CountDownLatch` 预热），**不得在 UI 线程调用**。
 - 编辑器 API 调用（setText / diagnostics 赋值 / subscribeEvent 回调）保持主线程；文本快照可在后台线程取（`Content.toString` 内部 ReadWriteLock）。
 - 自动保存：快照与写盘均在 `Dispatchers.IO`；`onRelease` 兜底保存（修过 dispose 顺序丢改动）。
 - 大文件（>200 KB）：关闭括号高亮 / 当前块 / 自动换行，跳过行级诊断。

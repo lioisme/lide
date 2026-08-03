@@ -1,4 +1,4 @@
-# delua × AndroLua Pro 功能补全任务文档
+# lide × AndroLua Pro 功能补全任务文档
 
 | 元数据 | 内容 |
 |--------|------|

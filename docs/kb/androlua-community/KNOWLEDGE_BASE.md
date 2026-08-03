@@ -110,7 +110,7 @@
   - N2412 Lua实现热更新 —— `private_api`（`LuaDexLoader` 依赖）；
   - N1997 简约远程公告 —— `editor_bound`。
 - **风险提示**：远程加载代码（`loadstring` 远程内容、远程 dex 加载）属 `remote_exec`，
-  在 delua 宿主中必须走白名单/签名校验，见 §4。
+  在 lide 宿主中必须走白名单/签名校验，见 §4。
 
 ### 2.8 Lua 语言 / 教程（Lua代码 205、Lua教程 14、Androlua教程 58、table表 13、字符处理 24）
 
@@ -191,7 +191,7 @@
 
 ## 6. 已知边界（诚实声明）
 
-- 全部判定为 `static_review`（静态文本），**未做设备实测**；涉及 delua/Pro 兼容结论必须
+- 全部判定为 `static_review`（静态文本），**未做设备实测**；涉及 lide/Pro 兼容结论必须
   走 `androlua-project-validation` 双端验证后才能升格 `✅实测`。
 - `post_<id>.json` 中 `truncation=truncated_tail`（359 篇）表示文末被来源截断，引用片段时避开文末。
 - 自动 verdict 有系统性偏差风险：`chinese_identifier`/`private_api` 是主要判负原因，

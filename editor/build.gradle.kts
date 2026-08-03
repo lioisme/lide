@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.lioisme.delua.editor"
+    namespace = "com.lioisme.lide.editor"
     compileSdk = 36
 
     defaultConfig {

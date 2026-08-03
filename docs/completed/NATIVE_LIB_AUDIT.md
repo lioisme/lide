@@ -1,10 +1,10 @@
-# Delua 原生库缺失审计报告
+# LIDE 原生库缺失审计报告
 
 | 元数据 | 内容 |
 |--------|------|
 | 文档版本 | 1.1 |
 | 审计日期 | 2026-07-31 |
-| 审计对象 | delua 原生引擎库（NDK .so 模块） |
+| 审计对象 | lide 原生引擎库（NDK .so 模块） |
 | 对比基线 | AndroLua Pro 4.2.0（`docs/AndroLua_pro-master/`） |
 | 审计范围 | JNI 源码树、构建配置、Lua 运行时脚本、Java 运行时加载链 |
 | 执行状态 | **阶段 A 已完成（42/42 模块成功）**；阶段 B（设备验证）待执行 |
@@ -13,17 +13,17 @@
 
 ## 1. 执行摘要
 
-delua 当前仅打包 **2 个**自定义原生库（`libluajava.so`、`libgl.so`），而 AndroLua Pro 参考源码树定义并可构建 **15 个** `.so`（含 `libluajava.so`），即 **缺失 13 个原生模块**。
+lide 当前仅打包 **2 个**自定义原生库（`libluajava.so`、`libgl.so`），而 AndroLua Pro 参考源码树定义并可构建 **15 个** `.so`（含 `libluajava.so`），即 **缺失 13 个原生模块**。
 
-缺失模块中，**4 个被 delua 内置 Lua 运行时脚本直接依赖**（`cjson`、`socket`、`mime`、`xml`），缺库将导致 `require "cjson"`、`http.lua`、`smtp.lua` 等核心功能直接报错；其余 9 个为 AndroLua Pro 生态能力（`md5`、`crypt`、`zip`、`zlib`、`regex`、`canvas`、`bson`、`luv`、`sensor`），供用户脚本可选加载。
+缺失模块中，**4 个被 lide 内置 Lua 运行时脚本直接依赖**（`cjson`、`socket`、`mime`、`xml`），缺库将导致 `require "cjson"`、`http.lua`、`smtp.lua` 等核心功能直接报错；其余 9 个为 AndroLua Pro 生态能力（`md5`、`crypt`、`zip`、`zlib`、`regex`、`canvas`、`bson`、`luv`、`sensor`），供用户脚本可选加载。
 
-**根因**：原生模块全部从 C 源码编译，源码存在于 `docs/AndroLua_pro-master/app/src/main/jni/`（398 个 C/C++ 文件），delua 的 `build-scripts/jni/` 仅含 Android.mk 构建配置（17 个 .mk，0 个 C 文件）。上一轮 WP-001 修复已修正 Android.mk 的链接声明，但构建脚本的源码拷贝源指向了不含源码的 `build-scripts/jni/`，**全量编译目前无法产出任何模块**（详见 §5.1）。
+**根因**：原生模块全部从 C 源码编译，源码存在于 `docs/AndroLua_pro-master/app/src/main/jni/`（398 个 C/C++ 文件），lide 的 `build-scripts/jni/` 仅含 Android.mk 构建配置（17 个 .mk，0 个 C 文件）。上一轮 WP-001 修复已修正 Android.mk 的链接声明，但构建脚本的源码拷贝源指向了不含源码的 `build-scripts/jni/`，**全量编译目前无法产出任何模块**（详见 §5.1）。
 
 ---
 
 ## 2. 现状盘点
 
-### 2.1 已打包产物（delua）
+### 2.1 已打包产物（lide）
 
 ```
 app/src/main/jniLibs/
@@ -66,7 +66,7 @@ docs/AndroLua_pro-master/app/src/main/jni/
 
 ## 3. 缺失模块清单（13 项）
 
-| # | .so 文件 | luaopen 导出 | Lua 侧 require 名 | 依赖 delua 现有代码 | 编译风险 |
+| # | .so 文件 | luaopen 导出 | Lua 侧 require 名 | 依赖 lide 现有代码 | 编译风险 |
 |---|----------|--------------|--------------------|--------------------|----------|
 | 1 | `libcjson.so` | `luaopen_cjson` / `luaopen_cjson_safe` | `"cjson"` | ✅ **直接依赖** | 低 |
 | 2 | `libsocket.so` | `luaopen_socket_core` | `"socket.core"`（经 `socket.lua`） | ✅ **直接依赖** | 低 |
@@ -112,7 +112,7 @@ luaCpath = getApplicationInfo().nativeLibraryDir + "/lib?.so" + ";" + libDir + "
 | `xml.lua` | XML 解析 | `require("xml.core")` 失败 |
 | `import "gl"`（GL 渲染） | kleinbottle 工程 | 可用（已打包） |
 
-**结论**：delua 当前只能运行不依赖网络/JSON-C/XML 的基础脚本；三个回归测试工程中 `demo/` 的 HTTP + JSON 路径实际依赖 `socket`/`mime`/`cjson`，在缺库状态下无法通过回归验收。
+**结论**：lide 当前只能运行不依赖网络/JSON-C/XML 的基础脚本；三个回归测试工程中 `demo/` 的 HTTP + JSON 路径实际依赖 `socket`/`mime`/`cjson`，在缺库状态下无法通过回归验收。
 
 ---
 
@@ -124,7 +124,7 @@ luaCpath = getApplicationInfo().nativeLibraryDir + "/lib?.so" + ";" + libDir + "
 
 **正确拓扑**：
 - **源码（唯一真源）**：`docs/AndroLua_pro-master/app/src/main/jni/`（398 个 C/C++ 文件，勿改动）
-- **构建配置（delua 维护）**：`build-scripts/jni/**/Android.mk`（已修复 `LOCAL_SHARED_LIBRARIES := luajava`，共 12 处）
+- **构建配置（lide 维护）**：`build-scripts/jni/**/Android.mk`（已修复 `LOCAL_SHARED_LIBRARIES := luajava`，共 12 处）
 
 **修复方式**：构建脚本按以下顺序操作——
 1. 从 `docs/AndroLua_pro-master/app/src/main/jni/` 拷贝完整源码树至临时构建目录；
@@ -156,11 +156,11 @@ luaCpath = getApplicationInfo().nativeLibraryDir + "/lib?.so" + ";" + libDir + "
 
 ---
 
-## 6. 依赖关系矩阵（delua 代码 → 原生模块）
+## 6. 依赖关系矩阵（lide 代码 → 原生模块）
 
 ### 6.1 直接依赖（必须补齐）
 
-| delua 资产 | 引用的模块 | 引用方式 |
+| lide 资产 | 引用的模块 | 引用方式 |
 |-----------|-----------|---------|
 | `assets/lua/bmob.lua` | cjson | `require "cjson"` |
 | `assets/lua/http.lua` | socket, mime, socket.url | `require("socket")` / `require("mime")` |
@@ -240,7 +240,7 @@ luaCpath = getApplicationInfo().nativeLibraryDir + "/lib?.so" + ";" + libDir + "
 
 ## 8. 结论
 
-delua 缺失的 13 个原生库全部可从 `docs/AndroLua_pro-master/app/src/main/jni/`（398 个 C/C++ 源文件）编译产出，源码完备、无需移植。阻塞补齐的**唯一技术障碍**是构建脚本的源码拷贝源错误（§5.1），修复后按 §7 阶段 A → B → C → D 执行即可。
+lide 缺失的 13 个原生库全部可从 `docs/AndroLua_pro-master/app/src/main/jni/`（398 个 C/C++ 源文件）编译产出，源码完备、无需移植。阻塞补齐的**唯一技术障碍**是构建脚本的源码拷贝源错误（§5.1），修复后按 §7 阶段 A → B → C → D 执行即可。
 
 **优先级排序**：
 1. **P0**：修复构建脚本拷贝源 + 全量编译链路（阶段 A）
@@ -250,4 +250,4 @@ delua 缺失的 13 个原生库全部可从 `docs/AndroLua_pro-master/app/src/ma
 
 ---
 
-*审计完成。数据来源：delua 工作树、AndroLua Pro 4.2.0 参考源码树、Lua 运行时脚本、Java 运行时加载链、NDK 构建配置。*
+*审计完成。数据来源：lide 工作树、AndroLua Pro 4.2.0 参考源码树、Lua 运行时脚本、Java 运行时加载链、NDK 构建配置。*

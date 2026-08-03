@@ -10,11 +10,11 @@
 
 社区帖子（2144 篇）**不是可直接作为训练样本/权威文档的语料**：
 
-- 部分使用了**特定 AndroLua 客户端版本的私有 API**（`com.androlua.*`），在 delua /
+- 部分使用了**特定 AndroLua 客户端版本的私有 API**（`com.androlua.*`），在 lide /
   AndroLua Pro 中不可直接运行；
 - 大量作者**命名、逻辑、架构不规范**（中文标识符、全局变量污染、未对齐缩进、代码残缺、
   混入广告/公告/纯文本等）；
-- 但其中**有价值的方法、思路、可复用片段**是 delua 工程开发与社区治理的重要输入。
+- 但其中**有价值的方法、思路、可复用片段**是 lide 工程开发与社区治理的重要输入。
 
 本任务：**把 2144 篇社区帖子转化为一套分类清晰、口径统一、可审计、可持续增量的
 「社区知识库 + LLM 训练语料」**。
@@ -25,7 +25,7 @@
 
 | 价值方向 | 说明 |
 |---------|------|
-| AndroLua 工程开发 | 方法/思路可直接迁移进 delua 宿主与 Lua 工程；负面样本用于避免踩坑 |
+| AndroLua 工程开发 | 方法/思路可直接迁移进 lide 宿主与 Lua 工程；负面样本用于避免踩坑 |
 | 定向 LLM 微调 | 输出 `training/*.jsonl` 指令微调样本，教会大模型识别 AndroLua 专属写法与反例 |
 | 评审依据 | `STANDARDS.md` 中的正负面判定与可信度分级，可供任何人对帖子做一致性复评 |
 
@@ -79,8 +79,8 @@
 | 档位 | 含义 |
 |------|------|
 | `universal` | 纯 Lua 5.3 标准能力，任何宿主可运行 |
-| `android_api` | 依赖 Android public API（Activity / Intent / View），Pro/delua 可运行 |
-| `host_private` | 依赖宿主私有类（`com.androlua.*`、`activity.getLuaDir` 等）——**delua/Pro 需验证** |
+| `android_api` | 依赖 Android public API（Activity / Intent / View），Pro/lide 可运行 |
+| `host_private` | 依赖宿主私有类（`com.androlua.*`、`activity.getLuaDir` 等）——**lide/Pro 需验证** |
 | `editor_bound` | 依赖特定编辑器能力（FusionApp `uiManager`、`ds.*`、Cover/uiplugin） |
 | `obsolete` | 依赖已废弃 API / 已在系统行为中失效 |
 | `unverifiable` | 无法判定（残缺/无上下文） |
@@ -94,7 +94,7 @@
 1. 每个 `catalog/post_*.json` 必须带 source 指纹（manual_id+file_path），保证可回溯。
 2. 自动标签仅作为**初筛**；任何进入 `positives/` / `negatives/` 的条目，必须经**人工复核**
    并具有「作者一眼可见」的可引用片段。
-3. 可信度分级沿用 androlua-lua 约定：`✅实测` / `⚠仅pro` / `⚠仅delua` / `未实测`。
+3. 可信度分级沿用 androlua-lua 约定：`✅实测` / `⚠仅pro` / `⚠仅lide` / `未实测`。
    本库帖子的判定原则上应标注为 **`未实测`**（代码面评审结论，不代表设备行为）。
 
 ---
@@ -128,7 +128,7 @@ docs/kb/androlua-community/
 
 ## 8. 风险与边界（诚实声明）
 
-1. **可信度**：本库条目大部分基于**静态文本评审**，未经设备实测；凡涉 delua/Pro 兼容为
+1. **可信度**：本库条目大部分基于**静态文本评审**，未经设备实测；凡涉 lide/Pro 兼容为
    端口，必须走 `androlua-project-validation` SKILL 双端实测后才可升格为 `✅实测`。
 2. **语料残缺**：多篇为片段，训练样本在使用前必须做完整性过滤（见 training/README）。
 3. **版权**：保留作者元数据原作者标注；入库时保留 source 行，不涂抹。

@@ -2,7 +2,7 @@
 
 | Metadata | Value |
 |----------|-------|
-| Document ID | DELUA-LIBS-001 |
+| Document ID | LIDE-LIBS-001 |
 | Status | Draft（待评审） |
 | Author | Audit Team |
 | Stakeholders | 核心平台（:androlua）、宿主（:app）、编辑器（:editor）、QA |

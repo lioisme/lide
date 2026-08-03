@@ -5,7 +5,7 @@
 ## 1. 现象与危害
 
 约 104 篇帖子依赖**特定编辑器的专属能力**（FusionApp 的 `uiManager`、主题 API、
-`fa2` 编译期特性、`LuaActivity` 默认方法等），在 Pro/delua 宿主直接运行会缺符号/缺环境：
+`fa2` 编译期特性、`LuaActivity` 默认方法等），在 Pro/lide 宿主直接运行会缺符号/缺环境：
 
 - `activity.uiManager.colors.*`、`activity.UiManager.getColors()`（FusionApp 主题系统）；
 - `fa2` 专属的编译/库注入方式（`@other 本项目只支持有ViewPager2库的编辑器` 类声明）；

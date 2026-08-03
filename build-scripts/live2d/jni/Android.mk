@@ -1,4 +1,4 @@
-# Live2D V2 native engine + Lua binding (delua)
+# Live2D V2 native engine + Lua binding (lide)
 # Ported from the l2d-py Live2D/V2 reference (C++/GLES2).
 #
 # Single entry point (Lua -> C direct, no Java bridge):
@@ -13,7 +13,7 @@ LOCAL_PATH := $(call my-dir)
 # Host engine libluajava.so provides the Lua VM (same convention as libcjson.so)
 include $(CLEAR_VARS)
 LOCAL_MODULE := luajava
-LOCAL_SRC_FILES := ../../../prebuilt/$(TARGET_ARCH_ABI)/libluajava.so
+LOCAL_SRC_FILES := ../../../third_party/prebuilt/$(TARGET_ARCH_ABI)/libluajava.so
 include $(PREBUILT_SHARED_LIBRARY)
 
 include $(CLEAR_VARS)

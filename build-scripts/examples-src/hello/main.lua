@@ -12,7 +12,7 @@ layout = {
   background = "#FF0099CC",
   {
     TextView,
-    text = "Hello, delua!",
+    text = "Hello, lide!",
     textSize = "26sp",
     textColor = "#FFFFFFFF",
     layout_width = "wrap",

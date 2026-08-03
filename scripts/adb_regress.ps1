@@ -1,7 +1,7 @@
-﻿# delua ADB 回归矩阵脚本（WP-019）
+﻿# lide ADB 回归矩阵脚本（WP-019）
 # 用法：powershell -ExecutionPolicy Bypass -File scripts\adb_regress.ps1 [-Device emulator-5554] [-SkipBuild]
 # 流程：构建 x64 → 安装 → 推送 4 个基准工程 → 逐个拉起运行 → 断言（logcat 关键行 / 进程存活 / 截图存档）
-# 截图与日志存档：%TEMP%\delua-verify\
+# 截图与日志存档：%TEMP%\lide-verify\
 
 param(
     [string]$Device = "emulator-5554",
@@ -12,7 +12,7 @@ $ErrorActionPreference = "Stop"
 $root = Split-Path -Parent $PSScriptRoot
 $apk = Join-Path $root "app\build\outputs\apk\x64\debug\app-x64-debug.apk"
 $projRoot = "/storage/emulated/0/AndroLua/project/"
-$verifyDir = Join-Path $env:TEMP "delua-verify"
+$verifyDir = Join-Path $env:TEMP "lide-verify"
 New-Item -ItemType Directory -Force -Path $verifyDir | Out-Null
 
 function Adb([string]$argsLine) {
@@ -41,7 +41,7 @@ $results += [pscustomobject]@{ Case = "BUILD"; Result = "PASS"; Note = "assemble
 
 Write-Host "== 2/6 安装 APK =="
 Adb "install -r $apk" | Out-Null
-Adb "shell appops set com.lioisme.delua MANAGE_EXTERNAL_STORAGE allow" | Out-Null
+Adb "shell appops set com.lioisme.lide MANAGE_EXTERNAL_STORAGE allow" | Out-Null
 $results += [pscustomobject]@{ Case = "INSTALL"; Result = "PASS"; Note = "install -r" }
 
 Write-Host "== 3/6 推送 4 个基准工程 =="
@@ -61,11 +61,11 @@ foreach ($m in $matrix) {
     $name = $m.Name
     Write-Host "---- $name ----"
     Adb "logcat -c" | Out-Null
-    Adb "shell am start -a android.intent.action.VIEW -d androlua://com.lioisme.delua/project/$name/main.lua" | Out-Null
+    Adb "shell am start -a android.intent.action.VIEW -d androlua://com.lioisme.lide/project/$name/main.lua" | Out-Null
     Start-Sleep -Seconds 8
-    $pidLine = Adb "shell pidof com.lioisme.delua"
+    $pidLine = Adb "shell pidof com.lioisme.lide"
     $alive = $pidLine -match '\d+'
-    $resumed = (Adb "shell dumpsys activity activities") -match "topResumedActivity=ActivityRecord\{[^}]* com\.lioisme\.delua/\.engine\.EngineActivity"
+    $resumed = (Adb "shell dumpsys activity activities") -match "topResumedActivity=ActivityRecord\{[^}]* com\.lioisme\.lide/\.engine\.EngineActivity"
     if ($m.Expect -eq "UI") {
         # 纯 UI 脚本（demo）：无 print 输出，以「引擎页前台 + 进程存活」为成功判据。
         $matched = $resumed
@@ -74,7 +74,7 @@ foreach ($m in $matrix) {
         $matched = $log -match $m.Expect
     }
     Adb "exec-out screencap -p > $verifyDir\$name.png" | Out-Null
-    if ($alive) { Adb "shell am force-stop com.lioisme.delua" | Out-Null }
+    if ($alive) { Adb "shell am force-stop com.lioisme.lide" | Out-Null }
     $pass = $alive -and $matched
     $results += [pscustomobject]@{ Case = $name; Result = $(if ($pass) { "PASS" } else { "FAIL" }); Note = "alive=$alive resumed=$resumed expect=$($m.Expect)" }
 }

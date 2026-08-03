@@ -2,12 +2,12 @@
 
 | Metadata | Value |
 |----------|-------|
-| Document ID | DELUA-UI-001 |
+| Document ID | LIDE-UI-001 |
 | Status | Draft — Awaiting Approval |
 | Author | Engineering (Audit) |
 | Stakeholders | Product, IDE Engineering, QA |
 | Priority | P0 — Blocks editor UX acceptance |
-| Baseline | delua HEAD `c7b35dd` · Squircle-CE `docs/reference/Squircle-CE-master` |
+| Baseline | lide HEAD `c7b35dd` · Squircle-CE `docs/reference/Squircle-CE-master` |
 | Est. Effort | 4–5 engineering days (M1–M5) |
 
 ---
@@ -43,15 +43,15 @@
 
 ## 1. Executive Summary
 
-delua 宿主界面（`:app`）与编辑器界面（`:editor`）的 Tab 标签栏、侧边栏抽屉、文件树需与 Squircle-CE 对齐，并满足硬性约束：**宿主所有界面一律使用官方或成熟第三方组件，禁止手搓自研**。
+lide 宿主界面（`:app`）与编辑器界面（`:editor`）的 Tab 标签栏、侧边栏抽屉、文件树需与 Squircle-CE 对齐，并满足硬性约束：**宿主所有界面一律使用官方或成熟第三方组件，禁止手搓自研**。
 
 全量审计结论（详见 `docs/` 历史审计与本报告 §2、§14）：
 
 - **架构方向正确**：抽屉容器（`ModalNavigationDrawer`/`ModalDrawerSheet`）、Tab 容器（`LazyRow`）、文件树（`LazyColumn`）、工具栏（M3 `TopAppBar`）均为官方组件；Squircle-CE 自研的 `:core-ui`（`TabItem`/`DrawerSuite`）属"手搓"，**不在对齐范围**。
-- **P0 缺陷 2 项（抽屉）**：① 系统返回键不会先关抽屉而是直接弹出编辑器（Material3 1.3.0 的 `ModalNavigationDrawer` 经字节码实证无内部 `BackHandler`，delua 亦未自备）；② `openFileFromTree` 中 `drawerState.close()` 在挂起 IO 之后执行，存在竞态，可将"打开"状态写入 saveable 状态，造成"返回主界面时抽屉自动打开"。
+- **P0 缺陷 2 项（抽屉）**：① 系统返回键不会先关抽屉而是直接弹出编辑器（Material3 1.3.0 的 `ModalNavigationDrawer` 经字节码实证无内部 `BackHandler`，lide 亦未自备）；② `openFileFromTree` 中 `drawerState.close()` 在挂起 IO 之后执行，存在竞态，可将"打开"状态写入 saveable 状态，造成"返回主界面时抽屉自动打开"。
 - **P1 差距 4 项（Tab 栏）**：标签卡样式（chip 卡 vs Squircle 扁平标签 + 底部指示条）、无拖拽排序、无"点击当前标签弹关闭菜单"、新标签不自动滚动到末尾。
 - **P2 差距 3 项**：抽屉手势（不可拖拽关闭）、文件树无横向滚动、无版本目录。
-- 唯一新增第三方依赖：**`sh.calvin.reorderable:reorderable:3.0.0`**（Squircle 同款；POM 实证与 delua 的 Compose BOM 2024.09.00 / 1.7.3 二进制兼容）。
+- 唯一新增第三方依赖：**`sh.calvin.reorderable:reorderable:3.0.0`**（Squircle 同款；POM 实证与 lide 的 Compose BOM 2024.09.00 / 1.7.3 二进制兼容）。
 
 交付物：10 个工作包（WP-001…WP-010）、13 条验收标准（AC-01…AC-13）、16 条手工回归用例（TC-01…TC-16）、8 项工程注意事项（N-01…N-08）。
 
@@ -63,13 +63,13 @@ delua 宿主界面（`:app`）与编辑器界面（`:editor`）的 Tab 标签栏
 
 | # | 现象 | 根因 | 证据 |
 |---|------|------|------|
-| E1 | 抽屉打开时按返回键，不关抽屉而是直接返回主界面 | Material3 1.3.0 `ModalNavigationDrawer` **无内部 BackHandler**；delua 亦无自定义 BackHandler（全库 grep 零命中） | §14.1 javap 字节码检索 |
+| E1 | 抽屉打开时按返回键，不关抽屉而是直接返回主界面 | Material3 1.3.0 `ModalNavigationDrawer` **无内部 BackHandler**；lide 亦无自定义 BackHandler（全库 grep 零命中） | §14.1 javap 字节码检索 |
 | E2 | 返回编辑器界面时抽屉自动打开 | `rememberDrawerState` 为 `rememberSaveable` 实现；navigation-compose 2.8.5 按 back-stack entry 保存/恢复状态。若组合在抽屉 Open 时销毁（E1 触发链），Open 值落盘，同一 entry 恢复时抽屉重新打开 | §14.2 `DrawerState.Saver` 实证 |
 | E3 | 打开文件期间抽屉敞开 | `EditorScreen.kt:104-112`：`scope.launch { session.openTab(relative); drawerState.close() }` —— `close()` 在挂起 IO（读盘 + `Content` 构造）**之后**执行；窗口期内按返回 → 协程随组合销毁取消，`close()` 永不执行 | `EditorScreen.kt` 全文 |
 
 ### 2.2 Tab 栏差距清单
 
-| # | 维度 | delua 现状 | Squircle-CE 参照 | 处置 |
+| # | 维度 | lide 现状 | Squircle-CE 参照 | 处置 |
 |---|------|-----------|------------------|------|
 | G1 | 卡片样式 | chip 卡：`RoundedCornerShape(8.dp)`、`secondaryContainer` 底、高 34dp（`EditorTabs.kt:72-86`） | 扁平标签：高 36dp、无背景、选中态为底部 3dp `primary` 圆角指示条（`TabItem.kt` / `TabIndicator.kt`） | WP-004 |
 | G2 | 脏标记 | 6dp 实心圆点 | 标题前缀 `"• "`（`DocumentTab.kt:58`） | WP-004 |
@@ -80,7 +80,7 @@ delua 宿主界面（`:app`）与编辑器界面（`:editor`）的 Tab 标签栏
 
 ### 2.3 抽屉行为差距清单
 
-| # | 维度 | delua 现状 | Squircle-CE 参照 | 处置 |
+| # | 维度 | lide 现状 | Squircle-CE 参照 | 处置 |
 |---|------|-----------|------------------|------|
 | G7 | 返回键 | 无（E1） | `BackHandler { if (isOpen) close else onBack }`（EditorScreen.kt:237-241） | WP-001 |
 | G8 | 拖拽关闭 | `gesturesEnabled = false`（EditorScreen.kt:132） | `drawerGesturesEnabled = drawerState.isOpen`（:357） | WP-007 |
@@ -88,7 +88,7 @@ delua 宿主界面（`:app`）与编辑器界面（`:editor`）的 Tab 标签栏
 
 ### 2.4 文件树差距清单
 
-| # | 维度 | delua 现状 | Squircle-CE 参照 | 处置 |
+| # | 维度 | lide 现状 | Squircle-CE 参照 | 处置 |
 |---|------|-----------|------------------|------|
 | G10 | 横向滚动 | 无（长路径省略号截断，`ProjectFileTree.kt:150-157`） | `horizontalScroll` + 条目最小宽 248dp + 宽度缓存（`FileExplorer.kt`） | WP-009 |
 
@@ -108,7 +108,7 @@ delua 宿主界面（`:app`）与编辑器界面（`:editor`）的 Tab 标签栏
 | 项目 | 理由 |
 |------|------|
 | 照搬 Squircle `:core-ui`（`DrawerSuite`/`TabItem`/`TabIndicator`/DS IconButton 等） | 违反"禁止手搓自研"硬性约束；仅借鉴其**行为与视觉规范**，实现一律使用官方组件 |
-| Tab 排序跨会话持久化（Room/磁盘） | delua 会话为内存态（`EditorSession` 按 `remember(project)` 重建）；需先建会话持久化基础设施，列为后续工作项 |
+| Tab 排序跨会话持久化（Room/磁盘） | lide 会话为内存态（`EditorSession` 按 `remember(project)` 重建）；需先建会话持久化基础设施，列为后续工作项 |
 | 文件树长按多选 / 操作栏（ExplorerActionBar）、异步节点加载 | 超出本次对齐目标，列为后续工作项 |
 | 抽屉边缘滑开手势 | 与编辑器触摸交互冲突（双方设计均禁止）；仅支持"打开后可拖拽关闭" |
 | 编辑区（`LuaEditor`/诊断/搜索）任何改动 | 与本次 UI 对齐无关，禁止触碰 |
@@ -137,7 +137,7 @@ delua 宿主界面（`:app`）与编辑器界面（`:editor`）的 Tab 标签栏
 | 属性 | 内容 |
 |------|------|
 | 目标 | 修复 E1：系统返回键在抽屉打开时**先关抽屉**，再按一次才退出编辑器（经典侧边栏抽屉契约） |
-| 文件 | `app/src/main/kotlin/com/lioisme/delua/ui/screen/EditorScreen.kt` |
+| 文件 | `app/src/main/kotlin/com/lioisme/lide/ui/screen/EditorScreen.kt` |
 | 依赖 | 无 |
 | 工时 | 0.5 天 |
 
@@ -163,7 +163,7 @@ BackHandler(enabled = drawerState.isOpen) {
 | 属性 | 内容 |
 |------|------|
 | 目标 | 修复 E3：抽屉关闭不再依赖挂起 IO 完成；杜绝 Open 状态落盘（E2 触发链） |
-| 文件 | `app/src/main/kotlin/com/lioisme/delua/ui/screen/EditorScreen.kt`（`openFileFromTree`，104-112 行） |
+| 文件 | `app/src/main/kotlin/com/lioisme/lide/ui/screen/EditorScreen.kt`（`openFileFromTree`，104-112 行） |
 | 依赖 | 无 |
 | 工时 | 0.5 天 |
 
@@ -256,7 +256,7 @@ fun moveTab(from: Int, to: Int) {
 }
 ```
 
-- 说明：delua 的选中语义是 `selectedFile: String?`（按文件名），**天然跟随**标签移动，无需 Squircle 的 `selectedPosition` 修正逻辑；`Content` 缓存（`contents`）按文件名键控，重排不触碰。
+- 说明：lide 的选中语义是 `selectedFile: String?`（按文件名），**天然跟随**标签移动，无需 Squircle 的 `selectedPosition` 修正逻辑；`Content` 缓存（`contents`）按文件名键控，重排不触碰。
 - 仅主线程调用（与现有 `_tabs` 变更约定一致）。
 
 4. **宿主接线**：`EditorScreen.kt:197-205` 传 `onTabMoved = { from, to -> session.moveTab(from, to) }`。
@@ -334,7 +334,7 @@ LaunchedEffect(tabs.size) {
 }
 ```
 
-- 用计数增幅判定追加（delua 无 Squircle 的事件总线，计数判定成本最低且无副作用）；重排导致的数量不变场景不触发。
+- 用计数增幅判定追加（lide 无 Squircle 的事件总线，计数判定成本最低且无副作用）；重排导致的数量不变场景不触发。
 - 注意 `LaunchedEffect(tabs.size)` 在数量不变的重排时不重启，天然满足"重排不滚动"。
 
 **验收标准（AC-06）**：文件树打开标签（追加）后标签行自动滚动到新标签；关闭/拖拽不触发滚动；标签少于一屏时不产生可见动画（对照 §10 TC-08）。
@@ -448,7 +448,7 @@ onToggleDrawer = { scope.launch { if (drawerState.isOpen) drawerState.close() el
 
 ### N-01 架构边界（R1/R3/R4）
 
-- `:editor`（`com.lioisme.delua.editor`）不得出现 `com.androlua`、`com.luajava`、`System.loadLibrary`、jniLibs；`editor/build.gradle.kts` 不得依赖 `:androlua`。
+- `:editor`（`com.lioisme.lide.editor`）不得出现 `com.androlua`、`com.luajava`、`System.loadLibrary`、jniLibs；`editor/build.gradle.kts` 不得依赖 `:androlua`。
 - `:editor` 不得读取 `:app` 的任何状态/类型。拖拽排序、关闭菜单、文件树的**数据流一律为：`:editor` 事件回调 → `:app` 宿主（`EditorScreen`/`EditorSession`）→ 状态回流**。
 - 新增依赖 `sh.calvin.reorderable` 为纯 Compose 库（POM 实证无 Android 平台绑定之外的产物），不破坏边界。
 - 抽屉 `BackHandler`、`drawerState`、会话操作属宿主专属逻辑，放 `:app`。
@@ -595,7 +595,7 @@ onToggleDrawer = { scope.launch { if (drawerState.isOpen) drawerState.close() el
 
 ### 14.1 E1 — M3 1.3.0 `ModalNavigationDrawer` 无内部 BackHandler
 
-对 `material3-android:1.3.0`（delua BOM 2024.09.00 实际解析版本）classes.jar 反编译检索：
+对 `material3-android:1.3.0`（lide BOM 2024.09.00 实际解析版本）classes.jar 反编译检索：
 
 ```
 NavigationDrawerKt$ModalNavigationDrawer$1$1 … $3 — 全部 12 个内部类：BackHandler 零命中
@@ -609,7 +609,7 @@ NavigationDrawerKt$ModalNavigationDrawer$1$1 … $3 — 全部 12 个内部类�
 
 ### 14.3 reorderable 3.0.0 兼容性
 
-POM 实证（`repo1.maven.org/.../reorderable-3.0.0.pom`）：依赖为 Jetpack/Compose Multiplatform 1.7.0（runtime/animation/foundation）与 kotlin-stdlib-common 1.9.0。delua BOM 2024.09.00 → Compose 1.7.3、Kotlin 2.2.20：二进制兼容；Squircle-CE 生产环境同库同版本（其 libs.versions.toml `reorderable = "3.0.0"`）。
+POM 实证（`repo1.maven.org/.../reorderable-3.0.0.pom`）：依赖为 Jetpack/Compose Multiplatform 1.7.0（runtime/animation/foundation）与 kotlin-stdlib-common 1.9.0。lide BOM 2024.09.00 → Compose 1.7.3、Kotlin 2.2.20：二进制兼容；Squircle-CE 生产环境同库同版本（其 libs.versions.toml `reorderable = "3.0.0"`）。
 
 ### 14.4 Squircle 关键参照行号
 

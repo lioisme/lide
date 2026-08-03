@@ -33,7 +33,7 @@
  * SUCH DAMAGE.
  */
 
-/* delua patch: added <unistd.h> for getpid() (NDK r29 / C99) */
+/* lide patch: added <unistd.h> for getpid() (NDK r29 / C99) */
 
 #include <sys/types.h>
 #include <sys/stat.h>

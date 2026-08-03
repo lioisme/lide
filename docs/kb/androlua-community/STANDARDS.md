@@ -49,7 +49,7 @@
    - 把 UI、业务、IO 写在一个脚本；无任何封装意图。
 4. **平台绑定问题（明确不可移植）**
    - 直接使用 `com.androlua.*` 私有类且无说明/降级路径；
-   - 直接依赖特定编辑器全局对象（`ui`、`ds.*`、`Corner`、`LuaActivity` 默认方法、`this`）且不兼容 delua/Pro 默认启动页方式。
+   - 直接依赖特定编辑器全局对象（`ui`、`ds.*`、`Corner`、`LuaActivity` 默认方法、`this`）且不兼容 lide/Pro 默认启动页方式。
 
 ### 4.2 判 `positive` 的情形
 
@@ -80,7 +80,7 @@
 | obsolete | 引用的 API 已在高版本被移除（`PorterDuff.Mode` 旧枚举等）、或注明已失效 |
 | unverifiable | fragment/无上下文/无法判断 |
 
-> 注：`loadlayout` / `activity` / `this` 属于 AndroLua **宿主标准**（Pro 与 delua 均提供）
+> 注：`loadlayout` / `activity` / `this` 属于 AndroLua **宿主标准**（Pro 与 lide 均提供）
 > → 归 `android_api`；只有当还引用了「编辑器本身专属」能力时才升级为 `editor_bound`。
 
 ## 6. 出评条目字段（模板）
@@ -93,7 +93,7 @@ kind: code_demo
 verdict: negative          # positive | negative | neutral | harmful
 portability: host_private
 confidence: static_review   # static_review | device_tested | unverified
-tags:                       # 可选 delua 专属标签
+tags:                       # 可选 lide 专属标签
   - chinese_identifier
   - global_pollution
   - androlua_private

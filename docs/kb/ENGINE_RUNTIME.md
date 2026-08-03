@@ -1,4 +1,4 @@
-# delua 引擎与运行时知识库
+# lide 引擎与运行时知识库
 
 > 来源：`ANDROLUA_SOURCE_CODE_AUDIT_REPORT.md`、`ENGINE_LEVEL_COMPARISON_REPORT.md`、`NATIVE_LIB_AUDIT.md`、
 > `LIBS_SUPPORT_WORK_ORDER.md`、`EMULATOR_RUNTIME_AUDIT_REPORT.md`、`GAME_ENGINE_PERFORMANCE_AUDIT_REPORT.md`、
@@ -25,17 +25,17 @@
 
 ## 2. 原生模块与资产清单
 
-### 2.1 原生模块（delua 内置 17 个 × 3 ABI；pro 15 个 × 1 ABI）
+### 2.1 原生模块（lide 内置 17 个 × 3 ABI；pro 15 个 × 1 ABI）
 
 | 类别 | 模块 |
 |------|------|
-| 核心 | lua（5.3.3）、luajava（JNI 桥，117 个导出符号）、luagl（→ delua `gl`） |
+| 核心 | lua（5.3.3）、luajava（JNI 桥，117 个导出符号）、luagl（→ lide `gl`） |
 | 与 pro 一致 | cjson、md5、crypt、zip、xml、regex、zlib、canvas、bson、luv、socket、mime、sensor |
 | 已补齐 | **lfs、lsqlite3**（LIBS-003，NDK 29 预编译 + Lua 5.3 `lua_strlen` 兼容补丁） |
 | 有意不提供 | **lluv**（与 luv 功能重叠）、**tcc**（NDK 仅 armeabi-v7a 有目标） |
-| delua 超集 | `mime`（pro 未内置） |
+| lide 超集 | `mime`（pro 未内置） |
 
-- 产物：`prebuilt/{arm64-v8a,armeabi-v7a,x86_64}/`；构建配置与源码在 `build-scripts/jni/`（含 lfs/lsqlite3 子目录与 patches）。
+- 产物：`third_party/prebuilt/{arm64-v8a,armeabi-v7a,x86_64}/`；构建配置与源码在 `build-scripts/jni/`（含 lfs/lsqlite3 子目录与 patches）。
 - 一键重建：`scripts/rebuild_engine.{ps1,sh}`（`DISABLED_MODULES=("lluv","tcc")`）。
 - 缺失/第三方 .so 补偿：工程 `libs/` 自备 → `libsloader` 优先命中，否则 `package.loadlib("./libs/lib…so", "luaopen_…")`。
 - 加载路径：`luaCpath = nativeLibraryDir + "/lib?.so" + libDir + "/lib?.so"`，无需宿主代码配合。
@@ -58,9 +58,9 @@
 
 | 证据 | 结果 | 出处 |
 |------|------|------|
-| Universal Lua Probe（956 项） | delua **878/956** vs pro **879/956**（91% 优秀），唯一差异 socket 已修复 | `docs/log/*.log`、ENGINE_LEVEL_COMPARISON |
+| Universal Lua Probe（956 项） | lide **878/956** vs pro **879/956**（91% 优秀），唯一差异 socket 已修复 | `docs/log/*.log`、ENGINE_LEVEL_COMPARISON |
 | 探针差异根因 | `extractLuaScripts()` 遇子目录 `socket` 抛 IOException，try-catch 在循环外 → 后续脚本全未落盘；已改为递归遍历 + 单文件 try-catch | ENGINE_LEVEL_COMPARISON |
-| 模拟器实测 | 12 个参考工程 delua vs pro 日志**逐字一致**（含非致命 bug 日志）；残余差异仅 LuaDexLoader +4 行号、宿主包装帧一行 | EMULATOR_RUNTIME_AUDIT |
+| 模拟器实测 | 12 个参考工程 lide vs pro 日志**逐字一致**（含非致命 bug 日志）；残余差异仅 LuaDexLoader +4 行号、宿主包装帧一行 | EMULATOR_RUNTIME_AUDIT |
 | 真机 /libs 矩阵 | V-01~V-10 全 PASS（SDK 36 arm64）：自动加载、额外 dex、自制 .so、LuaSocket、init 隔离、冷启动解包、资产升级覆盖、损坏 dex 降级、classloader 稳定 | LIBS_SUPPORT_WORK_ORDER |
 | Java 桥 | bindClass/newInstance/createProxy/loadLib 12/12 全可用；危险操作（os.execute/io.popen/loadfile/dex）全部可用 | docs/log |
 | 引擎缺陷修复 | ① socket 解包缺陷；② **W^X writable-dex**：Android 8+/14+ 拒绝 app 可写目录加载 dex → `InMemoryDexClassLoader` 内存字节加载（API≥26，不回退）；③ LuaActivity 未注册 → ActivityNotFoundException；④ targetSdk 36 明文 HTTP 默认禁 → `usesCleartextTraffic="true"` | 各审计报告 |
@@ -72,12 +72,12 @@
 | 项 | 说明 |
 |----|------|
 | `InMemoryDexClassLoader` 无 AOT | 无 dex2oat 产物，冷启动解释执行（慢 10~50 倍）；游戏 demo 启动「卡」的共同来源 |
-| 递归性能异常 | delua 探针递归 0.0116s vs pro 0.0002s（~58 倍慢），原因未定案，需关注 |
+| 递归性能异常 | lide 探针递归 0.0116s vs pro 0.0002s（~58 倍慢），原因未定案，需关注 |
 | `LuaObject.finalize` watchdog | 10 万行 print 极端场景触发引擎固有 GC 极限崩溃（WP-002 实测），非本工程范围 |
 | 魔改字节码不兼容 | 外部 Lua 5.3.3 工具编译产物不可直接运行；打包链用引擎同款 LuaState（LuaCompiler） |
 | GLES 1.0 | `gl` 模块依赖 GLESv1_CM，部分设备不可用（仅 kleinbottle 使用） |
 | 探针已知缺陷 | `math.huge`/`math.pi` 报「无」、`status(运行)` bad argument 为探针自身问题，非运行时缺陷 |
-| Xposed 反检测 | pro 原版 check1/2/3 已在 delua fork 彻底清除（grep 零命中），对 Xposed 生态友好 |
+| Xposed 反检测 | pro 原版 check1/2/3 已在 lide fork 彻底清除（grep 零命中），对 Xposed 生态友好 |
 | 打包体积 | 全量原生库合计 ~1.3 MB，APK 22.79 MB（历史基线）；体积预算 WP-001 ACC-004 增量 ≤6 MB |
 
 ---
@@ -103,4 +103,4 @@ Lua → C（.so）调用为纯 C 路径不经 Java（`require "zip"` = `package.
 | dex/so 加载 | `androlua/src/main/java/com/androlua/LuaDexLoader.java`（W^X 内存加载） |
 | 打包链 | `androlua/.../LuaCompiler.kt`、`AXmlManifest.kt`、`app/.../build/{ApkBuilder,ApkSigner,V2Signer,ZipUtils}.kt`、`BuildApkScreen.kt` |
 | 资产提取 | `LuaApplication.extractLuaScripts()`（递归 + MD5 版本化） |
-| 原生模块构建 | `build-scripts/jni/`、`scripts/rebuild_engine.*`、`prebuilt/` |
+| 原生模块构建 | `build-scripts/jni/`、`scripts/rebuild_engine.*`、`third_party/prebuilt/` |

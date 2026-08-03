@@ -5,7 +5,7 @@
 ## 1. 现象与危害
 
 60+ 篇帖子直接 `import`/`bindClass` **`com.androlua.*` 私有类**。这些类随客户端版本
-**不存在、改名或签名变化**，导致跨版本/跨宿主（delua）不可运行：
+**不存在、改名或签名变化**，导致跨版本/跨宿主（lide）不可运行：
 
 - `LuaAdapter` / `LuaAsyncTask` / `LuaDexLoader` / `LuaDrawable` / `LuaEditor` /
   `LuaFragment` / `LuaLexer` / `LuaRecyclerAdapter` / `LuaTimer` / `LuaTimerTask` /

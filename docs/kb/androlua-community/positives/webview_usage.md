@@ -1,6 +1,6 @@
 # 正向主题卡：WebView 使用与下载（WebViewClient / WebChromeClient / DownloadListener）
 
-> reviewed: 2026-08-02 ｜ confidence: static_review ｜ portability: android_api（可运行于 Pro/delua）
+> reviewed: 2026-08-02 ｜ confidence: static_review ｜ portability: android_api（可运行于 Pro/lide）
 
 ## 1. 思路要点
 
@@ -35,7 +35,7 @@ local DownloadListener= luajava.bindClass "android.webkit.DownloadListener"
 
 ## 4. 工程落地建议
 
-- 全部为公开 Android API（`android.webkit.*`），Pro/delua 可直接运行；
+- 全部为公开 Android API（`android.webkit.*`），Pro/lide 可直接运行；
 - 下载接管时注意 Android 10+ 分区存储与 `WRITE_EXTERNAL_STORAGE` 变化，社区帖多为旧版
   写法，落地需按目标 SDK 修正（见 negatives/obsolete 主题）。
 

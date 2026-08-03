@@ -1,7 +1,7 @@
-# delua 宿主（IDE）性能审计报告（V2 · 2026-08-01）
+# lide 宿主（IDE）性能审计报告（V2 · 2026-08-01）
 
 > 审计对象：`:editor` 模块全部源码 + `:app` 的 `EditorScreen.kt` / `EditorSession.kt` /
-> `ProjectListScreen.kt` / `ProjectManager.kt` / `DeluaApp.kt` / `SettingsManager.kt` / 构建脚本
+> `ProjectListScreen.kt` / `ProjectManager.kt` / `LideApp.kt` / `SettingsManager.kt` / 构建脚本
 > 参照基准：`docs/reference/sora-editor-main/`（sora-editor 0.24.6 源码）、`docs/reference/Squircle-CE-master/`
 > 验证环境：x64 Android 14 模拟器（emulator-5554，adb root）
 > 关联报告：`docs/completed/EDITOR_PERFORMANCE_AUDIT_REPORT.md`（V1，P0 问题已全部落实修复）
@@ -27,7 +27,7 @@ V1 报告（2026-07-31）列出的 P0 问题**已全部修复**并经代码核�
 **本次 V2 审计结论**：架构主体（会话驱动 + StateFlow 信号分离 + 增量诊断 + 事件驱动搜索）已对齐
 Squircle `EditorViewModel` 范式，无"随时间/滑动越来越卡"的累积性缺陷（sora 搜索线程会
 interrupt 旧任务、分析线程空闲即退出并释放 shadowed 文本、TextMate 各 registry 无无界缓存、
-`LuaActivity.sLuaActivityMap` 在 onDestroy 清理、/data/anr 内无 delua 记录）。
+`LuaActivity.sLuaActivityMap` 在 onDestroy 清理、/data/anr 内无 lide 记录）。
 
 **仍存在的问题**集中在 6 处低成本修正（见 §1），本次一并实施并做设备回归验证。
 
@@ -39,7 +39,7 @@ interrupt 旧任务、分析线程空闲即退出并释放 shadowed 文本、Tex
 
 | # | 位置 | 问题 | 影响 |
 |---|---|---|---|
-| P1-1 | `EditorScreen.kt:95` | `Log.d("DeluaDebug", …)` 位于组合体顶部，**每次重组都执行**（含字符串拼接分配）；重组源：脏标记 / undo 能力 / 选中文件 / 主题 / 对话框状态等 | 调试残留 + 每重组日志开销 |
+| P1-1 | `EditorScreen.kt:95` | `Log.d("LideDebug", …)` 位于组合体顶部，**每次重组都执行**（含字符串拼接分配）；重组源：脏标记 / undo 能力 / 选中文件 / 主题 / 对话框状态等 | 调试残留 + 每重组日志开销 |
 | P1-2 | `LuaEditor.kt:247-256` + `EditorScreen.kt:636` | `DisposableEffect.onDispose` 在主线程执行 `editor.text.toString()`（O(n) 全文拷贝 + 大对象分配），但宿主 lambda `{ session.flushSelectedDirtyAsync() }` **直接丢弃该字符串** | 退出编辑器时无谓的主线程 O(n) 拷贝与 GC 压力 |
 | P1-3 | `SearchBar.kt:94-96` | `LaunchedEffect(query, …)` 每敲一键立即 `searcher.search()`；sora `EditorSearcher.executeMatch` 在**调用线程（主线程）**做 `content.toStringBuilder()`（O(n)）+ interrupt + `new Thread` | 大文件（>200KB，诊断已跳但搜索不跳）下每键主线程 O(n) 拷贝 + 线程对象风暴；连续键入时搜索频繁重启 |
 | P1-4 | `EditorScreen.kt:91-94` | `selectedFile` 与 `selectedContent` 两个 StateFlow 分两次发射 → 文件切换产生**两次整屏重组**（第一帧空 content、第二帧带 content） | 文件切换帧率浪费 |
@@ -58,7 +58,7 @@ interrupt 旧任务、分析线程空闲即退出并释放 shadowed 文本、Tex
 
 | # | 位置 | 问题 | 建议 |
 |---|---|---|---|
-| P3-1 | `DeluaApp.kt:36-106` | `extractExamplePlugin` / `extractLayoutTemplates` / `extractLuadoc` 在 Application.onCreate 主线程同步做 IO（存在性检查 + 复制） | 移入后台线程（与引擎无关，宿主页读取时已就绪）；`LuaApplication.extractLuaScripts` 需保证引擎运行时就绪，保留主线程（25 个小文件 + MD5 ≈ 2-6ms，可接受） |
+| P3-1 | `LideApp.kt:36-106` | `extractExamplePlugin` / `extractLayoutTemplates` / `extractLuadoc` 在 Application.onCreate 主线程同步做 IO（存在性检查 + 复制） | 移入后台线程（与引擎无关，宿主页读取时已就绪）；`LuaApplication.extractLuaScripts` 需保证引擎运行时就绪，保留主线程（25 个小文件 + MD5 ≈ 2-6ms，可接受） |
 | P3-2 | `app/build.gradle.kts:117` | Compose BOM 2024.09.00（Compose 1.7.3 / material3 1.3.0）偏旧；1.8/1.9 含大量重组/布局/lazy 性能修复 | 升级 BOM 前需验证 `sh.calvin.reorderable:3.0.0`（按 1.7.3 编译）二进制兼容与 material3 API 变更；建议单独分支试升级 |
 | P3-3 | `EditorSession.kt:49` | `contents` 缓存无上限（每标签一份 Content + undo 栈） | 加 LRU 上限（如 12）且仅逐出"未选中且非脏"项；需与标签生命周期联动，本次不动 |
 | P3-4 | `ProjectManager.kt:24-30` | `listProjects` 每次全量 `loadProject`（列目录 + 读 init.lua 解析） | 工程数 >50 时首次进入列表有可见延迟；可加目录 mtime 指纹缓存 |
@@ -75,7 +75,7 @@ interrupt 旧任务、分析线程空闲即退出并释放 shadowed 文本、Tex
 | 分析线程不泄漏 | `AsyncIncrementalAnalyzeManager.LooperThread.run()`（:630-646）`messageQueue.take()` 阻塞，`handleMessage` 返回 false 即退出，finally release shadowed 文本 |
 | TextMate 无无界缓存 | GrammarRegistry 各 map 在 reload 时 clear；TextMateAnalyzer 仅缓存 1 个正则 |
 | 引擎 Activity 静态表清理 | `LuaActivity.onDestroy()`（:802-811）`sLuaActivityMap.remove(pageName)` |
-| delua ANR（旧安装遗留，本次重装后未复现） | `/data/anr/` 内 2026-08-01 06:03/06:10 有 2 份 delua ANR，均属**重装前的旧安装**（安装路径 `~~gu4vR5W…` / `~~vJ8RtOF…`，与当前 `~~ZSngyHW…` 不同）；主线程卡在 `EngineActivity.onCreate → LuaActivity.doFile → pcall → LuaPrint.execute → sendMsg → MessageQueue.enqueueMessage`（Lua 脚本主线程执行期阻塞 20s）。引擎侧特性（脚本在主线程 doFile），非编辑器缺陷；本次重装构建后运行 demo 复测未再现 |
+| lide ANR（旧安装遗留，本次重装后未复现） | `/data/anr/` 内 2026-08-01 06:03/06:10 有 2 份 lide ANR，均属**重装前的旧安装**（安装路径 `~~gu4vR5W…` / `~~vJ8RtOF…`，与当前 `~~ZSngyHW…` 不同）；主线程卡在 `EngineActivity.onCreate → LuaActivity.doFile → pcall → LuaPrint.execute → sendMsg → MessageQueue.enqueueMessage`（Lua 脚本主线程执行期阻塞 20s）。引擎侧特性（脚本在主线程 doFile），非编辑器缺陷；本次重装构建后运行 demo 复测未再现 |
 | 引擎输出 Binder 截断 | `EngineActivity.OUTPUT_LIMIT = 200KB`（防 Binder 事务溢出） |
 | 自动保存不抢主线程 | `editTick.collectLatest` 500ms 防抖 + `flushDirty` 内 `withContext(IO)` 取快照写盘 |
 | 大文件降级 | >200KB：跳过行级诊断 / 关闭括号高亮 / 当前块 / 换行，undo 栈降为 200 |
@@ -103,7 +103,7 @@ interrupt 旧任务、分析线程空闲即退出并释放 shadowed 文本、Tex
 | 搜索键入（防抖验证） | 395 帧 / janky 2.28%（50th=6ms、90th=11ms、95th=14ms、99th=48ms）；输入 "function" → 计数 **0/7** 事件驱动正确；全清后键入残串 "functiontion" → 0/0（计数始终与查询一致，150ms 防抖生效，停止键入后才搜索） |
 | 工程列表滑动（下拉/上拉各 1 次 + 快速滑动） | 78 帧 / janky 0%（50th=5ms、90th=6ms、99th=15ms） |
 | 编辑器滚动（4 次连续 swipe） | 350 帧 / janky 1.14%（50th=5ms、90th=10ms、99th=69ms） |
-| 运行 demo 工程（EngineActivity） | EngineActivity Displayed +145ms；无 ANR、无崩溃；demo 工程 md5 报错 `length=16; index=16` 为**已知工程自身 bug**（`docs/kb/androlua-lua/PITFALLS.md` #1，pro/delua 双端逐字一致，预期行为） |
+| 运行 demo 工程（EngineActivity） | EngineActivity Displayed +145ms；无 ANR、无崩溃；demo 工程 md5 报错 `length=16; index=16` 为**已知工程自身 bug**（`docs/kb/androlua-lua/PITFALLS.md` #1，pro/lide 双端逐字一致，预期行为） |
 | ANR / 崩溃复查 | `/data/anr/` 无新文件；logcat 无 `FATAL EXCEPTION` / `ANR in com.lioisme` |
 | 内存（复测） | TOTAL PSS ≈ 124MB（会话加载 demo + 搜索后），无泄漏趋势 |
 | R1 边界 | `luajava/androlua/loadLibrary` 在 `editor/src` 零命中 |
@@ -140,7 +140,7 @@ interrupt 旧任务、分析线程空闲即退出并释放 shadowed 文本、Tex
 
 ## 4. 本次修复清单（Phase A）
 
-1. **P1-1** `EditorScreen.kt`：删除 `DeluaDebug` 日志行。
+1. **P1-1** `EditorScreen.kt`：删除 `LideDebug` 日志行。
 2. **P1-2** `LuaEditor.kt`：`onRelease` 签名 `(content: String) -> Unit` → `() -> Unit`，删除 onDispose 的 `editor.text.toString()`。
 3. **P1-3** `SearchBar.kt`：`LaunchedEffect(query, …)` 内增加 150ms 防抖（`delay` + 取消语义由 LaunchedEffect 重启天然提供），键入停止后才发起搜索（sora 匹配本身在后台，结果事件驱动计数不变）。
 4. **P1-4** `EditorSession.kt` + `EditorScreen.kt`：`_selectedFile` / `_selectedContent` 合并为单一 `Selection(file, content)` StateFlow，文件切换原子发射一次。
@@ -191,7 +191,7 @@ rg -n "luajava|androlua|loadLibrary" editor/src
 
 ### 6.3 修复清单
 
-1. **工程列表缓存提升**（核心）`DeluaNavHost.kt` + `ProjectListScreen.kt`：
+1. **工程列表缓存提升**（核心）`LideNavHost.kt` + `ProjectListScreen.kt`：
    `projects` 状态与 `refreshProjects`（suspend，IO 读盘）提升至 NavHost 层，
    导航往返不销毁；页面改为纯消费方，保留唯一触发点
    `LaunchedEffect(Unit, refreshKey, pendingImportPaths.size) { refresh() }`，

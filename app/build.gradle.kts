@@ -12,11 +12,11 @@ val keystoreProperties = Properties().apply {
 }
 
 android {
-    namespace = "com.lioisme.delua"
+    namespace = "com.lioisme.lide"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.lioisme.delua"
+        applicationId = "com.lioisme.lide"
         minSdk = 24
         targetSdk = 36
         versionCode = 1

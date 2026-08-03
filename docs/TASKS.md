@@ -1,32 +1,36 @@
-# 任务库总览（Task Board）
+# 任务看板（Task Board）
 
 > **类型**：任务看板 · 状态实时更新
 > **用途**：回答「项目做到哪了」「现在该做什么」
-> **更新要求**：任务状态变化当天更新本文件 + 对应任务文档
+> **权威状态矩阵**：[kb/README.md](kb/README.md) §2（本文档是其摘要入口）
 
 ---
 
-## 当前状态速览（2026-08-03）
+## 当前进行中
 
-| 状态 | 任务 | 文档 |
+| 任务 | 文档 | 进度 / 状态 |
 |---|---|---|
-| ✅ 已完成 | Java→Kotlin 迁移（3 文件） | [completed/java2kotlin-migration.md](completed/java2kotlin-migration.md) |
-| ✅ 已完成 | 代码审计违规整改（Phase 1–3） | [completed/audit-remediation.md](completed/audit-remediation.md) |
-| 🚧 进行中 | UI 重构（新 ui/ 框架 + 旧代码归档） | [in-progress/ui-refactor.md](in-progress/ui-refactor.md) |
-| 📋 计划中 | 技术债清理（TD1–TD7）等 | [planned/backlog.md](planned/backlog.md) |
+| 对齐 pro 宿主 IDE 功能（19 个 WP） | [in-progress/PARITY_COMPLETION_WORK_ORDER.md](in-progress/PARITY_COMPLETION_WORK_ORDER.md) | 6/19 完成（剩余 WP-005~016、018） |
+| 编辑器性能 V2 收尾 | [in-progress/EDITOR_PERFORMANCE_AUDIT_V2_REPORT.md](in-progress/EDITOR_PERFORMANCE_AUDIT_V2_REPORT.md) | 阶段 B 部分落地，A/C 未全执行 |
+| 编辑器 UI 对齐（Squircle-CE 标杆） | [in-progress/EDITOR_UI_ALIGNMENT_WORK_ORDER.md](in-progress/EDITOR_UI_ALIGNMENT_WORK_ORDER.md) | WP-001/002/008 已落地，余项未完成 |
+| 社区代码知识库 | [kb/androlua-community/README.md](kb/androlua-community/README.md) | 2144 篇初筛完成；正负面卡 + 训练 seed 产出 |
+| 独立 APK 打包器（WP-014，代码已落地） | [kb/ROADMAP.md](kb/ROADMAP.md) §未登记进展 | 未真机验收、未登记 PROGRESS |
 
-## 当前唯一进行中的主线
+## 已完成（摘要）
 
-**UI 重构**：把旧版 Lua 界面（javaapi/editor/project/plugin/package 等模块）重构为新的 `assets/ui/` 框架（Material3 风格：settings、dexmanager、project_dex_config 已建成，ui/main.lua 已重写为项目列表）。
+已完成文档 14 篇在 [completed/](completed/)（引擎迁移 WP-001~010、以及编辑器/审计/打包器审计等），矩阵见 [kb/README.md](kb/README.md) §2.1。
 
-## 任务管理规则
+## 计划中 / 未排期
 
-1. **状态机**：📋 计划中 → 🚧 进行中 → ✅ 已完成（不允许跳级标记）。
-2. 新任务先登记到 [planned/backlog.md](planned/backlog.md)，开始做时移到 [in-progress/](in-progress/)，完成后移到 [completed/](completed/)。
-3. 每个任务文档头部必须包含：状态、目标、验收标准、关联代码路径。
-4. 完成判断以**工作区真实代码**为准（例如：文件已存在、引用已清理、构建通过）。
+| 任务 | 文档 | 状态 |
+|---|---|---|
+| 技术债盘点（TD1~TD7） | [planned/backlog.md](planned/backlog.md) | 计划中 |
+| Xposed 模块路线图（M1~M5） | [planned/XPOSED_MODULE_FEASIBILITY_REPORT.md](planned/XPOSED_MODULE_FEASIBILITY_REPORT.md) | 研究定稿，未启动 |
+| 引擎/宿主性能优化建议 | [planned/GAME_ENGINE_PERFORMANCE_AUDIT_REPORT.md](planned/GAME_ENGINE_PERFORMANCE_AUDIT_REPORT.md)、[planned/HOST_PERFORMANCE_AUDIT_REPORT.md](planned/HOST_PERFORMANCE_AUDIT_REPORT.md) | 审计完成，建议未排期 |
 
-## 关联
+## 维护规则
 
-- 项目事实性资料 → [docs/README.md](README.md) §2.1 知识库
-- 想找任务但不确定在哪 → 先在 [backlog.md](planned/backlog.md) 搜索关键词
+1. **状态机**：📋 计划中 → 🚧 进行中 → ✅ 已完成（不允许跳级）。
+2. 新任务先登记 [planned/backlog.md](planned/backlog.md)；开始做时 `git mv` 到 [in-progress/](in-progress/)；完成后 `git mv` 到 [completed/](completed/)。
+3. 每篇任务文档头部必须注明：状态、目标、验收标准、关联代码路径。
+4. 完成判断以**工作区真实代码/构建结果**为准；状态变化当天更新本文档 + 任务文档 + [kb/README.md](kb/README.md) §2 矩阵。

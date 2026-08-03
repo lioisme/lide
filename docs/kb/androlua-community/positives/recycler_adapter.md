@@ -34,12 +34,12 @@ local function main( ... )
 2. **数据源-视图分离**：`LuaAdapter` 的 setData + 布局模板 + getView 回调模式，等价于
    Java 版 ArrayAdapter；理解它即可移植任意列表页。
 3. **依赖声明先行**：ViewPager2/RecyclerView 依赖 androidx 库，宿主不自带时必须先 `loadDex`
-   或 /libs 注入（id 2868 注释明示"需要下载 dex 放 libs"）——这正好命中 delua 的
+   或 /libs 注入（id 2868 注释明示"需要下载 dex 放 libs"）——这正好命中 lide 的
    `/libs 机制`，移植时按 LIBS_SUPPORT_WORK_ORDER 处理。
 
 ## 4. 工程落地建议
 
-- `LuaAdapter` Pro 源码存在；delua 待双端实测。**注意 `LuaRecyclerAdapter` 在 Pro 4.4.2
+- `LuaAdapter` Pro 源码存在；lide 待双端实测。**注意 `LuaRecyclerAdapter` 在 Pro 4.4.2
   源码中不存在**（id 3428/3734 用到的类移植时会失败，见 negatives/private_api_lockin）。
 - androidx 组件一律走 /libs dex 注入，不在宿主内置范围。
 

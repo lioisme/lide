@@ -1,12 +1,12 @@
-# Delua 项目整改工作清单
+# LIDE 项目整改工作清单
 
 | 元数据 | 内容 |
 |--------|------|
 | 文档版本 | 1.0 |
 | 创建日期 | 2026-07-31 |
-| 项目名称 | Delua |
-| 项目代号 | delua |
-| 目标包名 | `com.lioisme.delua` |
+| 项目名称 | LIDE |
+| 项目代号 | lide |
+| 目标包名 | `com.lioisme.lide` |
 | 工作目录 | `/storage/emulated/0/AndroLua` |
 | 引擎基础 | AndroLua Pro (nirenr) — Lua 5.3.3 |
 | 文档状态 | **草案** |
@@ -20,7 +20,7 @@
 3. [工作包详细定义](#3-工作包详细定义)
    - [阶段一：基础整改（P0 阻塞级）](#阶段一基础整改p0-阻塞级)
      - [WP-001 修复原生库构建系统](#wp-001-修复原生库构建系统)
-     - [WP-002 重命名包名为 com.lioisme.delua](#wp-002-重命名包名为-comlioismedelua)
+     - [WP-002 重命名包名为 com.lioisme.lide](#wp-002-重命名包名为-comlioismelide)
    - [阶段二：功能清理（P1 高优先级）](#阶段二功能清理p1-高优先级)
      - [WP-003 移除内置样例工程](#wp-003-移除内置样例工程)
      - [WP-004 修复构建脚本错误处理](#wp-004-修复构建脚本错误处理)
@@ -41,7 +41,7 @@
 
 ## 1. 执行摘要
 
-本文档定义了 Delua 项目从当前状态过渡到完全合规状态所需的所有工作包。共计 **10 个工作包**，分为 **5 个阶段**，按依赖关系和严重程度依次执行。
+本文档定义了 LIDE 项目从当前状态过渡到完全合规状态所需的所有工作包。共计 **10 个工作包**，分为 **5 个阶段**，按依赖关系和严重程度依次执行。
 
 当前阶段目标：消除 P0（阻塞级）缺陷，使项目达到**可发布基线**。
 
@@ -55,7 +55,7 @@
   ├── WP-001 修复原生库构建系统 ────────────── 无前置依赖
   │         │ 验证：13 个 .so 均正确输出
   │
-  └── WP-002 重命名包名为 com.lioisme.delua ── 无前置依赖
+  └── WP-002 重命名包名为 com.lioisme.lide ── 无前置依赖
             │ 验证：apk 安装后包名正确
             │
             ▼
@@ -147,12 +147,12 @@
 
 ---
 
-#### WP-002 重命名包名为 com.lioisme.delua
+#### WP-002 重命名包名为 com.lioisme.lide
 
 | 属性 | 值 |
 |------|-----|
 | **标识符** | WP-002 |
-| **标题** | 重命名包名为 `com.lioisme.delua` |
+| **标题** | 重命名包名为 `com.lioisme.lide` |
 | **严重程度** | **P0 — 阻塞级** |
 | **前置依赖** | 无 |
 | **预估工时** | 0.5 人日 |
@@ -160,7 +160,7 @@
 
 ##### 问题描述
 
-当前所有 Kotlin 和 Java 源文件使用 `com.delua` 包名，与要求的 `com.lioisme.delua` 不符。本任务将全局重命名包名。
+当前所有 Kotlin 和 Java 源文件使用 `com.lide` 包名，与要求的 `com.lioisme.lide` 不符。本任务将全局重命名包名。
 
 ##### 范围
 
@@ -170,7 +170,7 @@
 |---------|---------|------|
 | `app/build.gradle.kts` | `namespace`、`applicationId` | 2 处 |
 | `androlua/build.gradle.kts` | `namespace` | 1 处 |
-| Kotlin 源文件 | `package com.delua.*` → `package com.lioisme.delua.*` | ~35 个文件 |
+| Kotlin 源文件 | `package com.lide.*` → `package com.lioisme.lide.*` | ~35 个文件 |
 | Java 源文件（androlua 模块） | `package` 声明（注意：`com.luajava`、`com.androlua`、`com.android.cglib` 保持不动） | 0 个（注意范围） |
 | AndroidManifest.xml | `android:name` 中的类全限定名 | 2 个文件 |
 | `ProjectManager.kt` | 默认包名字符串 | 1 处 |
@@ -179,8 +179,8 @@
 
 | # | 标准 | 验证方法 |
 |---|------|---------|
-| ACC-001 | 构建生成的 APK 的 `applicationId` 为 `com.lioisme.delua` | `aapt dump badging app/build/outputs/apk/*.apk \| grep package:` |
-| ACC-002 | 所有源文件无 `com.delua` 引用（`com.delua.androlua` 同样替换为 `com.lioisme.delua.androlua`） | `grep -r "package com\.delua" app/src androlua/src` 无输出 |
+| ACC-001 | 构建生成的 APK 的 `applicationId` 为 `com.lioisme.lide` | `aapt dump badging app/build/outputs/apk/*.apk \| grep package:` |
+| ACC-002 | 所有源文件无 `com.lide` 引用（`com.lide.androlua` 同样替换为 `com.lioisme.lide.androlua`） | `grep -r "package com\.lide" app/src androlua/src` 无输出 |
 | ACC-003 | 保留 `com.luajava`、`com.androlua`、`com.android.cglib` 不变 | `grep -r "package com\.\(luajava\|androlua\|android\.cglib\)"` 有 70+ 匹配 |
 | ACC-004 | 项目可编译通过 | `.\gradlew assembleArm64Debug` 成功 |
 
@@ -188,10 +188,10 @@
 
 | 步骤 | 描述 | 验证条件 |
 |------|------|---------|
-| 2.1 | 在 IDE 中使用重构功能（Refactor → Rename）更改 `com.delua` → `com.lioisme.delua`（**仅更改 Kotlin 源文件，不更改 Java 源文件**） | 重构预览中排除 `androlua/src/main/java/` |
-| 2.2 | 手动更新 `app/build.gradle.kts`：`namespace = "com.lioisme.delua"`、`applicationId = "com.lioisme.delua"` | 文件确认 |
-| 2.3 | 手动更新 `androlua/build.gradle.kts`：`namespace = "com.lioisme.delua.androlua"` | 文件确认 |
-| 2.4 | 更新 `app/src/main/AndroidManifest.xml` 中引用 `com.delua` 的类路径 | 全文搜索确认无遗留 |
+| 2.1 | 在 IDE 中使用重构功能（Refactor → Rename）更改 `com.lide` → `com.lioisme.lide`（**仅更改 Kotlin 源文件，不更改 Java 源文件**） | 重构预览中排除 `androlua/src/main/java/` |
+| 2.2 | 手动更新 `app/build.gradle.kts`：`namespace = "com.lioisme.lide"`、`applicationId = "com.lioisme.lide"` | 文件确认 |
+| 2.3 | 手动更新 `androlua/build.gradle.kts`：`namespace = "com.lioisme.lide.androlua"` | 文件确认 |
+| 2.4 | 更新 `app/src/main/AndroidManifest.xml` 中引用 `com.lide` 的类路径 | 全文搜索确认无遗留 |
 | 2.5 | 更新 `androlua/src/main/AndroidManifest.xml`（如引用旧包名） | 文件确认 |
 | 2.6 | `ProjectManager.kt` 第 138 行更新默认 packageName | 文件确认 |
 | 2.7 | 全量编译验证 | `.\gradlew assembleArm64Debug` 通过 |
@@ -209,7 +209,7 @@
 | **标识符** | WP-003 |
 | **标题** | 移除内置样例工程 |
 | **严重程度** | **P1 — 高优先级** |
-| **前置依赖** | WP-002（因 `DeluaApp.kt` 包路径变更） |
+| **前置依赖** | WP-002（因 `LideApp.kt` 包路径变更） |
 | **预估工时** | 0.25 人日 |
 | **风险等级** | 低 |
 
@@ -222,7 +222,7 @@
 | 操作 | 文件/目录 |
 |------|----------|
 | 删除 | `app/src/main/assets/samples/`（整个目录） |
-| 修改 | `app/src/main/kotlin/com/lioisme/delua/DeluaApp.kt`：移除 `extractSamples()` 方法及其调用 |
+| 修改 | `app/src/main/kotlin/com/lioisme/lide/LideApp.kt`：移除 `extractSamples()` 方法及其调用 |
 | 清理 | 引用 `extractSamples()` 的导入语句 |
 
 ##### 验收标准
@@ -230,7 +230,7 @@
 | # | 标准 | 验证方法 |
 |---|------|---------|
 | ACC-001 | `assets/samples/` 目录不存在 | `Test-Path app/src/main/assets/samples` 返回 `False` |
-| ACC-002 | `DeluaApp.kt` 中不存在 `extractSamples` 方法 | `Select-String "extractSamples" DeluaApp.kt` 无匹配 |
+| ACC-002 | `LideApp.kt` 中不存在 `extractSamples` 方法 | `Select-String "extractSamples" LideApp.kt` 无匹配 |
 | ACC-003 | APK 中不包含样例工程文件 | `unzip -l app/build/outputs/apk/*.apk \| grep samples` 无输出 |
 | ACC-004 | 首次安装并启动后，`/storage/emulated/0/AndroLua/project/` 目录为空 | 设备上 `ls /storage/emulated/0/AndroLua/project/` 为空 |
 
@@ -239,7 +239,7 @@
 | # | 结果 | 说明 |
 |---|------|------|
 | ACC-001 | ✅ | `Test-Path app/src/main/assets/samples` → `False`（目录已删除） |
-| ACC-002 | ✅ | `DeluaApp.kt` 无 `extractSamples` |
+| ACC-002 | ✅ | `LideApp.kt` 无 `extractSamples` |
 | ACC-003 | ✅ | APK 内仅 `assets/examples/*.alp`（6 个），无 `samples` 条目 |
 | ACC-004 | ✅ | 全新安装启动后 `project/` 为空（随后由示例界面导入产生 6 工程） |
 
@@ -251,12 +251,12 @@
 - 新增 `build-scripts/make-examples.ps1`（`.alp` 生成脚本，PowerShell .NET zip）
 - `app/src/main/assets/examples/`：6 个内置 `.alp`（demo / DemoProject / kleinbottle / TestJson / hello / listview）
 - 新增 `ExamplesScreen.kt`：示例列表、已导入徽标、导入/重新导入按钮（复用 `AlpManager.import`）
-- `DeluaNavHost.kt` 新增 `Routes.EXAMPLES`；`ProjectListScreen.kt` 顶栏新增示例入口（MenuBook 图标）
+- `LideNavHost.kt` 新增 `Routes.EXAMPLES`；`ProjectListScreen.kt` 顶栏新增示例入口（MenuBook 图标）
 - 中英文字符串（`values/strings.xml`、`values-zh/strings.xml`）
 
-双端验证（pro / delua，x64 模拟器 ADB）：6 示例全部导入成功并运行对比，日志逐字一致：
+双端验证（pro / lide，x64 模拟器 ADB）：6 示例全部导入成功并运行对比，日志逐字一致：
 
-| 示例 | delua 结果 | pro 对比 |
+| 示例 | lide 结果 | pro 对比 |
 |------|-----------|---------|
 | demo | `Runtime error: length=16; index=16`（工程自身 md5 越界 bug） | 逐字一致（含行号） |
 | DemoProject | 19 行输出（含信息页动态数据） | 逐字一致 |
@@ -594,7 +594,7 @@ git checkout HEAD~1 -- prebuilt/ app/src/main/jniLibs/
 | R-002 | Android 15+ 限制 `System.loadLibrary` | 低 | 高 | 跟踪 Android 15 变更，评估 `JNI_OnLoad` 方案 |
 | R-003 | `libluv.so` 因包含完整 libuv 源码体积过大 | 中 | 低 | 评估是否实际需要 luv 模块；不需要则从构建列表移除 |
 | R-004 | `libsensor.so`（C++）在部分设备上加载失败 | 低 | 中 | 添加 try-catch 加载降级，不影响其他模块 |
-| R-005 | 包名重命名遗漏 `AndroidManifest.xml` 中的引用 | 中 | 高 | 使用 `grep -rn "com\.delua"` 穷举扫描 |
+| R-005 | 包名重命名遗漏 `AndroidManifest.xml` 中的引用 | 中 | 高 | 使用 `grep -rn "com\.lide"` 穷举扫描 |
 | R-006 | ProGuard 混淆导致 JNI 方法名不匹配 | 低 | 高 | 使用 `-keep class com.luajava.** { native <methods>; }` 精确保留 |
 
 ---
@@ -604,8 +604,8 @@ git checkout HEAD~1 -- prebuilt/ app/src/main/jniLibs/
 | 工作包 | 关联文件 |
 |--------|---------|
 | WP-001 | `scripts/rebuild_engine.ps1`、`scripts/rebuild_engine.sh`、`prebuilt/*/`、`app/src/main/jniLibs/*/`、`build-scripts/jni/**/*.mk` |
-| WP-002 | `app/build.gradle.kts`、`androlua/build.gradle.kts`、`app/src/main/AndroidManifest.xml`、`androlua/src/main/AndroidManifest.xml`、`app/src/main/kotlin/com/delua/**/*.kt`、`app/src/main/java/com/delua/**/*.java` |
-| WP-003 | `app/src/main/assets/samples/`、`app/src/main/kotlin/.../DeluaApp.kt` |
+| WP-002 | `app/build.gradle.kts`、`androlua/build.gradle.kts`、`app/src/main/AndroidManifest.xml`、`androlua/src/main/AndroidManifest.xml`、`app/src/main/kotlin/com/lide/**/*.kt`、`app/src/main/java/com/lide/**/*.java` |
+| WP-003 | `app/src/main/assets/samples/`、`app/src/main/kotlin/.../LideApp.kt` |
 | WP-004 | `scripts/rebuild_engine.ps1`、`scripts/rebuild_engine.sh` |
 | WP-005 | `app/proguard-rules.pro` |
 | WP-006 | `app/src/main/AndroidManifest.xml` |
@@ -630,7 +630,7 @@ aapt dump badging app\build\outputs\apk\arm64\debug\*.apk | findstr "package:"
 unzip -l app\build\outputs\apk\arm64\debug\*.apk | findstr "\.so$"
 
 # 全局搜索旧包名残留
-grep -rn "com\.delua" app/src androlua/src --include="*.kt" --include="*.java" --include="*.xml"
+grep -rn "com\.lide" app/src androlua/src --include="*.kt" --include="*.java" --include="*.xml"
 
 # 运行 lint
 .\gradlew lintArm64Debug

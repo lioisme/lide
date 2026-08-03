@@ -53,13 +53,13 @@
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
 
     <application
-        android:name=".DeluaApp"
+        android:name=".LideApp"
         android:allowBackup="true"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:requestLegacyExternalStorage="true"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Delua"
+        android:theme="@style/Theme.Lide"
         android:usesCleartextTraffic="true">
 
         <activity
@@ -106,7 +106,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="androlua" />
-                <data android:host="com.lioisme.delua" />
+                <data android:host="com.lioisme.lide" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -121,14 +121,14 @@
             android:name=".engine.EngineActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="false"
-            android:theme="@style/Theme.Delua" />
+            android:theme="@style/Theme.Lide" />
 
         <activity
             android:name="com.androlua.LuaActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.Delua">
+            android:theme="@style/Theme.Lide">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.EDIT" />
@@ -180,7 +180,7 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="false"
             android:label="@string/app_name"
-            android:theme="@style/Theme.Delua" />
+            android:theme="@style/Theme.Lide" />
 
         <activity
             android:name="com.nirenr.screencapture.ScreenCaptureActivity"

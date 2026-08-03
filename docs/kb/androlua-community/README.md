@@ -5,7 +5,7 @@
 > 抽取出**正面方法与思路**、**负面反例**，并输出 **LLM 微调训练语料**。
 >
 > 与 `androlua-lua/`（工程侧实测知识库）的区别：本库默认 **`static_review`（静态文本评审）**，
-> 不做设备断言；涉及 delua/Pro 兼容结论，一律需 `androlua-project-validation` 双端实测升级后
+> 不做设备断言；涉及 lide/Pro 兼容结论，一律需 `androlua-project-validation` 双端实测升级后
 > 才能写入工程知识库。
 
 ---

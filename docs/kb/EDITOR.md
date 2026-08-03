@@ -1,4 +1,4 @@
-# delua 编辑器知识库
+# lide 编辑器知识库
 
 > 来源：`EDITOR_CRASH_ANALYSIS_REPORT.md`、`EDITOR_DRAWER_AUDIT_REPORT.md`、`EDITOR_PERFORMANCE_AUDIT_REPORT.md`、
 > `EDITOR_PERFORMANCE_AUDIT_V2_REPORT.md`、`EDITOR_UI_ALIGNMENT_WORK_ORDER.md`、`AGENTS.md`。
@@ -9,7 +9,7 @@
 
 - 编辑器 = `:editor` 模块（纯 Kotlin/Java）+ sora-editor + TextMate Lua 语法；R1 边界零命中（含注释）。
 - **初始化顺序（官方 demo 顺序，勿改）**：`colorScheme` → `setEditorLanguage` → `setText`。
-- **TextMate 只经 `TextMateInitializer`（进程级一次性）**，不得在 UI 线程调用；已预热到进程启动（`DeluaApp` + `CountDownLatch`）。
+- **TextMate 只经 `TextMateInitializer`（进程级一次性）**，不得在 UI 线程调用；已预热到进程启动（`LideApp` + `CountDownLatch`）。
 - 编辑器 API（setText / diagnostics 赋值 / subscribeEvent 回调）保持主线程；文本快照可在后台线程取（`Content.toString` 内部 ReadWriteLock）。
 - 自动保存：快照 + 写盘均 `Dispatchers.IO`，`onRelease` 兜底保存（修过 dispose 顺序丢改动）。
 - 大文件（>200 KB）：关括号高亮 / 当前块 / 自动换行，跳过行级诊断。

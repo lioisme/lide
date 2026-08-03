@@ -3,6 +3,10 @@
 build/
 app/build/
 
+# 源码包目录名为 build（打包器模块），需要保留跟踪
+!**/src/main/**/build/
+!**/src/test/**/build/
+
 # IDE
 .idea/
 *.iml

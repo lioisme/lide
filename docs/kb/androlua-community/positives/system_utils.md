@@ -1,6 +1,6 @@
 # 正向主题卡：系统小工具函数集（状态栏/夜间模式/屏幕尺寸/输入法）
 
-> reviewed: 2026-08-02 ｜ confidence: static_review ｜ portability: android_api（可运行于 Pro/delua）
+> reviewed: 2026-08-02 ｜ confidence: static_review ｜ portability: android_api（可运行于 Pro/lide）
 
 ## 1. 思路要点
 
@@ -47,8 +47,8 @@ end
 
 ## 4. 工程落地建议
 
-- 全部公开 API（除 RootUtil），delua 可运行；移植时按 §3.3 模块化；
-- `loadbitmap` 是宿主扩展（Pro/delua 有），签名需实测。
+- 全部公开 API（除 RootUtil），lide 可运行；移植时按 §3.3 模块化；
+- `loadbitmap` 是宿主扩展（Pro/lide 有），签名需实测。
 
 ## 5. 相关帖子
 

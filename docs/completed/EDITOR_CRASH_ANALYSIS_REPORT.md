@@ -1,6 +1,6 @@
-# delua 编辑器审计报告（v3）：编辑器-宿主边界、闪退根因与关联性说明
+# lide 编辑器审计报告（v3）：编辑器-宿主边界、闪退根因与关联性说明
 
-> 审计对象：`app/src/main/kotlin/com/lioisme/delua/ui/editor/*`、`ui/screen/EditorScreen.kt`、`DeluaApp.kt`、`:androlua` 模块
+> 审计对象：`app/src/main/kotlin/com/lioisme/lide/ui/editor/*`、`ui/screen/EditorScreen.kt`、`LideApp.kt`、`:androlua` 模块
 > 对照源码：`docs/sora-editor-main/`（editor / language-textmate，API 已与 Maven AAR `io.github.rosemoe:editor:0.24.6` 比对）
 > 审计日期：2026-07-31
 > 本文回答的核心问题：**"编辑器是纯粹的 editor，androlua 属于宿主管辖——为什么分析结论会指向 luajava 这类原生库？"**
@@ -10,7 +10,7 @@
 ## 0. TL;DR
 
 1. **你说得对，这是架构定论：** 编辑器与宿主是两层，边界不可逾越。luajava / `libluajava.so` 属于宿主（运行时引擎进程），编辑器进程内不应存在任何对它的引用。
-2. **上一轮分析指向 luajava，是因为上一版 delua 代码本身违规了。** 闪退的直接触发者是 `LuaDiagnostics.kt`——它从宿主模块导入了 `com.luajava.LuaStateFactory`（JNI 原生 Lua）到编辑器打字热路径。**这不是"编辑器需要 luajava"，而是"编辑器代码非法借用了宿主的原生引擎"。** 分析结论是"违规代码是崩溃原因"，不是"编辑器应该修 luajava"。
+2. **上一轮分析指向 luajava，是因为上一版 lide 代码本身违规了。** 闪退的直接触发者是 `LuaDiagnostics.kt`——它从宿主模块导入了 `com.luajava.LuaStateFactory`（JNI 原生 Lua）到编辑器打字热路径。**这不是"编辑器需要 luajava"，而是"编辑器代码非法借用了宿主的原生引擎"。** 分析结论是"违规代码是崩溃原因"，不是"编辑器应该修 luajava"。
 3. **根因 ≠ 机制。** 根因是边界违规（架构层）；机制是违规用法触发宿主原生库的缺陷（技术层）。修复 = 恢复边界（移除依赖），而非修补 luajava。
 4. **边界已恢复（当前代码已修复）。** `ui/editor/` 目录 7 个文件对 `com.androlua.*` / `com.luajava.*` 的运行时引用为 **0**；`LuaDiagnostics` 已是纯 Kotlin 单遍词法校验器；TextMate 初始化已预热到进程启动。构建通过。
 5. **纯编辑器路径的残余风险已复核**：诊断索引过期、分析线程异常、预热阻塞等均无崩溃风险（见 §5，附源码证据）。
@@ -62,7 +62,7 @@
 
 ### 2.1 结论先行
 
-> 分析指向 luajava **不是**因为编辑器依赖它，而是因为**上一版 delua 的编辑器代码违规地引用了它**——`LuaDiagnostics.kt` 把宿主模块的 `com.luajava.LuaStateFactory` 拉进了编辑器打字路径。闪退是这条违规的直接后果。修复不是"修 luajava"，而是"把 luajava 从编辑器里移除"（已完成）。
+> 分析指向 luajava **不是**因为编辑器依赖它，而是因为**上一版 lide 的编辑器代码违规地引用了它**——`LuaDiagnostics.kt` 把宿主模块的 `com.luajava.LuaStateFactory` 拉进了编辑器打字路径。闪退是这条违规的直接后果。修复不是"修 luajava"，而是"把 luajava 从编辑器里移除"（已完成）。
 
 ### 2.2 当时的推导链（证据 → 结论）
 
@@ -105,7 +105,7 @@
 
 ### 3.2 现状：import 审计表（当前代码）
 
-对 `app/src/main/kotlin/com/lioisme/delua/ui/editor/` 全量 grep `luajava` / `androlua`：
+对 `app/src/main/kotlin/com/lioisme/lide/ui/editor/` 全量 grep `luajava` / `androlua`：
 
 | 文件 | 结果 |
 |---|---|

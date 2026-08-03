@@ -1,6 +1,6 @@
 # 能力清单：API 与能力边界（Capability Inventory）
 
-> 记录可用 API 与机制、以及 pro 有而 delua 无的能力边界。
+> 记录可用 API 与机制、以及 pro 有而 lide 无的能力边界。
 > 依据：`docs/completed/ANDROLUA_FEATURE_PARITY_AUDIT.md`、`ANDROLUA_PARITY_FULL_AUDIT_REPORT.md`、双端实测。
 
 ## 1. 工程骨架能力（✅双端一致）
@@ -43,7 +43,7 @@ bson、canvas、cjson、crypt、gl、luajava、luv、md5、mime、regex、sensor
 - dex 按包名解析失败时双端一致降级：打印 `NameNotFoundException` 后走 `InMemoryDexClassLoader` 字节加载（见 PITFALLS §2）。
 - `.alp`（zip）导出/导入即携带 libs，无注册表概念。
 
-## 8. 宿主应用功能（delua 独有）
+## 8. 宿主应用功能（lide 独有）
 
 | 功能 | 说明 | 位置 |
 |---|---|---|
@@ -53,7 +53,7 @@ bson、canvas、cjson、crypt、gl、luajava、luv、md5、mime、regex、sensor
 | 构建 APK | 独立打包器（D-10 已开工：`LuaCompiler`/`AXmlManifest`/`ApkBuilder`/`ApkSigner`/`V2Signer`/`BuildApkScreen`） | `:app` |
 | Java API 浏览器 | 顶栏 GridView 按钮 + 设置页入口；类表 4,196 条（pro 平移 + material/androidx 扩展）+ 宿主 dex 动态枚举 + **工程 libs 自动识别**：`libs/*.dex|jar` 类名级入「工程库」分类、`libs/lib*.so` 模块名级入「原生库」分类（函数级不做，见审计报告 §4）；九分类筛选、搜索、反射详情（事件推导 `setOnXxxListener→onXxx`）、长按复制 | `:app` `apibrowser/` |
 
-## 9. pro 有而 delua 无（⚠仅pro，`import` 会失败，属"pro 独有能力"不是 bug）
+## 9. pro 有而 lide 无（⚠仅pro，`import` 会失败，属"pro 独有能力"不是 bug）
 
 | 缺失能力 | 说明 |
 |---|---|
@@ -62,4 +62,4 @@ bson、canvas、cjson、crypt、gl、luajava、luv、md5、mime、regex、sensor
 | `android.widget` 扩展控件 | CardView、DrawerLayout、ToolBar、SlidingLayout、PullingLayout、RippleHelper、CircleImageView、HorizontalListView、FloatButton、PageLayout、PageAdapter、ViewDragHelper 等 24 个 |
 | 其他 | `FloatWindow`、`AlertDialogBuilder`、multidex 支持类、Xposed 反检测 `onHook` |
 
-工程若依赖上表能力 → 在 delua 中判定为白名单差异（SKILL §6.5），需在报告中注明，不视为 delua 缺陷。
+工程若依赖上表能力 → 在 lide 中判定为白名单差异（SKILL §6.5），需在报告中注明，不视为 lide 缺陷。

@@ -2,7 +2,7 @@
 <resources>
 
     <!-- Common -->
-    <string name="app_name">delua</string>
+    <string name="app_name">LIDE</string>
     <string name="back">返回</string>
     <string name="cancel">取消</string>
     <string name="create">创建</string>
@@ -52,7 +52,7 @@
     <string name="font_size">字体大小</string>
     <string name="tab_size">制表符大小</string>
     <string name="about">关于</string>
-    <string name="version">delua v1.0</string>
+    <string name="version">LIDE v1.0</string>
     <string name="lua_manual">Lua 手册</string>
     <string name="lua_manual_missing">未找到离线手册。</string>
     <string name="system_wallpaper">系统壁纸</string>
@@ -77,7 +77,7 @@
     <string name="perm_project_saved">已保存</string>
     <string name="perm_project_save_failed">保存失败</string>
     <string name="perm_host_section">宿主应用权限</string>
-    <string name="perm_host_hint">delua 宿主应用自身的权限。它们适用于 IDE 及宿主内运行的脚本。</string>
+    <string name="perm_host_hint">LIDE 宿主应用自身的权限。它们适用于 IDE 及宿主内运行的脚本。</string>
     <string name="perm_package_only">仅写入打包 APK</string>
     <string name="project_permissions">工程权限</string>
     <string name="project_info">工程信息</string>
@@ -232,6 +232,7 @@
     <!-- Content descriptions -->
     <string name="cd_new_project">新建项目</string>
     <string name="cd_settings">设置</string>
+    <string name="cd_more_options">更多选项</string>
     <string name="cd_back">返回</string>
     <string name="cd_replace">替换</string>
     <string name="cd_replace_all">全部替换</string>
@@ -239,7 +240,7 @@
     <string name="menu_category_project">工程</string>
     <string name="cd_open_file_tree">打开文件树</string>
     <string name="cd_search">搜索</string>
-    <string name="accessibility_service_description">Delua 无障碍服务：为 Lua 脚本提供自动化能力（点击、滑动、截图）。</string>
+    <string name="accessibility_service_description">LIDE 无障碍服务：为 Lua 脚本提供自动化能力（点击、滑动、截图）。</string>
     <!-- API 浏览器（WP-008） -->
     <string name="api_browser">API 浏览器</string>
     <string name="api_browser_subtitle">浏览 Lua 可调用的 Java 类</string>

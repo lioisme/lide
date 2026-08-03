@@ -1,6 +1,6 @@
--- live2dapp.lua — 看板娘（Live2D v2）delua 原生引擎封装（多模型版）
+-- live2dapp.lua — 看板娘（Live2D v2）lide 原生引擎封装（多模型版）
 --
--- 仅支持 delua 原生库（liblive2d.so），不携带 pro（jp.live2d.* dex）兼容。
+-- 仅支持 lide 原生库（liblive2d.so），不携带 pro（jp.live2d.* dex）兼容。
 -- 语义对齐 live2d 官方 v2 引擎（迁移计划 docs/planned/LIVE2D_NATIVE_MIGRATION_PLAN.md）：
 --   LAppView / L2DViewMatrix / L2DModelMatrix / L2DMatrix44 / TouchManager /
 --   L2DTargetPoint / LAppLive2DManager（4 模型轮换 + 双模型分支 + tap/flick/pinch）
@@ -288,7 +288,7 @@ end
 
 -- ==================== 背景图（方案 B：liblive2d.so 原生原语） ====================
 --
--- delua 代理性能红线（17:06 实证）：draw 循环内对 Java 对象做 __index 取方法会
+-- lide 代理性能红线（17:06 实证）：draw 循环内对 Java 对象做 __index 取方法会
 -- 每个新 JavaObject 用户态对象（50k 上限 → 崩溃），缓存方法引用调用又报
 -- "can not call the function"（LuaState 对方法 wrapper 仅支持隐式 l_i 接口形状）。
 -- 因此背景纹理/程序/quad 全部下沉 native（setupBg/drawBg，stb_image 解码），

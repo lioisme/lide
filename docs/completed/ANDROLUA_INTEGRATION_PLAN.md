@@ -1,6 +1,6 @@
-# delua × AndroLua 原生引擎集成方案
+# lide × AndroLua 原生引擎集成方案
 
-> **文档编号**: DELUA-ARCH-002  
+> **文档编号**: LIDE-ARCH-002  
 > **版本**: 1.0  
 > **编制日期**: 2026-07-31  
 
@@ -29,7 +29,7 @@
 
 **结论**：使用 `AndroLua_pro-master/` 作为官方纯净参考源。
 
-### 1.2 当前 delua 架构问题
+### 1.2 当前 lide 架构问题
 
 当前执行路径：
 
@@ -107,17 +107,17 @@ Kotlin EngineActivity (239行, 反射调用 LuaState)
 | `com.android.cglib.dx.*` | P1 | DexMaker（动态 DEX 生成，LuaDexLoader 依赖） |
 
 **不导入**：
-- `com.myopicmobile.textwarrior.*`（编辑器组件，delua 用 sora-editor）
+- `com.myopicmobile.textwarrior.*`（编辑器组件，lide 用 sora-editor）
 - `com.androlua.LuaEditor`、`LuaLexer`、`LuaTokenTypes`（同上）
-- `com.nirenr.*`（截图、取色等工具，delua 不需要）
-- `android.widget.*`（AndroLuaPro 自定义视图，delua 不需要）
+- `com.nirenr.*`（截图、取色等工具，lide 不需要）
+- `android.widget.*`（AndroLuaPro 自定义视图，lide 不需要）
 
 ### Phase 2：创建 EngineActivity.java
 
-新建 `app/src/main/java/com/delua/engine/EngineActivity.java`：
+新建 `app/src/main/java/com/lide/engine/EngineActivity.java`：
 
 ```java
-package com.delua.engine;
+package com.lide.engine;
 
 import com.androlua.LuaActivity;
 import com.androlua.LuaApplication;
@@ -198,24 +198,24 @@ public class EngineActivity extends LuaActivity {
 
 ### Phase 3：替换 LuaApplication 为 Java 版
 
-`DeluaApp.kt` 保持不变（仍 extends LuaApplication），但 `LuaApplication` 现在指向从 AndroLuaPro 导入的 Java 类而非 Kotlin 版。
+`LideApp.kt` 保持不变（仍 extends LuaApplication），但 `LuaApplication` 现在指向从 AndroLuaPro 导入的 Java 类而非 Kotlin 版。
 
 删除旧的 Kotlin 实现：
-- ❌ `androlua/src/main/kotlin/com/delua/androlua/LuaApplication.kt`
-- ❌ `androlua/src/main/kotlin/com/delua/androlua/LuaContext.kt`
+- ❌ `androlua/src/main/kotlin/com/lide/androlua/LuaApplication.kt`
+- ❌ `androlua/src/main/kotlin/com/lide/androlua/LuaContext.kt`
 
 ### Phase 4：移除 EngineActivity.kt
 
 删除：
-- ❌ `app/src/main/kotlin/com/delua/engine/EngineActivity.kt`
-- ❌ `app/src/main/kotlin/com/delua/engine/`（如果仅此文件）
+- ❌ `app/src/main/kotlin/com/lide/engine/EngineActivity.kt`
+- ❌ `app/src/main/kotlin/com/lide/engine/`（如果仅此文件）
 
 ### Phase 5：精简 EngineBridge.kt
 
 不再需要加载 `engine.dex`。简化为：
 
 ```kotlin
-// androlua/src/main/kotlin/com/delua/androlua/engine/EngineBridge.kt
+// androlua/src/main/kotlin/com/lide/androlua/engine/EngineBridge.kt
 class EngineBridge(private val context: Context) {
     companion object {
         const val EXTRA_PROJECT_DIR = "projectDir"
@@ -279,21 +279,21 @@ class EngineBridge(private val context: Context) {
 | `androlua/src/main/java/com/luajava/*.java` | AndroLua_pro-master | 约 20 个文件 |
 | `androlua/src/main/java/com/androlua/*.java`（运行时类） | AndroLua_pro-master | 约 30 个文件 |
 | `androlua/src/main/java/com/android/cglib/*.java` | AndroLua_pro-master | 约 65 个文件 |
-| `app/src/main/java/com/delua/engine/EngineActivity.java` | 新建 | 薄 Java 层 |
+| `app/src/main/java/com/lide/engine/EngineActivity.java` | 新建 | 薄 Java 层 |
 
 ### 4.2 删除文件
 
 | 文件 | 原因 |
 |------|------|
-| `app/src/main/kotlin/com/delua/engine/EngineActivity.kt` | 被 Java EngineActivity 替代 |
-| `androlua/src/main/kotlin/com/delua/androlua/LuaApplication.kt` | 被 Java LuaApplication 替代 |
-| `androlua/src/main/kotlin/com/delua/androlua/LuaContext.kt` | 被 Java LuaContext 替代 |
+| `app/src/main/kotlin/com/lide/engine/EngineActivity.kt` | 被 Java EngineActivity 替代 |
+| `androlua/src/main/kotlin/com/lide/androlua/LuaApplication.kt` | 被 Java LuaApplication 替代 |
+| `androlua/src/main/kotlin/com/lide/androlua/LuaContext.kt` | 被 Java LuaContext 替代 |
 
 ### 4.3 修改文件
 
 | 文件 | 变更 |
 |------|------|
-| `androlua/src/main/kotlin/com/delua/androlua/engine/EngineBridge.kt` | 移除 engine.dex 加载，简化 |
+| `androlua/src/main/kotlin/com/lide/androlua/engine/EngineBridge.kt` | 移除 engine.dex 加载，简化 |
 | `androlua/build.gradle.kts` | 确认 Java 源码编译 |
 | `androlua/src/main/assets/` | 加入 AndroLua 标准 Lua 模块（import.lua 等） |
 | `app/src/main/AndroidManifest.xml` | 无需修改（EngineActivity 类名不变） |
@@ -302,8 +302,8 @@ class EngineBridge(private val context: Context) {
 
 | 文件 | 说明 |
 |------|------|
-| `app/src/main/kotlin/com/delua/DeluaApp.kt` | 继续 extends LuaApplication |
-| `app/src/main/kotlin/com/delua/ui/screen/RunScreen.kt` | 使用 EngineBridge 不变 |
+| `app/src/main/kotlin/com/lide/LideApp.kt` | 继续 extends LuaApplication |
+| `app/src/main/kotlin/com/lide/ui/screen/RunScreen.kt` | 使用 EngineBridge 不变 |
 | `prebuilt/engine.dex` | 保留备用 |
 | `prebuilt/arm64-v8a/libluajava.so` | 原生库 |
 | `prebuilt/armeabi-v7a/libluajava.so` | 原生库 |
@@ -332,7 +332,7 @@ class EngineBridge(private val context: Context) {
 | AC-01 | demo 工程运行，显示 ListView | 编译运行，选 demo 点击 Run |
 | AC-02 | testjson 工程运行，显示 JSON 内容 | 同上 |
 | AC-03 | kleinbottle 工程运行，显示 3D 渲染 | 同上 |
-| AC-04 | EngineActivity 无 Kotlin 依赖 | `javap -p com.delua.engine.EngineActivity` 确认 |
+| AC-04 | EngineActivity 无 Kotlin 依赖 | `javap -p com.lide.engine.EngineActivity` 确认 |
 | AC-05 | LuaActivity 等运行时类为 Java 源码 | 确认 `androlua/src/main/java/` 下无 Kotlin |
 | AC-06 | engine.dex 不再在主执行路径中使用 | 确认 EngineBridge 无 loadEngine() 调用 |
 | AC-07 | 脚本错误时正确回传 JSON | 运行错误脚本，检查结果文件 |

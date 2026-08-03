@@ -1,5 +1,8 @@
 # Lua 模块详解（Knowledge Base）
 
+> ⚠️ **已过期**：本文描述旧 AndroLuaX 的 `assets/ui` 业务 Lua 模块树；当前宿主为 Kotlin/Compose
+> （Lua 仅作脚本语言，宿主框架层不再用 Lua 实现）。现状以 [kb/ENGINE_RUNTIME.md](../ENGINE_RUNTIME.md) 为准。
+
 > **类型**：知识库 · 模块说明书
 > **用途**：修改/新增 Lua 业务功能时，了解每个模块的职责、入口、相互依赖
 > **核对时间**：2026-08-03 · 基于实际文件内容

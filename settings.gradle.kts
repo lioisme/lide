@@ -8,7 +8,9 @@ pluginManagement {
     }
 }
 
-rootProject.name = "delua"
+rootProject.name = "lide"
 include(":app")
-include(":androlua")
 include(":editor")
+include(":androlua")
+// androlua 属上游库，源码收纳在 third_party/ 统一管理（后续新增上游库均入此处）
+project(":androlua").projectDir = file("third_party/androlua")

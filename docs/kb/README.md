@@ -1,4 +1,4 @@
-# delua 知识库
+# lide 知识库
 
 > 本目录是基于 `docs/` 全部文档 + `PROGRESS.md` / `WHITEPAPER.md` / `AGENTS.md` 整理的知识库文档集。
 > 目标是让任何一篇工程文档的**角色、状态、结论、注意事项**都能在一分钟内被检索到。
@@ -51,7 +51,7 @@ docs/
 | `DEPENDENCY_MODEL_AUDIT_REPORT.md` | 2026-07-31 | 全局依赖仓库（common/）去留审计，方案 A 已执行（净删 ~1700 行） | WP-009 | 反转 WP-007 P2-12 / WP-008 P1-4~9 决策 |
 | `LIBS_SUPPORT_WORK_ORDER.md` | 2026-08-01 | /libs 全链路收口 LIBS-001~007，真机矩阵 V-01~V-10 全绿；修复 W^X dex 加载 | WP-010 | 标题仍为 Draft（状态字段遗留，内容已完成） |
 | `FULL_AUDIT_REPORT_2026-08-01.md` | 2026-08-01 | 全量审计（基准 36eac8c）：引擎 100% 对齐且超集、IDE 对齐 ~6 成、P0/P1/P2 共 21 项 | PARITY 工作单 | 其行动项由 PARITY_COMPLETION_WORK_ORDER 承接 |
-| `EMULATOR_RUNTIME_AUDIT_REPORT.md` | 2026-08-01 | 12 参考工程 delua vs pro 日志逐字一致；修复 LuaActivity 未注册 + cleartext 两缺陷 | WP-010 验证 | ⚠ 该文件尚未 `git add`（未跟踪） |
+| `EMULATOR_RUNTIME_AUDIT_REPORT.md` | 2026-08-01 | 12 参考工程 lide vs pro 日志逐字一致；修复 LuaActivity 未注册 + cleartext 两缺陷 | WP-010 验证 | ⚠ 该文件尚未 `git add`（未跟踪） |
 | `EDITOR_CRASH_ANALYSIS_REPORT.md` | 2026-07-31 | 闪退根因 = 编辑器边界违规引入 luajava，已通过 `:editor` 独立模块 + R1~R4 恢复 | 编辑器重构期 | 定稿；P0~P2 全部落地 |
 | `EDITOR_DRAWER_AUDIT_REPORT.md` | 2026-08-01 | 抽屉三缺陷修复 + 宽屏 Permanent 适配，Phase 0~6 全部完成 | WP-001（工作单） | 真机回归 5 项已由「工作单 WP-001」验证通过 |
 | `EDITOR_PERFORMANCE_AUDIT_REPORT.md` | 2026-07-31 | 定位 4 个 P0 性能灾难链路（每键重建 scheme 等），根因已修复 | 编辑器重构期 | 阶段 B/C 建议并入 V2 报告继续跟踪 |
@@ -91,8 +91,8 @@ docs/
 
 | 资产 | 内容 | 用途 |
 |------|------|------|
-| `docs/log/androluapro.log` | pro 宿主探针输出（2026-07-31 06:00:36，879/956） | delua 运行时对照基线 |
-| `docs/log/delua.log` | delua 宿主探针输出（2026-07-31 16:01:37，878/956） | 一致性验证证据 |
+| `docs/log/androluapro.log` | pro 宿主探针输出（2026-07-31 06:00:36，879/956） | lide 运行时对照基线 |
+| `docs/log/lide.log` | lide 宿主探针输出（2026-07-31 16:01:37，878/956） | 一致性验证证据 |
 | `docs/reference/androlua/`（AndroLua_pro-master） | pro 4.4.2 全量参考源码 + Lua 资产 + jni 398 个 C 文件 | 逐字节比对基准 / 移植来源 |
 | `docs/reference/{sora-editor-main, Squircle-CE-master, luaj-master, project}` | 编辑器上游源码、Squircle-CE 标杆、LuaJ（已废弃）、参考工程 | 编辑器对齐基准 / 历史比对 |
 

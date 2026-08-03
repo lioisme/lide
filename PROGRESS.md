@@ -1,6 +1,6 @@
 # 项目进度 `PROGRESS.md`
 
-> 记录 delua 引擎迁移（LuaJ → AndroLua C Engine）的工作进度。
+> 记录 lide 引擎迁移（LuaJ → AndroLua C Engine）的工作进度。
 
 ---
 
@@ -12,8 +12,8 @@
 - 编写 `Android.mk` + `Application.mk`，配置 NDK r28.2（minSdk=24）
 - 提取 AndroLua_pro-master 的 C 源码（`luajava.c`、`lua_gl.[ch]`、Lua 5.3.3 核心、`lua_cjson`、`sqlite`）
 - 构建产出（已验证 ELF 格式 + `nm` 确认 117 个 JNI 导出符号）：
-  - `prebuilt/arm64-v8a/libluajava.so`（341.7KB） + `libgl.so`（60.3KB）
-  - `prebuilt/armeabi-v7a/libluajava.so`（211.6KB） + `libgl.so`（35.7KB）
+  - `third_party/prebuilt/arm64-v8a/libluajava.so`（341.7KB） + `libgl.so`（60.3KB）
+  - `third_party/prebuilt/armeabi-v7a/libluajava.so`（211.6KB） + `libgl.so`（35.7KB）
 - 配置存档至 `build-scripts/jni/`，含 `rebuild_engine.ps1` 一键重构建脚本
 
 **决策**：切换到 AndroLua_pro 的 C 引擎（Lua 5.3.3），替代原 LuaJ 方案。原生库作为预编译二进制 blob，不维护在项目源码中。
@@ -33,22 +33,22 @@
 **架构变更**：
 - **移除** `engine.dex` 独立 DEX 方案 — Java 运行时源码直接编译进宿主主 DEX
 - `EngineActivity.java` 直接继承 `androlua` 模块的 `LuaActivity`，无需 DexClassLoader 加载
-- `DeluaApp.kt` 直接继承 `androlua` 模块的 `LuaApplication`
+- `LideApp.kt` 直接继承 `androlua` 模块的 `LuaApplication`
 - 消除双份运行时类问题（同一类不再同时存在于主 DEX 和独立 DEX）
 
-**预构建产物清单**（`prebuilt/`）：
+**预构建产物清单**（`third_party/prebuilt/`）：
 ```
-prebuilt/arm64-v8a/libgl.so           60 KB
-prebuilt/arm64-v8a/libluajava.so     342 KB
-prebuilt/armeabi-v7a/libgl.so         36 KB
-prebuilt/armeabi-v7a/libluajava.so   212 KB
-prebuilt/x86_64/libgl.so              60 KB
-prebuilt/x86_64/libluajava.so        347 KB
+third_party/prebuilt/arm64-v8a/libgl.so           60 KB
+third_party/prebuilt/arm64-v8a/libluajava.so     342 KB
+third_party/prebuilt/armeabi-v7a/libgl.so         36 KB
+third_party/prebuilt/armeabi-v7a/libluajava.so   212 KB
+third_party/prebuilt/x86_64/libgl.so              60 KB
+third_party/prebuilt/x86_64/libluajava.so        347 KB
 ```
 
 **决策说明**：
 - 遵循"有源码就用源码"原则 — 所有 AndroLua_pro Java 类从源码编译，无预编译二进制运行时
-- 原生 `.so` 仍保留预编译产物（prebuilt/），但 `scripts/rebuild_engine.*` 支持一键从源码重建
+- 原生 `.so` 仍保留预编译产物（third_party/prebuilt/），但 `scripts/rebuild_engine.*` 支持一键从源码重建
 - `LuaApplication.getUriForPath/getUriForFile` 因依赖自定义 `FileProvider.java` 移除，不影响核心功能
 
 ---
@@ -67,7 +67,7 @@ prebuilt/x86_64/libluajava.so        347 KB
 | `androlua/.../engine/EngineBridge.kt` | androlua | 桥接层：创建 Intent、通过文件协议收集结果 |
 | `app/.../engine/EngineActivity.java` | app | 引擎 Activity：继承 `LuaActivity`（androlua 模块），重写 `onCreate`/`getLuaPath`/`onDestroy`，直接访问 LuaState |
 | `app/.../ui/screen/RunScreen.kt` | app | Compose 界面：通过 `rememberLauncherForActivityResult(StartActivityForResult)` 启动 EngineActivity，读取文件结果并展示 |
-| `app/.../navigation/DeluaNavHost.kt` | app | 导航图：创建 EngineBridge 实例，传入 RunScreen；移除所有 LuaRunner 引用 |
+| `app/.../navigation/LideNavHost.kt` | app | 导航图：创建 EngineBridge 实例，传入 RunScreen；移除所有 LuaRunner 引用 |
 
 ### 文件协议（engine_result.json + engine_output.txt）
 
@@ -170,9 +170,9 @@ assets/samples/
 
 | 编号 | 检查项 | 状态 |
 |------|--------|------|
-| WP004-AC1 | 工程在 delua 中打开后点击"运行"，引擎 Activity 正确启动 | ⚪ 待设备验证 |
+| WP004-AC1 | 工程在 lide 中打开后点击"运行"，引擎 Activity 正确启动 | ⚪ 待设备验证 |
 | WP004-AC2 | Lua 脚本 UI 正确显示，无白屏/崩溃 | ⚪ 待设备验证 |
-| WP004-AC3 | 返回 delua IDE 后，输出/结果在 RunScreen 正确展示 | ⚪ 待设备验证 |
+| WP004-AC3 | 返回 lide IDE 后，输出/结果在 RunScreen 正确展示 | ⚪ 待设备验证 |
 | WP004-AC4 | 连续运行 3 次无内存泄漏 | ⚪ 待 Profiler 验证 |
 | WP004-AC5 | 脚本异常时 error message 正确传递回宿主 | ⚪ 待设备验证 |
 
@@ -254,7 +254,7 @@ assets/samples/
 2. 从 `docs/AndroLua_pro-master/` 复制 C 源码到临时构建目录
 3. 写入 Android.mk + Application.mk 构建配置
 4. 执行 `ndk-build` 编译 `libluajava.so` + `libgl.so`
-5. 复制产物到 `prebuilt/{abi}/` 和 `app/src/main/jniLibs/{abi}/`
+5. 复制产物到 `third_party/prebuilt/{abi}/` 和 `app/src/main/jniLibs/{abi}/`
 
 ### CI 集成
 
@@ -280,8 +280,8 @@ CI 包含四个 Job：
 
 | 产物 | 位置 |
 |------|------|
-| Lua 运行时脚本 (25 个) | `prebuilt/lua/` — 从 `assets/lua/` 同步 |
-| `.so` 文件 | `prebuilt/{arm64-v8a,armeabi-v7a,x86_64}/` — NDK 从 C 源码构建 |
+| Lua 运行时脚本 (25 个) | `third_party/prebuilt/lua/` — 从 `assets/lua/` 同步 |
+| `.so` 文件 | `third_party/prebuilt/{arm64-v8a,armeabi-v7a,x86_64}/` — NDK 从 C 源码构建 |
 | Java 运行时 | `androlua/src/main/java/` — 全量 AndroLua_pro Java 源码，编译进主 DEX |
 
 ### 验收状态
@@ -292,7 +292,7 @@ CI 包含四个 Job：
 | WP007-AC2 | `scripts/rebuild_engine.ps1` 更新正确 | ✅ 脚本就绪 |
 | WP007-AC3 | `.github/workflows/build.yml` 配置正确 | ✅ GitHub Actions 工作流 |
 | WP007-AC4 | x86_64 在 Application.mk 中启用 | ✅ 确认 |
-| WP007-AC5 | `prebuilt/lua/` 目录存在且包含 25 个脚本 | ✅ 确认 |
+| WP007-AC5 | `third_party/prebuilt/lua/` 目录存在且包含 25 个脚本 | ✅ 确认 |
 
 ---
 
@@ -311,14 +311,14 @@ CI 包含四个 Job：
 - `build-scripts/make-examples.ps1`：`.alp` 生成脚本（PowerShell .NET zip，UTF-8 无 BOM 写 init.lua）
 - `app/src/main/assets/examples/*.alp`：6 个内置示例（构建产物）
 - `ExamplesScreen.kt`：示例列表（名称/描述/已导入徽标/导入/重新导入按钮，Toast + Snackbar 反馈）
-- `DeluaNavHost.kt`：`Routes.EXAMPLES` 路由；`ProjectListScreen.kt` 顶栏 MenuBook 示例入口
+- `LideNavHost.kt`：`Routes.EXAMPLES` 路由；`ProjectListScreen.kt` 顶栏 MenuBook 示例入口
 - `values/strings.xml` + `values-zh/strings.xml`：示例界面字符串
-- `DeluaApp.kt`：移除 `extractSamples()`；`assets/samples/` 目录删除
+- `LideApp.kt`：移除 `extractSamples()`；`assets/samples/` 目录删除
 - `ZipUtil` / `AlpManager`：导入失败日志增强（含堆栈 + destDir 快照）
 
 **导入语义**：示例导入复用 `AlpManager.import`（与用户导入同一路径）；重新导入覆盖已存在目录内容（实测验证）。导入目录名由 init.lua `appname` 决定，与 .alp 文件名无关。
 
-**双端验证（x64 模拟器 ADB，pro / delua 对比）**：
+**双端验证（x64 模拟器 ADB，pro / lide 对比）**：
 
 | 示例 | 结果 | pro 对比 |
 |------|------|---------|
@@ -331,7 +331,7 @@ CI 包含四个 Job：
 
 **过程教训**：
 - listview 首版 `LuaAdapter` 数据元素为字符串 → 双端 ClassCastException；修复为 LuaTable（`{ content = "..." }`）后需**重新生成 .alp + 重建 APK + 重装 + 重新导入**（导入链路本身工作正常，内容更新才是关键）。
-- 模拟器写 /sdcard EPERM → `adb shell appops set com.lioisme.delua MANAGE_EXTERNAL_STORAGE allow`（详见 ENVIRONMENT.md §8）。
+- 模拟器写 /sdcard EPERM → `adb shell appops set com.lioisme.lide MANAGE_EXTERNAL_STORAGE allow`（详见 ENVIRONMENT.md §8）。
 - `adb install -r` 保留 appops 与 /sdcard 工程数据；`adb uninstall` 报 DELETE_FAILED_INTERNAL_ERROR 时用覆盖安装。
 
 **决策**：D-16（反转 D-03）——示例资产化 .alp + 导入界面替代 assets/samples 首启解包。

@@ -41,7 +41,7 @@ end
 
 ## 4. 工程落地建议
 
-- `cjson` 在 Pro/delua 宿主中为标准扩展（SYNTAX_MANUAL 有记录），可直接 `import "cjson"`；
+- `cjson` 在 Pro/lide 宿主中为标准扩展（SYNTAX_MANUAL 有记录），可直接 `import "cjson"`；
 - 大 JSON 的 `({.*})` 截取有性能与正确性风险，优先 `json.decode(全文)` + `pcall` 包裹。
 
 ## 5. 相关帖子

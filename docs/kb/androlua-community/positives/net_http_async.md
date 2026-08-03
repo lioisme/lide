@@ -29,9 +29,9 @@ import "cjson"             --解析json
 4. **校验票据**：id 2688 说明 `cjson` 解出的 `result` 字段要判断后再走逻辑——任何远程数据
    都必须先校验再使用（该帖自己的票据校验接口已失效，属反例，见 negatives）。
 
-## 4. 工程落地建议（delua 视角）
+## 4. 工程落地建议（lide 视角）
 
-- `com.androlua.Http` 在 Pro 4.4.2 源码 `com/androlua/Http.java` 中确认存在；delua 是否同签名
+- `com.androlua.Http` 在 Pro 4.4.2 源码 `com/androlua/Http.java` 中确认存在；lide 是否同签名
   需设备实测（待 `androlua-project-validation` 双端验证后回填）。
 - 新工程更推荐自带纯 Lua 实现（`luajava.bindClass("java.net.HttpURLConnection")`）以摆脱宿主绑定；
   若接受绑定，需同时处理回调线程与超时。

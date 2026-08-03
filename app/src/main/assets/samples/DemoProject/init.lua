@@ -1,6 +1,6 @@
 appname = "DemoProject"
 appver = "1.0"
-packagename = "com.delua.demoproject"
+packagename = "com.lide.demoproject"
 
 -- page list for project navigation
 pages = { "main", "calc", "info" }

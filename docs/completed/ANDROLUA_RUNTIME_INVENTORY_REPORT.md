@@ -11,13 +11,13 @@
 
 | 层 | 与 pro 4.4.2 一致率 | 说明 |
 |---|---|---|
-| Java | 96.3%（387/402 逐字节一致） | 15 个文件修改（多为注释剥离/等值适配，5 个行为修改），0 个 delua 新增 Java 类，41 个 pro 文件未移植（IDE 层，判定合理） |
+| Java | 96.3%（387/402 逐字节一致） | 15 个文件修改（多为注释剥离/等值适配，5 个行为修改），0 个 lide 新增 Java 类，41 个 pro 文件未移植（IDE 层，判定合理） |
 | 原生 | 17 个 .so/ABI 与官方 APK 对齐 | 仅 2 个最小补丁 + 2 个模块禁用（lluv→luv 取代、tcc 无 arm64/x86_64）；`prebuilt/` 与 `jniLibs/` 双向 MD5 一致 |
-| Lua 脚本 | 28/28 逐字节一致 | 另 3 个 delua 新增（layouthelper 家族扩展） |
+| Lua 脚本 | 28/28 逐字节一致 | 另 3 个 lide 新增（layouthelper 家族扩展） |
 | 解耦 | ✅ | `:androlua` 对 host 零引用；`:editor` 对 `:androlua` 零引用（R1 零命中）；`loadLibrary` 单点（`LuaState.java:106`） |
 | 版本滚动 | ⚠️ 部分可行 | C 层可重建（ps1 全流程），Java 层无自动化对比/合入机制，pro 版本无 pin |
 
-**核心结论**：delua 的 AndroLua 运行环境是 pro 4.4.2 的**纯继承体**（Java 侧零新增类、Lua 侧逐字节、原生侧最小补丁），宿主隔离通过「独立模块 + 命名空间 + 单一桥接面」实现，满足「与 pro 保持一致、与其他代码解耦」的目标；版本滚动机制存在缺口，见 §5。
+**核心结论**：lide 的 AndroLua 运行环境是 pro 4.4.2 的**纯继承体**（Java 侧零新增类、Lua 侧逐字节、原生侧最小补丁），宿主隔离通过「独立模块 + 命名空间 + 单一桥接面」实现，满足「与 pro 保持一致、与其他代码解耦」的目标；版本滚动机制存在缺口，见 §5。
 
 ---
 
@@ -28,13 +28,13 @@
 | 路径 | 内容 | 归属 |
 |---|---|---|
 | `androlua/src/main/java/` | 402 个 Java 文件（pro 继承体） | 运行时 |
-| `androlua/src/main/kotlin/com/lioisme/delua/androlua/` | 9 个 Kotlin 文件（delua 管理层） | 运行时 |
+| `androlua/src/main/kotlin/com/lioisme/lide/androlua/` | 9 个 Kotlin 文件（lide 管理层） | 运行时 |
 | `androlua/src/test/kotlin/` | 4 个 JVM 单测（AXmlManifestTest、LuaCompilerTest、LuaConfigParserTest、PermissionResolverTest） | 运行时 |
 | `androlua/libs/` | 空目录（仅 .gitkeep，`fileTree("libs")` 依赖预留位） | 运行时 |
 | `androlua/src/main/assets/lua/` | 空目录（AAR assets 合并占位，Lua 脚本实际放 host 侧） | 运行时 |
 | `prebuilt/{arm64-v8a,armeabi-v7a,x86_64}/` | 17 个 .so（二进制真源，md5 与 jniLibs 一致） | 原生 |
 | `app/src/main/jniLibs/` | 同 prebuilt（打包入 APK；x86_64 另有未提交的 liblive2d.so） | 原生 |
-| `app/src/main/assets/lua/` | 31 个 Lua 脚本（28 pro + 3 delua） | Lua |
+| `app/src/main/assets/lua/` | 31 个 Lua 脚本（28 pro + 3 lide） | Lua |
 | `app/src/main/assets/luadoc/`、`layouts/` | pro 语法手册、.aly 布局模板 | Lua |
 | `build-scripts/jni/` | 17 个模块目录的 Android.mk + Application.mk（NDK overlay） | 原生 |
 | `build-scripts/patches/` | 2 个 C 补丁（lsqlite3.c、zip/mkstemp.c） | 原生 |
@@ -45,7 +45,7 @@
 ### 2.2 Java 层
 
 - **包分布**（pro 原包名全保留）：`com.androlua`（52 类）、`com.luajava`（16 类）、`com.android.cglib.*`、`android.widget.*` / `android.content.*` / `android.annotation.*`（pro 自带垫片）、`com.nirenr.screencapture`。
-- **delua 管理层（9 Kotlin，`com.lioisme.delua.androlua`）**：`AlpManager`（.alp 打包/解析）、`AlpNaming`、`AXmlManifest`（字节级 AXML 补丁）、`LuaCompiler`（luac 字节码化，复用 luajava `LuaState`）、`LuaConfigParser`、`PermissionResolver`、`PluginManager`、`ZipUtil`、`engine/EngineBridge`（117 个 JNI 符号声明，host 无关）。
+- **lide 管理层（9 Kotlin，`com.lioisme.lide.androlua`）**：`AlpManager`（.alp 打包/解析）、`AlpNaming`、`AXmlManifest`（字节级 AXML 补丁）、`LuaCompiler`（luac 字节码化，复用 luajava `LuaState`）、`LuaConfigParser`、`PermissionResolver`、`PluginManager`、`ZipUtil`、`engine/EngineBridge`（117 个 JNI 符号声明，host 无关）。
 - **manifest 注册面**（app 侧）：`com.androlua.LuaActivity`、`LuaActivityX`、`LuaService`、`LuaAccessibilityService`、`com.nirenr.screencapture.ScreenCaptureActivity`、`android.content.FileProvider`（meta-data 用 androidx 标准 `android.support.FILE_PROVIDER_PATHS`）+ host 的 `.engine.EngineActivity`。
 
 ### 2.3 原生库层（17 个 .so / ABI）
@@ -59,14 +59,14 @@
 | libsensor.so | `jni/sensor` | 同 pro |
 | libgl.so | `jni/luagl` | 同 pro |
 
-- **ABI**：`arm64-v8a` / `armeabi-v7a` / `x86_64`。pro 官方 APK 仅 arm 双 ABI；**x86_64 为 delua 补充**（模拟器验证用）。
+- **ABI**：`arm64-v8a` / `armeabi-v7a` / `x86_64`。pro 官方 APK 仅 arm 双 ABI；**x86_64 为 lide 补充**（模拟器验证用）。
 - `prebuilt/` 与 `app/src/main/jniLibs/` 对应文件 MD5 全部一致，无缺失、无多余（x86_64 的 liblive2d.so 属未提交实验，除外）。
 - pro 参考树**不含预编译 .so**（仅 C 源码），二进制一致性以「官方 APK 17 个 .so + 双端探针」实测锚定（见 `docs/kb/androlua-lua/PITFALLS.md`）。
 
 ### 2.4 Lua 脚本层（`app/src/main/assets/lua/`，31 个）
 
 - **pro 28 个**逐字节一致：autotheme、base64、bin、bmob、check、console、ftp、hex、http、import、json、loadbitmap、loadlayout、loadmenu、logcat、ltn12、mbox、mime、options、permission、smtp、socket、su、test、xml 等。
-- **delua 新增 3 个**：`loadlayout2.lua`、`loadlayout3.lua`、`xml2table.lua`（layouthelper 家族扩展，pro 无对应物）。
+- **lide 新增 3 个**：`loadlayout2.lua`、`loadlayout3.lua`、`xml2table.lua`（layouthelper 家族扩展，pro 无对应物）。
 - ⚠️ `prebuilt/lua/` 是**过期快照**（仅 28 个，缺新增 3 个），且未被任何构建消费，见 §5.2。
 
 ### 2.5 构建配置
@@ -74,7 +74,7 @@
 - `build-scripts/jni/Application.mk`：`APP_ABI` 三 ABI、`APP_PLATFORM android-24`、`APP_STL c++_static`、release。
 - Android.mk 集合 17 模块；pro 的 19 个 jni 目录中禁用 **lluv**（被 luv 取代）与 **tcc**（无 arm64/x86_64 目标）。
 - 补丁 2 个：`lsqlite3.c`（`lua_strlen`→`lua_rawlen`，Lua 5.3 等价修复，UTF-8 无 BOM）、`zip/mkstemp.c`（补 `#include <unistd.h>`，NDK r29/C99 适配）。
-- R8：`app/proguard-rules.pro` keep `com.luajava.**`、`com.androlua.**`、`com.android.cglib.**`、`com.nirenr.**`、`com.lioisme.delua.androlua.**`、`android.widget.**` 等；`app/build.gradle.kts` 的 `luaApiSurface` 在 release 构建后用 mapping 文件校验 Lua 可见 API 未被 R8 移除。
+- R8：`app/proguard-rules.pro` keep `com.luajava.**`、`com.androlua.**`、`com.android.cglib.**`、`com.nirenr.**`、`com.lioisme.lide.androlua.**`、`android.widget.**` 等；`app/build.gradle.kts` 的 `luaApiSurface` 在 release 构建后用 mapping 文件校验 Lua 可见 API 未被 R8 移除。
 - 编译验证命令（AGENTS.md）：`.\gradlew.bat :app:compileArm64DebugKotlin` / `:app:assembleArm64Debug`。
 
 ---
@@ -83,7 +83,7 @@
 
 ### 3.1 Java 层（402 个文件）
 
-- **387 个逐字节一致（96.3%）**；0 个 delua 新增 Java 类（证明 Java 侧是纯继承体）。
+- **387 个逐字节一致（96.3%）**；0 个 lide 新增 Java 类（证明 Java 侧是纯继承体）。
 - **15 个修改文件**，分两类：
 
 **A. 等值适配（注释/文档剥离 + androidx 注解替换，逻辑等值调用）**：
@@ -119,29 +119,29 @@
 
 ### 3.2 原生层
 
-- 与 pro 官方 APK 17 个 .so 清单对齐（`docs/kb/androlua-lua/PITFALLS.md` 记录过 delua 曾因源码树误判移除 lfs/lsqlite3、后按 APK 实测恢复的教训）。
+- 与 pro 官方 APK 17 个 .so 清单对齐（`docs/kb/androlua-lua/PITFALLS.md` 记录过 lide 曾因源码树误判移除 lfs/lsqlite3、后按 APK 实测恢复的教训）。
 - 差异仅 2 个：**lluv→luv 取代**（luv 为 lluv 继任者，能力等价）、**tcc 禁用**（pro 的「编译 Lua」能力由 Java 侧 `LuaCompiler` 用 luajava `LloadBuffer`+`dump` 实现，行为等价）。
 - 补丁为最小等价修复/编译适配，无功能改动。
 
 ### 3.3 Lua 脚本层
 
-- 28/28 逐字节一致；3 个 delua 新增为 loadlayout 家族扩展，不触碰 pro 文件。
-- 双端（pro 官方 APK vs delua）探针结果一致（`ANDROLUA_PARITY_DUAL_END_FINAL_VERIFICATION.md`）。
+- 28/28 逐字节一致；3 个 lide 新增为 loadlayout 家族扩展，不触碰 pro 文件。
+- 双端（pro 官方 APK vs lide）探针结果一致（`ANDROLUA_PARITY_DUAL_END_FINAL_VERIFICATION.md`）。
 
 ---
 
 ## 4. 耦合面与边界（解耦审计）
 
 ```
-:app (com.lioisme.delua)  ──►  :androlua (com.androlua / com.luajava / ...)
+:app (com.lioisme.lide)  ──►  :androlua (com.androlua / com.luajava / ...)
      │                            │ (零依赖 app / editor)
      └──►  :editor (sora-editor)  ◄── 零依赖（R1：luajava/androlua/loadLibrary 零命中）
 ```
 
-- **`:androlua` → host 零引用**：402 个 Java + 9 个 Kotlin 中 `import com.lioisme.delua`（非 androlua 子包）零命中。
+- **`:androlua` → host 零引用**：402 个 Java + 9 个 Kotlin 中 `import com.lioisme.lide`（非 androlua 子包）零命中。
 - **R1 边界**：`rg -n "luajava|androlua|loadLibrary" editor/src` 零命中（AGENTS.md 验证命令）。
 - **host 桥接面（唯一允许耦合点）**：
-  - `DeluaApp : LuaApplication`：onCreate 追加插件/布局/luadoc 提取与 TextMate 预载。
+  - `LideApp : LuaApplication`：onCreate 追加插件/布局/luadoc 提取与 TextMate 预载。
   - `EngineActivity : LuaActivity`：`getLuaPath` 覆写 + `luaDir`（protected）依赖 + `sendMsg/sendError` 回传 `EXTRA_OUTPUT/EXTRA_ERROR`。
   - `RunEngineLauncher`、`build/ApkBuilder` 管线（host 侧，仅调用 androlua 的工具层）。
   - `EngineBridge`（androlua 侧）为纯 JNI 声明，无 host 类型。
@@ -160,9 +160,9 @@
 
 1. **pro 版本无 pin**：参考树仅靠目录名（v4.4.2），无 URL/commit/校验和记录。
 2. **`docs/reference/` gitignored**：CI/换机后无法重建、无法跑对比。
-3. **`prebuilt/lua/` 快照过期**（缺 3 个 delua 脚本），且无消费方——要么删除、要么纳入构建产物。
+3. **`prebuilt/lua/` 快照过期**（缺 3 个 lide 脚本），且无消费方——要么删除、要么纳入构建产物。
 4. **二进制双真相源**：`prebuilt/` 与 `jniLibs/` 两份 .so，需一致性校验（当前靠人工 MD5）。
-5. **Java 内嵌耦合点**：`LuaApplication`/`LuaDexLoader`/`LuaActivity` 中的 delua 代码在 pro 升级时需手工合并（§3.1 B 类）。
+5. **Java 内嵌耦合点**：`LuaApplication`/`LuaDexLoader`/`LuaActivity` 中的 lide 代码在 pro 升级时需手工合并（§3.1 B 类）。
 6. **配置同步面**：R8 keep 清单、`luaApiSurface`、manifest 注册面需随 pro 演进同步更新；`LuaCompiler` 依赖的 Lua 版本与 .so 绑定。
 7. **无回归脚本**：升级后应跑双端探针（`docs/kb/androlua-lua/` 体系）+ `:app:assembleArm64Debug`。
 
@@ -183,7 +183,7 @@
 | 未提交工作区改动 | `LuaAccessibilityService`（stopScreenshot）、`check.lua`（String.len 断言修复）、`docs/kb/androlua-lua/*`、示例 .alp、ExamplesScreen/strings 更新——建议尽快提交收口 |
 | live2d 实验未收口 | `build-scripts/live2d/` + 仅 x86_64 的 `liblive2d.so`（prebuilt 与 jniLibs 各一份）均未提交；混在二进制目录中，需明确「实验/正式」归属 |
 | 反 Xposed 检测移除 | pro 的 `LuaActivity` 安全检测被有意删除（-117 行），属于**安全性行为差异**，需在文档中明示 |
-| 内嵌业务代码 | `LuaApplication`/`LuaDexLoader` 中 delua 代码与 pro 源码同文件，是滚动合并冲突高发区（§5.2-5） |
+| 内嵌业务代码 | `LuaApplication`/`LuaDexLoader` 中 lide 代码与 pro 源码同文件，是滚动合并冲突高发区（§5.2-5） |
 | android.support 字符串残留 | `FileProvider` 的 `FILE_PROVIDER_PATHS`、CardView 注释等，均系源码原本内容，与 androidx FileProvider 兼容，无害 |
 | reference 编码 | pro README 为 GBK，批处理脚本按编码注意处理 |
 | 语义差异锚点 | 一致性以「逐字节 + 官方 APK 实测」双锚定；pro 若发布新版（无官方版本号体系），需重新跑双端验证 |
@@ -198,7 +198,7 @@
 # R1 边界（AGENTS.md 硬门槛，须零命中）
 rg -n "luajava|androlua|loadLibrary" editor/src
 
-# Java 层 MD5 全量对比（pro vs delua）
+# Java 层 MD5 全量对比（pro vs lide）
 # 以 docs/reference/androlua/AndroLua_pro-master/app/src/main/java 为基准，
 # 相对路径求并集 → identical / modified / pro-only excluded 三清单
 

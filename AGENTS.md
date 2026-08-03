@@ -4,7 +4,7 @@
 
 ## 架构边界（R1–R4）
 
-- **R1** `:editor`（包 `com.lioisme.delua.editor`）禁止出现 `com.androlua`、`com.luajava`、
+- **R1** `:editor`（包 `com.lioisme.lide.editor`）禁止出现 `com.androlua`、`com.luajava`、
   `System.loadLibrary`、jniLibs；其 `build.gradle.kts` 禁止依赖 `:androlua`。
   编辑器进程内的一切 Lint / 诊断 / 补全 / 高亮逻辑必须是纯 Kotlin/Java，禁止触碰 `libluajava.so`。
 - **R2** Lua 编译与运行能力属于宿主 `:app`（`EngineBridge` → `EngineActivity`，同进程运行）。
@@ -47,8 +47,9 @@ rg -n "luajava|androlua|loadLibrary" editor/src
 - **行级单飞**：列表行必须经 `rowInfoAsync`（suspend）获取——快路径同步读缓存，
   慢路径 `NonCancellable + IO` 内 CHM `getOrPut` 单飞 compute；禁止在行 `LaunchedEffect`
   里直接 `rowInfo`（计算随行生命周期取消 → fling 反复全 dex 扫描，性能审计 R2）。
-- **不可用行呈现（用户决策）**：禁止「不可用」文本标签、禁止对 API 文本灰显/中划线等
-  任何文本样式改动；只用非文本指示（徽章旁 6dp error 色调圆点），徽章照常显示。
+- **不可用行呈现（用户决策，2026-08 反转）**：不可用 API（loadable == false）的 API 文本
+  用 Compose 原生 `TextDecoration.LineThrough` 中划线表示；禁止往文本内容里插入
+  `-`/`~~` 等字符的「伪中划线」技巧。不再使用 error 圆点等附加指示。
 
 ## API 浏览器索引快照契约
 
@@ -78,4 +79,4 @@ rg -n "luajava|androlua|loadLibrary" editor/src
   禁止在 UI 线程同步 O(n) 过滤；行级反射信息缓存（`rowInfoCache`）必须是**非空包装**，
   禁止用返回 null 的 `getOrPut`（CHM 拒绝 null，负缓存永久失效 → 全 dex 扫描 → ART 全局锁）。
 
-## /libs 机制约定（工程 /libs 支持，详见 docs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.md
+## /libs 机制约定（工程 /libs 支持，详见 docs/completed/LIBS_SUPPORT_WORK_ORDER.md

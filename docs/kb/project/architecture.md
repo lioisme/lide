@@ -1,5 +1,8 @@
 # 架构与合规红线（Knowledge Base）
 
+> ⚠️ **已过期**：本文基于旧三层（Lua/Kotlin/Res）+ `wiki/` 基线的架构；当前架构（`:app`/`:editor`/`:androlua`、
+> R1~R4 边界）的权威描述见 [../ARCHITECTURE.md](../ARCHITECTURE.md) 与根 [AGENTS.md](../../../AGENTS.md)。
+
 > **类型**：知识库 · 规则性资料
 > **用途**：判断某个改动该改哪一层、哪些改动被禁止
 > **核对时间**：2026-08-03

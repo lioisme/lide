@@ -1,4 +1,4 @@
-// luaopen_live2d: Lua -> C direct binding for the delua built-in Live2D V2
+// luaopen_live2d: Lua -> C direct binding for the lide built-in Live2D V2
 // native engine (liblive2d.so).
 //
 // Design (Lua -> C, no Java engine classes in the path):
@@ -41,7 +41,7 @@
 // see PITFALLS "draw 循环零 Java 调用"), so they live here in C, same as the
 // model draw path. stb_image decodes the PNG; no BitmapFactory involved.
 
-// delua's bundled Lua headers (build-scripts/jni/lua) are C headers without
+// lide's bundled Lua headers (build-scripts/jni/lua) are C headers without
 // extern "C" guards; compiled from C++ they would mangle every lua_* symbol.
 extern "C" {
 #include <lua.h>

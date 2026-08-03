@@ -1,6 +1,6 @@
 appname="listview"
 appver="1.0"
-packagename="com.delua.listview"
+packagename="com.lide.listview"
 user_permission={
   "INTERNET",
 }

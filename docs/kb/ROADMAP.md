@@ -1,4 +1,4 @@
-# delua 路线图与待办台账
+# lide 路线图与待办台账
 
 > 进行中 / 计划中工作的单一索引。原文档：`PARITY_COMPLETION_WORK_ORDER.md`、`EDITOR_PERFORMANCE_AUDIT_V2_REPORT.md`、
 > `EDITOR_UI_ALIGNMENT_WORK_ORDER.md`、`XPOSED_MODULE_FEASIBILITY_REPORT.md`、`GAME_ENGINE_PERFORMANCE_AUDIT_REPORT.md`、
@@ -62,7 +62,7 @@
 
 验收基准（AC）：gfxinfo jank=0、AsyncAnalyzer 线程唯一、styles 非空、77KB 打开耗时 ≤ Squircle、搜索流畅、R1 零命中。
 
-### 3.2 UI 对齐（DELUA-UI-001，内部 WP）
+### 3.2 UI 对齐（LIDE-UI-001，内部 WP）
 
 | WP | 内容 | 状态 |
 |----|------|------|

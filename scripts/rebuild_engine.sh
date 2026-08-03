@@ -1,17 +1,17 @@
 #!/bin/bash
-# delua AndroLua Engine Rebuild Script (Unix/macOS)
+# lide AndroLua Engine Rebuild Script (Unix/macOS)
 # Usage: ./scripts/rebuild_engine.sh [arm64-v8a|armeabi-v7a|x86_64|all]
 # Requires: ANDROID_NDK_HOME
 
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-DELUA_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-PREBUILT_DIR="$DELUA_ROOT/prebuilt"
-JNILIBS_DIR="$DELUA_ROOT/app/src/main/jniLibs"
-JNI_SRC_DIR="$DELUA_ROOT/docs/reference/androlua/AndroLua_pro-master/app/src/main/jni"
-JNI_CFG_DIR="$DELUA_ROOT/build-scripts/jni"
-BUILD_DIR="${TMPDIR:-/tmp}/delua-ndk-build"
+LIDE_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+PREBUILT_DIR="$LIDE_ROOT/third_party/prebuilt"
+JNILIBS_DIR="$LIDE_ROOT/app/src/main/jniLibs"
+JNI_SRC_DIR="$LIDE_ROOT/docs/reference/androlua/AndroLua_pro-master/app/src/main/jni"
+JNI_CFG_DIR="$LIDE_ROOT/build-scripts/jni"
+BUILD_DIR="${TMPDIR:-/tmp}/lide-ndk-build"
 BUILD_LOG="$BUILD_DIR/build.log"
 
 # Disabled modules kept in reference tree (Android.mk2 only / no build file).
@@ -36,7 +36,7 @@ if [ -z "${ANDROID_NDK_HOME:-}" ]; then
 fi
 
 echo "============================================"
-echo " delua Engine Rebuild Script"
+echo " lide Engine Rebuild Script"
 echo " ABI:       $ABI"
 echo " NDK:       $ANDROID_NDK_HOME"
 echo " Output:    $PREBUILT_DIR"
@@ -49,7 +49,7 @@ rm -rf "$BUILD_DIR"
 mkdir -p "$BUILD_DIR"
 
 # Copy reference JNI source tree (docs/AndroLua_pro-master), then overlay
-# delua-managed Android.mk build configs from build-scripts/jni/
+# lide-managed Android.mk build configs from build-scripts/jni/
 cp -R "$JNI_SRC_DIR" "$BUILD_DIR/jni"
 
 while IFS= read -r mk; do
@@ -139,7 +139,7 @@ for abi in "${ABI_LIST_ARR[@]}"; do
     for so in "$libs_dir"/*.so; do
         if [ -f "$so" ]; then
             cp "$so" "$PREBUILT_DIR/$abi/"
-            echo "  prebuilt/$abi/$(basename "$so")"
+            echo "  third_party/prebuilt/$abi/$(basename "$so")"
         fi
     done
 

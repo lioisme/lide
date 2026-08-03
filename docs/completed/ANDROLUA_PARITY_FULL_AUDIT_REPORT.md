@@ -1,6 +1,6 @@
-# delua × AndroLua Pro 工程 / 库 / 插件 / 模块系统全面一致性审计报告
+# lide × AndroLua Pro 工程 / 库 / 插件 / 模块系统全面一致性审计报告
 
-> 审计对象：`delua`（`:androlua` + `:app` + `:editor` 三模块）vs `docs/reference/androlua/AndroLua_pro-master/`（AndroLua Pro 4.4.2 源码）
+> 审计对象：`lide`（`:androlua` + `:app` + `:editor` 三模块）vs `docs/reference/androlua/AndroLua_pro-master/`（AndroLua Pro 4.4.2 源码）
 > 审计方法：全量源码逐文件阅读 + 全仓库调用链 grep 验证 + 关键文件逐字节比对（hash/diff）
 > 审计日期：2026-07-31
 > 审计人：opencode（独立复核，非复用既有审计文档结论；既有文档 `ANDROLUA_FEATURE_PARITY_AUDIT.md` 的部分结论已随代码演进过期，本报告以当前代码为准）
@@ -9,9 +9,9 @@
 
 ## 1. 结论速览
 
-- **引擎运行时层已 100% 对齐**：`com.luajava` 全部 16 类、`com.android.cglib.*` 全链、`com.androlua` 主体 42+ 类逐字节一致；28 个 Lua 运行时脚本逐字节一致（另增 3 个 layouthelper 族脚本）；15 个原生 `.so` 与 pro 主 `Android.mk` 构建集完全一致（delua 还多出 x86_64 ABI）；`package.path` / `package.cpath` / `libsloader` / `dexCache(MD5)` / `libCache(实例级)` / `unApk(MD5 增量)` 等机制全部同构。
-- **"工程内自行管理"的 pro 核心模型在 delua 中完整保留**：`<project>/libs/` 自动加载（`LuaDexLoader.loadLibs`）、`require` 链、工程根探测（`prjCache` 上溯）、`.alp` 导入导出、`newActivity` 页面机制均原样可用。
-- **delua 的"统一管理"是叠加层**：`common/libs` + `common/modules` + `registry.json` + `delua.json` + `plugin.json`。其与运行时的唯一桥梁是**依赖物化**（`materializeProjectDependencies`），该链路 8 个环节当前全部连通（历史断链已修复），但存在 6 处"写-读不对称"半成品与 10 项工程级遗留，另有 4 处与 pro 生态的行为偏差需要决策收口。
+- **引擎运行时层已 100% 对齐**：`com.luajava` 全部 16 类、`com.android.cglib.*` 全链、`com.androlua` 主体 42+ 类逐字节一致；28 个 Lua 运行时脚本逐字节一致（另增 3 个 layouthelper 族脚本）；15 个原生 `.so` 与 pro 主 `Android.mk` 构建集完全一致（lide 还多出 x86_64 ABI）；`package.path` / `package.cpath` / `libsloader` / `dexCache(MD5)` / `libCache(实例级)` / `unApk(MD5 增量)` 等机制全部同构。
+- **"工程内自行管理"的 pro 核心模型在 lide 中完整保留**：`<project>/libs/` 自动加载（`LuaDexLoader.loadLibs`）、`require` 链、工程根探测（`prjCache` 上溯）、`.alp` 导入导出、`newActivity` 页面机制均原样可用。
+- **lide 的"统一管理"是叠加层**：`common/libs` + `common/modules` + `registry.json` + `lide.json` + `plugin.json`。其与运行时的唯一桥梁是**依赖物化**（`materializeProjectDependencies`），该链路 8 个环节当前全部连通（历史断链已修复），但存在 6 处"写-读不对称"半成品与 10 项工程级遗留，另有 4 处与 pro 生态的行为偏差需要决策收口。
 
 ---
 
@@ -58,20 +58,20 @@ Pro 没有独立的工程/插件管理 Java 类。**工程、插件、IDE 页面
 
 ---
 
-## 3. delua 工程结构审计
+## 3. lide 工程结构审计
 
 ### 3.1 模块拓扑
 
 | 模块 | 内容 | 与 pro 的关系 |
 |---|---|---|
-| `:androlua`（库模块） | `com.androlua`（42+）、`com.luajava`（16）、`android.*`/`com.nirenr.*`/cglib（~300）、Kotlin 管理层（12 文件）、assets（loadlayout2/3、xml2table） | pro `app/src/main/java` 的运行时部分 + delua 自创管理层 |
+| `:androlua`（库模块） | `com.androlua`（42+）、`com.luajava`（16）、`android.*`/`com.nirenr.*`/cglib（~300）、Kotlin 管理层（12 文件）、assets（loadlayout2/3、xml2table） | pro `app/src/main/java` 的运行时部分 + lide 自创管理层 |
 | `:app`（宿主 APK） | Compose IDE（20 个 Kotlin 屏/管理器）、`EngineActivity`、assets（lua×28、luadoc、plugin.json、samples×4、textmate）、jniLibs（15×3 ABI） | pro 的 IDE（Lua 页面）被 Compose 宿主替换 |
 | `:editor`（库模块） | sora-editor + TextMate Lua 高亮/诊断/补全 | pro 的 textwarrior 编辑链被替换（`LuaEditor` 类不再存在） |
 
-- pro 的"IDE = Lua 工程"模型与 delua 的"纯编辑器模块 + 宿主运行时"同构：pro 的 `assets/` 对应宿主资源，`files/` 运行时目录对应宿主数据目录。
+- pro 的"IDE = Lua 工程"模型与 lide 的"纯编辑器模块 + 宿主运行时"同构：pro 的 `assets/` 对应宿主资源，`files/` 运行时目录对应宿主数据目录。
 - R1 边界：`:editor` 对 `luajava|androlua|loadLibrary` 零命中（含注释），符合 AGENTS.md。
 
-### 3.2 磁盘布局（delua 实况）
+### 3.2 磁盘布局（lide 实况）
 
 ```
 /storage/emulated/0/AndroLua/            ← luaExtDir（LuaApplication.java:165-179，与 pro 同）
@@ -89,7 +89,7 @@ data/data/<pkg>/files/odex|lib|lua/       ← pro 同款私有目录
 
 ## 4. 工程系统比对
 
-| 维度 | pro | delua | 判定 |
+| 维度 | pro | lide | 判定 |
 |---|---|---|---|
 | 工程位置/结构 | `project/<name>/` init.lua+main.lua+icon+libs | 同；模板额外写 `pages/user_permission/dependencies` | ✅ 兼容 |
 | 工程根探测 | `prjCache` 上溯（LuaActivity.java:470-507） | 同源码保留（LuaActivity.java:361-398）；EngineActivity 场景直接 `getLuaPath()` 覆写 | ✅ |
@@ -101,7 +101,7 @@ data/data/<pkg>/files/odex|lib|lua/       ← pro 同款私有目录
 | 工程列表 | Lua 页 `loadfile` pcall 扫描 | Compose `ProjectManager.listProjects`，**要求 main.lua+init.lua 齐备**（ProjectManager.kt:28） | ✅ 语义等价 |
 | 独立 .lua 打开 | 文件管理器直接拉起 `LuaActivity`（file://*.lua filter） | MainActivity 收养为单文件工程（MainActivity.kt:123-157）再编辑 | ⚠️ 行为差异（见 §9-4） |
 | 删除工程 | 有（Lua 页） | `deleteProject` 存在但 **UI 零调用**（ProjectManager.kt:211-217） | ❌ 死代码 |
-| delua.json 声明 | 无此概念 | 读路径存在（DependencyManager.kt:153-156），**全仓无写入端** | ❌ 半成品 |
+| lide.json 声明 | 无此概念 | 读路径存在（DependencyManager.kt:153-156），**全仓无写入端** | ❌ 半成品 |
 
 **工程系统结论：核心机制（结构、探测、运行、页面、alp 容器）与 pro 一致；差异集中在"插件型 .alp 分流"与"导出编译"两个 pro 生态能力未接入。**
 
@@ -111,7 +111,7 @@ data/data/<pkg>/files/odex|lib|lua/       ← pro 同款私有目录
 
 ### 5.1 运行时（逐字节一致 ✅）
 
-| 组件 | pro | delua | 判定 |
+| 组件 | pro | lide | 判定 |
 |---|---|---|---|
 | `LuaDexLoader` / `LuaDexClassLoader` | 172/31 行 | 同源（172/31 行） | ✅ |
 | `loadLibs`（libs/ 自动加载） | :70-82 | 同 | ✅ |
@@ -121,7 +121,7 @@ data/data/<pkg>/files/odex|lib|lua/       ← pro 同款私有目录
 | cpath（nativeLibDir/lib?.so） | LuaApplication.java:187 | 同（:190） | ✅ |
 | `LuaActivity.loadLib(name)` | :733-747 | 同（:624-638） | ✅ |
 
-### 5.2 管理面（delua 自创层）
+### 5.2 管理面（lide 自创层）
 
 - 仓库：`common/libs/<name>/{metadata.json, <name>-<version>.jar|.dex}`；安装（DependencyManager.kt:28-53）、卸载带引用拦截（:55-64,231-238）、列表（LibraryRegistry.kt:9-15）。
 - **物化链路（8 环全通，核心决策"全局仓库 = 安装面 / 工程目录 = 运行时面"）**：
@@ -141,7 +141,7 @@ ProjectDependenciesScreen 勾选(172-179) → saveDependencies(67-87)
 
 | # | 差距 | 证据 | 影响 |
 |---|---|---|---|
-| L1 | **common 仓库不支持 `.so`**：`findJarFile` 只认 .jar/.dex，安装 .so 会被校验判缺失并阻止运行 | LibraryRegistry.kt:22-24,57-62；DependencyManager.kt:170-173,191-195 | pro 的 libs/ 可直接放 .so（gl/cjson 等），delua 全局库做不到 |
+| L1 | **common 仓库不支持 `.so`**：`findJarFile` 只认 .jar/.dex，安装 .so 会被校验判缺失并阻止运行 | LibraryRegistry.kt:22-24,57-62；DependencyManager.kt:170-173,191-195 | pro 的 libs/ 可直接放 .so（gl/cjson 等），lide 全局库做不到 |
 | L2 | **物化无清理**：取消声明/换版本后 `<project>/libs` 旧 jar 永久残留，`loadLibs` 继续加载 | DependencyManager.kt:197-205 | 隐性行为不一致（运行了已卸载的库） |
 | L3 | 同库多版本孤儿 jar：重装生成 `<name>-<newver>.jar`，旧文件残留，`findJarFile` 取目录第一个（顺序不定） | LibraryRegistry.kt:22-24 | 版本语义不可靠 |
 | L4 | `registry.json` 只写不读（`readRegistry` 零调用） | DependencyManager.kt:249-256,258-285 | 索引形同虚设 |
@@ -153,7 +153,7 @@ ProjectDependenciesScreen 勾选(172-179) → saveDependencies(67-87)
 
 ## 6. 插件系统比对
 
-| 维度 | pro | delua | 判定 |
+| 维度 | pro | lide | 判定 |
 |---|---|---|---|
 | 插件结构 | `plugin/<name>/` init.lua 元数据 + main.lua + icon | 同；元数据优先 `plugin.json`（name/version/description/main/author），无 json 时 fallback init.lua（appname/appver/description/author，正则 `fieldOf`） | ✅ 超集（兼容 pro 生态插件） |
 | 扫描 | `loadfile(init.lua,"bt",app)()` pcall 跳过 | `PluginManager.scan` 一级子目录 + `loadPlugin`（PluginManager.kt:20-34,59-78） | ✅ |
@@ -169,7 +169,7 @@ ProjectDependenciesScreen 勾选(172-179) → saveDependencies(67-87)
 
 ## 7. 模块系统比对
 
-| 维度 | pro | delua | 判定 |
+| 维度 | pro | lide | 判定 |
 |---|---|---|---|
 | package.path | 工程前缀 + files/lua 三模式 | 同（LuaActivity.java:230 + LuaApplication.java:192 逐字符同构） | ✅ |
 | package.cpath | nativeLibDir + app_lib | 同 | ✅ |
@@ -194,7 +194,7 @@ ProjectDependenciesScreen 勾选(172-179) → saveDependencies(67-87)
 | `com.androlua` 主体 42+（含 LuaContext / LuaActivity / LuaApplication / LuaService / LuaDexLoader / LuaDexClassLoader / LuaEnhancer / Http / Download / 全部 Adapter / LuaThread / LuaTimer / LuaAsyncTask / 控件族 / util/*） | ✅ 逐字节（仅 4 文件有意修改，见下） |
 | `android.content.FileProvider`（自定义版） | ✅ 两侧同为自定义类，authority=包名 |
 | Lua 运行时脚本 28 个（app assets/lua == pro resources/lua，含 socket/{headers,tp,url}） | ✅ 逐字节 |
-| 原生库 15 个 × 3 ABI（bson/canvas/cjson/crypt/gl/luajava/luv/md5/regex/sensor/socket/mime/libzip/zlib + 静态 lua） | ✅ 与 pro 主 Android.mk 构建集一致（pro 的 lluv/lsqlite3/tcc 为 Android.mk2 禁用态，delua 正确未引入）；delua 另补 x86_64（pro 仅 armeabi-v7a） |
+| 原生库 15 个 × 3 ABI（bson/canvas/cjson/crypt/gl/luajava/luv/md5/regex/sensor/socket/mime/libzip/zlib + 静态 lua） | ✅ 与 pro 主 Android.mk 构建集一致（pro 的 lluv/lsqlite3/tcc 为 Android.mk2 禁用态，lide 正确未引入）；lide 另补 x86_64（pro 仅 armeabi-v7a） |
 | `initENV` 空环境块执行 init.lua（无 package.path/print 上下文） | ✅ 同款 |
 | print 双重覆盖（Java LuaPrint → import.lua `_M.print`） | ✅ 同款 |
 | `L.close()` 注释态、`MultiDex.installLibs` 注释态、`LuaAssetLoader` 未注册 | ✅ 同款（与 pro 行为一致） |
@@ -210,9 +210,9 @@ ProjectDependenciesScreen 勾选(172-179) → saveDependencies(67-87)
 
 ## 9. Manifest / 组件 / 权限比对（当前实况）
 
-| 组件 | pro | delua | 判定 |
+| 组件 | pro | lide | 判定 |
 |---|---|---|---|
-| IDE 入口 | `Welcome`(LAUNCHER) → `Main`(singleTask, 5 组 .alp VIEW/EDIT) | `MainActivity`(MAIN/LAUNCHER) + `.alp`/`.lua`(VIEW+EDIT, content+file)/`androlua://{com.lioisme.delua, com.androlua}` 5 组 filter | ✅ 超集 |
+| IDE 入口 | `Welcome`(LAUNCHER) → `Main`(singleTask, 5 组 .alp VIEW/EDIT) | `MainActivity`(MAIN/LAUNCHER) + `.alp`/`.lua`(VIEW+EDIT, content+file)/`androlua://{com.lioisme.lide, com.androlua}` 5 组 filter | ✅ 超集 |
 | LuaActivity 直开 .lua | file://*.lua + content + text/* | .lua 由 MainActivity 收养后进编辑器（EngineActivity 不直接暴露） | ⚠️ 行为差异 |
 | LuaService | ✅ | ✅ 已注册（含 luaDir/luaPath extra 消费链路 LuaService.java:292-317） | ✅ 修复 |
 | LuaAccessibilityService | ✅ + config xml | ✅ 已注册 + `res/xml/accessibility_service_config.xml` + 截图 API | ✅ 修复 |
@@ -230,11 +230,11 @@ ProjectDependenciesScreen 勾选(172-179) → saveDependencies(67-87)
 
 | # | 问题 | 证据 |
 |---|---|---|
-| G1 | `delua.json` 无写入端：文档宣称"声明即同步入口"，实际 `setProjectDependencies` 只写 init.lua；且 `ProjectManager.parseDependencies`（列表显示）只认 init.lua——手工建 delua.json 时两视图不一致 | DependencyManager.kt:153-156,287-306,319-325；ProjectManager.kt:127-141 |
+| G1 | `lide.json` 无写入端：文档宣称"声明即同步入口"，实际 `setProjectDependencies` 只写 init.lua；且 `ProjectManager.parseDependencies`（列表显示）只认 init.lua——手工建 lide.json 时两视图不一致 | DependencyManager.kt:153-156,287-306,319-325；ProjectManager.kt:127-141 |
 | G2 | `registry.json` 只写不读（索引无消费者） | DependencyManager.kt:249-256 |
 | G3 | `Project.dependencies` 字段只写无读 | Project.kt:14；ProjectManager.kt:52,61 |
-| G4 | `assets/plugin/plugin.json` 无提取逻辑，永不参与扫描（惰性示例） | DeluaApp.kt 无相关代码 |
-| G5 | `extractSamples` **每次启动无条件覆盖**示例工程（用户修改丢失）；对比 `extractLuadoc` 有 `exists && length>0` 跳过 | DeluaApp.kt:35-60 vs :73-86 |
+| G4 | `assets/plugin/plugin.json` 无提取逻辑，永不参与扫描（惰性示例） | LideApp.kt 无相关代码 |
+| G5 | `extractSamples` **每次启动无条件覆盖**示例工程（用户修改丢失）；对比 `extractLuadoc` 有 `exists && length>0` 跳过 | LideApp.kt:35-60 vs :73-86 |
 
 ### 10.2 死代码（grep 验证零调用）
 
@@ -251,7 +251,7 @@ ProjectDependenciesScreen 勾选(172-179) → saveDependencies(67-87)
 
 ## 11. 特性一致性矩阵（总表）
 
-| 特性 | pro 机制 | delua 现状 | 一致性 |
+| 特性 | pro 机制 | lide 现状 | 一致性 |
 |---|---|---|---|
 | 工程结构（init.lua 元数据 + main.lua + icon + libs/） | project/<name>/ | 同结构；模板含 dependencies 块 | ✅ |
 | 工程根探测 / newActivity 页面链 / LuaActivityX | prjCache 上溯 | 同源码 | ✅ |
@@ -270,7 +270,7 @@ ProjectDependenciesScreen 勾选(172-179) → saveDependencies(67-87)
 | IDE 编辑器 | textwarrior + LuaEditor + javaapi 补全 | sora-editor + TextMate | ✅ 合理替换（pro 脚本 import LuaEditor 会失败，已知） |
 | 布局助手 | layouthelper/ + javaapi/*.aly | loadlayout2/3、xml2table 脚本可用；**.aly 模板缺失（编辑器侧无布局助手）** | ⚠️ |
 | 离线文档 | luadoc/ | ✅ 已补齐（WebView 渲染） | ✅ |
-| 独立 APK 打包 | bin.lua + 外部 mao/sign | **无**（delua 无打包功能；白皮书阶段四/五规划中） | ❌ 缺失（最大单项） |
+| 独立 APK 打包 | bin.lua + 外部 mao/sign | **无**（lide 无打包功能；白皮书阶段四/五规划中） | ❌ 缺失（最大单项） |
 | .lua 关联 / androlua:// | ✅ | ✅（含双 host 兼容） | ✅ |
 | 运行输出 | 引擎内控制台 | 引擎内控制台（结果页已按决策移除） | ✅ |
 
@@ -295,7 +295,7 @@ ProjectDependenciesScreen 勾选(172-179) → saveDependencies(67-87)
 | 6 | **registry.json 接入或删除**：让索引被 LibraryManager/ModuleManager 消费，或移除该概念 | 二选一收口 |
 | 7 | **模块子目录支持**：安装/物化保留相对路径（socket 式目录模块可入仓） | 目录型模块安装后 `require "m/子"` 可用 |
 | 8 | **extractSamples 防覆盖**：加存在性/版本标记跳过（对齐 extractLuadoc），或改为仅首启提取 | 重启不丢用户修改 |
-| 9 | **delua.json 收口**：要么接通写入端（统一两套解析器），要么删除读路径 | 两套解析结果恒一致 |
+| 9 | **lide.json 收口**：要么接通写入端（统一两套解析器），要么删除读路径 | 两套解析结果恒一致 |
 
 ### P2 —— 可选（生态/工程化）
 
@@ -312,18 +312,18 @@ ProjectDependenciesScreen 勾选(172-179) → saveDependencies(67-87)
 > 每项均标注完成情况与工作简述；构建验收：`:app:compileArm64DebugKotlin` ✅、`:app:assembleArm64Debug` ✅、`:editor` R1 边界 grep 零命中 ✅。
 
 - **P0-1 ✅ 已完成**：`PluginManager.kt` `PluginInfo.main` 默认值 `init.lua`→`main.lua`（data class 默认值 + `optString("main", ...)` 两处）；`app/src/main/assets/plugin/plugin.json` main 字段同步修正。安装的 plugin.json 插件点击后运行 main.lua。
-- **P0-2 ✅ 已完成**：`EngineBridge.kt` 重写——新增 `EXTRA_SCRIPT_ARGS="arg"` 常量（对齐 LuaActivity `ARG` 键）、`createEngineIntent(projectDir, mainFile, args: Array<Any?>?)`；`RunEngineLauncher.launch` 增 `args` 参数透传；`DeluaNavHost` 插件运行传 `arrayOf(plugin.dir, plugin.dir/main)` 作为 `{luadir, luapath}`。
+- **P0-2 ✅ 已完成**：`EngineBridge.kt` 重写——新增 `EXTRA_SCRIPT_ARGS="arg"` 常量（对齐 LuaActivity `ARG` 键）、`createEngineIntent(projectDir, mainFile, args: Array<Any?>?)`；`RunEngineLauncher.launch` 增 `args` 参数透传；`LideNavHost` 插件运行传 `arrayOf(plugin.dir, plugin.dir/main)` 作为 `{luadir, luapath}`。
 - **P0-3 ✅ 已完成**：`ZipUtil.kt` 重写（`safeEntryName` zip-slip 防护 + `readEntryText`）；`AlpManager.kt` 重写——`AlpKind{PROJECT,PLUGIN}`、`resolveKind`（init.lua `mode="plugin"` 或文件名 `*_plugin`）、`import(File/Uri): AlpImportResult?`；`MainActivity` `.alp` 导入后按 kind 分流，插件跳转插件列表；工程列表导入结果按类型计数提示。
 - **P1-4 ✅ 已完成**：`LibraryRegistry.findArtifactFile` 扩展认 `.so`；`DependencyManager.installLibrary` 对 .so 命名 `lib<name>.so`（libsloader `luaopen_<name>` 可命中），jar/dex 仍 `<name>-<version>.<ext>`，重装先删旧构件（单构件约束）；`ProjectManager.getLocalLibFiles` 支持 `.so`。
-- **P1-5 ✅ 已完成**：物化清单 `.delua-materialized.json`（`MaterializationManifest` 私有嵌套类）——运行前同步，`syncMaterializedFiles` 删除未声明文件（canonical 前缀守卫 + `pruneEmptyParents`），卸载/换版本后引擎不再加载残留。
+- **P1-5 ✅ 已完成**：物化清单 `.lide-materialized.json`（`MaterializationManifest` 私有嵌套类）——运行前同步，`syncMaterializedFiles` 删除未声明文件（canonical 前缀守卫 + `pruneEmptyParents`），卸载/换版本后引擎不再加载残留。
 - **P1-6 ✅ 已完成**：`registry.json` 概念整体移除（`registryFile` 字段与 read/write/update 函数删除）；`getLibraryInfo/getModuleInfo` 死代码同步清理。
 - **P1-7 ✅ 已完成**：`installModule(sourceDir, ...)` 递归收集 `.lua` 按相对路径入仓（socket 式目录模块）；物化同时落 `<project>/lua/<rel>` 与（含 init.lua 时）`<project>/lua/<name>/`；新增 `installModuleFromFiles`（文件多选安装）；`ModuleRegistry.readMetadata` files 缺失时回退磁盘重列。
-- **P1-8 ✅ 已完成**：`DeluaApp.extractSamples` 目录存在即跳过（重启不丢用户修改）；新增 `extractExamplePlugin`（G4 收口：`plugin/example/` 从 assets 提取 plugin.json + 生成 main.lua）、`extractLayoutTemplates`（P2-14 配套）。
-- **P1-9 ✅ 已完成**：`delua.json` 读路径与 `ProjectManager.parseDependencies/getProjectDependencies/setProjectDependencies` 删除；依赖声明单一事实源 = init.lua `dependencies` 块；`Project.dependencies` 字段删除。
+- **P1-8 ✅ 已完成**：`LideApp.extractSamples` 目录存在即跳过（重启不丢用户修改）；新增 `extractExamplePlugin`（G4 收口：`plugin/example/` 从 assets 提取 plugin.json + 生成 main.lua）、`extractLayoutTemplates`（P2-14 配套）。
+- **P1-9 ✅ 已完成**：`lide.json` 读路径与 `ProjectManager.parseDependencies/getProjectDependencies/setProjectDependencies` 删除；依赖声明单一事实源 = init.lua `dependencies` 块；`Project.dependencies` 字段删除。
 - **P2-10 ✅ 已决策**：v1.0 明确暂不支持设备端独立 APK 打包，决策理由（mao/sign 缺失、v1-only 签名不可装、模板携带全套 IDE 运行时、优先级低）写入 `WHITEPAPER.md` 阶段四；后续平移 pro `bin.lua` 的 luac/checklib/manifest 补丁三机制。
 - **P2-11 ✅ 已完成**：`ZipUtil` 路径穿越防护（见 P0-3）；`replaceDependenciesBlock` 改为结构化扫描（`findDependenciesBlock` 跳过字符串/注释/长括号 + 花括号配平 `skipBalancedBraces`），不再依赖换行/非嵌套假设。
-- **P2-12 ✅ 已完成**：死代码清理（`PluginManager.loadedPlugins`、`DependencyManager` 三项只读函数、`AlpManager.export(File)`、`ProjectManager` delua.json 依赖方法、`Project.dependencies`）；`deleteProject` 接入 UI（工程长按 → 删除确认对话框）；UI 文案国际化收口（插件/库/模块/依赖/工程列表全部走 strings.xml，含 values-zh；ProjectDependenciesScreen 乱码清理）。
+- **P2-12 ✅ 已完成**：死代码清理（`PluginManager.loadedPlugins`、`DependencyManager` 三项只读函数、`AlpManager.export(File)`、`ProjectManager` lide.json 依赖方法、`Project.dependencies`）；`deleteProject` 接入 UI（工程长按 → 删除确认对话框）；UI 文案国际化收口（插件/库/模块/依赖/工程列表全部走 strings.xml，含 values-zh；ProjectDependenciesScreen 乱码清理）。
 - **P2-13 ✅ 已完成**：AGENTS.md R2 改为"EngineBridge → EngineActivity，同进程运行"单进程口径；白皮书 3.3 独立 Activity 栈表述与实现一致（历史报告保留原貌）。
-- **P2-14 ✅ 部分完成（资产侧）**：pro `assets/javaapi/{clayout,layout,mlayout}.aly` 复制入 `app/src/main/assets/layouts/javaapi/`，`DeluaApp` 首启提取到 `filesDir/layouts/`（存在即跳过）；布局预览/编辑器侧布局助手 UI 仍待单独立项（审计原结论不变）。
+- **P2-14 ✅ 部分完成（资产侧）**：pro `assets/javaapi/{clayout,layout,mlayout}.aly` 复制入 `app/src/main/assets/layouts/javaapi/`，`LideApp` 首启提取到 `filesDir/layouts/`（存在即跳过）；布局预览/编辑器侧布局助手 UI 仍待单独立项（审计原结论不变）。
 
 > **2026-07-31 架构反转（依赖模型收口）**：本节 P1-4/5/7 与 P2-12 涉及的「全局仓库 + 物化同步」终态决策已被 `docs/completed/DEPENDENCY_MODEL_AUDIT_REPORT.mddocs/completed/DEPENDENCY_MODEL_AUDIT_REPORT.mddocs/completed/DEPENDENCY_MODEL_AUDIT_REPORT.mddocs/completed/DEPENDENCY_MODEL_AUDIT_REPORT.mddocs/completed/DEPENDENCY_MODEL_AUDIT_REPORT.mddocs/completed/DEPENDENCY_MODEL_AUDIT_REPORT.mddocs/completed/DEPENDENCY_MODEL_AUDIT_REPORT.mddocs/completed/DEPENDENCY_MODEL_AUDIT_REPORT.mddocs/completed/DEPENDENCY_MODEL_AUDIT_REPORT.mddocs/completed/DEPENDENCY_MODEL_AUDIT_REPORT.mddocs/completed/DEPENDENCY_MODEL_AUDIT_REPORT.mddocs/completed/DEPENDENCY_MODEL_AUDIT_REPORT.mddocs/completed/DEPENDENCY_MODEL_AUDIT_REPORT.mddocs/completed/DEPENDENCY_MODEL_AUDIT_REPORT.mddocs/completed/DEPENDENCY_MODEL_AUDIT_REPORT.mddocs/completed/DEPENDENCY_MODEL_AUDIT_REPORT.mddocs/completed/DEPENDENCY_MODEL_AUDIT_REPORT.mddocs/completed/DEPENDENCY_MODEL_AUDIT_REPORT.mddocs/completed/DEPENDENCY_MODEL_AUDIT_REPORT.mddocs/completed/DEPENDENCY_MODEL_AUDIT_REPORT.mddocs/completed/DEPENDENCY_MODEL_AUDIT_REPORT.mddocs/completed/DEPENDENCY_MODEL_AUDIT_REPORT.mddocs/completed/DEPENDENCY_MODEL_AUDIT_REPORT.mddocs/completed/DEPENDENCY_MODEL_AUDIT_REPORT.mddocs/completed/DEPENDENCY_MODEL_AUDIT_REPORT.mddocs/completed/DEPENDENCY_MODEL_AUDIT_REPORT.mddocs/completed/DEPENDENCY_MODEL_AUDIT_REPORT.mddocs/completed/DEPENDENCY_MODEL_AUDIT_REPORT.mddocs/completed/DEPENDENCY_MODEL_AUDIT_REPORT.mddocs/completed/DEPENDENCY_MODEL_AUDIT_REPORT.mddocs/completed/DEPENDENCY_MODEL_AUDIT_REPORT.mddocs/completed/DEPENDENCY_MODEL_AUDIT_REPORT.mddocs/completed/DEPENDENCY_MODEL_AUDIT_REPORT.mddocs/completed/DEPENDENCY_MODEL_AUDIT_REPORT.mddocs/completed/DEPENDENCY_MODEL_AUDIT_REPORT.mddocs/completed/DEPENDENCY_MODEL_AUDIT_REPORT.mddocs/completed/DEPENDENCY_MODEL_AUDIT_REPORT.mddocs/completed/DEPENDENCY_MODEL_AUDIT_REPORT.mddocs/completed/DEPENDENCY_MODEL_AUDIT_REPORT.mddocs/completed/DEPENDENCY_MODEL_AUDIT_REPORT.mddocs/completed/DEPENDENCY_MODEL_AUDIT_REPORT.mddocs/completed/DEPENDENCY_MODEL_AUDIT_REPORT.mddocs/completed/DEPENDENCY_MODEL_AUDIT_REPORT.mddocs/completed/DEPENDENCY_MODEL_AUDIT_REPORT.mddocs/completed/DEPENDENCY_MODEL_AUDIT_REPORT.mddocs/completed/DEPENDENCY_MODEL_AUDIT_REPORT.mddocs/completed/DEPENDENCY_MODEL_AUDIT_REPORT.mddocs/completed/DEPENDENCY_MODEL_AUDIT_REPORT.mddocs/completed/DEPENDENCY_MODEL_AUDIT_REPORT.mddocs/completed/DEPENDENCY_MODEL_AUDIT_REPORT.mddocs/completed/DEPENDENCY_MODEL_AUDIT_REPORT.md

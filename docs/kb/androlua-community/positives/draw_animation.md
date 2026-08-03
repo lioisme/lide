@@ -37,8 +37,8 @@ import "android.animation.ObjectAnimator"
 
 ## 4. 工程落地建议
 
-- 自绘的 `Paint`/`Path`/`Canvas` 均为公开 API，delua 可直接运行；`LuaDrawable` 类名 Pro 确认
-  存在，delua 待双端实测；
+- 自绘的 `Paint`/`Path`/`Canvas` 均为公开 API，lide 可直接运行；`LuaDrawable` 类名 Pro 确认
+  存在，lide 待双端实测；
 - 动画封装帖（1616）要求 `import "dh"` 自定义模块，跨宿主不可用——移植时应内联依赖。
 
 ## 5. 相关帖子

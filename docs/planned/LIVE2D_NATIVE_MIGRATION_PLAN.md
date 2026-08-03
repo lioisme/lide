@@ -1,8 +1,8 @@
 # Live2D 看板娘 · 原生引擎迁移任务方法文档
 
 > 状态：审计完成，计划待确认执行
-> 目标：将「看板娘」Live2D 引擎运行时从 `.dex`（Java `jp.live2d.*`）迁移为 delua Lua 直调原生 `liblive2d.so`，不改 Java 侧、不魔改引擎核心、功能不降级、性能优于原版。
-> 对照模式：delua（无 dex，纯原生）vs pro（原版 dex），同一工程代码，双端逐项验证。
+> 目标：将「看板娘」Live2D 引擎运行时从 `.dex`（Java `jp.live2d.*`）迁移为 lide Lua 直调原生 `liblive2d.so`，不改 Java 侧、不魔改引擎核心、功能不降级、性能优于原版。
+> 对照模式：lide（无 dex，纯原生）vs pro（原版 dex），同一工程代码，双端逐项验证。
 
 ---
 
@@ -62,12 +62,12 @@
 | 文件 | 内容 | 迁移结论 |
 |---|---|---|
 | `main.lua`（60 行） | Window 全屏、`SoundManager.init(this)`、`LAppLive2DManager(this, getLuaDir())`、`createView`、`frame.addView(GLView)`、`change.bringToFront()`、`change.onClick=changeModel`、`FileManager.init(this)`、双击返回退出（`os.time()` 判 2 秒） | 改写为原生路径：GLSurfaceView 自建 + live2dapp 容器；**UI 与交互逻辑不变** |
-| `init.lua` | 标准 delua 启动 | 原样保留 |
+| `init.lua` | 标准 lide 启动 | 原样保留 |
 | `layout.aly`（38 行） | LinearLayout 垂直；FrameLayout `frame`（90%h/fill）；ImageView `change`（`res/change.png`，left|bottom 10dp）；底栏 #0xFF748071 两条 TextView | **原样保留**（无 Java 依赖） |
 | `res/live2d/{haru,shizuku,wanko}` | 完整模型包（见 §2.4） | 原样保留；路径与 dex reload 分支字符串**逐字符一致** |
 | `res/image/back_class_normal.png` | 背景图 | 保留；渲染方式见 §5.1 |
 | `res/change.png` | 换装按钮图标 | 保留 |
-| `libs/live2D.dex/.oat` | pro 引擎运行时 | delua 版**移除**（原生替代）；pro 对照保留 |
+| `libs/live2D.dex/.oat` | pro 引擎运行时 | lide 版**移除**（原生替代）；pro 对照保留 |
 | `layout.xml`（若有） | pro 自动生成 | 不参与 |
 
 ### 2.4 模型与 layout 数据表（实测 model.json）
@@ -99,7 +99,7 @@
 
 ### 2.5 已识别差异清单（功能降级风险）
 
-| # | 差异 | Java（pro）行为 | delua 原生行为 | 判定 |
+| # | 差异 | Java（pro）行为 | lide 原生行为 | 判定 |
 |---|---|---|---|---|
 | D1 | 淡入动画 | `feedIn`：alpha 0→1（10 帧），期间 FBO/OffscreenImage 半透明渲染；`hitTestSimple` alpha<1 拒绝 tap | 无淡入，直接显示；tap 立即生效 | **可接受**（视觉 10 帧内差异） |
 | D2 | 音效 | `SoundManager` 播放 `sounds/*.wav`（tap_body 等） | 无音效 | **待核**：查 pro APK 是否打包 `sounds/`；若没有 → 无实际差异，可移除 `SoundManager.init` |
@@ -136,8 +136,8 @@
 - 采集基线：模型轮换顺序、tap/flick/pinch 行为、背景图、底部栏、双击退出、失败行为、logcat 关键行。
 - **验收**：基线行为清单完整落盘（`docs/reference/project/看板娘/` 或 KB）。
 
-### Phase 4：delua 原生验证
-- 安装 delua 看板娘原生版；**无 `libs/live2D.dex`**。
+### Phase 4：lide 原生验证
+- 安装 lide 看板娘原生版；**无 `libs/live2D.dex`**。
 - 逐项执行 §4 验证矩阵左列。
 - **验收**：全部通过，无异常逃逸（补全/诊断 try/catch 约束仅涉 :editor，本项目为宿主 Lua 运行时，仍要求 Lua 侧 pcall 降级）。
 
@@ -155,7 +155,7 @@
 
 ## 4. 双端对照验证矩阵
 
-| # | 验证项 | pro（dex）期望 | delua（原生）期望 | 证据手段 |
+| # | 验证项 | pro（dex）期望 | lide（原生）期望 | 证据手段 |
 |---|---|---|---|---|
 | V1 | 初始模型 | haru（modelCount=-1） | haru | logcat 加载行 |
 | V2 | 轮换顺序 | haru→shizuku→wanko→haru_01+02→haru…（dex @01fac4 实证：0→haru、1→shizuku、2→wanko、3→双模型） | 同左 | change 点击 4 次 |
@@ -189,7 +189,7 @@
 
 ### 4.2 启动与崩溃修复记录（本方案落地中新增）
 
-- **启动陷阱**：delua `LuaActivity.getLuaPath()` 只读 intent data URI，`--es luaPath` 无效 → null → `sendMsg(null)` NPE。必须 `am start -d file:///sdcard/.../main.lua`。
+- **启动陷阱**：lide `LuaActivity.getLuaPath()` 只读 intent data URI，`--es luaPath` 无效 → null → `sendMsg(null)` NPE。必须 `am start -d file:///sdcard/.../main.lua`。
 - **glBlendFunc GOT 崩溃**（`lua_drawBg` 407 行）：`liblive2d.so` 的 `glBlendFunc@plt` GOT 槽（GNU_RELRO 只读段）加载期固化为坏值 → 调 unmapped 地址 SIGSEGV。改调**语义等价的 `glBlendFuncSeparate`**（模型路径每帧调用、从未崩）后不再复现。
 - **GL 对象跨线程销毁崩溃**（tombstone_11 SI_KERNEL `deleteProgramDataLocked`）：`__gc` 在主线程 Lua GC 回收模型，GL 对象在 GLThread 创建。修复：`luaopen_live2d` 不再注册 `__gc`，删除仅经显式 `live2d.free`（GL 线程 reload 路径）。之后 8+ 分钟无崩溃、无新 tombstone。
 
@@ -216,7 +216,7 @@
 ## 6. 红线与约束（评审硬门槛）
 
 - R1-R4 架构边界：本项目全属宿主 `:app` 运行时（Lua 工程），不涉及 `:editor`。
-- PITFALLS §27：delua 引擎模块 .so 只允许 Lua→C 入口；看板娘方案不新增任何 `Java_*` 绑定。
+- PITFALLS §27：lide 引擎模块 .so 只允许 Lua→C 入口；看板娘方案不新增任何 `Java_*` 绑定。
 - 引擎核心不魔改：Lua 侧复刻全部 Java 层逻辑（矩阵/手势/布局/事件），引擎只补充方案 B 场景下的**新原语**（可选，默认不做）。
-- 验证顺序：pro 基线先行 → delua 原生 → 双端对照（SKILL 强制）。
+- 验证顺序：pro 基线先行 → lide 原生 → 双端对照（SKILL 强制）。
 - 报错文本逐字对照，证据链 = logcat 断言 + 截图像素统计 + 脚本驱动。

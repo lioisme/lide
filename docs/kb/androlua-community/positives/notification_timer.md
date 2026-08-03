@@ -42,7 +42,7 @@ calendar.set(Calendar.MINUTE, 59)
 ## 4. 工程落地建议
 
 - `LuaTimer/LuaTimerTask/Ticker` 在 Pro 4.4.2 源码确认存在（`com/androlua/*.java`）；
-  delua 需双端实测签名。
+  lide 需双端实测签名。
 - 通知权限在 Android 13+ 需运行时 `POST_NOTIFICATIONS` 申请，帖中旧写法未覆盖，落地需补。
 
 ## 5. 相关帖子

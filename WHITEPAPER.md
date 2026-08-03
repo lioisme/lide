@@ -1,4 +1,4 @@
-# delua — Android Lua 手机编程平台
+# lide — Android Lua 手机编程平台
 
 **白皮书 v2.0**
 
@@ -6,9 +6,9 @@
 
 ## 1. 摘要
 
-delua 是一个面向 **Android 手机编程** 场景的 Lua 脚本编程环境。用户在手机上编写、运行、调试 Lua 脚本，并可一键构建为独立 APK。
+lide 是一个面向 **Android 手机编程** 场景的 Lua 脚本编程环境。用户在手机上编写、运行、调试 Lua 脚本，并可一键构建为独立 APK。
 
-delua 采用 **AndroLua C 原生引擎**（`libluajava.so` + 全量 Java 运行时源码）作为底层运行时，从 AndroLua_pro 源码编译集成。宿主层使用 **Kotlin + Jetpack Compose** 实现 IDE、项目管理及调试工具链。
+lide 采用 **AndroLua C 原生引擎**（`libluajava.so` + 全量 Java 运行时源码）作为底层运行时，从 AndroLua_pro 源码编译集成。宿主层使用 **Kotlin + Jetpack Compose** 实现 IDE、项目管理及调试工具链。
 
 引擎 Java 层编译为宿主 APK 主 DEX（`androlua` 模块），原生 `.so` 通过 NDK 从 AndroLua_pro C 源码构建。引擎与宿主通过 **Intent 通信 + 文件级结果协议**解耦，实现零兼容层代码的纯正 AndroLua 运行体验。
 
@@ -18,13 +18,13 @@ delua 采用 **AndroLua C 原生引擎**（`libluajava.so` + 全量 Java 运行�
 
 ### 2.1 方案选择
 
-delua v1 原型采用 LuaJ（纯 Java Lua 5.2）作为脚本引擎，并在 `androlua/` 模块中维护了 ~2000 行 Kotlin 兼容层代码（`ImportFunction`、`LoadLayoutFunction`、`ViewProxy`、`GLModule` 等）来模拟 AndroLua 的 API 行为。经审计发现，这套兼容层存在 6 个 P0 级缺陷，维护成本高于预期。
+lide v1 原型采用 LuaJ（纯 Java Lua 5.2）作为脚本引擎，并在 `androlua/` 模块中维护了 ~2000 行 Kotlin 兼容层代码（`ImportFunction`、`LoadLayoutFunction`、`ViewProxy`、`GLModule` 等）来模拟 AndroLua 的 API 行为。经审计发现，这套兼容层存在 6 个 P0 级缺陷，维护成本高于预期。
 
 **决策**：迁移到 AndroLua C 原生引擎，移除所有兼容层代码。
 
 ### 2.2 设计目标
 
-delua 的核心设计原则：
+lide 的核心设计原则：
 
 1. **Kotlin 宿主** —— 所有 IDE 功能、构建工具链、项目管理均使用 Kotlin / Java 实现
 2. **Lua 仅作为脚本语言** —— Lua 仅用于运行用户代码，不承担宿主框架职责
@@ -45,7 +45,7 @@ delua 的核心设计原则：
 │  PROCESS BOUNDARY ———— Android Application                         │
 │                                                                     │
 │  ┌───────────────────────────────────────────────────────────────┐  │
-│  │  delua Host Process (Kotlin / ART)                             │  │
+│  │  lide Host Process (Kotlin / ART)                             │  │
 │  │  ┌─────────────────────────────────────────────────────────┐  │  │
 │  │  │  IDE Layer (Jetpack Compose + Material 3)                │  │  │
 │  │  │  ├── ProjectListScreen   项目管理                          │  │  │
@@ -109,7 +109,7 @@ Java 运行时类（`com.luajava.*`、`com.androlua.*`）通过 `androlua` 模�
 
 ### 4.1 设计理念
 
-手机屏幕有限，delua 的 IDE 遵循 **极简原则** —— 编辑器页面仅保留核心编辑区域，不设控制台、日志面板等辅助视图。运行输出、构建日志等通过 **Toast / Snackbar / 独立结果页面** 呈现。
+手机屏幕有限，lide 的 IDE 遵循 **极简原则** —— 编辑器页面仅保留核心编辑区域，不设控制台、日志面板等辅助视图。运行输出、构建日志等通过 **Toast / Snackbar / 独立结果页面** 呈现。
 
 ### 4.2 编辑器页面布局
 
@@ -227,7 +227,7 @@ EngineActivity (extends LuaActivity, 独立 Activity 栈)
 
 ### 5.4 APK 构建引擎
 
-构建引擎是 delua 最核心的底层基础设施，完全在 Kotlin 中实现，不依赖任何外部构建工具。
+构建引擎是 lide 最核心的底层基础设施，完全在 Kotlin 中实现，不依赖任何外部构建工具。
 
 **构建流水线**：
 
@@ -271,7 +271,7 @@ EngineActivity (extends LuaActivity, 独立 Activity 栈)
 
 ### 5.5 签名子系统
 
-- **调试签名**：delua 自带预生成的 debug.keystore（与 Android SDK 标准 debug 证书一致）
+- **调试签名**：lide 自带预生成的 debug.keystore（与 Android SDK 标准 debug 证书一致）
 - **自定义签名**：用户导入自己的 `.keystore` 或 `.jks` 文件，指定别名和密码
 - **v1 签名（JAR 签名）**：使用 `java.util.jar.JarFile` + `java.security.KeyStore` 实现
 - **v2 / v3 签名（APK 签名方案）**：使用 BouncyCastle 库 + APK Signing Block 格式实现

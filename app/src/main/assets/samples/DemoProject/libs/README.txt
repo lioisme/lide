@@ -2,7 +2,7 @@
 
 Place .dex or .jar files in this libs/ directory.
 
-The delua engine scans this directory at startup (LuaDexLoader.loadLibs)
+The lide engine scans this directory at startup (LuaDexLoader.loadLibs)
 and loads every .dex / .jar / .apk / .zip via DexClassLoader. Their Java
 classes then become available to your Lua scripts through luajava,
 using the standard "import" mechanism - no manual loading needed.

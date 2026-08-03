@@ -2,7 +2,7 @@
 
 | Metadata | Value |
 |----------|-------|
-| Document ID | DELUA-ENG-001 |
+| Document ID | LIDE-ENG-001 |
 | Status | Draft |
 | Author | Audit Team |
 | Stakeholders | Core Platform, IDE, QA |
@@ -34,7 +34,7 @@
 
 ## 1. Executive Summary
 
-The current delua IDE embeds **LuaJ 3.0.1** — a pure Java Lua 5.2 runtime (package `org.luaj.vm2`). Approximately 2,000 lines of Kotlin compat code bridge LuaJ to the Android framework, accumulating 6 P0 defects (type coercion, coroutine semantics, class-loading deadlocks). This work order details the replacement of LuaJ with the **native C Lua 5.3.3 engine** sourced from the AndroLua Pro open-source project.
+The current lide IDE embeds **LuaJ 3.0.1** — a pure Java Lua 5.2 runtime (package `org.luaj.vm2`). Approximately 2,000 lines of Kotlin compat code bridge LuaJ to the Android framework, accumulating 6 P0 defects (type coercion, coroutine semantics, class-loading deadlocks). This work order details the replacement of LuaJ with the **native C Lua 5.3.3 engine** sourced from the AndroLua Pro open-source project.
 
 The migration is executed across 7 work packages with 8 acceptance criteria. Estimated duration: 21 calendar days (15 engineering days).
 
@@ -325,7 +325,7 @@ intent.putExtra("engineDexPath", dexPath);    // optional
 **Owner**: IDE Integration Engineer  
 **Estimate**: 2 days  
 **Depends On**: WP-002 (engine.dex available)  
-**Deliverable**: A new `EngineActivity.java` in the main delua APK that bridges IDE and engine
+**Deliverable**: A new `EngineActivity.java` in the main lide APK that bridges IDE and engine
 
 #### Tasks
 
@@ -536,7 +536,7 @@ intent.putExtra("engineDexPath", dexPath);    // optional
 | R-03 | **CGLIB/DexMaker fails on ART** — `dx` tool deprecated in SDK 28+ | High | High | Replace with `D8` or fallback to `Proxy` | Runtime |
 | R-04 | **Lua 5.2 ↔ 5.3 semantic incompatibilities** — bit32 vs bit, integer division | Medium | Medium | Document in Appendix A; patch Lua code | Runtime |
 | R-05 | **ACC-08 (kleinbottle) fails on API 28+** — OpenGL ES 1.0 deprecated | Medium | Medium | Use GLSurfaceView; test on API 33 | QA |
-| R-06 | **`import.lua` uses `androlua://` URIs** — not applicable in delua context | Low | Medium | Remove or replace with `file://` scheme | Runtime |
+| R-06 | **`import.lua` uses `androlua://` URIs** — not applicable in lide context | Low | Medium | Remove or replace with `file://` scheme | Runtime |
 | R-07 | **Engine.dex + libluajava.so → APK size increase > 5 MB** | Medium | High | Only compile necessary C modules; ProGuard engine.dex | Build |
 | R-08 | **ClassLoader isolation failure** — engine classes leak into IDE process | Medium | Critical | Use separate process (`android:process=":engine"`); test isolation | IDE |
 | R-09 | **`loadlayout` XML resolution path differs** — `res/layout/` vs `layout/` | Low | Medium | Normalize paths; test with demo project | IDE |

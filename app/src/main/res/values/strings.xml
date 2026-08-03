@@ -2,7 +2,7 @@
 <resources>
 
     <!-- Common -->
-    <string name="app_name">delua</string>
+    <string name="app_name">LIDE</string>
     <string name="back">Back</string>
     <string name="cancel">Cancel</string>
     <string name="create">Create</string>
@@ -52,7 +52,7 @@
     <string name="font_size">Font Size</string>
     <string name="tab_size">Tab Size</string>
     <string name="about">About</string>
-    <string name="version">delua v1.0</string>
+    <string name="version">LIDE v1.0</string>
     <string name="lua_manual">Lua Manual</string>
     <string name="lua_manual_missing">Offline manual not found.</string>
     <string name="system_wallpaper">System wallpaper</string>
@@ -77,7 +77,7 @@
     <string name="perm_project_saved">Saved</string>
     <string name="perm_project_save_failed">Save failed</string>
     <string name="perm_host_section">Host App Permissions</string>
-    <string name="perm_host_hint">Permissions of the delua host app itself. They apply to the IDE and to scripts running inside the host.</string>
+    <string name="perm_host_hint">Permissions of the LIDE host app itself. They apply to the IDE and to scripts running inside the host.</string>
     <string name="perm_package_only">Written into packaged APK only</string>
     <string name="project_permissions">Project Permissions</string>
     <string name="run_permission_denied_hint">%1$d permission(s) denied - running anyway</string>
@@ -234,6 +234,7 @@
     <!-- Content descriptions -->
     <string name="cd_new_project">New Project</string>
     <string name="cd_settings">Settings</string>
+    <string name="cd_more_options">More options</string>
     <string name="cd_back">Back</string>
     <string name="cd_replace">Replace</string>
     <string name="cd_replace_all">Replace all</string>
@@ -241,7 +242,7 @@
     <string name="menu_category_project">Project</string>
     <string name="cd_open_file_tree">Open file tree</string>
     <string name="cd_search">Search</string>
-    <string name="accessibility_service_description">Delua 无障碍服务：为 Lua 脚本提供自动化能力（点击、滑动、截图）。</string>
+    <string name="accessibility_service_description">LIDE 无障碍服务：为 Lua 脚本提供自动化能力（点击、滑动、截图）。</string>
     <!-- API browser (WP-008) -->
     <string name="api_browser">API Browser</string>
     <string name="api_browser_subtitle">Browse Java classes exposed to Lua</string>

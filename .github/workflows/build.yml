@@ -1,4 +1,4 @@
-name: delua CI
+name: lide CI
 
 on:
   push:
@@ -81,7 +81,7 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: delua-arm64-debug
+          name: lide-arm64-debug
           path: app/build/outputs/apk/arm64/debug/*.apk
 
   build-x64:
@@ -108,7 +108,7 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: delua-x64-debug
+          name: lide-x64-debug
           path: app/build/outputs/apk/x64/debug/*.apk
 
   verify-release:
@@ -174,5 +174,5 @@ jobs:
         with:
           name: prebuilt-artifacts
           path: |
-            prebuilt/
+            third_party/prebuilt/
             app/src/main/jniLibs/

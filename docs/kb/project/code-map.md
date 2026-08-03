@@ -1,5 +1,8 @@
 # 代码地图（Knowledge Base）
 
+> ⚠️ **已过期**：本文撰写于旧 AndroLuaX 宿主形态（`assets/ui/*`、`wiki/` 基线、`build_all.ps1`）。
+> 当前三项模式的模块地图与工具链见根 [README.md](../../../README.md)、[kb/ENGINE_RUNTIME.md](../ENGINE_RUNTIME.md)；以下内容仅作历史参考。
+
 > **类型**：知识库 · 索引性资料
 > **用途**：快速定位「某个功能/文件在哪里」，明确每个目录职责
 > **核对时间**：2026-08-03 · 全量文件与工作区一致

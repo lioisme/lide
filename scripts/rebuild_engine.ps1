@@ -1,4 +1,4 @@
-# delua AndroLua Engine Rebuild Script (Windows)
+# lide AndroLua Engine Rebuild Script (Windows)
 # Usage: .\scripts\rebuild_engine.ps1 [-ABI <arm64-v8a|armeabi-v7a|x86_64|all>]
 # Requires: ANDROID_NDK_HOME
 
@@ -9,9 +9,9 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-# Resolve delua project root robustly (automatic variables can be empty
+# Resolve lide project root robustly (automatic variables can be empty
 # depending on how the script is invoked)
-$DELUA_ROOT = $null
+$LIDE_ROOT = $null
 $scriptCandidate = $null
 if ($PSScriptRoot) { $scriptCandidate = Split-Path -Parent $PSScriptRoot }
 if (-not $scriptCandidate -and $MyInvocation.MyCommand.Path) {
@@ -21,23 +21,23 @@ if (-not $scriptCandidate) { $scriptCandidate = (Get-Location).Path }
 
 foreach ($c in @($scriptCandidate, (Get-Location).Path)) {
     if ($c -and (Test-Path (Join-Path $c "settings.gradle.kts"))) {
-        $DELUA_ROOT = $c
+        $LIDE_ROOT = $c
         break
     }
     if ($c -and (Test-Path (Join-Path $c "scripts\rebuild_engine.ps1"))) {
-        $DELUA_ROOT = $c
+        $LIDE_ROOT = $c
         break
     }
 }
-if (-not $DELUA_ROOT) {
-    Write-Error "Cannot locate delua project root. Run this script from the project root or scripts/ directory."
+if (-not $LIDE_ROOT) {
+    Write-Error "Cannot locate lide project root. Run this script from the project root or scripts/ directory."
     exit 1
 }
-$PREBUILT_DIR = Join-Path $DELUA_ROOT "prebuilt"
-$JNILIBS_DIR = Join-Path $DELUA_ROOT "app\src\main\jniLibs"
-$JNI_SRC_DIR = Join-Path $DELUA_ROOT "docs\reference\androlua\AndroLua_pro-master\app\src\main\jni"
-$JNI_CFG_DIR = Join-Path $DELUA_ROOT "build-scripts\jni"
-$BUILD_DIR = Join-Path $env:TEMP "delua-ndk-build"
+$PREBUILT_DIR = Join-Path $LIDE_ROOT "third_party\prebuilt"
+$JNILIBS_DIR = Join-Path $LIDE_ROOT "app\src\main\jniLibs"
+$JNI_SRC_DIR = Join-Path $LIDE_ROOT "docs\reference\androlua\AndroLua_pro-master\app\src\main\jni"
+$JNI_CFG_DIR = Join-Path $LIDE_ROOT "build-scripts\jni"
+$BUILD_DIR = Join-Path $env:TEMP "lide-ndk-build"
 $BUILD_LOG = Join-Path $BUILD_DIR "build.log"
 
 # Disabled modules kept in reference tree (Android.mk2 only / no build file)
@@ -79,7 +79,7 @@ if (Test-Path $BUILD_DIR) { Remove-Item $BUILD_DIR -Recurse -Force }
 New-Item -ItemType Directory $BUILD_DIR -Force | Out-Null
 
 # Copy reference JNI source tree (docs/AndroLua_pro-master), then overlay
-# delua-managed Android.mk build configs from build-scripts/jni/
+# lide-managed Android.mk build configs from build-scripts/jni/
 $JNI_DIR = Join-Path $BUILD_DIR "jni"
 Copy-Item $JNI_SRC_DIR $JNI_DIR -Recurse -Force
 
@@ -96,7 +96,7 @@ foreach ($d in $DISABLED_MODULES) {
 
 # Apply source patches from build-scripts/patches/ (files overlay the
 # reference tree; keeps docs/ reference pristine)
-$PATCH_DIR = Join-Path $DELUA_ROOT "build-scripts\patches"
+$PATCH_DIR = Join-Path $LIDE_ROOT "build-scripts\patches"
 if (Test-Path $PATCH_DIR) {
     Get-ChildItem $PATCH_DIR -Recurse -File | ForEach-Object {
         $relPath = $_.FullName.Substring($PATCH_DIR.Length + 1)
@@ -177,7 +177,7 @@ foreach ($abi in $ABI_LIST) {
     New-Item -ItemType Directory $prebuiltAbi -Force | Out-Null
     Get-ChildItem $libsDir -Filter "*.so" | ForEach-Object {
         Copy-Item $_.FullName (Join-Path $prebuiltAbi $_.Name) -Force
-        Write-Host "  prebuilt/$abi/$($_.Name)"
+        Write-Host "  third_party/prebuilt/$abi/$($_.Name)"
     }
 
     # Copy to jniLibs/

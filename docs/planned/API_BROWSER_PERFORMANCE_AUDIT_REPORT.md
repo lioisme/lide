@@ -93,7 +93,7 @@
 - **R5d**：详情反射失败（类不存在/初始化异常）时 `ApiClassDetailScreen.kt:106-118` 显示
   **无限转圈 + `api_no_result` 文案**——语义错误（不是「无结果」而是「反射失败」），且无重试路径。
 - **R5e**：混淆 keep 规则缺失——release 构建下宿主自类名被混淆后，动态枚举的字符串类名
-  （`com.lioisme.delua.R` 及宿主自类）`Class.forName` 失配，API 浏览器功能退化（当前仅 debug 验证，属隐患）。
+  （`com.lioisme.lide.R` 及宿主自类）`Class.forName` 失配，API 浏览器功能退化（当前仅 debug 验证，属隐患）。
 
 ---
 
@@ -142,7 +142,7 @@
   反射成功后结论已入 rowInfoCache，两缓存语义一致。
 - **R5d**：详情页三态（Loading / Loaded / Failed）；Failed 显示 `api_detail_failed` 文案 + 重试按钮
   （重试 = 递增生产 key 重跑反射），删除「无结果」误用。
-- **R5e**：app 模块 R8 keep 规则：`-keepnames class com.lioisme.delua.**`（动态枚举按字符串类名定位的宿主类）；
+- **R5e**：app 模块 R8 keep 规则：`-keepnames class com.lioisme.lide.**`（动态枚举按字符串类名定位的宿主类）；
   核对 `build.gradle.kts` minify 开关后落地。
 - **不可用行呈现（用户决策，P1）**：
   - **删除** `api_unavailable` 文本标签（`ApiBrowserScreen.kt:489-495`）与两处 `strings.xml` 资源条目；
@@ -261,7 +261,7 @@
   - **R5d**：详情页三态 `DetailUiState`（Loading / Loaded / Failed）：Loading 转圈 + `api_loading` 文案
     （修正原先 spinner 下误挂 `api_no_result` 的错误）；Failed 显示新增 `api_detail_failed` 文案 + 重试按钮
     （`retryTick` 递增触发 produceState 重启），删除「无限转圈 + 无结果」误用；
-  - **R5e**：核对 `app/proguard-rules.pro` —— 既有规则 `-keep class com.lioisme.delua.** { *; }`（第 15 行）
+  - **R5e**：核对 `app/proguard-rules.pro` —— 既有规则 `-keep class com.lioisme.lide.** { *; }`（第 15 行）
     已覆盖宿主自类与 R 内部类按字符串类名反射的场景，androidx/material 由依赖 consumer 规则保护、
     framework 类不在 APK 内 —— **无需新增规则**（避免宽泛 keep 导致 APK 膨胀），仅记录结论；
   - 新增字符串资源 `api_detail_failed` / `api_retry`（en/zh）；

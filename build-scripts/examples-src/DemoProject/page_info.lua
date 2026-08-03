@@ -20,7 +20,7 @@ function page.getVersion()
 end
 
 function page.platform()
-    return "LuaJ on Android (delua)"
+    return "LuaJ on Android (LIDE)"
 end
 
 return page

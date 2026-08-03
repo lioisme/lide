@@ -1,7 +1,7 @@
--- 看板娘 main.lua — delua 原生引擎版（多模型）
+-- 看板娘 main.lua — lide 原生引擎版（多模型）
 -- Lua -> C 直调 liblive2d.so（require "live2dapp"），GL 线程零 Java；
 -- 语义来源：docs/planned/LIVE2D_NATIVE_MIGRATION_PLAN.md（dex 逐指令实证）
--- 仅支持 delua 原生库（liblive2d.so）；不携带任何 pro（jp.live2d.* dex）回退代码/资产
+-- 仅支持 lide 原生库（liblive2d.so）；不携带任何 pro（jp.live2d.* dex）回退代码/资产
 require "import"
 import "android.app.*"
 import "android.os.*"

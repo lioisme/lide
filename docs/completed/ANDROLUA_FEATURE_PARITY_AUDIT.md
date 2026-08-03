@@ -1,9 +1,9 @@
-# delua × AndroLua_pro 工程 / 库 / 插件 / 模块系统一致性审计报告
+# lide × AndroLua_pro 工程 / 库 / 插件 / 模块系统一致性审计报告
 
-> 审计对象：`delua` 工程（`androlua/` + `app/` 模块）vs `docs/reference/androlua/AndroLua_pro-master/`（AndroLua pro 4.4.2 源码）
-> 审计基准：pro 源码按字节比对（`git diff --no-index` + hash 比对），delua 侧补充全量运行时链路追踪。
+> 审计对象：`lide` 工程（`androlua/` + `app/` 模块）vs `docs/reference/androlua/AndroLua_pro-master/`（AndroLua pro 4.4.2 源码）
+> 审计基准：pro 源码按字节比对（`git diff --no-index` + hash 比对），lide 侧补充全量运行时链路追踪。
 > 审计日期：2026-07-31
-> 结论速览：**引擎层（C 原生 + Lua 运行时脚本）已完全对齐；宿主管理机制（库/插件/模块）是 delua 自创的"全局仓库"模型，与 pro 的"工程内自行管理"模型存在 3 处断链，另有 5 类运行时组件未接入，导致特性不一致。**
+> 结论速览：**引擎层（C 原生 + Lua 运行时脚本）已完全对齐；宿主管理机制（库/插件/模块）是 lide 自创的"全局仓库"模型，与 pro 的"工程内自行管理"模型存在 3 处断链，另有 5 类运行时组件未接入，导致特性不一致。**
 
 ---
 
@@ -11,7 +11,7 @@
 
 | 范围 | 方法 |
 |---|---|
-| delua 侧 | `androlua/src/main/java`（~430 文件）、`androlua/src/main/kotlin`（12 文件）、`app/src/main/java`、`app/src/main/kotlin`、`app/src/main/assets`、`app/src/main/jniLibs`、两份 `build.gradle.kts`、`AndroidManifest.xml` |
+| lide 侧 | `androlua/src/main/java`（~430 文件）、`androlua/src/main/kotlin`（12 文件）、`app/src/main/java`、`app/src/main/kotlin`、`app/src/main/assets`、`app/src/main/jniLibs`、两份 `build.gradle.kts`、`AndroidManifest.xml` |
 | pro 侧 | `app/src/main/java`（~500 文件）、`app/src/main/assets`（IDE Lua 页面）、`app/src/main/resources/lua`（28 脚本）、`app/src/main/jni`（21 个原生模块）、`AndroidManifest.xml`、`build.gradle` |
 | 比对手段 | 全量文件清单 diff、逐字节 hash 比对、`git diff --no-index` 细粒度 diff、运行时调用链追踪（LuaDexLoader → import.lua → LuaActivity → EngineActivity） |
 
@@ -60,14 +60,14 @@ pro 的工程 / 库 / 插件 / 模块全部采用 **沙盒内自组织 + 工程�
 
 ---
 
-## 3. delua 逐层比对结果
+## 3. lide 逐层比对结果
 
 ### 3.1 ✅ 完全一致（引擎核心，逐字节）
 
 | 类别 | 内容 |
 |---|---|
 | Lua 运行时脚本 | `app/src/main/assets/lua/` 28 个文件与 pro `resources/lua/` **逐字节一致**（import.lua、loadlayout.lua、loadbitmap.lua、loadmenu.lua、json.lua、socket/、ltn12.lua、mime.lua、smtp.lua、ftp.lua、http.lua、xml.lua、base64.lua、bin.lua、hex.lua、mbox.lua、check.lua、console.lua、autotheme.lua、logcat.lua、options.lua、permission.lua、su.lua、test.lua、bmob.lua） |
-| 原生库 | 15 个 `.so` × 3 ABI（arm64-v8a/armeabi-v7a/x86_64）：bson、canvas、cjson、crypt、gl、luajava、luv、md5、mime、regex、sensor、socket、xml、zip、zlib。与 pro 主 `Android.mk` 实际构建集 **完全一致**（pro 的 lfs/lsqlite3/lluv/tcc 均为 `Android.mk2` 禁用态，delua 正确未引入） |
+| 原生库 | 15 个 `.so` × 3 ABI（arm64-v8a/armeabi-v7a/x86_64）：bson、canvas、cjson、crypt、gl、luajava、luv、md5、mime、regex、sensor、socket、xml、zip、zlib。与 pro 主 `Android.mk` 实际构建集 **完全一致**（pro 的 lfs/lsqlite3/lluv/tcc 均为 `Android.mk2` 禁用态，lide 正确未引入） |
 | `com.luajava` | 全部 16 个类逐字节一致：`LuaState`(1277L)、`LuaJavaAPI`(1823L)、`LuaObject`、`LuaTable`、`LuaFunction`、`LuaInvocationHandler`、`LuaStack`、`LuaString`、`LuaList`、`JavaFunction`、`LuaException`、`LuaStateFactory`、`Console`、`LuaMetaTable`、`LuaMethodInterceptor`、`LuaAbstractMethodInterceptor` |
 | `com.android.cglib` | dx（~270 文件）+ proxy（9 文件）完整一致，`LuaEnhancer` 依赖的代理/增强链无缺口 |
 | `com.androlua`（主体） | 42+ 个类逐字节一致：`LuaAdapter`、`LuaArrayAdapter`、`LuaExAdapter`、`LuaMultiAdapter`、`LuaExpandableListAdapter`、`LuaThread`、`LuaTimer`、`LuaTimerTask`、`LuaAsyncTask`、`LuaRunnable`、`LuaDexLoader`、`LuaDexClassLoader`、`LuaEnhancer`、`Http`、`Download`、`LuaDialog`、`LuaDrawable`、`LuaBitmap`、`LuaBitmapDrawable`、`LuaAnimation`、`LuaFragment`、`LuaPreferenceFragment`、`LuaView`、`LuaWebView`(1 行 icon 差异除外)、`LuaCameraView`、`LuaBroadcastReceiver`、`LuaContentObserver`、`LuaFileObserver`、`LuaClient`、`LuaServer`、`LuaContext`、`LuaPrint`、`LuaAssetLoader`、`LuaGcable`、`LuaResources`(注解差异除外)、`Ticker`、`GifDecoder`、`NineBitmapDrawable`、`LoadingDrawable`、`CrashHandler`、`ZipUtil`、`util/*`（AsyncTaskX、ClickRunnable、RootUtil、RSASecurity、ScreenMetrics、TimerTaskX、TimerX、VolatileBox、VolatileDispose） |
@@ -79,7 +79,7 @@ pro 的工程 / 库 / 插件 / 模块全部采用 **沙盒内自组织 + 工程�
 | 文件 | 改动 | 影响评估 |
 |---|---|---|
 | `LuaActivity.java`（-115/+17） | ① 删除 Xposed 反检测 `chcek1/check2/check3/a` 及 `runFunc("onHook")`；② `R.drawable.icon` → `android.R.drawable.sym_def_app_icon`（×3 处，适配无 res 工程）；③ `luaDir` private → protected（供 EngineActivity）；④ 新增 `mScriptError/getScriptError/setScriptError`；⑤ `android.support.annotation` → `androidx.annotation` | ① 属恶意软件痕迹清除，合理；② 图标从工程 icon.png 退化为系统图标（`setTitle` 中 TaskDescription 仍读工程 icon.png，仅快捷方式图标退化）；④ 为宿主回传错误信息而加，无副作用 |
-| `LuaApplication.java`（+37） | 新增 `extractLuaScripts()`：首次启动把 `assets/lua/*` 复制到 `luaMdDir` | 对应 pro 的 `Welcome.unApk("lua", luaMdDir)`。差异：pro 每次启动按 **MD5 校验更新**，delua 仅 `if (outFile.exists()) continue` —— **升级 APK 内置脚本不生效**（低危）。delua 同时移除了 pro 的 `unApk("assets", localDir)`（即 javaapi/luadoc/keys/IDE 页面解包，见 3.4） |
+| `LuaApplication.java`（+37） | 新增 `extractLuaScripts()`：首次启动把 `assets/lua/*` 复制到 `luaMdDir` | 对应 pro 的 `Welcome.unApk("lua", luaMdDir)`。差异：pro 每次启动按 **MD5 校验更新**，lide 仅 `if (outFile.exists()) continue` —— **升级 APK 内置脚本不生效**（低危）。lide 同时移除了 pro 的 `unApk("assets", localDir)`（即 javaapi/luadoc/keys/IDE 页面解包，见 3.4） |
 | `LuaAccessibilityService.java`（-64） | 删除全部 `com.nirenr.screencapture.*`/`com.nirenr.Point` 依赖：`startScreenshot/getScreenshot/stopScreenshot`、`click(Point)/longClick(Point)/press(Point)/swipe(Point,Point)` 重载 | **Lua 侧 `service.startScreenshot()` 等 API 消失**（见 3.3 缺失类） |
 | `PageView` / `BasePageAdapter` / `ArrayPageAdapter` | 仅删除 Javadoc/版权头注释，无逻辑改动 | 行为等价 ✅ |
 
@@ -93,25 +93,25 @@ pro 的工程 / 库 / 插件 / 模块全部采用 **沙盒内自组织 + 工程�
 | `android.app`（2） | FloatWindow、AlertDialogBuilder | 悬浮窗 API 缺失 |
 | `android.support.multidex`（3） | MultiDex、MultiDexExtractor、ZipUtil | 工程 libs 方法数 >64K 时无 `installLibs` 支持（当前主 DEX 无需，但 pro 原装能力缺失） |
 | `com.nirenr`（9） | Color、ColorFinder、ColorPoint、Point、SplitEditView、screencapture/FileUtil、ScreenCaptureActivity、ScreenCaptureListener、ScreenShot | **截图 + 找色自动化 API 整体缺失**；`LuaAccessibilityService` 被连带削掉截图功能 |
-| pro IDE 编辑链（33+5） | textwarrior/*（33 个）、LuaEditor、LuaLexer、LuaTokenTypes、Main、Welcome、SplitEditView | pro 的工程内 Lua 编辑器（`LuaEditor` 类在 Lua 侧可 import）被 delua 的 sora-editor 替代——**合理替换**，但 pro 脚本若 `import "com.androlua.LuaEditor"` 将失败 |
+| pro IDE 编辑链（33+5） | textwarrior/*（33 个）、LuaEditor、LuaLexer、LuaTokenTypes、Main、Welcome、SplitEditView | pro 的工程内 Lua 编辑器（`LuaEditor` 类在 Lua 侧可 import）被 lide 的 sora-editor 替代——**合理替换**，但 pro 脚本若 `import "com.androlua.LuaEditor"` 将失败 |
 | `android.support.v4.app.Fragment`（1） | Fragment | LuaFragment 已用框架 Fragment，低危 |
 
 ### 3.4 🔴 资产差异（IDE 侧 Lua 资源）
 
-| pro 资产 | delua 现状 | 影响 |
+| pro 资产 | lide 现状 | 影响 |
 |---|---|---|
-| `assets/main.lua`、`init.lua`、`layout.lua`、`help.lua`、`logcat.lua` | 无 | pro 的 Lua IDE 首页体系；delua 用 Compose 替代（合理） |
-| `assets/javaapi/`（android.lua、layout.aly、mlayout.aly、clayout.aly、fiximport.lua、init.lua、main.lua） | 无 | pro 的补全数据 + 布局助手模板（`.aly` 由 `loadlayout` 家族解析）——delua 编辑器改用 textmate 高亮 + 自建诊断，**`loadlayout` 的 .aly 语法仍是运行时 API，缺失模板意味着 pro 的布局辅助能力消失** |
+| `assets/main.lua`、`init.lua`、`layout.lua`、`help.lua`、`logcat.lua` | 无 | pro 的 Lua IDE 首页体系；lide 用 Compose 替代（合理） |
+| `assets/javaapi/`（android.lua、layout.aly、mlayout.aly、clayout.aly、fiximport.lua、init.lua、main.lua） | 无 | pro 的补全数据 + 布局助手模板（`.aly` 由 `loadlayout` 家族解析）——lide 编辑器改用 textmate 高亮 + 自建诊断，**`loadlayout` 的 .aly 语法仍是运行时 API，缺失模板意味着 pro 的布局辅助能力消失** |
 | `assets/layouthelper/`（init.lua、layout.lua、loadlayout2.lua、loadlayout3.lua、main.lua、xml2table.lua） | 无 | Lua 侧 `require "loadlayout2"`/`require "xml2table"` 等会失败 |
 | `assets/luadoc/`（manual.html 等离线文档） | 无 | 离线文档缺失 |
-| `assets/keys/`（keystore.ks、platform/testkey 签名） | 无 | 独立 APK 构建签名链缺失（delua 用自有 keystore.jks，属合理替换） |
-| `assets/plugin/`（main.lua、init.lua、layout.aly、item.aly） | 仅有示例 `plugin/plugin.json` | pro 的插件管理页为 Lua 实现，delua 用 Compose PluginScreen 替代 |
-| `assets/project/`、`assets/projectinfo/` | 无 | pro 的工程列表/属性编辑页；delua 用 ProjectListScreen/ProjectDependenciesScreen 替代 |
+| `assets/keys/`（keystore.ks、platform/testkey 签名） | 无 | 独立 APK 构建签名链缺失（lide 用自有 keystore.jks，属合理替换） |
+| `assets/plugin/`（main.lua、init.lua、layout.aly、item.aly） | 仅有示例 `plugin/plugin.json` | pro 的插件管理页为 Lua 实现，lide 用 Compose PluginScreen 替代 |
+| `assets/project/`、`assets/projectinfo/` | 无 | pro 的工程列表/属性编辑页；lide 用 ProjectListScreen/ProjectDependenciesScreen 替代 |
 | `assets/play.png`、`redo.png`、`undo.png` | 无 | UI 图标，无关紧要 |
 
-### 3.5 🔴 delua 自创"统一管理"系统（与 pro 模型的根本分歧）
+### 3.5 🔴 lide 自创"统一管理"系统（与 pro 模型的根本分歧）
 
-delua 在 `androlua` 模块 Kotlin 侧新增 5 个管理组件，构建了一套 **全局仓库模型**：
+lide 在 `androlua` 模块 Kotlin 侧新增 5 个管理组件，构建了一套 **全局仓库模型**：
 
 ```
 {luaExtDir}/
@@ -121,7 +121,7 @@ delua 在 `androlua` 模块 Kotlin 侧新增 5 个管理组件，构建了一套
 │   ├── libs/<name>/          # 全局库：metadata.json + <name>-<version>.jar|.dex
 │   ├── modules/<name>/       # 全局模块：metadata.json + *.lua
 │   └── registry.json         # 全局索引（schemaVersion/lastUpdated/libraries/modules）
-└── delua.json（可选）         # 工程依赖声明（dependencies.{libs,modules}）
+└── lide.json（可选）         # 工程依赖声明（dependencies.{libs,modules}）
 ```
 
 对应实现：`LibraryRegistry.kt`、`ModuleRegistry.kt`、`DependencyManager.kt`、`PluginManager.kt`、`AlpManager.kt`。
@@ -130,34 +130,34 @@ delua 在 `androlua` 模块 Kotlin 侧新增 5 个管理组件，构建了一套
 
 1. **依赖声明永不物化（P0）**：`ProjectDependenciesScreen` 把 `dependencies = {libs={"x"}, modules={"y"}}` 写进 `init.lua`（`DependencyManager.replaceDependenciesInInitLua`），但**没有任何代码**把 `common/libs/<name>` 的 jar/dex 复制进 `<project>/libs/` 或通知引擎；`LibraryRegistry.findJarFile()` 定义了但**零调用方**；`EngineBridge/EngineActivity` 不接收任何依赖信息。→ **声明的依赖在 Lua 运行时完全无效**，用户会得到"明明安装了却 import 不到"的割裂体验。
 2. **验证只查存在性（P1）**：`validateDependencies` 仅检查 `common/libs/<name>` 目录是否存在，不校验 jar 有效性、版本、ABI。
-3. **插件安装/运行为死代码（P1）**：`PluginManager.installFromAlp()` 零调用方；`PluginScreen` 只读列表，点击无动作；pro 的插件 = `newActivity(plugin/main.lua)` 直接运行，delua 未实现运行入口。插件元数据格式（plugin.json vs init.lua appname/appver）**与 pro 不兼容**——pro 生态插件放进 delua 的 plugin/ 目录不会被识别（扫描只看 plugin.json）。
+3. **插件安装/运行为死代码（P1）**：`PluginManager.installFromAlp()` 零调用方；`PluginScreen` 只读列表，点击无动作；pro 的插件 = `newActivity(plugin/main.lua)` 直接运行，lide 未实现运行入口。插件元数据格式（plugin.json vs init.lua appname/appver）**与 pro 不兼容**——pro 生态插件放进 lide 的 plugin/ 目录不会被识别（扫描只看 plugin.json）。
 
 另有 **2 处工程链路残缺（P1）**：
 
 4. **运行结果回传死链（已按用户决定收口）**：宿主结果页 `RunScreen` 经真机验证出现"两个界面"（宿主页先展示 `run_no_result` 误导文案、引擎随后全屏运行），判定为冗余中间页后**移除**（见 §8 状态 #2）。当前"运行"= `RunEngineLauncher` 物化依赖 → 直启 `EngineActivity`，输出/错误由引擎自带控制台（status/ListView）展示，宿主不做结果回传。
-5. **`common/` 目录与工程 libs/ 机制并存但互不感知**：pro 的工程内 `<project>/libs/` 机制（`LuaDexLoader.loadLibs`）delua **完整保留且可用**（DemoProject 样例也以此说明），但全局仓库与其零交互——两套模型并存、用户侧割裂。
+5. **`common/` 目录与工程 libs/ 机制并存但互不感知**：pro 的工程内 `<project>/libs/` 机制（`LuaDexLoader.loadLibs`）lide **完整保留且可用**（DemoProject 样例也以此说明），但全局仓库与其零交互——两套模型并存、用户侧割裂。
 
 ### 3.6 🔴 Manifest / 组件注册差异
 
-| 组件 | pro | delua | 后果 |
+| 组件 | pro | lide | 后果 |
 |---|---|---|---|
 | `LuaService` | ✅ 声明 | ❌ 未声明 | `activity.startService()/bindService()/stopService()`（LuaActivity.java:1003/1010/1027 仍引用 `LuaService.class`）→ **运行时 ServiceNotFoundException 崩溃** |
 | `LuaAccessibilityService` | ✅ 声明 + `res/xml/accessibility_service_config` | ❌ 类在、manifest 无、无 xml | 无障碍自动化整体不可用 |
 | `FileProvider` | ✅ `<provider authorities=包名>` + `androlua_filepaths.xml` | ❌ 类在、manifest 无 | `activity.share()`（LuaActivity.java:716/736）与 `activity.getUriForFile/getUriForPath` → **IllegalArgumentException 崩溃** |
 | `ScreenCaptureActivity` | ✅ | ❌（类也缺失） | 截图 API 缺失 |
-| `MainActivity` | singleTask + VIEW/EDIT `.alp` + `.lua` 关联 + `androlua://` scheme | 仅 `.alp` VIEW（file/content） | 文件管理器里点 `.lua` 无法用 delua 打开；`androlua://` 协议脚本拉起不可用 |
+| `MainActivity` | singleTask + VIEW/EDIT `.alp` + `.lua` 关联 + `androlua://` scheme | 仅 `.alp` VIEW（file/content） | 文件管理器里点 `.lua` 无法用 lide 打开；`androlua://` 协议脚本拉起不可用 |
 | `android:largeHeap`、`persistent` | ✅ | ❌ | 大工程内存风险（persistent 不建议沿用，largeHeap 建议补） |
 | 权限 | 41 项 | 36 项 | 缺失：`WRITE_SMS`、`WRITE_CALL_LOG`、`READ_FRAME_BUFFER`、`BATTERY_STATS`、`CLEAR_APP_CACHE`、`GET_PACKAGE_SIZE`、`SYSTEM_ALERT_WINDOW`（FloatWindow 依赖）、`SET_WALLPAPER`、`DOWNLOAD_WITHOUT_NOTIFICATION`、`ANSWER_PHONE_CALLS`、`CHANGE_NETWORK_STATE`、`com.android.launcher.permission.INSTALL_SHORTCUT`（桌面快捷方式 API 依赖） |
 
-### 3.7 delua 特有的宿主层（不在 pro 范围内，评审通过）
+### 3.7 lide 特有的宿主层（不在 pro 范围内，评审通过）
 
-`EngineBridge.kt` / `EngineActivity.java`（Intent + 文件协议）、sora-editor + TextMate（`LuaLanguage/LuaDiagnostics/TextMateInitializer`，符合 AGENTS.md R1-R4）、Compose UI 层、`DeluaApp`（samples 提取、TextMate 预加载）——均为合理的"IDE 工程化"替换，与 pro 无冲突。
+`EngineBridge.kt` / `EngineActivity.java`（Intent + 文件协议）、sora-editor + TextMate（`LuaLanguage/LuaDiagnostics/TextMateInitializer`，符合 AGENTS.md R1-R4）、Compose UI 层、`LideApp`（samples 提取、TextMate 预加载）——均为合理的"IDE 工程化"替换，与 pro 无冲突。
 
 ---
 
 ## 4. 特性一致性矩阵
 
-| 特性 | pro 机制 | delua 现状 | 一致性 |
+| 特性 | pro 机制 | lide 现状 | 一致性 |
 |---|---|---|---|
 | 工程结构（init.lua 元数据 + main.lua + icon.png + libs/） | `project/<name>/` | 同结构，`ProjectManager` 读 appname/packagename/icon ✅ | ✅ 一致 |
 | 工程导入/导出 `.alp` | Main/Welcome + ZipUtil | `AlpManager`（zip/zipToStream，file+content URI）✅ | ✅ 一致（实现路径不同） |
@@ -187,7 +187,7 @@ delua 在 `androlua` 模块 Kotlin 侧新增 5 个管理组件，构建了一套
 | # | 行动 | 涉及文件 | 验收标准 |
 |---|---|---|---|
 | 1 | **依赖物化**：运行前把 `common/libs/<name>` 的 jar/dex 与 `common/modules/<name>` 的 lua 物化到 `<project>/libs/` 与工程目录（或扩展 `EngineBridge` 传递依赖清单、`LuaDexLoader` 支持全局目录），使 `dependencies` 声明在引擎真实生效 | `DependencyManager.kt`、`EngineBridge.kt`、`RunScreen`（重建） | 声明依赖后 `import`/`require` 可用 |
-| 2 | **结果回传闭环**：重建结果展示（恢复 RunScreen 或 Snackbar），消费 `engine_result.json` 与 `engine_output.txt` | `EngineActivity.java`、`EngineBridge.kt`、`DeluaNavHost.kt` | 引擎退出后宿主展示输出/错误 |
+| 2 | **结果回传闭环**：重建结果展示（恢复 RunScreen 或 Snackbar），消费 `engine_result.json` 与 `engine_output.txt` | `EngineActivity.java`、`EngineBridge.kt`、`LideNavHost.kt` | 引擎退出后宿主展示输出/错误 |
 | 3 | **Manifest 注册三组件**：`LuaService`（含 luaDir/luaPath extra）、`FileProvider`（authorities=包名 + file_paths xml）、`LuaAccessibilityService`（+ accessibility_service_config xml） | `app/src/main/AndroidManifest.xml` + `res/xml/*` | `activity.startService()`、`activity.share()`、无障碍不崩溃 |
 
 ### P1 —— 近期补齐（特性一致性）
@@ -213,8 +213,8 @@ delua 在 `androlua` 模块 Kotlin 侧新增 5 个管理组件，构建了一套
 
 ## 6. 附：关键文件速查
 
-- delua 管理组件：`androlua/src/main/kotlin/com/lioisme/delua/androlua/{AlpManager,PluginManager,ZipUtil}.kt`、`common/{DependencyManager,LibraryRegistry,ModuleRegistry}.kt`
-- 引擎桥接：`androlua/.../engine/EngineBridge.kt`、`app/src/main/{java/com/lioisme/delua/engine/EngineActivity.java, kotlin/com/lioisme/delua/engine/RunEngineLauncher.kt}`
+- lide 管理组件：`androlua/src/main/kotlin/com/lioisme/lide/androlua/{AlpManager,PluginManager,ZipUtil}.kt`、`common/{DependencyManager,LibraryRegistry,ModuleRegistry}.kt`
+- 引擎桥接：`androlua/.../engine/EngineBridge.kt`、`app/src/main/{java/com/lioisme/lide/engine/EngineActivity.java, kotlin/com/lioisme/lide/engine/RunEngineLauncher.kt}`
 - 运行时入口：`androlua/src/main/java/com/androlua/{LuaActivity,LuaApplication,LuaDexLoader}.java`
 - 比对基线：`docs/reference/androlua/AndroLua_pro-master/app/src/main/{java,assets,resources/lua,jni}`
 
@@ -235,7 +235,7 @@ delua 在 `androlua` 模块 Kotlin 侧新增 5 个管理组件，构建了一套
 | 8 | P1 | 权限补齐 | ✅ 完成（见 #3） |
 | 10 | P2 | `.lua` 文件关联 / `androlua://` scheme | ✅ 完成（MainActivity 三类拉起：.alp 导入、.lua 打开编辑（独立文件自动收养为工程）、androlua:// 拉起运行/编辑；editor 路由支持 fileName） |
 | 11 | P2 | luadoc/ 离线文档 | ✅ 完成（`assets/luadoc/` 4 文件 + 启动提取至 filesDir + 设置页"Lua Manual"入口（WebView 离线渲染）） |
-| 12 | P2 | 管理模型终态决策 | ✅ 决策：**保留全局仓库 + 物化同步为终态**——common/ 仓库负责集中安装/版本/卸载，`materializeProjectDependencies`（P0-1）在运行前把声明依赖物化为 `<project>/libs/` 与 `<project>/lua/`，与 pro 的"工程内自行管理"模型在运行时归一（LuaDexLoader/package.path 感知的仍是工程目录）；delua.json/init.lua 声明即同步入口。两套模型不再割裂：全局仓库 = 安装/管理面，工程目录 = 运行时面，物化是唯一的桥 |
+| 12 | P2 | 管理模型终态决策 | ✅ 决策：**保留全局仓库 + 物化同步为终态**——common/ 仓库负责集中安装/版本/卸载，`materializeProjectDependencies`（P0-1）在运行前把声明依赖物化为 `<project>/libs/` 与 `<project>/lua/`，与 pro 的"工程内自行管理"模型在运行时归一（LuaDexLoader/package.path 感知的仍是工程目录）；lide.json/init.lua 声明即同步入口。两套模型不再割裂：全局仓库 = 安装/管理面，工程目录 = 运行时面，物化是唯一的桥 |
 
 > 注：P1-4 中 `MultiDex.java` 已就位但保持 pro 同款注释态（`//MultiDex.installLibs(this)`），未启用。
 > 所有改动已通过 `:app:compileArm64DebugKotlin` 与 `:app:assembleArm64Debug`（BUILD SUCCESSFUL）。
@@ -244,6 +244,6 @@ delua 在 `androlua` 模块 Kotlin 侧新增 5 个管理组件，构建了一套
 
 ## 7. 总结
 
-- **引擎与运行时语义已 100% 对齐**：28 个 Lua 脚本、15 个原生库、`com.luajava` 全部 16 类、cglib 全链、`com.androlua` 主体逐字节一致，LuaDexLoader 的工程内 libs 机制原样保留——"工程内自行管理"的 pro 核心模型在 delua 中依然成立。
-- **delua 的"统一管理"（common/ 仓库 + dependencies 声明 + plugin.json）是新增层，且与运行时存在 3 处断链**：依赖不物化、结果不回传、插件不可运行；同时 manifest 未注册 LuaService/FileProvider/AccessibilityService 导致 3 类脚本 API 直接崩溃，80 个 Java 类（控件/截图/找色）缺失使 Lua API 面收窄。
+- **引擎与运行时语义已 100% 对齐**：28 个 Lua 脚本、15 个原生库、`com.luajava` 全部 16 类、cglib 全链、`com.androlua` 主体逐字节一致，LuaDexLoader 的工程内 libs 机制原样保留——"工程内自行管理"的 pro 核心模型在 lide 中依然成立。
+- **lide 的"统一管理"（common/ 仓库 + dependencies 声明 + plugin.json）是新增层，且与运行时存在 3 处断链**：依赖不物化、结果不回传、插件不可运行；同时 manifest 未注册 LuaService/FileProvider/AccessibilityService 导致 3 类脚本 API 直接崩溃，80 个 Java 类（控件/截图/找色）缺失使 Lua API 面收窄。
 - 建议按第 5 节 P0 → P1 → P2 顺序执行，先修断链、再补类与资产、最后决策管理模型的终态，即可达成与 AndroLua pro 的全面特性一致。

@@ -1,8 +1,8 @@
-# delua Java API 浏览器 —— 现状审计与可行性报告
+# lide Java API 浏览器 —— 现状审计与可行性报告
 
 | Metadata | Value |
 |----------|-------|
-| 文档 ID | DELUA-API-001 |
+| 文档 ID | LIDE-API-001 |
 | 状态 | **已实施 + 模拟器验收归档（2026-08-02；ACC 结果见 §6.1）** |
 | 关联 WP | ROADMAP WP-008（Java API 浏览器，P1 / 批 4）、WP-007（fiximport，共享类表） |
 | 对照版本 | AndroLua Pro 4.4.2（nirenr/AndroLua_pro，commit `abe5c25`，master） |
@@ -12,15 +12,15 @@
 
 ## 0. 结论摘要
 
-1. **delua 目前没有 API 浏览器**：`:app` / `:editor` 均无任何实现，仅残留 pro 的 3 个 `.aly` 布局模板（`app/src/main/assets/layouts/javaapi/`），未接线、无类表、无入口。
+1. **lide 目前没有 API 浏览器**：`:app` / `:editor` 均无任何实现，仅残留 pro 的 3 个 `.aly` 布局模板（`app/src/main/assets/layouts/javaapi/`），未接线、无类表、无入口。
 2. **AndroLua Pro 的"Java 方法浏览器"不是原生代码，而是一个纯 Lua 资产工程**（`assets/javaapi/`：`main.lua` + 手写类表 `android.lua`（4,124 个类名）+ 3 个布局 + `fiximport.lua`），功能 = 类名搜索 + 点击反射出构造器/事件/getter/setter/字段/方法。**它没有任何分类筛选**（只有"全部"+搜索框），更没有"谷歌质感库/AndroidX/R 资源类"概念。
-3. **用户要求的"自动识别筛选"在 delua 技术上完全可行，且能做得比 pro 更好**：分类可全部由规则自动判定（包名前缀 + 反射验证），其中"谷歌质感库控件"与"AndroidX 控件"类别有真实数据支撑——delua 宿主 APK 已依赖 `com.google.android.material:material:1.13.0` 与完整 Compose/AndroidX 全家桶，类确实存在于运行进程，反射即可用。
+3. **用户要求的"自动识别筛选"在 lide 技术上完全可行，且能做得比 pro 更好**：分类可全部由规则自动判定（包名前缀 + 反射验证），其中"谷歌质感库控件"与"AndroidX 控件"类别有真实数据支撑——lide 宿主 APK 已依赖 `com.google.android.material:material:1.13.0` 与完整 Compose/AndroidX 全家桶，类确实存在于运行进程，反射即可用。
 4. **原生库（工程 `libs/*.so` C 模块）不支持函数级 API 自动识别**——诚实结论，理由见 §4；但"模块名级"识别可以做到（与打包器 checklib 同源）。工程 `libs/*.dex|jar`（字节码库）则**支持完整自动识别**（类级），已纳入方案。
 5. 实现落点按 R1/R3 归入 `:app`（反射是运行时语义，`:editor` 保持纯文本级）。预计规模：1 个数据层（类表平移 + 扩展 + 动态枚举 + 分类器）+ 1 个 Compose 页面 + 1 个详情页 + 导航接线 + 资产搬运，约 1 个批次（批 4 剩余项）可完成。
 
 ---
 
-## 1. 现状审计：delua 侧
+## 1. 现状审计：lide 侧
 
 ### 1.1 代码面：零实现
 
@@ -28,7 +28,7 @@
 |--------|------|
 | `:app` 中 `ApiBrowser / ApiList / ApiActivity` 等符号 | **零命中**（grep 全量 kotlin/java 源码） |
 | `:editor` 中相关符号 | 零命中（符合 R1） |
-| 导航注册（`DeluaNavHost.kt` Routes） | 无 API 浏览器路由（现有：projects/editor/settings/permissions/projectpermissions/projectinfo/buildapk/plugins/manual/examples） |
+| 导航注册（`LideNavHost.kt` Routes） | 无 API 浏览器路由（现有：projects/editor/settings/permissions/projectpermissions/projectinfo/buildapk/plugins/manual/examples） |
 | 规划台账 | `docs/kb/ROADMAP.md` WP-008「Java API 浏览器（类表 + 反射详情，事件推导规则对齐 pro）」P1/批 4，**未开工**；`FULL_AUDIT_REPORT_2026-08-01.md` 将 API 浏览器列入"高频创作特性缺失" |
 
 ### 1.2 资产面：有残留，未接线
@@ -39,7 +39,7 @@
 - `mlayout.aly`（成员列表页：EditText 过滤 + ListView）
 - `layout.aly`（"正在分析。。。"过渡页，注意该文件含乱码字符）
 
-缺失配套：**没有 `main.lua`（浏览器逻辑）、没有 `android.lua`（类表）、没有 `init.lua`、没有 `fiximport.lua`**。`DeluaApp.kt:53` 仅把这批 `.aly` 当"布局助手模板"提取到 `filesDir/layouts/` 复用，与 API 浏览器无关。→ 这些文件是搬运 pro 资产时的残留，属于"死资产"。
+缺失配套：**没有 `main.lua`（浏览器逻辑）、没有 `android.lua`（类表）、没有 `init.lua`、没有 `fiximport.lua`**。`LideApp.kt:53` 仅把这批 `.aly` 当"布局助手模板"提取到 `filesDir/layouts/` 复用，与 API 浏览器无关。→ 这些文件是搬运 pro 资产时的残留，属于"死资产"。
 
 ### 1.3 相关可用能力（方案加分项）
 
@@ -104,7 +104,7 @@
 | 事件推导 | ✅ `setOnXxxListener → onXxx` | 规则在 Lua 正则 |
 | getter/setter 推导 | ✅ | |
 | 剪贴板复制 | ✅ | |
-| **分类筛选（全部/质感库/AndroidX/R…）** | ❌ 无 | **delua 需求超越 pro，属增强项** |
+| **分类筛选（全部/质感库/AndroidX/R…）** | ❌ 无 | **lide 需求超越 pro，属增强项** |
 | 工程 dex 自动识别 | ❌ | |
 | 原生 .so 函数识别 | ❌ | 原版也没做，见 §4 |
 
@@ -121,7 +121,7 @@
 | 全部 | — | 合并索引 | ✅ |
 | 谷歌质感库控件 | `com.google.android.material.*` | 静态表（推荐词条）+ 宿主 dex 枚举 | ✅ **宿主已带 material 1.13.0，类真实可反射**（见 3.2 注意事项） |
 | AndroidX 控件 | `androidx.*` / `android.support.*` | 同上 | ✅ 宿主带 Compose/navigation/core 全家桶 |
-| R 资源类 | 类名为 `R` 或含 `$R` / 是某 `R` 类的内部类 | **反射枚举**：`Class.forName("android.R")` + `getClasses()` → `android.R$id/layout/attr…`；宿主 `com.lioisme.delua.R`；工程 libs 中 R | ✅ 全自动，无静态表成本 |
+| R 资源类 | 类名为 `R` 或含 `$R` / 是某 `R` 类的内部类 | **反射枚举**：`Class.forName("android.R")` + `getClasses()` → `android.R$id/layout/attr…`；宿主 `com.lioisme.lide.R`；工程 libs 中 R | ✅ 全自动，无静态表成本 |
 | 系统控件/常用控件 | 类存在且反射验证 `android.view.View` 可赋值（`Class.forName(c).let { View::class.java.isAssignableFrom(it) }`） | 静态表候选 + 反射 | ✅ 全自动，pro 没有的亮点 |
 | Android 框架 | `android.*` | 静态表 | ✅ |
 | Java 标准库 | `java.*` / `javax.*` | 静态表 | ✅ |
@@ -145,7 +145,7 @@
 | 来源 | 方式 | 说明 |
 |------|------|------|
 | `android.R`（框架） | `Class.forName("android.R").classes` | 含 `$id/$layout/$drawable/$attr/$string…` 全部内部类，纯反射 |
-| 宿主 R | `Class.forName("com.lioisme.delua.R")` | 同上 |
+| 宿主 R | `Class.forName("com.lioisme.lide.R")` | 同上 |
 | 工程 libs 中 R | 3.3 的 dex 枚举结果按"类名 = `R` 或以 `R$` 开头"过滤 | 打包后工程才有自身 R；IDE 阶段仅 libs 来源 |
 
 ### 3.5 成员详情页（反射 + 事件推导，对齐 pro）
@@ -162,7 +162,7 @@
 | 公有方法 | `getMethods()` | `clazz.methods`（`toString()` 直接输出 Java 签名，与 pro 观感一致） |
 | 类头 | `class + " extends " + superclass` | `clazz.name + " extends " + clazz.superclass?.name` |
 
-事件推导与 pro 的**差异点**（建议在报告中登记为已知差异，不强行对齐 pro 的缺陷）：pro 的事件/属性名是从方法签名**正则剥离**而来，会丢失泛型与重载区分；delua 可保留 pro 的展示格式（用户习惯），数据层保留完整 `Method` 对象供后续"点击事件项跳转查看对应 Listener 接口"增强（不在本期）。
+事件推导与 pro 的**差异点**（建议在报告中登记为已知差异，不强行对齐 pro 的缺陷）：pro 的事件/属性名是从方法签名**正则剥离**而来，会丢失泛型与重载区分；lide 可保留 pro 的展示格式（用户习惯），数据层保留完整 `Method` 对象供后续"点击事件项跳转查看对应 Listener 接口"增强（不在本期）。
 
 ---
 
@@ -174,7 +174,7 @@
 ### 4.1 为什么函数级不可行（本质原因）
 
 1. **C 模块的函数清单不落盘、无元数据**。`libxxx.so` 是 ELF 共享库，导出符号只有 `luaopen_xxx`（模块入口）。Lua API 函数表是在 `dlopen` 后调用 `luaopen_xxx(L)`、由 C 代码在运行时向 Lua 注册表中写入的——**"有哪些函数"这个信息只存在于 Lua 运行时内存里**，静态解析 ELF 拿不到。
-2. **枚举必须执行不可信代码**。要拿到函数清单，唯一途径是：`dlopen(用户.so)` → 用 `LuaState`（`libluajava.so` 已随引擎加载，技术上是可调的）→ 调 `luaopen_*` → 遍历返回表。这等于把任意用户原生代码加载进 IDE 进程执行，可能崩溃 IDE 或执行恶意逻辑。delua 对 `libs/` 的既定立场是"按不可信输入对待，加载失败必须降级"（`ARCHITECTURE.md`），浏览器做枚举与之矛盾。
+2. **枚举必须执行不可信代码**。要拿到函数清单，唯一途径是：`dlopen(用户.so)` → 用 `LuaState`（`libluajava.so` 已随引擎加载，技术上是可调的）→ 调 `luaopen_*` → 遍历返回表。这等于把任意用户原生代码加载进 IDE 进程执行，可能崩溃 IDE 或执行恶意逻辑。lide 对 `libs/` 的既定立场是"按不可信输入对待，加载失败必须降级"（`ARCHITECTURE.md`），浏览器做枚举与之矛盾。
 3. **语义依赖**。多数 C 模块的 `luaopen_*` 依赖运行时环境（全局 `activity`、已加载的姊妹模块、`package.loaded` 状态），脱离工程运行上下文单独加载往往直接失败或半初始化——枚举结果不可信。
 4. **R1/R2 架构红线**。`:editor` 禁 native（R1）；即使放 `:app`，这也是"运行时语义"而非"文本级能力"，与编辑器职责边界相悖。
 
@@ -189,17 +189,17 @@
 
 ---
 
-## 5. 实现方案（delua 侧，建议立项范围）
+## 5. 实现方案（lide 侧，建议立项范围）
 
 ### 5.1 模块归属（R1/R3 合规）
 
 | 组件 | 落点 | 理由 |
 |------|------|------|
 | 类表资产 | `:app` assets（平移 pro `android.lua` → `assets/javaapi/android.lua`，与 WP-007 共享） | 宿主环境资产 |
-| 索引/分类/反射数据层 | `:app` `com.lioisme.delua.apibrowser/ApiIndex.kt`（纯 Kotlin） | 反射 = 运行时语义，宿主专属（R3） |
+| 索引/分类/反射数据层 | `:app` `com.lioisme.lide.apibrowser/ApiIndex.kt`（纯 Kotlin） | 反射 = 运行时语义，宿主专属（R3） |
 | 分类器 | `:app` `ApiCategoryClassifier.kt` | 同上 |
 | UI | `:app` `ui/screen/ApiBrowserScreen.kt` + `ApiClassDetailScreen.kt`（Compose） | 宿主 UI |
-| 导航 | `DeluaNavHost.kt` 新增 `Routes.API_BROWSER` | 入口建议：SettingsScreen 与 ProjectListScreen 抽屉各一（pro 位置在 IDE 菜单） |
+| 导航 | `LideNavHost.kt` 新增 `Routes.API_BROWSER` | 入口建议：SettingsScreen 与 ProjectListScreen 抽屉各一（pro 位置在 IDE 菜单） |
 | `:editor` | **零改动** | R1 门禁 `rg -n "luajava|androlua|loadLibrary" editor/src` 继续零命中 |
 
 ### 5.2 数据层设计
@@ -280,20 +280,20 @@ clist.onItemClick=function(l,v)
 
 ---
 
-## 8. 实施记录（2026-08-02，delua 侧）
+## 8. 实施记录（2026-08-02，lide 侧）
 
 ### 8.1 交付物清单
 
 | 组件 | 文件 | 说明 |
 |------|------|------|
 | 类表资产 | `app/src/main/assets/javaapi/android.lua` | pro 4,124 条平移 + 74 条 material/androidx 精选扩展 = **4,196 条**，166,924 B，格式 `return {\n"name",...}`（供 WP-007 fiximport 共享） |
-| 数据层 | `app/src/main/kotlin/com/lioisme/delua/apibrowser/ApiCategory.kt` | 9 类枚举（常用控件/Material/AndroidX/R 资源/AndroLua 扩展/Android 框架/Java 标准库/工程库/其他） |
+| 数据层 | `app/src/main/kotlin/com/lioisme/lide/apibrowser/ApiCategory.kt` | 9 类枚举（常用控件/Material/AndroidX/R 资源/AndroLua 扩展/Android 框架/Java 标准库/工程库/其他） |
 | 数据层 | `.../apibrowser/ApiIndex.kt` | 进程级单例；静态类表解析 + 宿主 dex 枚举（androidx./material. 前缀）+ 工程 libs/dex/jar 枚举 + lib*.so 模块名 + R 类反射补齐；快照缓存按工程根签名失效；isLoadable/isViewSubclass 反射验证带并发缓存 |
 | 数据层 | `.../apibrowser/ApiCategoryClassifier.kt` | 顺序敏感规则（R → material → androidx → androlua 白名单 → java → widget 反射验证 → framework → other） |
 | 数据层 | `.../apibrowser/ApiReflection.kt` | Detail 六分组反射；事件 `setOn(\w+)Listener → onXxx`、getter/setter 基于 Method 对象推导（修正 pro 正则剥离 "(public)Name" 缺陷，格式观感保留） |
 | UI | `.../ui/screen/ApiBrowserScreen.kt` | 分类 chips（含计数）+ 即时搜索 + 类列表（长按复制 + Snackbar）+ 不可用标记 |
 | UI | `.../ui/screen/ApiClassDetailScreen.kt` | 分组明细（类头/构建方法/公有事件/getter/setter/字段/方法）+ 成员过滤 + 长按复制 |
-| 导航 | `DeluaNavHost.kt` | `Routes.API_BROWSER` / `API_CLASS_DETAIL`（类名 URL 编码）；入口：SettingsScreen「API 浏览器」项 + ProjectListScreen 顶栏 GridView 按钮 |
+| 导航 | `LideNavHost.kt` | `Routes.API_BROWSER` / `API_CLASS_DETAIL`（类名 URL 编码）；入口：SettingsScreen「API 浏览器」项 + ProjectListScreen 顶栏 GridView 按钮 |
 | 字符串 | `values/strings.xml` / `values-zh/strings.xml` | api_* 全量双语（字节级插入，CRLF/UTF-8 无 BOM 保持） |
 
 ### 8.2 决策与差异（相对 §5 方案）

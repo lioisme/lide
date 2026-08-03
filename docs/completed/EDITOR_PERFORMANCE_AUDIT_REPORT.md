@@ -1,6 +1,6 @@
-# delua 编辑器性能审计报告
+# lide 编辑器性能审计报告
 
-> 审计对象：`app/src/main/kotlin/com/lioisme/delua/ui/editor/*`、`ui/screen/EditorScreen.kt`、`project/ProjectManager.kt`
+> 审计对象：`app/src/main/kotlin/com/lioisme/lide/ui/editor/*`、`ui/screen/EditorScreen.kt`、`project/ProjectManager.kt`
 > 审计基准：`docs/sora-editor-main/`（sora-editor 源码，已与依赖的 Maven `io.github.rosemoe:editor:0.24.6` / `language-textmate:0.24.6` AAR 反编译 API 逐一比对，确认一致）
 > 审计日期：2026-07-31
 
@@ -8,9 +8,9 @@
 
 ## 1. 执行摘要
 
-delua 的编辑器卡顿**不是 sora-editor 的瓶颈，而是 delua 集成方式的瓶颈**。delua 用 Compose `AndroidView` 把 `CodeEditor` 包成一个"受控组件"，每次按键都会走一遍"全文同步 + 全文重分析 + 全文重排版 + 多次全屏重绘"的灾难链路：
+lide 的编辑器卡顿**不是 sora-editor 的瓶颈，而是 lide 集成方式的瓶颈**。lide 用 Compose `AndroidView` 把 `CodeEditor` 包成一个"受控组件"，每次按键都会走一遍"全文同步 + 全文重分析 + 全文重排版 + 多次全屏重绘"的灾难链路：
 
-- **每敲一个字符**，delua 都会：
+- **每敲一个字符**，lide 都会：
   1. 在 `ContentChangeEvent` 回调里把**整个文档** `toString()` 一次（O(n)，主线程）；
   2. 把全文放进 Compose 顶层 state，触发整屏重组；
   3. 在 `AndroidView.update` 里**无条件重建 `TextMateColorScheme`**，而 sora 的 `TextMateColorScheme.attachEditor()` 会调用 `editor.rerunAnalysis()` —— **打断正在进行的增量分析线程，复制全文，重新逐行 tokenize 整个文档**（O(n) 全文分词，后台线程 100% 占用，结果永远收敛不了，高亮每键被清空）；
@@ -20,7 +20,7 @@ delua 的编辑器卡顿**不是 sora-editor 的瓶颈，而是 delua 集成方�
 
 - 搜索框每敲一个字符，还会在主线程做一次全文 `toString()` + `split()`/`Regex` 计数，而 sora 自带的 `EditorSearcher` 本来就是后台搜索 + 事件推送的。
 
-**结论**：sora-editor 0.24.6 自带完善的增量分析（`AsyncIncrementalAnalyzeManager` 的 `MSG_MOD` 路径只从改动行 tokenize 到状态收敛为止）、增量样式更新（`StyleUpdateRange`）、后台搜索（`PublishSearchResultEvent`）、渲染节点缓存（`RenderNodeHolder`）。delua 的代码把这套机制**全部绕过了**，把编辑器退化成了"每键全量重算"。
+**结论**：sora-editor 0.24.6 自带完善的增量分析（`AsyncIncrementalAnalyzeManager` 的 `MSG_MOD` 路径只从改动行 tokenize 到状态收敛为止）、增量样式更新（`StyleUpdateRange`）、后台搜索（`PublishSearchResultEvent`）、渲染节点缓存（`RenderNodeHolder`）。lide 的代码把这套机制**全部绕过了**，把编辑器退化成了"每键全量重算"。
 
 修复后应达到的基线（sora 的架构上限）：**单次按键 = 主线程 O(插入文本) 的文档修改 + 后台增量分析（通常 1~3 行）+ 受影响行的局部重绘**，与文件总大小基本无关。
 
@@ -30,7 +30,7 @@ delua 的编辑器卡顿**不是 sora-editor 的瓶颈，而是 delua 集成方�
 
 | 项 | 说明 |
 |---|---|
-| delua 端 | `LuaEditor.kt`、`EditorScreen.kt`、`LuaLanguage.kt`、`LuaSnippetManager.kt`、`SearchBar.kt`、`EditorToolbar.kt`、`ProjectManager.kt`、`SettingsManager.kt`、`app/build.gradle.kts` |
+| lide 端 | `LuaEditor.kt`、`EditorScreen.kt`、`LuaLanguage.kt`、`LuaSnippetManager.kt`、`SearchBar.kt`、`EditorToolbar.kt`、`ProjectManager.kt`、`SettingsManager.kt`、`app/build.gradle.kts` |
 | sora-editor 端 | `CodeEditor.java`、`EditorRenderer.java`、`EditorSearcher.java`、`EditorStyleDelegate.java`、`EditorAutoCompletion.java`、`EditorInputConnection.java`、`AsyncIncrementalAnalyzeManager.java`、`Content.java`、`TextMateColorScheme.java`、`TextMateAnalyzer.java`、`TextMateLanguage.java`、`DirectAccessProps.java` |
 | 方法 | 静态代码路径分析；0.24.6 AAR 反编译 API 与 docs 源码比对（签名一致，docs 源码可作为 0.24.6 行为依据）；参照 sora 官方 demo（`docs/sora-editor-main/app/src/main/.../MainActivity.kt`）的"标准用法"作为上限参照 |
 | 关键结论的验证方式 | 见 §7 验证方案（thread 观察、gfxinfo、断点） |
@@ -81,7 +81,7 @@ public void rerun() {
 }
 ```
 
-`LooperThread.initialize()`（`AsyncIncrementalAnalyzeManager.java:492-516`）逐行调用 `TextMateAnalyzer.tokenizeLine()` → `grammar.tokenizeLine2(line, ...)`（`TextMateAnalyzer.java:213`，每行 2 秒超时的 TextMate 文法正则分词，delua 未打包 `oniguruma-native`，走纯 Java Joni），随后 `computeBlocks()` 全文重算折叠块（`TextMateAnalyzer.java:175-205`）。
+`LooperThread.initialize()`（`AsyncIncrementalAnalyzeManager.java:492-516`）逐行调用 `TextMateAnalyzer.tokenizeLine()` → `grammar.tokenizeLine2(line, ...)`（`TextMateAnalyzer.java:213`，每行 2 秒超时的 TextMate 文法正则分词，lide 未打包 `oniguruma-native`，走纯 Java Joni），随后 `computeBlocks()` 全文重算折叠块（`TextMateAnalyzer.java:175-205`）。
 
 **后果**（文件越大越严重）：
 
@@ -162,9 +162,9 @@ LaunchedEffect(searchQuery, isCaseSensitive, isRegex) { performSearch() }  // �
 - `EditorSearcher.search()`（`EditorSearcher.java:155-168`）→ `executeMatch()`（:173-180）→ `new SearchRunnable(editor.getText(), ...)`，其构造函数 `this.text = content.toStringBuilder()`（:568-570）——**全量拷贝发生在调用线程（主线程）**；
 - 匹配本身在后台线程跑（`SearchRunnable.run()` :578-635），结果经 `PublishSearchResultEvent` 推送（:613-618）；
 - 更糟：`EditorSearcher` 订阅了 `ContentChangeEvent`（:84-88），**搜索激活期间每敲一个键（编辑区）都会重新 `executeMatch()`，再次主线程全文拷贝**；
-- sora 渲染器自带匹配高亮（`EditorRenderer.java:1273-1281`），delua 根本不需要自己画。
+- sora 渲染器自带匹配高亮（`EditorRenderer.java:1273-1281`），lide 根本不需要自己画。
 
-delua 用主线程正则 + `split` 重算了一遍 sora 已经在后台算好的结果。
+lide 用主线程正则 + `split` 重算了一遍 sora 已经在后台算好的结果。
 
 ### 3.6 【P1-2】主题切换在组合期间同步执行
 
@@ -223,7 +223,7 @@ if (lastTheme != targetTheme) {
 | 步骤 | 执行位置 | 成本量级 |
 |---|---|---|
 | 1. 文档修改 + dispatch `ContentChangeEvent`（含 IME 组合，2~6 次事件） | `CodeEditor.java:5290/5339` | 正常（增量），但每事件触发步骤 2 |
-| 2. delua 回调 `text.toString()` ×(2~6) | `Content.java:961-976` | O(n) ≈ 60KB×6 拷贝 + GC，约 1~3ms |
+| 2. lide 回调 `text.toString()` ×(2~6) | `Content.java:961-976` | O(n) ≈ 60KB×6 拷贝 + GC，约 1~3ms |
 | 3. state 更新 → EditorScreen 整屏重组 | Compose | 约 0.5~2ms |
 | 4. `update`：`TextMateColorScheme.create` + `attachEditor`→`rerunAnalysis` | `TextMateColorScheme.java:352-361`、`AsyncIncrementalAnalyzeManager.java:145-164` | UI 线程 `copyText` O(n) 约 1ms；后台全文 tokenize 约 0.4~4s（每键重启，永不收敛）；`sendNewStyles(null)` 清高亮 |
 | 5. `update`：`text.toString() != content` 全文比较 | `LuaEditor.kt:157` | O(n) ≈ 0.1~0.5ms |
@@ -239,7 +239,7 @@ if (lastTheme != targetTheme) {
 
 ## 5. 与 sora-editor 上限的差距（功能层面）
 
-| 能力 | sora 0.24.6 提供 | delua 现状 |
+| 能力 | sora 0.24.6 提供 | lide 现状 |
 |---|---|---|
 | 增量语法分析（`AsyncIncrementalAnalyzeManager`） | 有（MSG_MOD 增量路径） | **被 P0-1 绕过，退化全量** |
 | 增量样式更新/局部重绘 | 有（`StyleUpdateRange`、`RenderNodeHolder`、`SparseStylePatches`） | 被多轮全屏 invalidate 掩盖 |
@@ -258,7 +258,7 @@ if (lastTheme != targetTheme) {
 
 ## 6. 修复路线图
 
-### 阶段 A：止血（1~2 天，纯 delua 侧改动，不改 sora）
+### 阶段 A：止血（1~2 天，纯 lide 侧改动，不改 sora）
 
 1. **`update` 块改为"仅配置真正变化才执行"**（`LuaEditor.kt:155-166`）：
    - 删除无条件 `editor.colorScheme = TextMateColorScheme.create(...)`；factory 里创建**一次** `TextMateColorScheme` 实例，`update` 中仅在主题名变化时 `editor.colorScheme = 同一实例`（仅主题切换时付一次全量分析代价）；
@@ -315,4 +315,4 @@ if (lastTheme != targetTheme) {
 | findCursorBlock 线性扫描 | `CodeEditor.java:1591-1639`、`3550-3551`、`4257-4273` |
 | 全文档标识符补全 | `language-textmate/.../TextMateLanguage.java:304-311`、`TextMateAnalyzer.java:265-272` |
 | 官方 demo 的标准用法（事件驱动、一次性 setText、复用 scheme、防抖 50ms） | `app/.../MainActivity.kt:225-272`、`506-543`、`238-244` |
-| delua 的 P0 问题代码 | `app/.../ui/editor/LuaEditor.kt:100-175`、`app/.../ui/screen/EditorScreen.kt:42-99,138-144` |
+| lide 的 P0 问题代码 | `app/.../ui/editor/LuaEditor.kt:100-175`、`app/.../ui/screen/EditorScreen.kt:42-99,138-144` |

@@ -102,12 +102,12 @@ Scaffold
   - 结论：冻结修复已包含在工作副本内（行级反射已 IO 化、`warmUpLoadable` 已存在），本次重构以当前工作副本为基线叠加；重构完成后由用户决定整体提交。本次任务不执行提交。
 
 - **T2 数据层改造：已完成（2026-08-03）**
-  修改 `app/src/main/kotlin/com/lioisme/delua/apibrowser/ApiIndex.kt`：
+  修改 `app/src/main/kotlin/com/lioisme/lide/apibrowser/ApiIndex.kt`：
   - `warmUpLoadable()` → `warmUpRowInfo()`：按列表顺序预热 `rowInfo(name)`（填 kindCache，含负缓存），预算常量改名 `ROW_INFO_WARMUP_BUDGET_MS`（1500ms 不变，超时跳过）。
   - `rowInfo(name)` 内部在取 `classKind` 后同步写 `loadableCache[name] = kind != null`：一次 `Class.forName` 同时填充两缓存，两缓存保持一致，`isLoadable` 与详情页等调用方直接受益；KDoc 明确线程契约。
 
 - **T3 列表行重构：已完成（2026-08-03）**
-  修改 `app/src/main/kotlin/com/lioisme/delua/ui/screen/ApiBrowserScreen.kt` 的 `ClassRow` 与新增辅助组件：
+  修改 `app/src/main/kotlin/com/lioisme/lide/ui/screen/ApiBrowserScreen.kt` 的 `ClassRow` 与新增辅助组件：
   - 行结构改为需求二三要素：第一行 = 简单名（`simpleNameOf`，`$` 优先于 `.`，如 `MenuPresenter$Callback → Callback`）+ 类型徽章；第二行 = FQN API（labelSmall Monospace，单行省略）。
   - 类型徽章 `TypeBadge`：接口（`api_kind_interface`，primaryContainer）→ 用途分类（`api_usage_*` 9 条资源接线，secondaryContainer）→ 兜底类（`api_kind_class`，surfaceVariant）；工程库条目（usage 恒 null）用 tertiary 色系区分。
   - 不可用行保留「当前设备不可用」error 色提示 + 整行灰显语义。

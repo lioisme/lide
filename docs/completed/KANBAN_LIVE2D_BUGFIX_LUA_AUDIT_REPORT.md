@@ -1,6 +1,6 @@
 # 看板娘 Live2D 三问题审计与修复报告（延迟崩溃 / 绘制错乱 / Lua 规范化）
 
-> 日期：2026-08-02 · 范围：delua 宿主内 Lua 工程「看板娘」（`docs/reference/project/看板娘/`）
+> 日期：2026-08-02 · 范围：lide 宿主内 Lua 工程「看板娘」（`docs/reference/project/看板娘/`）
 > 直调原生 `liblive2d.so` 的实现。设备：emulator-5554（Android 14，x86_64，1440x2560，
 > 本会话 window 720x1280 override）。
 >

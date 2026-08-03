@@ -1,5 +1,8 @@
 # 更新日志（版本历史）
 
+> **遗留**：记录自 AndroLua+ / AndroLuaX 继承的版本历史，仅为事实记录；
+> 当前 lide 已启用新版本体系（versionCode 1 baseline，见 [project-overview.md](project-overview.md)）。
+
 > **类型**：知识库 · 历史事实
 > **来源**：原根目录 `CHANGELOG.md`，2026-08-03 迁入 docs 体系
 > **说明**：前半段为 AndroLuaX（本产品）版本历史；后半段「AndroLua+」为上游运行时框架历史（随 jar 继承，仅记录）。
