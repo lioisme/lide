@@ -69,7 +69,7 @@
 | T6 | P2 | `.editorconfig` + ktlint 配置 + pre-commit 样例 | T5 | ✅ 已完成 |
 | T7 | P2 | 移除 `.class` 补丁编译产物（保留源码+说明） | — | ✅ 已完成 |
 | T8 | P2 | 依赖锁定/校验（可行性按执行结果定） | T4 | ✅ 已完成（结论：不引入） |
-| T9 | P0 | 最终验证：R1 grep + 编译 + 单测 + 干净 clone 完全从源码构建 | T1~T8 | ⬜ 待执行 |
+| T9 | P0 | 最终验证：R1 grep + 编译 + 单测 + 干净 clone 完全从源码构建 | T1~T8 | ✅ 已完成 |
 
 ---
 
@@ -310,7 +310,16 @@
 - 本机 NDK 版本与 CI（26.1）不同，脚本必须无版本硬编码（T2 保证）
 - 单测若遇网络/环境抖动，记录原始输出，不掩盖
 
-**完成状态**：【⬜ 待执行】 简述：
+**完成状态**：【✅ 已完成】 简述：
+
+| 步骤 | 结果 |
+|---|---|
+| 基础设施 | 提交 `2885ef81`（T1~T8 合并）后，`git clone` 至 `C:\Users\liois\AppData\Local\Temp\opencode\delua_cleanclone`：HEAD 正确、`.alp` 为 gitignore 不随 clone 出现、`third_party/prebuilt` 不存在、索引 `i/crlf` 零残留 |
+| 引擎就地构建 | `scripts/rebuild_engine.ps1 arm64-v8a`（NDK 29.0.14206865，ANDROID_NDK_HOME 环境变量注入，零版本硬编码）：**16/16 模块成功**，51 个 `.so`（arm64/armeabi/x86_64 各 17）从 `build-scripts/jni/` vendored 源码产出至 `jniLibs/` |
+| Gradle 全量构建 | `gradlew :app:assembleArm64Debug` BUILD SUCCESSFUL（77 tasks）：APK `app-arm64-debug.apk` 33.84 MB；**7 个 `.alp`** 由 generateExamples 自动生成并打入 assets；**18 个 arm64 `.so`（含 libluajava.so）** 打入 lib/ |
+| 单测 | `:app:testX64DebugUnitTest + :editor:testDebugUnitTest` 全部通过：8 套件 61 用例 0 失败 0 错误（AlpNaming 6 / LuaConfigParser 14 / ZipUtil 5 / ApkBuilder 7 / ApkSigner 6 / EngineResultParser 6 / BuildPackaging 3 / LuaDiagnostics 14） |
+| R1 红线 | `git grep luajava|androlua|loadLibrary editor/src` = **0** |
+| 说明 | 重建出的 17 个 arm64 `.so` 与提交基线存在字节级差异（NDK 工具链时间戳/构建 ID），属预期：提交的 `.so` 是基线真源，重建产出自 vendored C 源码并已随 APK 实测可用 |
 
 ---
 
@@ -352,5 +361,5 @@ git ls-files --eol
 | 2026-08-04 | **T7 完成**（移除 3 个补丁 `.class` 编译产物，source+README 保留并注明再生成方式） | opencode |
 | 2026-08-04 | T8 完成 | opencode |
 | 2026-08-04 | **T8**（锁定实测：--write-locks 120KB/模块噪音，全固定版本 → 不引入，登记替代方案） | opencode |
-| 2026-08-04 | T9 完成（最终验证） | opencode |
+| 2026-08-04 | **T9 完成**（干净 clone 完全从源码构建：16/16 模块 .so + assembleArm64Debug + 61 单测全绿 + R1 零命中；提交 2885ef81） | opencode |
 | 2026-08-04 | 终审报告落盘 docs/completed/ | opencode |
