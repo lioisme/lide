@@ -55,11 +55,23 @@ fun ApiClassDetailScreen(
     onBack: () -> Unit,
 ) {
     val context = LocalContext.current
-    val detailState = produceState<ApiReflection.Detail?>(initialValue = null, className) {
-        value = withContext(Dispatchers.IO) { ApiReflection.reflect(className) }
+    // 详情三态（性能审计 R5d）：Loading / Loaded / Failed —— 反射失败显示明确错误 + 重试，
+    // 不再误用「无匹配结果」文案并无限转圈。retryTick 递增触发 produceState 重启重试。
+    var retryTick by remember { mutableStateOf(0) }
+    val detailState = produceState<DetailUiState>(
+        initialValue = DetailUiState.Loading,
+        className,
+        retryTick,
+    ) {
+        value = try {
+            withContext(Dispatchers.IO) { ApiReflection.reflect(className) }
+                ?.let { DetailUiState.Loaded(it) }
+                ?: DetailUiState.Failed
+        } catch (_: Throwable) {
+            DetailUiState.Failed
+        }
     }
     var query by rememberSaveable { mutableStateOf("") }
-    val detail = detailState.value
 
     Scaffold(
         topBar = {
@@ -102,14 +114,14 @@ fun ApiClassDetailScreen(
                 shape = RoundedCornerShape(12.dp),
             )
 
-            when {
-                detail == null -> {
+            when (val state = detailState.value) {
+                DetailUiState.Loading -> {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             CircularProgressIndicator()
                             Spacer(Modifier.height(12.dp))
                             Text(
-                                stringResource(R.string.api_no_result),
+                                stringResource(R.string.api_loading),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
@@ -117,7 +129,24 @@ fun ApiClassDetailScreen(
                     }
                 }
 
-                else -> {
+                DetailUiState.Failed -> {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Text(
+                                stringResource(R.string.api_detail_failed),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.error,
+                            )
+                            Spacer(Modifier.height(12.dp))
+                            Button(onClick = { retryTick++ }) {
+                                Text(stringResource(R.string.api_retry))
+                            }
+                        }
+                    }
+                }
+
+                is DetailUiState.Loaded -> {
+                    val detail = state.detail
                     val q = query.trim()
                     val titles = ApiGroupTitles(
                         constructors = stringResource(R.string.api_group_constructors),
@@ -127,7 +156,10 @@ fun ApiClassDetailScreen(
                         fields = stringResource(R.string.api_group_fields),
                         methods = stringResource(R.string.api_group_methods),
                     )
-                    val rows = remember(detail, q, titles) { buildRows(detail, titles, q) }
+                    // 成员元数据仅随 detail/titles 变化解析一次（memberNameOf 每成员一次 + 预小写）；
+                    // 击键过滤只做一趟 nameLower.contains，零字符串解析零逐成员转换（性能审计 R4）。
+                    val memberGroups = remember(detail, titles) { buildMemberGroups(detail, titles) }
+                    val rows = remember(detail, q, titles, memberGroups) { buildRows(detail, memberGroups, q) }
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
                         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
@@ -167,6 +199,13 @@ private sealed interface DetailRow {
     data class Member(val text: String, val memberName: String) : DetailRow
 }
 
+/** 详情反射三态（性能审计 R5d）：Loading 转圈 / Loaded 内容 / Failed 错误 + 重试。 */
+private sealed interface DetailUiState {
+    data object Loading : DetailUiState
+    data class Loaded(val detail: ApiReflection.Detail) : DetailUiState
+    data object Failed : DetailUiState
+}
+
 /** 分组标题（Composable 层获取，保持可翻译）。 */
 private data class ApiGroupTitles(
     val constructors: String,
@@ -177,26 +216,48 @@ private data class ApiGroupTitles(
     val methods: String,
 )
 
-/** 分组顺序与 pro 一致；query 非空时按成员名子串过滤（pro medit 语义）。 */
-private fun buildRows(detail: ApiReflection.Detail, titles: ApiGroupTitles, query: String): List<DetailRow> {
+/** 成员元数据（一次解析，击键过滤复用）：显示文本 + 复制用成员名 + 预小写过滤键。 */
+private data class MemberMeta(
+    val text: String,
+    val name: String,
+    val nameLower: String,
+)
+
+/** 成员元数据预索引：memberNameOf 每成员仅解析一次（性能审计 R4）。分组顺序与 pro 一致。 */
+private fun buildMemberGroups(detail: ApiReflection.Detail, titles: ApiGroupTitles): List<Pair<String, List<MemberMeta>>> {
+    fun group(title: String, items: List<String>): Pair<String, List<MemberMeta>> =
+        title to items.map { item ->
+            val name = memberNameOf(item)
+            MemberMeta(item, name, name.lowercase())
+        }
+    return listOf(
+        group(titles.constructors, detail.constructors),
+        group(titles.events, detail.events),
+        group(titles.getters, detail.getters),
+        group(titles.setters, detail.setters),
+        group(titles.fields, detail.fields),
+        group(titles.methods, detail.methods),
+    )
+}
+
+/** 过滤行构建：头部恒显；query 非空时按预小写成员名子串过滤（pro medit 语义，保留 ignoreCase 行为）。 */
+private fun buildRows(
+    detail: ApiReflection.Detail,
+    groups: List<Pair<String, List<MemberMeta>>>,
+    query: String,
+): List<DetailRow> {
     val result = ArrayList<DetailRow>()
-    val q = query
-    fun group(title: String, items: List<String>) {
-        if (items.isEmpty()) return
+    result.add(DetailRow.Member(detail.header, simpleNameOf(detail.header)))
+    val q = query.trim().lowercase()
+    for ((title, members) in groups) {
+        if (members.isEmpty()) continue
         result.add(DetailRow.Group(title))
-        for (item in items) {
-            if (q.isEmpty() || memberNameOf(item).contains(q, ignoreCase = true)) {
-                result.add(DetailRow.Member(item, memberNameOf(item)))
+        for (member in members) {
+            if (q.isEmpty() || member.nameLower.contains(q)) {
+                result.add(DetailRow.Member(member.text, member.name))
             }
         }
     }
-    result.add(DetailRow.Member(detail.header, simpleNameOf(detail.header)))
-    group(titles.constructors, detail.constructors)
-    group(titles.events, detail.events)
-    group(titles.getters, detail.getters)
-    group(titles.setters, detail.setters)
-    group(titles.fields, detail.fields)
-    group(titles.methods, detail.methods)
     return result
 }
 

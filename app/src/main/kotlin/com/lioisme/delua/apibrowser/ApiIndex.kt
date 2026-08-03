@@ -7,13 +7,18 @@ import dalvik.system.DexFile
 import java.io.File
 import java.util.Collections
 import java.util.concurrent.ConcurrentHashMap
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.withContext
 
 /**
  * API 索引：静态类表（assets/javaapi/android.lua，pro 类表平移 + 扩展）
  * + 宿主 dex 动态枚举（androidx/material）+ 工程 libs/ 下 dex|jar 动态枚举
  * + 原生库模块名扫描（libs/ 下 so，仅模块名级）。
  *
- * 线程模型：build() 在 IO 线程整体构建，产物为不可变快照；反射验证带并发缓存。
+ * 线程模型：两阶段构建——buildBase() 只做非反射阶段（静态解析 + dex 枚举，约 1s 级）并快速发布
+ * 基础快照，completeBuild() 在后台补全反射阶段（用途推断 + 行信息预热，带时间预算上界）
+ * 并原子替换为完整快照；均在 IO 线程执行，反射验证带并发缓存。
  * 反射查询接口（rowInfo / isLoadable / classKind / isViewSubclass）禁止在 UI 线程
  * 直接调用（AGENTS.md 线程契约），UI 只读惰性缓存结果。
  * 全部反射路径 try/catch(Throwable) 降级（AGENTS.md 约定）。
@@ -38,7 +43,7 @@ object ApiIndex {
     /**
      * 列表行反射信息：类形态 + 可加载性，一次类加载判定同时服务两处显示决策。
      * [kind] 为 null 表示类不可加载或反射失败；[loadable] 是该事实的显式化，
-     * 显示层读 [loadable] 决定灰显，不依赖 [kind] 的隐式 null 语义。
+     * 显示层读 [loadable] 决定不可用指示（error 圆点），不依赖 [kind] 的隐式 null 语义。
      */
     data class RowInfo(
         val kind: ClassKind?,
@@ -51,14 +56,6 @@ object ApiIndex {
         "md5", "mime", "regex", "sensor", "smtp", "socket", "xml", "zip", "zlib", "luv",
     )
 
-    /**
-     * 宿主 dex 枚举的纳入前缀：静态类表缺口的 AndroidX/Material 类自动补齐。
-     * 前缀过滤 + 跳过内部类（$），控制条目量与噪音。
-     */
-    private val hostDexPrefixes = listOf(
-        "androidx.", "com.google.android.material.",
-    )
-
     /** 不可变快照。 */
     data class Snapshot(
         val classes: List<ApiClassEntry>,
@@ -69,14 +66,14 @@ object ApiIndex {
          * 快 5~10 倍；仅内部过滤使用，外部不可变。
          */
         val nameLower: List<String>,
-    ) {
-        val categoryCounts: Map<ApiCategory, Int> by lazy {
-            classes.groupingBy { it.category }.eachCount()
-        }
-        val usageCounts: Map<ApiUsage, Int> by lazy {
-            classes.mapNotNull { it.usage }.groupingBy { it }.eachCount()
-        }
-    }
+        /**
+         * 分类 → 类条目索引（build 期一次预分组，索引对齐 [classes]/[nameLower]）。
+         * 分类过滤直接取子集：O(选中分类条目数) 而非 O(全部条目)（性能审计 R3）。
+         */
+        val categories: Map<ApiCategory, List<Int>>,
+        /** 分类计数（build 期 eager 预计算，供筛选菜单展示，避免组合阶段 lazy 首读抖动）。 */
+        val categoryCounts: Map<ApiCategory, Int>,
+    )
 
     data class ApiClassEntry(
         val name: String,
@@ -89,6 +86,13 @@ object ApiIndex {
 
     @Volatile
     private var snapshot: Snapshot? = null
+
+    /** buildBase/completeBuild 互斥锁：杜绝并发构建互踩快照字段（R5a）。 */
+    private val buildLock = Any()
+
+    /** completeBuild() 是否已完成（幂等标志；invalidate 时复位）。 */
+    @Volatile
+    private var completePhaseDone = false
 
     /**
      * 列表行反射信息缓存（含负缓存）：键为类名，值为 [RowInfo] 实例。
@@ -109,82 +113,108 @@ object ApiIndex {
 
     fun cached(): Snapshot? = snapshot
 
-    /** 宿主 ClassLoader（build() 后可用），供反射规则链复用。 */
+    /** 宿主 ClassLoader（buildBase() 后可用），供反射规则链复用。 */
     fun hostLoader(): ClassLoader? = hostClassLoader
 
     /**
-     * 构建索引。进程级缓存：工程根未变化时复用快照。
-     * 必须在 IO 线程调用。
+     * 构建索引第一阶段（非反射，快）：静态类表解析 + dex 枚举 + R 类补齐 + 模块扫描。
+     * 发布基础快照（用途/行信息未补全），列表可立即显示；反射补全见 [completeBuild]。
+     * 进程级缓存：工程根未变化时复用当前快照（含已补全的完整快照）。
+     * 必须在 IO 线程调用；支持并发调用（内部互斥单飞）。
      */
     @SuppressLint("WrongThread")
-    fun build(context: Context, projectRoots: List<File>): Snapshot {
+    fun buildBase(context: Context, projectRoots: List<File>): Snapshot {
         val roots = projectRoots.map { it.absolutePath }.toSet()
         hostClassLoader = context.classLoader
-        if (snapshot != null && builtProjectRoots == roots) {
-            return snapshot!!
-        }
-        val start = System.currentTimeMillis()
-        val entries = LinkedHashMap<String, ApiClassEntry>()
-        val nativeModules = LinkedHashSet<String>()
-        nativeModules += builtinNativeModules
+        snapshot?.let { s -> if (builtProjectRoots == roots) return s }
+        synchronized(buildLock) {
+            snapshot?.let { s -> if (builtProjectRoots == roots) return s }
+            val start = System.currentTimeMillis()
+            val entries = LinkedHashMap<String, ApiClassEntry>()
+            val nativeModules = LinkedHashSet<String>()
+            nativeModules += builtinNativeModules
 
-        // 1) 静态类表（pro 平移 + material/androidx 精选扩展）
-        val staticNames = parseClassTable(context)
-        for (name in staticNames) {
-            entries.putIfAbsent(name, ApiClassEntry(name, ApiCategoryClassifier.categorize(name), fromProject = false))
-        }
-
-        // 2) 宿主 dex 枚举（androidx/material 动态补齐）
-        enumerateDexFile(File(context.applicationInfo.sourceDir)) { name ->
-            if (hostDexPrefixes.any { name.startsWith(it) } && '$' !in name) {
+            // 1) 静态类表（pro 平移 + material/androidx 精选扩展）
+            val staticNames = parseClassTable(context)
+            for (name in staticNames) {
                 entries.putIfAbsent(name, ApiClassEntry(name, ApiCategoryClassifier.categorize(name), fromProject = false))
             }
-        }
 
-        // 3) 工程 libs/ 下 dex|jar 枚举（真·自动识别）
-        for (root in roots) {
-            val libsDir = File(root, "libs")
-            val libFiles = libsDir.listFiles { f -> f.isFile && (f.name.endsWith(".dex") || f.name.endsWith(".jar")) }
-                ?: continue
-            for (lib in libFiles) {
-                enumerateDexFile(lib) { name ->
-                    if ('$' !in name) {
-                        entries.putIfAbsent(name, ApiClassEntry(name, ApiCategory.PROJECT, fromProject = true))
+            // 2) 宿主 dex 枚举（androidx/material 动态补齐）
+            // 前缀先行（多数类名不匹配，prefix 比较失败即退出，免整串扫描）；
+            // 匹配前缀后才做 '$' 内部类过滤（仅 ~16K 命中条目触发整串扫描）。
+            enumerateDexFile(File(context.applicationInfo.sourceDir)) { name ->
+                if ((name.startsWith("androidx.") || name.startsWith("com.google.android.material.")) && '$' !in name) {
+                    entries.putIfAbsent(name, ApiClassEntry(name, ApiCategoryClassifier.categorize(name), fromProject = false))
+                }
+            }
+
+            // 3) 工程 libs/ 下 dex|jar 枚举（真·自动识别）
+            for (root in roots) {
+                val libsDir = File(root, "libs")
+                val libFiles = libsDir.listFiles { f -> f.isFile && (f.name.endsWith(".dex") || f.name.endsWith(".jar")) }
+                    ?: continue
+                for (lib in libFiles) {
+                    enumerateDexFile(lib) { name ->
+                        if ('$' !in name) {
+                            entries.putIfAbsent(name, ApiClassEntry(name, ApiCategory.PROJECT, fromProject = true))
+                        }
                     }
                 }
-            }
-            // 原生库：libs/lib*.so → 模块名（仅模块名级识别，函数级不可静态获取）
-            val soFiles = libsDir.listFiles { f -> f.isFile && f.name.startsWith("lib") && f.name.endsWith(".so") }
-                ?: continue
-            for (so in soFiles) {
-                nativeModules += so.name.removePrefix("lib").removeSuffix(".so")
-            }
-        }
-
-        // 4) R 资源类自动补齐：android.R + 宿主 R 的内部类（反射枚举）
-        for (r in listOf("android.R", "com.lioisme.delua.R")) {
-            try {
-                val clazz = Class.forName(r, false, context.classLoader)
-                for (inner in clazz.classes) {
-                    val n = "${clazz.name}$${inner.simpleName}"
-                    entries.putIfAbsent(n, ApiClassEntry(n, ApiCategory.R_RESOURCES, fromProject = false))
+                // 原生库：libs/lib*.so → 模块名（仅模块名级识别，函数级不可静态获取）
+                val soFiles = libsDir.listFiles { f -> f.isFile && f.name.startsWith("lib") && f.name.endsWith(".so") }
+                    ?: continue
+                for (so in soFiles) {
+                    nativeModules += so.name.removePrefix("lib").removeSuffix(".so")
                 }
-                entries.putIfAbsent(r, ApiClassEntry(r, ApiCategory.R_RESOURCES, fromProject = false))
-            } catch (_: Throwable) {
             }
-        }
 
-        val classList = entries.values.toList()
-        snapshot = Snapshot(
-            classes = classList,
-            nameLower = classList.map { it.name.lowercase() },
-            nativeModules = nativeModules.toList().sorted(),
-        )
-        assignUsages()
-        warmUpRowInfo()
-        builtProjectRoots = roots
-        android.util.Log.d("ApiIndex", "built ${entries.size} classes, ${nativeModules.size} modules in ${System.currentTimeMillis() - start}ms")
-        return snapshot!!
+            // 4) R 资源类自动补齐：android.R + 宿主 R 的内部类（反射枚举）
+            for (r in listOf("android.R", "com.lioisme.delua.R")) {
+                try {
+                    val clazz = Class.forName(r, false, context.classLoader)
+                    for (inner in clazz.classes) {
+                        val n = "${clazz.name}$${inner.simpleName}"
+                        entries.putIfAbsent(n, ApiClassEntry(n, ApiCategory.R_RESOURCES, fromProject = false))
+                    }
+                    entries.putIfAbsent(r, ApiClassEntry(r, ApiCategory.R_RESOURCES, fromProject = false))
+                } catch (_: Throwable) {
+                }
+            }
+
+            val classList = entries.values.toList()
+            val categories = classList.indices.groupBy { classList[it].category }
+            val base = Snapshot(
+                classes = classList,
+                nameLower = classList.map { it.name.lowercase() },
+                categories = categories,
+                categoryCounts = categories.mapValues { it.value.size },
+                nativeModules = nativeModules.toList().sorted(),
+            )
+            snapshot = base
+            completePhaseDone = false
+            builtProjectRoots = roots
+            android.util.Log.d("ApiIndex", "built base ${entries.size} classes, ${nativeModules.size} modules in ${System.currentTimeMillis() - start}ms")
+            return base
+        }
+    }
+
+    /**
+     * 构建索引第二阶段（反射补全，带时间预算上界）：用途分类推断 + 列表行信息预热，
+     * 完成后原子替换进程级快照（[cached] 可见完整快照），列表徽章渐进完善。
+     * 幂等：已完成后直接返回；buildBase 未执行（快照为空）时直接返回。
+     * 必须在 IO 线程调用。
+     */
+    fun completeBuild() {
+        if (snapshot == null || completePhaseDone) return
+        synchronized(buildLock) {
+            if (completePhaseDone) return
+            val start = System.currentTimeMillis()
+            assignUsages()
+            warmUpRowInfo()
+            completePhaseDone = true
+            android.util.Log.d("ApiIndex", "complete phase done in ${System.currentTimeMillis() - start}ms")
+        }
     }
 
     /** 用途分类批量推断：时间预算内对宿主可加载类做反射规则链，超时余量置 null。 */
@@ -207,7 +237,7 @@ object ApiIndex {
      * 列表行信息预热：按列表顺序批量填充 rowInfoCache（经 [rowInfo]，非空包装含负缓存），
      * 使首屏及前序滚动行命中缓存（O(1) 查表），消除行级全 dex 扫描风暴。
      * 时间预算内尽力而为，超时余量跳过，未预热条目由行级 IO 惰性补齐（首次扫描一次后即缓存）。
-     * build() 已在 IO 线程调用本方法。
+     * completeBuild() 在 IO 线程调用本方法。
      */
     private fun warmUpRowInfo() {
         val s = snapshot ?: return
@@ -220,19 +250,29 @@ object ApiIndex {
 
     /** 使索引失效（工程 libs 变化后由宿主显式调用）。 */
     fun invalidate() {
-        snapshot = null
-        builtProjectRoots = null
+        synchronized(buildLock) {
+            snapshot = null
+            builtProjectRoots = null
+            completePhaseDone = false
+        }
     }
 
-    /** 解析 assets/javaapi/android.lua 类表（return { "类名", ... }）。 */
+    /** 解析 assets/javaapi/android.lua 类表（return { "类名", ... }）。
+     *  手动引号扫描替代 Regex.findAll（每行分配 MatchResult 的开销，实测约 1s）——
+     *  单趟 indexOf 子串切分，毫秒级（性能审计 R1 冷启动优化）。 */
     private fun parseClassTable(context: Context): List<String> {
         val result = ArrayList<String>()
         try {
             val text = context.assets.open(ASSET_CLASS_TABLE).bufferedReader(Charsets.UTF_8).use { it.readText() }
-            val regex = Regex("\"([^\"]+)\"")
-            for (match in regex.findAll(text)) {
-                val name = match.groupValues[1]
+            var from = 0
+            while (true) {
+                val open = text.indexOf('"', from)
+                if (open < 0) break
+                val close = text.indexOf('"', open + 1)
+                if (close < 0) break
+                val name = text.substring(open + 1, close)
                 if (name.isNotBlank()) result.add(name)
+                from = close + 1
             }
         } catch (_: Throwable) {
         }
@@ -269,6 +309,21 @@ object ApiIndex {
      * produceState / LaunchedEffect + Dispatchers.IO 获取，UI 只读缓存结果。
      */
     fun rowInfo(name: String): RowInfo = rowInfoCache.getOrPut(name) { computeRowInfo(name) }
+
+    /**
+     * 列表行反射信息挂起版本（单飞，滚动安全）：语义同 [rowInfo]。
+     * - 快路径：缓存命中直接返回（UI 只读缓存，契约允许，零协程开销）；
+     * - 慢路径：NonCancellable + IO 执行 CHM getOrPut 单飞 compute——同一类名仅一次全 dex 扫描，
+     *   计算不随调用方（行 LaunchedEffect/produceState 生命周期）取消，结果必落缓存；
+     *   fling 时行快速进出组合不再反复重启负查找（性能审计 R2）。
+     * 线程契约：计算恒在 IO，UI 只走同步快路径。
+     */
+    suspend fun rowInfoAsync(name: String): RowInfo {
+        rowInfoCache[name]?.let { return it }
+        return withContext(Dispatchers.IO + NonCancellable) {
+            rowInfoCache.getOrPut(name) { computeRowInfo(name) }
+        }
+    }
 
     private fun computeRowInfo(name: String): RowInfo {
         val kind = try {

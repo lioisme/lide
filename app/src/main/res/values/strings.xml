@@ -249,7 +249,8 @@
     <string name="api_member_filter_hint">Filter members…</string>
     <string name="api_loading">Building index…</string>
     <string name="api_no_result">No matching results</string>
-    <string name="api_unavailable">Unavailable on this device</string>
+    <string name="api_detail_failed">Failed to reflect this class</string>
+    <string name="api_retry">Retry</string>
     <string name="api_copied">Copied to clipboard</string>
     <string name="api_group_constructors">Constructors</string>
     <string name="api_group_events">Public Events</string>

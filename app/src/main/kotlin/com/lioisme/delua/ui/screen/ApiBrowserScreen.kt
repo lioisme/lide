@@ -5,6 +5,7 @@ import android.content.ClipboardManager
 import android.content.Context
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,10 +17,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -75,12 +78,20 @@ fun ApiBrowserScreen(
     val scope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
     val strCopied = stringResource(R.string.api_copied)
-    val indexState = produceState<Snapshot?>(initialValue = null) {
-        value = withContext(Dispatchers.IO) {
+    // 两阶段索引发布（性能审计 F1）：白屏不再等反射预算（曾达 3.5~5.6s 串行）——
+    // buildBase 只做非反射阶段（静态解析 + dex 枚举，约 1s 级），发布后列表立即可交互；
+    // completeBuild 在同一 IO 协程内后台补全（用途分类 + 行信息预热，预算上界 2s + 2.5s），
+    // 完成后原子替换进程级快照并刷新本状态（徽章渐进完善，无闪烁）。
+    var snapshot by remember { mutableStateOf<Snapshot?>(null) }
+    LaunchedEffect(Unit) {
+        val base = withContext(Dispatchers.IO) {
             val projectManager = ProjectManager(context)
             val roots = projectManager.listProjects().map { File(it.path) }
-            ApiIndex.build(context, roots)
+            ApiIndex.buildBase(context, roots)
         }
+        snapshot = base
+        withContext(Dispatchers.IO) { ApiIndex.completeBuild() }
+        snapshot = ApiIndex.cached()
     }
 
     var selectedCategory by rememberSaveable { mutableStateOf<ApiCategory?>(null) }
@@ -118,8 +129,8 @@ fun ApiBrowserScreen(
         if (!searchActive) searchBarState.snapTo(0f)
     }
 
-    val snapshot = indexState.value
-    // 正文列表：仅受分类筛选影响，与搜索关键词解耦。同步计算（无输入场景，单次亚毫秒级）。
+    // 正文列表：仅受分类筛选影响，与搜索关键词解耦。同步计算，命中 build 期分类预索引
+    // （O(选中分类条目数)），单次亚毫秒级（性能审计 R3）。
     val bodyList = remember(snapshot, selectedCategory) {
         snapshot?.let { filterSnapshot(it, selectedCategory, "") } ?: emptyList()
     }
@@ -450,16 +461,14 @@ private fun ClassRow(
     onClick: () -> Unit,
     onLongClick: () -> Unit,
 ) {
-    // 行级反射信息（接口判定 + 可加载性）经 IO 线程获取，UI 只读缓存结果；
-    // 命中 build 期预热缓存时开销为 O(1) 查表。失败降级按不可用处理。
-    var info by remember(entry.name) { mutableStateOf<RowInfo?>(null) }
-    LaunchedEffect(entry.name) {
-        info = withContext(Dispatchers.IO) {
-            try {
-                ApiIndex.rowInfo(entry.name)
-            } catch (_: Throwable) {
-                RowInfo(kind = null, loadable = false)
-            }
+    // 行级反射信息（接口判定 + 可加载性）经 rowInfoAsync 获取：命中 build 期预热缓存时 O(1) 查表；
+    // 未命中时单飞计算（NonCancellable，不随行生命周期取消，fling 不重启全 dex 扫描）。
+    // 失败降级按不可用处理。
+    val info by produceState<RowInfo?>(initialValue = null, entry.name) {
+        value = try {
+            ApiIndex.rowInfoAsync(entry.name)
+        } catch (_: Throwable) {
+            RowInfo(kind = null, loadable = false)
         }
     }
     val unavailable = info?.loadable == false
@@ -476,25 +485,22 @@ private fun ClassRow(
                     text = simpleNameOf(entry.name),
                     style = MaterialTheme.typography.bodyMedium,
                     fontFamily = FontFamily.Monospace,
-                    color = if (unavailable) {
-                        MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
-                    } else {
-                        MaterialTheme.colorScheme.onSurface
-                    },
+                    color = MaterialTheme.colorScheme.onSurface,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.weight(1f, fill = false),
                 )
                 Spacer(Modifier.width(8.dp))
+                TypeBadge(entry = entry, info = info)
                 if (unavailable) {
-                    Text(
-                        text = stringResource(R.string.api_unavailable),
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.error,
-                        maxLines = 1,
+                    // 不可用行非文本指示（用户决策）：徽章照常显示，仅追加 error 色调小圆点；
+                    // 禁止文本标签/灰显/中划线等任何文本样式改动。
+                    Spacer(Modifier.width(6.dp))
+                    Box(
+                        modifier = Modifier
+                            .size(6.dp)
+                            .background(MaterialTheme.colorScheme.error, CircleShape),
                     )
-                } else {
-                    TypeBadge(entry = entry, info = info)
                 }
             }
             Spacer(Modifier.height(4.dp))
@@ -581,12 +587,29 @@ private fun simpleNameOf(fqn: String): String {
 
 private fun filterSnapshot(snapshot: Snapshot, category: ApiCategory?, query: String): List<ApiClassEntry> {
     val q = query.trim().lowercase()
-    return snapshot.classes.indices
-        .asSequence()
-        .filter { category == null || snapshot.classes[it].category == category }
-        .filter { q.isEmpty() || snapshot.nameLower[it].contains(q) }
-        .map { snapshot.classes[it] }
-        .toList()
+    val indices = snapshot.categories[category]
+    return if (indices == null) {
+        // 全量（无分类筛选）：查询为空直接返回原表（零拷贝）。
+        if (q.isEmpty()) {
+            snapshot.classes
+        } else {
+            snapshot.classes.indices
+                .asSequence()
+                .filter { snapshot.nameLower[it].contains(q) }
+                .map { snapshot.classes[it] }
+                .toList()
+        }
+    } else {
+        // 分类筛选：O(选中分类条目数)，命中 build 期预索引（性能审计 R3）。
+        if (q.isEmpty()) {
+            indices.map { snapshot.classes[it] }
+        } else {
+            indices.asSequence()
+                .filter { snapshot.nameLower[it].contains(q) }
+                .map { snapshot.classes[it] }
+                .toList()
+        }
+    }
 }
 
 private fun copyToClipboard(context: Context, text: String) {

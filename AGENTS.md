@@ -40,6 +40,24 @@ rg -n "luajava|androlua|loadLibrary" editor/src
   数十毫秒，列表场景（数千条目）会造成 UI 冻结。
 - 列表行反射信息一律经 `produceState` + `Dispatchers.IO` 获取，UI 只读惰性缓存结果；
   全部反射路径必须 `try/catch(Throwable)` 降级（含负缓存），且带时间预算上界。
+- **两阶段构建**：`buildBase()` 只做非反射阶段（静态表解析 + dex 枚举 + 预索引），快速发布
+  基础快照；`completeBuild()` 后台补全反射阶段（`assignUsages` + `warmUpRowInfo`，预算上界
+  2s+2.5s）并原子替换完整快照。两者均须在 IO 线程调用；buildBase/completeBuild/invalidate
+  内部互斥（`buildLock`），禁止绕开锁直接读写快照字段（性能审计 F1/R5a）。
+- **行级单飞**：列表行必须经 `rowInfoAsync`（suspend）获取——快路径同步读缓存，
+  慢路径 `NonCancellable + IO` 内 CHM `getOrPut` 单飞 compute；禁止在行 `LaunchedEffect`
+  里直接 `rowInfo`（计算随行生命周期取消 → fling 反复全 dex 扫描，性能审计 R2）。
+- **不可用行呈现（用户决策）**：禁止「不可用」文本标签、禁止对 API 文本灰显/中划线等
+  任何文本样式改动；只用非文本指示（徽章旁 6dp error 色调圆点），徽章照常显示。
+
+## API 浏览器索引快照契约
+
+- `Snapshot` 的 `categories`（分类 → 索引，build 期一次预分组）与 `categoryCounts`（eager）
+  为内部优化面，过滤必须走预索引（O(选中子集)），禁止在 UI 线程对全量 entries 做 O(n) 过滤
+  （性能审计 R3）；`usageCounts` 已删除（用途仅作徽章，不做筛选维度）。
+- 详情页三态：`ApiReflection.reflect` 必须经 `ApiIndex.isLoadable` 共享行级缓存判定（R5c）；
+  详情显示层必须用 `DetailUiState`（Loading/Loaded/Failed），反射失败显示
+  `api_detail_failed` + 重试，禁止误用「无结果」文案或无限转圈（R5d）。
 
 ## API 浏览器搜索语义红线（冻结审计结论，详见 docs/planned/API_BROWSER_FREEZE_FIX_PLAN.md）
 
