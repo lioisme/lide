@@ -17,6 +17,8 @@ import kotlinx.coroutines.withContext
 import com.lioisme.delua.engine.RunEngineLauncher
 import com.lioisme.delua.model.Project
 import com.lioisme.delua.project.ProjectManager
+import com.lioisme.delua.ui.screen.ApiBrowserScreen
+import com.lioisme.delua.ui.screen.ApiClassDetailScreen
 import com.lioisme.delua.ui.screen.BuildApkScreen
 import com.lioisme.delua.ui.screen.EditorScreen
 import com.lioisme.delua.ui.screen.ExamplesScreen
@@ -42,6 +44,8 @@ object Routes {
     const val PLUGINS = "plugins"
     const val MANUAL = "manual"
     const val EXAMPLES = "examples"
+    const val API_BROWSER = "apibrowser"
+    const val API_CLASS_DETAIL = "apibrowser/{className}"
 
     fun editor(project: Project): String {
         return "editor/${enc(project.name)}/${enc(project.path)}?fileName=${enc(project.mainFile)}"
@@ -57,6 +61,10 @@ object Routes {
 
     fun buildApk(project: Project): String {
         return "buildapk?projectName=${enc(project.name)}&projectPath=${enc(project.path)}"
+    }
+
+    fun apiClassDetail(className: String): String {
+        return "apibrowser/${enc(className)}"
     }
 
     fun enc(s: String) = URLEncoder.encode(s, "UTF-8")
@@ -124,6 +132,9 @@ fun DeluaNavHost(
                 onExamplesClick = {
                     navController.navigate(Routes.EXAMPLES)
                 },
+                onApiBrowserClick = {
+                    navController.navigate(Routes.API_BROWSER)
+                },
                 refreshKey = projectInfoVersion,
                 pendingImportPaths = pendingImportPaths,
             )
@@ -177,6 +188,31 @@ fun DeluaNavHost(
                 onPermissionsClick = { navController.navigate(Routes.PERMISSIONS) },
                 onPluginsClick = { navController.navigate(Routes.PLUGINS) },
                 onManualClick = { navController.navigate(Routes.MANUAL) },
+                onApiBrowserClick = { navController.navigate(Routes.API_BROWSER) },
+            )
+        }
+        slideComposable(route = Routes.API_BROWSER) {
+            ApiBrowserScreen(
+                onBack = { navController.popBackStack() },
+                onClassClick = { className ->
+                    navController.navigate(Routes.apiClassDetail(className))
+                },
+            )
+        }
+        slideComposable(
+            route = Routes.API_CLASS_DETAIL,
+            arguments = listOf(
+                navArgument("className") { type = NavType.StringType },
+            ),
+        ) { backStackEntry ->
+            val className = Routes.dec(backStackEntry.arguments?.getString("className"))
+            if (className.isBlank()) {
+                LaunchedEffect(Unit) { navController.popBackStack() }
+                return@slideComposable
+            }
+            ApiClassDetailScreen(
+                className = className,
+                onBack = { navController.popBackStack() },
             )
         }
         slideComposable(route = Routes.MANUAL) {

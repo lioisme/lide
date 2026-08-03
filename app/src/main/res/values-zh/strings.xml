@@ -240,4 +240,34 @@
     <string name="cd_open_file_tree">打开文件树</string>
     <string name="cd_search">搜索</string>
     <string name="accessibility_service_description">Delua 无障碍服务：为 Lua 脚本提供自动化能力（点击、滑动、截图）。</string>
+    <!-- API 浏览器（WP-008） -->
+    <string name="api_browser">API 浏览器</string>
+    <string name="api_browser_subtitle">浏览 Lua 可调用的 Java 类</string>
+    <string name="api_search_hint">搜索类名…</string>
+    <string name="api_member_filter_hint">过滤成员…</string>
+    <string name="api_loading">正在构建索引…</string>
+    <string name="api_no_result">无匹配结果</string>
+    <string name="api_unavailable">当前设备不可用</string>
+    <string name="api_copied">已复制到剪贴板</string>
+    <string name="api_group_constructors">构建方法</string>
+    <string name="api_group_events">公有事件</string>
+    <string name="api_group_getters">公有 getter</string>
+    <string name="api_group_setters">公有 setter</string>
+    <string name="api_group_fields">公有字段</string>
+    <string name="api_group_methods">公有方法</string>
+    <string name="api_native_module_desc">原生 C 模块。其函数表仅在引擎运行期 luaopen_* 之后存在于 Lua 内存中，无法静态识别。</string>
+    <string name="api_category_all">全部</string>
+    <string name="api_category_common">常用控件</string>
+    <string name="api_category_material">谷歌质感库控件</string>
+    <string name="api_category_androidx">AndroidX 控件</string>
+    <string name="api_category_r">R 资源类</string>
+    <string name="api_category_androlua">AndroLua 扩展</string>
+    <string name="api_category_framework">Android 框架</string>
+    <string name="api_category_java">Java 标准库</string>
+    <string name="api_category_project">工程库</string>
+    <string name="api_category_native">原生库</string>
+    <string name="api_category_other">其他</string>
+    <string name="cd_api_browser">API 浏览器</string>
+    <string name="api_filter">按 分 类 筛 选</string>
+    <string name="api_clear_search">清 空 搜 索</string>
 </resources>

@@ -229,3 +229,15 @@
 - docs/reference/project/看板娘/ 与示例 uild-scripts/examples-src/live2d/：已删除 pro 回退代码（import "jp.live2d.*"、SoundManager/FileManager/LAppLive2DManager 分支）与资产（libs/live2D.dex），仅支持 delua 原生库 liblive2d.so（equire "live2dapp" 失败即明确报错退出）。
 - 真机回归全 PASS：haru→shizuku→wanko→haru_01+02 四分支轮换、tap/flick 交互、FPS 60 glErr=0、无 Runtime error。
 - live2dapp.lua 内 dex @xxx 实证 注释为行为来源标注（官方 v2 引擎语义），非 pro 兼容代码，保留。
+
+## 34. Kotlin KDoc 里写 `libs/*.dex` / `libs/*.so` 会开启嵌套块注释（⚠仅 delua 源码编写）
+
+- 现象：文件从 KDoc 中 `libs/*.dex` 处开始被注释"吞噬"，编译器报 `Unclosed comment`（错误行号指向文件 EOF 之外，极具迷惑性），该文件后续所有声明全部消失 → 其他文件连锁 `Unresolved reference`。
+- 根因：Kotlin 块注释可嵌套，`/*` 字节序列在注释内会开启嵌套注释；`libs/*.dex` 中的 `/*`（`s/` + `*`）恰好构成开启符，而文本内无对应 `*/` 闭合 → 外层注释永不闭合。
+- 规避：KDoc 中引用 glob 模式一律写成 `libs/ 下 dex|jar`（或转义），禁止出现 `/*` 字节序列；已修复于 `ApiIndex.kt`（2026-08-02）。
+- 验证：编译报错消失；排查手段 = 对源码文件做字节级 `/*` 与 `*/` 计数（不相等即存在嵌套开口），`rg` 等文本工具看不见此问题。
+
+## 35. 宿主 API 浏览器对工程 libs 的识别边界（⚠仅 delua，与 §7 互补）
+
+- 事实：`dex|jar` → 类名级全量识别（入「工程库」分类）；`lib*.so` → 仅模块名级（入「原生库」分类）；函数级不可静态获取（C 模块函数表只存在于 Lua 运行时内存，枚举需执行不可信代码——已否决，见 `docs/planned/API_BROWSER_AUDIT_REPORT.md` §4）。
+- 判定：浏览器「工程库/原生库」分类计数随 `<project>/libs/` 内容变化；`.so` 只展示 `require "模块名"` 与说明文案，不承诺函数列表。

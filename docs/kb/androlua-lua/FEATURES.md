@@ -51,6 +51,7 @@ bson、canvas、cjson、crypt、gl、luajava、luv、md5、mime、regex、sensor
 | 内置示例 | 顶栏「示例」入口（MenuBook 图标）→ `ExamplesScreen.kt`：6 个内置 `.alp`（demo / DemoProject / kleinbottle / TestJson / hello / listview），一键导入/重新导入，已导入徽标；导入复用 `AlpManager.import`（与用户导入同路径、同覆盖语义） | `assets/examples/*.alp`（`make-examples.ps1` 从 `build-scripts/examples-src/` 生成） |
 | 代码编辑器 | sora-editor 引擎 + TextMate（Lua 高亮）、行级词法诊断、补全、自动保存 | `:editor` |
 | 构建 APK | 独立打包器（D-10 已开工：`LuaCompiler`/`AXmlManifest`/`ApkBuilder`/`ApkSigner`/`V2Signer`/`BuildApkScreen`） | `:app` |
+| Java API 浏览器 | 顶栏 GridView 按钮 + 设置页入口；类表 4,196 条（pro 平移 + material/androidx 扩展）+ 宿主 dex 动态枚举 + **工程 libs 自动识别**：`libs/*.dex|jar` 类名级入「工程库」分类、`libs/lib*.so` 模块名级入「原生库」分类（函数级不做，见审计报告 §4）；九分类筛选、搜索、反射详情（事件推导 `setOnXxxListener→onXxx`）、长按复制 | `:app` `apibrowser/` |
 
 ## 9. pro 有而 delua 无（⚠仅pro，`import` 会失败，属"pro 独有能力"不是 bug）
 

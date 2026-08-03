@@ -242,4 +242,34 @@
     <string name="cd_open_file_tree">Open file tree</string>
     <string name="cd_search">Search</string>
     <string name="accessibility_service_description">Delua 无障碍服务：为 Lua 脚本提供自动化能力（点击、滑动、截图）。</string>
+    <!-- API browser (WP-008) -->
+    <string name="api_browser">API Browser</string>
+    <string name="api_browser_subtitle">Browse Java classes exposed to Lua</string>
+    <string name="api_search_hint">Search class name…</string>
+    <string name="api_member_filter_hint">Filter members…</string>
+    <string name="api_loading">Building index…</string>
+    <string name="api_no_result">No matching results</string>
+    <string name="api_unavailable">Unavailable on this device</string>
+    <string name="api_copied">Copied to clipboard</string>
+    <string name="api_group_constructors">Constructors</string>
+    <string name="api_group_events">Public Events</string>
+    <string name="api_group_getters">Public Getters</string>
+    <string name="api_group_setters">Public Setters</string>
+    <string name="api_group_fields">Public Fields</string>
+    <string name="api_group_methods">Public Methods</string>
+    <string name="api_native_module_desc">Native C module. Its function table only exists inside the engine runtime after luaopen_*, so it cannot be introspected statically.</string>
+    <string name="api_category_all">All</string>
+    <string name="api_category_common">Common Widgets</string>
+    <string name="api_category_material">Material Components</string>
+    <string name="api_category_androidx">AndroidX</string>
+    <string name="api_category_r">R Resources</string>
+    <string name="api_category_androlua">AndroLua Extensions</string>
+    <string name="api_category_framework">Android Framework</string>
+    <string name="api_category_java">Java Standard Library</string>
+    <string name="api_category_project">Project Libraries</string>
+    <string name="api_category_native">Native Libraries</string>
+    <string name="api_category_other">Other</string>
+    <string name="cd_api_browser">API Browser</string>
+    <string name="api_filter">Filter by category</string>
+    <string name="api_clear_search">Clear search</string>
 </resources>

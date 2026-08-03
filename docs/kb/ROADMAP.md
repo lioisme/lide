@@ -25,13 +25,14 @@
 ## 2. 宿主 IDE 功能补全（PARITY-COMPLETION 剩余 WP）
 
 > 6/19 已完成（WP-001 编译修复、WP-002 运行诊断闭环、WP-003 user_permission、WP-004 工程属性页、WP-017 解析结构化、WP-019 测试骨架）。
+> 2026-08-02：WP-008（Java API 浏览器）✅ 已落地，详见 `docs/planned/API_BROWSER_AUDIT_REPORT.md` §8（资产/数据层/UI/导航全量交付，x64 debug 构建通过）。
 
 | WP | 标题 | 优先级 | 建议批次 |
 |----|------|--------|---------|
 | WP-005 | 编辑器文件操作 + 工程重命名（文件树新建/重命名/删除，联动 EditorSession） | P1 | 批 3 |
 | WP-006 | 查错 / 格式化 / 函数导航 / gotoLine（查错 = EngineActivity check 模式，`:app`；格式化/导航 = `:editor`） | P1 | 批 3 |
-| WP-007 | 导入分析（fiximport）+ 错误建议 import（类表数据源 = 平移 pro `android.lua` 4510 行） | P1 | 批 4 |
-| WP-008 | Java API 浏览器（类表 + 反射详情，事件推导规则对齐 pro） | P1 | 批 4 |
+| WP-007 | 导入分析（fiximport）+ 错误建议 import（类表数据源 = 平移 pro `android.lua` 4510 行 → **共享 WP-008 已落地的 `assets/javaapi/android.lua` 4196 条**） | P1 | 批 4 |
+| WP-008 | Java API 浏览器（类表 + 反射详情，事件推导规则对齐 pro） → **✅ 已落地并归档（2026-08-02，ACC 1/2/4~7 通过、ACC-3 环境受阻，见 §2.1 与 `API_BROWSER_AUDIT_REPORT.md` §6.1/§8）** | P1 | 批 4 |
 | WP-009 | 布局助手（9-A 预览 / 9-B 属性编辑 / 9-C 拖拽 + XML 转换器，分期独立立项） | P1 | 批 5 |
 | WP-010 | 最近文件 / 继续上次（AppStateStore：上次工程 + 标签 + 光标，上限 50） | P1 | 批 4 |
 | WP-011 | 日志查看器（logcat 过滤；API 29+ READ_LOGS 受限 → 默认本进程日志） | P1 | 批 5 |

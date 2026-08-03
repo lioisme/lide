@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.FileDownload
 import androidx.compose.material.icons.filled.FileUpload
 import androidx.compose.material.icons.filled.Folder
+import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.material.icons.filled.Settings
@@ -50,6 +51,7 @@ fun ProjectListScreen(
     onProjectInfoClick: (Project) -> Unit = {},
     onSettingsClick: () -> Unit,
     onExamplesClick: () -> Unit = {},
+    onApiBrowserClick: () -> Unit = {},
     refreshKey: Int = 0,
     pendingImportPaths: List<String> = emptyList(),
 ) {
@@ -158,6 +160,12 @@ fun ProjectListScreen(
                         onClick = onExamplesClick,
                     ) {
                         Icon(Icons.Default.MenuBook, contentDescription = stringResource(R.string.examples))
+                    }
+                    TipIconButton(
+                        tooltip = stringResource(R.string.api_browser),
+                        onClick = onApiBrowserClick,
+                    ) {
+                        Icon(Icons.Default.GridView, contentDescription = stringResource(R.string.api_browser))
                     }
                     TipIconButton(
                         tooltip = stringResource(R.string.import_alp),

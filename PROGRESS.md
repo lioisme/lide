@@ -335,3 +335,18 @@ CI 包含四个 Job：
 - `adb install -r` 保留 appops 与 /sdcard 工程数据；`adb uninstall` 报 DELETE_FAILED_INTERNAL_ERROR 时用覆盖安装。
 
 **决策**：D-16（反转 D-03）——示例资产化 .alp + 导入界面替代 assets/samples 首启解包。
+
+---
+
+## WP-008：Java API 浏览器（2026-08-02 落地，2026-08-02 模拟器验收归档）
+
+**目标**：对齐 pro 4.4.2 的 Java 方法浏览器（assets/javaapi 纯 Lua 资产工程），并按用户需求超越 pro：自动分类筛选（全部 / 谷歌质感库控件 / AndroidX 控件 / R 资源类 / 常用控件 / Android 框架 / Java 标准库 / AndroLua 扩展 / 工程库 / 原生库）。详见 `docs/planned/API_BROWSER_AUDIT_REPORT.md`（§0 结论 + §6 验收结果 + §8 实施记录）。
+
+**完成内容**：
+- 类表资产：`assets/javaapi/android.lua`（pro 4,124 条平移 + 74 条 material/androidx 精选扩展 = 4,196 条；WP-007 fiximport 可共享）
+- 数据层 `apibrowser/`：`ApiCategory`（9 类枚举）、`ApiIndex`（静态类表 + 宿主 dex 动态枚举 + 工程 libs dex|jar + lib*.so 模块名 + R 类反射补齐，进程级快照缓存）、`ApiCategoryClassifier`（顺序敏感自动分类）、`ApiReflection`（六分组反射 + setOnXxxListener→onXxx 事件推导）
+- UI：`ApiBrowserScreen`（分类 chips 含计数 + 即时搜索 + 长按复制）、`ApiClassDetailScreen`（分组明细 + 成员过滤 + 长按复制）
+- 导航：`Routes.API_BROWSER` / `API_CLASS_DETAIL`；入口 = 设置页「API 浏览器」+ 工程列表顶栏 GridView 按钮
+- `:editor` 零改动（R1 门禁保持零命中）
+
+**验收状态**：模拟器（emulator-5554，x64 debug）已归档——ACC-1 ✅ / ACC-2 ✅ / ACC-3 ⚠️ 环境受阻（ROM 存储沙箱拒绝外部放置 libs 文件，见审计报告 §6.1）/ ACC-4 ✅ / ACC-5 ✅ / ACC-6 ✅ / ACC-7 ✅（R8 release 构建通过）。

@@ -52,3 +52,5 @@ docs/kb/androlua-lua/
 | 2026-08-02 | 架构审计：引擎 .so 携带 Java JNI 桥残留（jp_live2d_sample_Live2DNative）已安全恢复（删 jni 桥 + Android.mk + mOwnDrag 死字段，重建 .so 并回归）；红线：引擎模块只允许 luaopen_* 入口（PITFALLS 27） | PITFALLS.md |
 | 2026-08-02 | 运行环境全量对齐终审：L1 脚本（check.lua CRLF 修复、逐字节一致）/ L2 原生库（lfs/lsqlite3 误移除教训：源码树 Android.mk2 不等于官方 APK 打包，以设备 APK 为准；PITFALLS 28）/ L3 Java（LuaAccessibilityService 补 stopScreenshot，PITFALLS 29）/ L4 宿主；x64 双端实测 test 探针 81 项 diff 全为白名单、demo/DemoProject/testjson/kleinbottle 全一致 | PITFALLS.md, README.md |
 | 2026-08-02 | 真机回归（CPH2415 arm64/Adreno）：GLSL #version 120 被拒 → 改 100（PITFALLS 新条目）；看板娘工程去 pro 化（删 jp.live2d.* 分支 + live2D.dex）；真机环境事实 | PITFALLS.md |
+| 2026-08-02 | 宿主 API 浏览器落地（WP-008）：工程 libs 类自动识别（dex|jar → 类名，.so → 模块名）入「工程库/原生库」分类；KDoc 内 `libs/*.dex` 字样会开嵌套注释的 Kotlin 编译坑（PITFALLS 新条目）；详见 docs/planned/API_BROWSER_AUDIT_REPORT.md §8 | FEATURES.md, PITFALLS.md |
+| 2026-08-02 | WP-008 模拟器验收归档：ACC-1/2/4~7 通过；ACC-3 环境受阻（模拟器 ROM FUSE 沙箱拒绝外部放置的 libs 文件——chown 应用 uid/重启后仍 Permission denied，工程库 (0)；该限制同时影响宿主引擎读工程 libs，属环境既有问题）；冷启动 ≤3.5s 可交互；R8 release 构建通过 | API_BROWSER_AUDIT_REPORT.md §6.1 |

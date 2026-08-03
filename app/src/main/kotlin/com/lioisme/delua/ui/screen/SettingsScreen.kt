@@ -43,6 +43,7 @@ import com.lioisme.delua.editor.TipIconButton
 import com.lioisme.delua.i18n.LocaleManager
 import com.lioisme.delua.ui.theme.*
 import androidx.compose.material.icons.filled.Extension
+import androidx.compose.material.icons.filled.GridView
 
 private val colorOptions = listOf(
     0xFFF44336, 0xFFE91E63, 0xFF9C27B0, 0xFF673AB7,
@@ -54,7 +55,13 @@ private val colorOptions = listOf(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen(onBack: () -> Unit, onPermissionsClick: () -> Unit = {}, onPluginsClick: () -> Unit = {}, onManualClick: () -> Unit = {}) {
+fun SettingsScreen(
+    onBack: () -> Unit,
+    onPermissionsClick: () -> Unit = {},
+    onPluginsClick: () -> Unit = {},
+    onManualClick: () -> Unit = {},
+    onApiBrowserClick: () -> Unit = {},
+) {
     val context = LocalContext.current
     val activity = context.resolveActivity()
     val config by SettingsManager.themeConfig.collectAsState()
@@ -146,6 +153,12 @@ fun SettingsScreen(onBack: () -> Unit, onPermissionsClick: () -> Unit = {}, onPl
             }
             Spacer(Modifier.height(24.dp))
             SettingsSection(stringResource(R.string.general)) {
+                SettingsItem(
+                    icon = Icons.Default.GridView,
+                    title = stringResource(R.string.api_browser),
+                    subtitle = stringResource(R.string.api_browser_subtitle),
+                    onClick = onApiBrowserClick,
+                )
                 SettingsItem(
                     icon = Icons.Default.Language,
                     title = stringResource(R.string.language),
