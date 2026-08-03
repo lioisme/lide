@@ -30,5 +30,9 @@ classes.jar
 # (Gradle task :app:generateExamples); never commit the generated archives.
 app/src/main/assets/examples/*.alp
 
+# Engine native libs: built solely from vendored C sources in build-scripts/jni/
+# via scripts/rebuild_engine.ps1|.sh (see CI build jobs); NEVER commit binaries.
+app/src/main/jniLibs/
+
 # Downloaded reference projects (never committed)
 docs/reference/

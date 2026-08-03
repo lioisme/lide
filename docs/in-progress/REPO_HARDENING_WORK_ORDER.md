@@ -70,6 +70,7 @@
 | T7 | P2 | 移除 `.class` 补丁编译产物（保留源码+说明） | — | ✅ 已完成 |
 | T8 | P2 | 依赖锁定/校验（可行性按执行结果定） | T4 | ✅ 已完成（结论：不引入） |
 | T9 | P0 | 最终验证：R1 grep + 编译 + 单测 + 干净 clone 完全从源码构建 | T1~T8 | ✅ 已完成 |
+| T10 | P0 | 二进制禁入：`.so` 全部出库、jniLibs 转构建输出、CI 先 rebuild 再 assemble | T9 | ✅ 已完成 |
 
 ---
 
@@ -323,6 +324,37 @@
 
 ---
 
+### T10 — 二进制禁入：仓库零二进制原生产物 【P0】
+
+**背景（用户决策，2026-08-04）**：宿主为 Kotlin/Java，要求**所有原生库以源码形式存在于源码目录**；
+禁止任何二进制 `.so`、预编译 `.dex`、`.jar`、`.zip` 入库；`.alp` 例外（可作为工程包直接存在）。
+
+**范围**：
+- `git rm --cached` 移除全部 51 个 `app/src/main/jniLibs/*.so`（引擎库不再入库）
+- `app/src/main/jniLibs/` 加入 `.gitignore`（转为纯构建输出，由 `scripts/rebuild_engine.*` 从 `build-scripts/jni/` vendored 源码产出）
+- CI 三个打包类 job（arm64 / x86_64 / verify-release）在 `assemble` 前先 setup NDK 26.1 并跑 `rebuild_engine.sh <abi>`（完全从源码）
+- `rebuild-engine` 手动 job 移除过时的 d8 步骤与「上传 jniLibs 产物」步骤，改为重建后校验 `git ls-files '*.so'` 为零
+- 文档同步：AGENTS.md 新增 **R5 二进制禁入硬规则**（含验证命令）、README 新增「二进制策略」章节、本工作订单登记
+
+**验收标准**：
+- `git ls-files '*.so' '*.dex' '*.zip'` 为空
+- `git ls-files '*.jar'` 仅剩 `gradle/wrapper/gradle-wrapper.jar`（官方引导例外）
+- 本地 `rebuild_engine.ps1 arm64-v8a` + `assembleArm64Debug` 成功，APK 含引擎 `.so`
+- R1 红线零命中
+
+**完成状态**：【✅ 已完成】 简述：
+
+| 项 | 结果 |
+|---|---|
+| 出库 | `git rm -r --cached app/src/main/jniLibs`（51 个 `.so` 全出库；磁盘文件保留为构建输出，已 ignore） |
+| gitignore | `app/src/main/jniLibs/` 加入 `.gitignore`（注释：仅由 rebuild_engine 从 vendored 源码产出，永不提交二进制） |
+| CI | arm64 / x86_64 / verify-release 三个 job 均新增「NDK 26.1 安装 + rebuild_engine.sh \<abi\>」步骤；`rebuild-engine` job 移除 d8 步骤与 jniLibs 上传，改为二进制跟踪校验 |
+| 规则落地 | AGENTS.md 新增 **R5**（禁止 `.so`/`.dex`/`.jar`/`.zip` 入库，wrapper jar 例外，`.alp` 例外；验证命令 3 条）；README 新增「二进制策略」章节 |
+| 本地验证 | `rebuild_engine.ps1 arm64-v8a`（NDK 29）16/16 模块成功 → `assembleArm64Debug` BUILD SUCCESSFUL，APK 含 17 引擎 `.so` + liblive2d.so + androidx.graphics.path（Maven AAR 自带，非仓内）；R1 零命中；`git check-ignore jniLibs/*.so` 通过 |
+| 验收 | `git ls-files '*.so' '*.dex' '*.zip'` = 0；`git ls-files '*.jar'` 仅 wrapper jar |
+
+---
+
 ## 4. 验证命令索引（贯穿全程）
 
 ```powershell
@@ -363,3 +395,4 @@ git ls-files --eol
 | 2026-08-04 | **T8**（锁定实测：--write-locks 120KB/模块噪音，全固定版本 → 不引入，登记替代方案） | opencode |
 | 2026-08-04 | **T9 完成**（干净 clone 完全从源码构建：16/16 模块 .so + assembleArm64Debug + 61 单测全绿 + R1 零命中；提交 2885ef81） | opencode |
 | 2026-08-04 | 终审报告落盘 docs/completed/ | opencode |
+| 2026-08-04 | **T10 完成**（二进制禁入：51 `.so` 全出库、jniLibs 转构建输出、CI 先 rebuild、AGENTS.md R5 + README 策略） | opencode |

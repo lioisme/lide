@@ -1,8 +1,9 @@
 # lide — Android 端 Lua 脚本 IDE / 运行时
 
 lide 是 AndroLua 衍生项目：Kotlin + Jetpack Compose 实现的宿主 IDE（`:app`，位于 `app/`），
-内置 sora 编辑器模块（`:editor`），以 AndroLua C 原生引擎（`third_party/androlua` 运行时 + `app/src/main/jniLibs/` 原生库，源码 vendor 于 `build-scripts/jni/`）作为
-Lua 编译与运行底座，工程格式兼容 AndroLua `.alp` 规范。
+内置 sora 编辑器模块（`:editor`），以 AndroLua C 原生引擎的源码 vendor（`build-scripts/jni/`）构建库作为
+Lua 编译与运行底座（构建时经 `scripts/rebuild_engine.*` 从源码产出 `app/src/main/jniLibs/`），
+工程格式兼容 AndroLua `.alp` 规范。
 
 > 进入任何开发工作前，先读 [AGENTS.md](AGENTS.md)（评审硬门槛与架构边界）与
 > [docs/README.md](docs/README.md)（文档中心入口）。
@@ -38,8 +39,14 @@ Lua 编译与运行底座，工程格式兼容 AndroLua `.alp` 规范。
 .\gradlew.bat :app:compileArm64DebugKotlin   # Kotlin 编译检查
 .\gradlew.bat :app:assembleArm64Debug        # 完整构建（arm64）
 .\build-apks.ps1                             # 4 个变体 APK（x64/arm64 × Debug/Release）
-.\scripts\rebuild_engine.ps1 all            # 从 C 源码重建原生引擎并同步到 jniLibs/
+.\scripts\rebuild_engine.ps1 all            # 从 C 源码（build-scripts/jni/）重建原生引擎到 jniLibs/
 ```
+
+## 二进制策略
+
+- **仓库禁止任何二进制原生产物**：原生库一律以源码形式存在于 `build-scripts/jni/`（C/Kotlin 宿主不携带 `.so`/`.dex`/`.jar`/`.zip`）。
+- `app/src/main/jniLibs/` 为 **纯构建输出**（gitignore），仅由 `scripts/rebuild_engine.ps1|.sh` 从 vendored 源码产出；CI 各 build job 在 `assemble` 前先重建引擎。
+- 例外：`gradle/wrapper/gradle-wrapper.jar`（Gradle 官方引导，非宿主产物）；`.alp` 作为工程包可直接存在（构建时由 `:app:generateExamples` 从 `build-scripts/examples-src/` 生成）。
 
 ## 约定
 

@@ -44,6 +44,13 @@
 - `2885ef81`：仓库硬化：源码可完全从仓库构建（T1-T8）
 - 本报告随同 `docs/in-progress/REPO_HARDENING_WORK_ORDER.md` 一并落盘。
 
+## 4b. T10 二进制禁入（2026-08-04 追加）
+
+- 用户决策：宿主 Kotlin/Java，原生库一律源码入库；禁止 `.so`/`.dex`/`.jar`/`.zip`；`.alp` 例外。
+- 51 个 `app/src/main/jniLibs/*.so` 全部出库；jniLibs 转纯构建输出（gitignore），仅由 `scripts/rebuild_engine.*` 从 `build-scripts/jni/` 源码产出。
+- CI 三个打包 job 均改为 assemble 前先 rebuild；AGENTS.md 新增 R5 硬规则与验证命令。
+- 验收：`git ls-files '*.so' '*.dex' '*.zip'` 为空；`git ls-files '*.jar'` 仅 wrapper jar（官方引导例外）。
+
 ## 5. 验收断言
 
 - [x] 干净 clone 可从源码完整构建（引擎 .so + Gradle APK）

@@ -2,7 +2,7 @@
 
 本项目为「纯编辑器模块 + 宿主运行时」双层架构。以下规则是评审硬门槛，违反视为严重缺陷。
 
-## 架构边界（R1–R4）
+## 架构边界（R1–R5）
 
 - **R1** `:editor`（包 `com.lioisme.lide.editor`）禁止出现 `com.androlua`、`com.luajava`、
   `System.loadLibrary`、jniLibs；其 `build.gradle.kts` 禁止依赖 `:androlua`。
@@ -11,11 +11,17 @@
   编辑器只做文本级能力（行级词法诊断、补全、高亮、搜索），不做运行时语义。
 - **R3** 新增编辑器功能默认放 `:editor`；宿主专属逻辑（文件、权限、运行时、设置持久化）放 `:app`。
 - **R4** `:editor` 不得读取 `:app` 的任何状态或类型；宿主依赖一律通过参数 / 接口注入。
+- **R5** 仓库禁止任何二进制原生产物入库：`.so`/`.dex`/`.jar`（`gradle/wrapper/gradle-wrapper.jar` 引导例外）
+  /`.zip` 一律不得 `git add`；原生引擎唯一允许形态是源码（vendor 于 `build-scripts/jni/`），
+  `app/src/main/jniLibs/` 是 `scripts/rebuild_engine.*` 的构建输出（gitignore），CI 在 `assemble` 前必须先重建。
+  例外：`.alp` 作为工程包可直接存在（构建时由 `:app:generateExamples` 从 `build-scripts/examples-src/` 生成）。
 
-验证命令（必须零命中）：
+验证命令（以下必须全部成立）：
 
 ```
 rg -n "luajava|androlua|loadLibrary" editor/src
+git ls-files '*.so' '*.dex' '*.zip'
+git ls-files '*.jar' | grep -v 'gradle/wrapper/gradle-wrapper.jar'
 ```
 
 ## 构建与验证

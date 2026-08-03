@@ -75,6 +75,19 @@ jobs:
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
 
+      - name: Set up Android NDK
+        run: |
+          echo "ANDROID_NDK_HOME=$ANDROID_SDK_ROOT/ndk/26.1.10909125" >> $GITHUB_ENV
+
+      - name: Install NDK component
+        run: |
+          yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --install 'ndk;26.1.10909125'
+
+      - name: Rebuild native engine from vendored sources
+        run: |
+          chmod +x scripts/rebuild_engine.sh
+          ./scripts/rebuild_engine.sh arm64-v8a
+
       - name: Build ARM64 debug APK
         run: ./gradlew assembleArm64Debug
 
@@ -102,6 +115,19 @@ jobs:
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
 
+      - name: Set up Android NDK
+        run: |
+          echo "ANDROID_NDK_HOME=$ANDROID_SDK_ROOT/ndk/26.1.10909125" >> $GITHUB_ENV
+
+      - name: Install NDK component
+        run: |
+          yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --install 'ndk;26.1.10909125'
+
+      - name: Rebuild native engine from vendored sources
+        run: |
+          chmod +x scripts/rebuild_engine.sh
+          ./scripts/rebuild_engine.sh x86_64
+
       - name: Build x86_64 debug APK
         run: ./gradlew assembleX64Debug
 
@@ -128,6 +154,19 @@ jobs:
 
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
+
+      - name: Set up Android NDK
+        run: |
+          echo "ANDROID_NDK_HOME=$ANDROID_SDK_ROOT/ndk/26.1.10909125" >> $GITHUB_ENV
+
+      - name: Install NDK component
+        run: |
+          yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --install 'ndk;26.1.10909125'
+
+      - name: Rebuild native engine from vendored sources
+        run: |
+          chmod +x scripts/rebuild_engine.sh
+          ./scripts/rebuild_engine.sh arm64-v8a
 
       - name: Build release + verify Lua-visible API surface
         run: ./gradlew verifyReleaseLuaSurface
@@ -158,20 +197,13 @@ jobs:
         run: |
           yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --install 'ndk;26.1.10909125'
 
-      - name: Rebuild native libs
+      - name: Rebuild native libs from vendored sources
         run: |
           chmod +x scripts/rebuild_engine.sh
           ./scripts/rebuild_engine.sh all
 
-      - name: Install d8 (DEX compiler)
+      - name: Verify no binaries are tracked
         run: |
-          echo "d8 is bundled with Android SDK build-tools"
-          echo "Checking for d8..."
-          which d8 || find $ANDROID_SDK_ROOT -name "d8" -type f 2>/dev/null
-
-      - name: Upload rebuilt artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: native-libs
-          path: |
-            app/src/main/jniLibs/
+          test "$(git ls-files '*.so' | wc -l)" = "0"
+          test "$(git ls-files '*.jar' | grep -v 'gradle/wrapper/gradle-wrapper.jar' | wc -l)" = "0"
+          echo "OK: no binary .so/.dex/.jar tracked (wrapper jar exempt)"
