@@ -51,6 +51,14 @@
 - CI 三个打包 job 均改为 assemble 前先 rebuild；AGENTS.md 新增 R5 硬规则与验证命令。
 - 验收：`git ls-files '*.so' '*.dex' '*.zip'` 为空；`git ls-files '*.jar'` 仅 wrapper jar（官方引导例外）。
 
+## 4c. T11 源码归一 + AGP 原生构建（2026-08-04 追加）
+
+- 用户决策：原生库源码全部移入 Kotlin 项目源码子目录 `app/src/main/cpp/`（AGP 官方 ndk 源码目录）。
+- 引擎 16 模块 + live2d + patches 全部 `git mv` 归档；`live2d/Android.mk` 去除 PREBUILT luajava（同树模块）。
+- 构建改为 AGP `externalNativeBuild`（ndk-build）直建：`ndkVersion = 29.0.14206865`；删除
+  `scripts/rebuild_engine.ps1|.sh` 与 jniLibs 缓存机制；CI 只装 NDK 后直接 assemble。
+- 验收：arm64/x64 APK 各含 19 `.so`（引擎 + live2d + androidx.graphics AAR）；R1 与二进制红线零命中；单测全绿。
+
 ## 5. 验收断言
 
 - [x] 干净 clone 可从源码完整构建（引擎 .so + Gradle APK）

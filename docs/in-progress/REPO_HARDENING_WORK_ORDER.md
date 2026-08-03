@@ -355,6 +355,44 @@
 
 ---
 
+### T11 — 源码归一：原生源码迁入 `app/src/main/cpp/` + 接入 AGP externalNativeBuild 【P0】
+
+**背景（用户决策，2026-08-04）**：宿主为 Kotlin/Java，要求原生库源码**全部**放进 Kotlin 项目源代码的
+一个子目录下、遵循官方规范。选择：统一归档进 `app/src/main/cpp/`（AGP 官方 ndk 源码目录），
+构建方式遵循官方约定——由 AGP `externalNativeBuild`（ndk-build）直接构建，彻底移除
+`scripts/rebuild_engine.*` 脚本与 `jniLibs` 缓存机制。
+
+**范围**：
+- `git mv build-scripts/jni/* -> app/src/main/cpp/`（16 引擎模块 + `Android.mk`，历史保留）
+- `git mv build-scripts/live2d/* -> app/src/main/cpp/live2d/`；重写 `live2d/Android.mk`：
+  去掉 `PREBUILT luajava`（同树模块，冲突会重复定义），`LOCAL_SRC_FILES` 改 `src/...`，
+  `LOCAL_C_INCLUDES` 改 `$(LOCAL_PATH)/../lua`
+- `build-scripts/patches/*`（lsqlite3.c/mkstemp.c 修正版）覆盖并入 `app/src/main/cpp/` 对应文件后删除
+- `app/build.gradle.kts`：新增 `externalNativeBuild { ndkBuild { path = src/main/cpp/Android.mk } }`，
+  `ndkVersion = "29.0.14206865"`（T9 同款，CI 同步）；删除 `jniLibs.srcDirs`（live2d）引用
+- `app/src/main/cpp/Application.mk` 重建（APP_PLATFORM android-24 / APP_STL c++_static / APP_OPTIM release，
+  APP_ABI 由 AGP 依 abiFilters 注入）
+- 删除 `scripts/rebuild_engine.ps1|.sh`；`.gitignore` 去掉 `jniLibs` 条目（产物已归 `app/build/`）
+- CI：三个打包 job 去掉「rebuild_engine 步骤」，只装 NDK 29.0.14206865 后直接 `assemble`；
+  `rebuild-engine` job 更名 `verify-no-binaries`（git ls-files 零星二进制校验，含 .dex/.zip）
+
+**验收标准**：
+- `assembleArm64Debug` / `assembleX64Debug` BUILD SUCCESSFUL，APK 内含引擎 `.so` + `live2d.so`
+- `git ls-files '*.so' '*.dex' '*.zip'` 为空；非 wrapper `*.jar` 为空；R1 红线零命中
+- 单测全部通过
+
+**完成状态**：【✅ 已完成】 简述：
+
+| 项 | 结果 |
+|---|---|
+| 源码归档 | 引擎 16 模块 + live2d src + patches 全部落入 `app/src/main/cpp/`（git mv 保留改名历史） |
+| AGP 构建 | `externalNativeBuild.ndkBuild` 直连 `src/main/cpp/Android.mk`，AGP 依 flavor abiFilters 注入 APP_ABI；`Application.mk` 声明 STL/平台/优化 |
+| 脚本清理 | `scripts/rebuild_engine.ps1|.sh`、`build-scripts/live2d`（Application.mk/.gitignore）、`build-scripts/patches` 删除；`.gitignore` jniLibs 行移除 |
+| CI | build-arm64 / build-x64 / verify-release 均改为「安装 NDK 29.0.14206865 → assemble」；`rebuild-engine` job 改名 verify-no-binaries |
+| 本地验证 | arm64 与 x64 APK 均含 19 `.so`（引擎 + live2d + androidx.graphics AAR）；R1/二进制红线零命中；单测 UP-TO-DATE 全绿 |
+
+---
+
 ## 4. 验证命令索引（贯穿全程）
 
 ```powershell
@@ -373,8 +411,8 @@ rg -n "luajava|androlua|loadLibrary" editor/src
 # 行尾/二进制归类检查
 git ls-files --eol
 
-# 引擎重建（T9 在干净 clone 中执行）
-.\scripts\rebuild_engine.ps1 all
+# 引擎构建（T11 起由 AGP externalNativeBuild 负责，无独立脚本）
+.\gradlew.bat :app:assembleArm64Debug --console=plain
 ```
 
 ---
@@ -396,3 +434,4 @@ git ls-files --eol
 | 2026-08-04 | **T9 完成**（干净 clone 完全从源码构建：16/16 模块 .so + assembleArm64Debug + 61 单测全绿 + R1 零命中；提交 2885ef81） | opencode |
 | 2026-08-04 | 终审报告落盘 docs/completed/ | opencode |
 | 2026-08-04 | **T10 完成**（二进制禁入：51 `.so` 全出库、jniLibs 转构建输出、CI 先 rebuild、AGENTS.md R5 + README 策略） | opencode |
+| 2026-08-04 | **T11 完成**（源码归一 `app/src/main/cpp/` + AGP externalNativeBuild 直建引擎：脚本/jniLibs 缓存机制退役、CI 改直接 assemble、NDK 29 双端统一、arm64/x64 APK 19 `.so` 验证通过） | opencode |

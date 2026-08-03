@@ -18,6 +18,8 @@ val keystoreProperties = Properties().apply {
 android {
     namespace = "com.lioisme.lide"
     compileSdk = 36
+    // 固定 NDK 版本：本地与 CI 统一（29.0.14206865，T9 终验同款），AGP externalNativeBuild 直接使用。
+    ndkVersion = "29.0.14206865"
 
     defaultConfig {
         applicationId = "com.lioisme.lide"
@@ -84,19 +86,19 @@ android {
         jvmTarget = "17"
     }
 
-    buildFeatures {
+buildFeatures {
         compose = true
         buildConfig = true
     }
 
-    sourceSets {
-        getByName("main") {
-            jniLibs.srcDirs(
-                "src/main/jniLibs",
-                // live2d 原生库独立目录：产物不与原版库存放一起
-                // （build-scripts/live2d/libs/{abi}/liblive2d.so，三 ABI 交叉编译）
-                "../build-scripts/live2d/libs"
-            )
+    // 原生引擎：源码统一位于 src/main/cpp/（AGP 官方 ndk 源码目录）。
+    // 由 AGP externalNativeBuild 直接调用 ndk-build，产物自动打进 APK，
+    // 不再有 jniLibs 缓存目录 / rebuild 脚本（旧的 scripts/rebuild_engine.* 已废弃）。
+    // APP_ABI 由 AGP 依据 abiFilters 注入；APP_STL/APP_PLATFORM/APP_OPTIM
+    // 由同目录 Application.mk 声明（ndk-build 原生读取）。
+    externalNativeBuild {
+        ndkBuild {
+            path = file("src/main/cpp/Android.mk")
         }
     }
 

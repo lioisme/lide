@@ -12,8 +12,11 @@
 - **R3** 新增编辑器功能默认放 `:editor`；宿主专属逻辑（文件、权限、运行时、设置持久化）放 `:app`。
 - **R4** `:editor` 不得读取 `:app` 的任何状态或类型；宿主依赖一律通过参数 / 接口注入。
 - **R5** 仓库禁止任何二进制原生产物入库：`.so`/`.dex`/`.jar`（`gradle/wrapper/gradle-wrapper.jar` 引导例外）
-  /`.zip` 一律不得 `git add`；原生引擎唯一允许形态是源码（vendor 于 `build-scripts/jni/`），
-  `app/src/main/jniLibs/` 是 `scripts/rebuild_engine.*` 的构建输出（gitignore），CI 在 `assemble` 前必须先重建。
+  /`.zip` 一律不得 `git add`；原生引擎唯一允许形态是源码（统一归档于 `app/src/main/cpp/`，
+  顶层 `Android.mk` + `Application.mk` 为 ndk-build 定义，`live2d/` 为独立模块），
+  由 AGP `externalNativeBuild`（ndk-build）在 `assemble` 时直接从源码构建并打包进 APK，
+  不设任何 jniLibs 缓存目录，也无 rebuild 脚本（`scripts/rebuild_engine.*` 已废弃删除）。
+  NDK 版本固定为 `29.0.14206865`（`app/build.gradle.kts` `ndkVersion`）。
   例外：`.alp` 作为工程包可直接存在（构建时由 `:app:generateExamples` 从 `build-scripts/examples-src/` 生成）。
 
 验证命令（以下必须全部成立）：

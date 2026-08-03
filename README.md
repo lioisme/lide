@@ -1,8 +1,6 @@
-# lide — Android 端 Lua 脚本 IDE / 运行时
-
 lide 是 AndroLua 衍生项目：Kotlin + Jetpack Compose 实现的宿主 IDE（`:app`，位于 `app/`），
-内置 sora 编辑器模块（`:editor`），以 AndroLua C 原生引擎的源码 vendor（`build-scripts/jni/`）构建库作为
-Lua 编译与运行底座（构建时经 `scripts/rebuild_engine.*` 从源码产出 `app/src/main/jniLibs/`），
+内置 sora 编辑器模块（`:editor`），以 AndroLua C 原生引擎源码（`app/src/main/cpp/`）为
+Lua 编译与运行底座（由 AGP `externalNativeBuild` 在 `assemble` 时直接从源码构建并打包进 APK），
 工程格式兼容 AndroLua `.alp` 规范。
 
 > 进入任何开发工作前，先读 [AGENTS.md](AGENTS.md)（评审硬门槛与架构边界）与
@@ -16,8 +14,8 @@ Lua 编译与运行底座（构建时经 `scripts/rebuild_engine.*` 从源码产
 |---|---|
 | `app/` | **宿主应用**（`:app`）：Compose IDE、EngineActivity、打包器、设置持久化 |
 | `editor/` | **编辑器模块**（`:editor`）：纯 Kotlin 文本能力（行级诊断/补全/高亮/搜索），不触碰原生引擎 |
-| `build-scripts/` | 原生引擎构建工具链（jni/Android.mk、patches/、examples-src/、live2d） |
-| `scripts/` | 开发脚本：引擎重建 `rebuild_engine.*`、双端回归 `adb_regress.ps1` |
+| `build-scripts/` | 内置示例源码包（examples-src/，构建时生成 `.alp`）；`make-examples.ps1` 兼容脚本 |
+| `scripts/` | 开发脚本：双端回归 `adb_regress.ps1` |
 | `third_party/` | **上游库统一收纳**（只读，后续新增上游库一律入此）：`androlua/`（Gradle 模块 `:androlua`）、`patches/`（material3 SearchBar 实验补丁） |
 | `docs/` | **文档中心**：知识库（`kb/`）、完成/进行中/计划（`completed|in-progress|planned`）、日志（`log/`）、参考基线（`reference/`，gitignore 排除、不提交、只读） |
 | `gradle/` `gradlew*` `settings/build.gradle` `build-apks.*` | Gradle 工程骨架 + 根级构建脚本 |
@@ -37,15 +35,16 @@ Lua 编译与运行底座（构建时经 `scripts/rebuild_engine.*` 从源码产
 
 ```powershell
 .\gradlew.bat :app:compileArm64DebugKotlin   # Kotlin 编译检查
-.\gradlew.bat :app:assembleArm64Debug        # 完整构建（arm64）
+.\gradlew.bat :app:assembleArm64Debug        # 完整构建（arm64；原生引擎由 AGP 从 app/src/main/cpp/ 自动构建）
 .\build-apks.ps1                             # 4 个变体 APK（x64/arm64 × Debug/Release）
-.\scripts\rebuild_engine.ps1 all            # 从 C 源码（build-scripts/jni/）重建原生引擎到 jniLibs/
 ```
 
 ## 二进制策略
 
-- **仓库禁止任何二进制原生产物**：原生库一律以源码形式存在于 `build-scripts/jni/`（C/Kotlin 宿主不携带 `.so`/`.dex`/`.jar`/`.zip`）。
-- `app/src/main/jniLibs/` 为 **纯构建输出**（gitignore），仅由 `scripts/rebuild_engine.ps1|.sh` 从 vendored 源码产出；CI 各 build job 在 `assemble` 前先重建引擎。
+- **仓库禁止任何二进制原生产物**：原生库一律以源码形式存在于 `app/src/main/cpp/`（顶层 `Android.mk` +
+  `Application.mk` 为 ndk-build 定义，`live2d/` 为独立模块；C/Kotlin 宿主不携带 `.so`/`.dex`/`.jar`/`.zip`）。
+- 原生引擎由 AGP `externalNativeBuild`（ndk-build）在 `assemble` 时直接从 `app/src/main/cpp/` 源码构建并打进 APK，
+  无 jniLibs 缓存目录、无 rebuild 脚本（旧 `scripts/rebuild_engine.*` 已废弃删除）。NDK 版本 `29.0.14206865`。
 - 例外：`gradle/wrapper/gradle-wrapper.jar`（Gradle 官方引导，非宿主产物）；`.alp` 作为工程包可直接存在（构建时由 `:app:generateExamples` 从 `build-scripts/examples-src/` 生成）。
 
 ## 约定
