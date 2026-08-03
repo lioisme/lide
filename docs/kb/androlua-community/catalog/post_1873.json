@@ -5,19 +5,21 @@
  "author": "苦小怕",
  "platform": "所有环境",
  "source_date": "2022年09月11日 12:08:38",
- "hits": 906,
+ "hits": 907,
  "up": 27,
  "favorite": 64,
  "comment": 2,
  "source_file": "系统\\1873_Notification补充.lua",
  "kind": "reference_sheet",
- "verdict": "neutral",
- "portability": "android_api",
+ "verdict": "negative",
+ "portability": "editor_bound",
  "flags": [
-  "xml_list"
+  "xml_list",
+  "editor_bound",
+  "editor_bound"
  ],
- "truncation": "preview_truncated",
- "line_count": 13,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 181,
+ "char_count": 4509,
  "confidence": "static_review"
 }

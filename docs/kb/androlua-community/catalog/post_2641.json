@@ -5,17 +5,19 @@
  "author": "AstarLC",
  "platform": "所有环境",
  "source_date": "2023年04月09日 23:00:17",
- "hits": 845,
+ "hits": 846,
  "up": 10,
  "favorite": 24,
  "comment": 12,
  "source_file": "实用代码\\2641_初见OpenGL_ES做的伪3D.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "complete_or_unverifiable",
- "line_count": 13,
- "char_count": 300,
+ "flags": [
+  "global_pollution"
+ ],
+ "truncation": "complete",
+ "line_count": 317,
+ "char_count": 6774,
  "confidence": "static_review"
 }

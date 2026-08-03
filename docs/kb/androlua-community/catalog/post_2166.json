@@ -5,19 +5,22 @@
  "author": "Duo",
  "platform": "所有环境",
  "source_date": "2022年12月10日 22:45:38",
- "hits": 1127,
+ "hits": 1128,
  "up": 13,
  "favorite": 24,
  "comment": 15,
  "source_file": "小游戏\\2166_Three-Planet_System.lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "universal",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
  "flags": [
-  "short_text"
+  "androlua_private",
+  "private_api",
+  "chinese_identifier",
+  "global_pollution"
  ],
- "truncation": "preview_truncated",
- "line_count": 19,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 603,
+ "char_count": 15126,
  "confidence": "static_review"
 }

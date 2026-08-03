@@ -5,17 +5,19 @@
  "author": "阙月",
  "platform": "所有环境",
  "source_date": "2023年12月16日 19:54:48",
- "hits": 295,
+ "hits": 297,
  "up": 0,
  "favorite": 9,
  "comment": 2,
  "source_file": "网络请求\\3663_超星学习通pc及app模拟登录.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 13,
- "char_count": 300,
+ "flags": [
+  "hardcoded_secret"
+ ],
+ "truncation": "complete",
+ "line_count": 102,
+ "char_count": 3148,
  "confidence": "static_review"
 }

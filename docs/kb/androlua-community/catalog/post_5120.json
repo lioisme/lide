@@ -16,8 +16,8 @@
  "flags": [
   "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 7,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 116,
+ "char_count": 3320,
  "confidence": "static_review"
 }

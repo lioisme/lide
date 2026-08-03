@@ -5,7 +5,7 @@
  "author": "Duo",
  "platform": "Fusion App2",
  "source_date": "2022年11月22日 11:29:18",
- "hits": 687,
+ "hits": 688,
  "up": 11,
  "favorite": 20,
  "comment": 9,
@@ -17,8 +17,8 @@
   "editor_bound",
   "editor_bound"
  ],
- "truncation": "preview_truncated",
- "line_count": 17,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 917,
+ "char_count": 22199,
  "confidence": "static_review"
 }

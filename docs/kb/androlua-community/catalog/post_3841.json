@@ -5,7 +5,7 @@
  "author": "由风",
  "platform": "Fusion App1,Fusion App2,reOpenLua,OpenLuaX",
  "source_date": "2024年02月03日 17:21:18",
- "hits": 266,
+ "hits": 267,
  "up": 3,
  "favorite": 16,
  "comment": 0,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 8,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 43,
+ "char_count": 1120,
  "confidence": "static_review"
 }

@@ -5,17 +5,21 @@
  "author": "ㄛㄙ飞ㄋ",
  "platform": "所有环境",
  "source_date": "2023年01月29日 13:13:43",
- "hits": 450,
+ "hits": 451,
  "up": 8,
  "favorite": 22,
  "comment": 4,
  "source_file": "浏览器\\2394_来玩游戏吧.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "obsolete",
+ "flags": [
+  "obsolete",
+  "obsolete",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 191,
+ "char_count": 4633,
  "confidence": "static_review"
 }

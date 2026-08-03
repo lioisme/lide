@@ -5,7 +5,7 @@
  "author": "NekoLaska",
  "platform": "Fusion App2",
  "source_date": "2023年04月20日 13:41:39",
- "hits": 292,
+ "hits": 293,
  "up": 4,
  "favorite": 12,
  "comment": 6,
@@ -17,8 +17,8 @@
   "editor_bound",
   "editor_bound"
  ],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 105,
+ "char_count": 5411,
  "confidence": "static_review"
 }

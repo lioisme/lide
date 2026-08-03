@@ -11,11 +11,13 @@
  "comment": 6,
  "source_file": "系统\\4608_内存报告.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 13,
- "char_count": 300,
+ "flags": [
+  "os_exec"
+ ],
+ "truncation": "complete",
+ "line_count": 423,
+ "char_count": 14334,
  "confidence": "static_review"
 }

@@ -5,20 +5,21 @@
  "author": "ипц",
  "platform": "AndLua",
  "source_date": "2025年03月09日 08:58:14",
- "hits": 557,
+ "hits": 558,
  "up": 8,
  "favorite": 19,
  "comment": 0,
  "source_file": "JS教程\\4579_AndLua+易支付开源.lua",
  "kind": "fragment",
- "verdict": "neutral",
+ "verdict": "negative",
  "portability": "android_api",
  "flags": [
-  "truncated_tail",
+  "incomplete_mark",
+  "chinese_identifier",
   "incomplete_fragment"
  ],
- "truncation": "preview_truncated",
- "line_count": 19,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 676,
+ "char_count": 15907,
  "confidence": "static_review"
 }

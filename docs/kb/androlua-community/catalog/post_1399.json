@@ -5,19 +5,17 @@
  "author": "oゞ夜色乄未央ぁ",
  "platform": "所有环境",
  "source_date": "2022年03月15日 08:57:16",
- "hits": 354,
+ "hits": 355,
  "up": 4,
  "favorite": 18,
  "comment": 1,
  "source_file": "UI控件\\1399_NumberPicker数值选择器.lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "universal",
- "flags": [
-  "short_text"
- ],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 104,
+ "char_count": 2678,
  "confidence": "static_review"
 }

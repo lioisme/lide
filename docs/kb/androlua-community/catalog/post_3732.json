@@ -5,19 +5,19 @@
  "author": "•⤙•/k",
  "platform": "AndLua",
  "source_date": "2024年01月16日 01:14:19",
- "hits": 399,
+ "hits": 400,
  "up": 5,
  "favorite": 7,
  "comment": 2,
  "source_file": "自绘制\\3732_网络波动曲线图（优化精简）.lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "universal",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
  "flags": [
-  "short_text"
+  "global_pollution"
  ],
- "truncation": "preview_truncated",
- "line_count": 15,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 137,
+ "char_count": 3208,
  "confidence": "static_review"
 }

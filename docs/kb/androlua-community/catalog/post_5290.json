@@ -10,14 +10,15 @@
  "favorite": 4,
  "comment": 0,
  "source_file": "小工具\\5290_小米_红米电池健康报告解析工具.lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "universal",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
  "flags": [
-  "short_text"
+  "androlua_private",
+  "private_api"
  ],
- "truncation": "preview_truncated",
- "line_count": 13,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 296,
+ "char_count": 9211,
  "confidence": "static_review"
 }

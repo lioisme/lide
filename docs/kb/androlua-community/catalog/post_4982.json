@@ -10,15 +10,12 @@
  "favorite": 20,
  "comment": 0,
  "source_file": "Layout布局\\4982_播放弹幕.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "android_api",
- "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
- ],
- "truncation": "preview_truncated",
- "line_count": 16,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 233,
+ "char_count": 4711,
  "confidence": "static_review"
 }

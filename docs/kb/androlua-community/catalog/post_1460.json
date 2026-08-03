@@ -5,19 +5,19 @@
  "author": "海纳百氚，有容乃大",
  "platform": "所有环境",
  "source_date": "2022年04月30日 21:30:47",
- "hits": 2042,
+ "hits": 2043,
  "up": 40,
  "favorite": 91,
  "comment": 14,
  "source_file": "布局教程\\1460_海纳云用卡片式布局.lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "universal",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
  "flags": [
-  "short_text"
+  "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 16,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 1003,
+ "char_count": 33983,
  "confidence": "static_review"
 }

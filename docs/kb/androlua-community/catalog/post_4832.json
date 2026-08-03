@@ -11,13 +11,11 @@
  "comment": 0,
  "source_file": "布局代码\\4832_碰撞判断.lua",
  "kind": "code_demo",
- "verdict": "negative",
+ "verdict": "positive",
  "portability": "android_api",
- "flags": [
-  "global_pollution"
- ],
- "truncation": "preview_truncated",
- "line_count": 20,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 70,
+ "char_count": 1242,
  "confidence": "static_review"
 }

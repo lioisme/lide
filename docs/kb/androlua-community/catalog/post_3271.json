@@ -5,7 +5,7 @@
  "author": "一個冬瓜",
  "platform": "所有环境",
  "source_date": "2023年08月16日 16:09:53",
- "hits": 217,
+ "hits": 218,
  "up": 5,
  "favorite": 14,
  "comment": 2,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 7,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 68,
+ "char_count": 1968,
  "confidence": "static_review"
 }

@@ -5,7 +5,7 @@
  "author": "寒雪落花静云月",
  "platform": "AndroLua,AndLua",
  "source_date": "2025年09月06日 07:53:56",
- "hits": 273,
+ "hits": 274,
  "up": 2,
  "favorite": 5,
  "comment": 0,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 10,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 965,
+ "char_count": 35052,
  "confidence": "static_review"
 }

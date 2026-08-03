@@ -10,14 +10,15 @@
  "favorite": 6,
  "comment": 0,
  "source_file": "小工具\\5085_带自动缓存管理的番剧更新周更表.lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "universal",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
  "flags": [
-  "short_text"
+  "androlua_private",
+  "private_api"
  ],
- "truncation": "preview_truncated",
- "line_count": 15,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 1250,
+ "char_count": 36802,
  "confidence": "static_review"
 }

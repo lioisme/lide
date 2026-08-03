@@ -5,17 +5,20 @@
  "author": "oゞ夜色乄未央ぁ",
  "platform": "",
  "source_date": "2020年05月01日 12:26:18",
- "hits": 1135,
+ "hits": 1137,
  "up": 4,
  "favorite": 37,
  "comment": 5,
  "source_file": "实用代码\\155_FA部分实用代码概述.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "flags": [
+  "chinese_identifier",
+  "remote_exec"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 158,
+ "char_count": 3473,
  "confidence": "static_review"
 }

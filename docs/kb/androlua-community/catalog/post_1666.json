@@ -5,20 +5,17 @@
  "author": "帕帝天秀",
  "platform": "所有环境",
  "source_date": "2022年08月05日 21:38:59",
- "hits": 659,
+ "hits": 660,
  "up": 9,
  "favorite": 14,
  "comment": 2,
  "source_file": "自绘制\\1666_手绘蝴蝶线动画.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "android_api",
- "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
- ],
- "truncation": "preview_truncated",
- "line_count": 16,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 80,
+ "char_count": 2221,
  "confidence": "static_review"
 }

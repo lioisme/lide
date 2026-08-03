@@ -5,20 +5,17 @@
  "author": "九天",
  "platform": "Fusion App1",
  "source_date": "2022年08月16日 00:17:06",
- "hits": 593,
+ "hits": 594,
  "up": 6,
  "favorite": 18,
  "comment": 7,
  "source_file": "小工具\\1719_弹窗卡片.lua",
- "kind": "text_note",
- "verdict": "negative",
- "portability": "universal",
- "flags": [
-  "short_text",
-  "global_pollution"
- ],
- "truncation": "preview_truncated",
- "line_count": 15,
- "char_count": 300,
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 189,
+ "char_count": 5440,
  "confidence": "static_review"
 }

@@ -5,19 +5,17 @@
  "author": "YONGLE-永乐",
  "platform": "所有环境",
  "source_date": "2022年04月23日 12:22:55",
- "hits": 396,
+ "hits": 397,
  "up": 4,
  "favorite": 9,
  "comment": 2,
  "source_file": "布局教程\\1450_小卡片布局.lua",
- "kind": "text_note",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "universal",
- "flags": [
-  "short_text"
- ],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 64,
+ "char_count": 1458,
  "confidence": "static_review"
 }

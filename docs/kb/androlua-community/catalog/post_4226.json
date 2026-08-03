@@ -11,11 +11,13 @@
  "comment": 1,
  "source_file": "文件操作\\4226_多选清理缓存示例.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "universal",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "flags": [
+  "os_exec"
+ ],
+ "truncation": "complete",
+ "line_count": 24,
+ "char_count": 677,
  "confidence": "static_review"
 }

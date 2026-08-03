@@ -5,17 +5,21 @@
  "author": "破晓",
  "platform": "所有环境",
  "source_date": "2023年12月03日 13:20:28",
- "hits": 569,
+ "hits": 570,
  "up": 8,
  "favorite": 34,
  "comment": 0,
  "source_file": "Adapter容器\\3629_常见的App数据路径.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 10,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 442,
+ "char_count": 9483,
  "confidence": "static_review"
 }

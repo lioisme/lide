@@ -10,14 +10,12 @@
  "favorite": 11,
  "comment": 14,
  "source_file": "手册公告\\4090_朽木、封杀，此子不可留也.lua",
- "kind": "text_note",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "universal",
- "flags": [
-  "short_text"
- ],
- "truncation": "preview_truncated",
- "line_count": 21,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 37,
+ "char_count": 1029,
  "confidence": "static_review"
 }

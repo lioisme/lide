@@ -11,11 +11,13 @@
  "comment": 0,
  "source_file": "Lua代码\\5122_悬浮侧边提示条.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "complete_or_unverifiable",
- "line_count": 16,
- "char_count": 300,
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 284,
+ "char_count": 7082,
  "confidence": "static_review"
 }

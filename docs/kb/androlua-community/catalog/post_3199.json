@@ -5,7 +5,7 @@
  "author": "煙雨舊時光",
  "platform": "所有环境",
  "source_date": "2023年08月05日 04:46:02",
- "hits": 187,
+ "hits": 188,
  "up": 1,
  "favorite": 0,
  "comment": 4,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 10,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 74,
+ "char_count": 1417,
  "confidence": "static_review"
 }

@@ -5,19 +5,19 @@
  "author": "•⤙•/k",
  "platform": "AndLua",
  "source_date": "2023年05月29日 09:40:09",
- "hits": 191,
+ "hits": 192,
  "up": 0,
  "favorite": 2,
  "comment": 4,
  "source_file": "小工具\\2873_小球围着大球转.lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "universal",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
  "flags": [
-  "short_text"
+  "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 72,
+ "char_count": 1759,
  "confidence": "static_review"
 }

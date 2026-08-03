@@ -5,7 +5,7 @@
  "author": "人心已冷",
  "platform": "所有环境",
  "source_date": "2022年06月04日 16:07:06",
- "hits": 729,
+ "hits": 730,
  "up": 15,
  "favorite": 45,
  "comment": 9,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "complete_or_unverifiable",
- "line_count": 13,
- "char_count": 300,
+ "truncation": "truncated_tail",
+ "line_count": 45,
+ "char_count": 1406,
  "confidence": "static_review"
 }

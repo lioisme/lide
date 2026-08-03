@@ -5,17 +5,21 @@
  "author": "苦小怕",
  "platform": "Fusion App2",
  "source_date": "2022年07月17日 16:15:05",
- "hits": 3173,
+ "hits": 3174,
  "up": 71,
  "favorite": 210,
  "comment": 38,
  "source_file": "布局教程\\1591_可展开卡片(适配手册夜间模式).lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 320,
+ "char_count": 7524,
  "confidence": "static_review"
 }

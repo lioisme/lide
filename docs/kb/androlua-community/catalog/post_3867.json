@@ -5,19 +5,17 @@
  "author": "",
  "platform": "所有环境",
  "source_date": "2024年02月09日 19:26:10",
- "hits": 343,
+ "hits": 344,
  "up": 1,
  "favorite": 6,
  "comment": 4,
  "source_file": "基础代码\\3867_新形势下lua的面向对象.lua",
- "kind": "text_note",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "universal",
- "flags": [
-  "short_text"
- ],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 165,
+ "char_count": 4582,
  "confidence": "static_review"
 }

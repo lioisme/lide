@@ -5,7 +5,7 @@
  "author": "kamihitoe",
  "platform": "AndroLua,reOpenLua,OpenLuaX,AndLua",
  "source_date": "2024年03月23日 15:57:00",
- "hits": 805,
+ "hits": 806,
  "up": 11,
  "favorite": 41,
  "comment": 9,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 61,
+ "char_count": 1794,
  "confidence": "static_review"
 }

@@ -5,7 +5,7 @@
  "author": "白隐Hakuin",
  "platform": "所有环境",
  "source_date": "2022年11月07日 15:09:48",
- "hits": 275,
+ "hits": 276,
  "up": 6,
  "favorite": 14,
  "comment": 1,
@@ -17,8 +17,8 @@
   "androlua_private",
   "private_api"
  ],
- "truncation": "preview_truncated",
- "line_count": 13,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 139,
+ "char_count": 3157,
  "confidence": "static_review"
 }

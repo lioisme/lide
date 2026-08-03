@@ -5,7 +5,7 @@
  "author": "破晓",
  "platform": "所有环境",
  "source_date": "2023年07月01日 13:33:18",
- "hits": 376,
+ "hits": 377,
  "up": 5,
  "favorite": 15,
  "comment": 0,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "universal",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 16,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 340,
+ "char_count": 9786,
  "confidence": "static_review"
 }

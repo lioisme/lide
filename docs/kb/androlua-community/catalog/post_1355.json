@@ -5,19 +5,17 @@
  "author": "oゞ夜色乄未央ぁ",
  "platform": "所有环境",
  "source_date": "2022年02月03日 14:14:35",
- "hits": 517,
+ "hits": 518,
  "up": 6,
  "favorite": 13,
  "comment": 3,
  "source_file": "Androlua教程\\1355_AndroLua常用函数.lua",
- "kind": "text_note",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "universal",
- "flags": [
-  "short_text"
- ],
- "truncation": "preview_truncated",
- "line_count": 10,
- "char_count": 300,
+ "flags": [],
+ "truncation": "truncated_tail",
+ "line_count": 17,
+ "char_count": 655,
  "confidence": "static_review"
 }

@@ -5,17 +5,20 @@
  "author": "oゞ夜色乄未央ぁ",
  "platform": "所有环境",
  "source_date": "2022年01月31日 18:22:25",
- "hits": 1654,
+ "hits": 1656,
  "up": 12,
  "favorite": 50,
  "comment": 6,
  "source_file": "实用代码\\1349_Glide图片加载框架.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "universal",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 13,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 176,
+ "char_count": 4240,
  "confidence": "static_review"
 }

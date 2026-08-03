@@ -10,15 +10,12 @@
  "favorite": 34,
  "comment": 2,
  "source_file": "自绘制\\2877_一个进度条.lua",
- "kind": "text_note",
- "verdict": "negative",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "universal",
- "flags": [
-  "short_text",
-  "global_pollution"
- ],
- "truncation": "preview_truncated",
- "line_count": 17,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 81,
+ "char_count": 1597,
  "confidence": "static_review"
 }

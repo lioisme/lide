@@ -11,11 +11,14 @@
  "comment": 18,
  "source_file": "安卓教程\\4844_乐曲演奏，V1.2，(二改)，更新。.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 722,
+ "char_count": 20270,
  "confidence": "static_review"
 }

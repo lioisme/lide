@@ -10,14 +10,17 @@
  "favorite": 2,
  "comment": 0,
  "source_file": "安卓教程\\5135_读取小米手环心率广播数据.lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "android_api",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "obsolete",
  "flags": [
-  "short_text"
+  "obsolete",
+  "obsolete",
+  "chinese_identifier",
+  "sensitive_permission"
  ],
- "truncation": "preview_truncated",
- "line_count": 17,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 303,
+ "char_count": 6545,
  "confidence": "static_review"
 }

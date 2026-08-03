@@ -5,7 +5,7 @@
  "author": "小白·马",
  "platform": "所有环境",
  "source_date": "2023年07月09日 17:41:59",
- "hits": 497,
+ "hits": 498,
  "up": 2,
  "favorite": 4,
  "comment": 2,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "universal",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "truncation": "truncated_tail",
+ "line_count": 224,
+ "char_count": 7721,
  "confidence": "static_review"
 }

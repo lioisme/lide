@@ -10,14 +10,12 @@
  "favorite": 17,
  "comment": 4,
  "source_file": "控件属性\\4359_ProgressIndicator_来自Google非常优雅的进度条.lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "universal",
- "flags": [
-  "short_text"
- ],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 550,
+ "char_count": 17657,
  "confidence": "static_review"
 }

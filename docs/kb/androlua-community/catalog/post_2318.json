@@ -5,19 +5,19 @@
  "author": "智",
  "platform": "所有环境",
  "source_date": "2023年01月14日 17:16:45",
- "hits": 257,
+ "hits": 258,
  "up": 6,
  "favorite": 10,
  "comment": 9,
  "source_file": "实用代码\\2318_使用TrafficStats获取网速.lua",
  "kind": "code_demo",
  "verdict": "negative",
- "portability": "universal",
+ "portability": "android_api",
  "flags": [
-  "global_pollution"
+  "chinese_identifier"
  ],
- "truncation": "complete_or_unverifiable",
- "line_count": 18,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 34,
+ "char_count": 568,
  "confidence": "static_review"
 }

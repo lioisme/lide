@@ -5,21 +5,21 @@
  "author": "oゞ夜色乄未央ぁ",
  "platform": "Fusion App2",
  "source_date": "2025年01月30日 16:57:45",
- "hits": 1741,
+ "hits": 1743,
  "up": 16,
  "favorite": 64,
  "comment": 8,
  "source_file": "网络爬虫\\4508_高清手机壁纸fastjson解析json教程.lua",
  "kind": "code_demo",
  "verdict": "negative",
- "portability": "editor_bound",
+ "portability": "host_private",
  "flags": [
-  "editor_bound",
-  "editor_bound",
+  "androlua_private",
+  "private_api",
   "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 370,
+ "char_count": 9863,
  "confidence": "static_review"
 }

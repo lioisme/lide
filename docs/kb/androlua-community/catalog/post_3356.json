@@ -5,19 +5,21 @@
  "author": "花园",
  "platform": "所有环境",
  "source_date": "2023年09月01日 07:37:34",
- "hits": 644,
+ "hits": 645,
  "up": 5,
  "favorite": 13,
  "comment": 16,
  "source_file": "小游戏\\3356_Flappy_Bird复刻(没写完屎山版).lua",
- "kind": "text_note",
- "verdict": "neutral",
+ "kind": "fragment",
+ "verdict": "negative",
  "portability": "android_api",
  "flags": [
-  "short_text"
+  "incomplete_mark",
+  "chinese_identifier",
+  "incomplete_fragment"
  ],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 413,
+ "char_count": 11002,
  "confidence": "static_review"
 }

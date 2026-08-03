@@ -5,17 +5,19 @@
  "author": "Aqora",
  "platform": "AndroLua,Fusion App1,Fusion App2,reOpenLua",
  "source_date": "2023年08月19日 11:22:24",
- "hits": 471,
+ "hits": 472,
  "up": 12,
  "favorite": 34,
  "comment": 1,
  "source_file": "小工具\\3288_BottomSheetDialog滑动冲突.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 18,
- "char_count": 300,
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 87,
+ "char_count": 2114,
  "confidence": "static_review"
 }

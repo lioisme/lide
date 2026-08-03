@@ -5,20 +5,19 @@
  "author": "oゞ夜色乄未央ぁ",
  "platform": "",
  "source_date": "2020年05月01日 12:26:18",
- "hits": 177,
+ "hits": 178,
  "up": 0,
  "favorite": 4,
  "comment": 0,
  "source_file": "动画教程\\1112_细胞球动画实战.lua",
- "kind": "text_note",
+ "kind": "code_demo",
  "verdict": "negative",
- "portability": "universal",
+ "portability": "android_api",
  "flags": [
-  "short_text",
-  "global_pollution"
+  "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 110,
+ "char_count": 2498,
  "confidence": "static_review"
 }

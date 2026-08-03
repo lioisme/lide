@@ -5,7 +5,7 @@
  "author": "博士",
  "platform": "所有环境",
  "source_date": "2022年12月02日 00:32:06",
- "hits": 456,
+ "hits": 457,
  "up": 9,
  "favorite": 25,
  "comment": 1,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "complete_or_unverifiable",
- "line_count": 12,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 54,
+ "char_count": 990,
  "confidence": "static_review"
 }

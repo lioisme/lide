@@ -5,7 +5,7 @@
  "author": "小华哥.",
  "platform": "Fusion App1",
  "source_date": "2023年06月18日 20:08:22",
- "hits": 628,
+ "hits": 630,
  "up": 3,
  "favorite": 20,
  "comment": 11,
@@ -16,8 +16,8 @@
  "flags": [
   "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 15,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 233,
+ "char_count": 6838,
  "confidence": "static_review"
 }

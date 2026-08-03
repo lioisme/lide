@@ -5,19 +5,19 @@
  "author": "•⤙•/k",
  "platform": "AndLua",
  "source_date": "2023年04月02日 18:48:50",
- "hits": 327,
+ "hits": 328,
  "up": 0,
  "favorite": 7,
  "comment": 10,
  "source_file": "小工具\\2621_利用叠加控件实现伪绘制开关.lua",
- "kind": "text_note",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "negative",
  "portability": "universal",
  "flags": [
-  "short_text"
+  "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 104,
+ "char_count": 2228,
  "confidence": "static_review"
 }

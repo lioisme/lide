@@ -5,17 +5,19 @@
  "author": "Duo",
  "platform": "Fusion App2",
  "source_date": "2022年11月12日 21:16:06",
- "hits": 180,
+ "hits": 181,
  "up": 4,
  "favorite": 3,
  "comment": 0,
  "source_file": "小工具\\2062_函数定积分数值运算.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 191,
+ "char_count": 3102,
  "confidence": "static_review"
 }

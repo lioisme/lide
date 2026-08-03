@@ -10,15 +10,12 @@
  "favorite": 6,
  "comment": 1,
  "source_file": "小游戏\\5221_舒特尔表游戏.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "android_api",
- "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
- ],
- "truncation": "preview_truncated",
- "line_count": 15,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 142,
+ "char_count": 3290,
  "confidence": "static_review"
 }

@@ -5,22 +5,20 @@
  "author": "ABVerterX",
  "platform": "AndroLua,Fusion App2",
  "source_date": "2022年08月29日 15:47:36",
- "hits": 433,
+ "hits": 434,
  "up": 4,
  "favorite": 16,
  "comment": 0,
  "source_file": "Activity活动\\1840_状态栏、导航栏沉浸（WindowInsetsController）.lua",
- "kind": "fragment",
+ "kind": "code_demo",
  "verdict": "negative",
  "portability": "editor_bound",
  "flags": [
-  "truncated_tail",
   "editor_bound",
-  "editor_bound",
-  "incomplete_fragment"
+  "editor_bound"
  ],
- "truncation": "preview_truncated",
- "line_count": 10,
- "char_count": 300,
+ "truncation": "truncated_tail",
+ "line_count": 28,
+ "char_count": 816,
  "confidence": "static_review"
 }

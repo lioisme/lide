@@ -5,7 +5,7 @@
  "author": "尼斯湖水怪",
  "platform": "所有环境",
  "source_date": "2023年02月08日 23:05:25",
- "hits": 341,
+ "hits": 342,
  "up": 5,
  "favorite": 6,
  "comment": 1,
@@ -15,10 +15,11 @@
  "portability": "host_private",
  "flags": [
   "androlua_private",
-  "private_api"
+  "private_api",
+  "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 17,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 242,
+ "char_count": 6005,
  "confidence": "static_review"
 }

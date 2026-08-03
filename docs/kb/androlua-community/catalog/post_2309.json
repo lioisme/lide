@@ -5,19 +5,19 @@
  "author": "海纳百氚，有容乃大",
  "platform": "所有环境",
  "source_date": "2023年01月12日 16:15:52",
- "hits": 939,
+ "hits": 940,
  "up": 19,
  "favorite": 68,
  "comment": 18,
  "source_file": "小工具\\2309_应用缓存清理（兼容优化）.lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "universal",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
  "flags": [
-  "short_text"
+  "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 9,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 410,
+ "char_count": 10898,
  "confidence": "static_review"
 }

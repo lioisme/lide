@@ -5,17 +5,19 @@
  "author": "祁画",
  "platform": "Fusion App1,AndLua",
  "source_date": "2022年01月03日 20:33:24",
- "hits": 920,
+ "hits": 921,
  "up": 17,
  "favorite": 32,
  "comment": 9,
  "source_file": "布局教程\\1291_边框圆角[自定义].lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 8,
- "char_count": 300,
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 67,
+ "char_count": 1836,
  "confidence": "static_review"
 }

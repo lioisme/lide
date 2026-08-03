@@ -10,14 +10,16 @@
  "favorite": 3,
  "comment": 0,
  "source_file": "基础代码\\5353_【EZ】调试日志.lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "universal",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
  "flags": [
-  "short_text"
+  "androlua_private",
+  "private_api",
+  "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 24,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 622,
+ "char_count": 20170,
  "confidence": "static_review"
 }

@@ -5,20 +5,17 @@
  "author": "水水水水水水水水水水水水",
  "platform": "所有环境",
  "source_date": "2023年05月14日 14:38:16",
- "hits": 265,
+ "hits": 266,
  "up": 1,
  "favorite": 2,
  "comment": 6,
  "source_file": "实用代码\\2800_手机帧数(FPS)获取方法二.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "android_api",
- "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
- ],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 54,
+ "char_count": 1185,
  "confidence": "static_review"
 }

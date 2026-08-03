@@ -5,20 +5,17 @@
  "author": "诺~",
  "platform": "所有环境",
  "source_date": "2023年04月11日 07:02:22",
- "hits": 523,
+ "hits": 524,
  "up": 4,
  "favorite": 5,
  "comment": 6,
  "source_file": "Lua代码\\2645_3D_圆球_+_光照.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "android_api",
- "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
- ],
- "truncation": "preview_truncated",
- "line_count": 13,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 304,
+ "char_count": 10061,
  "confidence": "static_review"
 }

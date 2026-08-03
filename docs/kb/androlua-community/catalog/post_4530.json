@@ -5,17 +5,20 @@
  "author": "海纳百氚，有容乃大",
  "platform": "所有环境",
  "source_date": "2025年02月11日 08:19:15",
- "hits": 670,
+ "hits": 671,
  "up": 7,
  "favorite": 12,
  "comment": 2,
  "source_file": "网络请求\\4530_GET、POST和SSE流式请求工具类.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "universal",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 13,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "obsolete",
+ "flags": [
+  "obsolete",
+  "obsolete"
+ ],
+ "truncation": "complete",
+ "line_count": 281,
+ "char_count": 7813,
  "confidence": "static_review"
 }

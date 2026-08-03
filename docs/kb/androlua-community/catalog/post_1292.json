@@ -5,7 +5,7 @@
  "author": "oゞ夜色乄未央ぁ",
  "platform": "所有环境",
  "source_date": "2022年01月04日 11:25:07",
- "hits": 942,
+ "hits": 943,
  "up": 16,
  "favorite": 45,
  "comment": 0,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 13,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 163,
+ "char_count": 3705,
  "confidence": "static_review"
 }

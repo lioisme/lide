@@ -5,17 +5,19 @@
  "author": "热爱从不降温",
  "platform": "所有环境",
  "source_date": "2025年07月14日 15:12:58",
- "hits": 623,
+ "hits": 628,
  "up": 3,
  "favorite": 10,
  "comment": 10,
  "source_file": "小工具\\4921_化学方程式自动配平2.0.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "flags": [
+  "global_pollution"
+ ],
+ "truncation": "complete",
+ "line_count": 613,
+ "char_count": 15672,
  "confidence": "static_review"
 }

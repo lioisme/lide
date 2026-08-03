@@ -5,19 +5,19 @@
  "author": "L.",
  "platform": "所有环境",
  "source_date": "2023年07月31日 14:33:03",
- "hits": 501,
+ "hits": 502,
  "up": 4,
  "favorite": 17,
  "comment": 12,
  "source_file": "布局教程\\3169_仿iOS对话框.lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "universal",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
  "flags": [
-  "short_text"
+  "chinese_identifier"
  ],
- "truncation": "complete_or_unverifiable",
- "line_count": 15,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 159,
+ "char_count": 4110,
  "confidence": "static_review"
 }

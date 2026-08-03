@@ -5,21 +5,20 @@
  "author": "小白·马",
  "platform": "Fusion App2",
  "source_date": "2022年06月28日 16:54:11",
- "hits": 1605,
+ "hits": 1606,
  "up": 24,
  "favorite": 68,
  "comment": 6,
  "source_file": "布局教程\\1565_主页轮播图-重构版.lua",
- "kind": "text_note",
+ "kind": "code_demo",
  "verdict": "negative",
- "portability": "editor_bound",
+ "portability": "host_private",
  "flags": [
-  "short_text",
-  "editor_bound",
-  "editor_bound"
+  "androlua_private",
+  "private_api"
  ],
- "truncation": "preview_truncated",
- "line_count": 10,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 192,
+ "char_count": 5257,
  "confidence": "static_review"
 }

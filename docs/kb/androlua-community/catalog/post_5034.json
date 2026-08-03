@@ -10,15 +10,12 @@
  "favorite": 14,
  "comment": 0,
  "source_file": "Layout布局\\5034_FlowLayout流式布局.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "universal",
- "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
- ],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 33,
+ "char_count": 579,
  "confidence": "static_review"
 }

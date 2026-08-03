@@ -5,20 +5,17 @@
  "author": "NekoLaska",
  "platform": "所有环境",
  "source_date": "2023年04月12日 20:06:05",
- "hits": 453,
+ "hits": 454,
  "up": 3,
  "favorite": 7,
  "comment": 2,
  "source_file": "实用代码\\2647_或许好看的AlertDialog封装.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "android_api",
- "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
- ],
- "truncation": "preview_truncated",
- "line_count": 9,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 90,
+ "char_count": 2248,
  "confidence": "static_review"
 }

@@ -5,7 +5,7 @@
  "author": "Duo",
  "platform": "所有环境",
  "source_date": "2023年08月18日 10:39:50",
- "hits": 609,
+ "hits": 611,
  "up": 13,
  "favorite": 39,
  "comment": 9,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 21,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 429,
+ "char_count": 12795,
  "confidence": "static_review"
 }

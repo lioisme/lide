@@ -5,17 +5,19 @@
  "author": "oゞ夜色乄未央ぁ",
  "platform": "Fusion App2",
  "source_date": "2022年12月18日 17:25:49",
- "hits": 1238,
+ "hits": 1239,
  "up": 21,
  "favorite": 66,
  "comment": 4,
  "source_file": "对话框\\2210_BottomSheetDialog底部对话框.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "neutral",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 19,
- "char_count": 300,
+ "flags": [
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 129,
+ "char_count": 2981,
  "confidence": "static_review"
 }

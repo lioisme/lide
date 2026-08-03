@@ -5,20 +5,19 @@
  "author": "訫念是你",
  "platform": "AndLua",
  "source_date": "2022年10月04日 10:14:19",
- "hits": 413,
+ "hits": 414,
  "up": 4,
  "favorite": 2,
  "comment": 7,
  "source_file": "小游戏\\1950_吃掉蔡鸡坤音游.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "negative",
  "portability": "android_api",
  "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
+  "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 18,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 225,
+ "char_count": 5127,
  "confidence": "static_review"
 }

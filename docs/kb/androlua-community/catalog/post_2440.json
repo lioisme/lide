@@ -5,20 +5,19 @@
  "author": "Miss",
  "platform": "所有环境",
  "source_date": "2023年02月07日 16:47:10",
- "hits": 371,
+ "hits": 372,
  "up": 1,
  "favorite": 4,
  "comment": 3,
  "source_file": "小游戏\\2440_一年前写的小游戏.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "negative",
  "portability": "android_api",
  "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
+  "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 196,
+ "char_count": 3617,
  "confidence": "static_review"
 }

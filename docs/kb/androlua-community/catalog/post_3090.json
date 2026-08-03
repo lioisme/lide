@@ -5,19 +5,20 @@
  "author": "⑨φZL",
  "platform": "所有环境",
  "source_date": "2023年07月16日 17:48:32",
- "hits": 790,
+ "hits": 791,
  "up": 22,
  "favorite": 49,
  "comment": 10,
  "source_file": "系统\\3090_固定屏幕v2.lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "android_api",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
  "flags": [
-  "short_text"
+  "androlua_private",
+  "private_api"
  ],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "truncation": "truncated_tail",
+ "line_count": 77,
+ "char_count": 1886,
  "confidence": "static_review"
 }

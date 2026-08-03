@@ -5,7 +5,7 @@
  "author": "⁧拾玖⁧‭",
  "platform": "所有环境",
  "source_date": "2024年08月17日 09:05:50",
- "hits": 606,
+ "hits": 607,
  "up": 8,
  "favorite": 33,
  "comment": 1,
@@ -17,8 +17,8 @@
   "editor_bound",
   "editor_bound"
  ],
- "truncation": "preview_truncated",
- "line_count": 9,
- "char_count": 300,
+ "truncation": "truncated_tail",
+ "line_count": 44,
+ "char_count": 1133,
  "confidence": "static_review"
 }

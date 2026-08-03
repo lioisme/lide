@@ -5,21 +5,19 @@
  "author": "智",
  "platform": "所有环境",
  "source_date": "2022年11月16日 20:11:49",
- "hits": 502,
+ "hits": 503,
  "up": 3,
  "favorite": 10,
  "comment": 12,
  "source_file": "实用代码\\2087_蓝奏云解析.lua",
- "kind": "fragment",
+ "kind": "code_demo",
  "verdict": "negative",
  "portability": "universal",
  "flags": [
-  "truncated_tail",
-  "chinese_identifier",
-  "incomplete_fragment"
+  "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 17,
- "char_count": 300,
+ "truncation": "truncated_tail",
+ "line_count": 28,
+ "char_count": 434,
  "confidence": "static_review"
 }

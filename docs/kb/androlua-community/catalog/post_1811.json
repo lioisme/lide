@@ -5,20 +5,17 @@
  "author": "一個冬瓜",
  "platform": "所有环境",
  "source_date": "2022年08月24日 12:07:31",
- "hits": 458,
+ "hits": 459,
  "up": 13,
  "favorite": 21,
  "comment": 1,
  "source_file": "实用代码\\1811_音频播放进度条.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "android_api",
- "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
- ],
- "truncation": "preview_truncated",
- "line_count": 19,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 111,
+ "char_count": 2094,
  "confidence": "static_review"
 }

@@ -5,20 +5,17 @@
  "author": "oゞ夜色乄未央ぁ",
  "platform": "所有环境",
  "source_date": "2022年03月15日 13:25:11",
- "hits": 1120,
+ "hits": 1121,
  "up": 3,
  "favorite": 44,
  "comment": 4,
  "source_file": "Adapter容器\\1401_ExpandableListView折叠列表.lua",
- "kind": "text_note",
- "verdict": "negative",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "universal",
- "flags": [
-  "short_text",
-  "global_pollution"
- ],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 55,
+ "char_count": 1014,
  "confidence": "static_review"
 }

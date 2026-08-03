@@ -5,7 +5,7 @@
  "author": "oゞ夜色乄未央ぁ",
  "platform": "Fusion App2",
  "source_date": "2022年01月29日 16:49:54",
- "hits": 695,
+ "hits": 696,
  "up": 8,
  "favorite": 27,
  "comment": 9,
@@ -16,8 +16,8 @@
  "flags": [
   "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 23,
+ "char_count": 598,
  "confidence": "static_review"
 }

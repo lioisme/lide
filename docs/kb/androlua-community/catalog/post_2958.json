@@ -5,20 +5,20 @@
  "author": "诺~",
  "platform": "所有环境",
  "source_date": "2023年06月20日 14:57:18",
- "hits": 266,
+ "hits": 267,
  "up": 2,
  "favorite": 5,
  "comment": 4,
  "source_file": "自绘制\\2958_光线反射.lua",
- "kind": "fragment",
- "verdict": "neutral",
- "portability": "android_api",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
  "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
+  "androlua_private",
+  "private_api"
  ],
- "truncation": "preview_truncated",
- "line_count": 10,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 304,
+ "char_count": 9632,
  "confidence": "static_review"
 }

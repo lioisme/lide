@@ -5,17 +5,20 @@
  "author": "oゞ夜色乄未央ぁ",
  "platform": "",
  "source_date": "2020年05月01日 12:26:18",
- "hits": 1065,
+ "hits": 1066,
  "up": 9,
  "favorite": 30,
  "comment": 7,
  "source_file": "远程更新\\238_远程推迟通知栏消息.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 13,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 39,
+ "char_count": 1487,
  "confidence": "static_review"
 }

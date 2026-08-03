@@ -5,7 +5,7 @@
  "author": "Hangx work",
  "platform": "Fusion App1",
  "source_date": "2022年04月14日 09:41:08",
- "hits": 891,
+ "hits": 892,
  "up": 10,
  "favorite": 41,
  "comment": 3,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 10,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 22,
+ "char_count": 546,
  "confidence": "static_review"
 }

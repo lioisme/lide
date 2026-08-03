@@ -5,7 +5,7 @@
  "author": "热爱从不降温",
  "platform": "所有环境",
  "source_date": "2023年07月10日 23:36:20",
- "hits": 435,
+ "hits": 436,
  "up": 1,
  "favorite": 18,
  "comment": 2,
@@ -16,7 +16,7 @@
  "flags": [
   "chinese_identifier"
  ],
- "truncation": "complete_or_unverifiable",
+ "truncation": "complete",
  "line_count": 11,
  "char_count": 293,
  "confidence": "static_review"

@@ -5,7 +5,7 @@
  "author": "",
  "platform": "所有环境",
  "source_date": "2022年06月12日 11:52:08",
- "hits": 378,
+ "hits": 379,
  "up": 7,
  "favorite": 5,
  "comment": 7,
@@ -17,8 +17,8 @@
   "editor_bound",
   "editor_bound"
  ],
- "truncation": "complete_or_unverifiable",
- "line_count": 13,
- "char_count": 300,
+ "truncation": "truncated_tail",
+ "line_count": 51,
+ "char_count": 1234,
  "confidence": "static_review"
 }

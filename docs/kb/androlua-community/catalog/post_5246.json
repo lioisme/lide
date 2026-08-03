@@ -10,14 +10,12 @@
  "favorite": 4,
  "comment": 0,
  "source_file": "基础代码\\5246_马尔可夫_数学模型.lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "universal",
- "flags": [
-  "text_only"
- ],
- "truncation": "preview_truncated",
- "line_count": 19,
- "char_count": 300,
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 473,
+ "char_count": 14204,
  "confidence": "static_review"
 }

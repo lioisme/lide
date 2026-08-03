@@ -10,14 +10,14 @@
  "favorite": 11,
  "comment": 2,
  "source_file": "基础代码\\4500_Android_KeyEvent_全部按键常量枚举含义.lua",
- "kind": "text_note",
+ "kind": "code_demo",
  "verdict": "neutral",
- "portability": "universal",
+ "portability": "android_api",
  "flags": [
-  "short_text"
+  "sensitive_permission"
  ],
- "truncation": "preview_truncated",
- "line_count": 13,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 226,
+ "char_count": 5502,
  "confidence": "static_review"
 }

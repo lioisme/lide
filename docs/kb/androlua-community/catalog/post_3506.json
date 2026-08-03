@@ -5,7 +5,7 @@
  "author": "壹影",
  "platform": "所有环境",
  "source_date": "2023年10月17日 11:49:48",
- "hits": 285,
+ "hits": 286,
  "up": 4,
  "favorite": 15,
  "comment": 1,
@@ -17,8 +17,8 @@
   "editor_bound",
   "editor_bound"
  ],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 130,
+ "char_count": 3201,
  "confidence": "static_review"
 }

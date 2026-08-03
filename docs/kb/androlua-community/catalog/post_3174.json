@@ -5,7 +5,7 @@
  "author": "煙雨舊時光",
  "platform": "AndroLua,AndLua",
  "source_date": "2023年08月01日 06:21:32",
- "hits": 413,
+ "hits": 414,
  "up": 2,
  "favorite": 5,
  "comment": 5,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "complete_or_unverifiable",
- "line_count": 13,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 67,
+ "char_count": 1137,
  "confidence": "static_review"
 }

@@ -5,20 +5,17 @@
  "author": "NekoLaska",
  "platform": "所有环境",
  "source_date": "2023年05月18日 20:07:39",
- "hits": 227,
+ "hits": 230,
  "up": 4,
  "favorite": 6,
  "comment": 10,
  "source_file": "Lua代码\\2816_获取函数耗时.lua",
- "kind": "fragment",
- "verdict": "neutral",
- "portability": "universal",
- "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
- ],
- "truncation": "preview_truncated",
- "line_count": 9,
- "char_count": 300,
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 84,
+ "char_count": 2229,
  "confidence": "static_review"
 }

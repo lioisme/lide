@@ -5,17 +5,20 @@
  "author": "一個冬瓜",
  "platform": "所有环境",
  "source_date": "2022年07月14日 17:36:46",
- "hits": 477,
+ "hits": 478,
  "up": 4,
  "favorite": 15,
  "comment": 1,
  "source_file": "布局教程\\1583_ScrollView的监听和一些讲解.lua",
- "kind": "code_demo",
- "verdict": "positive",
+ "kind": "fragment",
+ "verdict": "neutral",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 15,
- "char_count": 300,
+ "flags": [
+  "incomplete_mark",
+  "incomplete_fragment"
+ ],
+ "truncation": "complete",
+ "line_count": 76,
+ "char_count": 1666,
  "confidence": "static_review"
 }

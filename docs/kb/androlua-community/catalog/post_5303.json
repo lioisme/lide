@@ -11,11 +11,14 @@
  "comment": 2,
  "source_file": "网络爬虫\\5303_快手图集简易解析函数（附带demo示例）.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 278,
+ "char_count": 8231,
  "confidence": "static_review"
 }

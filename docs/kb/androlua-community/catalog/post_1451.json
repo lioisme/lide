@@ -5,19 +5,17 @@
  "author": "四十六画",
  "platform": "AndroLua,Fusion App1,Fusion App2",
  "source_date": "2022年04月23日 20:33:27",
- "hits": 391,
+ "hits": 392,
  "up": 3,
  "favorite": 7,
  "comment": 0,
  "source_file": "布局教程\\1451_小卡片布局修改.lua",
- "kind": "text_note",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "universal",
- "flags": [
-  "short_text"
- ],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 65,
+ "char_count": 1687,
  "confidence": "static_review"
 }

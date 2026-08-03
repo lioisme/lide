@@ -5,7 +5,7 @@
  "author": "•⤙•/k",
  "platform": "所有环境",
  "source_date": "2023年10月07日 19:35:32",
- "hits": 528,
+ "hits": 529,
  "up": 9,
  "favorite": 34,
  "comment": 4,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 9,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 19,
+ "char_count": 539,
  "confidence": "static_review"
 }

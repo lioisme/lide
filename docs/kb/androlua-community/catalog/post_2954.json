@@ -5,19 +5,17 @@
  "author": "海纳百氚，有容乃大",
  "platform": "所有环境",
  "source_date": "2023年06月19日 14:38:41",
- "hits": 425,
+ "hits": 427,
  "up": 4,
  "favorite": 13,
  "comment": 4,
  "source_file": "实用代码\\2954_随机密钥与伪密钥生成函数.lua",
- "kind": "text_note",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "universal",
- "flags": [
-  "short_text"
- ],
- "truncation": "preview_truncated",
- "line_count": 13,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 68,
+ "char_count": 2415,
  "confidence": "static_review"
 }

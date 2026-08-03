@@ -5,7 +5,7 @@
  "author": "清风",
  "platform": "所有环境",
  "source_date": "2024年01月28日 08:39:12",
- "hits": 144,
+ "hits": 145,
  "up": 3,
  "favorite": 4,
  "comment": 0,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "universal",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 47,
+ "char_count": 1071,
  "confidence": "static_review"
 }

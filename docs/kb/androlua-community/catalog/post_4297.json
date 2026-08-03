@@ -11,11 +11,15 @@
  "comment": 2,
  "source_file": "小工具\\4297_坤坤语音包(更新).lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 15,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 215,
+ "char_count": 5489,
  "confidence": "static_review"
 }

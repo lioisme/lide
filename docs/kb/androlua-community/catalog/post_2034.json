@@ -5,20 +5,17 @@
  "author": "TwO",
  "platform": "所有环境",
  "source_date": "2022年11月05日 01:17:06",
- "hits": 534,
+ "hits": 535,
  "up": 8,
  "favorite": 16,
  "comment": 6,
  "source_file": "系统\\2034_SSID&密码_连接WiFi.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "android_api",
- "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
- ],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "flags": [],
+ "truncation": "truncated_tail",
+ "line_count": 66,
+ "char_count": 2361,
  "confidence": "static_review"
 }

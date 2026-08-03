@@ -15,10 +15,11 @@
  "portability": "obsolete",
  "flags": [
   "obsolete",
+  "obsolete",
   "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 24,
+ "char_count": 547,
  "confidence": "static_review"
 }

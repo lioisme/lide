@@ -5,20 +5,19 @@
  "author": "博士",
  "platform": "所有环境",
  "source_date": "2022年12月02日 11:25:19",
- "hits": 501,
+ "hits": 502,
  "up": 7,
  "favorite": 36,
  "comment": 2,
  "source_file": "动画教程\\2132_动态背景.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "negative",
  "portability": "android_api",
  "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
+  "global_pollution"
  ],
- "truncation": "preview_truncated",
- "line_count": 10,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 144,
+ "char_count": 3656,
  "confidence": "static_review"
 }

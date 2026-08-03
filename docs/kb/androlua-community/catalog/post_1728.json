@@ -5,20 +5,19 @@
  "author": "九天",
  "platform": "Fusion App1",
  "source_date": "2022年08月17日 14:50:33",
- "hits": 990,
+ "hits": 992,
  "up": 12,
  "favorite": 44,
  "comment": 7,
  "source_file": "小工具\\1728_高仿微信零钱通.lua",
- "kind": "text_note",
+ "kind": "code_demo",
  "verdict": "negative",
  "portability": "universal",
  "flags": [
-  "short_text",
   "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 19,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 710,
+ "char_count": 19611,
  "confidence": "static_review"
 }

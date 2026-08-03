@@ -5,7 +5,7 @@
  "author": "Atomic fish",
  "platform": "Fusion App2",
  "source_date": "2022年08月17日 12:45:09",
- "hits": 626,
+ "hits": 627,
  "up": 12,
  "favorite": 39,
  "comment": 0,
@@ -15,10 +15,12 @@
  "portability": "host_private",
  "flags": [
   "androlua_private",
-  "private_api"
+  "private_api",
+  "chinese_identifier",
+  "remote_exec"
  ],
- "truncation": "preview_truncated",
- "line_count": 9,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 1037,
+ "char_count": 31937,
  "confidence": "static_review"
 }

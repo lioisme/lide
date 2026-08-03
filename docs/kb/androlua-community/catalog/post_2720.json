@@ -5,21 +5,20 @@
  "author": "智",
  "platform": "所有环境",
  "source_date": "2023年05月01日 07:22:31",
- "hits": 266,
+ "hits": 267,
  "up": 7,
  "favorite": 13,
  "comment": 4,
  "source_file": "文件操作\\2720_android.os.Environment.lua",
- "kind": "fragment",
+ "kind": "code_demo",
  "verdict": "negative",
  "portability": "obsolete",
  "flags": [
-  "truncated_tail",
   "obsolete",
-  "incomplete_fragment"
+  "obsolete"
  ],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "truncation": "truncated_tail",
+ "line_count": 40,
+ "char_count": 1143,
  "confidence": "static_review"
 }

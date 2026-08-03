@@ -5,7 +5,7 @@
  "author": "K.",
  "platform": "Fusion App1,Fusion App2,reOpenLua",
  "source_date": "2023年08月04日 09:15:46",
- "hits": 314,
+ "hits": 315,
  "up": 5,
  "favorite": 12,
  "comment": 4,
@@ -17,8 +17,8 @@
   "editor_bound",
   "editor_bound"
  ],
- "truncation": "preview_truncated",
- "line_count": 7,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 143,
+ "char_count": 3590,
  "confidence": "static_review"
 }

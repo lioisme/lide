@@ -5,20 +5,20 @@
  "author": "Duo",
  "platform": "所有环境",
  "source_date": "2023年05月26日 17:16:10",
- "hits": 608,
+ "hits": 609,
  "up": 5,
  "favorite": 13,
  "comment": 6,
  "source_file": "Lua代码\\2863_物理环境.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "negative",
  "portability": "android_api",
  "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
+  "chinese_identifier",
+  "global_pollution"
  ],
- "truncation": "preview_truncated",
- "line_count": 25,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 1315,
+ "char_count": 27548,
  "confidence": "static_review"
 }

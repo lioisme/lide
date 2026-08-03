@@ -5,20 +5,19 @@
  "author": "清风",
  "platform": "所有环境",
  "source_date": "2023年11月18日 08:47:17",
- "hits": 734,
+ "hits": 736,
  "up": 9,
  "favorite": 22,
  "comment": 4,
  "source_file": "加密解密\\3593_一种很新的加密方法.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "negative",
  "portability": "universal",
  "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
+  "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "truncation": "truncated_tail",
+ "line_count": 211,
+ "char_count": 4787,
  "confidence": "static_review"
 }

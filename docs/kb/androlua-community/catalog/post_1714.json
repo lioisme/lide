@@ -5,17 +5,19 @@
  "author": "花园",
  "platform": "所有环境",
  "source_date": "2022年08月14日 14:32:01",
- "hits": 919,
+ "hits": 920,
  "up": 16,
  "favorite": 44,
  "comment": 14,
  "source_file": "实用代码\\1714_andlua调用原生socket连接TCP传输.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "complete_or_unverifiable",
- "line_count": 14,
- "char_count": 300,
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 315,
+ "char_count": 6729,
  "confidence": "static_review"
 }

@@ -39,9 +39,12 @@ repositories {
 }
 
 dependencies {
-    implementation(platform("androidx.compose:compose-bom:2024.09.00"))
+    // 必须与 :app 运行时完全同版（BOM 2025.06.00 → material3 1.4.0）：
+    // 曾用 BOM 2024.09.00（material3 1.2.1）编译 TipIconButton 的 PlainTooltip，
+    // 运行时解析 1.4.0 的 TooltipKt → NoSuchMethodError 长按闪退（实测复现）。
+    implementation(platform("androidx.compose:compose-bom:2025.06.00"))
     implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.material3:material3:1.4.0")
     implementation("androidx.compose.material:material-icons-extended")
     implementation("androidx.core:core-ktx:1.15.0")
 

@@ -5,17 +5,20 @@
  "author": "121211",
  "platform": "Fusion App2",
  "source_date": "2023年12月25日 17:03:29",
- "hits": 805,
+ "hits": 806,
  "up": 7,
  "favorite": 24,
  "comment": 14,
  "source_file": "动画教程\\3690_项目点击_提前至首位_动画布局.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 224,
+ "char_count": 6099,
  "confidence": "static_review"
 }

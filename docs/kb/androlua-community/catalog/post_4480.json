@@ -10,14 +10,15 @@
  "favorite": 19,
  "comment": 2,
  "source_file": "网络请求\\4480_M3U8下载(支持解密、合并ts).lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "universal",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "obsolete",
  "flags": [
-  "short_text"
+  "obsolete",
+  "obsolete"
  ],
- "truncation": "preview_truncated",
- "line_count": 17,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 299,
+ "char_count": 7477,
  "confidence": "static_review"
 }

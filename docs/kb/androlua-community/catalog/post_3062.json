@@ -5,7 +5,7 @@
  "author": "邪默",
  "platform": "所有环境",
  "source_date": "2023年07月12日 22:26:37",
- "hits": 77,
+ "hits": 78,
  "up": 0,
  "favorite": 2,
  "comment": 0,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "universal",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 17,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 41,
+ "char_count": 779,
  "confidence": "static_review"
 }

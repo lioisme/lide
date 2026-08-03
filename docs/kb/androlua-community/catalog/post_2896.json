@@ -5,19 +5,17 @@
  "author": "小白·马",
  "platform": "所有环境",
  "source_date": "2023年06月03日 22:57:03",
- "hits": 185,
+ "hits": 186,
  "up": 2,
  "favorite": 2,
  "comment": 1,
  "source_file": "table表\\2896_二分查找.lua",
- "kind": "text_note",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "universal",
- "flags": [
-  "short_text"
- ],
- "truncation": "complete_or_unverifiable",
- "line_count": 12,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 163,
+ "char_count": 3502,
  "confidence": "static_review"
 }

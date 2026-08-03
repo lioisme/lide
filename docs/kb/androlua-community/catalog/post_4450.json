@@ -10,15 +10,12 @@
  "favorite": 5,
  "comment": 0,
  "source_file": "系统\\4450_图标快捷方式的创建与删除.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "android_api",
- "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
- ],
- "truncation": "preview_truncated",
- "line_count": 6,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 35,
+ "char_count": 1387,
  "confidence": "static_review"
 }

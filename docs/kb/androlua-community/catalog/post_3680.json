@@ -5,19 +5,22 @@
  "author": "琪琪子",
  "platform": "AndLua",
  "source_date": "2023年12月22日 15:19:46",
- "hits": 509,
+ "hits": 510,
  "up": 9,
  "favorite": 30,
  "comment": 15,
  "source_file": "小工具\\3680_录屏.lua",
  "kind": "reference_sheet",
- "verdict": "neutral",
- "portability": "android_api",
+ "verdict": "negative",
+ "portability": "obsolete",
  "flags": [
-  "xml_list"
+  "xml_list",
+  "obsolete",
+  "obsolete",
+  "sensitive_permission"
  ],
- "truncation": "preview_truncated",
- "line_count": 7,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 70,
+ "char_count": 2644,
  "confidence": "static_review"
 }

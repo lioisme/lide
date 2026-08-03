@@ -5,19 +5,20 @@
  "author": "小白·马",
  "platform": "Fusion App2",
  "source_date": "2023年05月26日 16:52:07",
- "hits": 965,
+ "hits": 966,
  "up": 15,
  "favorite": 58,
  "comment": 2,
  "source_file": "实用代码\\2862_ViewPager2_轮播图.lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "android_api",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
  "flags": [
-  "short_text"
+  "androlua_private",
+  "private_api"
  ],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 250,
+ "char_count": 6042,
  "confidence": "static_review"
 }

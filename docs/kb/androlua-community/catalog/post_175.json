@@ -5,20 +5,17 @@
  "author": "oゞ夜色乄未央ぁ",
  "platform": "所有环境",
  "source_date": "2020年05月01日 12:26:18",
- "hits": 320,
+ "hits": 321,
  "up": 2,
  "favorite": 7,
  "comment": 0,
  "source_file": "Androlua教程\\175_Lua字符串md5加密.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "universal",
- "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
- ],
- "truncation": "preview_truncated",
- "line_count": 15,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 232,
+ "char_count": 7716,
  "confidence": "static_review"
 }

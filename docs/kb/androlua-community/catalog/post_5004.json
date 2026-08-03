@@ -11,12 +11,13 @@
  "comment": 3,
  "source_file": "系统\\5004_电量伪装.lua",
  "kind": "text_note",
- "verdict": "neutral",
+ "verdict": "negative",
  "portability": "universal",
  "flags": [
-  "short_text"
+  "short_text",
+  "os_exec"
  ],
- "truncation": "complete_or_unverifiable",
+ "truncation": "complete",
  "line_count": 7,
  "char_count": 150,
  "confidence": "static_review"

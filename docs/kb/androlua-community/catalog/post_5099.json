@@ -12,10 +12,10 @@
  "source_file": "小工具\\5099_SearchView_的一个简单搜索提示实例.lua",
  "kind": "code_demo",
  "verdict": "positive",
- "portability": "universal",
+ "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 13,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 144,
+ "char_count": 3950,
  "confidence": "static_review"
 }

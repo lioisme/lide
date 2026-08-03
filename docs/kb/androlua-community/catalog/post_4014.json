@@ -11,11 +11,13 @@
  "comment": 4,
  "source_file": "布局代码\\4014_仿OPPO开关2.0.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "complete_or_unverifiable",
- "line_count": 12,
- "char_count": 300,
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 231,
+ "char_count": 4897,
  "confidence": "static_review"
 }

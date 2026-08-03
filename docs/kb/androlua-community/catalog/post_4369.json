@@ -10,14 +10,12 @@
  "favorite": 7,
  "comment": 0,
  "source_file": "小游戏\\4369_数字连线.lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "universal",
- "flags": [
-  "short_text"
- ],
- "truncation": "preview_truncated",
- "line_count": 19,
- "char_count": 300,
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 262,
+ "char_count": 6902,
  "confidence": "static_review"
 }

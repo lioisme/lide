@@ -11,11 +11,13 @@
  "comment": 0,
  "source_file": "基础代码\\4814_搜索词建议.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "universal",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 10,
- "char_count": 300,
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 19,
+ "char_count": 432,
  "confidence": "static_review"
 }

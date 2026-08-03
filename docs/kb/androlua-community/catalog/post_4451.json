@@ -10,16 +10,15 @@
  "favorite": 16,
  "comment": 1,
  "source_file": "小工具\\4451_一个简单有效的桌面快捷方式构建函数.lua",
- "kind": "text_note",
+ "kind": "code_demo",
  "verdict": "negative",
- "portability": "editor_bound",
+ "portability": "host_private",
  "flags": [
-  "short_text",
-  "editor_bound",
-  "editor_bound"
+  "androlua_private",
+  "private_api"
  ],
- "truncation": "preview_truncated",
- "line_count": 13,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 90,
+ "char_count": 3231,
  "confidence": "static_review"
 }

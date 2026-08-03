@@ -5,7 +5,7 @@
  "author": "yinyong",
  "platform": "所有环境",
  "source_date": "2023年11月15日 16:06:04",
- "hits": 289,
+ "hits": 290,
  "up": 3,
  "favorite": 5,
  "comment": 6,
@@ -14,10 +14,10 @@
  "verdict": "negative",
  "portability": "android_api",
  "flags": [
-  "global_pollution"
+  "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 18,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 87,
+ "char_count": 1528,
  "confidence": "static_review"
 }

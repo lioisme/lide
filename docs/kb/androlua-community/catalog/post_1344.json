@@ -5,19 +5,20 @@
  "author": "oゞ夜色乄未央ぁ",
  "platform": "所有环境",
  "source_date": "2022年01月29日 19:34:57",
- "hits": 1283,
+ "hits": 1285,
  "up": 20,
  "favorite": 82,
  "comment": 1,
  "source_file": "Activity活动\\1344_Activity部分函数.lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "android_api",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
  "flags": [
-  "short_text"
+  "androlua_private",
+  "private_api"
  ],
- "truncation": "preview_truncated",
- "line_count": 9,
- "char_count": 300,
+ "truncation": "truncated_tail",
+ "line_count": 53,
+ "char_count": 1556,
  "confidence": "static_review"
 }

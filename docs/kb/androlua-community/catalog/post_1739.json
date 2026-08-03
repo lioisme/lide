@@ -5,7 +5,7 @@
  "author": "兰皋",
  "platform": "所有环境",
  "source_date": "2022年08月18日 01:24:03",
- "hits": 756,
+ "hits": 757,
  "up": 5,
  "favorite": 18,
  "comment": 3,
@@ -17,8 +17,8 @@
   "androlua_private",
   "private_api"
  ],
- "truncation": "complete_or_unverifiable",
- "line_count": 16,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 119,
+ "char_count": 2768,
  "confidence": "static_review"
 }

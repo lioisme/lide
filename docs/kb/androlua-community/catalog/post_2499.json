@@ -5,20 +5,21 @@
  "author": "破晓",
  "platform": "Fusion App2",
  "source_date": "2023年02月22日 20:13:12",
- "hits": 731,
+ "hits": 732,
  "up": 3,
  "favorite": 37,
  "comment": 9,
  "source_file": "布局教程\\2499_简约浏览器UA切换，ListView布局.lua",
- "kind": "fragment",
- "verdict": "neutral",
- "portability": "android_api",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
  "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
+  "editor_bound",
+  "editor_bound",
+  "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 232,
+ "char_count": 5928,
  "confidence": "static_review"
 }

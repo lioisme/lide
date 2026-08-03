@@ -5,17 +5,21 @@
  "author": "老黑",
  "platform": "AndroLua,AppLua,AndLua,LuaApp",
  "source_date": "2023年01月14日 10:24:14",
- "hits": 647,
+ "hits": 648,
  "up": 10,
  "favorite": 45,
  "comment": 17,
  "source_file": "实用代码\\2316_远程验证客户端.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 17,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 293,
+ "char_count": 7888,
  "confidence": "static_review"
 }

@@ -5,19 +5,20 @@
  "author": "小白·马",
  "platform": "Fusion App2,reOpenLua,OpenLuaX",
  "source_date": "2024年02月17日 13:54:06",
- "hits": 453,
+ "hits": 454,
  "up": 4,
  "favorite": 21,
  "comment": 0,
  "source_file": "实用代码\\3899_提供自定义返回导航.lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "android_api",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
  "flags": [
-  "short_text"
+  "editor_bound",
+  "editor_bound"
  ],
- "truncation": "preview_truncated",
- "line_count": 8,
- "char_count": 300,
+ "truncation": "truncated_tail",
+ "line_count": 31,
+ "char_count": 1160,
  "confidence": "static_review"
 }

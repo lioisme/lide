@@ -5,17 +5,19 @@
  "author": "•⤙•/k",
  "platform": "AndLua",
  "source_date": "2023年06月26日 17:20:56",
- "hits": 386,
+ "hits": 387,
  "up": 2,
  "favorite": 9,
  "comment": 6,
  "source_file": "Activity活动\\2979_来自深渊_展示页.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 18,
- "char_count": 300,
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 264,
+ "char_count": 7537,
  "confidence": "static_review"
 }

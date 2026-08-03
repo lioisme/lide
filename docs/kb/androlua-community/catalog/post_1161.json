@@ -5,7 +5,7 @@
  "author": "oゞ夜色乄未央ぁ",
  "platform": "",
  "source_date": "2020年05月01日 12:26:18",
- "hits": 138,
+ "hits": 139,
  "up": 0,
  "favorite": 1,
  "comment": 0,
@@ -17,8 +17,8 @@
   "androlua_private",
   "private_api"
  ],
- "truncation": "preview_truncated",
- "line_count": 13,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 69,
+ "char_count": 1993,
  "confidence": "static_review"
 }

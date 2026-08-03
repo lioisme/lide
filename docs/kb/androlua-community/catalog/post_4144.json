@@ -10,15 +10,12 @@
  "favorite": 33,
  "comment": 8,
  "source_file": "基础代码\\4144_一个简单的可推动侧滑栏.lua",
- "kind": "text_note",
- "verdict": "negative",
- "portability": "universal",
- "flags": [
-  "short_text",
-  "global_pollution"
- ],
- "truncation": "preview_truncated",
- "line_count": 17,
- "char_count": 300,
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 51,
+ "char_count": 1000,
  "confidence": "static_review"
 }

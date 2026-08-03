@@ -10,14 +10,12 @@
  "favorite": 23,
  "comment": 4,
  "source_file": "网络请求\\4147_okhttp_封装方法.lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "universal",
- "flags": [
-  "short_text"
- ],
- "truncation": "preview_truncated",
- "line_count": 13,
- "char_count": 300,
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 306,
+ "char_count": 8528,
  "confidence": "static_review"
 }

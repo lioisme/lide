@@ -5,7 +5,7 @@
  "author": "Adam·Eva",
  "platform": "所有环境",
  "source_date": "2023年01月13日 10:43:58",
- "hits": 941,
+ "hits": 942,
  "up": 6,
  "favorite": 17,
  "comment": 8,
@@ -19,8 +19,8 @@
   "private_api",
   "incomplete_fragment"
  ],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 53,
+ "char_count": 1522,
  "confidence": "static_review"
 }

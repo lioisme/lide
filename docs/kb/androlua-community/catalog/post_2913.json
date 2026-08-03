@@ -5,20 +5,17 @@
  "author": "Duo",
  "platform": "所有环境",
  "source_date": "2023年06月07日 12:13:31",
- "hits": 392,
+ "hits": 393,
  "up": 3,
  "favorite": 7,
  "comment": 3,
  "source_file": "Lua代码\\2913_Pi.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "universal",
- "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
- ],
- "truncation": "preview_truncated",
- "line_count": 25,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 171,
+ "char_count": 3528,
  "confidence": "static_review"
 }

@@ -11,11 +11,14 @@
  "comment": 3,
  "source_file": "Menu菜单\\4194_popupMenu修改背景波纹以及字体大小.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "obsolete",
+ "flags": [
+  "obsolete",
+  "obsolete"
+ ],
+ "truncation": "complete",
+ "line_count": 239,
+ "char_count": 8250,
  "confidence": "static_review"
 }

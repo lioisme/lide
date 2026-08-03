@@ -5,17 +5,19 @@
  "author": "Duo",
  "platform": "所有环境",
  "source_date": "2023年05月22日 11:18:32",
- "hits": 234,
+ "hits": 235,
  "up": 2,
  "favorite": 3,
  "comment": 6,
  "source_file": "小工具\\2839_Chart.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "flags": [
+  "global_pollution"
+ ],
+ "truncation": "complete",
+ "line_count": 232,
+ "char_count": 4469,
  "confidence": "static_review"
 }

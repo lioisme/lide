@@ -5,7 +5,7 @@
  "author": "苦小怕",
  "platform": "Fusion App2",
  "source_date": "2022年05月22日 13:19:33",
- "hits": 557,
+ "hits": 558,
  "up": 8,
  "favorite": 30,
  "comment": 0,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 8,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 93,
+ "char_count": 2118,
  "confidence": "static_review"
 }

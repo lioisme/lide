@@ -5,7 +5,7 @@
  "author": "奥姆",
  "platform": "所有环境",
  "source_date": "2023年01月16日 17:33:13",
- "hits": 230,
+ "hits": 231,
  "up": 3,
  "favorite": 3,
  "comment": 0,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "complete_or_unverifiable",
- "line_count": 19,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 26,
+ "char_count": 435,
  "confidence": "static_review"
 }

@@ -5,7 +5,7 @@
  "author": "海纳百氚，有容乃大",
  "platform": "Fusion App2",
  "source_date": "2022年03月05日 21:10:16",
- "hits": 324,
+ "hits": 325,
  "up": 6,
  "favorite": 25,
  "comment": 0,
@@ -17,8 +17,8 @@
   "editor_bound",
   "editor_bound"
  ],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 33,
+ "char_count": 754,
  "confidence": "static_review"
 }

@@ -5,19 +5,17 @@
  "author": "初陌",
  "platform": "AndLua",
  "source_date": "2023年11月03日 18:11:54",
- "hits": 239,
+ "hits": 240,
  "up": 1,
  "favorite": 8,
  "comment": 4,
  "source_file": "Layout布局\\3548_网络错误模板.lua",
- "kind": "text_note",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "universal",
- "flags": [
-  "short_text"
- ],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 56,
+ "char_count": 1377,
  "confidence": "static_review"
 }

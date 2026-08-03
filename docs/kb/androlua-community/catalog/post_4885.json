@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "universal",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 20,
- "char_count": 300,
+ "truncation": "truncated_tail",
+ "line_count": 90,
+ "char_count": 1355,
  "confidence": "static_review"
 }

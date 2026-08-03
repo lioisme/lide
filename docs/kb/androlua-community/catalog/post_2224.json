@@ -5,7 +5,7 @@
  "author": "邪默",
  "platform": "AndLua,LuaApp",
  "source_date": "2022年12月19日 19:22:29",
- "hits": 679,
+ "hits": 680,
  "up": 6,
  "favorite": 17,
  "comment": 9,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "complete_or_unverifiable",
- "line_count": 14,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 150,
+ "char_count": 3500,
  "confidence": "static_review"
 }

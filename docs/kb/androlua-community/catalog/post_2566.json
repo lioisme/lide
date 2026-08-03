@@ -5,7 +5,7 @@
  "author": "dingyi",
  "platform": "所有环境",
  "source_date": "2023年03月08日 23:31:43",
- "hits": 172,
+ "hits": 173,
  "up": 2,
  "favorite": 7,
  "comment": 0,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "universal",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 16,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 66,
+ "char_count": 1392,
  "confidence": "static_review"
 }

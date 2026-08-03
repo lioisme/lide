@@ -5,17 +5,19 @@
  "author": "NekoLaska",
  "platform": "Fusion App2",
  "source_date": "2023年05月10日 23:32:20",
- "hits": 343,
+ "hits": 344,
  "up": 8,
  "favorite": 17,
  "comment": 3,
  "source_file": "Androlua教程\\2788_获取CPU频率.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 8,
- "char_count": 300,
+ "flags": [
+  "os_exec"
+ ],
+ "truncation": "complete",
+ "line_count": 55,
+ "char_count": 1487,
  "confidence": "static_review"
 }

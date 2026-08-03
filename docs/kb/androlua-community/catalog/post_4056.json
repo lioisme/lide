@@ -12,10 +12,10 @@
  "source_file": "Lua教程\\4056_效率不高的『3d建模』--二元函数_3d_绘图器.lua",
  "kind": "code_demo",
  "verdict": "positive",
- "portability": "universal",
+ "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 18,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 1630,
+ "char_count": 40749,
  "confidence": "static_review"
 }

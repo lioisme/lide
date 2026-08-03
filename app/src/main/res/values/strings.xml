@@ -272,4 +272,16 @@
     <string name="cd_api_browser">API Browser</string>
     <string name="api_filter">Filter by category</string>
     <string name="api_clear_search">Clear search</string>
+    <string name="api_usage_title">By Usage</string>
+    <string name="api_usage_adapter">Adapters</string>
+    <string name="api_usage_container">Container Widgets</string>
+    <string name="api_usage_input">Input Widgets</string>
+    <string name="api_usage_utility">Utility Classes</string>
+    <string name="api_usage_button">Buttons</string>
+    <string name="api_usage_state">State Widgets</string>
+    <string name="api_usage_view">View Widgets</string>
+    <string name="api_usage_popup">Popups &amp; Dialogs</string>
+    <string name="api_usage_dropdown">Dropdowns</string>
+    <string name="api_kind_interface">Interface</string>
+    <string name="api_kind_class">Class</string>
 </resources>

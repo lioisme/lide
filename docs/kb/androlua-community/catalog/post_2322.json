@@ -5,17 +5,20 @@
  "author": "ㄛㄙ飞ㄋ",
  "platform": "Fusion App2",
  "source_date": "2023年01月14日 21:07:42",
- "hits": 309,
+ "hits": 310,
  "up": 1,
  "favorite": 15,
  "comment": 3,
  "source_file": "实用代码\\2322_提取app所有图片资源.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 18,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 174,
+ "char_count": 2903,
  "confidence": "static_review"
 }

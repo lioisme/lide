@@ -5,20 +5,17 @@
  "author": "oゞ夜色乄未央ぁ",
  "platform": "",
  "source_date": "2020年05月01日 12:26:18",
- "hits": 167,
+ "hits": 168,
  "up": 1,
  "favorite": 9,
  "comment": 0,
  "source_file": "实用代码\\306_按两次返回键退出.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "universal",
- "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
- ],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 13,
+ "char_count": 315,
  "confidence": "static_review"
 }

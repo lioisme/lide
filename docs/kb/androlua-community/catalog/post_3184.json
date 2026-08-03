@@ -5,17 +5,20 @@
  "author": "Duo",
  "platform": "所有环境",
  "source_date": "2023年08月02日 11:52:00",
- "hits": 403,
+ "hits": 404,
  "up": 5,
  "favorite": 4,
  "comment": 2,
  "source_file": "小游戏\\3184_块.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 8,
- "char_count": 300,
+ "flags": [
+  "chinese_identifier",
+  "global_pollution"
+ ],
+ "truncation": "complete",
+ "line_count": 2087,
+ "char_count": 47602,
  "confidence": "static_review"
 }

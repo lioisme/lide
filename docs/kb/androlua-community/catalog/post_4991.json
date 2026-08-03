@@ -10,15 +10,15 @@
  "favorite": 12,
  "comment": 0,
  "source_file": "UI控件\\4991_Listview制作的简易歌词控件.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "negative",
  "portability": "android_api",
  "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
+  "global_pollution",
+  "sensitive_permission"
  ],
- "truncation": "preview_truncated",
- "line_count": 18,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 312,
+ "char_count": 7326,
  "confidence": "static_review"
 }

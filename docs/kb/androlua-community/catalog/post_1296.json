@@ -5,19 +5,19 @@
  "author": "oゞ夜色乄未央ぁ",
  "platform": "所有环境",
  "source_date": "2022年01月08日 21:24:58",
- "hits": 415,
+ "hits": 416,
  "up": 6,
  "favorite": 18,
  "comment": 3,
  "source_file": "系统\\1296_抢占音频焦点.lua",
  "kind": "code_demo",
  "verdict": "negative",
- "portability": "universal",
+ "portability": "android_api",
  "flags": [
   "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 10,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 39,
+ "char_count": 1198,
  "confidence": "static_review"
 }

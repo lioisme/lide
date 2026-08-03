@@ -5,17 +5,21 @@
  "author": "Adam·Eva",
  "platform": "所有环境",
  "source_date": "2023年11月19日 04:32:19",
- "hits": 752,
+ "hits": 753,
  "up": 5,
  "favorite": 19,
  "comment": 2,
  "source_file": "适配器\\3596_LuaAdapter.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 8,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 152,
+ "char_count": 4441,
  "confidence": "static_review"
 }

@@ -5,22 +5,20 @@
  "author": "博士",
  "platform": "所有环境",
  "source_date": "2022年12月02日 01:19:48",
- "hits": 1535,
+ "hits": 1536,
  "up": 16,
  "favorite": 65,
  "comment": 8,
  "source_file": "网络操作\\2129_API接口大全及使用.lua",
- "kind": "fragment",
+ "kind": "code_demo",
  "verdict": "negative",
  "portability": "host_private",
  "flags": [
-  "truncated_tail",
   "androlua_private",
-  "private_api",
-  "incomplete_fragment"
+  "private_api"
  ],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 1070,
+ "char_count": 28465,
  "confidence": "static_review"
 }

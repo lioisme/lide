@@ -5,17 +5,21 @@
  "author": "海纳百氚，有容乃大",
  "platform": "AndLua",
  "source_date": "2023年07月11日 21:02:06",
- "hits": 1604,
+ "hits": 1605,
  "up": 30,
  "favorite": 91,
  "comment": 14,
  "source_file": "小工具\\3053_一个注册登录布局对接水仙后台实例.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 17,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 574,
+ "char_count": 16133,
  "confidence": "static_review"
 }

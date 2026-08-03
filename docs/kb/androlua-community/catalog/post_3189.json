@@ -5,7 +5,7 @@
  "author": "沐风 - MFCompany",
  "platform": "Fusion App2,reOpenLua,OpenLuaX",
  "source_date": "2023年08月02日 21:09:26",
- "hits": 1273,
+ "hits": 1274,
  "up": 9,
  "favorite": 34,
  "comment": 33,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 381,
+ "char_count": 9666,
  "confidence": "static_review"
 }

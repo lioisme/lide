@@ -5,17 +5,19 @@
  "author": "oゞ夜色乄未央ぁ",
  "platform": "",
  "source_date": "2021年10月10日 05:18:08",
- "hits": 295,
+ "hits": 296,
  "up": 3,
  "favorite": 2,
  "comment": 0,
  "source_file": "布局教程\\1204_EditText封装.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "universal",
- "flags": [],
- "truncation": "complete_or_unverifiable",
- "line_count": 14,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 159,
+ "char_count": 3911,
  "confidence": "static_review"
 }

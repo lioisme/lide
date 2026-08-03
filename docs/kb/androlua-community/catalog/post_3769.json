@@ -5,17 +5,21 @@
  "author": "Sera",
  "platform": "AndLua",
  "source_date": "2024年01月22日 14:08:59",
- "hits": 543,
+ "hits": 546,
  "up": 0,
  "favorite": 3,
  "comment": 0,
  "source_file": "布局代码\\3769_AndLua自绘制拖动条.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 232,
+ "char_count": 4713,
  "confidence": "static_review"
 }

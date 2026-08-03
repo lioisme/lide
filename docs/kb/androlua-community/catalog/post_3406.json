@@ -5,19 +5,19 @@
  "author": "•⤙•/k",
  "platform": "AndLua",
  "source_date": "2023年09月18日 09:33:10",
- "hits": 393,
+ "hits": 395,
  "up": 4,
  "favorite": 8,
  "comment": 11,
  "source_file": "布局教程\\3406_伪_拖动条(二次修改).lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "universal",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
  "flags": [
-  "short_text"
+  "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 16,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 120,
+ "char_count": 2998,
  "confidence": "static_review"
 }

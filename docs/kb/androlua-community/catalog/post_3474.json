@@ -5,17 +5,19 @@
  "author": "热爱从不降温",
  "platform": "所有环境",
  "source_date": "2023年10月07日 14:57:57",
- "hits": 797,
+ "hits": 798,
  "up": 8,
  "favorite": 40,
  "comment": 24,
  "source_file": "小工具\\3474_看图猜成语2.1.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 10,
- "char_count": 300,
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 215,
+ "char_count": 5432,
  "confidence": "static_review"
 }

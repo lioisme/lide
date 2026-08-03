@@ -5,20 +5,17 @@
  "author": "oゞ夜色乄未央ぁ",
  "platform": "AndroLua,AndLua",
  "source_date": "2022年10月24日 20:28:31",
- "hits": 1243,
+ "hits": 1244,
  "up": 20,
  "favorite": 63,
  "comment": 8,
  "source_file": "UI控件\\1994_PullingLayout刷新控件.lua",
- "kind": "text_note",
- "verdict": "negative",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "universal",
- "flags": [
-  "short_text",
-  "global_pollution"
- ],
- "truncation": "complete_or_unverifiable",
- "line_count": 17,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 73,
+ "char_count": 1181,
  "confidence": "static_review"
 }

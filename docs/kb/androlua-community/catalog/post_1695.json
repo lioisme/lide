@@ -5,7 +5,7 @@
  "author": "花园",
  "platform": "所有环境",
  "source_date": "2022年08月10日 17:10:56",
- "hits": 540,
+ "hits": 541,
  "up": 11,
  "favorite": 29,
  "comment": 4,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "truncation": "truncated_tail",
+ "line_count": 57,
+ "char_count": 1266,
  "confidence": "static_review"
 }

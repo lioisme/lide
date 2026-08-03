@@ -5,7 +5,7 @@
  "author": "鹤归",
  "platform": "所有环境",
  "source_date": "2022年10月04日 09:35:36",
- "hits": 596,
+ "hits": 597,
  "up": 3,
  "favorite": 20,
  "comment": 3,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 15,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 52,
+ "char_count": 1209,
  "confidence": "static_review"
 }

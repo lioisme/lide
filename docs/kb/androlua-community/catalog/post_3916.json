@@ -5,7 +5,7 @@
  "author": "UyCode工作室-叶无尘",
  "platform": "reOpenLua",
  "source_date": "2024年02月22日 21:42:23",
- "hits": 375,
+ "hits": 376,
  "up": 1,
  "favorite": 1,
  "comment": 0,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 13,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 55,
+ "char_count": 1283,
  "confidence": "static_review"
 }

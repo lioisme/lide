@@ -10,15 +10,12 @@
  "favorite": 7,
  "comment": 1,
  "source_file": "安卓教程\\5244_liquidglass_Demo2_RenderNode.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "android_api",
- "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
- ],
- "truncation": "preview_truncated",
- "line_count": 13,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 134,
+ "char_count": 4361,
  "confidence": "static_review"
 }

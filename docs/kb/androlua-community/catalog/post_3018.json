@@ -5,20 +5,19 @@
  "author": "鲲宝",
  "platform": "所有环境",
  "source_date": "2023年07月03日 13:12:55",
- "hits": 227,
+ "hits": 228,
  "up": 6,
  "favorite": 6,
  "comment": 3,
  "source_file": "table表\\3018_最简单的面向对象2.1版.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "negative",
  "portability": "android_api",
  "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
+  "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 15,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 52,
+ "char_count": 1119,
  "confidence": "static_review"
 }

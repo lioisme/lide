@@ -10,14 +10,12 @@
  "favorite": 0,
  "comment": 3,
  "source_file": "小工具\\4221_历史上的今天（抓360导航）.lua",
- "kind": "text_note",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "android_api",
- "flags": [
-  "short_text"
- ],
- "truncation": "complete_or_unverifiable",
- "line_count": 14,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 28,
+ "char_count": 682,
  "confidence": "static_review"
 }

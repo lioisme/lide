@@ -5,17 +5,21 @@
  "author": "苦小怕",
  "platform": "所有环境",
  "source_date": "2023年06月18日 16:11:18",
- "hits": 947,
+ "hits": 949,
  "up": 17,
  "favorite": 40,
  "comment": 2,
  "source_file": "系统\\2950_获取系统主题色(MDC).lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 19,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "global_pollution"
+ ],
+ "truncation": "complete",
+ "line_count": 315,
+ "char_count": 14883,
  "confidence": "static_review"
 }

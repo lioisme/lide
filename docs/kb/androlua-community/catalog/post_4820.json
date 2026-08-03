@@ -11,11 +11,13 @@
  "comment": 5,
  "source_file": "Lua教程\\4820_帧率测试.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 16,
- "char_count": 300,
+ "flags": [
+  "global_pollution"
+ ],
+ "truncation": "complete",
+ "line_count": 224,
+ "char_count": 5816,
  "confidence": "static_review"
 }

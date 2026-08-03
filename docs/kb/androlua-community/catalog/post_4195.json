@@ -10,14 +10,15 @@
  "favorite": 38,
  "comment": 3,
  "source_file": "动画教程\\4195_丝滑的缓冲seekBar.lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "universal",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
  "flags": [
-  "short_text"
+  "chinese_identifier",
+  "sensitive_permission"
  ],
- "truncation": "preview_truncated",
- "line_count": 24,
- "char_count": 300,
+ "truncation": "truncated_tail",
+ "line_count": 330,
+ "char_count": 7263,
  "confidence": "static_review"
 }

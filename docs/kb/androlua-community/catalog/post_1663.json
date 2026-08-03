@@ -5,19 +5,17 @@
  "author": "帕帝天秀",
  "platform": "所有环境",
  "source_date": "2022年08月05日 21:33:07",
- "hits": 429,
+ "hits": 430,
  "up": 11,
  "favorite": 19,
  "comment": 0,
  "source_file": "字符处理\\1663_Lua语言代码规范.lua",
- "kind": "text_note",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "universal",
- "flags": [
-  "short_text"
- ],
- "truncation": "preview_truncated",
- "line_count": 21,
- "char_count": 300,
+ "flags": [],
+ "truncation": "truncated_tail",
+ "line_count": 346,
+ "char_count": 7784,
  "confidence": "static_review"
 }

@@ -5,17 +5,20 @@
  "author": "苦小怕",
  "platform": "所有环境",
  "source_date": "2023年07月01日 17:28:56",
- "hits": 904,
+ "hits": 905,
  "up": 7,
  "favorite": 21,
  "comment": 6,
  "source_file": "系统\\3002_android.R.drawable.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 9,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 126,
+ "char_count": 2888,
  "confidence": "static_review"
 }

@@ -11,11 +11,13 @@
  "comment": 0,
  "source_file": "浏览器\\5311_让FusionApp2.0可以正确调用摄像头.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "neutral",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 15,
- "char_count": 300,
+ "flags": [
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 227,
+ "char_count": 7970,
  "confidence": "static_review"
 }

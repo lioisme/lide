@@ -5,7 +5,7 @@
  "author": "诶害",
  "platform": "所有环境",
  "source_date": "2023年05月01日 03:58:16",
- "hits": 104,
+ "hits": 105,
  "up": 0,
  "favorite": 0,
  "comment": 0,
@@ -14,7 +14,7 @@
  "verdict": "positive",
  "portability": "universal",
  "flags": [],
- "truncation": "complete_or_unverifiable",
+ "truncation": "complete",
  "line_count": 6,
  "char_count": 123,
  "confidence": "static_review"

@@ -10,15 +10,12 @@
  "favorite": 1,
  "comment": 1,
  "source_file": "小工具\\5232_日语转罗马音标注.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "android_api",
- "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
- ],
- "truncation": "preview_truncated",
- "line_count": 17,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 145,
+ "char_count": 3438,
  "confidence": "static_review"
 }

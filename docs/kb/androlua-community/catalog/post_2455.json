@@ -5,17 +5,19 @@
  "author": "尼斯湖水怪",
  "platform": "所有环境",
  "source_date": "2023年02月11日 19:41:24",
- "hits": 218,
+ "hits": 219,
  "up": 2,
  "favorite": 9,
  "comment": 0,
  "source_file": "实用代码\\2455_指令输出获取.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "universal",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 16,
- "char_count": 300,
+ "flags": [
+  "os_exec"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 17,
+ "char_count": 325,
  "confidence": "static_review"
 }

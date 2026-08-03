@@ -17,8 +17,8 @@
   "androlua_private",
   "private_api"
  ],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 484,
+ "char_count": 14794,
  "confidence": "static_review"
 }

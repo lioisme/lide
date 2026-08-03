@@ -5,17 +5,21 @@
  "author": "苦小怕",
  "platform": "Fusion App2",
  "source_date": "2022年08月09日 22:36:41",
- "hits": 1131,
+ "hits": 1132,
  "up": 17,
  "favorite": 33,
  "comment": 2,
  "source_file": "控件属性\\1692_ShapeAppearanceModel.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound",
+  "chinese_identifier"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 394,
+ "char_count": 12910,
  "confidence": "static_review"
 }

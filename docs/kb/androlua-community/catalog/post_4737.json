@@ -11,11 +11,13 @@
  "comment": 1,
  "source_file": "Layout布局\\4737_ConstraintLayout详解.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "neutral",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 8,
- "char_count": 300,
+ "flags": [
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 515,
+ "char_count": 15876,
  "confidence": "static_review"
 }

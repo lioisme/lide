@@ -5,7 +5,7 @@
  "author": "Duo",
  "platform": "Fusion App2",
  "source_date": "2022年12月28日 11:05:01",
- "hits": 495,
+ "hits": 496,
  "up": 13,
  "favorite": 27,
  "comment": 1,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 9,
- "char_count": 300,
+ "truncation": "truncated_tail",
+ "line_count": 100,
+ "char_count": 2751,
  "confidence": "static_review"
 }

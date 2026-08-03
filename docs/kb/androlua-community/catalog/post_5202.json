@@ -5,7 +5,7 @@
  "author": "😈",
  "platform": "所有环境",
  "source_date": "2026年02月01日 14:06:33",
- "hits": 265,
+ "hits": 266,
  "up": 4,
  "favorite": 4,
  "comment": 0,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 225,
+ "char_count": 8477,
  "confidence": "static_review"
 }

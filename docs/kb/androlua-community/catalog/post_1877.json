@@ -5,17 +5,21 @@
  "author": "苦小怕",
  "platform": "所有环境",
  "source_date": "2022年09月12日 15:09:51",
- "hits": 1448,
+ "hits": 1449,
  "up": 27,
  "favorite": 83,
  "comment": 25,
  "source_file": "系统\\1877_常驻通知&刷屏通知.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 13,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 64,
+ "char_count": 2007,
  "confidence": "static_review"
 }

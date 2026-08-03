@@ -28,23 +28,25 @@ androlua-community/
 └── tools/              ← analyze.py（全量扫描/再生成）
 ```
 
-## 2. 当前统计（2026-08-02 全量扫描）
+## 2. 当前统计（2026-08-03 全量正文扫描 v2）
 
 | 维度 | 分布 |
 |------|------|
 | 总数 | 2144 篇 |
-| kind | code_demo 1439 / text_note 461 / fragment 234 / reference_sheet 5 / announce 5 |
-| verdict（初筛） | positive 1128 / neutral 573 / negative 435 / harmful 8 |
-| portability | android_api 1054 / universal 915 / editor_bound 104 / host_private 67 / obsolete 4 |
-| 来源截断 | preview_truncated 1740 / complete_or_unverifiable 404 |
+| kind | code_demo 1950 / text_note 154 / fragment 26 / reference_sheet 11 / announce 3 |
+| verdict（初筛） | positive 1005 / neutral 209 / negative 922 / harmful 8 |
+| portability | android_api 1067 / universal 602 / host_private 273 / editor_bound 170 / obsolete 32 |
+| 正文截断 | complete 1785 / truncated_tail 359 |
 
-> ⚠ **来源级事实**：社区 list 接口只回传约 300 字符的 `manual_content` 预览，
-> 1740/2144 篇正文**文末语句不完整**。所有 verdict 均为**静态初筛**，未实测。
+> ⚠ **来源级事实（v2 修正）**：v1 所称「300 字符预览截断 1740/2144」系接口列表预览限制，
+> **不是正文事实**。本版改为读取磁盘完整正文（`lua_files/**/*.lua`，12.5MB/438K 行）；
+> 真实文末截断 359 篇（truncated_tail）。verdict 均为静态初筛，未实测。
 
 ## 3. 使用方式
 
 - **找方法/思路** → `positives/`（每卡含来源 id 与片段）
 - **找反例/避坑** → `negatives/`（含判罚依据与修正写法）
+- **类型×用途×正负标注总览** → `KNOWLEDGE_BASE.md`（KB-COMM-002）
 - **批量筛选/审计** → `catalog/post_*.json`（机器可读）
 - **微调数据** → `training/`（JSONL，schema 见 `training/README.md`）
 
@@ -65,3 +67,5 @@ androlua-community/
 | 2026-08-02 | 人工复核：pro 源码核对 com.androlua.* 类存在性（LuaRecyclerAdapter 不存在） | catalog/, negatives/private_api_lockin.md |
 | 2026-08-02 | 第一批主题卡：positives 9 卡（网络/WebView/JSON/通知定时/自绘动画/列表适配器/文件存储/系统工具/热更新设计）；negatives 5 卡 + harmful 专项；2383/2384 误报降级 | positives/, negatives/ |
 | 2026-08-02 | 训练语料：schema + 人工 seed 11 条 + build_training.py 批量候选（analyze 399 / reject 1，draft） | training/ |
+| 2026-08-03 | **v2 全量正文扫描**：analyze.py 改为读磁盘完整正文（12.5MB/438K 行），修正 v1 预览截断误报；规则校准（shamrock 隐藏代码惯用法、layout 键值对、Glide.load 误报、注入/多开语义收窄）；harmful 双通道（正则初筛 + 人工复核清单 HARMFUL_OVERRIDES，8 篇） | tools/analyze.py, catalog/ |
+| 2026-08-03 | 专业知识库正文：KB-COMM-002（类型×用途×正负标注 + 负面专项 + harmful 专项 + 入库 DoD） | KNOWLEDGE_BASE.md |

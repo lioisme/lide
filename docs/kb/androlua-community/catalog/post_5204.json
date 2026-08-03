@@ -11,11 +11,13 @@
  "comment": 0,
  "source_file": "Lua代码\\5204_弹幕趋势图.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "flags": [
+  "remote_exec"
+ ],
+ "truncation": "complete",
+ "line_count": 235,
+ "char_count": 7493,
  "confidence": "static_review"
 }

@@ -5,17 +5,19 @@
  "author": "1111",
  "platform": "所有环境",
  "source_date": "2022年12月09日 14:40:52",
- "hits": 491,
+ "hits": 492,
  "up": 7,
  "favorite": 17,
  "comment": 1,
  "source_file": "控件属性\\2164_模仿fab点击效果.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 10,
- "char_count": 300,
+ "flags": [
+  "remote_exec"
+ ],
+ "truncation": "complete",
+ "line_count": 167,
+ "char_count": 5513,
  "confidence": "static_review"
 }

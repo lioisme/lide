@@ -5,20 +5,20 @@
  "author": "Adam·Eva",
  "platform": "所有环境",
  "source_date": "2023年11月21日 09:09:30",
- "hits": 372,
+ "hits": 373,
  "up": 5,
  "favorite": 5,
  "comment": 1,
  "source_file": "小游戏\\3599_24点.lua",
- "kind": "fragment",
- "verdict": "neutral",
- "portability": "universal",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
  "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
+  "editor_bound",
+  "editor_bound"
  ],
- "truncation": "preview_truncated",
- "line_count": 15,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 133,
+ "char_count": 3888,
  "confidence": "static_review"
 }

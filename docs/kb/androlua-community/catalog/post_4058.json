@@ -10,15 +10,12 @@
  "favorite": 14,
  "comment": 0,
  "source_file": "基础代码\\4058_消息发布距离现在的时长.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "universal",
- "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
- ],
- "truncation": "preview_truncated",
- "line_count": 9,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 32,
+ "char_count": 964,
  "confidence": "static_review"
 }

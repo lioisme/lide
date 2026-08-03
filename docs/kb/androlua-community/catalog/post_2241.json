@@ -5,19 +5,17 @@
  "author": "♡yue",
  "platform": "所有环境",
  "source_date": "2022年12月23日 18:22:18",
- "hits": 692,
+ "hits": 693,
  "up": 15,
  "favorite": 49,
  "comment": 5,
  "source_file": "布局教程\\2241_启动图.lua",
- "kind": "text_note",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "universal",
- "flags": [
-  "short_text"
- ],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 129,
+ "char_count": 2748,
  "confidence": "static_review"
 }

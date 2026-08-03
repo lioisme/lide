@@ -11,11 +11,13 @@
  "comment": 1,
  "source_file": "UI控件\\4200_关于丝滑的插值器解.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 13,
- "char_count": 300,
+ "flags": [
+  "global_pollution"
+ ],
+ "truncation": "complete",
+ "line_count": 332,
+ "char_count": 10415,
  "confidence": "static_review"
 }

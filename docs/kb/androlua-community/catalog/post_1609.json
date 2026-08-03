@@ -5,7 +5,7 @@
  "author": "迷糊.",
  "platform": "Fusion App2",
  "source_date": "2022年07月25日 17:29:31",
- "hits": 308,
+ "hits": 309,
  "up": 2,
  "favorite": 10,
  "comment": 2,
@@ -17,7 +17,7 @@
   "editor_bound",
   "editor_bound"
  ],
- "truncation": "complete_or_unverifiable",
+ "truncation": "complete",
  "line_count": 9,
  "char_count": 253,
  "confidence": "static_review"

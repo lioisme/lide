@@ -5,19 +5,17 @@
  "author": "oゞ夜色乄未央ぁ",
  "platform": "",
  "source_date": "2020年05月01日 12:26:18",
- "hits": 121,
+ "hits": 122,
  "up": 0,
  "favorite": 3,
  "comment": 0,
  "source_file": "Lua代码\\528_创建布局与组件.lua",
- "kind": "text_note",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "universal",
- "flags": [
-  "short_text"
- ],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 15,
+ "char_count": 342,
  "confidence": "static_review"
 }

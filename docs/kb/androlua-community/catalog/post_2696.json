@@ -5,7 +5,7 @@
  "author": "狸猫🐱",
  "platform": "所有环境",
  "source_date": "2023年04月22日 20:08:41",
- "hits": 391,
+ "hits": 392,
  "up": 6,
  "favorite": 15,
  "comment": 6,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "universal",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 16,
- "char_count": 300,
+ "truncation": "truncated_tail",
+ "line_count": 67,
+ "char_count": 1158,
  "confidence": "static_review"
 }

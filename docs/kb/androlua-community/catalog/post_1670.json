@@ -5,7 +5,7 @@
  "author": "W. by",
  "platform": "AndLua",
  "source_date": "2022年08月06日 04:35:47",
- "hits": 166,
+ "hits": 167,
  "up": 7,
  "favorite": 10,
  "comment": 1,
@@ -14,7 +14,7 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "complete_or_unverifiable",
+ "truncation": "complete",
  "line_count": 3,
  "char_count": 147,
  "confidence": "static_review"

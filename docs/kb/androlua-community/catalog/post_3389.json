@@ -5,23 +5,21 @@
  "author": "ᅟᅠ        ‌",
  "platform": "Fusion App2",
  "source_date": "2023年09月13日 08:00:42",
- "hits": 229,
+ "hits": 230,
  "up": 1,
  "favorite": 10,
  "comment": 0,
  "source_file": "Lua代码\\3389_计算web加载时间.lua",
- "kind": "fragment",
+ "kind": "code_demo",
  "verdict": "negative",
  "portability": "editor_bound",
  "flags": [
-  "truncated_tail",
   "editor_bound",
   "editor_bound",
-  "chinese_identifier",
-  "incomplete_fragment"
+  "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 31,
+ "char_count": 720,
  "confidence": "static_review"
 }

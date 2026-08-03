@@ -10,17 +10,15 @@
  "favorite": 7,
  "comment": 0,
  "source_file": "实用代码\\4177_将图片复制到剪贴板.lua",
- "kind": "fragment",
+ "kind": "code_demo",
  "verdict": "negative",
  "portability": "host_private",
  "flags": [
-  "truncated_tail",
   "androlua_private",
-  "private_api",
-  "incomplete_fragment"
+  "private_api"
  ],
- "truncation": "preview_truncated",
- "line_count": 13,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 34,
+ "char_count": 1166,
  "confidence": "static_review"
 }

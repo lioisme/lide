@@ -16,10 +16,11 @@
  "flags": [
   "androlua_private",
   "private_api",
+  "manual_override",
   "harmful_elevated"
  ],
- "truncation": "preview_truncated",
- "line_count": 25,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 144,
+ "char_count": 3079,
  "confidence": "static_review"
 }

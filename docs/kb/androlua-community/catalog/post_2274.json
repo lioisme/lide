@@ -5,17 +5,21 @@
  "author": "壹影",
  "platform": "所有环境",
  "source_date": "2023年01月03日 16:12:03",
- "hits": 593,
+ "hits": 594,
  "up": 11,
  "favorite": 35,
  "comment": 1,
  "source_file": "JS教程\\2274_混合加密(不可逆)-卡密生成.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "harmful",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 15,
- "char_count": 300,
+ "flags": [
+  "chinese_identifier",
+  "manual_override",
+  "harmful_elevated"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 385,
+ "char_count": 10578,
  "confidence": "static_review"
 }

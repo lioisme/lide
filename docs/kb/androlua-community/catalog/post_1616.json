@@ -5,20 +5,21 @@
  "author": "邪默",
  "platform": "AndLua",
  "source_date": "2022年07月26日 18:03:13",
- "hits": 2562,
+ "hits": 2570,
  "up": 33,
  "favorite": 89,
  "comment": 6,
  "source_file": "实用代码\\1616_动画封装函数等.lua",
- "kind": "fragment",
- "verdict": "neutral",
- "portability": "android_api",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
  "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
+  "androlua_private",
+  "private_api",
+  "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 10,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 951,
+ "char_count": 26556,
  "confidence": "static_review"
 }

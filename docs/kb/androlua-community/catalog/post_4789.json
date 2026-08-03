@@ -11,11 +11,13 @@
  "comment": 3,
  "source_file": "布局代码\\4789_一个不算精致的个人主页.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 8,
- "char_count": 300,
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 473,
+ "char_count": 11182,
  "confidence": "static_review"
 }

@@ -5,7 +5,7 @@
  "author": "dingyi",
  "platform": "AndroLua,Fusion App2,reOpenLua,AndLua",
  "source_date": "2023年03月04日 17:09:36",
- "hits": 229,
+ "hits": 230,
  "up": 4,
  "favorite": 6,
  "comment": 1,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "universal",
  "flags": [],
- "truncation": "complete_or_unverifiable",
- "line_count": 20,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 98,
+ "char_count": 1952,
  "confidence": "static_review"
 }

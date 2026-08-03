@@ -5,7 +5,7 @@
  "author": "୧⍤⃝@№小笨蛋べ",
  "platform": "所有环境",
  "source_date": "2023年02月19日 19:47:31",
- "hits": 280,
+ "hits": 281,
  "up": 6,
  "favorite": 15,
  "comment": 2,
@@ -16,8 +16,8 @@
  "flags": [
   "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 17,
+ "char_count": 376,
  "confidence": "static_review"
 }

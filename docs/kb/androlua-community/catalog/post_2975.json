@@ -5,7 +5,7 @@
  "author": "Cheese",
  "platform": "AndLua",
  "source_date": "2023年06月25日 11:58:59",
- "hits": 497,
+ "hits": 498,
  "up": 14,
  "favorite": 41,
  "comment": 16,
@@ -18,8 +18,8 @@
   "editor_bound",
   "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 28,
+ "char_count": 892,
  "confidence": "static_review"
 }

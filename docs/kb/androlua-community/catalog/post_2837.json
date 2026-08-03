@@ -5,17 +5,19 @@
  "author": "迷糊.",
  "platform": "所有环境",
  "source_date": "2023年05月21日 21:07:20",
- "hits": 566,
+ "hits": 567,
  "up": 6,
  "favorite": 15,
  "comment": 0,
  "source_file": "Activity活动\\2837_WindowManager悬浮窗创建_删除.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "neutral",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 18,
- "char_count": 300,
+ "flags": [
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 112,
+ "char_count": 2602,
  "confidence": "static_review"
 }

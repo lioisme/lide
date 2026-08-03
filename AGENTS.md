@@ -33,4 +33,31 @@ rg -n "luajava|androlua|loadLibrary" editor/src
 - 大文件（> 200 KB）：关闭括号高亮 / 当前块 / 自动换行，并跳过行级诊断。
 - 补全、诊断、事件回调必须 `try/catch(Throwable)` 降级，不得让异常逃逸进 sora 主循环。
 
+## API 浏览器反射线程契约
+
+- `ApiIndex` 的反射查询接口（`rowInfo` / `isLoadable` / `classKind` / `isViewSubclass`）
+  禁止在 UI 线程直接调用——`Class.forName` 负查找（类不存在）需扫描全部 dex，单次可达
+  数十毫秒，列表场景（数千条目）会造成 UI 冻结。
+- 列表行反射信息一律经 `produceState` + `Dispatchers.IO` 获取，UI 只读惰性缓存结果；
+  全部反射路径必须 `try/catch(Throwable)` 降级（含负缓存），且带时间预算上界。
+
+## API 浏览器搜索语义红线（冻结审计结论，详见 docs/planned/API_BROWSER_FREEZE_FIX_PLAN.md）
+
+- 搜索展开意图必须用独立 state（`searchActive`），InputField 的 `expanded`/`onExpandedChange`
+  只读写该意图；**禁止绑定 `searchBarState.currentValue` 动画派生值**（progress∈(0,1) 时
+  currentValue 恒 Expanded，会构成「收起→焦点回落→重新展开」死循环）。
+- `SearchBarState` 动画（`animateToExpanded`/`animateToCollapsed`）基于 Animatable，
+  并发调用互斥（后启动者取消先前的动画协程）：**全屏内同一时刻只允许一个协程驱动动画**
+  （`LaunchedEffect(searchActive)` 幂等驱动）；点击建议导航必须经「pendingNavigation 挂起 +
+  动画完成后消费」机制，**禁止**在点击回调里 `scope.launch { animateToCollapsed(); ... }`
+  （协程会被动画互斥取消，导航丢失）。
+- 收起路径（IME 搜索 / 点击建议 / Dialog 返回键）必须同时：置 `searchActive = false` +
+  显式 `focusManager.clearFocus()`；Dialog content 槽内自行 `BackHandler` 拦截返回键
+  （Dialog 拥有独立 back dispatcher，主窗口 BackHandler 无效）。
+- `rememberSearchBarState()` 必须无参调用（rememberSaveable 按引用比较 key，
+  每次重组新建 spring 实例会导致状态无限重建冻结）。
+- 过滤（`filterSnapshot`）必须在后台（`Dispatchers.Default`）执行 + 预建小写名索引，
+  禁止在 UI 线程同步 O(n) 过滤；行级反射信息缓存（`rowInfoCache`）必须是**非空包装**，
+  禁止用返回 null 的 `getOrPut`（CHM 拒绝 null，负缓存永久失效 → 全 dex 扫描 → ART 全局锁）。
+
 ## /libs 机制约定（工程 /libs 支持，详见 docs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.mddocs/completed/LIBS_SUPPORT_WORK_ORDER.md

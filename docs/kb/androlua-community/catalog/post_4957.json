@@ -5,20 +5,20 @@
  "author": "小然",
  "platform": "",
  "source_date": "2025年07月31日 02:37:40",
- "hits": 415,
+ "hits": 416,
  "up": 3,
  "favorite": 5,
  "comment": 6,
  "source_file": "基础代码\\4957_OpenGl加载纹理.lua",
- "kind": "fragment",
- "verdict": "neutral",
- "portability": "android_api",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
  "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
+  "androlua_private",
+  "private_api"
  ],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 419,
+ "char_count": 9032,
  "confidence": "static_review"
 }

@@ -5,7 +5,7 @@
  "author": "YONGLE-永乐",
  "platform": "所有环境",
  "source_date": "2023年05月07日 22:03:40",
- "hits": 654,
+ "hits": 655,
  "up": 0,
  "favorite": 0,
  "comment": 0,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "universal",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "truncation": "truncated_tail",
+ "line_count": 54,
+ "char_count": 1338,
  "confidence": "static_review"
 }

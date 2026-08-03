@@ -5,19 +5,21 @@
  "author": "⁧拾玖⁧‭",
  "platform": "所有环境",
  "source_date": "2024年09月20日 19:33:33",
- "hits": 676,
+ "hits": 678,
  "up": 1,
  "favorite": 4,
  "comment": 0,
  "source_file": "小工具\\4255_关于QQDialog和进度条.lua",
  "kind": "code_demo",
- "verdict": "harmful",
- "portability": "android_api",
+ "verdict": "negative",
+ "portability": "host_private",
  "flags": [
+  "androlua_private",
+  "private_api",
   "remote_exec"
  ],
- "truncation": "preview_truncated",
- "line_count": 10,
- "char_count": 300,
+ "truncation": "truncated_tail",
+ "line_count": 39,
+ "char_count": 1892,
  "confidence": "static_review"
 }

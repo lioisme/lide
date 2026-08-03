@@ -5,19 +5,19 @@
  "author": "•⤙•/k",
  "platform": "AndLua",
  "source_date": "2023年05月08日 00:10:07",
- "hits": 353,
+ "hits": 354,
  "up": 7,
  "favorite": 28,
  "comment": 0,
  "source_file": "实用代码\\2784_拟态绘制(二改版).lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "universal",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
  "flags": [
-  "short_text"
+  "chinese_identifier"
  ],
- "truncation": "complete_or_unverifiable",
- "line_count": 16,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 224,
+ "char_count": 5168,
  "confidence": "static_review"
 }

@@ -5,7 +5,7 @@
  "author": "往事如烟",
  "platform": "Fusion App2",
  "source_date": "2023年03月16日 14:05:27",
- "hits": 326,
+ "hits": 327,
  "up": 9,
  "favorite": 26,
  "comment": 4,
@@ -17,8 +17,8 @@
   "androlua_private",
   "private_api"
  ],
- "truncation": "preview_truncated",
- "line_count": 16,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 95,
+ "char_count": 2349,
  "confidence": "static_review"
 }

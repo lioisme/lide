@@ -10,17 +10,15 @@
  "favorite": 13,
  "comment": 2,
  "source_file": "Lua代码\\4196_给Editor格式化增加缩进.lua",
- "kind": "fragment",
+ "kind": "code_demo",
  "verdict": "negative",
  "portability": "host_private",
  "flags": [
-  "truncated_tail",
   "androlua_private",
-  "private_api",
-  "incomplete_fragment"
+  "private_api"
  ],
- "truncation": "preview_truncated",
- "line_count": 18,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 136,
+ "char_count": 2743,
  "confidence": "static_review"
 }

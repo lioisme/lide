@@ -11,11 +11,13 @@
  "comment": 2,
  "source_file": "小工具\\5282_百度搜图，二改功能更完善.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 10,
- "char_count": 300,
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 253,
+ "char_count": 5741,
  "confidence": "static_review"
 }

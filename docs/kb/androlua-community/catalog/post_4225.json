@@ -5,21 +5,21 @@
  "author": "⁧拾玖⁧‭",
  "platform": "所有环境",
  "source_date": "2024年08月30日 19:38:56",
- "hits": 345,
+ "hits": 346,
  "up": 4,
  "favorite": 5,
  "comment": 0,
  "source_file": "UI控件\\4225_LongProgressBar.lua",
  "kind": "code_demo",
- "verdict": "harmful",
+ "verdict": "negative",
  "portability": "host_private",
  "flags": [
   "androlua_private",
   "private_api",
   "remote_exec"
  ],
- "truncation": "preview_truncated",
- "line_count": 6,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 34,
+ "char_count": 1017,
  "confidence": "static_review"
 }

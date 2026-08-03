@@ -5,20 +5,17 @@
  "author": "Basic",
  "platform": "AndLua",
  "source_date": "2023年08月10日 11:17:48",
- "hits": 362,
+ "hits": 363,
  "up": 2,
  "favorite": 6,
  "comment": 4,
  "source_file": "小工具\\3227_Ping工具.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "android_api",
- "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
- ],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 89,
+ "char_count": 1938,
  "confidence": "static_review"
 }

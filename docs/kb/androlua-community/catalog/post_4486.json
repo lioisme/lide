@@ -10,16 +10,15 @@
  "favorite": 12,
  "comment": 5,
  "source_file": "小工具\\4486_人生小格界面函数优化V2.lua",
- "kind": "text_note",
+ "kind": "code_demo",
  "verdict": "negative",
  "portability": "editor_bound",
  "flags": [
-  "short_text",
   "editor_bound",
   "editor_bound"
  ],
- "truncation": "preview_truncated",
- "line_count": 15,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 460,
+ "char_count": 15420,
  "confidence": "static_review"
 }

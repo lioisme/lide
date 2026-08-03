@@ -17,8 +17,8 @@
   "incomplete_mark",
   "incomplete_fragment"
  ],
- "truncation": "preview_truncated",
- "line_count": 22,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 522,
+ "char_count": 11466,
  "confidence": "static_review"
 }

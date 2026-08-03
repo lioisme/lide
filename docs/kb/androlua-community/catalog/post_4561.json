@@ -11,11 +11,13 @@
  "comment": 0,
  "source_file": "基础代码\\4561_贴边悬浮窗(2.0优化版).lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "neutral",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "flags": [
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 175,
+ "char_count": 5194,
  "confidence": "static_review"
 }

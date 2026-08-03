@@ -5,7 +5,7 @@
  "author": "QQ少年",
  "platform": "Fusion App2",
  "source_date": "2024年11月02日 16:34:19",
- "hits": 763,
+ "hits": 764,
  "up": 12,
  "favorite": 30,
  "comment": 2,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 13,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 460,
+ "char_count": 12516,
  "confidence": "static_review"
 }

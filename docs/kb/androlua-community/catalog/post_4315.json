@@ -5,7 +5,7 @@
  "author": "青柠(YouCun)",
  "platform": "所有环境",
  "source_date": "2024年10月20日 05:56:52",
- "hits": 734,
+ "hits": 735,
  "up": 13,
  "favorite": 20,
  "comment": 9,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 7,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 577,
+ "char_count": 15305,
  "confidence": "static_review"
 }

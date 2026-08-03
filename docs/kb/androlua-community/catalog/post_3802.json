@@ -5,19 +5,20 @@
  "author": "zzzzzxxx",
  "platform": "reOpenLua,OpenLuaX",
  "source_date": "2024年01月27日 20:29:41",
- "hits": 634,
+ "hits": 635,
  "up": 1,
  "favorite": 4,
  "comment": 8,
  "source_file": "小游戏\\3802_Material_Design_之_侧边栏对话框的笔记.lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "android_api",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "obsolete",
  "flags": [
-  "short_text"
+  "obsolete",
+  "obsolete"
  ],
- "truncation": "preview_truncated",
- "line_count": 9,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 99,
+ "char_count": 3351,
  "confidence": "static_review"
 }

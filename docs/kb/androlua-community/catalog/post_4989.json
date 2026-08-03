@@ -11,11 +11,14 @@
  "comment": 5,
  "source_file": "Layout布局\\4989_newloadlayout.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "universal",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 13,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 961,
+ "char_count": 26025,
  "confidence": "static_review"
 }

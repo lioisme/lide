@@ -10,15 +10,14 @@
  "favorite": 1,
  "comment": 0,
  "source_file": "小工具\\5218_录音机.lua",
- "kind": "fragment",
+ "kind": "code_demo",
  "verdict": "neutral",
  "portability": "android_api",
  "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
+  "sensitive_permission"
  ],
- "truncation": "preview_truncated",
- "line_count": 15,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 193,
+ "char_count": 4378,
  "confidence": "static_review"
 }

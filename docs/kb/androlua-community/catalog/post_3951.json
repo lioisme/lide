@@ -11,13 +11,11 @@
  "comment": 0,
  "source_file": "Lua代码\\3951_分割图片.lua",
  "kind": "code_demo",
- "verdict": "negative",
+ "verdict": "positive",
  "portability": "android_api",
- "flags": [
-  "global_pollution"
- ],
- "truncation": "preview_truncated",
- "line_count": 17,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 99,
+ "char_count": 2279,
  "confidence": "static_review"
 }

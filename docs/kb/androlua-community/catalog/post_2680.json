@@ -5,20 +5,20 @@
  "author": "NekoLaska",
  "platform": "Fusion App2",
  "source_date": "2023年04月20日 19:37:46",
- "hits": 524,
+ "hits": 525,
  "up": 7,
  "favorite": 19,
  "comment": 5,
  "source_file": "小游戏\\2680_罕见图2.0.lua",
  "kind": "code_demo",
  "verdict": "negative",
- "portability": "editor_bound",
+ "portability": "host_private",
  "flags": [
-  "editor_bound",
-  "editor_bound"
+  "androlua_private",
+  "private_api"
  ],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 176,
+ "char_count": 7590,
  "confidence": "static_review"
 }

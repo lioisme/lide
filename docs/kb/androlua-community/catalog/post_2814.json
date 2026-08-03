@@ -5,7 +5,7 @@
  "author": "Cheese",
  "platform": "所有环境",
  "source_date": "2023年05月18日 14:00:04",
- "hits": 150,
+ "hits": 151,
  "up": 0,
  "favorite": 3,
  "comment": 5,
@@ -14,7 +14,7 @@
  "verdict": "positive",
  "portability": "universal",
  "flags": [],
- "truncation": "complete_or_unverifiable",
+ "truncation": "complete",
  "line_count": 6,
  "char_count": 107,
  "confidence": "static_review"

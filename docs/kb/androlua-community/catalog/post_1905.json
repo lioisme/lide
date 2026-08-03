@@ -5,17 +5,21 @@
  "author": "苦小怕",
  "platform": "Fusion App2",
  "source_date": "2022年09月23日 15:04:25",
- "hits": 597,
+ "hits": 598,
  "up": 4,
  "favorite": 18,
  "comment": 3,
  "source_file": "小工具\\1905_获取应用原生库.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 235,
+ "char_count": 5646,
  "confidence": "static_review"
 }

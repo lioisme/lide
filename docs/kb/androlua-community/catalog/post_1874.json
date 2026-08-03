@@ -5,7 +5,7 @@
  "author": "小白·马",
  "platform": "Fusion App2",
  "source_date": "2022年09月11日 14:10:11",
- "hits": 655,
+ "hits": 656,
  "up": 5,
  "favorite": 15,
  "comment": 7,
@@ -17,8 +17,8 @@
   "editor_bound",
   "editor_bound"
  ],
- "truncation": "preview_truncated",
- "line_count": 8,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 14,
+ "char_count": 528,
  "confidence": "static_review"
 }

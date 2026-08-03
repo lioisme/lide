@@ -10,15 +10,14 @@
  "favorite": 19,
  "comment": 4,
  "source_file": "网络操作\\4122_QQ群管理.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "negative",
  "portability": "android_api",
  "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
+  "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 17,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 464,
+ "char_count": 12164,
  "confidence": "static_review"
 }

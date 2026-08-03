@@ -5,20 +5,17 @@
  "author": "帕帝天秀",
  "platform": "所有环境",
  "source_date": "2022年08月05日 21:25:54",
- "hits": 905,
+ "hits": 906,
  "up": 19,
  "favorite": 51,
  "comment": 0,
  "source_file": "自绘制\\1661_自绘制开关.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "android_api",
- "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
- ],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "flags": [],
+ "truncation": "truncated_tail",
+ "line_count": 107,
+ "char_count": 2827,
  "confidence": "static_review"
 }

@@ -5,19 +5,17 @@
  "author": "破晓",
  "platform": "所有环境",
  "source_date": "2024年01月20日 11:12:54",
- "hits": 132,
+ "hits": 133,
  "up": 0,
  "favorite": 3,
  "comment": 0,
  "source_file": "Intent通信\\3756_使用UDP实现组播.lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "universal",
- "flags": [
-  "short_text"
- ],
- "truncation": "preview_truncated",
- "line_count": 8,
- "char_count": 300,
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 77,
+ "char_count": 1850,
  "confidence": "static_review"
 }

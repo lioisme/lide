@@ -5,17 +5,21 @@
  "author": "清汀琉璃",
  "platform": "Fusion App2",
  "source_date": "2022年10月01日 09:37:59",
- "hits": 1296,
+ "hits": 1297,
  "up": 22,
  "favorite": 69,
  "comment": 15,
  "source_file": "小工具\\1925_[RSS]_RSS订阅在Lua中的应用.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 672,
+ "char_count": 19763,
  "confidence": "static_review"
 }

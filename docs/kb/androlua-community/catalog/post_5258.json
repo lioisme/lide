@@ -11,11 +11,13 @@
  "comment": 5,
  "source_file": "基础代码\\5258_html-YOU加载动画.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 19,
- "char_count": 300,
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 252,
+ "char_count": 9221,
  "confidence": "static_review"
 }

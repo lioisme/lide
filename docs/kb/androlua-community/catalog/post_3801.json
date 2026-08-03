@@ -5,19 +5,20 @@
  "author": "System.out.print",
  "platform": "所有环境",
  "source_date": "2024年01月27日 17:12:51",
- "hits": 267,
+ "hits": 268,
  "up": 4,
  "favorite": 10,
  "comment": 12,
  "source_file": "文件操作\\3801_地址_范围性16进制修改.lua",
- "kind": "text_note",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "negative",
  "portability": "universal",
  "flags": [
-  "short_text"
+  "chinese_identifier",
+  "os_exec"
  ],
- "truncation": "preview_truncated",
- "line_count": 6,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 257,
+ "char_count": 8472,
  "confidence": "static_review"
 }

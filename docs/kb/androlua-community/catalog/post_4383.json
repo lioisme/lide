@@ -10,14 +10,16 @@
  "favorite": 21,
  "comment": 8,
  "source_file": "小工具\\4383_手写数字识别.lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "universal",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
  "flags": [
-  "short_text"
+  "androlua_private",
+  "private_api",
+  "remote_exec"
  ],
- "truncation": "preview_truncated",
- "line_count": 7,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 503,
+ "char_count": 11515,
  "confidence": "static_review"
 }

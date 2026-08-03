@@ -12,10 +12,10 @@
  "source_file": "Intent通信\\4283_一个最简单的检查权限方法.lua",
  "kind": "code_demo",
  "verdict": "positive",
- "portability": "universal",
+ "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 15,
+ "char_count": 498,
  "confidence": "static_review"
 }

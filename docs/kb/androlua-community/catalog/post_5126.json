@@ -10,15 +10,12 @@
  "favorite": 8,
  "comment": 3,
  "source_file": "Lua教程\\5126_入机认证(包含图片与文字).lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "android_api",
- "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
- ],
- "truncation": "preview_truncated",
- "line_count": 15,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 252,
+ "char_count": 5879,
  "confidence": "static_review"
 }

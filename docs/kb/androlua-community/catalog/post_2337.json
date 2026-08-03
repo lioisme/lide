@@ -5,17 +5,19 @@
  "author": "wzsy233",
  "platform": "所有环境",
  "source_date": "2023年01月17日 15:13:51",
- "hits": 545,
+ "hits": 547,
  "up": 7,
  "favorite": 19,
  "comment": 4,
  "source_file": "布局教程\\2337_带ProgressBar的Chip.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 9,
- "char_count": 300,
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 114,
+ "char_count": 3105,
  "confidence": "static_review"
 }

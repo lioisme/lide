@@ -5,21 +5,21 @@
  "author": "oゞ夜色乄未央ぁ",
  "platform": "Fusion App2",
  "source_date": "2025年02月25日 12:44:20",
- "hits": 1875,
+ "hits": 1877,
  "up": 10,
  "favorite": 54,
  "comment": 8,
  "source_file": "网络爬虫\\4558_影视分类筛选页面.lua",
  "kind": "code_demo",
  "verdict": "negative",
- "portability": "editor_bound",
+ "portability": "host_private",
  "flags": [
-  "editor_bound",
-  "editor_bound",
+  "androlua_private",
+  "private_api",
   "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 9,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 562,
+ "char_count": 15451,
  "confidence": "static_review"
 }

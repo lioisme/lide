@@ -5,19 +5,19 @@
  "author": "海纳百氚，有容乃大",
  "platform": "所有环境",
  "source_date": "2022年11月21日 04:00:25",
- "hits": 1404,
+ "hits": 1405,
  "up": 6,
  "favorite": 30,
  "comment": 4,
  "source_file": "Activity活动\\2092_列表弹窗框架实例（一次优化）.lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "universal",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
  "flags": [
-  "short_text"
+  "global_pollution"
  ],
- "truncation": "preview_truncated",
- "line_count": 16,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 751,
+ "char_count": 21852,
  "confidence": "static_review"
 }

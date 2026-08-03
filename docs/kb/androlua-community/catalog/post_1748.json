@@ -5,7 +5,7 @@
  "author": "机不可失🅥",
  "platform": "所有环境",
  "source_date": "2022年08月18日 17:56:58",
- "hits": 1062,
+ "hits": 1063,
  "up": 9,
  "favorite": 37,
  "comment": 8,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 113,
+ "char_count": 3181,
  "confidence": "static_review"
 }

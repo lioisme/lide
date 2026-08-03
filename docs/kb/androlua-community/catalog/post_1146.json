@@ -5,20 +5,17 @@
  "author": "oゞ夜色乄未央ぁ",
  "platform": "",
  "source_date": "2020年05月01日 12:26:18",
- "hits": 150,
+ "hits": 151,
  "up": 0,
  "favorite": 4,
  "comment": 0,
  "source_file": "布局教程\\1146_StackView初仿探探测试.lua",
- "kind": "text_note",
- "verdict": "negative",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "universal",
- "flags": [
-  "short_text",
-  "global_pollution"
- ],
- "truncation": "preview_truncated",
- "line_count": 17,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 68,
+ "char_count": 1377,
  "confidence": "static_review"
 }

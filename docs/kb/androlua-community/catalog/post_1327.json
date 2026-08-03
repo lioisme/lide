@@ -5,7 +5,7 @@
  "author": "祁画",
  "platform": "Fusion App1,AndLua",
  "source_date": "2022年01月17日 21:04:26",
- "hits": 828,
+ "hits": 829,
  "up": 14,
  "favorite": 37,
  "comment": 4,
@@ -16,8 +16,8 @@
  "flags": [
   "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 20,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 260,
+ "char_count": 7207,
  "confidence": "static_review"
 }

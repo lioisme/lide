@@ -12,10 +12,10 @@
  "source_file": "布局代码\\4712_APP下载页.lua",
  "kind": "code_demo",
  "verdict": "positive",
- "portability": "universal",
+ "portability": "android_api",
  "flags": [],
- "truncation": "complete_or_unverifiable",
- "line_count": 12,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 161,
+ "char_count": 4576,
  "confidence": "static_review"
 }

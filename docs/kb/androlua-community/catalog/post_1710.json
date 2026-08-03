@@ -5,17 +5,19 @@
  "author": "智",
  "platform": "所有环境",
  "source_date": "2022年08月12日 10:15:29",
- "hits": 671,
+ "hits": 672,
  "up": 10,
  "favorite": 44,
  "comment": 15,
  "source_file": "小工具\\1710_手电筒.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "neutral",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 19,
- "char_count": 300,
+ "flags": [
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 22,
+ "char_count": 383,
  "confidence": "static_review"
 }

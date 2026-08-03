@@ -5,17 +5,21 @@
  "author": "oゞ夜色乄未央ぁ",
  "platform": "所有环境",
  "source_date": "2022年01月29日 18:40:25",
- "hits": 1032,
+ "hits": 1033,
  "up": 8,
  "favorite": 23,
  "comment": 1,
  "source_file": "对话框\\1342_AlertDialog.Builder对话框.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "universal",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 15,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 99,
+ "char_count": 2156,
  "confidence": "static_review"
 }

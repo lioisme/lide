@@ -5,17 +5,21 @@
  "author": "Android黑科技",
  "platform": "Fusion App2",
  "source_date": "2023年03月14日 15:33:23",
- "hits": 814,
+ "hits": 818,
  "up": 25,
  "favorite": 100,
  "comment": 19,
  "source_file": "远程更新\\2577_远程更新.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 10,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 408,
+ "char_count": 14761,
  "confidence": "static_review"
 }

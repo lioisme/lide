@@ -5,17 +5,20 @@
  "author": "⁢",
  "platform": "AndLua",
  "source_date": "2023年03月04日 18:32:54",
- "hits": 903,
+ "hits": 904,
  "up": 14,
  "favorite": 49,
  "comment": 7,
  "source_file": "实用代码\\2548_开机自启.lua",
- "kind": "code_demo",
- "verdict": "positive",
+ "kind": "reference_sheet",
+ "verdict": "neutral",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "flags": [
+  "xml_list",
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 42,
+ "char_count": 1526,
  "confidence": "static_review"
 }

@@ -11,11 +11,13 @@
  "comment": 9,
  "source_file": "网络爬虫\\5159_一坨蓝奏云直链获取.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "complete_or_unverifiable",
- "line_count": 10,
- "char_count": 300,
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 527,
+ "char_count": 16172,
  "confidence": "static_review"
 }

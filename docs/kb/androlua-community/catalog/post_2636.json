@@ -5,7 +5,7 @@
  "author": "AstarLC",
  "platform": "所有环境",
  "source_date": "2023年04月08日 08:21:58",
- "hits": 481,
+ "hits": 482,
  "up": 4,
  "favorite": 6,
  "comment": 7,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 18,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 236,
+ "char_count": 5142,
  "confidence": "static_review"
 }

@@ -5,20 +5,19 @@
  "author": "Aqora",
  "platform": "所有环境",
  "source_date": "2022年12月28日 18:19:51",
- "hits": 411,
+ "hits": 412,
  "up": 6,
  "favorite": 20,
  "comment": 2,
  "source_file": "实用代码\\2262_美化版显示隐藏.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "negative",
  "portability": "android_api",
  "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
+  "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 18,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 121,
+ "char_count": 2456,
  "confidence": "static_review"
 }

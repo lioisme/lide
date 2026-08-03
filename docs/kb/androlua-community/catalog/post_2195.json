@@ -5,7 +5,7 @@
  "author": "智",
  "platform": "所有环境",
  "source_date": "2022年12月17日 18:21:21",
- "hits": 834,
+ "hits": 835,
  "up": 10,
  "favorite": 42,
  "comment": 14,
@@ -16,8 +16,8 @@
  "flags": [
   "chinese_identifier"
  ],
- "truncation": "complete_or_unverifiable",
- "line_count": 11,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 344,
+ "char_count": 9581,
  "confidence": "static_review"
 }

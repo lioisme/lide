@@ -5,20 +5,17 @@
  "author": "邪默",
  "platform": "所有环境",
  "source_date": "2023年07月12日 22:02:20",
- "hits": 54,
+ "hits": 55,
  "up": 1,
  "favorite": 0,
  "comment": 0,
  "source_file": "Lua代码\\3056_斐波那契数列.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "universal",
- "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
- ],
- "truncation": "preview_truncated",
- "line_count": 17,
- "char_count": 300,
+ "flags": [],
+ "truncation": "truncated_tail",
+ "line_count": 30,
+ "char_count": 560,
  "confidence": "static_review"
 }

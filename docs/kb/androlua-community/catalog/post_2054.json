@@ -5,17 +5,19 @@
  "author": "Duo",
  "platform": "Fusion App2",
  "source_date": "2022年11月08日 23:31:48",
- "hits": 362,
+ "hits": 363,
  "up": 9,
  "favorite": 13,
  "comment": 4,
  "source_file": "小工具\\2054_手指拖动_滑动条_的速度&加速度.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 10,
- "char_count": 300,
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 207,
+ "char_count": 5688,
  "confidence": "static_review"
 }

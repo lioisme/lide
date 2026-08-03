@@ -5,17 +5,21 @@
  "author": "苦小怕",
  "platform": "Fusion App2",
  "source_date": "2023年07月01日 23:59:05",
- "hits": 2323,
+ "hits": 2325,
  "up": 28,
  "favorite": 66,
  "comment": 23,
  "source_file": "布局教程\\3008_仿LSPosed主页布局.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 10,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 314,
+ "char_count": 8426,
  "confidence": "static_review"
 }

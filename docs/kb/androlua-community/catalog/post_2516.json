@@ -10,15 +10,14 @@
  "favorite": 33,
  "comment": 15,
  "source_file": "Activity活动\\2516_赞助列表.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "negative",
  "portability": "android_api",
  "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
+  "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 15,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 108,
+ "char_count": 3952,
  "confidence": "static_review"
 }

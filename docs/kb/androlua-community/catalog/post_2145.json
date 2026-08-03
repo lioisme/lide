@@ -5,7 +5,7 @@
  "author": "帕帝天秀",
  "platform": "所有环境",
  "source_date": "2022年12月04日 04:30:04",
- "hits": 333,
+ "hits": 334,
  "up": 6,
  "favorite": 14,
  "comment": 1,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "complete_or_unverifiable",
- "line_count": 10,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 78,
+ "char_count": 1925,
  "confidence": "static_review"
 }

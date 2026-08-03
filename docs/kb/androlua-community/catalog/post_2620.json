@@ -5,7 +5,7 @@
  "author": "2498709027",
  "platform": "所有环境",
  "source_date": "2023年04月02日 16:12:18",
- "hits": 533,
+ "hits": 534,
  "up": 7,
  "favorite": 25,
  "comment": 8,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 15,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 46,
+ "char_count": 1202,
  "confidence": "static_review"
 }

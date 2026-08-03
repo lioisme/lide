@@ -5,20 +5,17 @@
  "author": "𝗦𝗼𝗹𝗮𝗰𝗲⁧𝗘.⁧",
  "platform": "所有环境",
  "source_date": "2026年06月26日 00:34:22",
- "hits": 402,
+ "hits": 410,
  "up": 1,
  "favorite": 3,
  "comment": 4,
  "source_file": "网络请求\\5346_【EZ】获取ip信息.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "android_api",
- "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
- ],
- "truncation": "preview_truncated",
- "line_count": 20,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 213,
+ "char_count": 7111,
  "confidence": "static_review"
 }

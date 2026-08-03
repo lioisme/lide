@@ -5,17 +5,19 @@
  "author": "•⤙•/k",
  "platform": "AndLua",
  "source_date": "2023年01月31日 16:44:03",
- "hits": 1109,
+ "hits": 1110,
  "up": 8,
  "favorite": 16,
  "comment": 12,
  "source_file": "自绘制\\2409_绘制拖动.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 266,
+ "char_count": 9205,
  "confidence": "static_review"
 }

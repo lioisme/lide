@@ -5,17 +5,20 @@
  "author": "kamihitoe",
  "platform": "Fusion App2,reOpenLua,OpenLuaX",
  "source_date": "2024年03月01日 09:06:51",
- "hits": 453,
+ "hits": 455,
  "up": 6,
  "favorite": 18,
  "comment": 4,
  "source_file": "UI控件\\3940_Outlined_Input.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "android_api",
- "flags": [],
- "truncation": "complete_or_unverifiable",
- "line_count": 9,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "complete",
+ "line_count": 54,
+ "char_count": 1457,
  "confidence": "static_review"
 }

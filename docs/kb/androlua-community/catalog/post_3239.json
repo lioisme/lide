@@ -5,17 +5,20 @@
  "author": "由风",
  "platform": "Fusion App1,Fusion App2",
  "source_date": "2023年08月12日 15:11:58",
- "hits": 729,
+ "hits": 730,
  "up": 11,
  "favorite": 23,
  "comment": 3,
  "source_file": "安卓教程\\3239_MD3_带Icon的Filled_button（适配夜间模式）.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 8,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 104,
+ "char_count": 3482,
  "confidence": "static_review"
 }

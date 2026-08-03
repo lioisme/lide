@@ -5,7 +5,7 @@
  "author": "破晓",
  "platform": "Fusion App2",
  "source_date": "2023年03月19日 13:23:14",
- "hits": 1117,
+ "hits": 1121,
  "up": 27,
  "favorite": 93,
  "comment": 10,
@@ -17,8 +17,8 @@
   "editor_bound",
   "editor_bound"
  ],
- "truncation": "preview_truncated",
- "line_count": 10,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 272,
+ "char_count": 7655,
  "confidence": "static_review"
 }

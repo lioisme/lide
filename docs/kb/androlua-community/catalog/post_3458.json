@@ -5,17 +5,20 @@
  "author": "壹影",
  "platform": "所有环境",
  "source_date": "2023年10月04日 10:38:30",
- "hits": 352,
+ "hits": 353,
  "up": 0,
  "favorite": 9,
  "comment": 0,
  "source_file": "浏览器\\3458_WebView提示框内容上限.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 6,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "complete",
+ "line_count": 125,
+ "char_count": 2936,
  "confidence": "static_review"
 }

@@ -5,20 +5,17 @@
  "author": "WizLiu",
  "platform": "所有环境",
  "source_date": "2023年06月29日 23:38:06",
- "hits": 559,
+ "hits": 560,
  "up": 9,
  "favorite": 30,
  "comment": 2,
  "source_file": "Menu菜单\\2992_创建悬浮上下文菜单.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "universal",
- "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
- ],
- "truncation": "preview_truncated",
- "line_count": 20,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 73,
+ "char_count": 1728,
  "confidence": "static_review"
 }

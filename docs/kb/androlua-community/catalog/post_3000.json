@@ -5,20 +5,20 @@
  "author": "Duo",
  "platform": "所有环境",
  "source_date": "2023年07月01日 15:02:25",
- "hits": 208,
+ "hits": 209,
  "up": 6,
  "favorite": 8,
  "comment": 2,
  "source_file": "小游戏\\3000_嗯，波.lua",
- "kind": "fragment",
- "verdict": "neutral",
- "portability": "android_api",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
  "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
+  "editor_bound",
+  "editor_bound"
  ],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 92,
+ "char_count": 2030,
  "confidence": "static_review"
 }

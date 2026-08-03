@@ -5,20 +5,17 @@
  "author": "L.",
  "platform": "所有环境",
  "source_date": "2023年07月26日 02:24:41",
- "hits": 482,
+ "hits": 483,
  "up": 10,
  "favorite": 25,
  "comment": 9,
  "source_file": "安卓教程\\3144_通过进度条调节CardView的radius.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "android_api",
- "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
- ],
- "truncation": "preview_truncated",
- "line_count": 16,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 102,
+ "char_count": 2279,
  "confidence": "static_review"
 }

@@ -11,11 +11,13 @@
  "comment": 1,
  "source_file": "浏览器\\4776_关于手机.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "neutral",
  "portability": "universal",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 13,
- "char_count": 300,
+ "flags": [
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 353,
+ "char_count": 10484,
  "confidence": "static_review"
 }

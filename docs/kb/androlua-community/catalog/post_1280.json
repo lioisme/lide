@@ -5,20 +5,17 @@
  "author": "oゞ夜色乄未央ぁ",
  "platform": "所有环境",
  "source_date": "2021年12月29日 11:35:53",
- "hits": 1259,
+ "hits": 1260,
  "up": 16,
  "favorite": 54,
  "comment": 4,
  "source_file": "UI控件\\1280_EditText输入框控件.lua",
- "kind": "text_note",
- "verdict": "negative",
- "portability": "universal",
- "flags": [
-  "short_text",
-  "global_pollution"
- ],
- "truncation": "complete_or_unverifiable",
- "line_count": 14,
- "char_count": 300,
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 133,
+ "char_count": 2434,
  "confidence": "static_review"
 }

@@ -5,7 +5,7 @@
  "author": "胡斯凯",
  "platform": "所有环境",
  "source_date": "2022年10月19日 23:04:50",
- "hits": 245,
+ "hits": 246,
  "up": 6,
  "favorite": 16,
  "comment": 2,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 9,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 57,
+ "char_count": 1567,
  "confidence": "static_review"
 }

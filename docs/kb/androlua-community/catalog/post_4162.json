@@ -10,15 +10,17 @@
  "favorite": 3,
  "comment": 6,
  "source_file": "小工具\\4162_随机计算题(仿FA2).lua",
- "kind": "code_demo",
+ "kind": "fragment",
  "verdict": "negative",
  "portability": "editor_bound",
  "flags": [
+  "incomplete_mark",
   "editor_bound",
-  "editor_bound"
+  "editor_bound",
+  "incomplete_fragment"
  ],
- "truncation": "preview_truncated",
- "line_count": 9,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 29,
+ "char_count": 1551,
  "confidence": "static_review"
 }

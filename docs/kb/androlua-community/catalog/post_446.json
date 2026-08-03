@@ -5,17 +5,20 @@
  "author": "oゞ夜色乄未央ぁ",
  "platform": "",
  "source_date": "2020年05月01日 12:26:18",
- "hits": 1236,
+ "hits": 1237,
  "up": 1,
  "favorite": 4,
  "comment": 1,
  "source_file": "布局教程\\446_精仿vivoi音乐布局(超好看).lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "universal",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 16,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier",
+  "remote_exec"
+ ],
+ "truncation": "complete",
+ "line_count": 1981,
+ "char_count": 59711,
  "confidence": "static_review"
 }

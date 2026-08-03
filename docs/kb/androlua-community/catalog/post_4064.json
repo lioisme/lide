@@ -10,14 +10,15 @@
  "favorite": 29,
  "comment": 17,
  "source_file": "网络请求\\4064_蓝奏云_LanzouyunAPI_封装版.lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "universal",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
  "flags": [
-  "short_text"
+  "androlua_private",
+  "private_api"
  ],
- "truncation": "preview_truncated",
- "line_count": 16,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 866,
+ "char_count": 23869,
  "confidence": "static_review"
 }

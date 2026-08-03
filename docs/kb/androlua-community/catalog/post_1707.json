@@ -5,7 +5,7 @@
  "author": "归鸿",
  "platform": "所有环境",
  "source_date": "2022年08月11日 20:07:35",
- "hits": 1007,
+ "hits": 1009,
  "up": 18,
  "favorite": 42,
  "comment": 23,
@@ -16,8 +16,8 @@
  "flags": [
   "chinese_identifier"
  ],
- "truncation": "complete_or_unverifiable",
- "line_count": 13,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 154,
+ "char_count": 4352,
  "confidence": "static_review"
 }

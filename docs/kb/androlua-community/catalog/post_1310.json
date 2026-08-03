@@ -5,7 +5,7 @@
  "author": "jies辰",
  "platform": "所有环境",
  "source_date": "2022年01月10日 20:07:10",
- "hits": 585,
+ "hits": 586,
  "up": 6,
  "favorite": 44,
  "comment": 4,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 22,
+ "char_count": 482,
  "confidence": "static_review"
 }

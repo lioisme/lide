@@ -5,17 +5,20 @@
  "author": "Aqora",
  "platform": "Fusion App2,reOpenLua",
  "source_date": "2023年10月01日 19:37:17",
- "hits": 1047,
+ "hits": 1049,
  "up": 6,
  "favorite": 43,
  "comment": 6,
  "source_file": "布局教程\\3444_关于.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 15,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "complete",
+ "line_count": 327,
+ "char_count": 9556,
  "confidence": "static_review"
 }

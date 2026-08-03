@@ -5,7 +5,7 @@
  "author": "wzsy233",
  "platform": "所有环境",
  "source_date": "2023年01月16日 19:27:24",
- "hits": 922,
+ "hits": 923,
  "up": 5,
  "favorite": 25,
  "comment": 5,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "truncation": "truncated_tail",
+ "line_count": 111,
+ "char_count": 2805,
  "confidence": "static_review"
 }

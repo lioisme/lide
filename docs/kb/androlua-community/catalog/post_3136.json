@@ -5,7 +5,7 @@
  "author": "水仙花",
  "platform": "所有环境",
  "source_date": "2023年07月23日 23:19:14",
- "hits": 360,
+ "hits": 361,
  "up": 5,
  "favorite": 20,
  "comment": 2,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 31,
+ "char_count": 819,
  "confidence": "static_review"
 }

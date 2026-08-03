@@ -5,20 +5,20 @@
  "author": "oゞ夜色乄未央ぁ",
  "platform": "所有环境",
  "source_date": "2020年05月01日 12:26:18",
- "hits": 416,
+ "hits": 417,
  "up": 8,
  "favorite": 29,
  "comment": 2,
  "source_file": "系统\\803_使用系统TTS播报语音.lua",
- "kind": "fragment",
- "verdict": "neutral",
- "portability": "android_api",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "obsolete",
  "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
+  "obsolete",
+  "obsolete"
  ],
- "truncation": "preview_truncated",
- "line_count": 10,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 36,
+ "char_count": 1188,
  "confidence": "static_review"
 }

@@ -5,7 +5,7 @@
  "author": "Adam·Eva",
  "platform": "所有环境",
  "source_date": "2022年07月30日 15:44:48",
- "hits": 695,
+ "hits": 696,
  "up": 17,
  "favorite": 3,
  "comment": 5,
@@ -17,7 +17,7 @@
   "announcement_no_code",
   "announcement"
  ],
- "truncation": "preview_truncated",
+ "truncation": "truncated_tail",
  "line_count": 11,
  "char_count": 253,
  "confidence": "static_review"

@@ -5,20 +5,19 @@
  "author": "•⤙•/k",
  "platform": "AndLua",
  "source_date": "2023年07月29日 23:28:03",
- "hits": 383,
+ "hits": 384,
  "up": 7,
  "favorite": 16,
  "comment": 5,
  "source_file": "实用代码\\3163_滑动屏幕更改亮度和音量.lua",
- "kind": "text_note",
+ "kind": "code_demo",
  "verdict": "negative",
- "portability": "universal",
+ "portability": "android_api",
  "flags": [
-  "short_text",
-  "global_pollution"
+  "chinese_identifier"
  ],
- "truncation": "complete_or_unverifiable",
- "line_count": 19,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 180,
+ "char_count": 3466,
  "confidence": "static_review"
 }

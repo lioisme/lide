@@ -5,20 +5,17 @@
  "author": "kamihitoe",
  "platform": "所有环境",
  "source_date": "2023年04月30日 06:18:20",
- "hits": 424,
+ "hits": 426,
  "up": 4,
  "favorite": 14,
  "comment": 6,
  "source_file": "Androlua教程\\2711_Glide_SimpleTarget.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "android_api",
- "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
- ],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 52,
+ "char_count": 1323,
  "confidence": "static_review"
 }

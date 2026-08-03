@@ -5,20 +5,20 @@
  "author": "Cheese",
  "platform": "所有环境",
  "source_date": "2023年07月03日 14:17:59",
- "hits": 778,
+ "hits": 780,
  "up": 6,
  "favorite": 14,
  "comment": 5,
  "source_file": "布局教程\\3022_低仿Github上的开源GPT界面.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "negative",
  "portability": "android_api",
  "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
+  "chinese_identifier",
+  "hardcoded_secret"
  ],
- "truncation": "preview_truncated",
- "line_count": 15,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 246,
+ "char_count": 5968,
  "confidence": "static_review"
 }

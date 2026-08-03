@@ -5,19 +5,17 @@
  "author": "NekoLaska",
  "platform": "所有环境",
  "source_date": "2022年08月17日 12:44:02",
- "hits": 490,
+ "hits": 491,
  "up": 2,
  "favorite": 12,
  "comment": 6,
  "source_file": "Androlua教程\\1723_VibratorEffect类控制震动时长及强度.lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "universal",
- "flags": [
-  "short_text"
- ],
- "truncation": "preview_truncated",
- "line_count": 10,
- "char_count": 300,
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 45,
+ "char_count": 1252,
  "confidence": "static_review"
 }

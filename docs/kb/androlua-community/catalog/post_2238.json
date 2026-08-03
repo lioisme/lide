@@ -5,7 +5,7 @@
  "author": "诺~",
  "platform": "所有环境",
  "source_date": "2022年12月23日 10:39:56",
- "hits": 250,
+ "hits": 251,
  "up": 4,
  "favorite": 5,
  "comment": 2,
@@ -16,8 +16,8 @@
  "flags": [
   "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 15,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 20,
+ "char_count": 380,
  "confidence": "static_review"
 }

@@ -5,7 +5,7 @@
  "author": "伊藤诚",
  "platform": "所有环境",
  "source_date": "2025年12月24日 01:23:58",
- "hits": 577,
+ "hits": 578,
  "up": 8,
  "favorite": 21,
  "comment": 2,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 286,
+ "char_count": 7087,
  "confidence": "static_review"
 }

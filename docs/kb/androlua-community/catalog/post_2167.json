@@ -5,7 +5,7 @@
  "author": "1111",
  "platform": "所有环境",
  "source_date": "2022年12月11日 01:37:37",
- "hits": 381,
+ "hits": 382,
  "up": 7,
  "favorite": 16,
  "comment": 4,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "universal",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "truncation": "truncated_tail",
+ "line_count": 267,
+ "char_count": 5989,
  "confidence": "static_review"
 }

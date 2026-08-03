@@ -5,7 +5,7 @@
  "author": "胡斯凯",
  "platform": "所有环境",
  "source_date": "2022年04月28日 14:46:13",
- "hits": 158,
+ "hits": 159,
  "up": 0,
  "favorite": 1,
  "comment": 0,
@@ -16,7 +16,7 @@
  "flags": [
   "short_text"
  ],
- "truncation": "complete_or_unverifiable",
+ "truncation": "complete",
  "line_count": 3,
  "char_count": 118,
  "confidence": "static_review"

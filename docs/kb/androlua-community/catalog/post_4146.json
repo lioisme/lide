@@ -10,14 +10,15 @@
  "favorite": 42,
  "comment": 0,
  "source_file": "Lua代码\\4146_一个简单可推的侧滑栏实例V2.lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "universal",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "obsolete",
  "flags": [
-  "short_text"
+  "obsolete",
+  "obsolete"
  ],
- "truncation": "preview_truncated",
- "line_count": 18,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 440,
+ "char_count": 12988,
  "confidence": "static_review"
 }

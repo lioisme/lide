@@ -5,7 +5,7 @@
  "author": "随忆",
  "platform": "Fusion App2",
  "source_date": "2022年02月12日 00:17:49",
- "hits": 503,
+ "hits": 504,
  "up": 16,
  "favorite": 37,
  "comment": 2,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 15,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 184,
+ "char_count": 4144,
  "confidence": "static_review"
 }

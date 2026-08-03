@@ -5,7 +5,7 @@
  "author": "二⃢哥⃢",
  "platform": "所有环境",
  "source_date": "2023年05月16日 15:30:16",
- "hits": 134,
+ "hits": 135,
  "up": 4,
  "favorite": 14,
  "comment": 0,
@@ -14,9 +14,10 @@
  "verdict": "negative",
  "portability": "android_api",
  "flags": [
-  "chinese_identifier"
+  "chinese_identifier",
+  "sensitive_permission"
  ],
- "truncation": "complete_or_unverifiable",
+ "truncation": "complete",
  "line_count": 10,
  "char_count": 278,
  "confidence": "static_review"

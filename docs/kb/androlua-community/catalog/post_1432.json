@@ -5,22 +5,20 @@
  "author": "Adam·Eva",
  "platform": "Fusion App2",
  "source_date": "2022年04月12日 18:29:58",
- "hits": 685,
+ "hits": 686,
  "up": 9,
  "favorite": 27,
  "comment": 1,
  "source_file": "Intent通信\\1432_WebView上传文件，允许多选.lua",
- "kind": "fragment",
+ "kind": "code_demo",
  "verdict": "negative",
  "portability": "editor_bound",
  "flags": [
-  "truncated_tail",
   "editor_bound",
-  "editor_bound",
-  "incomplete_fragment"
+  "editor_bound"
  ],
- "truncation": "preview_truncated",
- "line_count": 10,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 52,
+ "char_count": 1547,
  "confidence": "static_review"
 }

@@ -5,7 +5,7 @@
  "author": "绅士",
  "platform": "所有环境",
  "source_date": "2023年04月30日 12:53:19",
- "hits": 914,
+ "hits": 915,
  "up": 21,
  "favorite": 63,
  "comment": 33,
@@ -16,8 +16,8 @@
  "flags": [
   "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 13,
- "char_count": 300,
+ "truncation": "truncated_tail",
+ "line_count": 27,
+ "char_count": 632,
  "confidence": "static_review"
 }

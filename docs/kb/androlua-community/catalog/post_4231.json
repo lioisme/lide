@@ -5,21 +5,21 @@
  "author": "oゞ夜色乄未央ぁ",
  "platform": "Fusion App2",
  "source_date": "2024年09月04日 10:05:04",
- "hits": 1230,
+ "hits": 1251,
  "up": 12,
  "favorite": 30,
  "comment": 3,
  "source_file": "网络爬虫\\4231_番组计划新番时间表.lua",
  "kind": "code_demo",
  "verdict": "negative",
- "portability": "editor_bound",
+ "portability": "host_private",
  "flags": [
-  "editor_bound",
-  "editor_bound",
+  "androlua_private",
+  "private_api",
   "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 9,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 262,
+ "char_count": 7620,
  "confidence": "static_review"
 }

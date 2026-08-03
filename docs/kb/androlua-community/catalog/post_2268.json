@@ -5,17 +5,20 @@
  "author": "奥姆",
  "platform": "所有环境",
  "source_date": "2023年01月01日 18:56:09",
- "hits": 539,
+ "hits": 540,
  "up": 10,
  "favorite": 18,
  "comment": 9,
  "source_file": "控件属性\\2268_更人性化的代码补全（还待补充，可修改）.lua",
- "kind": "code_demo",
- "verdict": "positive",
+ "kind": "fragment",
+ "verdict": "neutral",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 18,
- "char_count": 300,
+ "flags": [
+  "incomplete_mark",
+  "incomplete_fragment"
+ ],
+ "truncation": "complete",
+ "line_count": 79,
+ "char_count": 1969,
  "confidence": "static_review"
 }

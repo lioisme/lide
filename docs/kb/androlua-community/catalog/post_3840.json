@@ -5,20 +5,20 @@
  "author": "Aqora",
  "platform": "所有环境",
  "source_date": "2024年02月02日 23:32:44",
- "hits": 463,
+ "hits": 464,
  "up": 9,
  "favorite": 18,
  "comment": 8,
  "source_file": "动画教程\\3840_您对我们的印象是.lua",
  "kind": "code_demo",
  "verdict": "negative",
- "portability": "editor_bound",
+ "portability": "host_private",
  "flags": [
-  "editor_bound",
-  "editor_bound"
+  "androlua_private",
+  "private_api"
  ],
- "truncation": "complete_or_unverifiable",
- "line_count": 11,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 171,
+ "char_count": 4664,
  "confidence": "static_review"
 }

@@ -5,19 +5,19 @@
  "author": "oゞ夜色乄未央ぁ",
  "platform": "所有环境",
  "source_date": "2022年01月03日 17:25:28",
- "hits": 3589,
+ "hits": 3591,
  "up": 37,
  "favorite": 112,
  "comment": 8,
  "source_file": "UI控件\\1290_WebView浏览器控件.lua",
- "kind": "text_note",
+ "kind": "code_demo",
  "verdict": "neutral",
- "portability": "universal",
+ "portability": "android_api",
  "flags": [
-  "short_text"
+  "sensitive_permission"
  ],
- "truncation": "preview_truncated",
- "line_count": 18,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 125,
+ "char_count": 3845,
  "confidence": "static_review"
 }

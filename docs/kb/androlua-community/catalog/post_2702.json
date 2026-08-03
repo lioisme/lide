@@ -5,20 +5,22 @@
  "author": "咲拖孩",
  "platform": "AndroLua,AndLua",
  "source_date": "2023年04月26日 01:04:09",
- "hits": 895,
+ "hits": 896,
  "up": 4,
  "favorite": 16,
  "comment": 8,
  "source_file": "Androlua教程\\2702_Andlua调用shizuku.lua",
- "kind": "fragment",
- "verdict": "neutral",
- "portability": "android_api",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
  "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
+  "androlua_private",
+  "private_api",
+  "chinese_identifier",
+  "os_exec"
  ],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 387,
+ "char_count": 8307,
  "confidence": "static_review"
 }

@@ -5,17 +5,19 @@
  "author": "清汀琉璃",
  "platform": "Fusion App2",
  "source_date": "2023年07月19日 23:54:42",
- "hits": 1523,
+ "hits": 1524,
  "up": 22,
  "favorite": 76,
  "comment": 16,
  "source_file": "小工具\\3104_一言_Demo.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "complete_or_unverifiable",
- "line_count": 12,
- "char_count": 300,
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 638,
+ "char_count": 16607,
  "confidence": "static_review"
 }

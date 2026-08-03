@@ -10,14 +10,12 @@
  "favorite": 2,
  "comment": 4,
  "source_file": "Lua代码\\5358_Mandelbrot集轨道动力学算法路径优化.lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "universal",
- "flags": [
-  "text_only"
- ],
- "truncation": "preview_truncated",
- "line_count": 13,
- "char_count": 300,
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 289,
+ "char_count": 8517,
  "confidence": "static_review"
 }

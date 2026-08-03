@@ -5,7 +5,7 @@
  "author": "Atomic fish",
  "platform": "Fusion App2",
  "source_date": "2023年01月20日 14:25:51",
- "hits": 641,
+ "hits": 642,
  "up": 11,
  "favorite": 42,
  "comment": 9,
@@ -17,8 +17,8 @@
   "editor_bound",
   "editor_bound"
  ],
- "truncation": "complete_or_unverifiable",
- "line_count": 8,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 20,
+ "char_count": 655,
  "confidence": "static_review"
 }

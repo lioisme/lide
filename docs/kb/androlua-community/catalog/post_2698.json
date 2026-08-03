@@ -5,7 +5,7 @@
  "author": "•⤙•/k",
  "platform": "AndLua",
  "source_date": "2023年04月22日 20:25:46",
- "hits": 327,
+ "hits": 328,
  "up": 2,
  "favorite": 5,
  "comment": 7,
@@ -15,10 +15,11 @@
  "portability": "host_private",
  "flags": [
   "androlua_private",
-  "private_api"
+  "private_api",
+  "remote_exec"
  ],
- "truncation": "preview_truncated",
- "line_count": 9,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 68,
+ "char_count": 1828,
  "confidence": "static_review"
 }

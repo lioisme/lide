@@ -17,8 +17,8 @@
   "announcement_no_code",
   "announcement"
  ],
- "truncation": "complete_or_unverifiable",
- "line_count": 11,
- "char_count": 300,
+ "truncation": "truncated_tail",
+ "line_count": 20,
+ "char_count": 496,
  "confidence": "static_review"
 }

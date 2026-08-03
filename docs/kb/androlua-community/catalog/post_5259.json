@@ -5,7 +5,7 @@
  "author": "🐷",
  "platform": "AndroLua,reOpenLua,OpenLuaX,AndLua",
  "source_date": "2026年03月08日 07:27:20",
- "hits": 903,
+ "hits": 906,
  "up": 16,
  "favorite": 44,
  "comment": 9,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 509,
+ "char_count": 19860,
  "confidence": "static_review"
 }

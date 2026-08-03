@@ -11,11 +11,13 @@
  "comment": 0,
  "source_file": "Lua代码\\5211_Flip_Clock（翻页时钟）.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "neutral",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "flags": [
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 159,
+ "char_count": 3909,
  "confidence": "static_review"
 }

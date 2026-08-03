@@ -5,17 +5,20 @@
  "author": "Duo",
  "platform": "所有环境",
  "source_date": "2023年07月02日 08:46:30",
- "hits": 638,
+ "hits": 639,
  "up": 4,
  "favorite": 4,
  "comment": 5,
  "source_file": "小游戏\\3010_滑雪场.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 8,
- "char_count": 300,
+ "flags": [
+  "chinese_identifier",
+  "global_pollution"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 1476,
+ "char_count": 34267,
  "confidence": "static_review"
 }

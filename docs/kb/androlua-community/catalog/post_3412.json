@@ -5,19 +5,20 @@
  "author": "海纳百氚，有容乃大",
  "platform": "Fusion App2",
  "source_date": "2023年09月20日 16:57:05",
- "hits": 685,
+ "hits": 686,
  "up": 9,
  "favorite": 15,
  "comment": 7,
  "source_file": "Activity活动\\3412_高仿某个浏览器的主页布局（疑似）.lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "universal",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
  "flags": [
-  "short_text"
+  "androlua_private",
+  "private_api"
  ],
- "truncation": "preview_truncated",
- "line_count": 17,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 423,
+ "char_count": 12424,
  "confidence": "static_review"
 }

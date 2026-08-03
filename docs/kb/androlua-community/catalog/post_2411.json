@@ -5,7 +5,7 @@
  "author": "白咲花",
  "platform": "所有环境",
  "source_date": "2023年01月31日 21:49:18",
- "hits": 561,
+ "hits": 563,
  "up": 4,
  "favorite": 19,
  "comment": 3,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 296,
+ "char_count": 7048,
  "confidence": "static_review"
 }

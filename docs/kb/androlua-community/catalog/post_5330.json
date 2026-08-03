@@ -5,17 +5,20 @@
  "author": "😈",
  "platform": "",
  "source_date": "2026年06月06日 17:15:10",
- "hits": 348,
+ "hits": 350,
  "up": 6,
  "favorite": 12,
  "comment": 0,
  "source_file": "安卓教程\\5330_Lrc歌词动效.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 289,
+ "char_count": 7341,
  "confidence": "static_review"
 }

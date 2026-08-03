@@ -5,7 +5,7 @@
  "author": "夜白1007",
  "platform": "所有环境",
  "source_date": "2023年10月19日 02:37:59",
- "hits": 242,
+ "hits": 243,
  "up": 1,
  "favorite": 9,
  "comment": 1,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 26,
+ "char_count": 626,
  "confidence": "static_review"
 }

@@ -10,15 +10,12 @@
  "favorite": 8,
  "comment": 3,
  "source_file": "Layout布局\\5039_推拉门窗.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "android_api",
- "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
- ],
- "truncation": "preview_truncated",
- "line_count": 10,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 213,
+ "char_count": 5671,
  "confidence": "static_review"
 }

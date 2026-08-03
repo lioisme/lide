@@ -5,19 +5,20 @@
  "author": "迷糊.",
  "platform": "所有环境",
  "source_date": "2023年07月22日 17:44:44",
- "hits": 393,
+ "hits": 394,
  "up": 5,
  "favorite": 20,
  "comment": 9,
  "source_file": "系统\\3121_检测手机是否支持_USB_OTG_功能.lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "universal",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "obsolete",
  "flags": [
-  "short_text"
+  "obsolete",
+  "obsolete"
  ],
- "truncation": "preview_truncated",
- "line_count": 10,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 34,
+ "char_count": 857,
  "confidence": "static_review"
 }

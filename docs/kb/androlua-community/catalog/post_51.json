@@ -5,17 +5,19 @@
  "author": "oゞ夜色乄未央ぁ",
  "platform": "",
  "source_date": "2020年05月01日 12:26:18",
- "hits": 237,
+ "hits": 238,
  "up": 1,
  "favorite": 10,
  "comment": 0,
  "source_file": "实用代码\\51_获取已安装程序的包名、版本号、最后更新时间、图标、应用名称.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "neutral",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 7,
- "char_count": 300,
+ "flags": [
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 14,
+ "char_count": 647,
  "confidence": "static_review"
 }

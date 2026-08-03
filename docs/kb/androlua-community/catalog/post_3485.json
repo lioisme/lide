@@ -5,20 +5,17 @@
  "author": "•⤙•/k",
  "platform": "AndLua",
  "source_date": "2023年10月12日 09:49:22",
- "hits": 398,
+ "hits": 399,
  "up": 11,
  "favorite": 42,
  "comment": 13,
  "source_file": "实用代码\\3485_检测后台是否有音乐播放.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "android_api",
- "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
- ],
- "truncation": "preview_truncated",
- "line_count": 13,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 26,
+ "char_count": 491,
  "confidence": "static_review"
 }

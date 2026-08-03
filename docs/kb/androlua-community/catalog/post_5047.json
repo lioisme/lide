@@ -11,11 +11,14 @@
  "comment": 0,
  "source_file": "Adapter容器\\5047_ExetendFlexboxLayoutManager流式布局管理器.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 143,
+ "char_count": 3299,
  "confidence": "static_review"
 }

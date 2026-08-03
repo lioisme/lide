@@ -5,19 +5,19 @@
  "author": "•⤙•/k",
  "platform": "AndLua",
  "source_date": "2023年10月15日 14:40:56",
- "hits": 481,
+ "hits": 482,
  "up": 3,
  "favorite": 24,
  "comment": 2,
  "source_file": "小工具\\3496_非常水的底部淡出淡入提示.lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "universal",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
  "flags": [
-  "short_text"
+  "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 16,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 116,
+ "char_count": 3010,
  "confidence": "static_review"
 }

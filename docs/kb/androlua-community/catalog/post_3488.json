@@ -5,20 +5,19 @@
  "author": "•⤙•/k",
  "platform": "AndLua",
  "source_date": "2023年10月13日 10:15:45",
- "hits": 469,
+ "hits": 470,
  "up": 5,
  "favorite": 12,
  "comment": 4,
  "source_file": "布局教程\\3488_伪拖动条_仿imgui.lua",
- "kind": "text_note",
+ "kind": "code_demo",
  "verdict": "negative",
- "portability": "universal",
+ "portability": "android_api",
  "flags": [
-  "short_text",
-  "global_pollution"
+  "chinese_identifier"
  ],
- "truncation": "complete_or_unverifiable",
- "line_count": 17,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 131,
+ "char_count": 3343,
  "confidence": "static_review"
 }

@@ -11,11 +11,13 @@
  "comment": 1,
  "source_file": "小工具\\4980_Zip4j带密码、进度解压缩函数封装.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 17,
- "char_count": 300,
+ "flags": [
+  "hardcoded_secret"
+ ],
+ "truncation": "complete",
+ "line_count": 469,
+ "char_count": 14275,
  "confidence": "static_review"
 }

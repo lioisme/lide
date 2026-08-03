@@ -11,11 +11,13 @@
  "comment": 3,
  "source_file": "小工具\\5314_迷你世界0.1.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "neutral",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "flags": [
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 1706,
+ "char_count": 42110,
  "confidence": "static_review"
 }

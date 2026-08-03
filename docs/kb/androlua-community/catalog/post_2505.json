@@ -5,20 +5,20 @@
  "author": "Cheese",
  "platform": "AndroLua,AndLua",
  "source_date": "2023年02月23日 19:12:19",
- "hits": 595,
+ "hits": 596,
  "up": 4,
  "favorite": 12,
  "comment": 1,
  "source_file": "小工具\\2505_Alua实现桌面.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "negative",
  "portability": "android_api",
  "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
+  "global_pollution",
+  "sensitive_permission"
  ],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 135,
+ "char_count": 3670,
  "confidence": "static_review"
 }

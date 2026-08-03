@@ -5,19 +5,21 @@
  "author": "智",
  "platform": "所有环境",
  "source_date": "2023年01月14日 17:46:53",
- "hits": 767,
+ "hits": 768,
  "up": 14,
  "favorite": 29,
  "comment": 12,
  "source_file": "UI控件\\2319_MaterialButton.lua",
  "kind": "code_demo",
  "verdict": "negative",
- "portability": "android_api",
+ "portability": "editor_bound",
  "flags": [
+  "editor_bound",
+  "editor_bound",
   "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 8,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 121,
+ "char_count": 3093,
  "confidence": "static_review"
 }

@@ -5,17 +5,19 @@
  "author": "智",
  "platform": "所有环境",
  "source_date": "2023年01月06日 18:32:20",
- "hits": 862,
+ "hits": 863,
  "up": 12,
  "favorite": 37,
  "comment": 13,
  "source_file": "实用代码\\2285_DownloadManager扩展与指南-完美修复.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "universal",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 18,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 249,
+ "char_count": 7395,
  "confidence": "static_review"
 }

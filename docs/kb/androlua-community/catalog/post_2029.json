@@ -5,17 +5,21 @@
  "author": "小白·马",
  "platform": "所有环境",
  "source_date": "2022年11月03日 00:16:57",
- "hits": 724,
+ "hits": 725,
  "up": 19,
  "favorite": 58,
  "comment": 5,
  "source_file": "实用代码\\2029_SpannableString_文本样式.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 292,
+ "char_count": 9557,
  "confidence": "static_review"
 }

@@ -5,7 +5,7 @@
  "author": "海纳百氚，有容乃大",
  "platform": "AndLua",
  "source_date": "2022年05月31日 00:11:12",
- "hits": 427,
+ "hits": 428,
  "up": 8,
  "favorite": 24,
  "comment": 0,
@@ -16,8 +16,8 @@
  "flags": [
   "chinese_identifier"
  ],
- "truncation": "complete_or_unverifiable",
- "line_count": 13,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 42,
+ "char_count": 1009,
  "confidence": "static_review"
 }

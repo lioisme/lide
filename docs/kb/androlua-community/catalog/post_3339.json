@@ -5,7 +5,7 @@
  "author": "Aqora",
  "platform": "所有环境",
  "source_date": "2023年08月29日 19:06:00",
- "hits": 594,
+ "hits": 595,
  "up": 22,
  "favorite": 50,
  "comment": 24,
@@ -17,8 +17,8 @@
   "editor_bound",
   "editor_bound"
  ],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 102,
+ "char_count": 2338,
  "confidence": "static_review"
 }

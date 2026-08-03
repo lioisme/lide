@@ -5,7 +5,7 @@
  "author": "kamihitoe",
  "platform": "",
  "source_date": "2023年05月10日 13:12:15",
- "hits": 306,
+ "hits": 309,
  "up": 2,
  "favorite": 3,
  "comment": 1,
@@ -16,7 +16,7 @@
  "flags": [
   "short_text"
  ],
- "truncation": "complete_or_unverifiable",
+ "truncation": "complete",
  "line_count": 4,
  "char_count": 53,
  "confidence": "static_review"

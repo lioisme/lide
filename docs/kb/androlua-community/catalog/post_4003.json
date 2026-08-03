@@ -10,17 +10,15 @@
  "favorite": 2,
  "comment": 0,
  "source_file": "Layout布局\\4003_ExpandableListView折叠列表，重写BaseExpandableListAdapter.lua",
- "kind": "fragment",
+ "kind": "code_demo",
  "verdict": "negative",
  "portability": "editor_bound",
  "flags": [
-  "truncated_tail",
   "editor_bound",
-  "editor_bound",
-  "incomplete_fragment"
+  "editor_bound"
  ],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 270,
+ "char_count": 6667,
  "confidence": "static_review"
 }

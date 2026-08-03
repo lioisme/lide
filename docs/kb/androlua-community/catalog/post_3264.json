@@ -11,13 +11,11 @@
  "comment": 1,
  "source_file": "浏览器\\3264_舔狗日记（带图）.lua",
  "kind": "code_demo",
- "verdict": "negative",
+ "verdict": "positive",
  "portability": "universal",
- "flags": [
-  "global_pollution"
- ],
- "truncation": "preview_truncated",
- "line_count": 21,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 27,
+ "char_count": 489,
  "confidence": "static_review"
 }

@@ -5,7 +5,7 @@
  "author": "󠀀",
  "platform": "AndroLua",
  "source_date": "2023年07月26日 17:06:06",
- "hits": 201,
+ "hits": 202,
  "up": 2,
  "favorite": 2,
  "comment": 6,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 18,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 192,
+ "char_count": 2804,
  "confidence": "static_review"
 }

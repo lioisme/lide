@@ -5,20 +5,21 @@
  "author": "小白·马",
  "platform": "Fusion App2,reOpenLua",
  "source_date": "2023年05月28日 18:15:17",
- "hits": 2381,
+ "hits": 2383,
  "up": 35,
  "favorite": 112,
  "comment": 31,
  "source_file": "实用代码\\2868_Banner_ViewPager2_无限轮播.lua",
  "kind": "code_demo",
  "verdict": "negative",
- "portability": "editor_bound",
+ "portability": "host_private",
  "flags": [
-  "editor_bound",
-  "editor_bound"
+  "androlua_private",
+  "private_api",
+  "remote_exec"
  ],
- "truncation": "preview_truncated",
- "line_count": 10,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 382,
+ "char_count": 10559,
  "confidence": "static_review"
 }

@@ -5,7 +5,7 @@
  "author": "奥姆",
  "platform": "所有环境",
  "source_date": "2023年02月05日 21:04:57",
- "hits": 269,
+ "hits": 270,
  "up": 6,
  "favorite": 18,
  "comment": 8,
@@ -16,8 +16,8 @@
  "flags": [
   "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 19,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 29,
+ "char_count": 410,
  "confidence": "static_review"
 }

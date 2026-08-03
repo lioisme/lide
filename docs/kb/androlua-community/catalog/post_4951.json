@@ -10,15 +10,12 @@
  "favorite": 1,
  "comment": 5,
  "source_file": "Lua代码\\4951_alua编辑器性能跑分测试.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "universal",
- "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
- ],
- "truncation": "preview_truncated",
- "line_count": 13,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 93,
+ "char_count": 2444,
  "confidence": "static_review"
 }

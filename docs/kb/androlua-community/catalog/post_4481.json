@@ -5,20 +5,17 @@
  "author": "清风",
  "platform": "所有环境",
  "source_date": "2025年01月22日 16:36:54",
- "hits": 199,
+ "hits": 200,
  "up": 0,
  "favorite": 1,
  "comment": 1,
  "source_file": "小游戏\\4481_三门问题.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "universal",
- "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
- ],
- "truncation": "preview_truncated",
- "line_count": 17,
- "char_count": 300,
+ "flags": [],
+ "truncation": "truncated_tail",
+ "line_count": 36,
+ "char_count": 663,
  "confidence": "static_review"
 }

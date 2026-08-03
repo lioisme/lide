@@ -5,7 +5,7 @@
  "author": "Cheese",
  "platform": "AndroLua,AndLua",
  "source_date": "2023年02月23日 19:04:51",
- "hits": 733,
+ "hits": 734,
  "up": 7,
  "favorite": 26,
  "comment": 7,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "complete_or_unverifiable",
- "line_count": 14,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 58,
+ "char_count": 1539,
  "confidence": "static_review"
 }

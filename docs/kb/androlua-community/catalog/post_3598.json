@@ -5,20 +5,20 @@
  "author": "kamihitoe",
  "platform": "所有环境",
  "source_date": "2023年11月20日 09:00:39",
- "hits": 224,
+ "hits": 226,
  "up": 3,
  "favorite": 6,
  "comment": 1,
  "source_file": "基础代码\\3598_string元方法扩展.lua",
- "kind": "fragment",
- "verdict": "neutral",
- "portability": "android_api",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
  "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
+  "editor_bound",
+  "editor_bound"
  ],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 115,
+ "char_count": 2178,
  "confidence": "static_review"
 }

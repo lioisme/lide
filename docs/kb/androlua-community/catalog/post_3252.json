@@ -5,20 +5,17 @@
  "author": "Cheese",
  "platform": "所有环境",
  "source_date": "2023年08月14日 11:00:16",
- "hits": 378,
+ "hits": 379,
  "up": 3,
  "favorite": 5,
  "comment": 2,
  "source_file": "小游戏\\3252_摇杆.lua",
- "kind": "text_note",
- "verdict": "negative",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "universal",
- "flags": [
-  "short_text",
-  "global_pollution"
- ],
- "truncation": "preview_truncated",
- "line_count": 16,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 71,
+ "char_count": 1631,
  "confidence": "static_review"
 }

@@ -5,17 +5,20 @@
  "author": "Duo",
  "platform": "所有环境",
  "source_date": "2023年03月05日 12:38:59",
- "hits": 936,
+ "hits": 937,
  "up": 8,
  "favorite": 11,
  "comment": 4,
  "source_file": "Lua代码\\2551_MathForest(Nature_Math).lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "universal",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 49,
- "char_count": 300,
+ "flags": [
+  "chinese_identifier",
+  "global_pollution"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 1667,
+ "char_count": 36962,
  "confidence": "static_review"
 }

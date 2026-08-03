@@ -5,21 +5,17 @@
  "author": "伊藤诚",
  "platform": "所有环境",
  "source_date": "2025年07月14日 07:17:56",
- "hits": 300,
+ "hits": 301,
  "up": 6,
  "favorite": 14,
  "comment": 0,
  "source_file": "设备系统\\4917_手机帧率监控.lua",
- "kind": "fragment",
- "verdict": "negative",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "android_api",
- "flags": [
-  "truncated_tail",
-  "global_pollution",
-  "incomplete_fragment"
- ],
- "truncation": "preview_truncated",
- "line_count": 16,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 78,
+ "char_count": 1594,
  "confidence": "static_review"
 }

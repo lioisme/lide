@@ -10,14 +10,12 @@
  "favorite": 29,
  "comment": 9,
  "source_file": "Intent通信\\4427_调用相册多选图片配实例_V2.lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "universal",
- "flags": [
-  "short_text"
- ],
- "truncation": "preview_truncated",
- "line_count": 18,
- "char_count": 300,
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 256,
+ "char_count": 6623,
  "confidence": "static_review"
 }

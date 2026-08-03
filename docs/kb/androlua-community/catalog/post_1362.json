@@ -5,17 +5,20 @@
  "author": "Adam·Eva",
  "platform": "Fusion App2",
  "source_date": "2022年02月08日 15:38:58",
- "hits": 280,
+ "hits": 281,
  "up": 4,
  "favorite": 13,
  "comment": 0,
  "source_file": "浏览器\\1362_SSL证书异常处理.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 18,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 57,
+ "char_count": 1362,
  "confidence": "static_review"
 }

@@ -5,17 +5,20 @@
  "author": "AstarLC",
  "platform": "所有环境",
  "source_date": "2023年11月22日 20:14:21",
- "hits": 302,
+ "hits": 303,
  "up": 4,
  "favorite": 5,
  "comment": 4,
  "source_file": "小工具\\3602_函数图像绘制器.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 15,
- "char_count": 300,
+ "flags": [
+  "global_pollution",
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 366,
+ "char_count": 11908,
  "confidence": "static_review"
 }

@@ -15,10 +15,11 @@
  "portability": "host_private",
  "flags": [
   "androlua_private",
-  "private_api"
+  "private_api",
+  "os_exec"
  ],
- "truncation": "preview_truncated",
- "line_count": 9,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 229,
+ "char_count": 5109,
  "confidence": "static_review"
 }

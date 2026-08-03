@@ -5,20 +5,19 @@
  "author": "智",
  "platform": "所有环境",
  "source_date": "2023年01月15日 17:43:10",
- "hits": 815,
+ "hits": 816,
  "up": 8,
  "favorite": 18,
  "comment": 16,
  "source_file": "小工具\\2327_充电特效.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "negative",
  "portability": "android_api",
  "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
+  "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 83,
+ "char_count": 2205,
  "confidence": "static_review"
 }

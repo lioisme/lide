@@ -11,14 +11,11 @@
  "comment": 3,
  "source_file": "Layout布局\\4188_editText光标_把柄_选中颜色更改.lua",
  "kind": "code_demo",
- "verdict": "negative",
- "portability": "editor_bound",
- "flags": [
-  "editor_bound",
-  "editor_bound"
- ],
- "truncation": "preview_truncated",
- "line_count": 8,
- "char_count": 300,
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 93,
+ "char_count": 2825,
  "confidence": "static_review"
 }

@@ -5,17 +5,20 @@
  "author": "水仙花",
  "platform": "AndroLua,Fusion App1,reOpenLua,AndLua",
  "source_date": "2023年07月19日 00:40:22",
- "hits": 212,
+ "hits": 213,
  "up": 1,
  "favorite": 5,
  "comment": 1,
  "source_file": "实用代码\\3102_提取视频音频_pro.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "universal",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "obsolete",
+ "flags": [
+  "obsolete",
+  "obsolete"
+ ],
+ "truncation": "complete",
+ "line_count": 123,
+ "char_count": 3514,
  "confidence": "static_review"
 }

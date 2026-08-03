@@ -5,20 +5,17 @@
  "author": "•⤙•/k",
  "platform": "AndLua",
  "source_date": "2023年09月01日 23:00:01",
- "hits": 477,
+ "hits": 478,
  "up": 6,
  "favorite": 11,
  "comment": 8,
  "source_file": "布局教程\\3359_miku_16_周年_(心血来潮写的ui).lua",
- "kind": "text_note",
- "verdict": "negative",
- "portability": "universal",
- "flags": [
-  "short_text",
-  "global_pollution"
- ],
- "truncation": "preview_truncated",
- "line_count": 15,
- "char_count": 300,
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 197,
+ "char_count": 5584,
  "confidence": "static_review"
 }

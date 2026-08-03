@@ -5,7 +5,7 @@
  "author": "海纳百氚，有容乃大",
  "platform": "所有环境",
  "source_date": "2023年09月05日 19:21:30",
- "hits": 474,
+ "hits": 475,
  "up": 4,
  "favorite": 14,
  "comment": 13,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "universal",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 61,
+ "char_count": 1616,
  "confidence": "static_review"
 }

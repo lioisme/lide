@@ -5,20 +5,19 @@
  "author": "Cheese",
  "platform": "所有环境",
  "source_date": "2023年03月12日 15:15:10",
- "hits": 300,
+ "hits": 301,
  "up": 6,
  "favorite": 15,
  "comment": 2,
  "source_file": "控件属性\\2572_给控件设置多Drawable.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "negative",
  "portability": "android_api",
  "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
+  "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 19,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 36,
+ "char_count": 1078,
  "confidence": "static_review"
 }

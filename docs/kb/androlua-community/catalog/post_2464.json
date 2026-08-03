@@ -5,17 +5,19 @@
  "author": "Cheese",
  "platform": "AndroLua,AndLua",
  "source_date": "2023年02月13日 21:11:45",
- "hits": 620,
+ "hits": 621,
  "up": 8,
  "favorite": 21,
  "comment": 8,
  "source_file": "实用代码\\2464_Enc_官方加密套壳源码.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 13,
- "char_count": 300,
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 108,
+ "char_count": 2750,
  "confidence": "static_review"
 }

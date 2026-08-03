@@ -5,19 +5,20 @@
  "author": "cty.",
  "platform": "所有环境",
  "source_date": "2026年01月31日 20:46:34",
- "hits": 389,
+ "hits": 390,
  "up": 2,
  "favorite": 2,
  "comment": 4,
  "source_file": "字符处理\\5192_创建一个无法删除的文件！.lua",
- "kind": "text_note",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "negative",
  "portability": "universal",
  "flags": [
-  "short_text"
+  "chinese_identifier",
+  "os_exec"
  ],
- "truncation": "preview_truncated",
- "line_count": 9,
- "char_count": 300,
+ "truncation": "truncated_tail",
+ "line_count": 83,
+ "char_count": 2431,
  "confidence": "static_review"
 }

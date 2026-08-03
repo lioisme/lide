@@ -18,8 +18,8 @@
   "private_api",
   "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 7,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 16,
+ "char_count": 526,
  "confidence": "static_review"
 }

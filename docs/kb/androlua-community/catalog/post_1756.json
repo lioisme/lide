@@ -5,17 +5,19 @@
  "author": "机不可失🅥",
  "platform": "AndroLua,Fusion App1,AndLua",
  "source_date": "2022年08月19日 14:34:06",
- "hits": 897,
+ "hits": 898,
  "up": 3,
  "favorite": 10,
  "comment": 3,
  "source_file": "布局教程\\1756_仿微信首页布局.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "neutral",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "flags": [
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 1436,
+ "char_count": 42259,
  "confidence": "static_review"
 }

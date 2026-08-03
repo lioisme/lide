@@ -5,7 +5,7 @@
  "author": "Genouka",
  "platform": "AndroLua,AndLua",
  "source_date": "2024年02月15日 00:00:28",
- "hits": 305,
+ "hits": 306,
  "up": 3,
  "favorite": 7,
  "comment": 2,
@@ -16,7 +16,7 @@
  "flags": [
   "short_text"
  ],
- "truncation": "complete_or_unverifiable",
+ "truncation": "complete",
  "line_count": 7,
  "char_count": 86,
  "confidence": "static_review"

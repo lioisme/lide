@@ -10,14 +10,14 @@
  "favorite": 7,
  "comment": 0,
  "source_file": "小工具\\5058_tiksave_海外抖音视频图集解析工具.lua",
- "kind": "text_note",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "negative",
  "portability": "universal",
  "flags": [
-  "short_text"
+  "hardcoded_secret"
  ],
- "truncation": "preview_truncated",
- "line_count": 15,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 221,
+ "char_count": 5696,
  "confidence": "static_review"
 }

@@ -5,7 +5,7 @@
  "author": "奥姆",
  "platform": "所有环境",
  "source_date": "2022年12月16日 00:17:21",
- "hits": 176,
+ "hits": 177,
  "up": 2,
  "favorite": 3,
  "comment": 8,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 17,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 32,
+ "char_count": 635,
  "confidence": "static_review"
 }

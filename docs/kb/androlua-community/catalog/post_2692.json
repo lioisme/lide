@@ -5,7 +5,7 @@
  "author": "诺~",
  "platform": "所有环境",
  "source_date": "2023年04月22日 19:07:14",
- "hits": 560,
+ "hits": 561,
  "up": 9,
  "favorite": 12,
  "comment": 20,
@@ -17,8 +17,8 @@
   "androlua_private",
   "private_api"
  ],
- "truncation": "preview_truncated",
- "line_count": 7,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 248,
+ "char_count": 13008,
  "confidence": "static_review"
 }

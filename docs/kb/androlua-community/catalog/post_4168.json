@@ -5,7 +5,7 @@
  "author": "fo",
  "platform": "AndLua",
  "source_date": "2024年08月11日 04:34:16",
- "hits": 327,
+ "hits": 328,
  "up": 7,
  "favorite": 9,
  "comment": 3,
@@ -16,8 +16,8 @@
  "flags": [
   "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 16,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 210,
+ "char_count": 4101,
  "confidence": "static_review"
 }

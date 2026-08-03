@@ -5,7 +5,7 @@
  "author": "NekoLaska",
  "platform": "所有环境",
  "source_date": "2023年07月01日 21:17:49",
- "hits": 281,
+ "hits": 282,
  "up": 2,
  "favorite": 4,
  "comment": 1,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 5,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 25,
+ "char_count": 1089,
  "confidence": "static_review"
 }

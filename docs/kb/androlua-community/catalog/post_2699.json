@@ -5,7 +5,7 @@
  "author": "鑫先生",
  "platform": "Fusion App2",
  "source_date": "2023年04月22日 20:32:44",
- "hits": 1030,
+ "hits": 1032,
  "up": 12,
  "favorite": 43,
  "comment": 4,
@@ -17,8 +17,8 @@
   "editor_bound",
   "editor_bound"
  ],
- "truncation": "preview_truncated",
- "line_count": 9,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 61,
+ "char_count": 1451,
  "confidence": "static_review"
 }

@@ -10,15 +10,14 @@
  "favorite": 31,
  "comment": 0,
  "source_file": "Lua代码\\5101_丝滑揭露动画.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "negative",
  "portability": "android_api",
  "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
+  "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 15,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 182,
+ "char_count": 4108,
  "confidence": "static_review"
 }

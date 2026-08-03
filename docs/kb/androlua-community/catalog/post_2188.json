@@ -5,7 +5,7 @@
  "author": "Duo",
  "platform": "所有环境",
  "source_date": "2022年12月16日 06:39:59",
- "hits": 437,
+ "hits": 438,
  "up": 9,
  "favorite": 17,
  "comment": 13,
@@ -16,8 +16,8 @@
  "flags": [
   "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 77,
+ "char_count": 1645,
  "confidence": "static_review"
 }

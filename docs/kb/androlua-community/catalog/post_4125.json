@@ -10,14 +10,12 @@
  "favorite": 39,
  "comment": 3,
  "source_file": "消息通知\\4125_独立消息显示系统html+lua.lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "universal",
- "flags": [
-  "short_text"
- ],
- "truncation": "preview_truncated",
- "line_count": 18,
- "char_count": 300,
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 426,
+ "char_count": 11505,
  "confidence": "static_review"
 }

@@ -5,17 +5,19 @@
  "author": "◕ ̯͡◕",
  "platform": "所有环境",
  "source_date": "2023年05月05日 20:47:20",
- "hits": 384,
+ "hits": 385,
  "up": 6,
  "favorite": 20,
  "comment": 3,
  "source_file": "自绘制\\2766_拟态绘制.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "complete_or_unverifiable",
- "line_count": 15,
- "char_count": 300,
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 126,
+ "char_count": 3262,
  "confidence": "static_review"
 }

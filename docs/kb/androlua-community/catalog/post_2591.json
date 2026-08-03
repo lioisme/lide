@@ -5,7 +5,7 @@
  "author": "迷糊.",
  "platform": "所有环境",
  "source_date": "2023年03月20日 07:05:26",
- "hits": 238,
+ "hits": 239,
  "up": 5,
  "favorite": 5,
  "comment": 0,
@@ -16,8 +16,8 @@
  "flags": [
   "xml_list"
  ],
- "truncation": "preview_truncated",
- "line_count": 8,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 24,
+ "char_count": 772,
  "confidence": "static_review"
 }

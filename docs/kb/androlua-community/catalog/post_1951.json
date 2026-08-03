@@ -5,17 +5,19 @@
  "author": "碳昔",
  "platform": "所有环境",
  "source_date": "2022年10月04日 11:14:11",
- "hits": 560,
+ "hits": 562,
  "up": 6,
  "favorite": 9,
  "comment": 13,
  "source_file": "小游戏\\1951_只因琴块.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 152,
+ "char_count": 3356,
  "confidence": "static_review"
 }

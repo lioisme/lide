@@ -10,15 +10,15 @@
  "favorite": 14,
  "comment": 0,
  "source_file": "安卓教程\\4646_记账本.lua",
- "kind": "fragment",
- "verdict": "neutral",
- "portability": "android_api",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
  "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
+  "androlua_private",
+  "private_api"
  ],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 555,
+ "char_count": 18577,
  "confidence": "static_review"
 }

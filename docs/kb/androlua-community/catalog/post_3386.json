@@ -5,19 +5,20 @@
  "author": "壹影",
  "platform": "所有环境",
  "source_date": "2023年09月10日 20:05:11",
- "hits": 305,
+ "hits": 306,
  "up": 4,
  "favorite": 11,
  "comment": 6,
  "source_file": "JS教程\\3386_移动端实现Js断点.lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "universal",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
  "flags": [
-  "short_text"
+  "editor_bound",
+  "editor_bound"
  ],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 177,
+ "char_count": 5013,
  "confidence": "static_review"
 }

@@ -5,20 +5,21 @@
  "author": "Genouka",
  "platform": "所有环境",
  "source_date": "2023年09月02日 16:15:03",
- "hits": 699,
+ "hits": 700,
  "up": 11,
  "favorite": 32,
  "comment": 5,
  "source_file": "文件操作\\3362_lua_zip4j_带密码压缩_（手册首发）.lua",
- "kind": "fragment",
- "verdict": "neutral",
- "portability": "universal",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
  "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
+  "androlua_private",
+  "private_api",
+  "remote_exec"
  ],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 52,
+ "char_count": 1639,
  "confidence": "static_review"
 }

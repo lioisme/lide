@@ -5,20 +5,17 @@
  "author": "智",
  "platform": "所有环境",
  "source_date": "2023年02月04日 11:27:32",
- "hits": 467,
+ "hits": 468,
  "up": 2,
  "favorite": 8,
  "comment": 5,
  "source_file": "小游戏\\2429_ZipFile.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "android_api",
- "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
- ],
- "truncation": "preview_truncated",
- "line_count": 18,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 50,
+ "char_count": 714,
  "confidence": "static_review"
 }

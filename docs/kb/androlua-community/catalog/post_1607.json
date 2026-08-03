@@ -5,17 +5,19 @@
  "author": "碳昔",
  "platform": "所有环境",
  "source_date": "2022年07月24日 19:16:49",
- "hits": 1156,
+ "hits": 1158,
  "up": 24,
  "favorite": 75,
  "comment": 15,
  "source_file": "小工具\\1607_代码加密工具.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 284,
+ "char_count": 9112,
  "confidence": "static_review"
 }

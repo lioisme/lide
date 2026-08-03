@@ -5,21 +5,17 @@
  "author": "AstarLC",
  "platform": "所有环境",
  "source_date": "2023年06月03日 21:37:33",
- "hits": 199,
+ "hits": 200,
  "up": 2,
  "favorite": 2,
  "comment": 3,
  "source_file": "自绘制\\2895_Atan2的简单应用.lua",
- "kind": "fragment",
- "verdict": "negative",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "android_api",
- "flags": [
-  "truncated_tail",
-  "global_pollution",
-  "incomplete_fragment"
- ],
- "truncation": "preview_truncated",
- "line_count": 16,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 80,
+ "char_count": 2498,
  "confidence": "static_review"
 }

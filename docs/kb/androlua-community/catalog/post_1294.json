@@ -5,19 +5,17 @@
  "author": "oゞ夜色乄未央ぁ",
  "platform": "所有环境",
  "source_date": "2022年01月05日 22:41:07",
- "hits": 1526,
+ "hits": 1527,
  "up": 15,
  "favorite": 58,
  "comment": 3,
  "source_file": "Adapter容器\\1294_ListView列表适配器.lua",
- "kind": "text_note",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "universal",
- "flags": [
-  "short_text"
- ],
- "truncation": "preview_truncated",
- "line_count": 17,
- "char_count": 300,
+ "flags": [],
+ "truncation": "truncated_tail",
+ "line_count": 116,
+ "char_count": 2097,
  "confidence": "static_review"
 }

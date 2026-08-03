@@ -5,20 +5,20 @@
  "author": "JCY012",
  "platform": "Fusion App2",
  "source_date": "2026年06月05日 16:51:05",
- "hits": 383,
+ "hits": 384,
  "up": 4,
  "favorite": 3,
  "comment": 0,
  "source_file": "Lua代码\\5328_3D几何实体.lua",
- "kind": "fragment",
- "verdict": "neutral",
- "portability": "android_api",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
  "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
+  "androlua_private",
+  "private_api"
  ],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 604,
+ "char_count": 16785,
  "confidence": "static_review"
 }

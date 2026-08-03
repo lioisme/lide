@@ -5,20 +5,21 @@
  "author": "NekoLaska",
  "platform": "所有环境",
  "source_date": "2023年07月07日 20:29:36",
- "hits": 1453,
+ "hits": 1454,
  "up": 13,
  "favorite": 27,
  "comment": 6,
  "source_file": "Androlua教程\\3040_AndroLua+语法糖和特性.lua",
- "kind": "fragment",
- "verdict": "neutral",
- "portability": "android_api",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
  "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
+  "editor_bound",
+  "editor_bound",
+  "global_pollution"
  ],
- "truncation": "preview_truncated",
- "line_count": 13,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 289,
+ "char_count": 4766,
  "confidence": "static_review"
 }

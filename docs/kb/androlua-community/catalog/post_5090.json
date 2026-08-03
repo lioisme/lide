@@ -5,20 +5,21 @@
  "author": "寒雪落花静云月",
  "platform": "AndroLua,AndLua",
  "source_date": "2025年10月15日 21:20:40",
- "hits": 366,
+ "hits": 369,
  "up": 5,
  "favorite": 5,
  "comment": 2,
  "source_file": "安卓教程\\5090_倒计时再次优化。.lua",
- "kind": "fragment",
- "verdict": "neutral",
- "portability": "android_api",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
  "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
+  "androlua_private",
+  "private_api",
+  "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 15,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 1055,
+ "char_count": 28193,
  "confidence": "static_review"
 }

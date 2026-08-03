@@ -10,15 +10,12 @@
  "favorite": 0,
  "comment": 0,
  "source_file": "Lua代码\\4918_函数的ContextReceiver.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "universal",
- "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
- ],
- "truncation": "preview_truncated",
- "line_count": 13,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 63,
+ "char_count": 1356,
  "confidence": "static_review"
 }

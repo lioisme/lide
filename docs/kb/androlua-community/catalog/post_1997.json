@@ -5,7 +5,7 @@
  "author": "ɜ:",
  "platform": "所有环境",
  "source_date": "2022年10月24日 23:05:07",
- "hits": 1067,
+ "hits": 1068,
  "up": 27,
  "favorite": 89,
  "comment": 8,
@@ -15,10 +15,11 @@
  "portability": "editor_bound",
  "flags": [
   "editor_bound",
-  "editor_bound"
+  "editor_bound",
+  "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 145,
+ "char_count": 4193,
  "confidence": "static_review"
 }

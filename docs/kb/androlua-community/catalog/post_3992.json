@@ -11,11 +11,13 @@
  "comment": 9,
  "source_file": "Layout布局\\3992_非常像的QQ音乐的底部播放布局.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 690,
+ "char_count": 19873,
  "confidence": "static_review"
 }

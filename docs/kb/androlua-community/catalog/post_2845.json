@@ -5,20 +5,17 @@
  "author": "NekoLaska",
  "platform": "所有环境",
  "source_date": "2023年05月23日 20:52:25",
- "hits": 543,
+ "hits": 544,
  "up": 3,
  "favorite": 3,
  "comment": 8,
  "source_file": "小游戏\\2845_生命游戏.lua",
- "kind": "text_note",
- "verdict": "negative",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "universal",
- "flags": [
-  "short_text",
-  "global_pollution"
- ],
- "truncation": "preview_truncated",
- "line_count": 16,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 168,
+ "char_count": 3720,
  "confidence": "static_review"
 }

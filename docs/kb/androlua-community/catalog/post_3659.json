@@ -5,17 +5,19 @@
  "author": "AstarLC",
  "platform": "所有环境",
  "source_date": "2023年12月13日 22:03:09",
- "hits": 280,
+ "hits": 281,
  "up": 6,
  "favorite": 13,
  "comment": 2,
  "source_file": "基础代码\\3659_为三十万南京大屠杀同胞默哀_12.13.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "flags": [
+  "global_pollution"
+ ],
+ "truncation": "complete",
+ "line_count": 140,
+ "char_count": 4763,
  "confidence": "static_review"
 }

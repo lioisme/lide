@@ -5,19 +5,20 @@
  "author": "Cheese",
  "platform": "所有环境",
  "source_date": "2023年07月03日 13:57:58",
- "hits": 227,
+ "hits": 228,
  "up": 6,
  "favorite": 18,
  "comment": 0,
  "source_file": "Activity活动\\3020_设置当前窗口不可触摸.lua",
  "kind": "code_demo",
  "verdict": "negative",
- "portability": "android_api",
+ "portability": "editor_bound",
  "flags": [
-  "global_pollution"
+  "editor_bound",
+  "editor_bound"
  ],
- "truncation": "preview_truncated",
- "line_count": 16,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 45,
+ "char_count": 988,
  "confidence": "static_review"
 }

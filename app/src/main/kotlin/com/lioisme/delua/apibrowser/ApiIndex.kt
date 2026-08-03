@@ -14,11 +14,36 @@ import java.util.concurrent.ConcurrentHashMap
  * + 原生库模块名扫描（libs/ 下 so，仅模块名级）。
  *
  * 线程模型：build() 在 IO 线程整体构建，产物为不可变快照；反射验证带并发缓存。
+ * 反射查询接口（rowInfo / isLoadable / classKind / isViewSubclass）禁止在 UI 线程
+ * 直接调用（AGENTS.md 线程契约），UI 只读惰性缓存结果。
  * 全部反射路径 try/catch(Throwable) 降级（AGENTS.md 约定）。
  */
 object ApiIndex {
 
     private const val ASSET_CLASS_TABLE = "javaapi/android.lua"
+
+    /** 用途分类反射推断的时间预算（毫秒），超时余量置 null，保证索引构建有上界。 */
+    private const val USAGE_BUDGET_MS = 2000L
+
+    /** 列表行信息（类形态 + 可加载性）预热预算（毫秒），build 后批量填充缓存，超时余量跳过，构建有上界。
+     *  2500ms：负缓存（非空 RowInfo）生效后每类名仅扫描一次，预算利用率高，可覆盖更多首屏行。 */
+    private const val ROW_INFO_WARMUP_BUDGET_MS = 2500L
+
+    /** 类形态（反射惰性缓存）：接口判定 + 完整类声明签名（列表行第二行）。 */
+    data class ClassKind(
+        val isInterface: Boolean,
+        val signature: String,
+    )
+
+    /**
+     * 列表行反射信息：类形态 + 可加载性，一次类加载判定同时服务两处显示决策。
+     * [kind] 为 null 表示类不可加载或反射失败；[loadable] 是该事实的显式化，
+     * 显示层读 [loadable] 决定灰显，不依赖 [kind] 的隐式 null 语义。
+     */
+    data class RowInfo(
+        val kind: ClassKind?,
+        val loadable: Boolean,
+    )
 
     /** 引擎内置 C 模块（cpath = nativeLibraryDir/lib?.so + 工程 libs）。 */
     private val builtinNativeModules = listOf(
@@ -38,9 +63,18 @@ object ApiIndex {
     data class Snapshot(
         val classes: List<ApiClassEntry>,
         val nativeModules: List<String>,
+        /**
+         * 与 [classes] 同序的小写化类名索引（build 期预计算一次 O(n)）。
+         * 过滤时用大小写敏感 contains 代替 ignoreCase（避免每次击键为每条目重建转换），
+         * 快 5~10 倍；仅内部过滤使用，外部不可变。
+         */
+        val nameLower: List<String>,
     ) {
         val categoryCounts: Map<ApiCategory, Int> by lazy {
             classes.groupingBy { it.category }.eachCount()
+        }
+        val usageCounts: Map<ApiUsage, Int> by lazy {
+            classes.mapNotNull { it.usage }.groupingBy { it }.eachCount()
         }
     }
 
@@ -49,13 +83,21 @@ object ApiIndex {
         val category: ApiCategory,
         /** 来自工程 libs/ 下 dex|jar 动态枚举。 */
         val fromProject: Boolean,
+        /** 用途分类（适配器/按钮控件/…），反射语义推断，失败为 null。 */
+        val usage: ApiUsage? = null,
     )
 
     @Volatile
     private var snapshot: Snapshot? = null
 
-    /** 反射验证缓存：类名 → 是否可加载。失败负缓存，防重复探活。 */
-    private val loadableCache = ConcurrentHashMap<String, Boolean>()
+    /**
+     * 列表行反射信息缓存（含负缓存）：键为类名，值为 [RowInfo] 实例。
+     * 实现约定：**值永不为 null**（不可加载类以 RowInfo(kind = null, loadable = false) 入缓存）——
+     * ConcurrentHashMap 禁止 null 值，若 compute 返回 null 则 putIfAbsent 抛 NPE 且条目永不落缓存，
+     * 导致负查找（类不存在，需扫描全部 dex，单次 10~100ms）每次重查。非空包装是负缓存生效的前提
+     * （AGENTS.md 线程契约：反射查询禁止 UI 线程直接调用，UI 只读惰性缓存结果）。
+     */
+    private val rowInfoCache = ConcurrentHashMap<String, RowInfo>()
 
     private val viewAssignCache = ConcurrentHashMap<String, Boolean>()
 
@@ -66,6 +108,9 @@ object ApiIndex {
     private var hostClassLoader: ClassLoader? = null
 
     fun cached(): Snapshot? = snapshot
+
+    /** 宿主 ClassLoader（build() 后可用），供反射规则链复用。 */
+    fun hostLoader(): ClassLoader? = hostClassLoader
 
     /**
      * 构建索引。进程级缓存：工程根未变化时复用快照。
@@ -129,13 +174,48 @@ object ApiIndex {
             }
         }
 
+        val classList = entries.values.toList()
         snapshot = Snapshot(
-            classes = entries.values.toList(),
+            classes = classList,
+            nameLower = classList.map { it.name.lowercase() },
             nativeModules = nativeModules.toList().sorted(),
         )
+        assignUsages()
+        warmUpRowInfo()
         builtProjectRoots = roots
         android.util.Log.d("ApiIndex", "built ${entries.size} classes, ${nativeModules.size} modules in ${System.currentTimeMillis() - start}ms")
         return snapshot!!
+    }
+
+    /** 用途分类批量推断：时间预算内对宿主可加载类做反射规则链，超时余量置 null。 */
+    private fun assignUsages() {
+        val s = snapshot ?: return
+        val deadline = System.currentTimeMillis() + USAGE_BUDGET_MS
+        var checked = 0
+        var timedOut = false
+        val classes = s.classes.map { entry ->
+            if (timedOut || entry.fromProject) return@map entry
+            val usage = ApiUsageClassifier.classify(entry.name)
+            checked++
+            if (checked % 64 == 0 && System.currentTimeMillis() > deadline) timedOut = true
+            if (usage == entry.usage) entry else entry.copy(usage = usage)
+        }
+        snapshot = s.copy(classes = classes)
+    }
+
+    /**
+     * 列表行信息预热：按列表顺序批量填充 rowInfoCache（经 [rowInfo]，非空包装含负缓存），
+     * 使首屏及前序滚动行命中缓存（O(1) 查表），消除行级全 dex 扫描风暴。
+     * 时间预算内尽力而为，超时余量跳过，未预热条目由行级 IO 惰性补齐（首次扫描一次后即缓存）。
+     * build() 已在 IO 线程调用本方法。
+     */
+    private fun warmUpRowInfo() {
+        val s = snapshot ?: return
+        val deadline = System.currentTimeMillis() + ROW_INFO_WARMUP_BUDGET_MS
+        for (entry in s.classes) {
+            if (System.currentTimeMillis() > deadline) return
+            rowInfo(entry.name)
+        }
     }
 
     /** 使索引失效（工程 libs 变化后由宿主显式调用）。 */
@@ -181,16 +261,36 @@ object ApiIndex {
         }
     }
 
-    /** 类是否可加载（惰性缓存）。 */
-    fun isLoadable(name: String): Boolean {
-        return loadableCache.getOrPut(name) {
-            try {
-                Class.forName(name, false, hostClassLoader ?: ApiIndex::class.java.classLoader) != null
-            } catch (_: Throwable) {
-                false
+    /**
+     * 列表行反射信息（类形态 + 可加载性），惰性缓存。
+     * 一次 Class.forName 同时服务「接口判定 + 可加载性」两处显示决策；
+     * 不可加载类以非空 RowInfo 负缓存，**每类名仅首次全 dex 扫描一次，此后 O(1) 查表**。
+     * 线程契约：禁止在 UI 线程直接调用（AGENTS.md）；列表行经
+     * produceState / LaunchedEffect + Dispatchers.IO 获取，UI 只读缓存结果。
+     */
+    fun rowInfo(name: String): RowInfo = rowInfoCache.getOrPut(name) { computeRowInfo(name) }
+
+    private fun computeRowInfo(name: String): RowInfo {
+        val kind = try {
+            val clazz = Class.forName(name, false, hostClassLoader ?: ApiIndex::class.java.classLoader)
+            val signature = buildString {
+                append(if (clazz.isInterface) "interface" else "class")
+                append(" ")
+                append(clazz.name)
+                clazz.superclass?.let { append(" extends ").append(it.name) }
             }
+            ClassKind(clazz.isInterface, signature)
+        } catch (_: Throwable) {
+            null
         }
+        return RowInfo(kind = kind, loadable = kind != null)
     }
+
+    /** 类是否可加载（惰性缓存含负缓存）。线程契约同 [rowInfo]。 */
+    fun isLoadable(name: String): Boolean = rowInfo(name).loadable
+
+    /** 类形态信息（接口/签名），惰性缓存含负缓存，不可加载返回 null。线程契约同 [rowInfo]。 */
+    fun classKind(name: String): ClassKind? = rowInfo(name).kind
 
     /** 是否为 View 子类（反射验证，带缓存）。 */
     fun isViewSubclass(name: String): Boolean {

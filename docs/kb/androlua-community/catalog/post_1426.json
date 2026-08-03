@@ -5,7 +5,7 @@
  "author": "芥子",
  "platform": "所有环境",
  "source_date": "2022年03月31日 10:37:14",
- "hits": 260,
+ "hits": 261,
  "up": 0,
  "favorite": 6,
  "comment": 0,
@@ -17,8 +17,8 @@
   "androlua_private",
   "private_api"
  ],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 167,
+ "char_count": 3914,
  "confidence": "static_review"
 }

@@ -10,14 +10,12 @@
  "favorite": 3,
  "comment": 1,
  "source_file": "Activity活动\\4549_通过系统打开文件的函数_V1.lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "universal",
- "flags": [
-  "short_text"
- ],
- "truncation": "preview_truncated",
- "line_count": 16,
- "char_count": 300,
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 92,
+ "char_count": 2362,
  "confidence": "static_review"
 }

@@ -5,17 +5,21 @@
  "author": "海纳百氚，有容乃大",
  "platform": "AndLua",
  "source_date": "2022年05月22日 22:39:44",
- "hits": 1161,
+ "hits": 1163,
  "up": 22,
  "favorite": 69,
  "comment": 25,
  "source_file": "远程更新\\1484_解析JSON的远程更新方案（自动跳转安装）.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 16,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 394,
+ "char_count": 11490,
  "confidence": "static_review"
 }

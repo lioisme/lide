@@ -5,17 +5,21 @@
  "author": "小白·马",
  "platform": "Fusion App2",
  "source_date": "2023年01月15日 18:09:56",
- "hits": 1136,
+ "hits": 1137,
  "up": 15,
  "favorite": 71,
  "comment": 7,
  "source_file": "实用代码\\2328_MaterialButtonToggle（使用实例_捐赠弹窗）.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 15,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 217,
+ "char_count": 7322,
  "confidence": "static_review"
 }

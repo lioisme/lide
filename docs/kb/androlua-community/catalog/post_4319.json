@@ -11,11 +11,13 @@
  "comment": 5,
  "source_file": "小游戏\\4319_随机生成迷宫.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "complete_or_unverifiable",
- "line_count": 15,
- "char_count": 300,
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 365,
+ "char_count": 11098,
  "confidence": "static_review"
 }

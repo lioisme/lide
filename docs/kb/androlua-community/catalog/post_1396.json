@@ -5,20 +5,22 @@
  "author": "秋歌",
  "platform": "Fusion App1,Fusion App2",
  "source_date": "2022年03月13日 18:46:04",
- "hits": 348,
+ "hits": 349,
  "up": 2,
  "favorite": 14,
  "comment": 2,
  "source_file": "实用代码\\1396_字体切换『FA1~2版适用』.lua",
- "kind": "text_note",
+ "kind": "code_demo",
  "verdict": "negative",
- "portability": "universal",
+ "portability": "editor_bound",
  "flags": [
-  "short_text",
-  "chinese_identifier"
+  "editor_bound",
+  "editor_bound",
+  "chinese_identifier",
+  "global_pollution"
  ],
- "truncation": "complete_or_unverifiable",
- "line_count": 17,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 61,
+ "char_count": 1377,
  "confidence": "static_review"
 }

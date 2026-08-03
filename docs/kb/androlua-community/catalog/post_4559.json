@@ -11,11 +11,13 @@
  "comment": 6,
  "source_file": "基础代码\\4559_gps定位(优化2.0版).lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "neutral",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "flags": [
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 256,
+ "char_count": 7989,
  "confidence": "static_review"
 }

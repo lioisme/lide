@@ -5,20 +5,17 @@
  "author": "奥姆",
  "platform": "所有环境",
  "source_date": "2023年03月06日 00:51:20",
- "hits": 653,
+ "hits": 654,
  "up": 22,
  "favorite": 55,
  "comment": 3,
  "source_file": "Lua代码\\2554_文字输入+删除动画（循环）.lua",
- "kind": "text_note",
- "verdict": "negative",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "universal",
- "flags": [
-  "short_text",
-  "global_pollution"
- ],
- "truncation": "complete_or_unverifiable",
- "line_count": 19,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 62,
+ "char_count": 1198,
  "confidence": "static_review"
 }

@@ -5,19 +5,20 @@
  "author": "oゞ夜色乄未央ぁ",
  "platform": "",
  "source_date": "2020年05月01日 12:26:18",
- "hits": 141,
+ "hits": 142,
  "up": 1,
  "favorite": 4,
  "comment": 0,
  "source_file": "动画教程\\864_点击水珠动画.lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "universal",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
  "flags": [
-  "short_text"
+  "chinese_identifier",
+  "global_pollution"
  ],
- "truncation": "preview_truncated",
- "line_count": 16,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 46,
+ "char_count": 984,
  "confidence": "static_review"
 }

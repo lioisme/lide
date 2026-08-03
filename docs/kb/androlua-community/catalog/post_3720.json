@@ -5,19 +5,17 @@
  "author": "智",
  "platform": "reOpenLua,OpenLuaX",
  "source_date": "2024年01月13日 05:51:26",
- "hits": 616,
+ "hits": 617,
  "up": 0,
  "favorite": 4,
  "comment": 2,
  "source_file": "Layout布局\\3720_SearchBar_and_SearchView.lua",
- "kind": "text_note",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "android_api",
- "flags": [
-  "short_text"
- ],
- "truncation": "preview_truncated",
- "line_count": 9,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 27,
+ "char_count": 713,
  "confidence": "static_review"
 }

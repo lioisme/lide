@@ -17,8 +17,8 @@
   "editor_bound",
   "editor_bound"
  ],
- "truncation": "preview_truncated",
- "line_count": 7,
- "char_count": 300,
+ "truncation": "truncated_tail",
+ "line_count": 10,
+ "char_count": 486,
  "confidence": "static_review"
 }

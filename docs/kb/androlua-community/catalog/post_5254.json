@@ -10,16 +10,17 @@
  "favorite": 23,
  "comment": 0,
  "source_file": "小工具\\5254_视频图集聚合无水印解析下载工具.lua",
- "kind": "text_note",
+ "kind": "fragment",
  "verdict": "negative",
- "portability": "editor_bound",
+ "portability": "host_private",
  "flags": [
-  "short_text",
-  "editor_bound",
-  "editor_bound"
+  "incomplete_mark",
+  "androlua_private",
+  "private_api",
+  "incomplete_fragment"
  ],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 1173,
+ "char_count": 36305,
  "confidence": "static_review"
 }

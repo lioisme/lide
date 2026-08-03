@@ -11,11 +11,13 @@
  "comment": 0,
  "source_file": "网络爬虫\\4707_匹配bilibili.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "universal",
- "flags": [],
- "truncation": "complete_or_unverifiable",
- "line_count": 5,
- "char_count": 300,
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 7,
+ "char_count": 318,
  "confidence": "static_review"
 }

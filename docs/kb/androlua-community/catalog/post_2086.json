@@ -5,17 +5,19 @@
  "author": "Duo",
  "platform": "Fusion App2",
  "source_date": "2022年11月16日 18:19:01",
- "hits": 109,
+ "hits": 110,
  "up": 4,
  "favorite": 6,
  "comment": 0,
  "source_file": "小工具\\2086_函数零值点运算.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 10,
- "char_count": 300,
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 220,
+ "char_count": 3838,
  "confidence": "static_review"
 }

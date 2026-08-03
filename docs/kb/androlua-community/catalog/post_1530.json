@@ -5,7 +5,7 @@
  "author": "苦小怕",
  "platform": "所有环境",
  "source_date": "2022年06月08日 12:09:46",
- "hits": 245,
+ "hits": 246,
  "up": 4,
  "favorite": 3,
  "comment": 0,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "universal",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 41,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 43,
+ "char_count": 315,
  "confidence": "static_review"
 }

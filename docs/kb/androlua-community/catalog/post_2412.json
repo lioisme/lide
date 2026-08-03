@@ -5,21 +5,20 @@
  "author": "Aqora",
  "platform": "所有环境",
  "source_date": "2023年02月01日 01:22:31",
- "hits": 1073,
+ "hits": 1074,
  "up": 9,
  "favorite": 35,
  "comment": 15,
  "source_file": "远程更新\\2412_Lua实现热更新及例子2.0.lua",
- "kind": "text_note",
+ "kind": "code_demo",
  "verdict": "negative",
  "portability": "host_private",
  "flags": [
-  "short_text",
   "androlua_private",
   "private_api"
  ],
- "truncation": "preview_truncated",
- "line_count": 17,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 63,
+ "char_count": 973,
  "confidence": "static_review"
 }

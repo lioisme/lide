@@ -5,17 +5,19 @@
  "author": "oゞ夜色乄未央ぁ",
  "platform": "",
  "source_date": "2020年05月01日 12:26:18",
- "hits": 295,
+ "hits": 296,
  "up": 5,
  "favorite": 12,
  "comment": 0,
  "source_file": "布局教程\\1155_BlurMaskFilter模糊效果测试.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 61,
+ "char_count": 1369,
  "confidence": "static_review"
 }

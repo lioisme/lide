@@ -10,15 +10,14 @@
  "favorite": 6,
  "comment": 0,
  "source_file": "小工具\\5003_九宫格切图.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "negative",
  "portability": "android_api",
  "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
+  "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 13,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 272,
+ "char_count": 6454,
  "confidence": "static_review"
 }

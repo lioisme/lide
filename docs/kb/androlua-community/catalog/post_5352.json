@@ -5,17 +5,19 @@
  "author": "喵Miao..͇͉͔̖",
  "platform": "AndLua",
  "source_date": "2026年07月07日 22:47:23",
- "hits": 284,
+ "hits": 285,
  "up": 4,
  "favorite": 7,
  "comment": 0,
  "source_file": "基础代码\\5352_流动渐变边框.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 20,
- "char_count": 300,
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 211,
+ "char_count": 4847,
  "confidence": "static_review"
 }

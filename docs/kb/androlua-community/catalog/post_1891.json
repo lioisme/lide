@@ -5,7 +5,7 @@
  "author": "Adam·Eva",
  "platform": "所有环境",
  "source_date": "2022年09月16日 09:59:21",
- "hits": 463,
+ "hits": 464,
  "up": 8,
  "favorite": 18,
  "comment": 3,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 51,
+ "char_count": 1205,
  "confidence": "static_review"
 }

@@ -16,8 +16,8 @@
  "flags": [
   "short_text"
  ],
- "truncation": "preview_truncated",
- "line_count": 16,
- "char_count": 300,
+ "truncation": "truncated_tail",
+ "line_count": 39,
+ "char_count": 675,
  "confidence": "static_review"
 }

@@ -10,15 +10,12 @@
  "favorite": 7,
  "comment": 1,
  "source_file": "Lua代码\\5157_自动寻路.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "android_api",
- "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
- ],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 630,
+ "char_count": 14914,
  "confidence": "static_review"
 }

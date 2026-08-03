@@ -5,20 +5,19 @@
  "author": "Duo",
  "platform": "所有环境",
  "source_date": "2022年11月07日 08:45:58",
- "hits": 347,
+ "hits": 348,
  "up": 4,
  "favorite": 5,
  "comment": 0,
  "source_file": "小游戏\\2043_康威生命游戏.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "negative",
  "portability": "android_api",
  "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
+  "global_pollution"
  ],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 185,
+ "char_count": 3292,
  "confidence": "static_review"
 }

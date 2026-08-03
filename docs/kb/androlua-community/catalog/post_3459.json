@@ -5,20 +5,21 @@
  "author": "ㄛㄙ飞ㄋ",
  "platform": "Fusion App2,reOpenLua",
  "source_date": "2023年10月05日 01:10:54",
- "hits": 1660,
+ "hits": 1662,
  "up": 19,
  "favorite": 60,
  "comment": 3,
  "source_file": "安卓教程\\3459_tab,关联page2.lua",
  "kind": "code_demo",
  "verdict": "negative",
- "portability": "editor_bound",
+ "portability": "host_private",
  "flags": [
-  "editor_bound",
-  "editor_bound"
+  "androlua_private",
+  "private_api",
+  "sensitive_permission"
  ],
- "truncation": "preview_truncated",
- "line_count": 9,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 215,
+ "char_count": 10337,
  "confidence": "static_review"
 }

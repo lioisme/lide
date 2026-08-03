@@ -5,20 +5,19 @@
  "author": "2163841047",
  "platform": "所有环境",
  "source_date": "2023年07月07日 14:46:10",
- "hits": 323,
+ "hits": 324,
  "up": 6,
  "favorite": 11,
  "comment": 2,
  "source_file": "小工具\\3039_二维码生成（搬运）.lua",
- "kind": "text_note",
+ "kind": "code_demo",
  "verdict": "negative",
- "portability": "universal",
+ "portability": "android_api",
  "flags": [
-  "short_text",
   "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 19,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 155,
+ "char_count": 3823,
  "confidence": "static_review"
 }

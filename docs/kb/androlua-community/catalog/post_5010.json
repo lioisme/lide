@@ -10,14 +10,12 @@
  "favorite": 9,
  "comment": 0,
  "source_file": "基础代码\\5010_通知系统更新文件.lua",
- "kind": "text_note",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "android_api",
- "flags": [
-  "short_text"
- ],
- "truncation": "preview_truncated",
- "line_count": 13,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 42,
+ "char_count": 1664,
  "confidence": "static_review"
 }

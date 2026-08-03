@@ -10,15 +10,16 @@
  "favorite": 1,
  "comment": 0,
  "source_file": "安卓教程\\5118_小说阅读器三次优化.lua",
- "kind": "fragment",
- "verdict": "neutral",
- "portability": "android_api",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
  "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
+  "androlua_private",
+  "private_api",
+  "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 18,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 2802,
+ "char_count": 77304,
  "confidence": "static_review"
 }

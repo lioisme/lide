@@ -5,20 +5,19 @@
  "author": "琪琪子",
  "platform": "AndLua",
  "source_date": "2025年07月05日 03:42:14",
- "hits": 415,
+ "hits": 416,
  "up": 2,
  "favorite": 11,
  "comment": 2,
  "source_file": "网络爬虫\\4880_猫眼专业版电影票房.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "negative",
  "portability": "android_api",
  "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
+  "global_pollution"
  ],
- "truncation": "preview_truncated",
- "line_count": 17,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 129,
+ "char_count": 3568,
  "confidence": "static_review"
 }

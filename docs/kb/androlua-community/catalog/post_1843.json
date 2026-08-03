@@ -5,20 +5,17 @@
  "author": "迷糊.",
  "platform": "所有环境",
  "source_date": "2022年08月30日 10:25:59",
- "hits": 254,
+ "hits": 255,
  "up": 5,
  "favorite": 5,
  "comment": 2,
  "source_file": "实用代码\\1843_获取文件SHA256.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "android_api",
- "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
- ],
- "truncation": "preview_truncated",
- "line_count": 9,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 18,
+ "char_count": 577,
  "confidence": "static_review"
 }

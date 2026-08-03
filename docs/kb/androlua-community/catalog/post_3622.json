@@ -5,7 +5,7 @@
  "author": "",
  "platform": "所有环境",
  "source_date": "2023年12月02日 11:51:24",
- "hits": 223,
+ "hits": 224,
  "up": 4,
  "favorite": 0,
  "comment": 3,
@@ -14,10 +14,10 @@
  "verdict": "neutral",
  "portability": "universal",
  "flags": [
-  "short_text"
+  "text_only"
  ],
- "truncation": "preview_truncated",
- "line_count": 18,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 73,
+ "char_count": 1425,
  "confidence": "static_review"
 }

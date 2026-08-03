@@ -5,7 +5,7 @@
  "author": "•⤙•/k",
  "platform": "AndLua",
  "source_date": "2023年01月02日 20:47:13",
- "hits": 608,
+ "hits": 609,
  "up": 14,
  "favorite": 37,
  "comment": 10,
@@ -16,8 +16,8 @@
  "flags": [
   "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 85,
+ "char_count": 2406,
  "confidence": "static_review"
 }

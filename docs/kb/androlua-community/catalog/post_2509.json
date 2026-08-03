@@ -11,11 +11,13 @@
  "comment": 86,
  "source_file": "小工具\\2509_留言板_-_2.0.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 315,
+ "char_count": 9416,
  "confidence": "static_review"
 }

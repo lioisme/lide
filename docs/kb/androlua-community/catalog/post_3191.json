@@ -5,19 +5,20 @@
  "author": "海纳百氚，有容乃大",
  "platform": "所有环境",
  "source_date": "2023年08月03日 20:58:22",
- "hits": 3043,
+ "hits": 3044,
  "up": 48,
  "favorite": 146,
  "comment": 34,
  "source_file": "布局代码\\3191_一个简洁美观的主页BottomView界面布局.lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "universal",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "obsolete",
  "flags": [
-  "short_text"
+  "obsolete",
+  "obsolete"
  ],
- "truncation": "preview_truncated",
- "line_count": 15,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 552,
+ "char_count": 15671,
  "confidence": "static_review"
 }

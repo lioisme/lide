@@ -5,17 +5,20 @@
  "author": "Duo",
  "platform": "所有环境",
  "source_date": "2022年12月16日 12:23:17",
- "hits": 1603,
+ "hits": 1606,
  "up": 41,
  "favorite": 93,
  "comment": 13,
  "source_file": "安卓教程\\2189_ProgressBar.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 16,
- "char_count": 300,
+ "flags": [
+  "chinese_identifier",
+  "global_pollution"
+ ],
+ "truncation": "complete",
+ "line_count": 759,
+ "char_count": 21833,
  "confidence": "static_review"
 }

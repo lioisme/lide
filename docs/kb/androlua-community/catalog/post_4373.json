@@ -11,11 +11,13 @@
  "comment": 0,
  "source_file": "Layout布局\\4373_悬浮球自动开启.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 8,
- "char_count": 300,
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 139,
+ "char_count": 4439,
  "confidence": "static_review"
 }

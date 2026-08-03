@@ -5,7 +5,7 @@
  "author": "W. by",
  "platform": "所有环境",
  "source_date": "2022年08月08日 12:26:15",
- "hits": 219,
+ "hits": 220,
  "up": 3,
  "favorite": 5,
  "comment": 1,
@@ -14,10 +14,10 @@
  "verdict": "negative",
  "portability": "universal",
  "flags": [
-  "global_pollution"
+  "os_exec"
  ],
- "truncation": "preview_truncated",
- "line_count": 19,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 48,
+ "char_count": 884,
  "confidence": "static_review"
 }

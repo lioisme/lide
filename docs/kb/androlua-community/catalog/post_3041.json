@@ -5,17 +5,21 @@
  "author": "Duo",
  "platform": "所有环境",
  "source_date": "2023年07月07日 20:49:05",
- "hits": 814,
+ "hits": 815,
  "up": 14,
  "favorite": 32,
  "comment": 5,
  "source_file": "Lua代码\\3041_River_Music_Explore.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 13,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 447,
+ "char_count": 12214,
  "confidence": "static_review"
 }

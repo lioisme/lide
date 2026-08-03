@@ -5,21 +5,19 @@
  "author": "池⁧~喵⁧‭",
  "platform": "所有环境",
  "source_date": "2023年06月17日 17:06:26",
- "hits": 1315,
+ "hits": 1317,
  "up": 25,
  "favorite": 75,
  "comment": 11,
  "source_file": "远程更新\\2947_andlua_可用的消息弹窗.lua",
- "kind": "fragment",
+ "kind": "code_demo",
  "verdict": "negative",
- "portability": "universal",
+ "portability": "android_api",
  "flags": [
-  "truncated_tail",
-  "chinese_identifier",
-  "incomplete_fragment"
+  "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 6,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 31,
+ "char_count": 1211,
  "confidence": "static_review"
 }

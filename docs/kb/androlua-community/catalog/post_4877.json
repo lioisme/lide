@@ -11,11 +11,13 @@
  "comment": 0,
  "source_file": "UI控件\\4877_仿ios_WeChat的switch.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "complete_or_unverifiable",
- "line_count": 14,
- "char_count": 300,
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 131,
+ "char_count": 3528,
  "confidence": "static_review"
 }

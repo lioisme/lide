@@ -5,19 +5,20 @@
  "author": "程国荣",
  "platform": "所有环境",
  "source_date": "2025年10月13日 23:22:39",
- "hits": 598,
+ "hits": 599,
  "up": 9,
  "favorite": 21,
  "comment": 3,
  "source_file": "小工具\\5082_Clock_made_of_clocks.lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "universal",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
  "flags": [
-  "short_text"
+  "androlua_private",
+  "private_api"
  ],
- "truncation": "complete_or_unverifiable",
- "line_count": 14,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 415,
+ "char_count": 11154,
  "confidence": "static_review"
 }

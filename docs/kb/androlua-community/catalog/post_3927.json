@@ -5,20 +5,17 @@
  "author": "琪琪子",
  "platform": "AndLua",
  "source_date": "2024年02月25日 22:07:06",
- "hits": 697,
+ "hits": 698,
  "up": 17,
  "favorite": 56,
  "comment": 4,
  "source_file": "Lua代码\\3927_主题色切换动画.lua",
- "kind": "text_note",
- "verdict": "negative",
- "portability": "universal",
- "flags": [
-  "short_text",
-  "global_pollution"
- ],
- "truncation": "preview_truncated",
- "line_count": 15,
- "char_count": 300,
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 158,
+ "char_count": 4243,
  "confidence": "static_review"
 }

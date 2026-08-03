@@ -5,17 +5,19 @@
  "author": "海纳百氚，有容乃大",
  "platform": "所有环境",
  "source_date": "2023年06月27日 07:53:02",
- "hits": 486,
+ "hits": 487,
  "up": 7,
  "favorite": 16,
  "comment": 2,
  "source_file": "Activity活动\\2981_仿支付宝某个界面的布局（一次优化）.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "universal",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 13,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 681,
+ "char_count": 22348,
  "confidence": "static_review"
 }

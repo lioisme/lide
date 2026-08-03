@@ -5,20 +5,20 @@
  "author": "oゞ夜色乄未央ぁ",
  "platform": "所有环境",
  "source_date": "2021年12月28日 20:01:16",
- "hits": 1046,
+ "hits": 1047,
  "up": 15,
  "favorite": 60,
  "comment": 4,
  "source_file": "UI控件\\1278_TextView文本控件.lua",
- "kind": "text_note",
+ "kind": "code_demo",
  "verdict": "negative",
- "portability": "universal",
+ "portability": "host_private",
  "flags": [
-  "short_text",
-  "global_pollution"
+  "androlua_private",
+  "private_api"
  ],
- "truncation": "complete_or_unverifiable",
- "line_count": 14,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 97,
+ "char_count": 2079,
  "confidence": "static_review"
 }

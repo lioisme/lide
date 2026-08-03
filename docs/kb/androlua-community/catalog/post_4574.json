@@ -10,14 +10,15 @@
  "favorite": 37,
  "comment": 2,
  "source_file": "基础代码\\4574_RenderEffect弹窗背景模糊V2.lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "android_api",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "obsolete",
  "flags": [
-  "short_text"
+  "obsolete",
+  "obsolete"
  ],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 177,
+ "char_count": 5408,
  "confidence": "static_review"
 }

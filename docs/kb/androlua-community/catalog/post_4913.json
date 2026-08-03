@@ -5,20 +5,17 @@
  "author": "121211",
  "platform": "所有环境",
  "source_date": "2025年07月13日 16:40:54",
- "hits": 279,
+ "hits": 280,
  "up": 3,
  "favorite": 14,
  "comment": 1,
  "source_file": "基础代码\\4913_随机生成手机号等信息2.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "android_api",
- "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
- ],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 437,
+ "char_count": 12218,
  "confidence": "static_review"
 }

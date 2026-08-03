@@ -5,19 +5,19 @@
  "author": "ㄛㄙ飞ㄋ",
  "platform": "所有环境",
  "source_date": "2023年01月01日 03:42:56",
- "hits": 459,
+ "hits": 460,
  "up": 4,
  "favorite": 28,
  "comment": 3,
  "source_file": "Activity活动\\2267_自己用的屏幕沉浸.lua",
  "kind": "code_demo",
  "verdict": "negative",
- "portability": "universal",
+ "portability": "android_api",
  "flags": [
   "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 33,
+ "char_count": 989,
  "confidence": "static_review"
 }

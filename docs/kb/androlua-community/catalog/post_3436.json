@@ -5,7 +5,7 @@
  "author": "kamihitoe",
  "platform": "所有环境",
  "source_date": "2023年09月28日 14:19:32",
- "hits": 369,
+ "hits": 372,
  "up": 10,
  "favorite": 37,
  "comment": 1,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 78,
+ "char_count": 1899,
  "confidence": "static_review"
 }

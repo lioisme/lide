@@ -5,7 +5,7 @@
  "author": "小孩，别闹！",
  "platform": "所有环境",
  "source_date": "2023年07月15日 21:23:08",
- "hits": 278,
+ "hits": 279,
  "up": 4,
  "favorite": 9,
  "comment": 11,
@@ -15,10 +15,11 @@
  "portability": "editor_bound",
  "flags": [
   "editor_bound",
-  "editor_bound"
+  "editor_bound",
+  "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 15,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 149,
+ "char_count": 3289,
  "confidence": "static_review"
 }

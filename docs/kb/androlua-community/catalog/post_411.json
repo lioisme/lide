@@ -5,20 +5,19 @@
  "author": "oゞ夜色乄未央ぁ",
  "platform": "",
  "source_date": "2020年05月01日 12:26:18",
- "hits": 383,
+ "hits": 384,
  "up": 0,
  "favorite": 1,
  "comment": 0,
  "source_file": "适配器\\411_侧滑下拉折叠列表.lua",
- "kind": "text_note",
+ "kind": "code_demo",
  "verdict": "negative",
  "portability": "universal",
  "flags": [
-  "short_text",
   "chinese_identifier"
  ],
- "truncation": "complete_or_unverifiable",
- "line_count": 19,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 37,
+ "char_count": 640,
  "confidence": "static_review"
 }

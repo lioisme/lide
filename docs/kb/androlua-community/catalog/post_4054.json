@@ -12,10 +12,10 @@
  "source_file": "浏览器\\4054_html悬停效果示例.lua",
  "kind": "code_demo",
  "verdict": "positive",
- "portability": "universal",
+ "portability": "android_api",
  "flags": [],
- "truncation": "complete_or_unverifiable",
- "line_count": 15,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 50,
+ "char_count": 1168,
  "confidence": "static_review"
 }

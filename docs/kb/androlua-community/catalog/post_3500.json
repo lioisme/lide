@@ -5,17 +5,19 @@
  "author": "壹影",
  "platform": "所有环境",
  "source_date": "2023年10月16日 16:39:54",
- "hits": 197,
+ "hits": 198,
  "up": 3,
  "favorite": 1,
  "comment": 0,
  "source_file": "小工具\\3500_MuMu模拟器共享调试.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 15,
- "char_count": 300,
+ "flags": [
+  "global_pollution"
+ ],
+ "truncation": "complete",
+ "line_count": 43,
+ "char_count": 1236,
  "confidence": "static_review"
 }

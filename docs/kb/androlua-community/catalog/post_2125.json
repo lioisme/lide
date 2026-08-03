@@ -5,17 +5,19 @@
  "author": "NekoLaska",
  "platform": "所有环境",
  "source_date": "2022年11月30日 22:41:49",
- "hits": 533,
+ "hits": 534,
  "up": 9,
  "favorite": 14,
  "comment": 4,
  "source_file": "网络请求\\2125_Volley框架请求测试.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "flags": [
+  "remote_exec"
+ ],
+ "truncation": "complete",
+ "line_count": 68,
+ "char_count": 1805,
  "confidence": "static_review"
 }

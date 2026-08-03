@@ -5,7 +5,7 @@
  "author": "迷糊.",
  "platform": "所有环境",
  "source_date": "2022年08月29日 04:52:02",
- "hits": 139,
+ "hits": 140,
  "up": 2,
  "favorite": 4,
  "comment": 2,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 6,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 10,
+ "char_count": 514,
  "confidence": "static_review"
 }

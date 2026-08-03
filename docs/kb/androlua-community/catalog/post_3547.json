@@ -5,17 +5,21 @@
  "author": "破晓",
  "platform": "Fusion App2",
  "source_date": "2023年11月03日 15:24:45",
- "hits": 1293,
+ "hits": 1295,
  "up": 10,
  "favorite": 36,
  "comment": 6,
  "source_file": "Activity活动\\3547_手册自定义主题配色.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 18,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "obsolete",
+ "flags": [
+  "obsolete",
+  "obsolete",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 365,
+ "char_count": 10183,
  "confidence": "static_review"
 }

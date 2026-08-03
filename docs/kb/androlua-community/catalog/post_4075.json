@@ -12,12 +12,12 @@
  "source_file": "动画教程\\4075_多图片帧动画.lua",
  "kind": "code_demo",
  "verdict": "negative",
- "portability": "universal",
+ "portability": "android_api",
  "flags": [
   "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 21,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 72,
+ "char_count": 1872,
  "confidence": "static_review"
 }

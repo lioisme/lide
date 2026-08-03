@@ -5,17 +5,20 @@
  "author": "诺~",
  "platform": "所有环境",
  "source_date": "2023年07月22日 10:41:56",
- "hits": 328,
+ "hits": 329,
  "up": 6,
  "favorite": 15,
  "comment": 4,
  "source_file": "Lua代码\\3119_拖动控件.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "universal",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 199,
+ "char_count": 4240,
  "confidence": "static_review"
 }

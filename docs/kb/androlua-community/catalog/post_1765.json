@@ -5,7 +5,7 @@
  "author": "墨离雪",
  "platform": "所有环境",
  "source_date": "2022年08月20日 02:46:38",
- "hits": 146,
+ "hits": 147,
  "up": 5,
  "favorite": 4,
  "comment": 0,
@@ -14,7 +14,7 @@
  "verdict": "positive",
  "portability": "universal",
  "flags": [],
- "truncation": "preview_truncated",
+ "truncation": "truncated_tail",
  "line_count": 11,
  "char_count": 143,
  "confidence": "static_review"

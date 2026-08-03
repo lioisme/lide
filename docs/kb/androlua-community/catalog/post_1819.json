@@ -5,20 +5,22 @@
  "author": "清汀琉璃",
  "platform": "Fusion App2",
  "source_date": "2022年08月26日 10:45:53",
- "hits": 1584,
+ "hits": 1585,
  "up": 25,
  "favorite": 73,
  "comment": 36,
  "source_file": "小工具\\1819_天气Demo.lua",
- "kind": "fragment",
- "verdict": "neutral",
- "portability": "android_api",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
  "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
+  "editor_bound",
+  "editor_bound",
+  "chinese_identifier",
+  "sensitive_permission"
  ],
- "truncation": "preview_truncated",
- "line_count": 8,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 715,
+ "char_count": 24675,
  "confidence": "static_review"
 }

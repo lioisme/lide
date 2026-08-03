@@ -5,7 +5,7 @@
  "author": "迷糊.",
  "platform": "所有环境",
  "source_date": "2022年12月16日 15:29:12",
- "hits": 209,
+ "hits": 210,
  "up": 3,
  "favorite": 4,
  "comment": 3,
@@ -17,8 +17,8 @@
   "editor_bound",
   "editor_bound"
  ],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 26,
+ "char_count": 696,
  "confidence": "static_review"
 }

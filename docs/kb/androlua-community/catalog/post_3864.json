@@ -5,7 +5,7 @@
  "author": "Li",
  "platform": "所有环境",
  "source_date": "2024年02月09日 01:21:45",
- "hits": 216,
+ "hits": 217,
  "up": 4,
  "favorite": 13,
  "comment": 1,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "universal",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 15,
- "char_count": 300,
+ "truncation": "truncated_tail",
+ "line_count": 16,
+ "char_count": 361,
  "confidence": "static_review"
 }

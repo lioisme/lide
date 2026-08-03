@@ -5,17 +5,19 @@
  "author": "光之国大帝",
  "platform": "所有环境",
  "source_date": "2026年07月29日 08:42:39",
- "hits": 120,
+ "hits": 126,
  "up": 1,
- "favorite": 1,
+ "favorite": 2,
  "comment": 2,
  "source_file": "基础代码\\5362_调用摄像头动态追踪+陀螺仪与加速度计3d追踪(可以用手交互).lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "neutral",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "flags": [
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 372,
+ "char_count": 13741,
  "confidence": "static_review"
 }

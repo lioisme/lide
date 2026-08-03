@@ -5,17 +5,20 @@
  "author": "海纳百氚，有容乃大",
  "platform": "Fusion App2,reOpenLua,OpenLuaX",
  "source_date": "2025年09月14日 15:03:52",
- "hits": 1123,
+ "hits": 1124,
  "up": 5,
  "favorite": 11,
  "comment": 8,
  "source_file": "小工具\\5040_Notepad驱动的无状态列表和云文档.lua",
- "kind": "code_demo",
- "verdict": "positive",
- "portability": "universal",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "kind": "fragment",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "incomplete_mark",
+  "incomplete_fragment"
+ ],
+ "truncation": "complete",
+ "line_count": 469,
+ "char_count": 15462,
  "confidence": "static_review"
 }

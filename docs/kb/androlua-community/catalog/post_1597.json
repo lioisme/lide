@@ -5,7 +5,7 @@
  "author": "Adam·Eva",
  "platform": "Fusion App2",
  "source_date": "2022年07月18日 13:13:07",
- "hits": 748,
+ "hits": 749,
  "up": 11,
  "favorite": 23,
  "comment": 1,
@@ -17,8 +17,8 @@
   "editor_bound",
   "editor_bound"
  ],
- "truncation": "preview_truncated",
- "line_count": 9,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 84,
+ "char_count": 2884,
  "confidence": "static_review"
 }

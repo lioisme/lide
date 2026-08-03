@@ -5,7 +5,7 @@
  "author": "🦂蝎子🕷爱咬人",
  "platform": "AndLua",
  "source_date": "2023年04月20日 21:26:44",
- "hits": 187,
+ "hits": 188,
  "up": 0,
  "favorite": 3,
  "comment": 4,
@@ -14,7 +14,7 @@
  "verdict": "positive",
  "portability": "universal",
  "flags": [],
- "truncation": "complete_or_unverifiable",
+ "truncation": "complete",
  "line_count": 5,
  "char_count": 129,
  "confidence": "static_review"

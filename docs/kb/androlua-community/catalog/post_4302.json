@@ -16,7 +16,7 @@
  "flags": [
   "short_text"
  ],
- "truncation": "complete_or_unverifiable",
+ "truncation": "complete",
  "line_count": 5,
  "char_count": 129,
  "confidence": "static_review"

@@ -12,10 +12,10 @@
  "source_file": "小工具\\4961_可能是SharedPreferences封装.lua",
  "kind": "code_demo",
  "verdict": "positive",
- "portability": "universal",
+ "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 13,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 84,
+ "char_count": 1636,
  "confidence": "static_review"
 }

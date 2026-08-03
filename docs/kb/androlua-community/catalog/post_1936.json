@@ -5,20 +5,17 @@
  "author": "安宁",
  "platform": "所有环境",
  "source_date": "2022年10月01日 18:49:22",
- "hits": 559,
+ "hits": 560,
  "up": 8,
  "favorite": 17,
  "comment": 4,
  "source_file": "实用代码\\1936_html静态网页服务器2.6(socket).lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "android_api",
- "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
- ],
- "truncation": "preview_truncated",
- "line_count": 16,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 71,
+ "char_count": 2035,
  "confidence": "static_review"
 }

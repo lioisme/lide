@@ -5,20 +5,19 @@
  "author": "喵Miao..͇͉͔̖",
  "platform": "AndLua",
  "source_date": "2026年03月04日 00:09:09",
- "hits": 567,
+ "hits": 568,
  "up": 6,
  "favorite": 18,
  "comment": 2,
  "source_file": "基础代码\\5255_霓虹文字脉冲矩阵.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "negative",
  "portability": "android_api",
  "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
+  "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 21,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 264,
+ "char_count": 7428,
  "confidence": "static_review"
 }

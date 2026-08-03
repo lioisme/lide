@@ -5,17 +5,19 @@
  "author": "海纳百氚，有容乃大",
  "platform": "所有环境",
  "source_date": "2023年01月20日 13:52:18",
- "hits": 765,
+ "hits": 766,
  "up": 15,
  "favorite": 54,
  "comment": 17,
  "source_file": "小工具\\2353_全屏时钟_BLACK.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "universal",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 13,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 144,
+ "char_count": 3817,
  "confidence": "static_review"
 }

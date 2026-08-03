@@ -10,15 +10,14 @@
  "favorite": 56,
  "comment": 12,
  "source_file": "安卓教程\\4696_音乐通知栏(正确取消广播监听_三次修复).lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "negative",
  "portability": "android_api",
  "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
+  "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 10,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 324,
+ "char_count": 9332,
  "confidence": "static_review"
 }

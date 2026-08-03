@@ -5,17 +5,19 @@
  "author": "煙雨舊時光",
  "platform": "所有环境",
  "source_date": "2023年08月14日 17:44:59",
- "hits": 312,
+ "hits": 313,
  "up": 3,
  "favorite": 13,
  "comment": 4,
  "source_file": "自绘制\\3254_画板.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "complete_or_unverifiable",
- "line_count": 19,
- "char_count": 300,
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 106,
+ "char_count": 1771,
  "confidence": "static_review"
 }

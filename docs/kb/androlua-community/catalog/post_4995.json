@@ -10,15 +10,14 @@
  "favorite": 18,
  "comment": 8,
  "source_file": "自绘制\\4995_实时线性帧率折线.lua",
- "kind": "fragment",
+ "kind": "code_demo",
  "verdict": "neutral",
  "portability": "android_api",
  "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
+  "sensitive_permission"
  ],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 222,
+ "char_count": 5708,
  "confidence": "static_review"
 }

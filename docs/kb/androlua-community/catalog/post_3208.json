@@ -5,7 +5,7 @@
  "author": "九天",
  "platform": "所有环境",
  "source_date": "2023年08月06日 00:38:28",
- "hits": 1349,
+ "hits": 1351,
  "up": 8,
  "favorite": 36,
  "comment": 10,
@@ -18,8 +18,8 @@
   "private_api",
   "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 17,
- "char_count": 300,
+ "truncation": "truncated_tail",
+ "line_count": 283,
+ "char_count": 7005,
  "confidence": "static_review"
 }

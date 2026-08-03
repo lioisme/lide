@@ -5,20 +5,19 @@
  "author": "迷糊.",
  "platform": "所有环境",
  "source_date": "2022年08月31日 06:03:32",
- "hits": 407,
+ "hits": 408,
  "up": 7,
  "favorite": 21,
  "comment": 17,
  "source_file": "实用代码\\1846_加载直(网络)链Dex文件.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "negative",
  "portability": "android_api",
  "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
+  "remote_exec"
  ],
- "truncation": "preview_truncated",
- "line_count": 9,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 26,
+ "char_count": 1302,
  "confidence": "static_review"
 }

@@ -5,17 +5,20 @@
  "author": "•⤙•/k",
  "platform": "AndLua",
  "source_date": "2023年10月28日 13:44:39",
- "hits": 1178,
+ "hits": 1179,
  "up": 10,
  "favorite": 37,
  "comment": 9,
  "source_file": "布局代码\\3531_更适合安卓宝宝灵动岛(半成品x2).lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "universal",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 13,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier",
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 379,
+ "char_count": 9477,
  "confidence": "static_review"
 }

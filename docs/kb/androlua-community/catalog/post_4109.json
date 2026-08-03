@@ -11,11 +11,15 @@
  "comment": 1,
  "source_file": "文件操作\\4109_aidelua_自动提取APK和修改唯一包名.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "universal",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 15,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "os_exec"
+ ],
+ "truncation": "complete",
+ "line_count": 160,
+ "char_count": 4096,
  "confidence": "static_review"
 }

@@ -5,7 +5,7 @@
  "author": "ABVerterX",
  "platform": "所有环境",
  "source_date": "2023年02月04日 01:18:52",
- "hits": 153,
+ "hits": 154,
  "up": 7,
  "favorite": 11,
  "comment": 0,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "universal",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "truncation": "truncated_tail",
+ "line_count": 150,
+ "char_count": 3361,
  "confidence": "static_review"
 }

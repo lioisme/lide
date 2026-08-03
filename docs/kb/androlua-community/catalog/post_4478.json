@@ -10,15 +10,14 @@
  "favorite": 6,
  "comment": 2,
  "source_file": "基础代码\\4478_LangY_Game__字符游戏_贪吃蛇.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "negative",
  "portability": "android_api",
  "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
+  "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 17,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 239,
+ "char_count": 4373,
  "confidence": "static_review"
 }

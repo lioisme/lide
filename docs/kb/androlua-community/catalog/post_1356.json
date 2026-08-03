@@ -5,21 +5,19 @@
  "author": "oゞ夜色乄未央ぁ",
  "platform": "所有环境",
  "source_date": "2022年02月03日 19:00:02",
- "hits": 1115,
+ "hits": 1116,
  "up": 21,
  "favorite": 60,
  "comment": 4,
  "source_file": "动画教程\\1356_各种动画封装.lua",
- "kind": "fragment",
+ "kind": "code_demo",
  "verdict": "negative",
  "portability": "android_api",
  "flags": [
-  "truncated_tail",
-  "chinese_identifier",
-  "incomplete_fragment"
+  "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 13,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 101,
+ "char_count": 2638,
  "confidence": "static_review"
 }

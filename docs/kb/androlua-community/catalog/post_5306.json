@@ -5,7 +5,7 @@
  "author": "˶ᵒ ᵕ ˂˶",
  "platform": "AndroLua,AndLua",
  "source_date": "2026年04月27日 08:39:45",
- "hits": 422,
+ "hits": 424,
  "up": 1,
  "favorite": 1,
  "comment": 0,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 9,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 583,
+ "char_count": 18893,
  "confidence": "static_review"
 }

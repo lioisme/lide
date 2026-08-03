@@ -5,19 +5,17 @@
  "author": "Adam·Eva",
  "platform": "所有环境",
  "source_date": "2022年06月27日 20:50:40",
- "hits": 435,
+ "hits": 436,
  "up": 10,
  "favorite": 17,
  "comment": 0,
  "source_file": "浏览器\\1564_Android_Support_Custom_Tabs.lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "universal",
- "flags": [
-  "short_text"
- ],
- "truncation": "preview_truncated",
- "line_count": 16,
- "char_count": 300,
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 69,
+ "char_count": 2292,
  "confidence": "static_review"
 }

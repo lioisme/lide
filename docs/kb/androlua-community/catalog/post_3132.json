@@ -5,17 +5,21 @@
  "author": "破晓",
  "platform": "Fusion App2",
  "source_date": "2023年07月23日 11:13:43",
- "hits": 488,
+ "hits": 489,
  "up": 8,
  "favorite": 32,
  "comment": 2,
  "source_file": "实用代码\\3132_搜索局域网设备.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 46,
+ "char_count": 1302,
  "confidence": "static_review"
 }

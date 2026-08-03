@@ -5,21 +5,21 @@
  "author": "小孩，别闹！",
  "platform": "Fusion App2",
  "source_date": "2023年08月13日 09:53:24",
- "hits": 417,
+ "hits": 418,
  "up": 6,
  "favorite": 21,
  "comment": 5,
  "source_file": "实用代码\\3243_文件分享_配适安卓7+和FA2.lua",
- "kind": "text_note",
+ "kind": "code_demo",
  "verdict": "negative",
  "portability": "editor_bound",
  "flags": [
-  "short_text",
   "editor_bound",
-  "editor_bound"
+  "editor_bound",
+  "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 10,
- "char_count": 300,
+ "truncation": "truncated_tail",
+ "line_count": 48,
+ "char_count": 1542,
  "confidence": "static_review"
 }

@@ -5,17 +5,19 @@
  "author": "海纳百氚，有容乃大",
  "platform": "所有环境",
  "source_date": "2023年06月10日 08:16:56",
- "hits": 753,
+ "hits": 754,
  "up": 8,
  "favorite": 47,
  "comment": 14,
  "source_file": "小工具\\2917_lua实现RC4加解密（附加配套布局实例）.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "universal",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 546,
+ "char_count": 15463,
  "confidence": "static_review"
 }

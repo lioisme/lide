@@ -5,21 +5,19 @@
  "author": "•⤙•/k",
  "platform": "AndLua",
  "source_date": "2023年10月06日 20:07:16",
- "hits": 360,
+ "hits": 361,
  "up": 1,
  "favorite": 10,
  "comment": 6,
  "source_file": "小工具\\3467_gif_Toast.lua",
- "kind": "fragment",
+ "kind": "code_demo",
  "verdict": "negative",
- "portability": "universal",
+ "portability": "android_api",
  "flags": [
-  "truncated_tail",
-  "chinese_identifier",
-  "incomplete_fragment"
+  "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 17,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 70,
+ "char_count": 1907,
  "confidence": "static_review"
 }

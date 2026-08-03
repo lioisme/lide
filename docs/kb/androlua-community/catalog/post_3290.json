@@ -5,20 +5,19 @@
  "author": "破晓",
  "platform": "Fusion App2",
  "source_date": "2023年08月20日 19:30:24",
- "hits": 835,
+ "hits": 837,
  "up": 11,
  "favorite": 45,
  "comment": 3,
  "source_file": "布局教程\\3290_仿MIUI用户反馈收集弹窗布局.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "negative",
  "portability": "android_api",
  "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
+  "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 432,
+ "char_count": 11455,
  "confidence": "static_review"
 }

@@ -5,17 +5,19 @@
  "author": "追风少年",
  "platform": "所有环境",
  "source_date": "2022年08月23日 01:10:09",
- "hits": 514,
+ "hits": 515,
  "up": 4,
  "favorite": 20,
  "comment": 5,
  "source_file": "小工具\\1795_多音盒.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 1538,
+ "char_count": 53421,
  "confidence": "static_review"
 }

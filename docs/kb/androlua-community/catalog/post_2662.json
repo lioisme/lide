@@ -5,20 +5,17 @@
  "author": "Full Stack Devel",
  "platform": "所有环境",
  "source_date": "2023年04月17日 07:55:46",
- "hits": 364,
+ "hits": 365,
  "up": 6,
  "favorite": 22,
  "comment": 6,
  "source_file": "系统\\2662_(伪)左右立体环绕.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "android_api",
- "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
- ],
- "truncation": "preview_truncated",
- "line_count": 8,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 42,
+ "char_count": 858,
  "confidence": "static_review"
 }

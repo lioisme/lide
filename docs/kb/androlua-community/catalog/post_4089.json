@@ -10,12 +10,17 @@
  "favorite": 54,
  "comment": 8,
  "source_file": "小工具\\4089_手册扩展面板.lua",
- "kind": "code_demo",
- "verdict": "positive",
- "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 13,
- "char_count": 300,
+ "kind": "fragment",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "incomplete_mark",
+  "editor_bound",
+  "editor_bound",
+  "incomplete_fragment"
+ ],
+ "truncation": "complete",
+ "line_count": 545,
+ "char_count": 13705,
  "confidence": "static_review"
 }

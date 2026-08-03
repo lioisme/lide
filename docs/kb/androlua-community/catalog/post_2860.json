@@ -5,7 +5,7 @@
  "author": "诺~",
  "platform": "所有环境",
  "source_date": "2023年05月26日 10:11:25",
- "hits": 271,
+ "hits": 272,
  "up": 0,
  "favorite": 3,
  "comment": 5,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 8,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 330,
+ "char_count": 9136,
  "confidence": "static_review"
 }

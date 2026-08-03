@@ -10,15 +10,12 @@
  "favorite": 16,
  "comment": 2,
  "source_file": "Lua代码\\4836_百度图片搜索.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "android_api",
- "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
- ],
- "truncation": "preview_truncated",
- "line_count": 17,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 79,
+ "char_count": 1833,
  "confidence": "static_review"
 }

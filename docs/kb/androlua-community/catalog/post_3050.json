@@ -5,20 +5,19 @@
  "author": "热爱从不降温",
  "platform": "所有环境",
  "source_date": "2023年07月10日 23:33:47",
- "hits": 176,
+ "hits": 177,
  "up": 1,
  "favorite": 5,
  "comment": 2,
  "source_file": "实用代码\\3050_uuid生成.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "negative",
  "portability": "universal",
  "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
+  "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 74,
+ "char_count": 1478,
  "confidence": "static_review"
 }

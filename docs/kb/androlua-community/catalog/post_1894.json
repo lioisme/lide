@@ -5,7 +5,7 @@
  "author": "归魔",
  "platform": "Fusion App1",
  "source_date": "2022年09月18日 02:34:02",
- "hits": 359,
+ "hits": 360,
  "up": 2,
  "favorite": 4,
  "comment": 0,
@@ -16,8 +16,8 @@
  "flags": [
   "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 40,
+ "char_count": 1111,
  "confidence": "static_review"
 }

@@ -5,17 +5,19 @@
  "author": "oゞ夜色乄未央ぁ",
  "platform": "所有环境",
  "source_date": "2022年01月31日 18:48:07",
- "hits": 367,
+ "hits": 368,
  "up": 5,
  "favorite": 18,
  "comment": 2,
  "source_file": "实用代码\\1350_获取图片Exif信息.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "neutral",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 17,
- "char_count": 300,
+ "flags": [
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 52,
+ "char_count": 1518,
  "confidence": "static_review"
 }

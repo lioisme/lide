@@ -5,17 +5,19 @@
  "author": "帕帝天秀",
  "platform": "所有环境",
  "source_date": "2022年08月05日 21:27:25",
- "hits": 1100,
+ "hits": 1103,
  "up": 8,
  "favorite": 17,
  "comment": 3,
  "source_file": "自绘制\\1662_自绘制拖动条.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "complete_or_unverifiable",
- "line_count": 13,
- "char_count": 300,
+ "flags": [
+  "global_pollution"
+ ],
+ "truncation": "complete",
+ "line_count": 335,
+ "char_count": 11174,
  "confidence": "static_review"
 }

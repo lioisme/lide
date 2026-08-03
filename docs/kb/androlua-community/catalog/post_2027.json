@@ -5,7 +5,7 @@
  "author": "No one cares",
  "platform": "所有环境",
  "source_date": "2022年11月02日 08:01:34",
- "hits": 325,
+ "hits": 326,
  "up": 4,
  "favorite": 15,
  "comment": 1,
@@ -16,7 +16,7 @@
  "flags": [
   "short_text"
  ],
- "truncation": "preview_truncated",
+ "truncation": "truncated_tail",
  "line_count": 5,
  "char_count": 298,
  "confidence": "static_review"

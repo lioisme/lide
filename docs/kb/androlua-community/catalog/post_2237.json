@@ -5,20 +5,17 @@
  "author": "ㄛㄙ飞ㄋ",
  "platform": "所有环境",
  "source_date": "2022年12月23日 08:45:41",
- "hits": 383,
+ "hits": 384,
  "up": 5,
  "favorite": 22,
  "comment": 0,
  "source_file": "自绘制\\2237_画一个电量.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "android_api",
- "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
- ],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 119,
+ "char_count": 3349,
  "confidence": "static_review"
 }

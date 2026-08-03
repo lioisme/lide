@@ -5,19 +5,19 @@
  "author": "月牙",
  "platform": "Fusion App2",
  "source_date": "2025年10月10日 23:56:18",
- "hits": 777,
+ "hits": 778,
  "up": 7,
  "favorite": 25,
  "comment": 9,
  "source_file": "网络操作\\5072_QQ空间相册解析.lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "universal",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
  "flags": [
-  "short_text"
+  "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 340,
+ "char_count": 9994,
  "confidence": "static_review"
 }

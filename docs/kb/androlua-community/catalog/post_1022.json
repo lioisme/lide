@@ -5,7 +5,7 @@
  "author": "oゞ夜色乄未央ぁ",
  "platform": "",
  "source_date": "2020年05月01日 12:26:18",
- "hits": 96,
+ "hits": 97,
  "up": 0,
  "favorite": 2,
  "comment": 0,
@@ -16,8 +16,8 @@
  "flags": [
   "chinese_identifier"
  ],
- "truncation": "preview_truncated",
+ "truncation": "complete",
  "line_count": 10,
- "char_count": 300,
+ "char_count": 329,
  "confidence": "static_review"
 }

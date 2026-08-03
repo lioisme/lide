@@ -5,19 +5,17 @@
  "author": "迷糊.",
  "platform": "所有环境",
  "source_date": "2023年05月02日 12:04:56",
- "hits": 423,
+ "hits": 424,
  "up": 5,
  "favorite": 14,
  "comment": 5,
  "source_file": "实用代码\\2728_Java_线程池实现_-_ThreadPoolExecutor_使用示例.lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "universal",
- "flags": [
-  "short_text"
- ],
- "truncation": "preview_truncated",
- "line_count": 7,
- "char_count": 300,
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 66,
+ "char_count": 2196,
  "confidence": "static_review"
 }

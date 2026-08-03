@@ -5,19 +5,17 @@
  "author": "海纳百氚，有容乃大",
  "platform": "所有环境",
  "source_date": "2023年02月19日 22:50:45",
- "hits": 1434,
+ "hits": 1435,
  "up": 14,
  "favorite": 56,
  "comment": 8,
  "source_file": "布局教程\\2489_海纳微句用启动图（仿闲言重制）.lua",
- "kind": "text_note",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "universal",
- "flags": [
-  "short_text"
- ],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 223,
+ "char_count": 6266,
  "confidence": "static_review"
 }

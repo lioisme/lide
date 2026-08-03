@@ -5,17 +5,20 @@
  "author": "ㄛㄙ飞ㄋ",
  "platform": "所有环境",
  "source_date": "2024年04月07日 18:48:50",
- "hits": 874,
+ "hits": 875,
  "up": 10,
  "favorite": 26,
  "comment": 11,
  "source_file": "Java教程\\4010_线程池.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "universal",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 15,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 223,
+ "char_count": 6157,
  "confidence": "static_review"
 }

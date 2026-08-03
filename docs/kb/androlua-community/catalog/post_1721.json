@@ -5,17 +5,19 @@
  "author": "碳昔",
  "platform": "所有环境",
  "source_date": "2022年08月17日 08:45:14",
- "hits": 1014,
+ "hits": 1016,
  "up": 25,
  "favorite": 76,
  "comment": 4,
  "source_file": "小工具\\1721_微信收款界面.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 416,
+ "char_count": 11412,
  "confidence": "static_review"
 }

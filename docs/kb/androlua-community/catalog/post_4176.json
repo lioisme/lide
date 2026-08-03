@@ -10,14 +10,15 @@
  "favorite": 35,
  "comment": 3,
  "source_file": "动画教程\\4176_元素共享动画.lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "universal",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
  "flags": [
-  "short_text"
+  "androlua_private",
+  "private_api"
  ],
- "truncation": "preview_truncated",
- "line_count": 8,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 230,
+ "char_count": 6191,
  "confidence": "static_review"
 }

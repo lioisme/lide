@@ -5,20 +5,22 @@
  "author": "Adam·Eva",
  "platform": "Fusion App2",
  "source_date": "2022年06月02日 14:43:24",
- "hits": 1035,
+ "hits": 1036,
  "up": 8,
  "favorite": 30,
  "comment": 11,
  "source_file": "小工具\\1506_必应每日壁纸(官方接口).lua",
- "kind": "code_demo",
+ "kind": "fragment",
  "verdict": "negative",
- "portability": "editor_bound",
+ "portability": "host_private",
  "flags": [
-  "editor_bound",
-  "editor_bound"
+  "incomplete_mark",
+  "androlua_private",
+  "private_api",
+  "incomplete_fragment"
  ],
- "truncation": "preview_truncated",
- "line_count": 13,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 257,
+ "char_count": 6849,
  "confidence": "static_review"
 }

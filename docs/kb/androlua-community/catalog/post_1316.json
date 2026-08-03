@@ -5,7 +5,7 @@
  "author": "jies辰",
  "platform": "所有环境",
  "source_date": "2022年01月12日 11:48:49",
- "hits": 174,
+ "hits": 175,
  "up": 1,
  "favorite": 2,
  "comment": 0,
@@ -14,10 +14,10 @@
  "verdict": "neutral",
  "portability": "universal",
  "flags": [
-  "short_text"
+  "text_only"
  ],
- "truncation": "preview_truncated",
- "line_count": 6,
- "char_count": 300,
+ "truncation": "truncated_tail",
+ "line_count": 25,
+ "char_count": 1266,
  "confidence": "static_review"
 }

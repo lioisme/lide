@@ -11,11 +11,14 @@
  "comment": 3,
  "source_file": "小工具\\4431_一个简洁美观的全屏时钟功能V2.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "universal",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 19,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 413,
+ "char_count": 12585,
  "confidence": "static_review"
 }

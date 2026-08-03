@@ -10,15 +10,12 @@
  "favorite": 28,
  "comment": 4,
  "source_file": "安卓教程\\4972_拖动与尺寸缩放.lua",
- "kind": "text_note",
- "verdict": "negative",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "universal",
- "flags": [
-  "short_text",
-  "global_pollution"
- ],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 166,
+ "char_count": 4499,
  "confidence": "static_review"
 }

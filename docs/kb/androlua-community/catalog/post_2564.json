@@ -5,17 +5,19 @@
  "author": "渡鹤影",
  "platform": "AndroLua,AndLua",
  "source_date": "2023年03月08日 15:23:09",
- "hits": 324,
+ "hits": 325,
  "up": 2,
  "favorite": 10,
  "comment": 0,
  "source_file": "文件操作\\2564_缓存文件清理.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "universal",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 13,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "os_exec"
+ ],
+ "truncation": "complete",
+ "line_count": 64,
+ "char_count": 1707,
  "confidence": "static_review"
 }

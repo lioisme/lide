@@ -5,7 +5,7 @@
  "author": "如果爱有遗憾",
  "platform": "Fusion App2",
  "source_date": "2022年09月15日 00:59:51",
- "hits": 224,
+ "hits": 225,
  "up": 2,
  "favorite": 10,
  "comment": 0,
@@ -16,9 +16,10 @@
  "flags": [
   "short_text",
   "editor_bound",
-  "editor_bound"
+  "editor_bound",
+  "sensitive_permission"
  ],
- "truncation": "preview_truncated",
+ "truncation": "truncated_tail",
  "line_count": 15,
  "char_count": 218,
  "confidence": "static_review"

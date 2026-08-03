@@ -5,17 +5,20 @@
  "author": "寒雪落花静云月",
  "platform": "AndroLua,AndLua",
  "source_date": "2025年04月22日 13:33:56",
- "hits": 484,
+ "hits": 486,
  "up": 9,
  "favorite": 14,
  "comment": 10,
  "source_file": "安卓教程\\4710_画板，v1.2，增加图片保存，请复制到有存储权限的地方。.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 10,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 361,
+ "char_count": 13909,
  "confidence": "static_review"
 }

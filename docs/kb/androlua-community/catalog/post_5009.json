@@ -11,11 +11,13 @@
  "comment": 6,
  "source_file": "UI控件\\5009_EXOPlayer视频播放器.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "universal",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 10,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 1733,
+ "char_count": 47250,
  "confidence": "static_review"
 }

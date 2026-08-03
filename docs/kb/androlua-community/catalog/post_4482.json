@@ -10,16 +10,15 @@
  "favorite": 23,
  "comment": 2,
  "source_file": "小工具\\4482_兴许是一个可能实用的歌词搜索工具V2.lua",
- "kind": "text_note",
+ "kind": "code_demo",
  "verdict": "negative",
- "portability": "editor_bound",
+ "portability": "host_private",
  "flags": [
-  "short_text",
-  "editor_bound",
-  "editor_bound"
+  "androlua_private",
+  "private_api"
  ],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 1066,
+ "char_count": 32267,
  "confidence": "static_review"
 }

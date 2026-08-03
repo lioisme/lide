@@ -5,17 +5,20 @@
  "author": "碳昔",
  "platform": "所有环境",
  "source_date": "2023年04月02日 23:07:21",
- "hits": 344,
+ "hits": 345,
  "up": 5,
  "favorite": 18,
  "comment": 2,
  "source_file": "远程更新\\2623_讯飞语记解析.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "universal",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 140,
+ "char_count": 3489,
  "confidence": "static_review"
 }

@@ -5,17 +5,20 @@
  "author": "小白·马",
  "platform": "所有环境",
  "source_date": "2024年01月30日 15:08:37",
- "hits": 324,
+ "hits": 325,
  "up": 2,
  "favorite": 6,
  "comment": 5,
  "source_file": "网络操作\\3821_123云盘时间戳签名获取.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "universal",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 10,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 138,
+ "char_count": 4791,
  "confidence": "static_review"
 }

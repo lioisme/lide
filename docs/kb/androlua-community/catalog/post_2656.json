@@ -5,17 +5,19 @@
  "author": "机不可失🅥",
  "platform": "所有环境",
  "source_date": "2023年04月15日 14:17:14",
- "hits": 275,
+ "hits": 276,
  "up": 4,
  "favorite": 22,
  "comment": 0,
  "source_file": "远程更新\\2656_多接口云控代码失败切换.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "universal",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "flags": [
+  "remote_exec"
+ ],
+ "truncation": "complete",
+ "line_count": 35,
+ "char_count": 833,
  "confidence": "static_review"
 }

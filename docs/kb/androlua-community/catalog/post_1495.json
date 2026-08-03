@@ -5,19 +5,17 @@
  "author": "jies辰",
  "platform": "所有环境",
  "source_date": "2022年05月31日 14:44:20",
- "hits": 211,
+ "hits": 212,
  "up": 3,
  "favorite": 8,
  "comment": 0,
  "source_file": "table表\\1495_table.sort_排序示例.lua",
  "kind": "code_demo",
- "verdict": "negative",
+ "verdict": "positive",
  "portability": "universal",
- "flags": [
-  "syntax_hint"
- ],
- "truncation": "preview_truncated",
- "line_count": 31,
- "char_count": 300,
+ "flags": [],
+ "truncation": "truncated_tail",
+ "line_count": 33,
+ "char_count": 325,
  "confidence": "static_review"
 }

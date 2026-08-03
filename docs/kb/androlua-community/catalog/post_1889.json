@@ -5,21 +5,19 @@
  "author": "海纳百氚，有容乃大",
  "platform": "所有环境",
  "source_date": "2022年09月15日 22:57:25",
- "hits": 529,
+ "hits": 530,
  "up": 5,
  "favorite": 15,
  "comment": 3,
  "source_file": "小工具\\1889_UID生成器.lua",
- "kind": "fragment",
+ "kind": "code_demo",
  "verdict": "negative",
  "portability": "android_api",
  "flags": [
-  "truncated_tail",
-  "chinese_identifier",
-  "incomplete_fragment"
+  "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 406,
+ "char_count": 11642,
  "confidence": "static_review"
 }

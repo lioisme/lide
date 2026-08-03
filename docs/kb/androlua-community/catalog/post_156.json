@@ -5,20 +5,20 @@
  "author": "oゞ夜色乄未央ぁ",
  "platform": "",
  "source_date": "2020年05月01日 12:26:18",
- "hits": 526,
+ "hits": 527,
  "up": 3,
  "favorite": 22,
  "comment": 0,
  "source_file": "布局教程\\156_充值中心布局.lua",
- "kind": "text_note",
+ "kind": "code_demo",
  "verdict": "negative",
- "portability": "universal",
+ "portability": "android_api",
  "flags": [
-  "short_text",
+  "chinese_identifier",
   "global_pollution"
  ],
- "truncation": "preview_truncated",
- "line_count": 15,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 508,
+ "char_count": 11515,
  "confidence": "static_review"
 }

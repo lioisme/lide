@@ -5,7 +5,7 @@
  "author": "小白·马",
  "platform": "Fusion App2,reOpenLua,OpenLuaX",
  "source_date": "2024年02月09日 20:07:20",
- "hits": 333,
+ "hits": 334,
  "up": 4,
  "favorite": 9,
  "comment": 8,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 8,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 23,
+ "char_count": 886,
  "confidence": "static_review"
 }

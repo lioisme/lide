@@ -5,7 +5,7 @@
  "author": "辉.",
  "platform": "AndroLua,AndLua",
  "source_date": "2023年10月06日 01:38:41",
- "hits": 663,
+ "hits": 664,
  "up": 0,
  "favorite": 8,
  "comment": 5,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "complete_or_unverifiable",
- "line_count": 16,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 158,
+ "char_count": 3859,
  "confidence": "static_review"
 }

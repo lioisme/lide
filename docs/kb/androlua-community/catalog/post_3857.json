@@ -10,15 +10,15 @@
  "favorite": 13,
  "comment": 13,
  "source_file": "小游戏\\3857_小体量航天游戏Demo.lua",
- "kind": "fragment",
- "verdict": "neutral",
- "portability": "universal",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
  "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
+  "global_pollution",
+  "sensitive_permission"
  ],
- "truncation": "preview_truncated",
- "line_count": 18,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 900,
+ "char_count": 29407,
  "confidence": "static_review"
 }

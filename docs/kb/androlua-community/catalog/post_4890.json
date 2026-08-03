@@ -11,11 +11,13 @@
  "comment": 0,
  "source_file": "网络爬虫\\4890_酷我音乐排行榜.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "neutral",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 21,
- "char_count": 300,
+ "flags": [
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 215,
+ "char_count": 6579,
  "confidence": "static_review"
 }

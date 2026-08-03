@@ -5,7 +5,7 @@
  "author": "ㄛㄙ飞ㄋ",
  "platform": "所有环境",
  "source_date": "2023年02月09日 07:11:40",
- "hits": 350,
+ "hits": 351,
  "up": 6,
  "favorite": 21,
  "comment": 7,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "universal",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 19,
- "char_count": 300,
+ "truncation": "truncated_tail",
+ "line_count": 33,
+ "char_count": 514,
  "confidence": "static_review"
 }

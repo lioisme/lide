@@ -5,7 +5,7 @@
  "author": "ㄛㄙ飞ㄋ",
  "platform": "Fusion App2,reOpenLua",
  "source_date": "2023年09月22日 01:21:48",
- "hits": 341,
+ "hits": 342,
  "up": 0,
  "favorite": 4,
  "comment": 5,
@@ -17,8 +17,8 @@
   "editor_bound",
   "editor_bound"
  ],
- "truncation": "preview_truncated",
- "line_count": 8,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 375,
+ "char_count": 8921,
  "confidence": "static_review"
 }

@@ -5,20 +5,19 @@
  "author": "初陌",
  "platform": "AndLua",
  "source_date": "2023年11月04日 13:01:27",
- "hits": 165,
+ "hits": 166,
  "up": 1,
  "favorite": 4,
  "comment": 1,
  "source_file": "实用代码\\3552_像素计时器.lua",
- "kind": "text_note",
+ "kind": "code_demo",
  "verdict": "negative",
- "portability": "universal",
+ "portability": "android_api",
  "flags": [
-  "short_text",
-  "global_pollution"
+  "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 16,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 277,
+ "char_count": 8049,
  "confidence": "static_review"
 }

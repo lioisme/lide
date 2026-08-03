@@ -5,19 +5,22 @@
  "author": "⁧拾玖⁧‭",
  "platform": "所有环境",
  "source_date": "2026年05月31日 15:27:37",
- "hits": 847,
+ "hits": 849,
  "up": 1,
  "favorite": 3,
  "comment": 2,
  "source_file": "UI控件\\5324_LuaCodeEditor.lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "universal",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
  "flags": [
-  "text_only"
+  "androlua_private",
+  "private_api",
+  "global_pollution",
+  "remote_exec"
  ],
- "truncation": "preview_truncated",
- "line_count": 16,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 561,
+ "char_count": 11358,
  "confidence": "static_review"
 }

@@ -11,11 +11,13 @@
  "comment": 9,
  "source_file": "Lua代码\\4935_图表库MPAndroidChart-3.1.0的使用教学.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 10,
- "char_count": 300,
+ "flags": [
+  "remote_exec"
+ ],
+ "truncation": "complete",
+ "line_count": 314,
+ "char_count": 8621,
  "confidence": "static_review"
 }

@@ -5,20 +5,19 @@
  "author": "oゞ夜色乄未央ぁ",
  "platform": "所有环境",
  "source_date": "2022年12月18日 16:32:46",
- "hits": 644,
+ "hits": 645,
  "up": 14,
  "favorite": 30,
  "comment": 1,
  "source_file": "Androlua教程\\2208_thread线程.lua",
- "kind": "text_note",
+ "kind": "code_demo",
  "verdict": "negative",
  "portability": "universal",
  "flags": [
-  "short_text",
-  "global_pollution"
+  "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 19,
- "char_count": 300,
+ "truncation": "truncated_tail",
+ "line_count": 40,
+ "char_count": 603,
  "confidence": "static_review"
 }

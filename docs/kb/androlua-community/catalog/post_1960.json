@@ -5,19 +5,21 @@
  "author": "一键爬",
  "platform": "Fusion App2",
  "source_date": "2022年10月08日 23:07:06",
- "hits": 726,
+ "hits": 727,
  "up": 6,
  "favorite": 15,
  "comment": 4,
  "source_file": "jsoup\\1960_jsoup爬虫(RecyclerView嵌套式).lua",
  "kind": "code_demo",
  "verdict": "negative",
- "portability": "android_api",
+ "portability": "host_private",
  "flags": [
+  "androlua_private",
+  "private_api",
   "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "truncation": "truncated_tail",
+ "line_count": 126,
+ "char_count": 3843,
  "confidence": "static_review"
 }

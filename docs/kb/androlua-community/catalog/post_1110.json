@@ -5,20 +5,19 @@
  "author": "oゞ夜色乄未央ぁ",
  "platform": "",
  "source_date": "2020年05月01日 12:26:18",
- "hits": 130,
+ "hits": 131,
  "up": 0,
  "favorite": 2,
  "comment": 0,
  "source_file": "动画教程\\1110_简单躲避球动画实战.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "negative",
  "portability": "android_api",
  "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
+  "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 67,
+ "char_count": 1943,
  "confidence": "static_review"
 }

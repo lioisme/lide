@@ -5,7 +5,7 @@
  "author": "Miss",
  "platform": "所有环境",
  "source_date": "2023年02月07日 16:45:00",
- "hits": 118,
+ "hits": 119,
  "up": 0,
  "favorite": 2,
  "comment": 0,
@@ -16,8 +16,8 @@
  "flags": [
   "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 17,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 25,
+ "char_count": 425,
  "confidence": "static_review"
 }

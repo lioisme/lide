@@ -12,13 +12,14 @@
  "source_file": "布局代码\\5115_主题风格管理.lua",
  "kind": "code_demo",
  "verdict": "negative",
- "portability": "editor_bound",
+ "portability": "host_private",
  "flags": [
-  "editor_bound",
-  "editor_bound"
+  "androlua_private",
+  "private_api",
+  "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 9,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 196,
+ "char_count": 5930,
  "confidence": "static_review"
 }

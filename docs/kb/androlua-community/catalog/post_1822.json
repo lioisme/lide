@@ -5,7 +5,7 @@
  "author": "一键爬",
  "platform": "Fusion App2",
  "source_date": "2022年08月26日 14:37:47",
- "hits": 507,
+ "hits": 508,
  "up": 11,
  "favorite": 21,
  "comment": 2,
@@ -16,8 +16,8 @@
  "flags": [
   "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 52,
+ "char_count": 1225,
  "confidence": "static_review"
 }

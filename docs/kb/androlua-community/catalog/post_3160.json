@@ -5,20 +5,17 @@
  "author": "Cheese",
  "platform": "所有环境",
  "source_date": "2023年07月28日 22:51:03",
- "hits": 164,
+ "hits": 165,
  "up": 4,
  "favorite": 6,
  "comment": 0,
  "source_file": "安卓教程\\3160_获取View的Activity.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "android_api",
- "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
- ],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 13,
+ "char_count": 348,
  "confidence": "static_review"
 }

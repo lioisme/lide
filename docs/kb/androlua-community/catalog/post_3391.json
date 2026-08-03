@@ -5,7 +5,7 @@
  "author": "迷糊.",
  "platform": "Fusion App2,reOpenLua",
  "source_date": "2023年09月14日 16:46:09",
- "hits": 305,
+ "hits": 306,
  "up": 0,
  "favorite": 5,
  "comment": 2,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 35,
+ "char_count": 818,
  "confidence": "static_review"
 }

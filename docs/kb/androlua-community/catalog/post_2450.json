@@ -5,7 +5,7 @@
  "author": "壹影",
  "platform": "所有环境",
  "source_date": "2023年02月10日 09:17:49",
- "hits": 129,
+ "hits": 130,
  "up": 3,
  "favorite": 4,
  "comment": 1,
@@ -14,7 +14,7 @@
  "verdict": "positive",
  "portability": "universal",
  "flags": [],
- "truncation": "complete_or_unverifiable",
+ "truncation": "complete",
  "line_count": 11,
  "char_count": 139,
  "confidence": "static_review"

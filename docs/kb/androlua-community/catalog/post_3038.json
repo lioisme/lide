@@ -5,17 +5,19 @@
  "author": "花园",
  "platform": "所有环境",
  "source_date": "2023年07月07日 12:52:41",
- "hits": 613,
+ "hits": 615,
  "up": 21,
  "favorite": 33,
  "comment": 8,
  "source_file": "小游戏\\3038_Flappy_Bird(重力加速度完美版).lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 18,
- "char_count": 300,
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 179,
+ "char_count": 4471,
  "confidence": "static_review"
 }

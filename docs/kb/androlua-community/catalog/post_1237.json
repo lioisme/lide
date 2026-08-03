@@ -5,22 +5,20 @@
  "author": "jies辰",
  "platform": "",
  "source_date": "2021年12月19日 18:22:29",
- "hits": 188,
+ "hits": 189,
  "up": 1,
  "favorite": 5,
  "comment": 0,
  "source_file": "布局教程\\1237_获取主题完整配色.lua",
- "kind": "fragment",
+ "kind": "code_demo",
  "verdict": "negative",
  "portability": "editor_bound",
  "flags": [
-  "truncated_tail",
   "editor_bound",
-  "editor_bound",
-  "incomplete_fragment"
+  "editor_bound"
  ],
- "truncation": "preview_truncated",
+ "truncation": "complete",
  "line_count": 7,
- "char_count": 300,
+ "char_count": 346,
  "confidence": "static_review"
 }

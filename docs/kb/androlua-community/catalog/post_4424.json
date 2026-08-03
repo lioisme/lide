@@ -14,10 +14,11 @@
  "verdict": "neutral",
  "portability": "universal",
  "flags": [
-  "short_text"
+  "text_only",
+  "sensitive_permission"
  ],
- "truncation": "preview_truncated",
- "line_count": 10,
- "char_count": 300,
+ "truncation": "truncated_tail",
+ "line_count": 281,
+ "char_count": 8156,
  "confidence": "static_review"
 }

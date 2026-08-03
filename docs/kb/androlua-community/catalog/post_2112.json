@@ -5,7 +5,7 @@
  "author": "机不可失🅥",
  "platform": "所有环境",
  "source_date": "2022年11月25日 19:37:25",
- "hits": 340,
+ "hits": 341,
  "up": 4,
  "favorite": 12,
  "comment": 2,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "universal",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 15,
+ "char_count": 374,
  "confidence": "static_review"
 }

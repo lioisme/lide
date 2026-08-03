@@ -10,15 +10,12 @@
  "favorite": 2,
  "comment": 2,
  "source_file": "基础代码\\4547_伪3D_可移动_含视角移动.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "android_api",
- "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
- ],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "flags": [],
+ "truncation": "truncated_tail",
+ "line_count": 550,
+ "char_count": 14522,
  "confidence": "static_review"
 }

@@ -5,17 +5,21 @@
  "author": "😈",
  "platform": "所有环境",
  "source_date": "2026年06月25日 16:40:45",
- "hits": 491,
+ "hits": 496,
  "up": 5,
  "favorite": 2,
  "comment": 2,
  "source_file": "UI控件\\5345_MibaGlass液态玻璃dex.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "universal",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "remote_exec"
+ ],
+ "truncation": "complete",
+ "line_count": 233,
+ "char_count": 7787,
  "confidence": "static_review"
 }

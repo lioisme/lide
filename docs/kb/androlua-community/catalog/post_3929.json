@@ -5,7 +5,7 @@
  "author": "兜兜转转，又回到原点！",
  "platform": "所有环境",
  "source_date": "2024年02月26日 22:01:15",
- "hits": 309,
+ "hits": 310,
  "up": 4,
  "favorite": 13,
  "comment": 5,
@@ -16,8 +16,8 @@
  "flags": [
   "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 15,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 174,
+ "char_count": 5069,
  "confidence": "static_review"
 }

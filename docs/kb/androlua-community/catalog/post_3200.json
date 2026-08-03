@@ -5,7 +5,7 @@
  "author": "智",
  "platform": "所有环境",
  "source_date": "2023年08月05日 06:31:59",
- "hits": 272,
+ "hits": 273,
  "up": 4,
  "favorite": 6,
  "comment": 9,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "universal",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 10,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 107,
+ "char_count": 2091,
  "confidence": "static_review"
 }

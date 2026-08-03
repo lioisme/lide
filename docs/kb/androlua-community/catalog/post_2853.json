@@ -5,7 +5,7 @@
  "author": "NekoLaska",
  "platform": "所有环境",
  "source_date": "2023年05月25日 10:53:40",
- "hits": 774,
+ "hits": 775,
  "up": 18,
  "favorite": 51,
  "comment": 4,
@@ -17,8 +17,8 @@
   "editor_bound",
   "editor_bound"
  ],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 89,
+ "char_count": 2506,
  "confidence": "static_review"
 }

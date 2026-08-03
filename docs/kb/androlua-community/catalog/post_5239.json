@@ -11,11 +11,13 @@
  "comment": 0,
  "source_file": "小游戏\\5239_html5_3d拼图.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "neutral",
  "portability": "universal",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "flags": [
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 806,
+ "char_count": 31918,
  "confidence": "static_review"
 }

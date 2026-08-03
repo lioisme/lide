@@ -5,8 +5,8 @@
  "author": "伊藤诚",
  "platform": "所有环境",
  "source_date": "2026年02月22日 10:29:05",
- "hits": 484,
- "up": 3,
+ "hits": 486,
+ "up": 4,
  "favorite": 15,
  "comment": 0,
  "source_file": "Layout布局\\5245_Q弹底栏.lua",
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 8,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 338,
+ "char_count": 10033,
  "confidence": "static_review"
 }

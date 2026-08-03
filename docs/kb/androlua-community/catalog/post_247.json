@@ -5,17 +5,19 @@
  "author": "oゞ夜色乄未央ぁ",
  "platform": "",
  "source_date": "2020年05月01日 12:26:18",
- "hits": 155,
+ "hits": 156,
  "up": 2,
  "favorite": 4,
  "comment": 0,
  "source_file": "Lua代码\\247_I_O的其他办法.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "neutral",
  "portability": "universal",
- "flags": [],
- "truncation": "complete_or_unverifiable",
- "line_count": 10,
- "char_count": 300,
+ "flags": [
+  "sensitive_permission"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 31,
+ "char_count": 720,
  "confidence": "static_review"
 }

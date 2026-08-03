@@ -5,19 +5,17 @@
  "author": "海纳百氚，有容乃大",
  "platform": "Fusion App2",
  "source_date": "2022年03月28日 21:46:35",
- "hits": 361,
+ "hits": 362,
  "up": 8,
  "favorite": 12,
  "comment": 1,
  "source_file": "小工具\\1422_随机一文.lua",
- "kind": "text_note",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "universal",
- "flags": [
-  "short_text"
- ],
- "truncation": "complete_or_unverifiable",
- "line_count": 18,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 158,
+ "char_count": 3740,
  "confidence": "static_review"
 }

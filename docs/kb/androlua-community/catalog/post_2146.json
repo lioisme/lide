@@ -5,17 +5,20 @@
  "author": "智",
  "platform": "所有环境",
  "source_date": "2022年12月04日 08:40:08",
- "hits": 733,
+ "hits": 734,
  "up": 7,
  "favorite": 20,
  "comment": 4,
  "source_file": "小工具\\2146_蓝奏云解析，原作者GitHub@nwdgzs.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "harmful",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 15,
- "char_count": 300,
+ "flags": [
+  "manual_override",
+  "harmful_elevated"
+ ],
+ "truncation": "complete",
+ "line_count": 303,
+ "char_count": 9270,
  "confidence": "static_review"
 }

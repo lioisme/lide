@@ -5,20 +5,17 @@
  "author": "kamihitoe",
  "platform": "所有环境",
  "source_date": "2023年09月24日 12:16:49",
- "hits": 233,
+ "hits": 235,
  "up": 3,
  "favorite": 15,
  "comment": 0,
  "source_file": "Androlua教程\\3424_Glide_携带请求头.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "android_api",
- "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
- ],
- "truncation": "preview_truncated",
- "line_count": 9,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 27,
+ "char_count": 1085,
  "confidence": "static_review"
 }

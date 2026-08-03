@@ -5,7 +5,7 @@
  "author": "W. by",
  "platform": "AndLua",
  "source_date": "2022年08月06日 04:28:56",
- "hits": 352,
+ "hits": 353,
  "up": 1,
  "favorite": 4,
  "comment": 4,
@@ -16,10 +16,11 @@
  "flags": [
   "short_text",
   "androlua_private",
-  "private_api"
+  "private_api",
+  "os_exec"
  ],
- "truncation": "preview_truncated",
- "line_count": 13,
- "char_count": 300,
+ "truncation": "truncated_tail",
+ "line_count": 16,
+ "char_count": 338,
  "confidence": "static_review"
 }

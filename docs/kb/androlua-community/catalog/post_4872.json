@@ -10,12 +10,14 @@
  "favorite": 15,
  "comment": 0,
  "source_file": "基础代码\\4872_ClipboardManager部分剪切板操作.lua",
- "kind": "code_demo",
- "verdict": "positive",
+ "kind": "reference_sheet",
+ "verdict": "neutral",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "flags": [
+  "xml_list"
+ ],
+ "truncation": "complete",
+ "line_count": 153,
+ "char_count": 5260,
  "confidence": "static_review"
 }

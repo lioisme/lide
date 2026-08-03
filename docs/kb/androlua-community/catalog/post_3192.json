@@ -5,20 +5,20 @@
  "author": "NekoLaska",
  "platform": "Fusion App2",
  "source_date": "2023年08月03日 21:44:21",
- "hits": 1117,
+ "hits": 1119,
  "up": 9,
  "favorite": 36,
  "comment": 10,
  "source_file": "Adapter容器\\3192_ViewPager2示例.lua",
  "kind": "code_demo",
  "verdict": "negative",
- "portability": "editor_bound",
+ "portability": "host_private",
  "flags": [
-  "editor_bound",
-  "editor_bound"
+  "androlua_private",
+  "private_api"
  ],
- "truncation": "preview_truncated",
- "line_count": 9,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 160,
+ "char_count": 5031,
  "confidence": "static_review"
 }

@@ -5,7 +5,7 @@
  "author": "海纳百氚，有容乃大",
  "platform": "AndroLua,Fusion App2,reOpenLua",
  "source_date": "2023年09月30日 13:02:03",
- "hits": 1008,
+ "hits": 1011,
  "up": 12,
  "favorite": 50,
  "comment": 5,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 17,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 412,
+ "char_count": 11203,
  "confidence": "static_review"
 }

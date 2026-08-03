@@ -5,19 +5,19 @@
  "author": "•⤙•/k",
  "platform": "AndLua",
  "source_date": "2023年10月13日 23:57:00",
- "hits": 466,
+ "hits": 467,
  "up": 4,
  "favorite": 18,
  "comment": 0,
  "source_file": "布局教程\\3492_tip气泡提示布局.lua",
  "kind": "code_demo",
  "verdict": "negative",
- "portability": "universal",
+ "portability": "android_api",
  "flags": [
   "chinese_identifier"
  ],
- "truncation": "complete_or_unverifiable",
- "line_count": 16,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 59,
+ "char_count": 1451,
  "confidence": "static_review"
 }

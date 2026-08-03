@@ -5,7 +5,7 @@
  "author": "海纳百氚，有容乃大",
  "platform": "Fusion App2",
  "source_date": "2023年09月25日 16:35:39",
- "hits": 1258,
+ "hits": 1259,
  "up": 14,
  "favorite": 38,
  "comment": 16,
@@ -17,8 +17,8 @@
   "androlua_private",
   "private_api"
  ],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 432,
+ "char_count": 15862,
  "confidence": "static_review"
 }

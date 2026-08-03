@@ -270,4 +270,17 @@
     <string name="cd_api_browser">API 浏览器</string>
     <string name="api_filter">按 分 类 筛 选</string>
     <string name="api_clear_search">清 空 搜 索</string>
+
+    <string name="api_usage_title">按用途</string>
+    <string name="api_usage_adapter">适配器</string>
+    <string name="api_usage_container">容器控件</string>
+    <string name="api_usage_input">输入框类控件</string>
+    <string name="api_usage_utility">工具类</string>
+    <string name="api_usage_button">按钮控件</string>
+    <string name="api_usage_state">状态类控件</string>
+    <string name="api_usage_view">视图控件</string>
+    <string name="api_usage_popup">弹出式窗口</string>
+    <string name="api_usage_dropdown">下拉菜单控件</string>
+    <string name="api_kind_interface">接口</string>
+    <string name="api_kind_class">类</string>
 </resources>

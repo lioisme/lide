@@ -5,17 +5,19 @@
  "author": "Duo",
  "platform": "所有环境",
  "source_date": "2023年08月14日 09:14:06",
- "hits": 473,
+ "hits": 474,
  "up": 6,
  "favorite": 10,
  "comment": 4,
  "source_file": "小游戏\\3251_3D_三体.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "universal",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 25,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 3055,
+ "char_count": 74146,
  "confidence": "static_review"
 }

@@ -5,7 +5,7 @@
  "author": "碳昔",
  "platform": "所有环境",
  "source_date": "2023年07月21日 11:21:21",
- "hits": 130,
+ "hits": 131,
  "up": 0,
  "favorite": 4,
  "comment": 0,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "universal",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 16,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 40,
+ "char_count": 691,
  "confidence": "static_review"
 }

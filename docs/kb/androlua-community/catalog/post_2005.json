@@ -5,7 +5,7 @@
  "author": "No one cares",
  "platform": "AndroLua,Fusion App2",
  "source_date": "2022年10月27日 09:14:38",
- "hits": 299,
+ "hits": 300,
  "up": 4,
  "favorite": 21,
  "comment": 1,
@@ -14,7 +14,7 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
+ "truncation": "truncated_tail",
  "line_count": 5,
  "char_count": 158,
  "confidence": "static_review"

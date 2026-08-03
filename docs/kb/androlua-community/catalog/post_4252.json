@@ -10,15 +10,14 @@
  "favorite": 44,
  "comment": 8,
  "source_file": "布局代码\\4252_搜索列表.lua",
- "kind": "text_note",
+ "kind": "code_demo",
  "verdict": "negative",
- "portability": "universal",
+ "portability": "android_api",
  "flags": [
-  "short_text",
   "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 167,
+ "char_count": 3340,
  "confidence": "static_review"
 }

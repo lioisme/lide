@@ -5,7 +5,7 @@
  "author": "胡斯凯",
  "platform": "所有环境",
  "source_date": "2023年11月23日 00:58:19",
- "hits": 265,
+ "hits": 266,
  "up": 1,
  "favorite": 6,
  "comment": 0,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "universal",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 20,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 64,
+ "char_count": 1140,
  "confidence": "static_review"
 }

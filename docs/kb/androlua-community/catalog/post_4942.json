@@ -5,17 +5,21 @@
  "author": "该困",
  "platform": "Fusion App2",
  "source_date": "2025年07月21日 18:09:46",
- "hits": 801,
+ "hits": 802,
  "up": 6,
  "favorite": 22,
  "comment": 3,
  "source_file": "Layout布局\\4942_简单优雅好看的帖子列表.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 16,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 571,
+ "char_count": 14457,
  "confidence": "static_review"
 }

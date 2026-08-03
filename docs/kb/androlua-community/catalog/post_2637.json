@@ -5,19 +5,17 @@
  "author": "迷糊.",
  "platform": "所有环境",
  "source_date": "2023年04月08日 10:56:41",
- "hits": 488,
+ "hits": 489,
  "up": 5,
  "favorite": 11,
  "comment": 4,
  "source_file": "小工具\\2637_获取蓝奏云可用域名.lua",
- "kind": "text_note",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "universal",
- "flags": [
-  "short_text"
- ],
- "truncation": "complete_or_unverifiable",
- "line_count": 19,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 77,
+ "char_count": 1663,
  "confidence": "static_review"
 }

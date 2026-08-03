@@ -5,19 +5,20 @@
  "author": "sky",
  "platform": "所有环境",
  "source_date": "2026年05月03日 10:56:37",
- "hits": 495,
+ "hits": 496,
  "up": 3,
  "favorite": 9,
  "comment": 4,
  "source_file": "小工具\\5310_LUA环境分析.lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "universal",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "obsolete",
  "flags": [
-  "short_text"
+  "obsolete",
+  "obsolete"
  ],
- "truncation": "preview_truncated",
- "line_count": 10,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 3203,
+ "char_count": 151395,
  "confidence": "static_review"
 }

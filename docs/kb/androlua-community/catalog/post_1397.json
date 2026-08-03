@@ -5,20 +5,17 @@
  "author": "oゞ夜色乄未央ぁ",
  "platform": "所有环境",
  "source_date": "2022年03月14日 19:10:17",
- "hits": 1188,
+ "hits": 1189,
  "up": 12,
  "favorite": 47,
  "comment": 3,
  "source_file": "UI控件\\1397_Switch开关控件.lua",
- "kind": "text_note",
- "verdict": "negative",
- "portability": "universal",
- "flags": [
-  "short_text",
-  "global_pollution"
- ],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 69,
+ "char_count": 1380,
  "confidence": "static_review"
 }

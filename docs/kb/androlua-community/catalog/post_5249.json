@@ -11,13 +11,11 @@
  "comment": 3,
  "source_file": "网络请求\\5249_小云雀灵感视频解析.lua",
  "kind": "code_demo",
- "verdict": "negative",
- "portability": "universal",
- "flags": [
-  "global_pollution"
- ],
- "truncation": "preview_truncated",
- "line_count": 17,
- "char_count": 300,
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 81,
+ "char_count": 2254,
  "confidence": "static_review"
 }

@@ -5,17 +5,20 @@
  "author": "NekoLaska",
  "platform": "所有环境",
  "source_date": "2023年01月19日 13:59:04",
- "hits": 298,
+ "hits": 299,
  "up": 3,
  "favorite": 8,
  "comment": 0,
  "source_file": "数据存储\\2347_SharedPreferences使用.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "obsolete",
+ "flags": [
+  "obsolete",
+  "obsolete"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 50,
+ "char_count": 1337,
  "confidence": "static_review"
 }

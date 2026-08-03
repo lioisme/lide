@@ -5,22 +5,21 @@
  "author": "碳昔",
  "platform": "所有环境",
  "source_date": "2022年11月05日 22:58:51",
- "hits": 528,
+ "hits": 529,
  "up": 11,
  "favorite": 34,
  "comment": 4,
  "source_file": "小工具\\2037_动漫_追番表.lua",
- "kind": "fragment",
+ "kind": "code_demo",
  "verdict": "negative",
  "portability": "host_private",
  "flags": [
-  "truncated_tail",
   "androlua_private",
   "private_api",
-  "incomplete_fragment"
+  "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 245,
+ "char_count": 6056,
  "confidence": "static_review"
 }

@@ -5,21 +5,20 @@
  "author": "四十次日落",
  "platform": "Fusion App2",
  "source_date": "2026年05月27日 11:49:22",
- "hits": 631,
+ "hits": 632,
  "up": 4,
  "favorite": 9,
  "comment": 7,
  "source_file": "小工具\\5323_飞鸟·轻音.lua",
- "kind": "text_note",
+ "kind": "code_demo",
  "verdict": "negative",
  "portability": "editor_bound",
  "flags": [
-  "short_text",
   "editor_bound",
   "editor_bound"
  ],
- "truncation": "preview_truncated",
- "line_count": 9,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 4718,
+ "char_count": 152086,
  "confidence": "static_review"
 }

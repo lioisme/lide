@@ -5,20 +5,20 @@
  "author": "NekoLaska",
  "platform": "Fusion App2",
  "source_date": "2023年04月17日 13:01:10",
- "hits": 1331,
+ "hits": 1332,
  "up": 16,
  "favorite": 30,
  "comment": 5,
  "source_file": "布局教程\\2664_BottomNavigation+FragmentContainer测试.lua",
  "kind": "code_demo",
  "verdict": "negative",
- "portability": "editor_bound",
+ "portability": "host_private",
  "flags": [
-  "editor_bound",
-  "editor_bound"
+  "androlua_private",
+  "private_api"
  ],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 156,
+ "char_count": 5149,
  "confidence": "static_review"
 }

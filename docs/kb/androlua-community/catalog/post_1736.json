@@ -5,22 +5,21 @@
  "author": "筱",
  "platform": "Fusion App1",
  "source_date": "2022年08月17日 22:54:58",
- "hits": 306,
+ "hits": 307,
  "up": 3,
  "favorite": 12,
  "comment": 1,
  "source_file": "小工具\\1736_每日星座运势.lua",
- "kind": "fragment",
+ "kind": "code_demo",
  "verdict": "negative",
  "portability": "host_private",
  "flags": [
-  "truncated_tail",
   "androlua_private",
   "private_api",
-  "incomplete_fragment"
+  "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "truncation": "truncated_tail",
+ "line_count": 411,
+ "char_count": 11172,
  "confidence": "static_review"
 }

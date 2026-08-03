@@ -5,7 +5,7 @@
  "author": "听风诉说",
  "platform": "AndLua",
  "source_date": "2026年01月18日 13:59:22",
- "hits": 407,
+ "hits": 408,
  "up": 3,
  "favorite": 8,
  "comment": 1,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 13,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 158,
+ "char_count": 3612,
  "confidence": "static_review"
 }

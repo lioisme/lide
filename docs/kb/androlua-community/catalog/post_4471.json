@@ -10,14 +10,12 @@
  "favorite": 17,
  "comment": 8,
  "source_file": "网络请求\\4471_OpenAI非流式大模型请求工具.lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "universal",
- "flags": [
-  "short_text"
- ],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 141,
+ "char_count": 3911,
  "confidence": "static_review"
 }

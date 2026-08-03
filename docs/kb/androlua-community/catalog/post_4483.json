@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 5,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 115,
+ "char_count": 4187,
  "confidence": "static_review"
 }

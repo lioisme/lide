@@ -2,238 +2,229 @@
  "total": 2144,
  "posts_written": 2144,
  "by_kind": {
-  "code_demo": 1439,
-  "fragment": 234,
-  "text_note": 461,
-  "reference_sheet": 5,
-  "announce": 5
+  "code_demo": 1950,
+  "text_note": 154,
+  "fragment": 26,
+  "reference_sheet": 11,
+  "announce": 3
  },
  "by_verdict": {
-  "negative": 435,
-  "neutral": 573,
-  "positive": 1128,
+  "negative": 922,
+  "positive": 1005,
+  "neutral": 209,
   "harmful": 8
  },
  "by_portability": {
-  "android_api": 1054,
-  "universal": 915,
-  "host_private": 67,
-  "editor_bound": 104,
-  "obsolete": 4
+  "android_api": 1067,
+  "universal": 602,
+  "host_private": 273,
+  "editor_bound": 170,
+  "obsolete": 32
  },
- "by_source_truncation": {
-  "preview_truncated": 1740,
-  "complete_or_unverifiable": 404
+ "by_truncation": {
+  "truncated_tail": 359,
+  "complete": 1785
  },
  "by_category_verdict": {
   "实用代码": {
-   "negative": 51,
-   "neutral": 53,
-   "positive": 130,
-   "harmful": 2
+   "negative": 104,
+   "positive": 114,
+   "neutral": 18
   },
   "加密解密": {
-   "neutral": 4,
-   "positive": 2,
-   "negative": 2
+   "positive": 3,
+   "negative": 4,
+   "neutral": 1
   },
   "Activity活动": {
-   "positive": 21,
-   "neutral": 19,
-   "negative": 16
+   "positive": 17,
+   "neutral": 7,
+   "negative": 32
   },
   "系统": {
-   "positive": 54,
-   "negative": 16,
-   "neutral": 31
+   "positive": 52,
+   "negative": 36,
+   "neutral": 13
   },
   "Androlua教程": {
-   "neutral": 18,
-   "negative": 10,
-   "positive": 30
+   "neutral": 6,
+   "positive": 29,
+   "negative": 22,
+   "harmful": 1
   },
   "远程验证": {
    "neutral": 2
   },
   "JS教程": {
-   "positive": 17,
-   "neutral": 17,
-   "negative": 2
+   "positive": 11,
+   "neutral": 9,
+   "harmful": 3,
+   "negative": 13
   },
   "动画教程": {
-   "neutral": 27,
-   "positive": 24,
-   "negative": 17
+   "neutral": 3,
+   "positive": 27,
+   "negative": 38
   },
   "基础代码": {
-   "positive": 50,
-   "neutral": 31,
-   "negative": 4,
-   "harmful": 1
-  },
-  "Lua代码": {
-   "positive": 140,
-   "neutral": 50,
-   "negative": 15
-  },
-  "浏览器": {
-   "neutral": 14,
-   "negative": 11,
-   "positive": 38,
+   "neutral": 16,
+   "positive": 46,
+   "negative": 22,
    "harmful": 2
   },
+  "Lua代码": {
+   "positive": 146,
+   "negative": 37,
+   "neutral": 22
+  },
+  "浏览器": {
+   "positive": 30,
+   "negative": 20,
+   "neutral": 15
+  },
   "适配器": {
-   "positive": 11,
-   "neutral": 2,
-   "negative": 4
+   "positive": 9,
+   "neutral": 1,
+   "negative": 7
   },
   "控件属性": {
-   "neutral": 35,
-   "negative": 36,
-   "positive": 39
+   "neutral": 27,
+   "positive": 41,
+   "negative": 42
   },
   "自绘制": {
-   "neutral": 17,
-   "positive": 46,
-   "negative": 13
+   "positive": 38,
+   "neutral": 2,
+   "negative": 36
   },
   "编码转换": {
    "positive": 10,
-   "negative": 2,
-   "neutral": 2
-  },
-  "小工具": {
-   "negative": 56,
-   "neutral": 64,
-   "positive": 137,
-   "harmful": 1
-  },
-  "布局教程": {
-   "neutral": 50,
-   "negative": 48,
-   "positive": 58
-  },
-  "数据存储": {
-   "negative": 2,
-   "neutral": 2,
-   "positive": 4
-  },
-  "Intent通信": {
-   "positive": 31,
-   "negative": 31,
-   "neutral": 14
-  },
-  "UI控件": {
-   "negative": 15,
-   "neutral": 12,
-   "positive": 24,
-   "harmful": 1
-  },
-  "文件操作": {
-   "neutral": 12,
-   "positive": 29,
-   "negative": 5
-  },
-  "安卓教程": {
-   "positive": 31,
-   "negative": 12,
-   "neutral": 13
-  },
-  "网络操作": {
-   "negative": 8,
-   "positive": 10,
-   "neutral": 3
-  },
-  "字符处理": {
-   "neutral": 10,
-   "negative": 4,
-   "positive": 10
-  },
-  "网络请求": {
-   "positive": 18,
-   "neutral": 9,
-   "negative": 5
-  },
-  "远程更新": {
-   "positive": 9,
-   "neutral": 3,
    "negative": 4
   },
+  "小工具": {
+   "negative": 161,
+   "positive": 87,
+   "neutral": 8,
+   "harmful": 2
+  },
+  "布局教程": {
+   "negative": 73,
+   "neutral": 16,
+   "positive": 67
+  },
+  "数据存储": {
+   "positive": 3,
+   "negative": 4,
+   "neutral": 1
+  },
+  "Intent通信": {
+   "positive": 36,
+   "negative": 33,
+   "neutral": 7
+  },
+  "UI控件": {
+   "positive": 24,
+   "neutral": 3,
+   "negative": 25
+  },
+  "文件操作": {
+   "positive": 23,
+   "neutral": 7,
+   "negative": 16
+  },
+  "安卓教程": {
+   "positive": 28,
+   "negative": 28
+  },
+  "网络操作": {
+   "negative": 13,
+   "positive": 8
+  },
+  "字符处理": {
+   "neutral": 5,
+   "negative": 6,
+   "positive": 13
+  },
+  "网络请求": {
+   "positive": 17,
+   "negative": 14,
+   "neutral": 1
+  },
+  "远程更新": {
+   "negative": 13,
+   "positive": 3
+  },
   "Menu菜单": {
-   "positive": 4,
-   "neutral": 2
+   "positive": 5,
+   "negative": 1
   },
   "SAF访问": {
    "positive": 1,
    "negative": 2
   },
   "table表": {
-   "negative": 2,
+   "negative": 4,
    "positive": 8,
-   "neutral": 3
+   "neutral": 1
   },
   "jsoup": {
-   "positive": 3,
-   "negative": 1
-  },
-  "Layout布局": {
-   "positive": 24,
-   "neutral": 7,
    "negative": 4
   },
+  "Layout布局": {
+   "positive": 18,
+   "negative": 14,
+   "neutral": 3
+  },
   "Adapter容器": {
-   "neutral": 3,
-   "negative": 4,
-   "positive": 4
+   "positive": 6,
+   "negative": 5
   },
   "Java教程": {
-   "positive": 9,
+   "positive": 7,
    "neutral": 2,
-   "negative": 1
+   "negative": 3
   },
   "对话框": {
-   "positive": 5,
-   "neutral": 2
+   "negative": 2,
+   "neutral": 1,
+   "positive": 4
   },
   "手册公告": {
-   "neutral": 5,
-   "positive": 2
+   "neutral": 3,
+   "positive": 4
   },
   "小游戏": {
-   "negative": 15,
-   "neutral": 21,
-   "positive": 46
+   "negative": 47,
+   "positive": 30,
+   "neutral": 5
   },
   "xpath": {
-   "positive": 3,
-   "negative": 1
+   "negative": 4
   },
   "远程公告": {
    "negative": 2
   },
   "布局代码": {
-   "neutral": 3,
-   "positive": 13,
-   "negative": 6
+   "positive": 8,
+   "negative": 14
   },
   "网络爬虫": {
-   "positive": 15,
-   "negative": 7,
-   "neutral": 2
+   "negative": 15,
+   "positive": 8,
+   "neutral": 1
   },
   "Lua教程": {
-   "neutral": 5,
-   "positive": 9
-  },
-  "设备系统": {
-   "neutral": 2,
-   "positive": 5,
-   "harmful": 1,
+   "positive": 12,
+   "neutral": 1,
    "negative": 1
   },
+  "设备系统": {
+   "negative": 1,
+   "positive": 8
+  },
   "消息通知": {
-   "neutral": 1,
-   "positive": 4
+   "positive": 4,
+   "neutral": 1
   },
   "公告": {
    "neutral": 1

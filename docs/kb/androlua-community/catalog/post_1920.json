@@ -5,20 +5,17 @@
  "author": "⑨φZL",
  "platform": "所有环境",
  "source_date": "2022年09月26日 16:31:05",
- "hits": 316,
+ "hits": 317,
  "up": 6,
  "favorite": 17,
  "comment": 3,
  "source_file": "网络操作\\1920_扇贝每日一句接口封装.lua",
- "kind": "text_note",
- "verdict": "negative",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "universal",
- "flags": [
-  "short_text",
-  "global_pollution"
- ],
- "truncation": "preview_truncated",
- "line_count": 18,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 94,
+ "char_count": 2427,
  "confidence": "static_review"
 }

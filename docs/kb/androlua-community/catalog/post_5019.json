@@ -11,11 +11,14 @@
  "comment": 0,
  "source_file": "Layout布局\\5019_LayoutInflater（自用布局加载模块）.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "universal",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 730,
+ "char_count": 19574,
  "confidence": "static_review"
 }

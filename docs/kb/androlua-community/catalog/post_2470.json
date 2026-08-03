@@ -5,8 +5,8 @@
  "author": "小白·马",
  "platform": "Fusion App2",
  "source_date": "2023年02月15日 17:58:23",
- "hits": 414,
- "up": 4,
+ "hits": 416,
+ "up": 5,
  "favorite": 18,
  "comment": 2,
  "source_file": "实用代码\\2470_使用fa2内置的图片查看器.lua",
@@ -17,8 +17,8 @@
   "editor_bound",
   "editor_bound"
  ],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 57,
+ "char_count": 1616,
  "confidence": "static_review"
 }

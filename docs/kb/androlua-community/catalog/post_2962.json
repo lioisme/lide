@@ -5,7 +5,7 @@
  "author": "Basic",
  "platform": "所有环境",
  "source_date": "2023年06月22日 11:43:11",
- "hits": 295,
+ "hits": 296,
  "up": 2,
  "favorite": 11,
  "comment": 2,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "universal",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 30,
+ "char_count": 737,
  "confidence": "static_review"
 }

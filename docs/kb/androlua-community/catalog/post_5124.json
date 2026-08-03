@@ -11,11 +11,14 @@
  "comment": 0,
  "source_file": "自绘制\\5124_悬浮窗帧率显示.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 13,
- "char_count": 300,
+ "flags": [
+  "chinese_identifier",
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 419,
+ "char_count": 11417,
  "confidence": "static_review"
 }

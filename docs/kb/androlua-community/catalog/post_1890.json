@@ -5,21 +5,19 @@
  "author": "青柠(YouCun)",
  "platform": "所有环境",
  "source_date": "2022年09月16日 09:31:34",
- "hits": 726,
+ "hits": 727,
  "up": 3,
  "favorite": 15,
  "comment": 11,
  "source_file": "实用代码\\1890_反寂寞人.lua",
- "kind": "text_note",
- "verdict": "harmful",
- "portability": "universal",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
  "flags": [
-  "short_text",
-  "global_pollution",
-  "harmful_elevated"
+  "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 19,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 110,
+ "char_count": 2502,
  "confidence": "static_review"
 }

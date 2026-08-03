@@ -5,20 +5,17 @@
  "author": "•⤙•/k",
  "platform": "AndLua",
  "source_date": "2023年04月22日 20:05:21",
- "hits": 291,
+ "hits": 292,
  "up": 2,
  "favorite": 10,
  "comment": 0,
  "source_file": "控件属性\\2695_点击_水波纹.lua",
- "kind": "text_note",
- "verdict": "negative",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "universal",
- "flags": [
-  "short_text",
-  "global_pollution"
- ],
- "truncation": "preview_truncated",
- "line_count": 15,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 22,
+ "char_count": 390,
  "confidence": "static_review"
 }

@@ -10,15 +10,12 @@
  "favorite": 13,
  "comment": 1,
  "source_file": "安卓教程\\5243_agsl实现liquidglass性能不错.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "android_api",
- "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
- ],
- "truncation": "preview_truncated",
- "line_count": 13,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 183,
+ "char_count": 6392,
  "confidence": "static_review"
 }

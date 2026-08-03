@@ -5,17 +5,19 @@
  "author": "wzsy233",
  "platform": "所有环境",
  "source_date": "2023年01月16日 23:01:47",
- "hits": 351,
+ "hits": 352,
  "up": 4,
  "favorite": 15,
  "comment": 3,
  "source_file": "文件操作\\2333_使用BufferedReader_Writer读取和写入文件.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 8,
- "char_count": 300,
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 160,
+ "char_count": 4461,
  "confidence": "static_review"
 }

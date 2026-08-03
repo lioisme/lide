@@ -5,21 +5,19 @@
  "author": "九天",
  "platform": "Fusion App1",
  "source_date": "2022年08月16日 23:34:12",
- "hits": 570,
+ "hits": 571,
  "up": 9,
  "favorite": 37,
  "comment": 7,
  "source_file": "小工具\\1720_微信零钱界面.lua",
- "kind": "text_note",
+ "kind": "code_demo",
  "verdict": "negative",
  "portability": "universal",
  "flags": [
-  "short_text",
-  "chinese_identifier",
-  "global_pollution"
+  "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 20,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 284,
+ "char_count": 6847,
  "confidence": "static_review"
 }

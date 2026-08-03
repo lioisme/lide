@@ -5,20 +5,17 @@
  "author": "沐风 - MFCompany",
  "platform": "所有环境",
  "source_date": "2023年07月01日 21:36:56",
- "hits": 993,
+ "hits": 995,
  "up": 14,
  "favorite": 36,
  "comment": 8,
  "source_file": "Intent通信\\3006_QQ登陆.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "android_api",
- "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
- ],
- "truncation": "preview_truncated",
- "line_count": 10,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 339,
+ "char_count": 10446,
  "confidence": "static_review"
 }

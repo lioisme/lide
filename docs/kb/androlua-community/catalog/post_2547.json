@@ -5,17 +5,20 @@
  "author": "⁢",
  "platform": "AndLua",
  "source_date": "2023年03月04日 18:26:39",
- "hits": 254,
+ "hits": 255,
  "up": 7,
  "favorite": 24,
  "comment": 1,
  "source_file": "实用代码\\2547_读取手机号.lua",
- "kind": "code_demo",
- "verdict": "positive",
+ "kind": "reference_sheet",
+ "verdict": "neutral",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 9,
- "char_count": 300,
+ "flags": [
+  "xml_list",
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 22,
+ "char_count": 531,
  "confidence": "static_review"
 }

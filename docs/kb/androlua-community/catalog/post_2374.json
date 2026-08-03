@@ -5,19 +5,21 @@
  "author": "海纳百氚，有容乃大",
  "platform": "所有环境",
  "source_date": "2023年01月24日 19:58:56",
- "hits": 701,
+ "hits": 702,
  "up": 7,
  "favorite": 33,
  "comment": 13,
  "source_file": "小工具\\2374_百度移动统计详细使用方法.lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "universal",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
  "flags": [
-  "short_text"
+  "androlua_private",
+  "private_api",
+  "remote_exec"
  ],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "truncation": "truncated_tail",
+ "line_count": 112,
+ "char_count": 2372,
  "confidence": "static_review"
 }

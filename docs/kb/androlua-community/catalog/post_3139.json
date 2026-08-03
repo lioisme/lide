@@ -5,19 +5,19 @@
  "author": "Cheese",
  "platform": "所有环境",
  "source_date": "2023年07月24日 02:33:16",
- "hits": 887,
+ "hits": 888,
  "up": 26,
  "favorite": 48,
  "comment": 21,
  "source_file": "动画教程\\3139_ChangeBounds_Transition.lua",
- "kind": "text_note",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "negative",
  "portability": "android_api",
  "flags": [
-  "short_text"
+  "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 9,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 44,
+ "char_count": 1076,
  "confidence": "static_review"
 }

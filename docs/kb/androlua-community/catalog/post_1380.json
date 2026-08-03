@@ -5,7 +5,7 @@
  "author": "如果爱有遗憾",
  "platform": "AndroLua,AndLua",
  "source_date": "2022年02月22日 23:09:37",
- "hits": 225,
+ "hits": 226,
  "up": 3,
  "favorite": 4,
  "comment": 2,
@@ -14,7 +14,7 @@
  "verdict": "positive",
  "portability": "universal",
  "flags": [],
- "truncation": "preview_truncated",
+ "truncation": "truncated_tail",
  "line_count": 6,
  "char_count": 129,
  "confidence": "static_review"

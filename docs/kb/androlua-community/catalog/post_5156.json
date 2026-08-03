@@ -5,7 +5,7 @@
  "author": "橘猫",
  "platform": "AndroLua,reOpenLua,OpenLuaX,AndLua",
  "source_date": "2025年12月25日 02:36:20",
- "hits": 342,
+ "hits": 343,
  "up": 5,
  "favorite": 16,
  "comment": 2,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 6,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 30,
+ "char_count": 1078,
  "confidence": "static_review"
 }

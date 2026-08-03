@@ -5,7 +5,7 @@
  "author": "白隐Hakuin",
  "platform": "所有环境",
  "source_date": "2022年10月27日 08:42:55",
- "hits": 231,
+ "hits": 232,
  "up": 6,
  "favorite": 16,
  "comment": 4,
@@ -14,7 +14,7 @@
  "verdict": "positive",
  "portability": "universal",
  "flags": [],
- "truncation": "complete_or_unverifiable",
+ "truncation": "complete",
  "line_count": 6,
  "char_count": 193,
  "confidence": "static_review"

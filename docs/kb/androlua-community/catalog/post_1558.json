@@ -5,17 +5,20 @@
  "author": "小白哥哥",
  "platform": "所有环境",
  "source_date": "2022年06月26日 12:08:24",
- "hits": 467,
+ "hits": 468,
  "up": 4,
  "favorite": 15,
  "comment": 4,
  "source_file": "实用代码\\1558_快捷方式.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 157,
+ "char_count": 3526,
  "confidence": "static_review"
 }

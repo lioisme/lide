@@ -5,17 +5,19 @@
  "author": "易富焙",
  "platform": "AndroLua",
  "source_date": "2023年04月08日 14:02:10",
- "hits": 1251,
+ "hits": 1252,
  "up": 22,
  "favorite": 71,
  "comment": 8,
  "source_file": "小工具\\2638_仿MT管理器音乐播放器.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 19,
- "char_count": 300,
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 268,
+ "char_count": 5422,
  "confidence": "static_review"
 }

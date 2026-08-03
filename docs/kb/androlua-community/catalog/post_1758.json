@@ -5,19 +5,20 @@
  "author": "小白·马",
  "platform": "Fusion App2",
  "source_date": "2022年08月19日 20:55:00",
- "hits": 834,
+ "hits": 835,
  "up": 9,
  "favorite": 32,
  "comment": 3,
  "source_file": "布局教程\\1758_ViewPager2_使用实例（滑动动画）.lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "android_api",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
  "flags": [
-  "short_text"
+  "androlua_private",
+  "private_api"
  ],
- "truncation": "preview_truncated",
- "line_count": 10,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 181,
+ "char_count": 4678,
  "confidence": "static_review"
 }

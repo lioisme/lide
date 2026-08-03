@@ -5,20 +5,21 @@
  "author": "kamihitoe",
  "platform": "Fusion App2",
  "source_date": "2023年04月30日 08:20:43",
- "hits": 265,
+ "hits": 268,
  "up": 2,
  "favorite": 5,
  "comment": 0,
  "source_file": "浏览器\\2712_FusionWebView.lua",
  "kind": "code_demo",
  "verdict": "negative",
- "portability": "editor_bound",
+ "portability": "host_private",
  "flags": [
-  "editor_bound",
-  "editor_bound"
+  "androlua_private",
+  "private_api",
+  "global_pollution"
  ],
- "truncation": "preview_truncated",
- "line_count": 6,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 67,
+ "char_count": 2028,
  "confidence": "static_review"
 }

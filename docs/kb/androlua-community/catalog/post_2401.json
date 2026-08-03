@@ -5,19 +5,17 @@
  "author": "壹影",
  "platform": "所有环境",
  "source_date": "2023年01月30日 21:17:46",
- "hits": 463,
+ "hits": 464,
  "up": 7,
  "favorite": 17,
  "comment": 9,
  "source_file": "系统\\2401_Lua安全沙盒实现-方法1.lua",
- "kind": "text_note",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "universal",
- "flags": [
-  "short_text"
- ],
- "truncation": "preview_truncated",
- "line_count": 7,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 128,
+ "char_count": 2613,
  "confidence": "static_review"
 }

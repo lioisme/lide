@@ -5,17 +5,20 @@
  "author": "智",
  "platform": "所有环境",
  "source_date": "2023年06月05日 21:51:20",
- "hits": 443,
+ "hits": 444,
  "up": 4,
  "favorite": 7,
  "comment": 1,
  "source_file": "控件属性\\2902_androidx.palette.graphics.Palette_取壁纸强调色,实现伪动态取色.lua",
- "kind": "code_demo",
- "verdict": "positive",
+ "kind": "reference_sheet",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "flags": [
+  "xml_list",
+  "remote_exec"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 53,
+ "char_count": 1640,
  "confidence": "static_review"
 }

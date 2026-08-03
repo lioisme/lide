@@ -5,7 +5,7 @@
  "author": "雪子机器人开发",
  "platform": "Fusion App1",
  "source_date": "2023年05月31日 18:49:42",
- "hits": 544,
+ "hits": 545,
  "up": 3,
  "favorite": 12,
  "comment": 1,
@@ -14,10 +14,11 @@
  "verdict": "negative",
  "portability": "android_api",
  "flags": [
-  "chinese_identifier"
+  "chinese_identifier",
+  "global_pollution"
  ],
- "truncation": "preview_truncated",
- "line_count": 20,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 269,
+ "char_count": 7144,
  "confidence": "static_review"
 }

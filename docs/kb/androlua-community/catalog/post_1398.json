@@ -5,19 +5,20 @@
  "author": "oゞ夜色乄未央ぁ",
  "platform": "所有环境",
  "source_date": "2022年03月15日 08:50:10",
- "hits": 1566,
+ "hits": 1567,
  "up": 11,
  "favorite": 50,
  "comment": 6,
  "source_file": "UI控件\\1398_VideoView视频控件.lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "universal",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "obsolete",
  "flags": [
-  "short_text"
+  "obsolete",
+  "obsolete"
  ],
- "truncation": "preview_truncated",
- "line_count": 17,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 104,
+ "char_count": 2531,
  "confidence": "static_review"
 }

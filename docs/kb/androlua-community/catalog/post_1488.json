@@ -5,19 +5,21 @@
  "author": "阿良",
  "platform": "AndroLua,AndLua",
  "source_date": "2022年05月25日 18:51:47",
- "hits": 703,
+ "hits": 704,
  "up": 15,
  "favorite": 70,
  "comment": 14,
  "source_file": "布局教程\\1488_远程加Q授权弹窗源码-客户端.lua",
  "kind": "code_demo",
  "verdict": "negative",
- "portability": "android_api",
+ "portability": "host_private",
  "flags": [
+  "androlua_private",
+  "private_api",
   "chinese_identifier"
  ],
- "truncation": "complete_or_unverifiable",
- "line_count": 9,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 392,
+ "char_count": 10138,
  "confidence": "static_review"
 }

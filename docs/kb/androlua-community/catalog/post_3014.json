@@ -5,20 +5,20 @@
  "author": "•⤙•/k",
  "platform": "AndLua",
  "source_date": "2023年07月02日 17:36:37",
- "hits": 1436,
+ "hits": 1437,
  "up": 8,
  "favorite": 32,
  "comment": 29,
  "source_file": "布局教程\\3014_仿哔哩哔哩的视频播放布局.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "negative",
  "portability": "android_api",
  "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
+  "chinese_identifier",
+  "global_pollution"
  ],
- "truncation": "preview_truncated",
- "line_count": 18,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 2228,
+ "char_count": 68147,
  "confidence": "static_review"
 }

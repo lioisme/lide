@@ -5,17 +5,20 @@
  "author": "kamihitoe",
  "platform": "所有环境",
  "source_date": "2023年05月14日 07:05:40",
- "hits": 173,
+ "hits": 174,
  "up": 4,
  "favorite": 5,
  "comment": 0,
  "source_file": "Androlua教程\\2798_luajava.override扩展.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "universal",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 13,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "complete",
+ "line_count": 41,
+ "char_count": 1249,
  "confidence": "static_review"
 }

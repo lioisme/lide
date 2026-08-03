@@ -5,17 +5,21 @@
  "author": "碳昔",
  "platform": "所有环境",
  "source_date": "2022年08月10日 16:06:10",
- "hits": 1296,
+ "hits": 1298,
  "up": 12,
  "favorite": 40,
  "comment": 8,
  "source_file": "实用代码\\1694_二要素验效.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 10,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 1061,
+ "char_count": 30386,
  "confidence": "static_review"
 }

@@ -5,20 +5,17 @@
  "author": "奥姆",
  "platform": "所有环境",
  "source_date": "2023年04月09日 15:52:46",
- "hits": 280,
+ "hits": 281,
  "up": 4,
  "favorite": 6,
  "comment": 8,
  "source_file": "Lua代码\\2639_抽人.lua",
- "kind": "text_note",
- "verdict": "negative",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "universal",
- "flags": [
-  "short_text",
-  "global_pollution"
- ],
- "truncation": "preview_truncated",
- "line_count": 17,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 52,
+ "char_count": 891,
  "confidence": "static_review"
 }

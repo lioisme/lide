@@ -5,17 +5,19 @@
  "author": "oゞ夜色乄未央ぁ",
  "platform": "",
  "source_date": "2020年05月01日 12:26:18",
- "hits": 213,
+ "hits": 214,
  "up": 4,
  "favorite": 9,
  "comment": 0,
  "source_file": "动画教程\\1104_卡片跟随重影动画实战.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 78,
+ "char_count": 2037,
  "confidence": "static_review"
 }

@@ -10,15 +10,14 @@
  "favorite": 11,
  "comment": 9,
  "source_file": "基础代码\\3953_文字游戏「战斗系统」.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "negative",
  "portability": "android_api",
  "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
+  "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 669,
+ "char_count": 19578,
  "confidence": "static_review"
 }

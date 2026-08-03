@@ -5,17 +5,20 @@
  "author": "阙月",
  "platform": "所有环境",
  "source_date": "2023年12月29日 23:04:03",
- "hits": 577,
+ "hits": 579,
  "up": 1,
  "favorite": 10,
  "comment": 3,
  "source_file": "网络请求\\3699_有道文本翻译api.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 16,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 174,
+ "char_count": 7243,
  "confidence": "static_review"
 }

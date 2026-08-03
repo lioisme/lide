@@ -5,17 +5,21 @@
  "author": "Adam·Eva",
  "platform": "所有环境",
  "source_date": "2023年03月22日 23:30:54",
- "hits": 1038,
+ "hits": 1039,
  "up": 10,
  "favorite": 33,
  "comment": 5,
  "source_file": "适配器\\2597_LuaRecyclerAdapter.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 8,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 123,
+ "char_count": 3523,
  "confidence": "static_review"
 }

@@ -5,7 +5,7 @@
  "author": "破晓",
  "platform": "Fusion App2",
  "source_date": "2024年02月10日 14:21:16",
- "hits": 780,
+ "hits": 781,
  "up": 4,
  "favorite": 17,
  "comment": 8,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 254,
+ "char_count": 6829,
  "confidence": "static_review"
 }

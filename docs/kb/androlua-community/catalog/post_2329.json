@@ -5,17 +5,21 @@
  "author": "碳昔",
  "platform": "所有环境",
  "source_date": "2023年01月16日 11:16:37",
- "hits": 469,
+ "hits": 470,
  "up": 9,
  "favorite": 26,
  "comment": 5,
  "source_file": "小工具\\2329_酷我和网易云lrc格式化.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 17,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 151,
+ "char_count": 5070,
  "confidence": "static_review"
 }

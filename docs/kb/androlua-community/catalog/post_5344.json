@@ -5,7 +5,7 @@
  "author": "光之国大帝",
  "platform": "AndLua",
  "source_date": "2026年06月18日 16:14:45",
- "hits": 436,
+ "hits": 437,
  "up": 1,
  "favorite": 3,
  "comment": 1,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "complete_or_unverifiable",
- "line_count": 15,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 177,
+ "char_count": 5168,
  "confidence": "static_review"
 }

@@ -11,11 +11,13 @@
  "comment": 5,
  "source_file": "自绘制\\4630_随便仿的前端交互动效.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 164,
+ "char_count": 3578,
  "confidence": "static_review"
 }

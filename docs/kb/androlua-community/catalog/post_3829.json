@@ -5,20 +5,17 @@
  "author": "-",
  "platform": "AndLua",
  "source_date": "2024年01月31日 23:33:44",
- "hits": 300,
+ "hits": 301,
  "up": 6,
  "favorite": 18,
  "comment": 5,
  "source_file": "小工具\\3829_定位IP，不要忘了点个赞！嘻嘻，如果有会改的，帮我改一下，让它只显示省和市.lua",
- "kind": "text_note",
- "verdict": "negative",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "universal",
- "flags": [
-  "short_text",
-  "global_pollution"
- ],
- "truncation": "complete_or_unverifiable",
- "line_count": 16,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 28,
+ "char_count": 620,
  "confidence": "static_review"
 }

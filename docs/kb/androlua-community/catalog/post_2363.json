@@ -5,19 +5,21 @@
  "author": "归鸿",
  "platform": "所有环境",
  "source_date": "2023年01月22日 19:46:40",
- "hits": 653,
+ "hits": 654,
  "up": 16,
  "favorite": 39,
  "comment": 2,
  "source_file": "小工具\\2363_仿金铲铲之战弹窗.lua",
  "kind": "code_demo",
  "verdict": "negative",
- "portability": "android_api",
+ "portability": "host_private",
  "flags": [
+  "androlua_private",
+  "private_api",
   "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 10,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 211,
+ "char_count": 7022,
  "confidence": "static_review"
 }

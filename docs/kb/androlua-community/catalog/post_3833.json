@@ -5,7 +5,7 @@
  "author": "池⁧~喵⁧‭",
  "platform": "所有环境",
  "source_date": "2024年02月01日 12:00:28",
- "hits": 1386,
+ "hits": 1387,
  "up": 18,
  "favorite": 58,
  "comment": 7,
@@ -16,8 +16,8 @@
  "flags": [
   "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 10,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 37,
+ "char_count": 963,
  "confidence": "static_review"
 }

@@ -11,11 +11,13 @@
  "comment": 5,
  "source_file": "基础代码\\3989_百度搜图.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 7,
- "char_count": 300,
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 178,
+ "char_count": 4642,
  "confidence": "static_review"
 }

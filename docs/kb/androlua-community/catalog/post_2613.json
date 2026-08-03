@@ -5,20 +5,19 @@
  "author": "AstarLC",
  "platform": "AndLua",
  "source_date": "2023年03月30日 13:28:31",
- "hits": 417,
+ "hits": 418,
  "up": 5,
  "favorite": 5,
  "comment": 2,
  "source_file": "自绘制\\2613_Lua_Canvas_-_随便写的效果.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "negative",
  "portability": "android_api",
  "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
+  "global_pollution"
  ],
- "truncation": "preview_truncated",
- "line_count": 16,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 295,
+ "char_count": 7175,
  "confidence": "static_review"
 }

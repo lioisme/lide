@@ -5,17 +5,20 @@
  "author": "yinyong",
  "platform": "所有环境",
  "source_date": "2023年11月07日 22:53:32",
- "hits": 441,
+ "hits": 442,
  "up": 4,
  "favorite": 9,
  "comment": 3,
  "source_file": "基础代码\\3564_百度翻译API使用方法.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "obsolete",
+ "flags": [
+  "obsolete",
+  "obsolete"
+ ],
+ "truncation": "complete",
+ "line_count": 118,
+ "char_count": 2323,
  "confidence": "static_review"
 }

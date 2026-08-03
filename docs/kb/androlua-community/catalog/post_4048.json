@@ -11,11 +11,15 @@
  "comment": 0,
  "source_file": "jsoup\\4048_LanzouScraper.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "universal",
- "flags": [],
- "truncation": "complete_or_unverifiable",
- "line_count": 19,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "remote_exec"
+ ],
+ "truncation": "complete",
+ "line_count": 135,
+ "char_count": 2931,
  "confidence": "static_review"
 }

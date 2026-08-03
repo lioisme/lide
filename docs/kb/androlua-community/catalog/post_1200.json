@@ -5,17 +5,19 @@
  "author": "oゞ夜色乄未央ぁ",
  "platform": "",
  "source_date": "2021年02月11日 11:17:37",
- "hits": 717,
+ "hits": 718,
  "up": 2,
  "favorite": 20,
  "comment": 3,
  "source_file": "Intent通信\\1200_动态申请权限.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "neutral",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "flags": [
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 26,
+ "char_count": 688,
  "confidence": "static_review"
 }

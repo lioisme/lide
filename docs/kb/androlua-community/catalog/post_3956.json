@@ -10,12 +10,16 @@
  "favorite": 13,
  "comment": 6,
  "source_file": "基础代码\\3956_文字游戏「地图系统」.lua",
- "kind": "code_demo",
- "verdict": "positive",
+ "kind": "fragment",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 15,
- "char_count": 300,
+ "flags": [
+  "incomplete_mark",
+  "chinese_identifier",
+  "incomplete_fragment"
+ ],
+ "truncation": "complete",
+ "line_count": 591,
+ "char_count": 16870,
  "confidence": "static_review"
 }

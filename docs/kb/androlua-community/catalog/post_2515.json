@@ -11,11 +11,13 @@
  "comment": 22,
  "source_file": "布局教程\\2515_兴许是一个简洁美观的主页布局.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 17,
- "char_count": 300,
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 1153,
+ "char_count": 38082,
  "confidence": "static_review"
 }

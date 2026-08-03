@@ -5,19 +5,19 @@
  "author": "碳昔",
  "platform": "所有环境",
  "source_date": "2022年06月04日 13:30:12",
- "hits": 218,
+ "hits": 219,
  "up": 3,
  "favorite": 5,
  "comment": 0,
  "source_file": "文件操作\\1518_冒泡算法.lua",
- "kind": "text_note",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "negative",
  "portability": "universal",
  "flags": [
-  "short_text"
+  "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 3,
- "char_count": 300,
+ "truncation": "truncated_tail",
+ "line_count": 46,
+ "char_count": 1219,
  "confidence": "static_review"
 }

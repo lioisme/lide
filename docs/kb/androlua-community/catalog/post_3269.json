@@ -10,15 +10,12 @@
  "favorite": 6,
  "comment": 3,
  "source_file": "小工具\\3269_alua的xor随机算法加密.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "universal",
- "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
- ],
- "truncation": "preview_truncated",
- "line_count": 15,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 18,
+ "char_count": 391,
  "confidence": "static_review"
 }

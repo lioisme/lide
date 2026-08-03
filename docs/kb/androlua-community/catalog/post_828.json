@@ -5,18 +5,19 @@
  "author": "oゞ夜色乄未央ぁ",
  "platform": "",
  "source_date": "2020年05月01日 12:26:18",
- "hits": 133,
+ "hits": 134,
  "up": 2,
  "favorite": 9,
  "comment": 0,
  "source_file": "系统\\828_强制结束自身并清除数据.lua",
  "kind": "text_note",
- "verdict": "neutral",
+ "verdict": "negative",
  "portability": "universal",
  "flags": [
-  "short_text"
+  "short_text",
+  "os_exec"
  ],
- "truncation": "complete_or_unverifiable",
+ "truncation": "complete",
  "line_count": 2,
  "char_count": 64,
  "confidence": "static_review"

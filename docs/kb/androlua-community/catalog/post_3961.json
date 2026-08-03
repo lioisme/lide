@@ -5,7 +5,7 @@
  "author": "Mist",
  "platform": "所有环境",
  "source_date": "2024年03月10日 12:03:33",
- "hits": 846,
+ "hits": 847,
  "up": 1,
  "favorite": 10,
  "comment": 7,
@@ -16,7 +16,7 @@
  "flags": [
   "short_text"
  ],
- "truncation": "preview_truncated",
+ "truncation": "truncated_tail",
  "line_count": 10,
  "char_count": 152,
  "confidence": "static_review"

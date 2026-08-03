@@ -5,20 +5,20 @@
  "author": "诺~",
  "platform": "所有环境",
  "source_date": "2023年02月04日 11:58:25",
- "hits": 830,
+ "hits": 831,
  "up": 19,
  "favorite": 64,
  "comment": 13,
  "source_file": "小游戏\\2430_烟花.lua",
- "kind": "text_note",
+ "kind": "code_demo",
  "verdict": "negative",
- "portability": "universal",
+ "portability": "host_private",
  "flags": [
-  "short_text",
-  "global_pollution"
+  "androlua_private",
+  "private_api"
  ],
- "truncation": "preview_truncated",
- "line_count": 15,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 368,
+ "char_count": 9785,
  "confidence": "static_review"
 }

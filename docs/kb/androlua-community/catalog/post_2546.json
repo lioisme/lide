@@ -5,17 +5,20 @@
  "author": "dingyi",
  "platform": "所有环境",
  "source_date": "2023年03月04日 17:23:43",
- "hits": 400,
+ "hits": 401,
  "up": 3,
  "favorite": 7,
  "comment": 0,
  "source_file": "动画教程\\2546_旧版b站播放动画.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "universal",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 16,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "complete",
+ "line_count": 121,
+ "char_count": 2899,
  "confidence": "static_review"
 }

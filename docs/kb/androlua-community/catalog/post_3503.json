@@ -5,19 +5,20 @@
  "author": "壹影",
  "platform": "所有环境",
  "source_date": "2023年10月17日 09:55:24",
- "hits": 110,
+ "hits": 111,
  "up": 1,
  "favorite": 2,
  "comment": 0,
  "source_file": "JS教程\\3503_Js混淆_-1.lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "universal",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
  "flags": [
-  "text_only"
+  "editor_bound",
+  "editor_bound"
  ],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 155,
+ "char_count": 3760,
  "confidence": "static_review"
 }

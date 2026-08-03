@@ -5,7 +5,7 @@
  "author": "靐圝齉齾麤龖齉龘",
  "platform": "所有环境",
  "source_date": "2026年04月06日 20:08:43",
- "hits": 251,
+ "hits": 252,
  "up": 0,
  "favorite": 0,
  "comment": 1,
@@ -16,8 +16,8 @@
  "flags": [
   "chinese_identifier"
  ],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 86,
+ "char_count": 1822,
  "confidence": "static_review"
 }

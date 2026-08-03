@@ -10,15 +10,12 @@
  "favorite": 2,
  "comment": 0,
  "source_file": "小工具\\5180_ics文件解析.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "android_api",
- "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
- ],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 145,
+ "char_count": 3786,
  "confidence": "static_review"
 }

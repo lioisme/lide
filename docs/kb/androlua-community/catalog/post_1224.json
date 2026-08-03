@@ -5,7 +5,7 @@
  "author": "jies辰",
  "platform": "",
  "source_date": "2021年12月19日 18:03:15",
- "hits": 167,
+ "hits": 168,
  "up": 0,
  "favorite": 5,
  "comment": 0,
@@ -17,7 +17,7 @@
   "editor_bound",
   "editor_bound"
  ],
- "truncation": "complete_or_unverifiable",
+ "truncation": "complete",
  "line_count": 5,
  "char_count": 181,
  "confidence": "static_review"

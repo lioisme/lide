@@ -5,7 +5,7 @@
  "author": "NekoLaska",
  "platform": "Fusion App2,reOpenLua,OpenLuaX",
  "source_date": "2025年01月05日 11:55:13",
- "hits": 529,
+ "hits": 530,
  "up": 8,
  "favorite": 24,
  "comment": 1,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 78,
+ "char_count": 1615,
  "confidence": "static_review"
 }

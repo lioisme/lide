@@ -5,7 +5,7 @@
  "author": "NekoLaska",
  "platform": "Fusion App2",
  "source_date": "2023年06月12日 13:27:06",
- "hits": 422,
+ "hits": 423,
  "up": 3,
  "favorite": 10,
  "comment": 0,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 10,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 53,
+ "char_count": 1184,
  "confidence": "static_review"
 }

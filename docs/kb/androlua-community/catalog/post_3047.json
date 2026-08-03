@@ -5,19 +5,22 @@
  "author": "破晓",
  "platform": "Fusion App2",
  "source_date": "2023年07月09日 19:20:39",
- "hits": 1766,
+ "hits": 1767,
  "up": 14,
  "favorite": 50,
  "comment": 17,
  "source_file": "文件操作\\3047_手册文件管理.lua",
- "kind": "text_note",
- "verdict": "neutral",
- "portability": "universal",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
  "flags": [
-  "short_text"
+  "androlua_private",
+  "private_api",
+  "chinese_identifier",
+  "global_pollution"
  ],
- "truncation": "preview_truncated",
- "line_count": 9,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 712,
+ "char_count": 21225,
  "confidence": "static_review"
 }

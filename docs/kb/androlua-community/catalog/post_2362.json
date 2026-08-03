@@ -5,7 +5,7 @@
  "author": "刃痛",
  "platform": "所有环境",
  "source_date": "2023年01月22日 19:11:15",
- "hits": 133,
+ "hits": 134,
  "up": 7,
  "favorite": 7,
  "comment": 0,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "universal",
  "flags": [],
- "truncation": "complete_or_unverifiable",
- "line_count": 10,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 27,
+ "char_count": 656,
  "confidence": "static_review"
 }

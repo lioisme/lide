@@ -5,20 +5,17 @@
  "author": "一個冬瓜",
  "platform": "所有环境",
  "source_date": "2022年08月21日 10:45:30",
- "hits": 141,
+ "hits": 142,
  "up": 1,
  "favorite": 5,
  "comment": 0,
  "source_file": "实用代码\\1780_监听布局边界变化（可用于旋转监听）.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "android_api",
- "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
- ],
- "truncation": "preview_truncated",
- "line_count": 14,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 15,
+ "char_count": 315,
  "confidence": "static_review"
 }

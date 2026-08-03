@@ -5,7 +5,7 @@
  "author": "阿布拉小钢六",
  "platform": "所有环境",
  "source_date": "2022年02月24日 21:48:38",
- "hits": 162,
+ "hits": 163,
  "up": 2,
  "favorite": 9,
  "comment": 1,
@@ -14,7 +14,7 @@
  "verdict": "positive",
  "portability": "universal",
  "flags": [],
- "truncation": "complete_or_unverifiable",
+ "truncation": "complete",
  "line_count": 11,
  "char_count": 194,
  "confidence": "static_review"

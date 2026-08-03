@@ -5,17 +5,19 @@
  "author": "鲲宝",
  "platform": "所有环境",
  "source_date": "2023年06月30日 10:48:05",
- "hits": 599,
+ "hits": 600,
  "up": 6,
  "favorite": 2,
  "comment": 7,
  "source_file": "编码转换\\2993_仿数码管显示.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "complete_or_unverifiable",
- "line_count": 10,
- "char_count": 300,
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 190,
+ "char_count": 3972,
  "confidence": "static_review"
 }

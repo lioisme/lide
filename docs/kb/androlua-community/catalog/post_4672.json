@@ -11,13 +11,11 @@
  "comment": 2,
  "source_file": "设备系统\\4672_简单的lsposed注入检测.lua",
  "kind": "code_demo",
- "verdict": "harmful",
+ "verdict": "positive",
  "portability": "android_api",
- "flags": [
-  "harmful_elevated"
- ],
- "truncation": "complete_or_unverifiable",
- "line_count": 11,
- "char_count": 300,
+ "flags": [],
+ "truncation": "truncated_tail",
+ "line_count": 14,
+ "char_count": 422,
  "confidence": "static_review"
 }

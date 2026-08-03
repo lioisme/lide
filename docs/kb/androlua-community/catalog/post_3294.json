@@ -5,17 +5,21 @@
  "author": "清汀琉璃",
  "platform": "Fusion App2",
  "source_date": "2023年08月21日 01:01:21",
- "hits": 1803,
+ "hits": 1804,
  "up": 34,
  "favorite": 92,
  "comment": 53,
  "source_file": "网络爬虫\\3294_Fan_-_一个追番的简易示例Demo(xpath).lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "global_pollution"
+ ],
+ "truncation": "complete",
+ "line_count": 1152,
+ "char_count": 32451,
  "confidence": "static_review"
 }

@@ -12,10 +12,10 @@
  "source_file": "文件操作\\4102_Resource模块_1.2.1.lua",
  "kind": "code_demo",
  "verdict": "positive",
- "portability": "universal",
+ "portability": "android_api",
  "flags": [],
- "truncation": "complete_or_unverifiable",
- "line_count": 9,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 219,
+ "char_count": 4932,
  "confidence": "static_review"
 }

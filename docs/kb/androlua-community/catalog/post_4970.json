@@ -11,11 +11,14 @@
  "comment": 6,
  "source_file": "布局教程\\4970_跨RecyclerView拖拽放置Item.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 4,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 154,
+ "char_count": 4940,
  "confidence": "static_review"
 }

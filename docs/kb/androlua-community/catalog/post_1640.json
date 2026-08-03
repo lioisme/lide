@@ -5,17 +5,20 @@
  "author": "清汀琉璃",
  "platform": "Fusion App2",
  "source_date": "2022年08月01日 14:22:45",
- "hits": 778,
+ "hits": 779,
  "up": 15,
  "favorite": 44,
  "comment": 0,
  "source_file": "Activity活动\\1640_简简单单Dialog.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 10,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "complete",
+ "line_count": 130,
+ "char_count": 3740,
  "confidence": "static_review"
 }

@@ -11,11 +11,13 @@
  "comment": 0,
  "source_file": "消息通知\\5178_发送短信.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "neutral",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 15,
- "char_count": 300,
+ "flags": [
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 89,
+ "char_count": 2053,
  "confidence": "static_review"
 }

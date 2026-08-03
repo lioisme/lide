@@ -5,17 +5,20 @@
  "author": "北极づ莜蓝",
  "platform": "所有环境",
  "source_date": "2023年07月05日 20:16:17",
- "hits": 249,
+ "hits": 250,
  "up": 2,
  "favorite": 2,
  "comment": 4,
  "source_file": "小游戏\\3032_Flappy_Bird.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "universal",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 24,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 197,
+ "char_count": 5018,
  "confidence": "static_review"
 }

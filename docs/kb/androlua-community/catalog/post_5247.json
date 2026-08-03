@@ -10,15 +10,15 @@
  "favorite": 13,
  "comment": 4,
  "source_file": "小工具\\5247_聚合音乐搜索（第二次测试）.lua",
- "kind": "announce",
- "verdict": "neutral",
- "portability": "universal",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "obsolete",
  "flags": [
-  "announcement_no_code",
-  "announcement"
+  "obsolete",
+  "obsolete"
  ],
- "truncation": "preview_truncated",
- "line_count": 12,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 953,
+ "char_count": 29798,
  "confidence": "static_review"
 }

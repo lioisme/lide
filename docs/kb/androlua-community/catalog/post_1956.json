@@ -5,22 +5,20 @@
  "author": "Adam·Eva",
  "platform": "Fusion App2",
  "source_date": "2022年10月05日 18:28:32",
- "hits": 465,
+ "hits": 466,
  "up": 2,
  "favorite": 5,
  "comment": 2,
  "source_file": "系统\\1956_留言板有人在讨论的内存问题.lua",
- "kind": "fragment",
+ "kind": "code_demo",
  "verdict": "negative",
- "portability": "editor_bound",
+ "portability": "host_private",
  "flags": [
-  "truncated_tail",
-  "editor_bound",
-  "editor_bound",
-  "incomplete_fragment"
+  "androlua_private",
+  "private_api"
  ],
- "truncation": "preview_truncated",
- "line_count": 9,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 126,
+ "char_count": 3655,
  "confidence": "static_review"
 }

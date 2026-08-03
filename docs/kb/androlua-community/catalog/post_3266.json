@@ -11,11 +11,14 @@
  "comment": 3,
  "source_file": "小游戏\\3266_火.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 10,
- "char_count": 300,
+ "flags": [
+  "chinese_identifier",
+  "global_pollution"
+ ],
+ "truncation": "complete",
+ "line_count": 997,
+ "char_count": 21953,
  "confidence": "static_review"
 }

@@ -11,11 +11,13 @@
  "comment": 4,
  "source_file": "布局代码\\5098_日月按钮.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 17,
- "char_count": 300,
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 286,
+ "char_count": 6864,
  "confidence": "static_review"
 }

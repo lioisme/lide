@@ -5,7 +5,7 @@
  "author": "琪琪子",
  "platform": "AndLua",
  "source_date": "2024年01月26日 13:19:53",
- "hits": 650,
+ "hits": 651,
  "up": 14,
  "favorite": 48,
  "comment": 1,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 13,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 235,
+ "char_count": 5941,
  "confidence": "static_review"
 }

@@ -5,7 +5,7 @@
  "author": "奥姆",
  "platform": "Fusion App2",
  "source_date": "2022年12月26日 10:51:03",
- "hits": 382,
+ "hits": 384,
  "up": 6,
  "favorite": 20,
  "comment": 0,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "android_api",
  "flags": [],
- "truncation": "complete_or_unverifiable",
- "line_count": 12,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 105,
+ "char_count": 2755,
  "confidence": "static_review"
 }

@@ -5,20 +5,17 @@
  "author": "初叶",
  "platform": "AndroLua,reOpenLua,AndLua",
  "source_date": "2023年08月01日 07:57:00",
- "hits": 476,
+ "hits": 477,
  "up": 5,
  "favorite": 12,
  "comment": 16,
  "source_file": "小工具\\3175_刷QQ听音乐时长.lua",
- "kind": "fragment",
- "verdict": "neutral",
+ "kind": "code_demo",
+ "verdict": "positive",
  "portability": "android_api",
- "flags": [
-  "truncated_tail",
-  "incomplete_fragment"
- ],
- "truncation": "preview_truncated",
- "line_count": 18,
- "char_count": 300,
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 55,
+ "char_count": 1017,
  "confidence": "static_review"
 }

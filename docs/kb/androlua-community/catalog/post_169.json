@@ -5,17 +5,19 @@
  "author": "oゞ夜色乄未央ぁ",
  "platform": "",
  "source_date": "2020年05月01日 12:26:18",
- "hits": 231,
+ "hits": 232,
  "up": 0,
  "favorite": 2,
  "comment": 0,
  "source_file": "基础代码\\169_Lua数据类型.lua",
  "kind": "code_demo",
- "verdict": "positive",
- "portability": "universal",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 11,
- "char_count": 300,
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 129,
+ "char_count": 2403,
  "confidence": "static_review"
 }

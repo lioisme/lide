@@ -5,7 +5,7 @@
  "author": "jies辰",
  "platform": "Fusion App2",
  "source_date": "2022年05月10日 16:12:43",
- "hits": 207,
+ "hits": 208,
  "up": 6,
  "favorite": 13,
  "comment": 1,
@@ -18,7 +18,7 @@
   "editor_bound",
   "editor_bound"
  ],
- "truncation": "complete_or_unverifiable",
+ "truncation": "complete",
  "line_count": 2,
  "char_count": 54,
  "confidence": "static_review"

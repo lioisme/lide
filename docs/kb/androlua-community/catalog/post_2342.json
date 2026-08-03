@@ -5,17 +5,19 @@
  "author": "智",
  "platform": "所有环境",
  "source_date": "2023年01月18日 17:38:19",
- "hits": 432,
+ "hits": 433,
  "up": 13,
  "favorite": 22,
  "comment": 13,
  "source_file": "小工具\\2342_动能手电.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "neutral",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 8,
- "char_count": 300,
+ "flags": [
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 58,
+ "char_count": 1408,
  "confidence": "static_review"
 }

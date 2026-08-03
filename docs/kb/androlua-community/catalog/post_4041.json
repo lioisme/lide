@@ -5,17 +5,19 @@
  "author": "Duo",
  "platform": "所有环境",
  "source_date": "2024年05月03日 19:48:26",
- "hits": 816,
+ "hits": 817,
  "up": 12,
  "favorite": 18,
  "comment": 14,
  "source_file": "小游戏\\4041_打砖块.lua",
  "kind": "code_demo",
- "verdict": "positive",
+ "verdict": "negative",
  "portability": "android_api",
- "flags": [],
- "truncation": "preview_truncated",
- "line_count": 15,
- "char_count": 300,
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 1679,
+ "char_count": 43396,
  "confidence": "static_review"
 }

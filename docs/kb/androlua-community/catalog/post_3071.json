@@ -5,7 +5,7 @@
  "author": "北极づ莜蓝",
  "platform": "所有环境",
  "source_date": "2023年07月13日 19:00:58",
- "hits": 118,
+ "hits": 119,
  "up": 1,
  "favorite": 5,
  "comment": 0,
@@ -14,8 +14,8 @@
  "verdict": "positive",
  "portability": "universal",
  "flags": [],
- "truncation": "preview_truncated",
- "line_count": 10,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 32,
+ "char_count": 918,
  "confidence": "static_review"
 }

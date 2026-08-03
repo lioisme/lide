@@ -5,7 +5,7 @@
  "author": "NekoLaska",
  "platform": "Fusion App2",
  "source_date": "2024年01月17日 09:53:57",
- "hits": 900,
+ "hits": 903,
  "up": 14,
  "favorite": 42,
  "comment": 31,
@@ -17,8 +17,8 @@
   "androlua_private",
   "private_api"
  ],
- "truncation": "preview_truncated",
- "line_count": 15,
- "char_count": 300,
+ "truncation": "complete",
+ "line_count": 738,
+ "char_count": 19942,
  "confidence": "static_review"
 }
