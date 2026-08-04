@@ -337,10 +337,40 @@ public class LuaService extends Service implements LuaContext,LuaBroadcastReceiv
 	@Override
 	public void onDestroy() {
 		// TODO: Implement this method
-		runFunc("onDestroy");
+		for (LuaGcable obj : gclist) {
+			obj.gc();
+		}
+		try {
+			runFunc("onDestroy");
+		} catch (Throwable t) {
+			// 脚本 onDestroy 回调异常不得阻断原生资源释放路径
+		}
 		if(mReceiver!=null)
 		unregisterReceiver(mReceiver);
 		super.onDestroy();
+		// 原生 Lua 状态收口（内存泄漏修复）：与 LuaActivity 同款模式，
+		// lua_close 移入后台守护线程（延迟 500ms 让 gclist 已取消的 Timer/Thread
+		// 当前在途回调先完成），不在销毁线程上全量 GC。
+		final LuaState lua = L;
+		L = null;
+		if (lua != null) {
+			Thread thread = new Thread(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						Thread.sleep(500);
+					} catch (InterruptedException ignored) {
+					}
+					try {
+						lua.close();
+					} catch (Throwable ignored) {
+					}
+				}
+			});
+			thread.setName("LuaServiceStateClose");
+			thread.setDaemon(true);
+			thread.start();
+		}
 	}
 
 

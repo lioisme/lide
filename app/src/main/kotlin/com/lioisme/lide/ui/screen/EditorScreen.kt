@@ -89,6 +89,10 @@ fun EditorScreen(
     val appEditorConfig by SettingsManager.editorConfig.collectAsState()
 
     val session = remember(project) { EditorSession(project, projectManager) }
+    // 页面销毁时释放会话：兜底保存脏标签后取消会话作用域并清空 Content 缓存。
+    DisposableEffect(project) {
+        onDispose { session.release() }
+    }
     val tabs by session.tabs.collectAsState()
     val selection by session.selection.collectAsState()
     val selectedFile = selection.file

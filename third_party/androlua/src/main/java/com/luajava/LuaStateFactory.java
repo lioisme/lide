@@ -100,7 +100,7 @@ public final class LuaStateFactory
 	 */
 	public synchronized static void removeLuaState(long idx)
 	{
-		states.put(idx, null);
+		states.remove(idx);
 	}
 	
 

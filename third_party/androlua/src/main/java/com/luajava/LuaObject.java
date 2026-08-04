@@ -197,15 +197,23 @@ public class LuaObject implements Serializable {
 
 	@Override
 	protected void finalize() {
-		Log.i("luaObject", "finalize: "+ref+";"+toString());
+		// 崩溃修复：必须在任何 native 调用（含 toString）之前检查状态是否已关闭。
+		// LuaState.close 后 luaState==0，FinalizerDaemon 回收残留 LuaObject 时若经
+		// toString→push→rawGetI 访问已释放状态即 use-after-free（SIGSEGV）。
 		try {
 			synchronized (L) {
-				if (L.getPointer() != 0)
-					L.LunRef(LuaState.LUA_REGISTRYINDEX, ref);
+				if (L.getPointer() == 0)
+					return;
+				Log.i("luaObject", "finalize: " + ref + ";" + toString());
+				L.LunRef(LuaState.LUA_REGISTRYINDEX, ref);
 			}
 		}
-		catch (Exception e) {
-			System.err.println("Unable to release object " + ref);
+		catch (Throwable t) {
+			try {
+				System.err.println("Unable to release object " + ref);
+			}
+			catch (Throwable ignored) {
+			}
 		}
 	}
 

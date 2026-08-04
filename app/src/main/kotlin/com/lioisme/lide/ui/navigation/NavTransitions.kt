@@ -23,8 +23,15 @@ import kotlin.math.roundToInt
  */
 object NavTransitions {
 
-    /** 与经典 Android Activity 转场一致的时长。 */
-    const val ANIM_DURATION_MS = 300
+    /**
+     * 转场时长：150ms。
+     *
+     * 2026-08-04 修订（300→200→150ms）：验收标准要求「10 秒内进入退出 ≥20 次」，
+     * 40 个导航动作需在 10s 内完成（每动作 ≤250ms，转场须 ≤~180ms）。
+     * 实测模拟器 200ms 转场下执行节奏 ~255ms/动作（10.2s，超限）；150ms 下 ~200ms/动作
+     * （8s，留有余量）。快速进出由 NavigationGate 排队串行在转场边界执行，转场缩短不引入失步风险。
+     */
+    const val ANIM_DURATION_MS = 150
 
     /** 全宽推入：新页从右推入、旧页向左推出；pop 反向。二级页面标准。 */
     val FULL: RouteTransitions = slide(offsetFraction = 1f)

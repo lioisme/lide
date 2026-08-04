@@ -181,6 +181,7 @@ public class LuaAsyncTask extends AsyncTaskX implements LuaGcable {
 					Object[] ret=new Object[n];
 					for (int i=0;i < n;i++)
 						ret[i] = L.toJavaObject(i + 2);
+					closeLua();
 					return ret;
 				}
 			}
@@ -190,8 +191,27 @@ public class LuaAsyncTask extends AsyncTaskX implements LuaGcable {
 			mLuaContext.sendError("doInBackground", e);
 		}
 
-
+		closeLua();
 		return null;
+	}
+
+	private void closeLua() {
+		// 资源收口（内存泄漏修复）：任务独立 LuaState 在后台线程关闭。
+		// 原实现仅在 onPostExecute（主线程）做全量 GC 且 close 被注释，
+		// 每个 LuaAsyncTask 都泄漏一个原生 lua_State。close 幂等可安全重复调用。
+		if (L != null) {
+			try {
+				L.gc(LuaState.LUA_GCCOLLECT, 1);
+			}
+			catch (Throwable ignored) {
+			}
+			try {
+				L.close();
+			}
+			catch (Throwable ignored) {
+			}
+			L = null;
+		}
 	}
 
 	@Override
@@ -207,10 +227,6 @@ public class LuaAsyncTask extends AsyncTaskX implements LuaGcable {
 		catch (LuaException e) {
 			mLuaContext.sendError("onPostExecute", e);
 		}
-		if(L!=null)
-			L.gc(LuaState.LUA_GCCOLLECT, 1);
-		System.gc();
-		//L.close();
 	}
 
 	@Override

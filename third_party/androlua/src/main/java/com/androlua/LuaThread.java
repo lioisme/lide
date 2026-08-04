@@ -112,6 +112,9 @@ public class LuaThread extends Thread implements Runnable,LuaMetaTable,LuaGcable
 	}
 
 	public LuaThread(LuaContext luaContext, LuaObject func, boolean isLoop, Object[] arg) throws LuaException {
+		// 泄漏修复：与 String 构造（:97）保持一致注册 gclist；否则 loop 模式线程
+		// 不在 onDestroy 的 gc 循环里，quit 永不调用，Looper 挂起且 L 永不关闭。
+		luaContext.regGc(this);
 		mLuaContext = luaContext;
 		if (arg != null)
 			mArg = arg;
@@ -122,36 +125,51 @@ public class LuaThread extends Thread implements Runnable,LuaMetaTable,LuaGcable
 	@Override
 	public void run() {
 		try {
+			try {
+				if (L == null) {
+					initLua();
 
-			if (L == null) {
-				initLua();
+					if (mBuffer != null)
+						newLuaThread(mBuffer, mArg);
+					else
+						newLuaThread(mSrc, mArg);
+				}
+			}
+			catch (LuaException e) {
+				mLuaContext.sendError(this.toString(), e);
+				return;
+			}
+			if (mIsLoop) {
+				Looper.prepare();
+				thandler = new ThreadHandler();
+				isRun = true;
+				L.getGlobal("run");
+				if (!L.isNil(-1)) {
+					L.pop(1);
+					runFunc("run");
+				}
 
-				if (mBuffer != null)
-					newLuaThread(mBuffer, mArg);
-				else
-					newLuaThread(mSrc, mArg);
+				Looper.loop();
 			}
 		}
-		catch (LuaException e) {
-			mLuaContext.sendError(this.toString(), e);
-			return;
+		finally {
+			// 资源收口（内存泄漏修复）：原实现仅 GC 不 close，每个 LuaThread
+			// （含 loop 模式退出后）泄漏一个原生 lua_State。线程退出即本线程
+			// 最后一次使用 L 的时机，直接在退出前关闭，无跨线程竞态。
+			isRun = false;
+			closeLua();
 		}
-		if (mIsLoop) {
-			Looper.prepare();
-			thandler = new ThreadHandler();
-			isRun = true;
-			L.getGlobal("run");
-			if (!L.isNil(-1)) {
-				L.pop(1);
-				runFunc("run");
-			}
+	}
 
-			Looper.loop();
+	private void closeLua() {
+		if (L != null) {
+			try {
+				L.close();
+			}
+			catch (Throwable ignored) {
+			}
+			L = null;
 		}
-		isRun = false;
-		L.gc(LuaState.LUA_GCCOLLECT, 1);
-		System.gc();
-		return ;
 	}
 
 	public void call(String func) {

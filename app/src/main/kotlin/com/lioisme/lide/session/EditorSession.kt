@@ -7,6 +7,7 @@ import io.github.rosemoe.sora.text.Content
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -72,6 +73,26 @@ class EditorSession(
         val content = loadContent(main)
         _tabs.value = listOf(TabState(main, dirty = false, canUndo = false, canRedo = false))
         _selection.value = Selection(main, content)
+    }
+
+    private var released = false
+
+    /**
+     * 屏幕销毁时调用（DisposableEffect onDispose）：兜底保存全部脏标签，
+     * 随后取消会话作用域并清空 [Content] 缓存，防止会话与缓存跨页面滞留。
+     *
+     * 保存与取消在同一协程内串行，保证不丢盘；与 LuaEditor onRelease 的
+     * [flushSelectedDirtyAsync] 双路径对同一脏标签为幂等写，无竞态冲突。
+     */
+    fun release() {
+        if (released) return
+        released = true
+        scope.launch {
+            val dirty = _tabs.value.filter { it.dirty }.map { it.fileName }
+            dirty.forEach { flushDirty(it) }
+            synchronized(cacheLock) { contents.clear() }
+            scope.cancel()
+        }
     }
 
     /** 打开（或选中）标签：IO 读盘 + IO 线程构造 Content 后入缓存，再切换。 */

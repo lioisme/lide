@@ -82,16 +82,42 @@ public class LuaTimerTask extends TimerTaskX
 		{
 			mLuaContext.sendError(this.toString(), e);
 		}
-		L.gc(LuaState.LUA_GCCOLLECT, 1);
-		System.gc();
-		
+		finally
+		{
+			// 资源收口（内存泄漏修复）：原实现每 tick 全量 GC（LUA_GCCOLLECT + System.gc）
+			// 且从不 close，每个 LuaTimerTask 泄漏一个原生 lua_State。
+			// cancel 后在本 tick 结束时关闭；run 与 run 在 Timer 线程串行执行，
+			// close 与该线程上的所有 L 使用互不重叠，无 use-after-free。
+			if (mCanceled)
+				closeLua();
+		}
 	}
+
+	private volatile boolean mCanceled;
 
 	@Override
 	public boolean cancel()
 	{
-		// TODO: Implement this method
+		mCanceled = true;
 		return super.cancel();
+	}
+
+	/**
+	 * 关闭任务独立 LuaState（幂等，可被 Timer 线程上的收口任务重复调用）。
+	 */
+	public void closeLua()
+	{
+		if (L != null)
+		{
+			try
+			{
+				L.close();
+			}
+			catch (Throwable ignored)
+			{
+			}
+			L = null;
+		}
 	}
 
 	public void setArg(Object[] arg)

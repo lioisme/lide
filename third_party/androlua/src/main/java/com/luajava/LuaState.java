@@ -129,8 +129,11 @@ public class LuaState {
 
     /**
      * Closes state and removes the object from the LuaStateFactory
+     * 幂等：close 后 luaState 置 0，重复调用直接返回，防止双重 _close 悬空指针
      */
     public synchronized void close() {
+        if (luaState == 0)
+            return;
         LuaStateFactory.removeLuaState(luaState);
         _close(luaState);
         this.luaState = 0;

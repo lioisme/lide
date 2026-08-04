@@ -122,36 +122,50 @@ public class LuaRunnable extends Thread implements Runnable,LuaMetaTable,LuaGcab
 	@Override
 	public void run() {
 		try {
+			try {
+				if (L == null) {
+					initLua();
 
-			if (L == null) {
-				initLua();
+					if (mBuffer != null)
+						newLuaRunnable(mBuffer, mArg);
+					else
+						newLuaRunnable(mSrc, mArg);
+				}
+			}
+			catch (LuaException e) {
+				mLuaContext.sendMsg(e.getMessage());
+				return;
+			}
+			if (mIsLoop) {
+				Looper.prepare();
+				thandler = new ThreadHandler();
+				isRun = true;
+				L.getGlobal("run");
+				if (!L.isNil(-1)) {
+					L.pop(1);
+					runFunc("run");
+				}
 
-				if (mBuffer != null)
-					newLuaRunnable(mBuffer, mArg);
-				else
-					newLuaRunnable(mSrc, mArg);
+				Looper.loop();
 			}
 		}
-		catch (LuaException e) {
-			mLuaContext.sendMsg(e.getMessage());
-			return;
+		finally {
+			// 资源收口（内存泄漏修复）：原实现仅 GC 不 close，每个 LuaRunnable 泄漏一个
+			// 原生 lua_State。线程退出即最后使用 L 的时机，退出前关闭，无跨线程竞态。
+			isRun = false;
+			closeLua();
 		}
-		if (mIsLoop) {
-			Looper.prepare();
-			thandler = new ThreadHandler();
-			isRun = true;
-			L.getGlobal("run");
-			if (!L.isNil(-1)) {
-				L.pop(1);
-				runFunc("run");
-			}
+	}
 
-			Looper.loop();
+	private void closeLua() {
+		if (L != null) {
+			try {
+				L.close();
+			}
+			catch (Throwable ignored) {
+			}
+			L = null;
 		}
-		isRun = false;
-		L.gc(LuaState.LUA_GCCOLLECT, 1);
-		System.gc();
-		return ;
 	}
 
 	public void call(String func) {

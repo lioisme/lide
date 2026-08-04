@@ -806,12 +806,43 @@ public class LuaActivity extends Activity implements LuaBroadcastReceiver.OnRece
         for (LuaGcable obj : gclist) {
             obj.gc();
         }
-        sLuaActivityMap.remove(pageName);
-        runFunc("onDestroy");
+        if (sLuaActivityMap.get(pageName) == this)
+            sLuaActivityMap.remove(pageName);
+        try {
+            runFunc("onDestroy");
+        } catch (Throwable t) {
+            // 脚本 onDestroy 回调异常不得阻断原生资源释放路径
+        }
         super.onDestroy();
-        System.gc();
-        L.gc(LuaState.LUA_GCCOLLECT, 1);
-        //L.close();
+        // 原生 Lua 状态收口（内存泄漏修复）：
+        // 1) lua_close 恢复调用，否则每个 LuaActivity 泄漏一个原生 lua_State 及整个 Activity；
+        // 2) Lua GC 与 close 移入后台守护线程，避免在 UI 线程执行 System.gc/LUA_GCCOLLECT
+        //    造成主线程停顿（反复进出页面累积后即全 UI 卡死）；
+        // 3) 延迟 500ms 让 gclist 已取消的 Timer/Thread 当前在途回调先完成，避免 use-after-free。
+        final LuaState lua = L;
+        L = null;
+        if (lua != null) {
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException ignored) {
+                    }
+                    try {
+                        lua.gc(LuaState.LUA_GCCOLLECT, 1);
+                    } catch (Throwable ignored) {
+                    }
+                    try {
+                        lua.close();
+                    } catch (Throwable ignored) {
+                    }
+                }
+            });
+            thread.setName("LuaStateClose");
+            thread.setDaemon(true);
+            thread.start();
+        }
     }
 
     @Override

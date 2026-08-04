@@ -119,7 +119,9 @@ internal object EditorViewPool {
     /** 获取（必要时创建）池化编辑器。首次创建完成一次性装配与订阅。 */
     fun acquire(context: Context, config: EditorConfig): CodeEditor {
         editor?.let { return it }
-        val ed = CodeEditor(context).apply outer@{
+        // 使用 applicationContext 持有池化视图：CodeEditor 不绑定窗口/主题资源，
+        // 避免旋转等 Activity 重建时池仍强引用旧 Activity（内存泄漏）。
+        val ed = CodeEditor(context.applicationContext).apply outer@{
             // 官方 demo 顺序：colorScheme → language → setText，
             // 使分析器重启都发生在空文本阶段，setText 成为唯一一次全量分析。
             colorScheme = TextMateColorSchemeCache.forTheme(ThemeRegistry.getInstance())

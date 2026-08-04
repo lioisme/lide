@@ -18,7 +18,7 @@
 
 ## 已完成（摘要）
 
-已完成文档 14 篇在 [completed/](completed/)（引擎迁移 WP-001~010、以及编辑器/审计/打包器审计等），矩阵见 [kb/README.md](kb/README.md) §2.1。
+已完成文档 15 篇在 [completed/](completed/)（引擎迁移 WP-001~010、导航冻结修复、以及编辑器/审计/打包器审计等），矩阵见 [kb/README.md](kb/README.md) §2.1。
 
 ## 计划中 / 未排期
 

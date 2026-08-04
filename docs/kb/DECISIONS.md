@@ -20,6 +20,7 @@
 | D-14 | 2026-08-01 | **user_permission 拒绝后继续运行**（仅 Toast 提示） | 与 pro 行为一致：权限由脚本运行时自行处理 | WP-003 工作单；`PermissionResolver` 纯函数 + 单测 7 例 |
 | D-15 | 2026-08-01 | **Xposed 模块可行性：技术可行但有前提** | 四支柱为真：libluajava 静态链接可注入、Class.forName+setAccessible 匹配、三 ABI 就绪、pro 反 Xposed 代码已清除；约束：v1-only 不可装、native 需自提取、de.robv API compileOnly | 路线图 M1~M5 未启动，前置 = 打包器落地（D-10） |
 | D-16 | 2026-08-01 | **示例资产化：`assets/samples` 首启解包 → `assets/examples/*.alp` + 示例导入界面**（WP-003 扩展） | 需求「不内置工程」+ 开发者需内置示例参考；导入复用 `AlpManager.import`（与用户导入同一路径，支持覆盖重导入） | `ExamplesScreen.kt` / `Routes.EXAMPLES` / `make-examples.ps1` + `examples-src/` 6 示例；**反转 D-03**（原「资产化部署 + 首启提取」） |
+| D-17 | 2026-08-04 | **导航一律走单一漏斗门控：仅 Lifecycle==RESUMED 时执行 navigate/popBackStack**（NavigationGate） | 冻结根因 = NavHost$33$1 转场收尾回调在「转场中 pop」时丢失（entry 销毁内容残留 → 点击永久失效）；官方规范即「仅 RESUMED 时导航」；业务零改动 | `NavigationGate.kt` 新增 5 个扩展函数；`LideNavHost.kt` 13 处调用全量替换 + 11 处 BackHandler；不升级 navigation 2.9.x（方案 B 留待评估）；详见 `NAVIGATION_FREEZE_FIX_REPORT.md` |
 
 ---
 
