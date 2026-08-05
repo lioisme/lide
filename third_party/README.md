@@ -5,6 +5,7 @@
 | 目录 | 内容 | 说明 |
 |---|---|---|
 | `androlua/` | AndroLua Java 运行时源码（Gradle 库模块） | 模块名保持 `:androlua`，`settings.gradle.kts` 用 `projectDir` 指向本目录 |
+| `sora-editor/` | sora-editor 0.24.6 源码（`:sora-editor:editor` + `:sora-editor:language-textmate`，LGPL-2.1） | 自写最小构建，不引上游 build-logic；oniguruma 原生模块未收纳，用 Joni 纯 Java 路径（见该目录 README） |
 | `patches/` | 第三方代码补丁（如 `material3_searchbar_patch`） | 实验/历史归档，未接入构建 |
 
 > 上游参考源码 / 参考工程（sora-editor-main、luaj、Squircle-CE、AndroLua_pro 等）仍收纳在

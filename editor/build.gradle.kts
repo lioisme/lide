@@ -52,10 +52,10 @@ dependencies {
     // Tab 拖拽排序（WP-003，Squircle 同款固定版本；POM 实证与 Compose 1.7.3 二进制兼容）。
     implementation("sh.calvin.reorderable:reorderable:3.0.0")
 
-    // sora-editor - 专业代码编辑器
-    implementation("io.github.rosemoe:editor:0.24.6")
+    // sora-editor - 专业代码编辑器（0.24.6 源码收纳于 third_party/sora-editor/，见其 README）
+    implementation(project(":sora-editor:editor"))
     // TextMate 语法高亮支持
-    implementation("io.github.rosemoe:language-textmate:0.24.6")
+    implementation(project(":sora-editor:language-textmate"))
 
     testImplementation("junit:junit:4.13.2")
 }
