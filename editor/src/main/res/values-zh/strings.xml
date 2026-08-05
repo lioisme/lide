@@ -41,4 +41,8 @@
     <string name="cd_search_next">下一个匹配</string>
     <string name="cd_search_prev">上一个匹配</string>
     <string name="cd_search_close">关闭搜索</string>
+
+    <!-- TextMate runtime -->
+    <string name="textmate_init_failed">编辑器引擎初始化失败</string>
+    <string name="retry">重试</string>
 </resources>

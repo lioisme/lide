@@ -56,7 +56,7 @@ import com.lioisme.lide.editor.TipIconButton
 /*
  * API 浏览器界面组件集（与 ApiBrowserScreen 状态机解耦，P3-2 拆分）：
  * 搜索输入条 / 分类筛选菜单 / 列表行与徽标 / 纯函数助手。
- * 线程契约同 ApiBrowserScreen：行级反射信息仅经 ApiIndex.rowInfoAsync（IO 单飞）。
+ * 线程契约同 ApiBrowserScreen：行级反射信息仅经 ApiIndex.rowInfoAsync（合并缓存）。
  */
 
 /**
@@ -266,8 +266,8 @@ internal fun ClassRow(
     onClick: () -> Unit,
     onLongClick: () -> Unit,
 ) {
-    // 行级反射信息（接口判定 + 可加载性）经 rowInfoAsync 获取：命中 build 期预热缓存时 O(1) 查表；
-    // 未命中时单飞计算（NonCancellable，不随行生命周期取消，fling 不重启全 dex 扫描）。
+    // 行级反射信息（接口判定 + 可加载性）经 rowInfoAsync 获取：dex 枚举类名 O(1) 查表；
+    // 未命中合并缓存解析（同一类名至多一次全 dex 扫描，负缓存永久生效）。
     // 失败降级按不可用处理。
     val info by produceState<RowInfo?>(initialValue = null, entry.name) {
         value =

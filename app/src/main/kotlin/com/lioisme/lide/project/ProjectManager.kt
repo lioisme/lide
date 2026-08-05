@@ -75,12 +75,6 @@ class ProjectManager {
     }
 
     private fun loadProject(dir: File): Project {
-        val files =
-            dir
-                .listFiles()
-                ?.filter { it.isFile && it.name.endsWith(".lua") }
-                ?.map { it.name }
-                ?.sorted() ?: listOf("main.lua", "init.lua")
         val initFile = File(dir, "init.lua")
         var packageName = ""
         var icon: String? = null
@@ -99,7 +93,6 @@ class ProjectManager {
         return Project(
             name = appName,
             path = dir.absolutePath,
-            files = files,
             packageName = packageName,
             icon = icon,
         )
@@ -115,19 +108,54 @@ class ProjectManager {
     }
 
     /**
+     * 读取工程 init.lua 原始文本（不存在/读失败 → null，显式可空，B-1 域服务收敛）。
+     */
+    fun readInitContent(project: Project): String? =
+        try {
+            val initFile = File(project.path, "init.lua")
+            if (initFile.exists()) initFile.readText() else null
+        } catch (_: Exception) {
+            null
+        }
+
+    /**
      * 读取工程 init.lua 声明的 user_permission（WP-003）。
      * 读失败/缺省 → 空集合（降级，不抛）。
      */
     fun loadUserPermissions(project: Project): List<String> =
         try {
-            val initFile = File(project.path, "init.lua")
-            if (initFile.exists()) {
-                PermissionResolver.declared(initFile.readText())
-            } else {
-                emptyList()
-            }
+            val content = readInitContent(project)
+            if (content != null) PermissionResolver.declared(content) else emptyList()
         } catch (_: Exception) {
             emptyList()
+        }
+
+    /** 读取 init.lua 单个字符串字段（缺省/读失败 → null）。 */
+    fun initField(
+        project: Project,
+        name: String,
+    ): String? = readInitContent(project)?.let { LuaConfigParser.stringField(it, name) }
+
+    /** 读取 init.lua 字符串数组字段（如 user_permission）。 */
+    fun initArrayField(
+        project: Project,
+        name: String,
+    ): List<String> = readInitContent(project)?.let { LuaConfigParser.stringArrayField(it, name) } ?: emptyList()
+
+    /**
+     * 字段级写入 init.lua（B-1 域服务：UI 不再自摸文件）。
+     * 原子读改写；返回是否成功。
+     */
+    fun writeInitFields(
+        project: Project,
+        transform: (String) -> String,
+    ): Boolean =
+        try {
+            val content = readInitContent(project) ?: return false
+            File(project.path, "init.lua").writeText(transform(content))
+            true
+        } catch (_: Exception) {
+            false
         }
 
     fun getProjectScript(
@@ -193,7 +221,6 @@ user_permission = {}
         return Project(
             name = name,
             path = dir.absolutePath,
-            files = listOf("main.lua", "init.lua"),
             packageName = packageName,
         )
     }
@@ -278,7 +305,6 @@ user_permission = {}
         return Project(
             name = name,
             path = targetDir.absolutePath,
-            files = project.files,
             packageName = project.packageName,
             icon = project.icon,
         )

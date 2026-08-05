@@ -27,15 +27,13 @@ object ApiReflection {
 
     /**
      * 反射失败（类不存在 / 初始化异常）返回 null，调用方降级。
-     * 与 [ApiIndex] 行级缓存共享一次类加载判定（性能审计 R5c）：
-     * 不可加载类直接降级，避免详情页对同一类名重复全 dex 扫描；
-     * 可加载类继续完整反射，成功结论经 rowInfoCache 同步回写（两处语义一致）。
+     * 与 [ApiIndex] 行级缓存共享合并缓存（架构审计 P0-1）：类解析统一走
+     * [ApiIndex.loadClassRef]，同一类名全进程一次反射；初始化语义一致（initialize=false）。
      * 必须在 IO 线程调用（AGENTS.md 线程契约）。
      */
     fun reflect(className: String): Detail? {
         return try {
-            if (!ApiIndex.isLoadable(className)) return null
-            val clazz = Class.forName(className)
+            val clazz = ApiIndex.loadClassRef(className) ?: return null
             val methods = clazz.methods.toList()
             val header =
                 buildString {

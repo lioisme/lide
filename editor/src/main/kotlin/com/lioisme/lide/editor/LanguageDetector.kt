@@ -5,9 +5,13 @@ package com.lioisme.lide.editor
  *
  * 文件名匹配规则：优先精确文件名（如 `Dockerfile` / `Makefile` / `Rakefile`），
  * 否则取最后一个 `.` 之后的扩展名（含点前缀，如 `.lua`）。
- * 未命中返回 null → 宿主按纯文本处理。
+ * 未命中显式返回 plain-text scope（`text.plain`，已登记于语言目录）——
+ * 未知文件不再以 Lua 兜底，杜绝「csv/log 以 Lua 语法打开 + Lua 伪报错」。
  */
 object LanguageDetector {
+
+    /** 未识别扩展名的兜底 scope（纯文本，无语义高亮）。 */
+    const val PLAIN_SCOPE = "text.plain"
 
     private val associations =
         mapOf(
@@ -291,13 +295,20 @@ object LanguageDetector {
         )
 
     /**
-     * 解析文件名 → scope。精确文件名优先，其次扩展名（含点前缀）。
+     * 解析文件名 → scope。精确文件名优先，其次扩展名（不含点前缀，映射表键为小写扩展名）。
+     * 未命中返回 [PLAIN_SCOPE]（不返回 null）。
      */
-    fun detect(fileName: String): String? {
-        if (fileName.isEmpty()) return null
+    fun detect(fileName: String): String {
+        if (fileName.isEmpty()) return PLAIN_SCOPE
         associations[fileName]?.let { return it }
         val dot = fileName.lastIndexOf('.')
-        if (dot <= 0 || dot == fileName.length - 1) return null
-        return associations[fileName.substring(dot)]
+        if (dot <= 0 || dot == fileName.length - 1) return PLAIN_SCOPE
+        return associations[fileName.substring(dot + 1).lowercase()] ?: PLAIN_SCOPE
     }
+
+    /**
+     * 该文件名是否命中语言目录中的某种语言（非纯文本）。
+     * 供宿主「可打开性」判定消费（:editor 唯一事实源，P0-3）。
+     */
+    fun isKnownFile(fileName: String): Boolean = detect(fileName) != PLAIN_SCOPE
 }

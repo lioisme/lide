@@ -63,10 +63,9 @@ fun ApiBrowserScreen(
     val scope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
     val strCopied = stringResource(R.string.api_copied)
-    // 两阶段索引发布（性能审计 F1）：白屏不再等反射预算（曾达 3.5~5.6s 串行）——
-    // buildBase 只做非反射阶段（静态解析 + dex 枚举，约 1s 级），发布后列表立即可交互；
-    // completeBuild 在同一 IO 协程内后台补全（用途分类 + 行信息预热，预算上界 2s + 2.5s），
-    // 完成后原子替换进程级快照并刷新本状态（徽章渐进完善，无闪烁）。
+    // 两阶段索引发布：buildBase 只做非反射阶段（静态解析 + dex 枚举，约 1s 级），发布后列表
+    // 立即可交互；completeBuild 在同一 IO 协程内后台补全反射阶段（用途分类 + 分类细化，
+    // 类解析走合并缓存无预算），完成后原子替换进程级快照并刷新本状态（徽章渐进完善，无闪烁）。
     var snapshot by remember { mutableStateOf<Snapshot?>(null) }
     LaunchedEffect(Unit) {
         // 降级约定（AGENTS.md）：两阶段构建全路径 try/catch(Throwable)（P2#13）。
@@ -98,6 +97,7 @@ fun ApiBrowserScreen(
                 nameLower = emptyList(),
                 categories = emptyMap(),
                 categoryCounts = emptyMap(),
+                dexNames = emptySet(),
             )
         }
     }

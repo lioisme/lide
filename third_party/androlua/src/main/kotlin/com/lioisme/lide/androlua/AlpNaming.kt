@@ -4,6 +4,10 @@ package com.lioisme.lide.androlua
  * .alp 容器的类型与目标名解析（纯函数，JVM 可单测）。
  *
  * 语义对齐 pro（`main.lua:1127-1131` 类型判定 / `importx:1153` 目录名规则）。
+ *
+ * init.lua 字段读取统一走 [LuaConfigParser] 结构化解析（跳过注释/字符串），
+ * 不再使用裸正则（架构审计 §4.5：与 PluginManager 的解析行为保持一致，
+ * 避免带尾注释时两套解析结果不一致）。
  */
 object AlpNaming {
 
@@ -11,9 +15,9 @@ object AlpNaming {
      * 类型判定：zip 内 init.lua 的 `mode = "plugin"`，或 .alp 文件名以 `<name>_plugin` 开头。
      */
     fun resolveKind(alpFileName: String, initContent: String?): AlpManager.AlpKind {
-        val modePlugin = initContent?.let {
-            Regex("""(?m)^\s*mode\s*=\s*["']plugin["']\s*$""").containsMatchIn(it)
-        } ?: false
+        val modePlugin =
+            initContent != null &&
+                LuaConfigParser.stringField(initContent, "mode") == "plugin"
         val namePlugin = Regex("""^[^._]+_plugin""").containsMatchIn(alpFileName)
         return if (modePlugin || namePlugin) AlpManager.AlpKind.PLUGIN else AlpManager.AlpKind.PROJECT
     }
@@ -22,9 +26,7 @@ object AlpNaming {
      * 目标名：优先 init.lua 的 appname，否则取文件名去扩展名后截断到首个 `.`/`_`。
      */
     fun resolveName(alpFileName: String, initContent: String?): String {
-        val appName = initContent?.let {
-            Regex("""(?m)^\s*appname\s*=\s*"([^"]*)"\s*$""").find(it)?.groupValues?.get(1)
-        }
+        val appName = initContent?.let { LuaConfigParser.stringField(it, "appname") }
         if (!appName.isNullOrBlank()) return appName
         val base = alpFileName.substringBeforeLast('.')
         return base.substringBefore('.').substringBefore('_').ifBlank { "imported" }

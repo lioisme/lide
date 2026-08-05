@@ -7,7 +7,6 @@ import java.io.ByteArrayOutputStream
 import java.security.PrivateKey
 import java.security.cert.X509Certificate
 import java.util.zip.ZipEntry
-import java.util.zip.ZipInputStream
 import java.util.zip.ZipOutputStream
 
 /**
@@ -184,17 +183,6 @@ object ApkBuilder {
             "assets/layouts/",
         )
 
-    private fun readZip(apk: ByteArray): List<Triple<String, Int, ByteArray>> {
-        val out = ArrayList<Triple<String, Int, ByteArray>>()
-        ZipInputStream(apk.inputStream()).use { zis ->
-            while (true) {
-                val entry = zis.nextEntry ?: break
-                // 空名条目（zip 对齐/壳工具产物，STORED 零字节）无负载，跳过；
-                // 否则重写时 name="" 会触发 Android 13+/JDK 18+ 的重复条目拒绝。
-                if (entry.name.isBlank()) continue
-                out += Triple(entry.name, entry.method, zis.readBytes())
-            }
-        }
-        return out
-    }
+    private fun readZip(apk: ByteArray): List<Triple<String, Int, ByteArray>> =
+        ZipUtils.readEntries(apk, skipBlankNames = true)
 }

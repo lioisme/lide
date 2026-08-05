@@ -35,39 +35,32 @@ git ls-files '*.jar' | grep -v 'gradle/wrapper/gradle-wrapper.jar'
 ## 编辑器关键约定
 
 - 初始化顺序（官方 demo 顺序，勿改）：`colorScheme` → `setEditorLanguage` → `setText`。
-- TextMate 运行时只经 `TextMateInitializer`（进程级一次性）初始化，且不得在 UI 线程调用。
+- TextMate 运行时只经 `TextMateRuntime`（进程级一次性，`preload` 幂等触发；状态机
+  Loading/Ready/Failed，失败展示错误态 + 重试）初始化，且不得在 UI 线程调用。
 - 文本快照可在后台线程取（`Content.toString` 内部持有 `ReadWriteLock`），
   但编辑器 API 调用（`setText` / `diagnostics` 赋值 / `subscribeEvent` 回调）保持主线程。
 - 自动保存：快照与写盘均在 `Dispatchers.IO`；离开编辑器时经 `onRelease` 兜底保存。
 - 大文件（> 200 KB）：关闭括号高亮 / 当前块 / 自动换行，并跳过行级诊断。
 - 补全、诊断、事件回调必须 `try/catch(Throwable)` 降级，不得让异常逃逸进 sora 主循环。
+- 文件 → 语言 scope 唯一事实源为 `LanguageDetector`（未识别扩展名显式回落
+  `text.plain`，绝不回退为 Lua）；宿主「可打开性」判定经 `LanguageDetector.isKnownFile`
+  消费同一表，不另维护扩展名白名单。
 
-## API 浏览器反射线程契约
+## API 浏览器反射线程契约（2026-08 简化，架构审计 A-1）
 
-- `ApiIndex` 的反射查询接口（`rowInfo` / `isLoadable` / `classKind` / `isViewSubclass`）
-  禁止在 UI 线程直接调用——`Class.forName` 负查找（类不存在）需扫描全部 dex，单次可达
-  数十毫秒，列表场景（数千条目）会造成 UI 冻结。
-- 列表行反射信息一律经 `produceState` + `Dispatchers.IO` 获取，UI 只读惰性缓存结果；
-  全部反射路径必须 `try/catch(Throwable)` 降级（含负缓存），且带时间预算上界。
-- **两阶段构建**：`buildBase()` 只做非反射阶段（静态表解析 + dex 枚举 + 预索引），快速发布
-  基础快照；`completeBuild()` 后台补全反射阶段（`assignUsages` + `warmUpRowInfo`，预算上界
-  2s+2.5s）并原子替换完整快照。两者均须在 IO 线程调用；buildBase/completeBuild/invalidate
-  内部互斥（`buildLock`），禁止绕开锁直接读写快照字段（性能审计 F1/R5a）。
-- **行级单飞**：列表行必须经 `rowInfoAsync`（suspend）获取——快路径同步读缓存，
-  慢路径 `NonCancellable + IO` 内 CHM `getOrPut` 单飞 compute；禁止在行 `LaunchedEffect`
-  里直接 `rowInfo`（计算随行生命周期取消 → fling 反复全 dex 扫描，性能审计 R2）。
-- **不可用行呈现（用户决策，2026-08 反转）**：不可用 API（loadable == false）的 API 文本
-  用 Compose 原生 `TextDecoration.LineThrough` 中划线表示；禁止往文本内容里插入
-  `-`/`~~` 等字符的「伪中划线」技巧。不再使用 error 圆点等附加指示。
-
-## API 浏览器索引快照契约
-
-- `Snapshot` 的 `categories`（分类 → 索引，build 期一次预分组）与 `categoryCounts`（eager）
-  为内部优化面，过滤必须走预索引（O(选中子集)），禁止在 UI 线程对全量 entries 做 O(n) 过滤
-  （性能审计 R3）；`usageCounts` 已删除（用途仅作徽章，不做筛选维度）。
-- 详情页三态：`ApiReflection.reflect` 必须经 `ApiIndex.isLoadable` 共享行级缓存判定（R5c）；
-  详情显示层必须用 `DetailUiState`（Loading/Loaded/Failed），反射失败显示
-  `api_detail_failed` + 重试，禁止误用「无结果」文案或无限转圈（R5d）。
+- build 期把枚举出的 dex 类名存为 `Snapshot.dexNames: Set<String>`，「可加载性」判定
+  为 O(1) 查表，**只有存在类才 `Class.forName`**——不存在 `Class.forName` 全 dex 负查找。
+- 反射加载统一经 `ApiIndex.loadClassRef`（合并后的单张 `Class<?>?` 缓存），
+  `ApiReflection.reflect` / `ApiUsageClassifier` 一律走该封装，禁止自行
+  `Class.forName`（防 static 初始化差异与三套缓存并存）。
+- 列表行反射信息经 `produceState` + `Dispatchers.IO` 获取，UI 只读惰性缓存；
+  全部反射路径必须 `try/catch(Throwable)` 降级（含负缓存）。
+- 过滤必须走预索引（`categories`/`categoryCounts`，O(选中子集)），禁止在 UI 线程对
+  全量 entries 做 O(n) 过滤；过滤计算经 `produceState + Dispatchers.Default`。
+- 详情页三态：显示层必须用 `DetailUiState`（Loading/Loaded/Failed），反射失败显示
+  `api_detail_failed` + 重试，禁止误用「无结果」文案或无限转圈。
+- 不可用 API（loadable == false）用 Compose 原生 `TextDecoration.LineThrough` 中划线
+  表示；禁止往文本内容里插入 `-`/`~~` 等「伪中划线」技巧。
 
 ## API 浏览器搜索语义红线（冻结审计结论，详见 docs/planned/API_BROWSER_FREEZE_FIX_PLAN.md）
 

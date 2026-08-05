@@ -19,6 +19,8 @@ import com.lioisme.lide.R
 import com.lioisme.lide.androlua.LuaConfigParser
 import com.lioisme.lide.editor.TipIconButton
 import com.lioisme.lide.model.Project
+import com.lioisme.lide.project.ProjectManager
+import com.lioisme.lide.ui.theme.LideTopBar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -62,6 +64,7 @@ private data class InfoState(
 @Composable
 fun ProjectInfoScreen(
     project: Project,
+    projectManager: ProjectManager,
     onBack: () -> Unit,
     onSaved: () -> Unit,
 ) {
@@ -77,24 +80,20 @@ fun ProjectInfoScreen(
     LaunchedEffect(project) {
         state =
             withContext(Dispatchers.IO) {
-                val file = File(project.path, "init.lua")
-                if (!file.exists()) {
-                    null
-                } else {
-                    val content = file.readText()
-                    val values =
-                        STRING_FIELDS.associate { f ->
-                            f.key to (LuaConfigParser.stringField(content, f.key) ?: "")
-                        }
-                    InfoState(
-                        values = values,
-                        debugMode =
-                            LuaConfigParser.stringField(content, "debugmode")?.let {
-                                it != "false" && it != "0"
-                            } ?: true,
-                        permissions = LuaConfigParser.stringArrayField(content, "user_permission"),
-                    )
-                }
+                // B-1：init.lua 读写收敛到 ProjectManager 域服务，UI 不自摸文件。
+                val content = projectManager.readInitContent(project) ?: return@withContext null
+                val values =
+                    STRING_FIELDS.associate { f ->
+                        f.key to (LuaConfigParser.stringField(content, f.key) ?: "")
+                    }
+                InfoState(
+                    values = values,
+                    debugMode =
+                        LuaConfigParser.stringField(content, "debugmode")?.let {
+                            it != "false" && it != "0"
+                        } ?: true,
+                    permissions = LuaConfigParser.stringArrayField(content, "user_permission"),
+                )
             }
         if (state == null) {
             Toast.makeText(context, strLoadFailed, Toast.LENGTH_SHORT).show()
@@ -109,33 +108,27 @@ fun ProjectInfoScreen(
         scope.launch {
             val ok =
                 withContext(Dispatchers.IO) {
-                    try {
-                        val file = File(project.path, "init.lua")
-                        if (!file.exists()) return@withContext false
-                        var content = file.readText()
+                    // B-1：字段级写 init.lua 收敛到 ProjectManager 域服务。
+                    projectManager.writeInitFields(project) { content ->
+                        var updated = content
                         for (f in STRING_FIELDS) {
                             val v = s.values[f.key]?.trim().orEmpty()
-                            content = LuaConfigParser.setField(content, f.key, LuaConfigParser.quoteLuaString(v))
+                            updated = LuaConfigParser.setField(updated, f.key, LuaConfigParser.quoteLuaString(v))
                         }
-                        content =
+                        updated =
                             LuaConfigParser.setField(
-                                content,
+                                updated,
                                 "debugmode",
                                 if (s.debugMode) "true" else "false",
                             )
-                        content =
-                            LuaConfigParser.setStringArrayField(
-                                content,
-                                "user_permission",
-                                s.permissions.map {
-                                    com.lioisme.lide.androlua.PermissionResolver
-                                        .normalize(it)
-                                },
-                            )
-                        file.writeText(content)
-                        true
-                    } catch (t: Throwable) {
-                        false
+                        LuaConfigParser.setStringArrayField(
+                            updated,
+                            "user_permission",
+                            s.permissions.map {
+                                com.lioisme.lide.androlua.PermissionResolver
+                                    .normalize(it)
+                            },
+                        )
                     }
                 }
             if (ok) {
@@ -149,13 +142,9 @@ fun ProjectInfoScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.info_title)) },
-                navigationIcon = {
-                    TipIconButton(tooltip = stringResource(R.string.cd_back), onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
-                    }
-                },
+            LideTopBar(
+                title = stringResource(R.string.info_title),
+                onBack = onBack,
             )
         },
     ) { padding ->

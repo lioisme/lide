@@ -24,9 +24,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.androlua.LuaApplication
 import com.lioisme.lide.R
+import com.lioisme.lide.androlua.AlpManager
 import com.lioisme.lide.androlua.PluginInfo
 import com.lioisme.lide.androlua.PluginManager
 import com.lioisme.lide.editor.TipIconButton
+import com.lioisme.lide.import.AlpImportCoordinator
+import com.lioisme.lide.ui.theme.LideTopBar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -40,9 +43,12 @@ fun PluginScreen(
 ) {
     val context = LocalContext.current
     val pluginManager = remember { PluginManager() }
+    val alpCoordinator = remember(context) { AlpImportCoordinator(context) }
     var plugins by remember { mutableStateOf(listOf<PluginInfo>()) }
     var isRefreshing by remember { mutableStateOf(false) }
     var pendingUninstall by remember { mutableStateOf<PluginInfo?>(null) }
+    // WP-015 同名冲突挂起（与工程/示例导入同一状态机，B-1）。
+    var pendingPluginConflict by remember { mutableStateOf<AlpImportCoordinator.Pending?>(null) }
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val strCannotReadFile = stringResource(R.string.cannot_read_file)
@@ -72,30 +78,32 @@ fun PluginScreen(
             if (uri == null) return@rememberLauncherForActivityResult
             scope.launch {
                 try {
-                    val inputStream = withContext(Dispatchers.IO) { context.contentResolver.openInputStream(uri) }
-                    if (inputStream == null) {
+                    // 统一经 AlpImportCoordinator 走 AlpManager 导入（§4.5：installFromAlp 与之
+                    // 重复且无条件覆盖，此处收敛为 OVERWRITE 语义 + 冲突走确认弹窗）。
+                    val tempPath = withContext(Dispatchers.IO) { alpCoordinator.copyUriToTemp(uri) }
+                    if (tempPath == null) {
                         snackbarHostState.showSnackbar(strCannotReadFile)
                         return@launch
                     }
-                    val rawName = File(uri.lastPathSegment ?: "plugin.alp").name
-                    val tempFile =
+                    val plan = withContext(Dispatchers.IO) { alpCoordinator.plan(tempPath) }
+                    if (plan == null) {
+                        withContext(Dispatchers.IO) { alpCoordinator.discard(tempPath) }
+                        snackbarHostState.showSnackbar(strPluginInvalid)
+                        return@launch
+                    }
+                    if (plan.conflict) {
+                        pendingPluginConflict = AlpImportCoordinator.Pending(tempPath, plan)
+                        return@launch
+                    }
+                    val result =
                         withContext(Dispatchers.IO) {
-                            val f = File(context.cacheDir, "alp_${System.currentTimeMillis()}_$rawName")
-                            f.parentFile?.mkdirs()
-                            inputStream.use { it.copyTo(f.outputStream()) }
-                            f
+                            alpCoordinator.import(tempPath, AlpManager.ImportMode.OVERWRITE)
                         }
-                    val extDir = LuaApplication.getInstance().luaExtDir
-                    val info =
-                        withContext(Dispatchers.IO) {
-                            pluginManager.installFromAlp(tempFile.absolutePath, "$extDir/plugin")
-                        }
-                    withContext(Dispatchers.IO) { tempFile.delete() }
-                    if (info != null) {
+                    if (result != null) {
                         Toast
                             .makeText(
                                 context,
-                                context.getString(R.string.plugin_installed, info.name),
+                                context.getString(R.string.plugin_installed, plan.name),
                                 Toast.LENGTH_SHORT,
                             ).show()
                         refresh()
@@ -113,13 +121,9 @@ fun PluginScreen(
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.plugins)) },
-                navigationIcon = {
-                    TipIconButton(tooltip = stringResource(R.string.cd_back), onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.cd_back))
-                    }
-                },
+            LideTopBar(
+                title = stringResource(R.string.plugins),
+                onBack = onBack,
                 actions = {
                     TipIconButton(
                         tooltip = stringResource(R.string.plugin_install_alp),
@@ -128,11 +132,6 @@ fun PluginScreen(
                         Icon(Icons.Default.Add, contentDescription = stringResource(R.string.plugin_install_alp))
                     }
                 },
-                colors =
-                    TopAppBarDefaults.topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.surface,
-                        titleContentColor = MaterialTheme.colorScheme.onSurface,
-                    ),
             )
         },
     ) { padding ->
@@ -274,6 +273,56 @@ fun PluginScreen(
             },
             dismissButton = {
                 TextButton(onClick = { pendingUninstall = null }) { Text(stringResource(R.string.cancel)) }
+            },
+        )
+    }
+
+    pendingPluginConflict?.let { pending ->
+        AlpImportConflictDialog(
+            name = pending.plan.name,
+            onOverwrite = {
+                pendingPluginConflict = null
+                scope.launch {
+                    val result =
+                        withContext(Dispatchers.IO) {
+                            alpCoordinator.import(pending.tempPath, AlpManager.ImportMode.OVERWRITE)
+                        }
+                    if (result != null) {
+                        Toast
+                            .makeText(
+                                context,
+                                context.getString(R.string.plugin_installed, pending.plan.name),
+                                Toast.LENGTH_SHORT,
+                            ).show()
+                        refresh()
+                    } else {
+                        snackbarHostState.showSnackbar(strPluginInvalid)
+                    }
+                }
+            },
+            onRename = {
+                pendingPluginConflict = null
+                scope.launch {
+                    val result =
+                        withContext(Dispatchers.IO) {
+                            alpCoordinator.import(pending.tempPath, AlpManager.ImportMode.RENAME)
+                        }
+                    if (result != null) {
+                        Toast
+                            .makeText(
+                                context,
+                                context.getString(R.string.plugin_installed, pending.plan.name),
+                                Toast.LENGTH_SHORT,
+                            ).show()
+                        refresh()
+                    } else {
+                        snackbarHostState.showSnackbar(strPluginInvalid)
+                    }
+                }
+            },
+            onCancel = {
+                pendingPluginConflict = null
+                scope.launch { withContext(Dispatchers.IO) { alpCoordinator.discard(pending.tempPath) } }
             },
         )
     }

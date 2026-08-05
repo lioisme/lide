@@ -21,6 +21,8 @@ import com.androlua.LuaApplication
 import com.lioisme.lide.R
 import com.lioisme.lide.androlua.AlpManager
 import com.lioisme.lide.editor.TipIconButton
+import com.lioisme.lide.import.AlpImportCoordinator
+import com.lioisme.lide.ui.theme.LideTopBar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -60,7 +62,8 @@ fun ExamplesScreen(onBack: () -> Unit) {
     var importing by remember { mutableStateOf(false) }
     var isRefreshing by remember { mutableStateOf(false) }
     // WP-015 待确认导入：临时 .alp 路径 + 无副作用计划（冲突态已解析）。
-    var pendingImport by remember { mutableStateOf<PendingImport?>(null) }
+    val alpCoordinator = remember(context) { AlpImportCoordinator(context) }
+    var pendingImport by remember { mutableStateOf<AlpImportCoordinator.Pending?>(null) }
     val strImportFailed = stringResource(R.string.import_failed)
     val strImportSuccess = stringResource(R.string.examples_import_success)
 
@@ -81,13 +84,7 @@ fun ExamplesScreen(onBack: () -> Unit) {
         scope.launch {
             val ok =
                 withContext(Dispatchers.IO) {
-                    try {
-                        val result = AlpManager(context).import(tempPath, mode)
-                        File(tempPath).delete()
-                        result != null
-                    } catch (e: Exception) {
-                        false
-                    }
+                    alpCoordinator.import(tempPath, mode) != null
                 }
             importing = false
             if (ok) {
@@ -115,13 +112,17 @@ fun ExamplesScreen(onBack: () -> Unit) {
             // 选择后按模式执行；无冲突直接导入。
             val temp =
                 withContext(Dispatchers.IO) {
-                    val f = File(context.cacheDir, "example_${System.currentTimeMillis()}_${example.asset}")
-                    f.parentFile?.mkdirs()
                     try {
                         context.assets.open("examples/${example.asset}").use { input ->
+                            val f =
+                                File(
+                                    context.cacheDir,
+                                    "example_${System.currentTimeMillis()}_${example.asset}",
+                                )
+                            f.parentFile?.mkdirs()
                             input.copyTo(f.outputStream())
+                            f
                         }
-                        f
                     } catch (e: Exception) {
                         null
                     }
@@ -131,16 +132,16 @@ fun ExamplesScreen(onBack: () -> Unit) {
                 snackbarHostState.showSnackbar(strImportFailed)
                 return@launch
             }
-            val plan = withContext(Dispatchers.IO) { AlpManager(context).planImport(temp.absolutePath) }
+            val plan = withContext(Dispatchers.IO) { alpCoordinator.plan(temp.absolutePath) }
             if (plan == null) {
                 importing = false
-                withContext(Dispatchers.IO) { temp.delete() }
+                withContext(Dispatchers.IO) { alpCoordinator.discard(temp.absolutePath) }
                 snackbarHostState.showSnackbar(strImportFailed)
                 return@launch
             }
             if (plan.conflict) {
                 importing = false
-                pendingImport = PendingImport(temp.absolutePath, plan)
+                pendingImport = AlpImportCoordinator.Pending(temp.absolutePath, plan)
                 return@launch
             }
             executeImport(temp.absolutePath, AlpManager.ImportMode.OVERWRITE)
@@ -152,18 +153,9 @@ fun ExamplesScreen(onBack: () -> Unit) {
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.examples)) },
-                navigationIcon = {
-                    TipIconButton(tooltip = stringResource(R.string.cd_back), onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.cd_back))
-                    }
-                },
-                colors =
-                    TopAppBarDefaults.topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.surface,
-                        titleContentColor = MaterialTheme.colorScheme.onSurface,
-                    ),
+            LideTopBar(
+                title = stringResource(R.string.examples),
+                onBack = onBack,
             )
         },
     ) { padding ->
@@ -271,14 +263,8 @@ fun ExamplesScreen(onBack: () -> Unit) {
             },
             onCancel = {
                 pendingImport = null
-                scope.launch { withContext(Dispatchers.IO) { File(pending.tempPath).delete() } }
+                scope.launch { withContext(Dispatchers.IO) { alpCoordinator.discard(pending.tempPath) } }
             },
         )
     }
 }
-
-/** WP-015 待确认导入：临时 .alp 文件路径 + 已解析的导入计划。 */
-private data class PendingImport(
-    val tempPath: String,
-    val plan: AlpManager.ImportPlan,
-)

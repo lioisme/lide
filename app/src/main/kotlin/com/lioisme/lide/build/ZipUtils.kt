@@ -3,12 +3,13 @@ package com.lioisme.lide.build
 import java.io.OutputStream
 import java.util.zip.CRC32
 import java.util.zip.ZipEntry
+import java.util.zip.ZipInputStream
 import java.util.zip.ZipOutputStream
 
 /**
- * APK 装配/签名共用的 ZIP 写入工具。
+ * APK 装配/签名共用的 ZIP 工具（读写）。
  *
- * Android 11+（targetSdk 30+）安装校验要求 resources.arsc 等 STORED 条目
+ * 写入：Android 11+（targetSdk 30+）安装校验要求 resources.arsc 等 STORED 条目
  * 4 字节对齐：写入条目的 LOCAL 头 extra 字段填充零字节，使数据区起始偏移
  * 4 对齐（等价 zipalign），不破坏顺序读取（ZipInputStream 按 extra_len 跳过）。
  *
@@ -18,6 +19,24 @@ import java.util.zip.ZipOutputStream
  */
 object ZipUtils {
     const val LOC_HEADER_SIZE = 30
+
+    /** 从字节数组读取全部条目（名称 → 压缩方法 → 原始数据）。 */
+    fun readEntries(
+        bytes: ByteArray,
+        skipBlankNames: Boolean = false,
+    ): List<Triple<String, Int, ByteArray>> {
+        val out = ArrayList<Triple<String, Int, ByteArray>>()
+        ZipInputStream(bytes.inputStream()).use { zis ->
+            while (true) {
+                val entry = zis.nextEntry ?: break
+                // 空名条目（zip 对齐/壳工具产物，STORED 零字节）无负载，跳过；
+                // 否则重写时 name="" 会触发 Android 13+/JDK 18+ 的重复条目拒绝。
+                if (skipBlankNames && entry.name.isBlank()) continue
+                out += Triple(entry.name, entry.method, zis.readBytes())
+            }
+        }
+        return out
+    }
 
     /** 统计写出的字节数，作为 ZIP 内下一条目的真实偏移。 */
     class CountingOutputStream(

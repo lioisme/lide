@@ -33,6 +33,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.lioisme.lide.R
 import com.lioisme.lide.editor.TipIconButton
+import com.lioisme.lide.ui.theme.LideTopBar
 import com.lioisme.lide.util.HelpParser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -64,28 +65,10 @@ fun HelpScreen(onBack: () -> Unit) {
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.MenuBook,
-                            contentDescription = null,
-                            modifier = Modifier.padding(end = 8.dp),
-                            tint = MaterialTheme.colorScheme.primary,
-                        )
-                        Text(stringResource(R.string.help_title))
-                    }
-                },
-                navigationIcon = {
-                    TipIconButton(tooltip = stringResource(R.string.cd_back), onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.cd_back))
-                    }
-                },
-                colors =
-                    TopAppBarDefaults.topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.surface,
-                        titleContentColor = MaterialTheme.colorScheme.onSurface,
-                    ),
+            LideTopBar(
+                title = stringResource(R.string.help_title),
+                onBack = onBack,
+                icon = Icons.AutoMirrored.Filled.MenuBook,
             )
         },
     ) { padding ->

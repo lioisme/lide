@@ -109,7 +109,8 @@ object LuaConfigParser {
                         i = if (end < 0) n else end + close.length
                         lineStart = skipToNextLine(content, i, n)
                     } else {
-                        if (content[i] == '[') depth++
+                        // 索引括号（t[1]、[1] = "x"）不参与表嵌套计数（depth 只跟踪 `{}`）：
+                        // `[` 无配对递减，计入会使顶层 `t[1] = x` 之后所有字段静默丢失（P0-5）。
                         i++
                     }
                     atLineStart = false

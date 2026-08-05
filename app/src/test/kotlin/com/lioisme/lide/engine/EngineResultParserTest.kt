@@ -46,6 +46,39 @@ class EngineResultParserTest {
     }
 
     @Test
+    fun `findErrorLocation preserves project relative path for subdir files`() {
+        val output =
+            """
+            Runtime error: /storage/emulated/0/AndroLua/project/demo/utils/helper.lua:8: attempt to call a nil value
+            stack traceback:
+            	/storage/emulated/0/AndroLua/project/demo/utils/helper.lua:8: in function 'inner'
+            """.trimIndent()
+        assertEquals(
+            EngineResultParser.ErrorLocation("utils/helper.lua", 8),
+            EngineResultParser.findErrorLocation(output, "/storage/emulated/0/AndroLua/project/demo"),
+        )
+    }
+
+    @Test
+    fun `findErrorLocation falls back to basename without project path or outside project`() {
+        val output = "Runtime error: /p/utils/helper.lua:3: boom"
+        assertEquals(EngineResultParser.ErrorLocation("helper.lua", 3), EngineResultParser.findErrorLocation(output))
+        assertEquals(
+            EngineResultParser.ErrorLocation("helper.lua", 3),
+            EngineResultParser.findErrorLocation(output, "/unrelated/project"),
+        )
+    }
+
+    @Test
+    fun `findErrorLocation root file stays relative`() {
+        val output = "Runtime error: /p/demo/main.lua:12: boom"
+        assertEquals(
+            EngineResultParser.ErrorLocation("main.lua", 12),
+            EngineResultParser.findErrorLocation(output, "/p/demo"),
+        )
+    }
+
+    @Test
     fun `findNilGlobal extracts quoted name`() {
         val output =
             """

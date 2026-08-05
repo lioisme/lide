@@ -133,7 +133,6 @@ fun EditorScreen(
     var snackbarMsg by remember { mutableStateOf<String?>(null) }
     // 跳行/插入 import 的待执行标记：编辑器绑定目标文件后消费。
     var pendingGotoLine by remember { mutableStateOf<Int?>(null) }
-    var pendingImportGlobal by remember { mutableStateOf<String?>(null) }
 
     val engineResultLauncher =
         rememberLauncherForActivityResult(
@@ -145,7 +144,7 @@ fun EditorScreen(
                 data?.getBooleanExtra(EngineActivity.EXTRA_ERROR, false) == true ||
                     EngineResultParser.isErrorOutput(output)
             if (isError) {
-                runResult = RunResult(output, EngineResultParser.findErrorLocation(output))
+                runResult = RunResult(output, EngineResultParser.findErrorLocation(output, project.path))
             } else {
                 snackbarMsg = context.getString(R.string.run_finished)
             }
@@ -364,12 +363,11 @@ fun EditorScreen(
                 SnackbarHost(hostState = snackbarHostState)
             },
         ) { padding ->
-            // 标签视图列表：仅在标签数据实际变化时重建（避免每次重组分配新列表）。
-            val tabViews = remember(tabs) { tabs.map { it.tab } }
+            // 标签视图列表：状态类已合并（B-5），tabs 直接是 EditorTab，无需逐帧适配。
             EditorBody(
                 session = session,
                 contentPadding = padding,
-                tabs = tabViews,
+                tabs = tabs,
                 selectedFile = selectedFile,
                 content = content,
                 isDarkTheme = isDarkTheme,

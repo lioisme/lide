@@ -7,9 +7,9 @@ import io.github.rosemoe.sora.lang.analysis.AsyncIncrementalAnalyzeManager
 import io.github.rosemoe.sora.langs.textmate.registry.FileProviderRegistry
 import io.github.rosemoe.sora.langs.textmate.registry.GrammarRegistry
 import io.github.rosemoe.sora.langs.textmate.registry.ThemeRegistry
-import io.github.rosemoe.sora.langs.textmate.registry.dsl.languages
 import io.github.rosemoe.sora.langs.textmate.registry.model.ThemeModel
 import io.github.rosemoe.sora.langs.textmate.registry.provider.AssetsFileResolver
+import io.github.rosemoe.sora.langs.textmate.registry.reader.LanguageDefinitionReader
 import org.eclipse.tm4e.core.registry.IThemeSource
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.atomic.AtomicBoolean
@@ -83,28 +83,36 @@ object TextMateInitializer {
         themeRegistry.setTheme("quietlight")
 
         // 多语言化（任务单 EDITOR_ALL_LANGUAGES_SUPPORT_WORK_ORDER P1/P2）：
-        // 通过 LanguageCatalog 全量注册 38 种 TextMate 文法（一次性后台预编译）。
-        // 任一文法加载失败仅记录日志，不中断其余文法（降级原则）。
+        // 语言目录单一事实源 = assets/textmate/languages.json（架构审计 P0-2 根治，2026-08-06）：
+        // 经 sora 原生 LanguageDefinitionReader 批量读取（天然保留 embeddedLanguages 嵌入语言映射），
+        // 优先走 loadGrammars(list) 批量加载（先 prepare 全部 scope id，跨语言嵌入引用可解析）；
+        // 批量失败时逐条降级加载（任一文法失败仅记录日志，不中断其余文法，降级原则）。
         val grammarRegistry = GrammarRegistry.getInstance()
-        for (spec in LanguageCatalog.all) {
+        val definitions = try {
+            LanguageDefinitionReader.read(LANGUAGES_JSON)
+        } catch (t: Throwable) {
+            Log.e(TAG, "read languages.json failed", t)
+            emptyList()
+        }
+        if (definitions.isNotEmpty()) {
             try {
-                grammarRegistry.loadGrammar(
-                    languages {
-                        language(spec.name) {
-                            grammar = "textmate/${spec.grammar}"
-                            scopeName = spec.scopeName
-                            languageConfiguration = "textmate/${spec.languageConfiguration}"
-                        }
-                    }.build().single(),
-                )
+                grammarRegistry.loadGrammars(definitions)
             } catch (t: Throwable) {
-                Log.w(TAG, "grammar load failed: ${spec.name}", t)
+                Log.w(TAG, "batch grammar load failed, falling back per item", t)
+                for (definition in definitions) {
+                    try {
+                        grammarRegistry.loadGrammar(definition)
+                    } catch (itemError: Throwable) {
+                        Log.w(TAG, "grammar load failed: ${definition.name}", itemError)
+                    }
+                }
             }
         }
     }
 
     private const val TAG = "TextMateInitializer"
     private const val PRELOAD_THREAD_NAME = "TextMatePreload"
+    private const val LANGUAGES_JSON = "textmate/languages.json"
     private val THEMES = arrayOf("quietlight", "darcula")
     private var initStart = 0L
 }

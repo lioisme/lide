@@ -20,6 +20,8 @@ import com.lioisme.lide.androlua.LuaConfigParser
 import com.lioisme.lide.build.ApkBuilder
 import com.lioisme.lide.editor.TipIconButton
 import com.lioisme.lide.model.Project
+import com.lioisme.lide.project.ProjectManager
+import com.lioisme.lide.ui.theme.LideTopBar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
@@ -58,6 +60,7 @@ private sealed interface BuildResult {
 @Composable
 fun BuildApkScreen(
     project: Project,
+    projectManager: ProjectManager,
     onBack: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -81,19 +84,15 @@ fun BuildApkScreen(
     LaunchedEffect(project) {
         state =
             withContext(Dispatchers.IO) {
-                val file = File(project.path, "init.lua")
-                if (!file.exists()) {
-                    null
-                } else {
-                    val content = file.readText()
-                    BuildState(
-                        appName = LuaConfigParser.stringField(content, "appname") ?: project.name,
-                        packageName = LuaConfigParser.stringField(content, "packagename").orEmpty(),
-                        version = LuaConfigParser.stringField(content, "appver") ?: "1.0",
-                        versionCode = LuaConfigParser.stringField(content, "appcode") ?: "1",
-                        permissionCount = LuaConfigParser.stringArrayField(content, "user_permission").size,
-                    )
-                }
+                // B-1：init.lua 读写收敛到 ProjectManager 域服务，UI 不自摸文件。
+                val content = projectManager.readInitContent(project) ?: return@withContext null
+                BuildState(
+                    appName = LuaConfigParser.stringField(content, "appname") ?: project.name,
+                    packageName = LuaConfigParser.stringField(content, "packagename").orEmpty(),
+                    version = LuaConfigParser.stringField(content, "appver") ?: "1.0",
+                    versionCode = LuaConfigParser.stringField(content, "appcode") ?: "1",
+                    permissionCount = LuaConfigParser.stringArrayField(content, "user_permission").size,
+                )
             }
         if (state == null) {
             Toast.makeText(context, strLoadFailed, Toast.LENGTH_SHORT).show()
@@ -112,7 +111,7 @@ fun BuildApkScreen(
         scope.launch {
             val res =
                 withContext(Dispatchers.IO) {
-                    doBuild(context, project, s) { stage -> stageChannel.trySend(stage) }
+                    doBuild(context, project, projectManager, s) { stage -> stageChannel.trySend(stage) }
                 }
             building = false
             buildStage = null
@@ -151,13 +150,9 @@ fun BuildApkScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.build_title)) },
-                navigationIcon = {
-                    TipIconButton(tooltip = stringResource(R.string.cd_back), onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
-                    }
-                },
+            LideTopBar(
+                title = stringResource(R.string.build_title),
+                onBack = onBack,
             )
         },
     ) { padding ->
@@ -261,6 +256,7 @@ fun BuildApkScreen(
 private fun doBuild(
     context: android.content.Context,
     project: Project,
+    projectManager: ProjectManager,
     s: BuildState,
     onStage: (ApkBuilder.BuildStage) -> Unit,
 ): BuildResult =
@@ -293,7 +289,7 @@ private fun doBuild(
                 appName = s.appName,
                 versionName = s.version,
                 versionCode = s.versionCode.toIntOrNull() ?: 1,
-                declaredPermissions = declaredPermissions(project),
+                declaredPermissions = projectManager.loadUserPermissions(project),
                 luaSources = projectFiles,
                 engineLuaLibs = engineLibs,
             )
@@ -346,19 +342,6 @@ private fun installApk(
         Toast.makeText(context, e.message ?: context.getString(R.string.build_install_failed), Toast.LENGTH_LONG).show()
     }
 }
-
-private fun declaredPermissions(project: Project): List<String> =
-    try {
-        val initFile = File(project.path, "init.lua")
-        if (initFile.exists()) {
-            com.lioisme.lide.androlua.PermissionResolver
-                .declared(initFile.readText())
-        } else {
-            emptyList()
-        }
-    } catch (_: Exception) {
-        emptyList()
-    }
 
 /**
  * 收集工程目录全部文件（注入 assets/lua/<相对路径>，打包后即工程目录）：

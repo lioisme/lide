@@ -10,7 +10,7 @@ lide 是一个面向 **Android 手机编程** 场景的 Lua 脚本编程环境�
 
 lide 采用 **AndroLua C 原生引擎**（`libluajava.so` + 全量 Java 运行时源码）作为底层运行时，从 AndroLua_pro 源码编译集成。宿主层使用 **Kotlin + Jetpack Compose** 实现 IDE、项目管理及调试工具链。
 
-引擎 Java 层编译为宿主 APK 主 DEX（`androlua` 模块），原生 `.so` 通过 NDK 从 AndroLua_pro C 源码构建。引擎与宿主通过 **Intent 通信 + 文件级结果协议**解耦，实现零兼容层代码的纯正 AndroLua 运行体验。
+引擎 Java 层编译为宿主 APK 主 DEX（`androlua` 模块），原生 `.so` 通过 NDK 从 AndroLua_pro C 源码构建（AGP `externalNativeBuild`/ndk-build，无预编译产物入库）。引擎与宿主**同进程运行**：宿主经 `EngineBridge.createEngineIntent` 直启 `EngineActivity`（继承 `LuaActivity`），运行结果经 **ActivityResult + Intent Extra** 回传，实现零兼容层代码的纯正 AndroLua 运行体验。
 
 ---
 
@@ -28,9 +28,9 @@ lide 的核心设计原则：
 
 1. **Kotlin 宿主** —— 所有 IDE 功能、构建工具链、项目管理均使用 Kotlin / Java 实现
 2. **Lua 仅作为脚本语言** —— Lua 仅用于运行用户代码，不承担宿主框架职责
-3. **引擎与宿主解耦** —— ClassLoader 隔离 + Intent 通信，互不污染
+3. **引擎与宿主同进程** —— 引擎运行在宿主进程内独立 Activity 栈，结果经 ActivityResult 回传
 4. **零兼容层** —— 所有 AndroLua API 由原生引擎直接提供
-5. **预编译集成** —— .so + .dex 预编译，宿主构建零 NDK 依赖
+5. **源码集成** —— 原生引擎从 AndroLua_pro C 源码经 ndk-build 构建进 APK，无预编译产物/无 rebuild 脚本
 6. **生态兼容** —— 工程格式兼容 AndroLua 的 `.alp` 规范
 7. **极简 IDE** —— 适应手机屏幕限制
 
@@ -86,20 +86,22 @@ lide 的核心设计原则：
 |------|------|---------|
 | UI 框架 | Jetpack Compose + Material Design 3 | 声明式 UI，Kotlin 原生支持，适应手机屏幕 |
 | Lua 引擎 | AndroLua C 引擎（Lua 5.3.3 + JNI） | 原生性能，100% AndroLua API 兼容 |
-| 引擎集成 | NDK 编译 .so + Java 源码编译（androlua 模块） | 从 AndroLua_pro 源码构建，100% API 兼容 |
-| 通信协议 | Intent + 文件系统（JSON） | 松耦合，引擎运行在独立 Activity 栈 |
+| 引擎集成 | ndk-build 从源码构建 .so（AGP externalNativeBuild）+ Java 源码编译（androlua 模块） | 从 AndroLua_pro 源码构建，100% API 兼容 |
+| 通信协议 | ActivityResult + Intent Extra | 同进程 Activity 栈直启，结果回传，无文件协议 |
 | Java 运行时 | `androlua` 模块（Kotlin 库）编译所有 AndroLua_pro Java 源码 | 全量运行时类编译进宿主主 DEX |
 | 代码编辑器 | sora-editor + TextMate 语法 | 专业级编辑器，支持 Lua 语法高亮 |
 
 ### 3.3 解耦设计：EngineBridge
 
-引擎与宿主通过 EngineBridge 交互，运行在独立 Activity 栈：
+引擎与宿主运行在同一进程、独立 Activity 栈，经 EngineBridge 交互：
 
 ```
-RunEngineLauncher → 物化依赖(后台) → EngineBridge.createEngineIntent(projectDir, mainFile) → EngineActivity
+RunEngineLauncher → EngineBridge.createEngineIntent(projectDir, mainFile, args) → EngineActivity
 ```
 
-引擎输出/错误由引擎自带控制台（LuaActivity 默认布局）直接展示，宿主不做结果回传页；物化失败仅 Toast 提示。
+引擎输出/错误由引擎自带控制台（LuaActivity 默认布局）直接展示，宿主经 ActivityResult
+收取运行结果（output/error Extra，输出截断 200KB 防 Binder 溢出）；失败诊断经
+`EngineResultParser` 定位错误行号。物化失败仅 Toast 提示。
 
 Java 运行时类（`com.luajava.*`、`com.androlua.*`）通过 `androlua` 模块编译进宿主 APK 主 DEX，`EngineActivity` 直接继承 `LuaActivity`，无需反射或 ClassLoader 隔离。
 
@@ -288,10 +290,10 @@ EngineActivity (extends LuaActivity, 独立 Activity 栈)
 | 兼容性 | ~2000 行 Kotlin 兼容层代码 | 零兼容层，100% 原生 AndroLua API |
 | 维护来源 | 社区停更（2019） | AndroLua_pro 活跃项目 |
 | 性能 | 解释模式 ≈ C Lua 40-70% | 原生 C 速度 |
-| 引擎集成 | Gradle 依赖 | 预编译 .so + .dex，一次编译长期使用 |
-| 宿主耦合 | 强耦合（共享 Globals） | 完全解耦（Intent + 文件协议） |
-| ClassLoader 隔离 | ❌ 不隔离 | ✅ DexClassLoader 隔离 |
-| build.gradle 复杂度 | 低（仅 Maven 坐标） | 中（资产复制 + jniLibs） |
+| 引擎集成 | Gradle 依赖 | ndk-build 从源码构建，随 APK 打包 |
+| 宿主耦合 | 强耦合（共享 Globals） | 同进程独立 Activity 栈，ActivityResult 回传 |
+| ClassLoader 隔离 | ❌ 不隔离 | ✅ 单进程直启（无隔离负担；dex 经 InMemoryDexClassLoader 内存加载） |
+| build.gradle 复杂度 | 低（仅 Maven 坐标） | 中（externalNativeBuild 源码构建配置） |
 
 ### 6.2 迁移收益
 
@@ -307,12 +309,13 @@ EngineActivity (extends LuaActivity, 独立 Activity 栈)
 
 | 成本项 | 说明 | 频次 |
 |--------|------|------|
-| NDK 环境搭建 | 首次配置 NDK r28+ | 一次性 |
-| .so 编译 | `ndk-build` 编译 C 源码 | 仅源码变更时 |
-| .dex 编译 | `javac + d8` 编译 Java 源码 | 仅源码变更时 |
-| ClassLoader 隔离验证 | 安全审查 | 每次引擎更新 |
+| NDK 环境搭建 | 首次配置 NDK 29.0.14206865 | 一次性 |
+| .so 编译 | AGP `externalNativeBuild`（ndk-build）随 `assemble` 从 `app/src/main/cpp/` 构建 | 每次构建自动 |
+| .dex 编译 | `androlua` 模块编译 Java 源码 | 仅源码变更时 |
 
-引擎重建非日常操作。通过 `scripts/rebuild_engine.sh` / `.ps1` 一键完成。
+引擎源码统一归档于 `app/src/main/cpp/`（顶层 `Android.mk` + `Application.mk` 为
+ndk-build 定义，`live2d/` 为独立模块），由 AGP 在 assemble 时直接从源码构建并打包进
+APK——不设 jniLibs 缓存目录，也无 rebuild 脚本（R5）。
 
 ---
 
@@ -341,22 +344,24 @@ EngineActivity (extends LuaActivity, 独立 Activity 栈)
 - 运行入口（RunEngineLauncher：物化依赖 → 直启引擎，输出由引擎控制台展示）
 - Lua 运行时脚本（25 个 `.lua` 文件）
 
-### 阶段四：构建系统（规划中；v1.0 明确暂不支持，见下方决策说明）
+### 阶段四：构建系统（已完成 2026-08）
 
-- AndroidManifest 二进制 XML 编码/解码
-- APK 容器组装（ZIP 格式）
-- `classes.dex` 注入
-- 资源打包（图标、启动图）
-- 对齐（zipalign）
+- AndroidManifest 二进制 XML 补丁（`AXmlManifest` / `ManifestEdit`）
+- APK 容器组装（`ApkBuilder`：宿主 APK + 工程 Lua 注入，ZIP 条目 4 字节对齐）
+- `classes.dex` 注入 / main.lua 编译字节码（`LuaCompiler`）
+- 资源与图标打包、v1 + v2 签名（`ApkSigner` / `V2Signer`）
+- 产物写盘 `<luaExtDir>/apk/`，FileProvider 分享安装（`BuildApkScreen`）
 
-> **v1.0 决策（2026-07-31）**：设备端独立 APK 打包暂不支持。原因：① pro 打包器 `bin.lua` 依赖外部 `mao/sign` 签名 jar（不在仓库中），且 v1-only 签名在现代 Android（targetSdk≥30）不可安装；② 宿主 APK 模板携带全套 IDE 运行时，产物方法数/体积不可控；③ 打包器属于设备端构建链，与 IDE 编辑/运行主链路正交，优先级低。后续立项时平移 pro 的 luac 字节码化、`checklib` 依赖自动收集、manifest 字符串级补丁三个机制即可（参考 `docs/planned/XPOSED_MODULE_FEASIBILITY_REPORT.md` §3.2 的继承价值分析）。
+> **历史决策（2026-07-31）**：设备端独立 APK 打包一度暂不支持；2026-08 已按
+> `PARITY_COMPLETION_WORK_ORDER` 立项落地（打包链的 AXML/签名方案仅做显式拒绝与
+> 契约收敛，见 `docs/kb/ARCHITECTURE.md` 与 AGENTS.md 打包约定）。
 
-### 阶段五：签名与发布（规划中）
+### 阶段五：签名与发布（已完成 2026-08）
 
-- 调试 / 自定义签名管理
-- v1 / v2 / v3 签名方案支持
-- APK 安装与分享
-- 多 ABI 构建支持
+- 调试签名：`testkey.pk8` / `testkey.x509.pem`（assets/keys/，仅调试产物）
+- v1（JAR）+ v2（APK Signature Scheme）签名支持
+- APK 安装与分享（FileProvider + ACTION_INSTALL_PACKAGE）
+- 多 ABI 构建支持（宿主 arm64 / x64 debug variant）
 
 ---
 
@@ -366,9 +371,11 @@ EngineActivity (extends LuaActivity, 独立 Activity 栈)
 
 与 AndroLua_pro（`jni/` 19 个 C 模块源码随 APK 打包）相比，lide 内置原生模块为 **17 个 × 3 ABI**（15 个原有 + lfs + lsqlite3 已补齐）：
 
-- ✅ **lfs / lsqlite3**：已按 WP-001 流程预编译（`build-scripts/jni/{lfs,lsqlite3}/Android.mk` + `build-scripts/patches/lsqlite3/lsqlite3.c` 的 Lua 5.3 兼容补丁），产物入 `third_party/prebuilt/` 与 `app/src/main/jniLibs/`，真机 `require "lfs"` / `require "lsqlite3"` 验证通过。
-- ⏭️ **lluv**：与已内置的 luv 功能重叠（同源于 libuv），pro 生态中极少直接使用，不预编译。
-- ⏭️ **tcc**：脚本内嵌 C 编译器；NDK 29 仅 armeabi-v7a 有目标（无 arm64-v8a / x86_64），对现代设备无实际可用性，不预编译。
+- ✅ **lfs / lsqlite3**：已随引擎源码构建（`app/src/main/cpp/` 内 `Android.mk` 模块定义 +
+  `build-scripts/patches/lsqlite3/lsqlite3.c` 的 Lua 5.3 兼容补丁），真机
+  `require "lfs"` / `require "lsqlite3"` 验证通过。
+- ⏭️ **lluv**：与已内置的 luv 功能重叠（同源于 libuv），pro 生态中极少直接使用，不构建。
+- ⏭️ **tcc**：脚本内嵌 C 编译器；NDK 29 仅 armeabi-v7a 有目标（无 arm64-v8a / x86_64），对现代设备无实际可用性，不构建。
 - **补偿机制**：缺失模块（含任意第三方 .so）由工程 `libs/` 自备 —— 引擎 `loadLibs` 自动登记 `getLibrarys()`，`libsloader` 优先命中表，否则 `package.loadlib("./libs/lib…so", "luaopen_…")`。用法见 `app/src/main/assets/samples/DemoProject/libs/README.txt`。
 
 另注：lide 内置模块含 `gl`（OpenGL 绑定，对应 pro 的 luagl）与 `mime`（pro 未内置）等；`socket` 等常用模块与 pro 完全一致。内置 Lua 库为 pro 超集（31 文件 vs pro 28）。
@@ -379,7 +386,7 @@ EngineActivity (extends LuaActivity, 独立 Activity 栈)
 
 | 风险 | 说明 | 缓解措施 |
 |------|------|---------|
-| NDK 版本兼容性 | NDK 版本更新可能导致 C 编译失败 | 锁定 NDK 26.x；scripts/rebuild_engine 记录精确环境 |
+| NDK 版本兼容性 | NDK 版本更新可能导致 C 编译失败 | 锁定 NDK 29.0.14206865（app/build.gradle.kts ndkVersion） |
 | Support Library 依赖 | AndroLua_pro Java 源码有 Support Library 引用 | 使用 AndroidX 重写受影响类（参考 AndroLuaX） |
 | Android 14+ JNI 限制 | `luajava.c` 在 Android 14+ 的新 JNI 约束下崩溃 | 在 API 34+ 设备验证；必要时适配新 JNI API |
 | DEX 方法数超 64K | androlua 模块 Java 源码过多导致主 DEX 方法数超限 | 分割模块或启用 multidex |
@@ -387,7 +394,7 @@ EngineActivity (extends LuaActivity, 独立 Activity 栈)
 | Lua 5.1/5.3 语法差异 | 脚本使用了 Lua 5.1 专有语法 | 三个测试工程使用基础语法，兼容性好 |
 | 通配符导入受限 | Android 14+ 限制 DexFile API | 改用 PathClassLoader + 反射遍历 DEX 路径 |
 | 代理创建 ClassLoader 隔离 | createProxy 跨 ClassLoader 异常 | 限制代理 Android SDK 接口（Boot ClassLoader） |
-| 结果文件写入丢失 | Activity 异常退出时结果未写入 | onSaveInstanceState 兜底写入 |
+| 结果 Extra 体积超限 | 输出过大导致 Binder 溢出 | 输出截断 200KB |
 
 ---
 

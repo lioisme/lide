@@ -55,6 +55,13 @@ third_party/prebuilt/x86_64/libluajava.so        347 KB
 
 ## WP-003：Host 集成（已完成）
 
+> **2026-08 更正（文档漂移修复，架构审计 D-1）**：本节描述的历史文件协议
+> （`engine_result.json` / `engine_output.txt`）与 `RunScreen` 页面**已按 D-05 决策删除**。
+> 当前事实以 `docs/kb/ARCHITECTURE.md` 为准：引擎经 `EngineBridge.createEngineIntent`
+> 同进程直启 `EngineActivity`，结果经 **ActivityResult + Intent Extra** 回传
+> （output/error extra，输出截断 200KB 防 Binder 溢出）；`EngineResultParser` 解析
+> 错误定位并跳行。以下历史内容仅保留存档价值。
+
 **目标**：通过 Intent + 文件协议打通 Kotlin Host 与引擎层通信。
 
 **完成内容**：

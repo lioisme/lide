@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.lioisme.lide.R
 import com.lioisme.lide.editor.TipIconButton
+import com.lioisme.lide.ui.theme.LideTopBar
 import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -28,28 +29,10 @@ fun LuaManualScreen(onBack: () -> Unit) {
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Row(verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
-                        Icon(
-                            Icons.Default.MenuBook,
-                            contentDescription = null,
-                            modifier = Modifier.padding(end = 8.dp),
-                            tint = MaterialTheme.colorScheme.primary,
-                        )
-                        Text(stringResource(R.string.lua_manual))
-                    }
-                },
-                navigationIcon = {
-                    TipIconButton(tooltip = stringResource(R.string.cd_back), onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.cd_back))
-                    }
-                },
-                colors =
-                    TopAppBarDefaults.topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.surface,
-                        titleContentColor = MaterialTheme.colorScheme.onSurface,
-                    ),
+            LideTopBar(
+                title = stringResource(R.string.lua_manual),
+                onBack = onBack,
+                icon = Icons.Default.MenuBook,
             )
         },
     ) { padding ->

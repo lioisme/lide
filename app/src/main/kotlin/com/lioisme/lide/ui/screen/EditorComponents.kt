@@ -57,6 +57,7 @@ import com.lioisme.lide.editor.EditorTab
 import com.lioisme.lide.editor.EditorTabs
 import com.lioisme.lide.editor.FileBrowser
 import com.lioisme.lide.editor.FileNode
+import com.lioisme.lide.editor.LanguageDetector
 import com.lioisme.lide.editor.LuaEditor
 import com.lioisme.lide.editor.SearchBar
 import com.lioisme.lide.editor.pressAndHoldHapticFeedback
@@ -561,57 +562,25 @@ private fun ActionSheetRow(
 }
 
 /**
- * 可打开编辑的文档扩展名白名单（不含扩展名的文件视为文档，如 Makefile / LICENSE）。
- * 白名单之外的文件（二进制、归档、图片等）点击提示「不支持打开」。
+ * 可打开编辑的文档判定：语言文件消费 :editor 唯一事实源 [LanguageDetector]
+ * （P0-3，扩展名 → scope 由 :editor 维护，app 不再维护语言双表）；
+ * 纯文本附加扩展名（:editor 以 `text.plain` 打开）单独列出。
+ * 不含扩展名的文件视为文档（如 Makefile / LICENSE）。
+ * 其余文件（二进制、归档、图片等）点击提示「不支持打开」。
  */
-private val DOCUMENT_EXTENSIONS =
+private val PLAIN_TEXT_EXTENSIONS =
     setOf(
-        "lua",
         "txt",
-        "md",
-        "markdown",
-        "json",
-        "xml",
-        "yml",
-        "yaml",
-        "html",
-        "htm",
-        "css",
-        "js",
-        "mjs",
-        "ts",
-        "java",
-        "kt",
-        "kts",
-        "c",
-        "h",
-        "cc",
-        "cpp",
-        "hpp",
-        "cs",
-        "go",
-        "py",
-        "rb",
-        "php",
-        "sh",
-        "bat",
-        "ps1",
-        "ini",
-        "cfg",
-        "conf",
-        "properties",
         "csv",
         "log",
-        "gradle",
-        "toml",
-        "sql",
-        "env",
+        "ps1",
         "svg",
     )
 
 private fun isDocumentFile(name: String): Boolean {
+    if (LanguageDetector.isKnownFile(name)) return true
     val ext = name.substringAfterLast('.', "")
-    return ext.isEmpty() || ext.lowercase() in DOCUMENT_EXTENSIONS
+    return ext.isEmpty() || ext.lowercase() in PLAIN_TEXT_EXTENSIONS
 }
 
 @Composable

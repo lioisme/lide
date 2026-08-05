@@ -1,7 +1,7 @@
 package com.lioisme.lide
 
 import com.androlua.LuaApplication
-import com.lioisme.lide.editor.TextMateInitializer
+import com.lioisme.lide.editor.TextMateRuntime
 import com.lioisme.lide.i18n.LocaleManager
 import com.lioisme.lide.ui.theme.SettingsManager
 import java.io.File
@@ -20,17 +20,8 @@ class LideApp : LuaApplication() {
         // 后台完成后由各功能惰性消费，不阻塞 Application.onCreate 的首帧关键路径。
         bootstrapAssets()
         // TextMate 初始化有进程级一次性契约且禁止在 UI 线程调用（AGENTS.md 编辑器约定），
-        // 独立线程并行，与资产提取无依赖。
-        preloadTextMate()
-    }
-
-    private fun preloadTextMate() {
-        Thread {
-            TextMateInitializer.initialize(applicationContext)
-        }.apply {
-            name = "TextMatePreload"
-            isDaemon = true
-        }.start()
+        // 经 TextMateRuntime 单一入口后台预热（C-4，幂等；失败进入 Failed 态供编辑器展示错误）。
+        TextMateRuntime.preload(applicationContext)
     }
 
     /** 资产提取（后台线程）：示例插件 / 布局助手模板 / luadoc 离线文档。 */

@@ -41,4 +41,8 @@
     <string name="cd_search_next">Next match</string>
     <string name="cd_search_prev">Previous match</string>
     <string name="cd_search_close">Close search</string>
+
+    <!-- TextMate runtime -->
+    <string name="textmate_init_failed">Editor engine initialization failed</string>
+    <string name="retry">Retry</string>
 </resources>

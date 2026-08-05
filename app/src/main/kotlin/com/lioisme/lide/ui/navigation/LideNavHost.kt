@@ -328,6 +328,7 @@ fun LideNavHost(
             BackHandler(enabled = true) { navController.popGuarded() }
             ProjectInfoScreen(
                 project = project,
+                projectManager = projectManager,
                 onBack = { navController.popGuarded() },
                 onSaved = {
                     projectInfoVersion++
@@ -359,6 +360,7 @@ fun LideNavHost(
             BackHandler(enabled = true) { navController.popGuarded() }
             BuildApkScreen(
                 project = project,
+                projectManager = projectManager,
                 onBack = { navController.popGuarded() },
             )
         }

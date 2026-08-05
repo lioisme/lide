@@ -33,27 +33,6 @@ class PluginManager {
         return plugins.toList()
     }
 
-    fun installFromAlp(alpFile: String, pluginDir: String): PluginInfo? {
-        val file = File(alpFile)
-        if (!file.exists()) {
-            Log.e("PluginManager", "alp file not found: $alpFile")
-            return null
-        }
-        val name = file.nameWithoutExtension
-        val targetDir = File(pluginDir, name)
-        if (targetDir.exists()) {
-            targetDir.deleteRecursively()
-        }
-        if (!ZipUtil.unzip(file, targetDir)) {
-            return null
-        }
-        val info = loadPlugin(targetDir)
-        if (info != null) {
-            plugins.add(info)
-        }
-        return info
-    }
-
     private fun loadPlugin(dir: File): PluginInfo? {
         val jsonFile = File(dir, "plugin.json")
         if (jsonFile.exists()) {

@@ -100,4 +100,42 @@ class LuaConfigParserTest {
         assertEquals("com.androlua.testapp", packagename)
         assertEquals("2.5", appver)
     }
+
+    @Test
+    fun `top level index expression does not poison subsequent fields`() {
+        val content =
+            "t[1] = \"a\"\n" +
+                "t[2] = \"b\"\n" +
+                "appname = \"demo\"\n" +
+                "appver = \"1.0\"\n" +
+                "user_permission = { \"INTERNET\", \"WRITE_EXTERNAL_STORAGE\" }\n"
+        val appname = LuaConfigParser.stringField(content, "appname")
+        val appver = LuaConfigParser.stringField(content, "appver")
+        val perms = LuaConfigParser.stringArrayField(content, "user_permission")
+        assertEquals("demo", appname)
+        assertEquals("1.0", appver)
+        assertEquals(listOf("INTERNET", "WRITE_EXTERNAL_STORAGE"), perms)
+    }
+
+    @Test
+    fun `table bracket keys do not leak into depth counting`() {
+        val content =
+            "theme = { [1] = \"a\", [2] = \"b\" }\n" +
+                "appname = \"demo\"\n"
+        assertEquals("demo", LuaConfigParser.stringField(content, "appname"))
+    }
+
+    @Test
+    fun `long string values and comments still parsed after index expressions`() {
+        val content =
+            "local t = {}\n" +
+                "t[1] = 'x'\n" +
+                "--[[\n" +
+                "appname = \"blocked\"\n" +
+                "]]\n" +
+                "appdesc = [[hello]]\n" +
+                "packagename = \"com.demo\"\n"
+        assertEquals("[[hello]]", LuaConfigParser.field(content, "appdesc"))
+        assertEquals("com.demo", LuaConfigParser.stringField(content, "packagename"))
+    }
 }

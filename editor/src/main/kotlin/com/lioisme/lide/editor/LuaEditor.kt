@@ -4,8 +4,14 @@ import android.content.Context
 import android.util.Log
 import android.util.TypedValue
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -17,6 +23,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import io.github.rosemoe.sora.event.ContentChangeEvent
 import io.github.rosemoe.sora.lang.diagnostic.DiagnosticRegion
@@ -71,21 +79,8 @@ private const val DEFAULT_UNDO_STACK = 2500
 private const val DIAGNOSTIC_DEBOUNCE_MS = 500L
 private const val TAG = "LuaEditor"
 
-/** scope 未解析时的默认语言：Lua（IDE 主要工程语言；未知扩展名文件落此）。显式 scope 走匹配项。 */
+/** Lua scope：词法诊断仅作用于 Lua 文法。未知扩展名文件落 [LanguageDetector.PLAIN_SCOPE]。 */
 internal const val DEFAULT_SCOPE = "source.lua"
-
-/**
- * 进程级单例 TextMateColorScheme。
- *
- * [TextMateColorScheme] 实现 [ThemeRegistry.ThemeChangeListener]，主题切换时自动跟随
- * 注册表更新，无需按编辑器实例重建。创建成本 ~70ms（主线程），复用避免每进一次
- * 编辑器都支付一次。
- */
-private object TextMateColorSchemeCache {
-    private var scheme: TextMateColorScheme? = null
-
-    fun forTheme(registry: ThemeRegistry): TextMateColorScheme = scheme ?: TextMateColorScheme.create(registry).also { scheme = it }
-}
 
 /**
  * 编辑器视图池：进程级单实例 [CodeEditor] + 单次事件订阅 + 进程级诊断状态。
@@ -153,7 +148,8 @@ internal object EditorViewPool {
         isLargeFile: Boolean,
     ) {
         val applied = lastAppliedConfig
-        val resolvedScope = scope ?: DEFAULT_SCOPE
+        // scope 为 null（宿主未提供文件名）时按纯文本处理，不再以 Lua 兜底。
+        val resolvedScope = scope ?: LanguageDetector.PLAIN_SCOPE
         val effectiveIdentifiers = config.identifierCompletion && !isLargeFile
         val lang = editor.editorLanguage as? EditorLanguage
 
@@ -258,9 +254,9 @@ internal object EditorViewPool {
             CodeEditor(context.applicationContext).apply outer@{
                 // 官方 demo 顺序：colorScheme → language → setText，
                 // 使分析器重启都发生在空文本阶段，setText 成为唯一一次全量分析。
-                colorScheme = TextMateColorSchemeCache.forTheme(ThemeRegistry.getInstance())
+                colorScheme = TextMateRuntime.colorScheme()
 
-                val resolvedScope = scope ?: DEFAULT_SCOPE
+                val resolvedScope = scope ?: LanguageDetector.PLAIN_SCOPE
                 val lang =
                     EditorLanguage(resolvedScope, collectIdentifiers = config.identifierCompletion).apply {
                         setAutoCompleteEnabled(true)
@@ -324,31 +320,21 @@ internal object EditorViewPool {
 }
 
 /**
- * 进程级 TextMate 初始化门控。
- *
- * 组合级 remember 每次进入编辑器都从 false 开始 → 多一帧 spinner + 一次全量重组。
- * 进程级快照：初始化完成后再次进入时首组合即得 true，直接进入编辑器装配。
+ * TextMate 运行时就绪状态（C-4：单一服务 [TextMateRuntime] 消费侧）。
+ * 宿主进程启动已预热（幂等），编辑器只需消费状态：
+ * - Loading：展示 spinner；
+ * - Failed：展示错误态 + 重试（不再伪装就绪）；
+ * - Ready：进入编辑器装配。
  */
-private object EditorInitGate {
-    private val _state = MutableStateFlow(TextMateInitializer.isReady())
-    val state = _state.asStateFlow()
-
-    fun markReady() {
-        _state.value = true
-    }
-}
-
 @Composable
-fun rememberTextMateInitializer(): Boolean {
+fun rememberTextMateState(): TextMateRuntime.RuntimeState {
     val context = LocalContext.current
-    val ready by EditorInitGate.state.collectAsState()
+    val runtimeState by TextMateRuntime.state.collectAsState()
+    // 兜底触发：宿主未预热（如单元测试宿主）时此处首次触发初始化。
     LaunchedEffect(Unit) {
-        withContext(Dispatchers.Default) {
-            TextMateInitializer.initialize(context.applicationContext)
-        }
-        EditorInitGate.markReady()
+        TextMateRuntime.preload(context.applicationContext)
     }
-    return ready
+    return runtimeState
 }
 
 @Composable
@@ -363,7 +349,8 @@ fun LuaEditor(
     editorRef: AtomicReference<CodeEditor?>,
     modifier: Modifier = Modifier,
 ) {
-    val initReady = rememberTextMateInitializer()
+    val runtimeState = rememberTextMateState()
+    val appContext = LocalContext.current.applicationContext
     val currentOnContentModified by rememberUpdatedState(onContentModified)
     val currentOnUndoRedoStateChanged by rememberUpdatedState(onUndoRedoStateChanged)
     val currentOnRelease by rememberUpdatedState(onRelease)
@@ -371,12 +358,17 @@ fun LuaEditor(
     // 文件 → 语言 scope 由 :editor 解析（文本级能力，宿主只传文件名）。
     // 传入值可能是完整路径，先取 basename 再按扩展名/精确名映射。
     val resolvedScope = remember(fileName) {
-        val base = fileName?.substringAfterLast('/')?.substringAfterLast('\\') ?: return@remember null
-        LanguageDetector.detect(base)
+        val base = fileName?.substringAfterLast('/')?.substringAfterLast('\\')
+        if (base.isNullOrEmpty()) LanguageDetector.PLAIN_SCOPE else LanguageDetector.detect(base)
     }
+    // 诊断收集器（LaunchedEffect(Unit) 长驻）不得捕获首帧 scope：
+    // remember(fileName) 值变更后，经 rememberUpdatedState 读取最新值（防 P0-4 stale closure）。
+    val currentResolvedScope by rememberUpdatedState(resolvedScope)
 
     // rememberUpdatedState：事件回调 / factory / update 块中读取「最新」值而不触发重组。
     val currentContent = rememberUpdatedState(content)
+
+    val initReady = runtimeState is TextMateRuntime.RuntimeState.Ready
 
     LaunchedEffect(isDarkTheme, initReady) {
         if (initReady) {
@@ -385,8 +377,25 @@ fun LuaEditor(
     }
 
     if (!initReady) {
-        Box(modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            CircularProgressIndicator()
+        // C-4：初始化失败展示错误态 + 重试（不再伪装就绪，也不无限转圈）。
+        if (runtimeState is TextMateRuntime.RuntimeState.Failed) {
+            Box(modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        stringResource(R.string.textmate_init_failed),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                    Spacer(Modifier.height(8.dp))
+                    TextButton(onClick = { TextMateRuntime.retry(appContext) }) {
+                        Text(stringResource(R.string.retry))
+                    }
+                }
+            }
+        } else {
+            Box(modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator()
+            }
         }
         return
     }
@@ -434,7 +443,7 @@ fun LuaEditor(
             delay(DIAGNOSTIC_DEBOUNCE_MS)
             val editor = editorRef.get() ?: return@collectLatest
             // 行级词法诊断仅 Lua 文法（LuaDiagnostics 专用解析器）；其他语言跳过。
-            if (resolvedScope != DEFAULT_SCOPE) {
+            if (currentResolvedScope != DEFAULT_SCOPE) {
                 if (editor.diagnostics != null) {
                     editor.diagnostics = null
                     EditorViewPool.updateSignature("")

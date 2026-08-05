@@ -21,6 +21,7 @@
 | D-15 | 2026-08-01 | **Xposed 模块可行性：技术可行但有前提** | 四支柱为真：libluajava 静态链接可注入、Class.forName+setAccessible 匹配、三 ABI 就绪、pro 反 Xposed 代码已清除；约束：v1-only 不可装、native 需自提取、de.robv API compileOnly | 路线图 M1~M5 未启动，前置 = 打包器落地（D-10） |
 | D-16 | 2026-08-01 | **示例资产化：`assets/samples` 首启解包 → `assets/examples/*.alp` + 示例导入界面**（WP-003 扩展） | 需求「不内置工程」+ 开发者需内置示例参考；导入复用 `AlpManager.import`（与用户导入同一路径，支持覆盖重导入） | `ExamplesScreen.kt` / `Routes.EXAMPLES` / `make-examples.ps1` + `examples-src/` 6 示例；**反转 D-03**（原「资产化部署 + 首启提取」） |
 | D-17 | 2026-08-04 | **导航一律走单一漏斗门控：仅 Lifecycle==RESUMED 时执行 navigate/popBackStack**（NavigationGate） | 冻结根因 = NavHost$33$1 转场收尾回调在「转场中 pop」时丢失（entry 销毁内容残留 → 点击永久失效）；官方规范即「仅 RESUMED 时导航」；业务零改动 | `NavigationGate.kt` 新增 5 个扩展函数；`LideNavHost.kt` 13 处调用全量替换 + 11 处 BackHandler；不升级 navigation 2.9.x（方案 B 留待评估）；详见 `NAVIGATION_FREEZE_FIX_REPORT.md` |
+| D-18 | 2026-08-06 | **LIDE 插件平台（小政府）立项**：LIDE 收敛为纯宿主（仅 契约/准入/生命周期/导航/安全/中心 UI），androlua 独立为插件 APK（无 LAUNCHER、实现 Plugin 契约），对外开放固定 Plugin SDK——任何技术上满足注册声明的 APK 即可接入（类 Xposed 技术识别模型，默认无厂商白名单 + 可选受信证书开关）；业务数据一律类型化 AIDL/DTO，不用 scheme/裸 Intent；插件 UI 自带，LIDE 仅页面导航 | 用户立项要求（开放 API / 小政府 / 宿主完全不感知插件 / 进程隔离崩溃互不影响）；取 GMS 式绑定契约 + 跨进程隔离，拒 Xposed 同进程注入 | 定稿见 `planned/PLUGIN_PLATFORM_REPORT.md`（LIDE-DESIGN-2026-001，Phase 0~5）；**反转 D-08**（引擎由主进程迁出插件进程）；**部分反转 D-02**（Java 运行时/`.so` 由主 DEX 迁出插件 APK）；**D-10/D-16** 打包器与示例逻辑随之倾向插件侧；前审计 LIDE-AUDIT-2026-014 已归档 discard（11 耦合点证据继续作为迁移清单） |
 
 ---
 
@@ -31,6 +32,7 @@ D-06 保留全局仓库 ──(WP-009)──► D-07 删除全局仓库（反转
 D-10 打包暂缓 ──(打包器开工)──► 部分反转：代码已落地，待登记与验收
 D-03 资产化部署+首启提取 ──(WP-003 扩展)──► D-16 示例资产化 .alp + 导入界面（反转）
 INTEGRATION_PLAN Phase 6 保留 engine.dex ──(WP-002)──► D-02 移除独立 DEX
+D-02 Java 运行时进主 DEX / D-08 同进程单线程 ──(D-18 插件化立项)──► 引擎 Java 运行时与 .so 迁出主 DEX、引擎运行于插件进程（D-08 反转 / D-02 部分反转）
 ```
 
 ## 使用注意

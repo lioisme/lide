@@ -1,7 +1,5 @@
 package com.lioisme.lide.ui.screen
 
-import android.content.ClipData
-import android.content.ClipboardManager
 import android.content.Context
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
@@ -188,8 +186,8 @@ fun ApiClassDetailScreen(
                                 is DetailRow.Member -> {
                                     MemberRow(
                                         text = row.text,
-                                        onClick = { copy(context, row.text) },
-                                        onLongClick = { copy(context, row.memberName) },
+                                        onClick = { copyToClipboard(context, row.text) },
+                                        onLongClick = { copyToClipboard(context, row.memberName) },
                                     )
                                 }
                             }
@@ -325,15 +323,4 @@ private fun MemberRow(
         )
     }
     HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f))
-}
-
-private fun copy(
-    context: Context,
-    text: String,
-) {
-    try {
-        val cm = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        cm.setPrimaryClip(ClipData.newPlainText("lide-api", text))
-    } catch (_: Throwable) {
-    }
 }

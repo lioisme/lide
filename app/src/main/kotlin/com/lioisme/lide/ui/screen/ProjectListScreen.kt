@@ -34,6 +34,7 @@ import com.lioisme.lide.R
 import com.lioisme.lide.androlua.AlpManager
 import com.lioisme.lide.androlua.AlpManager.AlpKind
 import com.lioisme.lide.editor.TipIconButton
+import com.lioisme.lide.import.AlpImportCoordinator
 import com.lioisme.lide.model.Project
 import com.lioisme.lide.project.ProjectManager
 import kotlinx.coroutines.Dispatchers
@@ -94,23 +95,10 @@ fun ProjectListScreen(
     val snackbarHostState = remember { SnackbarHostState() }
 
     // WP-015 批量导入队列 + 同名冲突挂起：逐个处理，遇冲突暂停等确认（覆盖/改名/取消）。
+    val alpCoordinator = remember(context) { AlpImportCoordinator(context) }
     var importQueue by remember { mutableStateOf<List<android.net.Uri>>(emptyList()) }
-    var conflictPending by remember { mutableStateOf<ConflictPending?>(null) }
+    var conflictPending by remember { mutableStateOf<AlpImportCoordinator.Pending?>(null) }
     var importCounts by remember { mutableStateOf(0 to 0) }
-
-    /** 将 uri 复制到缓存临时文件（planImport 需要真实文件路径）。 */
-    fun copyToTemp(uri: android.net.Uri): String? =
-        try {
-            context.contentResolver.openInputStream(uri)?.use { input ->
-                val rawName = java.io.File(uri.lastPathSegment ?: "import.alp").name
-                val f = java.io.File(context.cacheDir, "alp_${System.currentTimeMillis()}_$rawName")
-                f.parentFile?.mkdirs()
-                input.copyTo(f.outputStream())
-                f.absolutePath
-            }
-        } catch (_: Throwable) {
-            null
-        }
 
     fun tallyImport(result: AlpManager.AlpImportResult?) {
         val (projectCount, pluginCount) = importCounts
@@ -162,23 +150,25 @@ fun ProjectListScreen(
             }
         importQueue = importQueue.drop(1)
         scope.launch {
-            val tempPath = withContext(Dispatchers.IO) { copyToTemp(next) }
+            val tempPath = withContext(Dispatchers.IO) { alpCoordinator.copyUriToTemp(next) }
             if (tempPath == null) {
                 advanceImportQueue()
                 return@launch
             }
-            val plan = withContext(Dispatchers.IO) { AlpManager(context).planImport(tempPath) }
+            val plan = withContext(Dispatchers.IO) { alpCoordinator.plan(tempPath) }
             if (plan == null) {
-                withContext(Dispatchers.IO) { java.io.File(tempPath).delete() }
+                withContext(Dispatchers.IO) { alpCoordinator.discard(tempPath) }
                 advanceImportQueue()
                 return@launch
             }
             if (plan.conflict) {
-                conflictPending = ConflictPending(tempPath, plan)
+                conflictPending = AlpImportCoordinator.Pending(tempPath, plan)
                 return@launch
             }
-            val result = withContext(Dispatchers.IO) { AlpManager(context).import(tempPath) }
-            withContext(Dispatchers.IO) { java.io.File(tempPath).delete() }
+            val result =
+                withContext(Dispatchers.IO) {
+                    alpCoordinator.import(tempPath, AlpManager.ImportMode.OVERWRITE)
+                }
             tallyImport(result)
             advanceImportQueue()
         }
@@ -188,10 +178,11 @@ fun ProjectListScreen(
     fun resolveConflict(mode: AlpManager.ImportMode) {
         val pending = conflictPending ?: return
         conflictPending = null
-        val tempPath = pending.tempPath
         scope.launch {
-            val result = withContext(Dispatchers.IO) { AlpManager(context).import(tempPath, mode) }
-            withContext(Dispatchers.IO) { java.io.File(tempPath).delete() }
+            val result =
+                withContext(Dispatchers.IO) {
+                    alpCoordinator.import(pending.tempPath, mode)
+                }
             tallyImport(result)
             advanceImportQueue()
         }
@@ -597,15 +588,9 @@ fun ProjectListScreen(
             onRename = { resolveConflict(AlpManager.ImportMode.RENAME) },
             onCancel = {
                 conflictPending = null
-                scope.launch { withContext(Dispatchers.IO) { java.io.File(pending.tempPath).delete() } }
+                scope.launch { withContext(Dispatchers.IO) { alpCoordinator.discard(pending.tempPath) } }
                 advanceImportQueue()
             },
         )
     }
 }
-
-/** WP-015 待确认导入：临时 .alp 文件路径 + 已解析的导入计划。 */
-private data class ConflictPending(
-    val tempPath: String,
-    val plan: AlpManager.ImportPlan,
-)

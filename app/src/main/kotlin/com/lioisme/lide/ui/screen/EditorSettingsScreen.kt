@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import com.lioisme.lide.R
 import com.lioisme.lide.editor.EditorConfig
 import com.lioisme.lide.editor.TipIconButton
+import com.lioisme.lide.ui.theme.LideTopBar
 import com.lioisme.lide.ui.theme.SettingsManager
 
 /** D1：21 项编辑器设置全集（分组见 [EditorConfig]，持久化经 [SettingsManager.updateEditor]）。 */
@@ -62,18 +63,9 @@ fun EditorSettingsScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.editor_settings)) },
-                navigationIcon = {
-                    TipIconButton(tooltip = stringResource(R.string.cd_back), onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.cd_back))
-                    }
-                },
-                colors =
-                    TopAppBarDefaults.topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.surface,
-                        titleContentColor = MaterialTheme.colorScheme.onSurface,
-                    ),
+            LideTopBar(
+                title = stringResource(R.string.editor_settings),
+                onBack = onBack,
             )
         },
     ) { padding ->

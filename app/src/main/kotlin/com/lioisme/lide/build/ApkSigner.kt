@@ -6,7 +6,6 @@ import java.security.PrivateKey
 import java.security.Signature
 import java.security.cert.X509Certificate
 import java.util.zip.ZipEntry
-import java.util.zip.ZipInputStream
 import java.util.zip.ZipOutputStream
 
 /**
@@ -60,17 +59,8 @@ object ApkSigner {
         return out.toByteArray()
     }
 
-    private fun readZip(apk: ByteArray): List<Triple<String, Int, ByteArray>> {
-        val out = ArrayList<Triple<String, Int, ByteArray>>()
-        ZipInputStream(apk.inputStream()).use { zis ->
-            while (true) {
-                val entry = zis.nextEntry ?: break
-                val data = zis.readBytes()
-                out += Triple(entry.name, entry.method, data)
-            }
-        }
-        return out
-    }
+    private fun readZip(apk: ByteArray): List<Triple<String, Int, ByteArray>> =
+        ZipUtils.readEntries(apk)
 
     private fun buildSections(manifestSections: Map<String, ByteArray>): List<Pair<String, ByteArray>> =
         manifestSections.map { (name, digest) ->

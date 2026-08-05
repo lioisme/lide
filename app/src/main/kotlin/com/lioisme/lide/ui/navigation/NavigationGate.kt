@@ -1,6 +1,5 @@
 package com.lioisme.lide.ui.navigation
 
-import android.util.Log
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
@@ -28,8 +27,10 @@ import java.util.WeakHashMap
  *
  * 线程契约：全部队列访问必须发生在主线程（Compose 回调 + Main dispatcher 协程），
  * 因此 [pendingStates] 用主线程专用的 WeakHashMap，禁止后台线程触碰。
+ *
+ * C-1 说明：压测埋点（wasSettled 边沿检测与逐导航 Log.d）已删除；navigation-compose
+ * 升级至含修复版本为根因消除路径（D-17 方案 B 留待评估），升级验证成功前本门控保留。
  */
-private const val TAG = "NavGate"
 
 /** 就绪轮询间隔（约一帧）。 */
 private const val NAV_READY_POLL_INTERVAL_MS = 16L
@@ -73,7 +74,6 @@ fun NavHostController.navigateGuarded(
     navOptions: NavOptions? = null,
 ) {
     if (!hasPendingNavigation() && isNavigationSettled()) {
-        Log.d(TAG, "navigate immediate $route")
         if (navOptions != null) navigate(route, navOptions) else navigate(route)
         return
     }
@@ -83,7 +83,6 @@ fun NavHostController.navigateGuarded(
 /** 门控弹栈：空闲即执行（根页面返回 false，由调用方兜底）；忙碌则入队并返回 true（已消费）。 */
 fun NavHostController.popGuarded(): Boolean {
     if (!hasPendingNavigation() && isNavigationSettled()) {
-        Log.d(TAG, "pop immediate")
         return popBackStack()
     }
     enqueue(PendingNav.Pop)
@@ -96,14 +95,12 @@ suspend fun NavHostController.navigateWhenReady(
     navOptions: NavOptions? = null,
 ) {
     if (!waitForNavigationSettled()) return
-    Log.d(TAG, "navigate ready $route")
     if (navOptions != null) navigate(route, navOptions) else navigate(route)
 }
 
 /** 挂起等待当前栈顶 RESUMED 后弹栈；超时后放弃。 */
 suspend fun NavHostController.popWhenReady() {
     if (waitForNavigationSettled()) {
-        Log.d(TAG, "pop ready")
         popBackStack()
     }
 }
@@ -114,9 +111,6 @@ suspend fun NavHostController.popWhenReady() {
  * 天然把全部导航串行化在转场边界上，从构造上杜绝「转场中修改导航栈」的失步。
  */
 suspend fun NavHostController.drainNavigationQueue() {
-    // 空闲态转场完成检测（false→true 边沿）：日志标记「当前目的地已可交互」，
-    // 供外部压力测试工具同步输入节奏（见 docs/discard/NAVIGATION_FREEZE_FIX_REPORT.md）。
-    var wasSettled = false
     try {
         while (true) {
             val state = synchronized(pendingStates) { pendingStates[this] }
@@ -132,13 +126,6 @@ suspend fun NavHostController.drainNavigationQueue() {
                     }
                 }
             if (action == null) {
-                val settled = isNavigationSettled()
-                if (!settled && !wasSettled) {
-                    // 仍处于转场中，等下一轮
-                } else if (settled && !wasSettled) {
-                    Log.d(TAG, "settled-idle")
-                }
-                wasSettled = settled
                 delay(NAV_READY_POLL_INTERVAL_MS)
                 continue
             }
@@ -148,7 +135,6 @@ suspend fun NavHostController.drainNavigationQueue() {
             } finally {
                 synchronized(state!!) { state.inFlight = false }
             }
-            wasSettled = true
         }
     } catch (e: CancellationException) {
         synchronized(pendingStates) {
@@ -182,12 +168,10 @@ private fun NavHostController.enqueue(action: PendingNav) {
 private fun NavHostController.execute(action: PendingNav) {
     when (action) {
         is PendingNav.Navigate -> {
-            Log.d(TAG, "navigate queued ${action.route}")
             if (action.navOptions != null) navigate(action.route, action.navOptions) else navigate(action.route)
         }
 
         PendingNav.Pop -> {
-            Log.d(TAG, "pop queued")
             popBackStack()
         }
     }

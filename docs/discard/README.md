@@ -29,7 +29,7 @@
 | 历史审计结论 / 旧报告 | 本目录 §3 清单 → 对应文件 |
 | 上游基线 / 社区语料 | `reference/`（只读，gitignore；2026-08-05 自 docs/reference/ 迁出，纯净基线已去重） |
 
-## 3. 丢弃清单（41 篇）
+## 3. 丢弃清单（42 篇）
 
 ### 3.1 已完成文档（原 docs/completed/，30 篇）
 
@@ -71,7 +71,7 @@
 | `DOCS_GOVERNANCE_AUDIT_REPORT_2026-08-05.md` | 2026-08-05 | 文档治理审计：全量文档去重分类、统一丢弃区重组（本目录建立依据） | docs/discard/README §1 + kb/README §6/§7 |
 | `REFERENCE_ASSETS_GOVERNANCE_AUDIT_REPORT.md` | 2026-08-05 | 上游基线资产治理：reference 数据湖迁出 docs/ + 纯净基线去重（已执行） | reference/README + kb/README §3 |
 
-### 3.2 过时 / 被取代文档（原 docs/archive/，8 篇）
+### 3.2 过时 / 被取代文档（9 篇）
 
 | 文件 | 原位置 | 归档原因（一句话） |
 |------|--------|-------------------|
@@ -83,6 +83,13 @@
 | `architecture.md` | `kb/project/` | 自标过期（原项目架构描述）；现行架构见 `docs/kb/ARCHITECTURE.md` |
 | `lua-modules.md` | `kb/project/` | 自标过期（原 Lua 模块清单）；现行运行时模块见 `third_party/` 与 `reference/` |
 | `code-map.md` | `kb/project/` | 自标过期（原代码地图）；现行模块拓扑见 `docs/kb/ARCHITECTURE.md` §3 |
+| `PLUGIN_SEPARATION_ARCHITECTURE_REPORT.md` | `planned/` | 双 APK 分家审计（LIDE-AUDIT-2026-014，2026-08-06）**已被 `PLUGIN_PLATFORM_REPORT.md` 演进取代**：方案从「双 APK + 运行端口」升级为「开放 Plugin SDK 插件平台（小政府）」，其隔离缺口证据（11 耦合点）与验收锚点在platform 报告中继续交叉引用 |
+
+### 3.3 非文档资产归档（补登）
+
+| 条目 | 原位置 | 归档原因（一句话） |
+|------|--------|-------------------|
+| `material3_searchbar_patch/` | `third_party/patches/` | 无任何构建引用的 AOSP 副本（~127KB 死代码），搜索组件缺陷历史围栏；架构审计 C-2（2026-08-06）迁移归档 |
 
 补充说明：
 

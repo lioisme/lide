@@ -43,16 +43,6 @@ class EditorSession(
     private val mainDispatcher: CoroutineContext = Dispatchers.Main.immediate,
     private val ioDispatcher: CoroutineContext = Dispatchers.IO,
 ) {
-    data class TabState(
-        val fileName: String,
-        val dirty: Boolean,
-        val canUndo: Boolean,
-        val canRedo: Boolean,
-    ) {
-        val tab: EditorTab get() = EditorTab(fileName, dirty)
-    }
-
-    /** 当前选中：文件与内容原子发射，文件切换只触发一次重组。 */
     data class Selection(
         val file: String? = null,
         val content: Content? = null,
@@ -64,8 +54,8 @@ class EditorSession(
     // 访问序 LRU：最近使用的排尾部，逐出时从头扫描。
     private val contents = LinkedHashMap<String, Content>(16, 0.75f, true)
 
-    private val _tabs = MutableStateFlow<List<TabState>>(emptyList())
-    val tabs: StateFlow<List<TabState>> = _tabs.asStateFlow()
+    private val _tabs = MutableStateFlow<List<EditorTab>>(emptyList())
+    val tabs: StateFlow<List<EditorTab>> = _tabs.asStateFlow()
 
     private val _selection = MutableStateFlow(Selection())
     val selection: StateFlow<Selection> = _selection.asStateFlow()
@@ -81,7 +71,7 @@ class EditorSession(
             if (files.isEmpty()) return@withContext
             val main = project.mainFile.takeIf { it in files } ?: files.first()
             val content = loadContent(main)
-            _tabs.value = listOf(TabState(main, dirty = false, canUndo = false, canRedo = false))
+            _tabs.value = listOf(EditorTab(main, dirty = false))
             _selection.value = Selection(main, content)
         }
 
@@ -112,7 +102,7 @@ class EditorSession(
     suspend fun openTab(fileName: String) {
         val content = withContext(ioDispatcher) { loadContent(fileName) }
         if (_tabs.value.none { it.fileName == fileName }) {
-            _tabs.value = _tabs.value + TabState(fileName, dirty = false, canUndo = false, canRedo = false)
+            _tabs.value = _tabs.value + EditorTab(fileName, dirty = false)
         }
         select(fileName, content)
     }
@@ -214,7 +204,7 @@ class EditorSession(
     /** 关闭全部标签（含当前选中）。脏标签返回待确认队列（语义同 [closeOthers]）。 */
     fun closeAll(): List<String> = closeBatch(_tabs.value)
 
-    private fun closeBatch(targets: List<TabState>): List<String> {
+    private fun closeBatch(targets: List<EditorTab>): List<String> {
         val dirty = targets.filter { it.dirty }.map { it.fileName }
         targets.filterNot { it.dirty }.forEach { close(it.fileName) }
         return dirty
