@@ -1,0 +1,23 @@
+{
+ "manual_id": 5146,
+ "type_name": "浏览器",
+ "manual_name": "Minecraft玩家信息查询",
+ "author": "•⤙•/k",
+ "platform": "AndLua",
+ "source_date": "2025年12月05日 22:05:26",
+ "hits": 497,
+ "up": 1,
+ "favorite": 7,
+ "comment": 1,
+ "source_file": "浏览器\\5146_Minecraft玩家信息查询.lua",
+ "kind": "code_demo",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 20,
+ "char_count": 62656,
+ "confidence": "static_review"
+}

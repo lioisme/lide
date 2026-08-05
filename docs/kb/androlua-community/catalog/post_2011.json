@@ -1,0 +1,24 @@
+{
+ "manual_id": 2011,
+ "type_name": "自绘制",
+ "manual_name": "绘制异形控件",
+ "author": "497",
+ "platform": "所有环境",
+ "source_date": "2022年10月29日 22:02:05",
+ "hits": 348,
+ "up": 5,
+ "favorite": 10,
+ "comment": 0,
+ "source_file": "自绘制\\2011_绘制异形控件.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 85,
+ "char_count": 2004,
+ "confidence": "static_review"
+}

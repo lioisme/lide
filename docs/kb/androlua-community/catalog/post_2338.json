@@ -1,0 +1,25 @@
+{
+ "manual_id": 2338,
+ "type_name": "安卓教程",
+ "manual_name": "监听CollapsingToolbarLayout折叠和展开实例",
+ "author": "wzsy233",
+ "platform": "所有环境",
+ "source_date": "2023年01月17日 17:38:22",
+ "hits": 777,
+ "up": 19,
+ "favorite": 38,
+ "comment": 0,
+ "source_file": "安卓教程\\2338_监听CollapsingToolbarLayout折叠和展开实例.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 147,
+ "char_count": 4142,
+ "confidence": "static_review"
+}

@@ -1,0 +1,23 @@
+{
+ "manual_id": 4242,
+ "type_name": "Layout布局",
+ "manual_name": "设置控件垂直边缘渐变效果",
+ "author": "1111",
+ "platform": "所有环境",
+ "source_date": "2024年09月09日 12:19:09",
+ "hits": 375,
+ "up": 7,
+ "favorite": 19,
+ "comment": 1,
+ "source_file": "Layout布局\\4242_设置控件垂直边缘渐变效果.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 14,
+ "char_count": 944,
+ "confidence": "static_review"
+}

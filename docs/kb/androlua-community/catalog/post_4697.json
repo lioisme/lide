@@ -1,0 +1,26 @@
+{
+ "manual_id": 4697,
+ "type_name": "基础代码",
+ "manual_name": "云注入模块",
+ "author": "兰皋",
+ "platform": "所有环境",
+ "source_date": "2025年04月15日 20:39:30",
+ "hits": 630,
+ "up": 6,
+ "favorite": 11,
+ "comment": 5,
+ "source_file": "基础代码\\4697_云注入模块.lua",
+ "kind": "code_demo",
+ "verdict": "harmful",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "manual_override",
+  "harmful_elevated"
+ ],
+ "truncation": "complete",
+ "line_count": 144,
+ "char_count": 3079,
+ "confidence": "static_review"
+}

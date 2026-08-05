@@ -1,0 +1,21 @@
+{
+ "manual_id": 1961,
+ "type_name": "Lua代码",
+ "manual_name": "string增强",
+ "author": "Adam·Eva",
+ "platform": "所有环境",
+ "source_date": "2022年10月10日 12:20:57",
+ "hits": 313,
+ "up": 7,
+ "favorite": 6,
+ "comment": 0,
+ "source_file": "Lua代码\\1961_string增强.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 54,
+ "char_count": 978,
+ "confidence": "static_review"
+}

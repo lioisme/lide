@@ -1,0 +1,21 @@
+{
+ "manual_id": 4484,
+ "type_name": "Lua代码",
+ "manual_name": "简易词法分析器（有限状态机）",
+ "author": "⁣​",
+ "platform": "所有环境",
+ "source_date": "2025年01月24日 14:28:51",
+ "hits": 175,
+ "up": 3,
+ "favorite": 2,
+ "comment": 2,
+ "source_file": "Lua代码\\4484_简易词法分析器（有限状态机）.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 131,
+ "char_count": 3487,
+ "confidence": "static_review"
+}

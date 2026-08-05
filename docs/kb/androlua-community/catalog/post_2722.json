@@ -1,0 +1,24 @@
+{
+ "manual_id": 2722,
+ "type_name": "小游戏",
+ "manual_name": "抛(小游戏)",
+ "author": "AstarLC",
+ "platform": "所有环境",
+ "source_date": "2023年05月01日 17:54:59",
+ "hits": 492,
+ "up": 13,
+ "favorite": 35,
+ "comment": 11,
+ "source_file": "小游戏\\2722_抛(小游戏).lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "global_pollution",
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 581,
+ "char_count": 17594,
+ "confidence": "static_review"
+}

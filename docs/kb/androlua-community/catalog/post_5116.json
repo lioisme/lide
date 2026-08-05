@@ -1,0 +1,21 @@
+{
+ "manual_id": 5116,
+ "type_name": "对话框",
+ "manual_name": "情人节礼物",
+ "author": "青柠(YouCun)",
+ "platform": "所有环境",
+ "source_date": "2025年11月07日 09:10:54",
+ "hits": 432,
+ "up": 4,
+ "favorite": 19,
+ "comment": 2,
+ "source_file": "对话框\\5116_情人节礼物.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 257,
+ "char_count": 6062,
+ "confidence": "static_review"
+}

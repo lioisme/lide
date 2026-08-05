@@ -1,0 +1,25 @@
+{
+ "manual_id": 2950,
+ "type_name": "系统",
+ "manual_name": "获取系统主题色(MDC)",
+ "author": "苦小怕",
+ "platform": "所有环境",
+ "source_date": "2023年06月18日 16:11:18",
+ "hits": 949,
+ "up": 17,
+ "favorite": 40,
+ "comment": 2,
+ "source_file": "系统\\2950_获取系统主题色(MDC).lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "global_pollution"
+ ],
+ "truncation": "complete",
+ "line_count": 315,
+ "char_count": 14883,
+ "confidence": "static_review"
+}

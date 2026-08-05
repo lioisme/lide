@@ -1,0 +1,24 @@
+{
+ "manual_id": 4186,
+ "type_name": "布局代码",
+ "manual_name": "LongCheckBox",
+ "author": "⁧拾玖⁧‭",
+ "platform": "所有环境",
+ "source_date": "2024年08月17日 09:05:50",
+ "hits": 607,
+ "up": 8,
+ "favorite": 33,
+ "comment": 1,
+ "source_file": "布局代码\\4186_LongCheckBox.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 44,
+ "char_count": 1133,
+ "confidence": "static_review"
+}

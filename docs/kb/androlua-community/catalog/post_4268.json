@@ -1,0 +1,21 @@
+{
+ "manual_id": 4268,
+ "type_name": "小工具",
+ "manual_name": "我活了多久",
+ "author": "繁事",
+ "platform": "所有环境",
+ "source_date": "2024年09月26日 10:49:30",
+ "hits": 246,
+ "up": 0,
+ "favorite": 8,
+ "comment": 2,
+ "source_file": "小工具\\4268_我活了多久.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 128,
+ "char_count": 5085,
+ "confidence": "static_review"
+}

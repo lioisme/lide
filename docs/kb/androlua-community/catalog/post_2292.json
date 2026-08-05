@@ -1,0 +1,23 @@
+{
+ "manual_id": 2292,
+ "type_name": "Lua代码",
+ "manual_name": "Camera",
+ "author": "智",
+ "platform": "所有环境",
+ "source_date": "2023年01月07日 21:12:14",
+ "hits": 516,
+ "up": 7,
+ "favorite": 12,
+ "comment": 5,
+ "source_file": "Lua代码\\2292_Camera.lua",
+ "kind": "code_demo",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 47,
+ "char_count": 1134,
+ "confidence": "static_review"
+}

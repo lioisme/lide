@@ -1,0 +1,23 @@
+{
+ "manual_id": 1554,
+ "type_name": "实用代码",
+ "manual_name": "【可上下首】远程音乐播放",
+ "author": "訫念是你",
+ "platform": "所有环境",
+ "source_date": "2022年06月23日 13:28:01",
+ "hits": 972,
+ "up": 9,
+ "favorite": 24,
+ "comment": 10,
+ "source_file": "实用代码\\1554_【可上下首】远程音乐播放.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 285,
+ "char_count": 7319,
+ "confidence": "static_review"
+}

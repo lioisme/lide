@@ -1,0 +1,23 @@
+{
+ "manual_id": 3963,
+ "type_name": "小游戏",
+ "manual_name": "文字游戏「修炼系统」",
+ "author": "兜兜转转，又回到原点！",
+ "platform": "所有环境",
+ "source_date": "2024年03月11日 13:00:31",
+ "hits": 384,
+ "up": 10,
+ "favorite": 13,
+ "comment": 4,
+ "source_file": "小游戏\\3963_文字游戏「修炼系统」.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 326,
+ "char_count": 8322,
+ "confidence": "static_review"
+}

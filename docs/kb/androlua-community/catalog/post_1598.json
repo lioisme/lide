@@ -1,0 +1,26 @@
+{
+ "manual_id": 1598,
+ "type_name": "小工具",
+ "manual_name": "仿Momo",
+ "author": "苦小怕",
+ "platform": "Fusion App2",
+ "source_date": "2022年07月18日 13:57:37",
+ "hits": 659,
+ "up": 9,
+ "favorite": 24,
+ "comment": 2,
+ "source_file": "小工具\\1598_仿Momo.lua",
+ "kind": "code_demo",
+ "verdict": "harmful",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "chinese_identifier",
+  "harmful_elevated"
+ ],
+ "truncation": "complete",
+ "line_count": 263,
+ "char_count": 6028,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 4917,
+ "type_name": "设备系统",
+ "manual_name": "手机帧率监控",
+ "author": "伊藤诚",
+ "platform": "所有环境",
+ "source_date": "2025年07月14日 07:17:56",
+ "hits": 301,
+ "up": 6,
+ "favorite": 14,
+ "comment": 0,
+ "source_file": "设备系统\\4917_手机帧率监控.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 78,
+ "char_count": 1594,
+ "confidence": "static_review"
+}

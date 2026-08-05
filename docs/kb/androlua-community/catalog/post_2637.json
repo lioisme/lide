@@ -1,0 +1,21 @@
+{
+ "manual_id": 2637,
+ "type_name": "小工具",
+ "manual_name": "获取蓝奏云可用域名",
+ "author": "迷糊.",
+ "platform": "所有环境",
+ "source_date": "2023年04月08日 10:56:41",
+ "hits": 489,
+ "up": 5,
+ "favorite": 11,
+ "comment": 4,
+ "source_file": "小工具\\2637_获取蓝奏云可用域名.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 77,
+ "char_count": 1663,
+ "confidence": "static_review"
+}

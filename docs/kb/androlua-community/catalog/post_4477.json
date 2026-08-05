@@ -1,0 +1,23 @@
+{
+ "manual_id": 4477,
+ "type_name": "动画教程",
+ "manual_name": "动画插值器的使用",
+ "author": "程国荣",
+ "platform": "所有环境",
+ "source_date": "2025年01月20日 17:19:28",
+ "hits": 651,
+ "up": 10,
+ "favorite": 26,
+ "comment": 4,
+ "source_file": "动画教程\\4477_动画插值器的使用.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 95,
+ "char_count": 2401,
+ "confidence": "static_review"
+}

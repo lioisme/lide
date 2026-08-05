@@ -1,0 +1,21 @@
+{
+ "manual_id": 1188,
+ "type_name": "文件操作",
+ "manual_name": "FileUtils-文件处理工具类",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 614,
+ "up": 11,
+ "favorite": 33,
+ "comment": 0,
+ "source_file": "文件操作\\1188_FileUtils-文件处理工具类.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 391,
+ "char_count": 10905,
+ "confidence": "static_review"
+}

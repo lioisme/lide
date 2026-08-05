@@ -1,0 +1,23 @@
+{
+ "manual_id": 2984,
+ "type_name": "Activity活动",
+ "manual_name": "仿某个工具箱的登录界面布局",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2023年06月28日 11:13:22",
+ "hits": 1109,
+ "up": 16,
+ "favorite": 40,
+ "comment": 4,
+ "source_file": "Activity活动\\2984_仿某个工具箱的登录界面布局.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 464,
+ "char_count": 14129,
+ "confidence": "static_review"
+}

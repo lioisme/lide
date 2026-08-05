@@ -1,0 +1,23 @@
+{
+ "manual_id": 1312,
+ "type_name": "Activity活动",
+ "manual_name": "状态栏和导航栏设置",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2022年01月11日 11:41:34",
+ "hits": 973,
+ "up": 21,
+ "favorite": 78,
+ "comment": 0,
+ "source_file": "Activity活动\\1312_状态栏和导航栏设置.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "complete",
+ "line_count": 36,
+ "char_count": 1091,
+ "confidence": "static_review"
+}

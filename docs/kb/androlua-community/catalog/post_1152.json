@@ -1,0 +1,21 @@
+{
+ "manual_id": 1152,
+ "type_name": "动画教程",
+ "manual_name": "ViewFlipper翻转视图测试",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 137,
+ "up": 0,
+ "favorite": 0,
+ "comment": 0,
+ "source_file": "动画教程\\1152_ViewFlipper翻转视图测试.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 45,
+ "char_count": 1088,
+ "confidence": "static_review"
+}

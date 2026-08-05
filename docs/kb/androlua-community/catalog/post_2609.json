@@ -1,0 +1,23 @@
+{
+ "manual_id": 2609,
+ "type_name": "自绘制",
+ "manual_name": "整点canvas好活儿玩(1)",
+ "author": "花园",
+ "platform": "所有环境",
+ "source_date": "2023年03月28日 06:24:36",
+ "hits": 556,
+ "up": 13,
+ "favorite": 24,
+ "comment": 12,
+ "source_file": "自绘制\\2609_整点canvas好活儿玩(1).lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 94,
+ "char_count": 2159,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 3037,
+ "type_name": "布局教程",
+ "manual_name": "如何使用RecyclerView",
+ "author": "NekoLaska",
+ "platform": "Fusion App2",
+ "source_date": "2023年07月06日 20:23:05",
+ "hits": 1011,
+ "up": 15,
+ "favorite": 38,
+ "comment": 4,
+ "source_file": "布局教程\\3037_如何使用RecyclerView.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 228,
+ "char_count": 5617,
+ "confidence": "static_review"
+}

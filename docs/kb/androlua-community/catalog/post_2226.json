@@ -1,0 +1,21 @@
+{
+ "manual_id": 2226,
+ "type_name": "控件属性",
+ "manual_name": "AppBarLayout 应用栏 设置阴影大小",
+ "author": "ABVerterX",
+ "platform": "所有环境",
+ "source_date": "2022年12月19日 22:25:01",
+ "hits": 239,
+ "up": 2,
+ "favorite": 4,
+ "comment": 0,
+ "source_file": "控件属性\\2226_AppBarLayout_应用栏_设置阴影大小.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 20,
+ "char_count": 555,
+ "confidence": "static_review"
+}

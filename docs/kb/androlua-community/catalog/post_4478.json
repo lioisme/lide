@@ -1,0 +1,23 @@
+{
+ "manual_id": 4478,
+ "type_name": "基础代码",
+ "manual_name": "LangY_Game: 字符游戏_贪吃蛇",
+ "author": "关",
+ "platform": "所有环境",
+ "source_date": "2025年01月20日 23:39:06",
+ "hits": 222,
+ "up": 0,
+ "favorite": 6,
+ "comment": 2,
+ "source_file": "基础代码\\4478_LangY_Game__字符游戏_贪吃蛇.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 239,
+ "char_count": 4373,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 1695,
+ "type_name": "自绘制",
+ "manual_name": "极简Draw画板模型",
+ "author": "花园",
+ "platform": "所有环境",
+ "source_date": "2022年08月10日 17:10:56",
+ "hits": 541,
+ "up": 11,
+ "favorite": 29,
+ "comment": 4,
+ "source_file": "自绘制\\1695_极简Draw画板模型.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "truncated_tail",
+ "line_count": 57,
+ "char_count": 1266,
+ "confidence": "static_review"
+}

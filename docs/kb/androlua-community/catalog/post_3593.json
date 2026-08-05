@@ -1,0 +1,23 @@
+{
+ "manual_id": 3593,
+ "type_name": "加密解密",
+ "manual_name": "一种很新的加密方法",
+ "author": "清风",
+ "platform": "所有环境",
+ "source_date": "2023年11月18日 08:47:17",
+ "hits": 736,
+ "up": 9,
+ "favorite": 22,
+ "comment": 4,
+ "source_file": "加密解密\\3593_一种很新的加密方法.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 211,
+ "char_count": 4787,
+ "confidence": "static_review"
+}

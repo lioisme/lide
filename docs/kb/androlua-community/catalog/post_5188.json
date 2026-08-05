@@ -1,0 +1,21 @@
+{
+ "manual_id": 5188,
+ "type_name": "Lua代码",
+ "manual_name": "Bilibili AV⇆BV 转换器",
+ "author": "琪琪子",
+ "platform": "AndLua",
+ "source_date": "2026年01月29日 01:17:46",
+ "hits": 309,
+ "up": 1,
+ "favorite": 2,
+ "comment": 3,
+ "source_file": "Lua代码\\5188_Bilibili_AV⇆BV_转换器.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 136,
+ "char_count": 2911,
+ "confidence": "static_review"
+}

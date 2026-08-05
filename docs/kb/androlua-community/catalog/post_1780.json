@@ -1,0 +1,21 @@
+{
+ "manual_id": 1780,
+ "type_name": "实用代码",
+ "manual_name": "监听布局边界变化（可用于旋转监听）",
+ "author": "一個冬瓜",
+ "platform": "所有环境",
+ "source_date": "2022年08月21日 10:45:30",
+ "hits": 142,
+ "up": 1,
+ "favorite": 5,
+ "comment": 0,
+ "source_file": "实用代码\\1780_监听布局边界变化（可用于旋转监听）.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 15,
+ "char_count": 315,
+ "confidence": "static_review"
+}

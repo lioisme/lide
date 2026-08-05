@@ -1,0 +1,23 @@
+{
+ "manual_id": 1194,
+ "type_name": "系统",
+ "manual_name": "判断软件有没有获取root权限",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2020年08月17日 17:28:19",
+ "hits": 225,
+ "up": 0,
+ "favorite": 4,
+ "comment": 0,
+ "source_file": "系统\\1194_判断软件有没有获取root权限.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "os_exec"
+ ],
+ "truncation": "complete",
+ "line_count": 12,
+ "char_count": 196,
+ "confidence": "static_review"
+}

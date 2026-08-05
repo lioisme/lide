@@ -1,0 +1,21 @@
+{
+ "manual_id": 711,
+ "type_name": "JS教程",
+ "manual_name": "FA网页翻译js",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 137,
+ "up": 0,
+ "favorite": 0,
+ "comment": 1,
+ "source_file": "JS教程\\711_FA网页翻译js.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 25,
+ "char_count": 1170,
+ "confidence": "static_review"
+}

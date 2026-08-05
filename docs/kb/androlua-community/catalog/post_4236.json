@@ -1,0 +1,21 @@
+{
+ "manual_id": 4236,
+ "type_name": "消息通知",
+ "manual_name": "通知添加直接回复操作",
+ "author": "琪琪子",
+ "platform": "AndLua",
+ "source_date": "2024年09月07日 13:24:28",
+ "hits": 901,
+ "up": 33,
+ "favorite": 65,
+ "comment": 4,
+ "source_file": "消息通知\\4236_通知添加直接回复操作.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 78,
+ "char_count": 2401,
+ "confidence": "static_review"
+}

@@ -1,0 +1,24 @@
+{
+ "manual_id": 5286,
+ "type_name": "小工具",
+ "manual_name": "百度搜图（非第三方，百度自用九九新API）",
+ "author": "海纳百氚，有容乃大",
+ "platform": "Fusion App2,reOpenLua,OpenLuaX",
+ "source_date": "2026年04月03日 13:36:59",
+ "hits": 655,
+ "up": 11,
+ "favorite": 17,
+ "comment": 14,
+ "source_file": "小工具\\5286_百度搜图（非第三方，百度自用九九新API）.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "complete",
+ "line_count": 949,
+ "char_count": 29087,
+ "confidence": "static_review"
+}

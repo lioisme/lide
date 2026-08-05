@@ -1,0 +1,23 @@
+{
+ "manual_id": 295,
+ "type_name": "Activity活动",
+ "manual_name": "InputMethodManager(输入法管理器)",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 254,
+ "up": 2,
+ "favorite": 12,
+ "comment": 0,
+ "source_file": "Activity活动\\295_InputMethodManager(输入法管理器).lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "global_pollution"
+ ],
+ "truncation": "complete",
+ "line_count": 77,
+ "char_count": 1921,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 5153,
+ "type_name": "网络爬虫",
+ "manual_name": "QQ音乐 api  搜索列表 单曲解析",
+ "author": "青柠(YouCun)",
+ "platform": "所有环境",
+ "source_date": "2025年12月22日 08:16:48",
+ "hits": 393,
+ "up": 5,
+ "favorite": 13,
+ "comment": 0,
+ "source_file": "网络爬虫\\5153_QQ音乐_api_搜索列表_单曲解析.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 175,
+ "char_count": 4377,
+ "confidence": "static_review"
+}

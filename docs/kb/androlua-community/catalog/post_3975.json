@@ -1,0 +1,24 @@
+{
+ "manual_id": 3975,
+ "type_name": "自绘制",
+ "manual_name": "软体物理模拟",
+ "author": "AstarLC",
+ "platform": "所有环境",
+ "source_date": "2024年03月16日 23:55:14",
+ "hits": 418,
+ "up": 6,
+ "favorite": 9,
+ "comment": 10,
+ "source_file": "自绘制\\3975_软体物理模拟.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "global_pollution",
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 643,
+ "char_count": 30080,
+ "confidence": "static_review"
+}

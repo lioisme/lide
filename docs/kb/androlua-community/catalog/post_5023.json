@@ -1,0 +1,21 @@
+{
+ "manual_id": 5023,
+ "type_name": "对话框",
+ "manual_name": "选择日期弹窗",
+ "author": "听风诉说",
+ "platform": "所有环境",
+ "source_date": "2025年08月31日 02:19:38",
+ "hits": 333,
+ "up": 6,
+ "favorite": 11,
+ "comment": 0,
+ "source_file": "对话框\\5023_选择日期弹窗.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 13,
+ "char_count": 510,
+ "confidence": "static_review"
+}

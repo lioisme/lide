@@ -1,0 +1,25 @@
+{
+ "manual_id": 1532,
+ "type_name": "实用代码",
+ "manual_name": "Java/Lua的md5摘要计算和效率测试",
+ "author": "Adam·Eva",
+ "platform": "所有环境",
+ "source_date": "2022年06月09日 10:24:40",
+ "hits": 208,
+ "up": 2,
+ "favorite": 4,
+ "comment": 2,
+ "source_file": "实用代码\\1532_Java_Lua的md5摘要计算和效率测试.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound",
+  "remote_exec"
+ ],
+ "truncation": "complete",
+ "line_count": 57,
+ "char_count": 1559,
+ "confidence": "static_review"
+}

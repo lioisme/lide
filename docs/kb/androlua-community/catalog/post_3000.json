@@ -1,0 +1,24 @@
+{
+ "manual_id": 3000,
+ "type_name": "小游戏",
+ "manual_name": "嗯，波",
+ "author": "Duo",
+ "platform": "所有环境",
+ "source_date": "2023年07月01日 15:02:25",
+ "hits": 209,
+ "up": 6,
+ "favorite": 8,
+ "comment": 2,
+ "source_file": "小游戏\\3000_嗯，波.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "complete",
+ "line_count": 92,
+ "char_count": 2030,
+ "confidence": "static_review"
+}

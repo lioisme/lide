@@ -1,0 +1,23 @@
+{
+ "manual_id": 4880,
+ "type_name": "网络爬虫",
+ "manual_name": "猫眼专业版电影票房",
+ "author": "琪琪子",
+ "platform": "AndLua",
+ "source_date": "2025年07月05日 03:42:14",
+ "hits": 416,
+ "up": 2,
+ "favorite": 11,
+ "comment": 2,
+ "source_file": "网络爬虫\\4880_猫眼专业版电影票房.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "global_pollution"
+ ],
+ "truncation": "complete",
+ "line_count": 129,
+ "char_count": 3568,
+ "confidence": "static_review"
+}

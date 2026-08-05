@@ -1,0 +1,8 @@
+{
+  "name": "Example Plugin",
+  "version": "1.0",
+  "description": "An example plugin for lide",
+  "main": "main.lua",
+  "author": "",
+  "minVersion": "1.0"
+}

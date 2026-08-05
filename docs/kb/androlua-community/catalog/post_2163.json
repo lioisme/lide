@@ -1,0 +1,26 @@
+{
+ "manual_id": 2163,
+ "type_name": "小游戏",
+ "manual_name": "Binary system",
+ "author": "Duo",
+ "platform": "所有环境",
+ "source_date": "2022年12月09日 10:31:02",
+ "hits": 497,
+ "up": 8,
+ "favorite": 13,
+ "comment": 8,
+ "source_file": "小游戏\\2163_Binary_system.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound",
+  "chinese_identifier",
+  "global_pollution"
+ ],
+ "truncation": "complete",
+ "line_count": 423,
+ "char_count": 10609,
+ "confidence": "static_review"
+}

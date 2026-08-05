@@ -1,0 +1,21 @@
+{
+ "manual_id": 371,
+ "type_name": "实用代码",
+ "manual_name": "播放Mp3",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 146,
+ "up": 0,
+ "favorite": 3,
+ "comment": 3,
+ "source_file": "实用代码\\371_播放Mp3.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 6,
+ "char_count": 203,
+ "confidence": "static_review"
+}

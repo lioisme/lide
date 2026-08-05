@@ -1,0 +1,23 @@
+{
+ "manual_id": 2717,
+ "type_name": "Lua代码",
+ "manual_name": "/0",
+ "author": "Duo",
+ "platform": "所有环境",
+ "source_date": "2023年04月30日 23:41:01",
+ "hits": 144,
+ "up": 2,
+ "favorite": 3,
+ "comment": 4,
+ "source_file": "Lua代码\\2717_0.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 24,
+ "char_count": 432,
+ "confidence": "static_review"
+}

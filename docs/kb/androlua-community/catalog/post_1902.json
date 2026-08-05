@@ -1,0 +1,25 @@
+{
+ "manual_id": 1902,
+ "type_name": "布局教程",
+ "manual_name": "横屏&大屏幕底栏自适应",
+ "author": "苦小怕",
+ "platform": "Fusion App2",
+ "source_date": "2022年09月21日 13:10:13",
+ "hits": 1802,
+ "up": 26,
+ "favorite": 97,
+ "comment": 10,
+ "source_file": "布局教程\\1902_横屏&大屏幕底栏自适应.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound",
+  "global_pollution"
+ ],
+ "truncation": "complete",
+ "line_count": 262,
+ "char_count": 5903,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 227,
+ "type_name": "基础代码",
+ "manual_name": "Lua函数",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 97,
+ "up": 0,
+ "favorite": 0,
+ "comment": 0,
+ "source_file": "基础代码\\227_Lua函数.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 68,
+ "char_count": 1233,
+ "confidence": "static_review"
+}

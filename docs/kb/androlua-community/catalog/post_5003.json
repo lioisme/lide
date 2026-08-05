@@ -1,0 +1,23 @@
+{
+ "manual_id": 5003,
+ "type_name": "小工具",
+ "manual_name": "九宫格切图",
+ "author": "听风诉说",
+ "platform": "AndLua",
+ "source_date": "2025年08月25日 01:46:45",
+ "hits": 285,
+ "up": 5,
+ "favorite": 6,
+ "comment": 0,
+ "source_file": "小工具\\5003_九宫格切图.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 272,
+ "char_count": 6454,
+ "confidence": "static_review"
+}

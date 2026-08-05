@@ -1,0 +1,21 @@
+{
+ "manual_id": 5266,
+ "type_name": "网络爬虫",
+ "manual_name": "抖音快手视频简易解析函数（附demo实例）",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2026年03月11日 23:51:08",
+ "hits": 579,
+ "up": 6,
+ "favorite": 20,
+ "comment": 0,
+ "source_file": "网络爬虫\\5266_抖音快手视频简易解析函数（附demo实例）.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 279,
+ "char_count": 8322,
+ "confidence": "static_review"
+}

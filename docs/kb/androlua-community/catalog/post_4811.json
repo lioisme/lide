@@ -1,0 +1,21 @@
+{
+ "manual_id": 4811,
+ "type_name": "Lua代码",
+ "manual_name": "抖音无水印视频解析",
+ "author": "琪琪子",
+ "platform": "AndLua",
+ "source_date": "2025年06月03日 18:54:12",
+ "hits": 923,
+ "up": 6,
+ "favorite": 25,
+ "comment": 9,
+ "source_file": "Lua代码\\4811_抖音无水印视频解析.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 61,
+ "char_count": 1692,
+ "confidence": "static_review"
+}

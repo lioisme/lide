@@ -1,0 +1,23 @@
+{
+ "manual_id": 2017,
+ "type_name": "字符处理",
+ "manual_name": "查找字符串",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2022年10月31日 13:54:16",
+ "hits": 278,
+ "up": 2,
+ "favorite": 8,
+ "comment": 1,
+ "source_file": "字符处理\\2017_查找字符串.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 30,
+ "char_count": 622,
+ "confidence": "static_review"
+}

@@ -1,0 +1,25 @@
+{
+ "manual_id": 3356,
+ "type_name": "小游戏",
+ "manual_name": "Flappy Bird复刻(没写完屎山版)",
+ "author": "花园",
+ "platform": "所有环境",
+ "source_date": "2023年09月01日 07:37:34",
+ "hits": 645,
+ "up": 5,
+ "favorite": 13,
+ "comment": 16,
+ "source_file": "小游戏\\3356_Flappy_Bird复刻(没写完屎山版).lua",
+ "kind": "fragment",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "incomplete_mark",
+  "chinese_identifier",
+  "incomplete_fragment"
+ ],
+ "truncation": "complete",
+ "line_count": 413,
+ "char_count": 11002,
+ "confidence": "static_review"
+}

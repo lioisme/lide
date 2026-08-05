@@ -1,0 +1,23 @@
+{
+ "manual_id": 96,
+ "type_name": "控件属性",
+ "manual_name": "带颜色的字体",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 129,
+ "up": 0,
+ "favorite": 1,
+ "comment": 0,
+ "source_file": "控件属性\\96_带颜色的字体.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 12,
+ "char_count": 351,
+ "confidence": "static_review"
+}

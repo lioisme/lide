@@ -1,0 +1,23 @@
+{
+ "manual_id": 1101,
+ "type_name": "动画教程",
+ "manual_name": "仿盒子背景水波纹动画",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 257,
+ "up": 1,
+ "favorite": 3,
+ "comment": 0,
+ "source_file": "动画教程\\1101_仿盒子背景水波纹动画.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "global_pollution"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 74,
+ "char_count": 2599,
+ "confidence": "static_review"
+}

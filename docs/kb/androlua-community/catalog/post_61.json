@@ -1,0 +1,23 @@
+{
+ "manual_id": 61,
+ "type_name": "布局教程",
+ "manual_name": "底栏模板布局",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 598,
+ "up": 3,
+ "favorite": 7,
+ "comment": 0,
+ "source_file": "布局教程\\61_底栏模板布局.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "global_pollution"
+ ],
+ "truncation": "complete",
+ "line_count": 404,
+ "char_count": 9389,
+ "confidence": "static_review"
+}

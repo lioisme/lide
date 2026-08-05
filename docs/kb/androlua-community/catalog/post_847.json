@@ -1,0 +1,21 @@
+{
+ "manual_id": 847,
+ "type_name": "Lua代码",
+ "manual_name": "timer定时器",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 179,
+ "up": 0,
+ "favorite": 2,
+ "comment": 0,
+ "source_file": "Lua代码\\847_timer定时器.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 19,
+ "char_count": 225,
+ "confidence": "static_review"
+}

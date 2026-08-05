@@ -1,0 +1,23 @@
+{
+ "manual_id": 1783,
+ "type_name": "小工具",
+ "manual_name": "我生活了多久",
+ "author": "易富焙",
+ "platform": "所有环境",
+ "source_date": "2022年08月21日 13:55:20",
+ "hits": 758,
+ "up": 18,
+ "favorite": 55,
+ "comment": 16,
+ "source_file": "小工具\\1783_我生活了多久.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 223,
+ "char_count": 5888,
+ "confidence": "static_review"
+}

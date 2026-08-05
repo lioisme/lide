@@ -1,0 +1,21 @@
+{
+ "manual_id": 3160,
+ "type_name": "安卓教程",
+ "manual_name": "获取View的Activity",
+ "author": "Cheese",
+ "platform": "所有环境",
+ "source_date": "2023年07月28日 22:51:03",
+ "hits": 165,
+ "up": 4,
+ "favorite": 6,
+ "comment": 0,
+ "source_file": "安卓教程\\3160_获取View的Activity.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 13,
+ "char_count": 348,
+ "confidence": "static_review"
+}

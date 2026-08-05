@@ -1,0 +1,21 @@
+{
+ "manual_id": 3388,
+ "type_name": "小工具",
+ "manual_name": "一个简洁的随机颜色卡（重构优化）",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2023年09月11日 12:53:35",
+ "hits": 679,
+ "up": 15,
+ "favorite": 45,
+ "comment": 8,
+ "source_file": "小工具\\3388_一个简洁的随机颜色卡（重构优化）.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "truncated_tail",
+ "line_count": 164,
+ "char_count": 4610,
+ "confidence": "static_review"
+}

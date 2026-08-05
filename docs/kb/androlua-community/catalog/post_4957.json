@@ -1,0 +1,24 @@
+{
+ "manual_id": 4957,
+ "type_name": "基础代码",
+ "manual_name": "OpenGl加载纹理",
+ "author": "小然",
+ "platform": "",
+ "source_date": "2025年07月31日 02:37:40",
+ "hits": 416,
+ "up": 3,
+ "favorite": 5,
+ "comment": 6,
+ "source_file": "基础代码\\4957_OpenGl加载纹理.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 419,
+ "char_count": 9032,
+ "confidence": "static_review"
+}

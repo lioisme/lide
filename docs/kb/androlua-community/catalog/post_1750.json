@@ -1,0 +1,21 @@
+{
+ "manual_id": 1750,
+ "type_name": "系统",
+ "manual_name": "获取CPU架构",
+ "author": "迷糊.",
+ "platform": "所有环境",
+ "source_date": "2022年08月19日 04:03:30",
+ "hits": 298,
+ "up": 3,
+ "favorite": 12,
+ "comment": 6,
+ "source_file": "系统\\1750_获取CPU架构.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "truncated_tail",
+ "line_count": 6,
+ "char_count": 325,
+ "confidence": "static_review"
+}

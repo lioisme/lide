@@ -1,0 +1,23 @@
+{
+ "manual_id": 415,
+ "type_name": "控件属性",
+ "manual_name": "键盘Enter键动作",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 86,
+ "up": 0,
+ "favorite": 2,
+ "comment": 0,
+ "source_file": "控件属性\\415_键盘Enter键动作.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 7,
+ "char_count": 140,
+ "confidence": "static_review"
+}

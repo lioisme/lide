@@ -1,0 +1,21 @@
+{
+ "manual_id": 5249,
+ "type_name": "网络请求",
+ "manual_name": "小云雀灵感视频解析",
+ "author": "琪琪子",
+ "platform": "AndLua",
+ "source_date": "2026年02月28日 17:06:07",
+ "hits": 479,
+ "up": 1,
+ "favorite": 8,
+ "comment": 3,
+ "source_file": "网络请求\\5249_小云雀灵感视频解析.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 81,
+ "char_count": 2254,
+ "confidence": "static_review"
+}

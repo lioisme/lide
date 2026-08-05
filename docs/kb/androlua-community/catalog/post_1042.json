@@ -1,0 +1,23 @@
+{
+ "manual_id": 1042,
+ "type_name": "系统",
+ "manual_name": "显示输入法",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 127,
+ "up": 0,
+ "favorite": 3,
+ "comment": 0,
+ "source_file": "系统\\1042_显示输入法.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 6,
+ "char_count": 175,
+ "confidence": "static_review"
+}

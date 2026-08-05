@@ -1,0 +1,21 @@
+{
+ "manual_id": 2109,
+ "type_name": "编码转换",
+ "manual_name": "Unicode解码",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2022年11月24日 20:30:43",
+ "hits": 331,
+ "up": 1,
+ "favorite": 7,
+ "comment": 1,
+ "source_file": "编码转换\\2109_Unicode解码.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 6,
+ "char_count": 120,
+ "confidence": "static_review"
+}

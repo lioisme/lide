@@ -1,0 +1,23 @@
+{
+ "manual_id": 2733,
+ "type_name": "Lua代码",
+ "manual_name": "检测本地链接文件大小破损",
+ "author": "诶害",
+ "platform": "所有环境",
+ "source_date": "2023年05月03日 08:57:07",
+ "hits": 181,
+ "up": 4,
+ "favorite": 8,
+ "comment": 2,
+ "source_file": "Lua代码\\2733_检测本地链接文件大小破损.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "os_exec"
+ ],
+ "truncation": "complete",
+ "line_count": 85,
+ "char_count": 1511,
+ "confidence": "static_review"
+}

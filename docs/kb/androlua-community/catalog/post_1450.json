@@ -1,0 +1,21 @@
+{
+ "manual_id": 1450,
+ "type_name": "布局教程",
+ "manual_name": "小卡片布局",
+ "author": "YONGLE-永乐",
+ "platform": "所有环境",
+ "source_date": "2022年04月23日 12:22:55",
+ "hits": 397,
+ "up": 4,
+ "favorite": 9,
+ "comment": 2,
+ "source_file": "布局教程\\1450_小卡片布局.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 64,
+ "char_count": 1458,
+ "confidence": "static_review"
+}

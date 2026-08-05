@@ -1,0 +1,25 @@
+{
+ "manual_id": 3510,
+ "type_name": "浏览器",
+ "manual_name": "多个WebView共享数据",
+ "author": "壹影",
+ "platform": "所有环境",
+ "source_date": "2023年10月18日 10:22:36",
+ "hits": 369,
+ "up": 2,
+ "favorite": 11,
+ "comment": 1,
+ "source_file": "浏览器\\3510_多个WebView共享数据.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound",
+  "global_pollution"
+ ],
+ "truncation": "complete",
+ "line_count": 254,
+ "char_count": 6414,
+ "confidence": "static_review"
+}

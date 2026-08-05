@@ -1,0 +1,24 @@
+{
+ "manual_id": 3444,
+ "type_name": "布局教程",
+ "manual_name": "关于",
+ "author": "Aqora",
+ "platform": "Fusion App2,reOpenLua",
+ "source_date": "2023年10月01日 19:37:17",
+ "hits": 1049,
+ "up": 6,
+ "favorite": 43,
+ "comment": 6,
+ "source_file": "布局教程\\3444_关于.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "complete",
+ "line_count": 327,
+ "char_count": 9556,
+ "confidence": "static_review"
+}

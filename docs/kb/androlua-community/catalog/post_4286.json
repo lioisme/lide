@@ -1,0 +1,24 @@
+{
+ "manual_id": 4286,
+ "type_name": "table表",
+ "manual_name": "导入语句格式化",
+ "author": "碳昔",
+ "platform": "所有环境",
+ "source_date": "2024年10月02日 15:16:17",
+ "hits": 519,
+ "up": 3,
+ "favorite": 9,
+ "comment": 0,
+ "source_file": "table表\\4286_导入语句格式化.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 202,
+ "char_count": 6851,
+ "confidence": "static_review"
+}

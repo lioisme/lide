@@ -1,0 +1,24 @@
+{
+ "manual_id": 4194,
+ "type_name": "Menu菜单",
+ "manual_name": "popupMenu修改背景波纹以及字体大小",
+ "author": "1111",
+ "platform": "所有环境",
+ "source_date": "2024年08月21日 01:38:11",
+ "hits": 752,
+ "up": 4,
+ "favorite": 14,
+ "comment": 3,
+ "source_file": "Menu菜单\\4194_popupMenu修改背景波纹以及字体大小.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "obsolete",
+ "flags": [
+  "obsolete",
+  "obsolete"
+ ],
+ "truncation": "complete",
+ "line_count": 239,
+ "char_count": 8250,
+ "confidence": "static_review"
+}

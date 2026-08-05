@@ -1,0 +1,25 @@
+{
+ "manual_id": 2446,
+ "type_name": "小工具",
+ "manual_name": "屏幕标尺",
+ "author": "尼斯湖水怪",
+ "platform": "所有环境",
+ "source_date": "2023年02月08日 23:05:25",
+ "hits": 342,
+ "up": 5,
+ "favorite": 6,
+ "comment": 1,
+ "source_file": "小工具\\2446_屏幕标尺.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 242,
+ "char_count": 6005,
+ "confidence": "static_review"
+}

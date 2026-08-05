@@ -1,0 +1,23 @@
+{
+ "manual_id": 3169,
+ "type_name": "布局教程",
+ "manual_name": "仿iOS对话框",
+ "author": "L.",
+ "platform": "所有环境",
+ "source_date": "2023年07月31日 14:33:03",
+ "hits": 502,
+ "up": 4,
+ "favorite": 17,
+ "comment": 12,
+ "source_file": "布局教程\\3169_仿iOS对话框.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 159,
+ "char_count": 4110,
+ "confidence": "static_review"
+}

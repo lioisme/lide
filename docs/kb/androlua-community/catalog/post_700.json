@@ -1,0 +1,21 @@
+{
+ "manual_id": 700,
+ "type_name": "浏览器",
+ "manual_name": "自定义标签栏、底栏点击项目事件",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 472,
+ "up": 3,
+ "favorite": 10,
+ "comment": 2,
+ "source_file": "浏览器\\700_自定义标签栏、底栏点击项目事件.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 13,
+ "char_count": 184,
+ "confidence": "static_review"
+}

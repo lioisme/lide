@@ -1,0 +1,23 @@
+{
+ "manual_id": 4319,
+ "type_name": "小游戏",
+ "manual_name": "随机生成迷宫",
+ "author": "fo",
+ "platform": "AndLua",
+ "source_date": "2024年10月21日 20:48:21",
+ "hits": 250,
+ "up": 2,
+ "favorite": 3,
+ "comment": 5,
+ "source_file": "小游戏\\4319_随机生成迷宫.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 365,
+ "char_count": 11098,
+ "confidence": "static_review"
+}

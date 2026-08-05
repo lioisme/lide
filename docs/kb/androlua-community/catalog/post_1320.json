@@ -1,0 +1,23 @@
+{
+ "manual_id": 1320,
+ "type_name": "实用代码",
+ "manual_name": "侧滑栏关闭手势滑动/锁住打开",
+ "author": "小白·马",
+ "platform": "所有环境",
+ "source_date": "2022年01月15日 00:20:19",
+ "hits": 497,
+ "up": 6,
+ "favorite": 19,
+ "comment": 2,
+ "source_file": "实用代码\\1320_侧滑栏关闭手势滑动_锁住打开.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "complete",
+ "line_count": 12,
+ "char_count": 172,
+ "confidence": "static_review"
+}

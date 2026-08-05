@@ -1,0 +1,23 @@
+{
+ "manual_id": 868,
+ "type_name": "控件属性",
+ "manual_name": "渐变圆角",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 91,
+ "up": 1,
+ "favorite": 0,
+ "comment": 0,
+ "source_file": "控件属性\\868_渐变圆角.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 8,
+ "char_count": 288,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 1279,
+ "type_name": "编码转换",
+ "manual_name": "URL编码解码",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2021年12月29日 11:33:34",
+ "hits": 294,
+ "up": 3,
+ "favorite": 15,
+ "comment": 0,
+ "source_file": "编码转换\\1279_URL编码解码.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 24,
+ "char_count": 472,
+ "confidence": "static_review"
+}

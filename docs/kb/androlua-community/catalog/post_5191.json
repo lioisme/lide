@@ -1,0 +1,21 @@
+{
+ "manual_id": 5191,
+ "type_name": "安卓教程",
+ "manual_name": "史无前例！Lua实现Liquidglass效果？！",
+ "author": "😈",
+ "platform": "所有环境",
+ "source_date": "2026年01月31日 16:38:09",
+ "hits": 418,
+ "up": 6,
+ "favorite": 10,
+ "comment": 3,
+ "source_file": "安卓教程\\5191_史无前例！Lua实现Liquidglass效果？！.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 223,
+ "char_count": 8975,
+ "confidence": "static_review"
+}

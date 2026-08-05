@@ -1,0 +1,23 @@
+{
+ "manual_id": 2435,
+ "type_name": "Activity活动",
+ "manual_name": "旋转智仙（文字旋转）",
+ "author": "奥姆",
+ "platform": "所有环境",
+ "source_date": "2023年02月05日 21:04:57",
+ "hits": 270,
+ "up": 6,
+ "favorite": 18,
+ "comment": 8,
+ "source_file": "Activity活动\\2435_旋转智仙（文字旋转）.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 29,
+ "char_count": 410,
+ "confidence": "static_review"
+}

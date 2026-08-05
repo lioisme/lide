@@ -1,0 +1,24 @@
+{
+ "manual_id": 5303,
+ "type_name": "网络爬虫",
+ "manual_name": "快手图集简易解析函数（附带demo示例）",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2026年04月19日 18:30:56",
+ "hits": 259,
+ "up": 1,
+ "favorite": 4,
+ "comment": 2,
+ "source_file": "网络爬虫\\5303_快手图集简易解析函数（附带demo示例）.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 278,
+ "char_count": 8231,
+ "confidence": "static_review"
+}

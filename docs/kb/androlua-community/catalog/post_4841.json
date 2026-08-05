@@ -1,0 +1,21 @@
+{
+ "manual_id": 4841,
+ "type_name": "Lua代码",
+ "manual_name": "段落拖动条",
+ "author": "琪琪子",
+ "platform": "AndLua",
+ "source_date": "2025年06月18日 07:50:39",
+ "hits": 451,
+ "up": 12,
+ "favorite": 27,
+ "comment": 4,
+ "source_file": "Lua代码\\4841_段落拖动条.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 249,
+ "char_count": 6155,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 5180,
+ "type_name": "小工具",
+ "manual_name": "ics文件解析",
+ "author": "鸡汤",
+ "platform": "AndLua",
+ "source_date": "2026年01月18日 10:57:46",
+ "hits": 170,
+ "up": 1,
+ "favorite": 2,
+ "comment": 0,
+ "source_file": "小工具\\5180_ics文件解析.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 145,
+ "char_count": 3786,
+ "confidence": "static_review"
+}

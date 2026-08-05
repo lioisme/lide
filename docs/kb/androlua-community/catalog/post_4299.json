@@ -1,0 +1,21 @@
+{
+ "manual_id": 4299,
+ "type_name": "基础代码",
+ "manual_name": "AES加解密",
+ "author": "左转",
+ "platform": "所有环境",
+ "source_date": "2024年10月13日 19:12:22",
+ "hits": 578,
+ "up": 5,
+ "favorite": 16,
+ "comment": 4,
+ "source_file": "基础代码\\4299_AES加解密.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 51,
+ "char_count": 1500,
+ "confidence": "static_review"
+}

@@ -1,0 +1,24 @@
+{
+ "manual_id": 5065,
+ "type_name": "小工具",
+ "manual_name": "Lunar 基于Java的成熟日历转换库",
+ "author": "海纳百氚，有容乃大",
+ "platform": "Fusion App2,reOpenLua,OpenLuaX",
+ "source_date": "2025年10月07日 14:50:24",
+ "hits": 474,
+ "up": 5,
+ "favorite": 10,
+ "comment": 3,
+ "source_file": "小工具\\5065_Lunar_基于Java的成熟日历转换库.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "remote_exec",
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 122,
+ "char_count": 3480,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 4230,
+ "type_name": "对话框",
+ "manual_name": "AlertDialog点击按钮不关闭",
+ "author": "NekoLaska",
+ "platform": "所有环境",
+ "source_date": "2024年09月03日 22:58:48",
+ "hits": 349,
+ "up": 1,
+ "favorite": 6,
+ "comment": 0,
+ "source_file": "对话框\\4230_AlertDialog点击按钮不关闭.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "truncated_tail",
+ "line_count": 22,
+ "char_count": 504,
+ "confidence": "static_review"
+}

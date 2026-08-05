@@ -1,0 +1,23 @@
+{
+ "manual_id": 4476,
+ "type_name": "小游戏",
+ "manual_name": "俄罗斯方块",
+ "author": "青柠(YouCun)",
+ "platform": "所有环境",
+ "source_date": "2025年01月20日 08:40:16",
+ "hits": 381,
+ "up": 5,
+ "favorite": 11,
+ "comment": 1,
+ "source_file": "小游戏\\4476_俄罗斯方块.lua",
+ "kind": "code_demo",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 336,
+ "char_count": 7650,
+ "confidence": "static_review"
+}

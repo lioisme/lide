@@ -1,0 +1,21 @@
+{
+ "manual_id": 2683,
+ "type_name": "小工具",
+ "manual_name": "获取手机参数",
+ "author": "🦂蝎子🕷爱咬人",
+ "platform": "AndLua",
+ "source_date": "2023年04月20日 22:27:06",
+ "hits": 221,
+ "up": 1,
+ "favorite": 13,
+ "comment": 0,
+ "source_file": "小工具\\2683_获取手机参数.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 22,
+ "char_count": 420,
+ "confidence": "static_review"
+}

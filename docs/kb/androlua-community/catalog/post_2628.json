@@ -1,0 +1,23 @@
+{
+ "manual_id": 2628,
+ "type_name": "Androlua教程",
+ "manual_name": "一个有Bug的多指触摸(可以直接在此软件中执行)",
+ "author": "AstarLC",
+ "platform": "所有环境",
+ "source_date": "2023年04月04日 18:49:36",
+ "hits": 197,
+ "up": 0,
+ "favorite": 2,
+ "comment": 3,
+ "source_file": "Androlua教程\\2628_一个有Bug的多指触摸(可以直接在此软件中执行).lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "global_pollution"
+ ],
+ "truncation": "complete",
+ "line_count": 262,
+ "char_count": 5925,
+ "confidence": "static_review"
+}

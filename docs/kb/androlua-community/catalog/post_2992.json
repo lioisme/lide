@@ -1,0 +1,21 @@
+{
+ "manual_id": 2992,
+ "type_name": "Menu菜单",
+ "manual_name": "创建悬浮上下文菜单",
+ "author": "WizLiu",
+ "platform": "所有环境",
+ "source_date": "2023年06月29日 23:38:06",
+ "hits": 560,
+ "up": 9,
+ "favorite": 30,
+ "comment": 2,
+ "source_file": "Menu菜单\\2992_创建悬浮上下文菜单.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 73,
+ "char_count": 1728,
+ "confidence": "static_review"
+}

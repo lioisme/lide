@@ -1,0 +1,21 @@
+{
+ "manual_id": 5259,
+ "type_name": "Lua代码",
+ "manual_name": "贝塞尔曲线UI底栏",
+ "author": "🐷",
+ "platform": "AndroLua,reOpenLua,OpenLuaX,AndLua",
+ "source_date": "2026年03月08日 07:27:20",
+ "hits": 906,
+ "up": 16,
+ "favorite": 44,
+ "comment": 9,
+ "source_file": "Lua代码\\5259_贝塞尔曲线UI底栏.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 509,
+ "char_count": 19860,
+ "confidence": "static_review"
+}

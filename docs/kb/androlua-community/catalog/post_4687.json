@@ -1,0 +1,24 @@
+{
+ "manual_id": 4687,
+ "type_name": "安卓教程",
+ "manual_name": "Rick and Morty API，展示角色信息。",
+ "author": "寒雪落花静云月",
+ "platform": "AndroLua",
+ "source_date": "2025年04月11日 23:18:48",
+ "hits": 314,
+ "up": 3,
+ "favorite": 6,
+ "comment": 0,
+ "source_file": "安卓教程\\4687_Rick_and_Morty_API，展示角色信息。.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 174,
+ "char_count": 4148,
+ "confidence": "static_review"
+}

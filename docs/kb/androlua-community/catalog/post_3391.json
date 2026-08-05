@@ -1,0 +1,21 @@
+{
+ "manual_id": 3391,
+ "type_name": "适配器",
+ "manual_name": "lua实现的BasePagerAdapter",
+ "author": "迷糊.",
+ "platform": "Fusion App2,reOpenLua",
+ "source_date": "2023年09月14日 16:46:09",
+ "hits": 306,
+ "up": 0,
+ "favorite": 5,
+ "comment": 2,
+ "source_file": "适配器\\3391_lua实现的BasePagerAdapter.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 35,
+ "char_count": 818,
+ "confidence": "static_review"
+}

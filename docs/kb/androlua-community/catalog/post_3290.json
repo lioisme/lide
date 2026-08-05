@@ -1,0 +1,23 @@
+{
+ "manual_id": 3290,
+ "type_name": "布局教程",
+ "manual_name": "仿MIUI用户反馈收集弹窗布局",
+ "author": "破晓",
+ "platform": "Fusion App2",
+ "source_date": "2023年08月20日 19:30:24",
+ "hits": 837,
+ "up": 11,
+ "favorite": 45,
+ "comment": 3,
+ "source_file": "布局教程\\3290_仿MIUI用户反馈收集弹窗布局.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 432,
+ "char_count": 11455,
+ "confidence": "static_review"
+}

@@ -1,0 +1,23 @@
+{
+ "manual_id": 168,
+ "type_name": "系统",
+ "manual_name": "获取运营商名称",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 217,
+ "up": 1,
+ "favorite": 3,
+ "comment": 0,
+ "source_file": "系统\\168_获取运营商名称.lua",
+ "kind": "code_demo",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 12,
+ "char_count": 272,
+ "confidence": "static_review"
+}

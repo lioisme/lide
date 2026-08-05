@@ -1,0 +1,21 @@
+{
+ "manual_id": 1099,
+ "type_name": "动画教程",
+ "manual_name": "窗口动画",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 220,
+ "up": 0,
+ "favorite": 4,
+ "comment": 0,
+ "source_file": "动画教程\\1099_窗口动画.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 44,
+ "char_count": 1212,
+ "confidence": "static_review"
+}

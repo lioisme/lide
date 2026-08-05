@@ -1,0 +1,23 @@
+{
+ "manual_id": 2618,
+ "type_name": "小游戏",
+ "manual_name": "Lua Canvas 愚人节当天随便写的小音游",
+ "author": "AstarLC",
+ "platform": "所有环境",
+ "source_date": "2023年04月01日 22:09:19",
+ "hits": 449,
+ "up": 10,
+ "favorite": 16,
+ "comment": 10,
+ "source_file": "小游戏\\2618_Lua_Canvas_愚人节当天随便写的小音游.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "global_pollution"
+ ],
+ "truncation": "complete",
+ "line_count": 663,
+ "char_count": 20149,
+ "confidence": "static_review"
+}

@@ -1,0 +1,23 @@
+{
+ "manual_id": 4226,
+ "type_name": "文件操作",
+ "manual_name": "多选清理缓存示例",
+ "author": "⁧拾玖⁧‭",
+ "platform": "所有环境",
+ "source_date": "2024年09月01日 11:01:26",
+ "hits": 370,
+ "up": 1,
+ "favorite": 7,
+ "comment": 1,
+ "source_file": "文件操作\\4226_多选清理缓存示例.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "os_exec"
+ ],
+ "truncation": "complete",
+ "line_count": 24,
+ "char_count": 677,
+ "confidence": "static_review"
+}

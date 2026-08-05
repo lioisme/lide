@@ -1,0 +1,23 @@
+{
+ "manual_id": 4332,
+ "type_name": "Lua代码",
+ "manual_name": "简单音效生成器",
+ "author": "青柠(YouCun)",
+ "platform": "所有环境",
+ "source_date": "2024年10月26日 20:04:32",
+ "hits": 466,
+ "up": 8,
+ "favorite": 7,
+ "comment": 2,
+ "source_file": "Lua代码\\4332_简单音效生成器.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "os_exec"
+ ],
+ "truncation": "complete",
+ "line_count": 239,
+ "char_count": 7083,
+ "confidence": "static_review"
+}

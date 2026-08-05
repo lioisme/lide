@@ -1,0 +1,23 @@
+{
+ "manual_id": 4964,
+ "type_name": "动画教程",
+ "manual_name": "关于控件回弹动画",
+ "author": "😈",
+ "platform": "所有环境",
+ "source_date": "2025年08月04日 12:26:03",
+ "hits": 656,
+ "up": 12,
+ "favorite": 22,
+ "comment": 0,
+ "source_file": "动画教程\\4964_关于控件回弹动画.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 125,
+ "char_count": 2854,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 3460,
+ "type_name": "控件属性",
+ "manual_name": "使 PopupMenu 覆盖在锚点 View 上",
+ "author": "ABVerterX",
+ "platform": "所有环境",
+ "source_date": "2023年10月05日 12:48:08",
+ "hits": 394,
+ "up": 2,
+ "favorite": 8,
+ "comment": 2,
+ "source_file": "控件属性\\3460_使_PopupMenu_覆盖在锚点_View_上.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "truncated_tail",
+ "line_count": 28,
+ "char_count": 732,
+ "confidence": "static_review"
+}

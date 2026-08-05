@@ -1,0 +1,21 @@
+{
+ "manual_id": 2005,
+ "type_name": "布局教程",
+ "manual_name": "适配器去除点击波纹",
+ "author": "No one cares",
+ "platform": "AndroLua,Fusion App2",
+ "source_date": "2022年10月27日 09:14:38",
+ "hits": 300,
+ "up": 4,
+ "favorite": 21,
+ "comment": 1,
+ "source_file": "布局教程\\2005_适配器去除点击波纹.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "truncated_tail",
+ "line_count": 5,
+ "char_count": 158,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 2145,
+ "type_name": "小工具",
+ "manual_name": "𝓛𝓸𝓿𝓮 𝓟𝓪𝓭𝓲",
+ "author": "帕帝天秀",
+ "platform": "所有环境",
+ "source_date": "2022年12月04日 04:30:04",
+ "hits": 334,
+ "up": 6,
+ "favorite": 14,
+ "comment": 1,
+ "source_file": "小工具\\2145_𝓛𝓸𝓿𝓮_𝓟𝓪𝓭𝓲.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 78,
+ "char_count": 1925,
+ "confidence": "static_review"
+}

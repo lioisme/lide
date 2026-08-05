@@ -1,0 +1,21 @@
+{
+ "manual_id": 3164,
+ "type_name": "Androlua教程",
+ "manual_name": "Lua Class Pro",
+ "author": "kamihitoe",
+ "platform": "所有环境",
+ "source_date": "2023年07月30日 11:06:02",
+ "hits": 200,
+ "up": 4,
+ "favorite": 10,
+ "comment": 2,
+ "source_file": "Androlua教程\\3164_Lua_Class_Pro.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 199,
+ "char_count": 5134,
+ "confidence": "static_review"
+}

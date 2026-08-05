@@ -1,0 +1,21 @@
+{
+ "manual_id": 1093,
+ "type_name": "文件操作",
+ "manual_name": "fas检查程序是否含有中文字符",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 93,
+ "up": 0,
+ "favorite": 0,
+ "comment": 0,
+ "source_file": "文件操作\\1093_fas检查程序是否含有中文字符.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 21,
+ "char_count": 476,
+ "confidence": "static_review"
+}

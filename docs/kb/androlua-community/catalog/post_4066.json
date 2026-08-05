@@ -1,0 +1,21 @@
+{
+ "manual_id": 4066,
+ "type_name": "文件操作",
+ "manual_name": "幽默谷歌",
+ "author": "kamihitoe",
+ "platform": "所有环境",
+ "source_date": "2024年05月17日 08:26:02",
+ "hits": 585,
+ "up": 4,
+ "favorite": 3,
+ "comment": 8,
+ "source_file": "文件操作\\4066_幽默谷歌.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 5,
+ "char_count": 151,
+ "confidence": "static_review"
+}

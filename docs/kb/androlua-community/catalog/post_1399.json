@@ -1,0 +1,21 @@
+{
+ "manual_id": 1399,
+ "type_name": "UI控件",
+ "manual_name": "NumberPicker数值选择器",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2022年03月15日 08:57:16",
+ "hits": 355,
+ "up": 4,
+ "favorite": 18,
+ "comment": 1,
+ "source_file": "UI控件\\1399_NumberPicker数值选择器.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 104,
+ "char_count": 2678,
+ "confidence": "static_review"
+}

@@ -1,0 +1,23 @@
+{
+ "manual_id": 1890,
+ "type_name": "实用代码",
+ "manual_name": "反寂寞人",
+ "author": "青柠(YouCun)",
+ "platform": "所有环境",
+ "source_date": "2022年09月16日 09:31:34",
+ "hits": 727,
+ "up": 3,
+ "favorite": 15,
+ "comment": 11,
+ "source_file": "实用代码\\1890_反寂寞人.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 110,
+ "char_count": 2502,
+ "confidence": "static_review"
+}

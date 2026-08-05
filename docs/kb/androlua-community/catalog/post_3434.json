@@ -1,0 +1,21 @@
+{
+ "manual_id": 3434,
+ "type_name": "控件属性",
+ "manual_name": "LuaAdapter适配器单独设置某项属性",
+ "author": "氕-Protium",
+ "platform": "所有环境",
+ "source_date": "2023年09月28日 02:16:02",
+ "hits": 554,
+ "up": 13,
+ "favorite": 43,
+ "comment": 0,
+ "source_file": "控件属性\\3434_LuaAdapter适配器单独设置某项属性.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 129,
+ "char_count": 2971,
+ "confidence": "static_review"
+}

@@ -1,0 +1,23 @@
+{
+ "manual_id": 1553,
+ "type_name": "小工具",
+ "manual_name": "孤灯广告拦截（美化布局）",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2022年06月22日 23:52:29",
+ "hits": 820,
+ "up": 12,
+ "favorite": 45,
+ "comment": 5,
+ "source_file": "小工具\\1553_孤灯广告拦截（美化布局）.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 323,
+ "char_count": 14056,
+ "confidence": "static_review"
+}

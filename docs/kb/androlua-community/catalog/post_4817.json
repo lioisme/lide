@@ -1,0 +1,21 @@
+{
+ "manual_id": 4817,
+ "type_name": "设备系统",
+ "manual_name": "获取手机名称",
+ "author": "程国荣",
+ "platform": "所有环境",
+ "source_date": "2025年06月07日 10:15:55",
+ "hits": 428,
+ "up": 7,
+ "favorite": 11,
+ "comment": 1,
+ "source_file": "设备系统\\4817_获取手机名称.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 164,
+ "char_count": 4417,
+ "confidence": "static_review"
+}

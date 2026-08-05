@@ -1,0 +1,21 @@
+{
+ "manual_id": 2688,
+ "type_name": "实用代码",
+ "manual_name": "简单使用白嫖的腾讯防水墙（可疑版）",
+ "author": "小白·马",
+ "platform": "所有环境",
+ "source_date": "2023年04月22日 09:27:17",
+ "hits": 1000,
+ "up": 44,
+ "favorite": 89,
+ "comment": 10,
+ "source_file": "实用代码\\2688_简单使用白嫖的腾讯防水墙（可疑版）.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 111,
+ "char_count": 3249,
+ "confidence": "static_review"
+}

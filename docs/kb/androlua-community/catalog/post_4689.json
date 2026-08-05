@@ -1,0 +1,21 @@
+{
+ "manual_id": 4689,
+ "type_name": "设备系统",
+ "manual_name": "Android 获得adb无线调试权限",
+ "author": "kruger",
+ "platform": "AndroLua",
+ "source_date": "2025年04月12日 13:13:25",
+ "hits": 372,
+ "up": 8,
+ "favorite": 13,
+ "comment": 1,
+ "source_file": "设备系统\\4689_Android_获得adb无线调试权限.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 601,
+ "char_count": 15806,
+ "confidence": "static_review"
+}

@@ -1,0 +1,25 @@
+{
+ "manual_id": 2712,
+ "type_name": "浏览器",
+ "manual_name": "FusionWebView",
+ "author": "kamihitoe",
+ "platform": "Fusion App2",
+ "source_date": "2023年04月30日 08:20:43",
+ "hits": 268,
+ "up": 2,
+ "favorite": 5,
+ "comment": 0,
+ "source_file": "浏览器\\2712_FusionWebView.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "global_pollution"
+ ],
+ "truncation": "complete",
+ "line_count": 67,
+ "char_count": 2028,
+ "confidence": "static_review"
+}

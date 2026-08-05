@@ -1,0 +1,24 @@
+{
+ "manual_id": 1398,
+ "type_name": "UI控件",
+ "manual_name": "VideoView视频控件",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2022年03月15日 08:50:10",
+ "hits": 1567,
+ "up": 11,
+ "favorite": 50,
+ "comment": 6,
+ "source_file": "UI控件\\1398_VideoView视频控件.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "obsolete",
+ "flags": [
+  "obsolete",
+  "obsolete"
+ ],
+ "truncation": "complete",
+ "line_count": 104,
+ "char_count": 2531,
+ "confidence": "static_review"
+}

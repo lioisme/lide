@@ -1,0 +1,24 @@
+{
+ "manual_id": 1394,
+ "type_name": "手册公告",
+ "manual_name": "函数相关公告",
+ "author": "迷糊.",
+ "platform": "所有环境",
+ "source_date": "2022年03月10日 16:12:25",
+ "hits": 480,
+ "up": 4,
+ "favorite": 0,
+ "comment": 3,
+ "source_file": "手册公告\\1394_函数相关公告.lua",
+ "kind": "announce",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "announcement_no_code",
+  "announcement"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 2,
+ "char_count": 42,
+ "confidence": "static_review"
+}

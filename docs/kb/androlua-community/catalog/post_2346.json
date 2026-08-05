@@ -1,0 +1,25 @@
+{
+ "manual_id": 2346,
+ "type_name": "Activity活动",
+ "manual_name": "仿MIUI我的设备（布局未适配）",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2023年01月19日 09:07:13",
+ "hits": 1080,
+ "up": 22,
+ "favorite": 42,
+ "comment": 27,
+ "source_file": "Activity活动\\2346_仿MIUI我的设备（布局未适配）.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 724,
+ "char_count": 20826,
+ "confidence": "static_review"
+}

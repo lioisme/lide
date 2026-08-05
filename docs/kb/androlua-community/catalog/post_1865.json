@@ -1,0 +1,25 @@
+{
+ "manual_id": 1865,
+ "type_name": "布局教程",
+ "manual_name": "中文布局",
+ "author": "苦小怕",
+ "platform": "所有环境",
+ "source_date": "2022年09月09日 23:22:34",
+ "hits": 673,
+ "up": 12,
+ "favorite": 16,
+ "comment": 3,
+ "source_file": "布局教程\\1865_中文布局.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 137,
+ "char_count": 2785,
+ "confidence": "static_review"
+}

@@ -1,0 +1,24 @@
+{
+ "manual_id": 2252,
+ "type_name": "小工具",
+ "manual_name": "AndLua+中文函数库",
+ "author": "海纳百氚，有容乃大",
+ "platform": "AndLua",
+ "source_date": "2022年12月26日 13:28:20",
+ "hits": 1137,
+ "up": 19,
+ "favorite": 61,
+ "comment": 7,
+ "source_file": "小工具\\2252_AndLua+中文函数库.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier",
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 439,
+ "char_count": 10219,
+ "confidence": "static_review"
+}

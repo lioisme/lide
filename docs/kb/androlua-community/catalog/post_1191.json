@@ -1,0 +1,23 @@
+{
+ "manual_id": 1191,
+ "type_name": "浏览器",
+ "manual_name": "生成当前网页MHT",
+ "author": "迷糊.",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 192,
+ "up": 2,
+ "favorite": 8,
+ "comment": 0,
+ "source_file": "浏览器\\1191_生成当前网页MHT.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "complete",
+ "line_count": 2,
+ "char_count": 84,
+ "confidence": "static_review"
+}

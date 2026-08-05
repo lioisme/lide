@@ -1,0 +1,23 @@
+{
+ "manual_id": 2873,
+ "type_name": "小工具",
+ "manual_name": "小球围着大球转",
+ "author": "•⤙•/k",
+ "platform": "AndLua",
+ "source_date": "2023年05月29日 09:40:09",
+ "hits": 192,
+ "up": 0,
+ "favorite": 2,
+ "comment": 4,
+ "source_file": "小工具\\2873_小球围着大球转.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 72,
+ "char_count": 1759,
+ "confidence": "static_review"
+}

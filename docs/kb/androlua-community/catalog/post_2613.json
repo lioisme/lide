@@ -1,0 +1,23 @@
+{
+ "manual_id": 2613,
+ "type_name": "自绘制",
+ "manual_name": "Lua Canvas - 随便写的效果",
+ "author": "AstarLC",
+ "platform": "AndLua",
+ "source_date": "2023年03月30日 13:28:31",
+ "hits": 418,
+ "up": 5,
+ "favorite": 5,
+ "comment": 2,
+ "source_file": "自绘制\\2613_Lua_Canvas_-_随便写的效果.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "global_pollution"
+ ],
+ "truncation": "complete",
+ "line_count": 295,
+ "char_count": 7175,
+ "confidence": "static_review"
+}

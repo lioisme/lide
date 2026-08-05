@@ -1,0 +1,21 @@
+{
+ "manual_id": 4415,
+ "type_name": "文件操作",
+ "manual_name": "音频流合并",
+ "author": "悲喜自渡",
+ "platform": "所有环境",
+ "source_date": "2024年12月14日 13:35:21",
+ "hits": 168,
+ "up": 3,
+ "favorite": 3,
+ "comment": 0,
+ "source_file": "文件操作\\4415_音频流合并.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 37,
+ "char_count": 1035,
+ "confidence": "static_review"
+}

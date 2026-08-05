@@ -1,0 +1,21 @@
+{
+ "manual_id": 2658,
+ "type_name": "安卓教程",
+ "manual_name": "LuaEditor 选中当前行",
+ "author": "ABVerterX",
+ "platform": "所有环境",
+ "source_date": "2023年04月16日 13:28:22",
+ "hits": 282,
+ "up": 3,
+ "favorite": 2,
+ "comment": 2,
+ "source_file": "安卓教程\\2658_LuaEditor_选中当前行.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "truncated_tail",
+ "line_count": 39,
+ "char_count": 783,
+ "confidence": "static_review"
+}

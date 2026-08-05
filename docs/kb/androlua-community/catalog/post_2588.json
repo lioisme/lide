@@ -1,0 +1,21 @@
+{
+ "manual_id": 2588,
+ "type_name": "实用代码",
+ "manual_name": "(setMultiChoiceItems)多选对话框",
+ "author": "Aqora",
+ "platform": "所有环境",
+ "source_date": "2023年03月19日 12:04:46",
+ "hits": 358,
+ "up": 8,
+ "favorite": 21,
+ "comment": 3,
+ "source_file": "实用代码\\2588_(setMultiChoiceItems)多选对话框.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 37,
+ "char_count": 1035,
+ "confidence": "static_review"
+}

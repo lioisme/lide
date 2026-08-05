@@ -1,0 +1,21 @@
+{
+ "manual_id": 4723,
+ "type_name": "网络爬虫",
+ "manual_name": "汽水音乐 api",
+ "author": "青柠(YouCun)",
+ "platform": "所有环境",
+ "source_date": "2025年04月29日 20:29:04",
+ "hits": 933,
+ "up": 5,
+ "favorite": 11,
+ "comment": 8,
+ "source_file": "网络爬虫\\4723_汽水音乐_api.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 275,
+ "char_count": 7690,
+ "confidence": "static_review"
+}

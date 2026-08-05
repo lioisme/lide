@@ -1,0 +1,21 @@
+{
+ "manual_id": 4126,
+ "type_name": "Intent通信",
+ "manual_name": "okhttp websocket",
+ "author": "邪默",
+ "platform": "所有环境",
+ "source_date": "2024年07月05日 18:51:32",
+ "hits": 398,
+ "up": 1,
+ "favorite": 3,
+ "comment": 1,
+ "source_file": "Intent通信\\4126_okhttp_websocket.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 59,
+ "char_count": 1531,
+ "confidence": "static_review"
+}

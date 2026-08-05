@@ -1,0 +1,23 @@
+{
+ "manual_id": 4995,
+ "type_name": "自绘制",
+ "manual_name": "实时线性帧率折线",
+ "author": "😈",
+ "platform": "所有环境",
+ "source_date": "2025年08月21日 16:31:01",
+ "hits": 782,
+ "up": 10,
+ "favorite": 18,
+ "comment": 8,
+ "source_file": "自绘制\\4995_实时线性帧率折线.lua",
+ "kind": "code_demo",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 222,
+ "char_count": 5708,
+ "confidence": "static_review"
+}

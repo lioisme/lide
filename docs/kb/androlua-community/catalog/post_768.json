@@ -1,0 +1,21 @@
+{
+ "manual_id": 768,
+ "type_name": "控件属性",
+ "manual_name": "编辑框搜索内容",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 268,
+ "up": 0,
+ "favorite": 1,
+ "comment": 0,
+ "source_file": "控件属性\\768_编辑框搜索内容.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 14,
+ "char_count": 492,
+ "confidence": "static_review"
+}

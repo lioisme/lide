@@ -1,0 +1,21 @@
+{
+ "manual_id": 4554,
+ "type_name": "UI控件",
+ "manual_name": "一个更加完美的加载 SVG 文件的方法 (Might be?)",
+ "author": "⁧拾玖⁧‭",
+ "platform": "所有环境",
+ "source_date": "2025年02月22日 07:57:41",
+ "hits": 655,
+ "up": 3,
+ "favorite": 6,
+ "comment": 2,
+ "source_file": "UI控件\\4554_一个更加完美的加载_SVG_文件的方法_(Might_be_).lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 38,
+ "char_count": 907,
+ "confidence": "static_review"
+}

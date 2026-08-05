@@ -1,0 +1,23 @@
+{
+ "manual_id": 2044,
+ "type_name": "实用代码",
+ "manual_name": "好用API分享",
+ "author": "Hao",
+ "platform": "所有环境",
+ "source_date": "2022年11月07日 12:47:07",
+ "hits": 407,
+ "up": 11,
+ "favorite": 25,
+ "comment": 7,
+ "source_file": "实用代码\\2044_好用API分享.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 50,
+ "char_count": 625,
+ "confidence": "static_review"
+}

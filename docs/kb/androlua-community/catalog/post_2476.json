@@ -1,0 +1,21 @@
+{
+ "manual_id": 2476,
+ "type_name": "小工具",
+ "manual_name": "分享文件:适配Android7.0及更高版本",
+ "author": "智",
+ "platform": "所有环境",
+ "source_date": "2023年02月18日 15:02:46",
+ "hits": 378,
+ "up": 4,
+ "favorite": 10,
+ "comment": 5,
+ "source_file": "小工具\\2476_分享文件_适配Android7.0及更高版本.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 50,
+ "char_count": 1272,
+ "confidence": "static_review"
+}

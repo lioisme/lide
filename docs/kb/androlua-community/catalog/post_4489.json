@@ -1,0 +1,21 @@
+{
+ "manual_id": 4489,
+ "type_name": "小游戏",
+ "manual_name": "中国象棋",
+ "author": "fo",
+ "platform": "",
+ "source_date": "2025年01月25日 20:14:49",
+ "hits": 457,
+ "up": 8,
+ "favorite": 30,
+ "comment": 3,
+ "source_file": "小游戏\\4489_中国象棋.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "truncated_tail",
+ "line_count": 758,
+ "char_count": 27607,
+ "confidence": "static_review"
+}

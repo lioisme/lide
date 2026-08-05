@@ -1,0 +1,23 @@
+{
+ "manual_id": 5142,
+ "type_name": "安卓教程",
+ "manual_name": "控件真实物理旋转动画",
+ "author": "😈",
+ "platform": "所有环境",
+ "source_date": "2025年11月30日 10:09:57",
+ "hits": 414,
+ "up": 2,
+ "favorite": 2,
+ "comment": 1,
+ "source_file": "安卓教程\\5142_控件真实物理旋转动画.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 69,
+ "char_count": 1644,
+ "confidence": "static_review"
+}

@@ -1,0 +1,25 @@
+{
+ "manual_id": 2811,
+ "type_name": "小工具",
+ "manual_name": "海纳云用内置图片取色器",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2023年05月17日 23:31:17",
+ "hits": 1392,
+ "up": 14,
+ "favorite": 60,
+ "comment": 20,
+ "source_file": "小工具\\2811_海纳云用内置图片取色器.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 790,
+ "char_count": 22400,
+ "confidence": "static_review"
+}

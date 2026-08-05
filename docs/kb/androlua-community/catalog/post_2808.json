@@ -1,0 +1,24 @@
+{
+ "manual_id": 2808,
+ "type_name": "Lua代码",
+ "manual_name": "发送短信",
+ "author": "二⃢哥⃢",
+ "platform": "所有环境",
+ "source_date": "2023年05月16日 15:30:16",
+ "hits": 135,
+ "up": 4,
+ "favorite": 14,
+ "comment": 0,
+ "source_file": "Lua代码\\2808_发送短信.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier",
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 10,
+ "char_count": 278,
+ "confidence": "static_review"
+}

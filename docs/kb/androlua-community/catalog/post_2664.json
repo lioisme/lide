@@ -1,0 +1,24 @@
+{
+ "manual_id": 2664,
+ "type_name": "布局教程",
+ "manual_name": "BottomNavigation+FragmentContainer测试",
+ "author": "NekoLaska",
+ "platform": "Fusion App2",
+ "source_date": "2023年04月17日 13:01:10",
+ "hits": 1332,
+ "up": 16,
+ "favorite": 30,
+ "comment": 5,
+ "source_file": "布局教程\\2664_BottomNavigation+FragmentContainer测试.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 156,
+ "char_count": 5149,
+ "confidence": "static_review"
+}

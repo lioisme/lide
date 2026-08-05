@@ -1,0 +1,23 @@
+{
+ "manual_id": 4630,
+ "type_name": "自绘制",
+ "manual_name": "随便仿的前端交互动效",
+ "author": "花园",
+ "platform": "所有环境",
+ "source_date": "2025年03月24日 08:45:16",
+ "hits": 507,
+ "up": 6,
+ "favorite": 7,
+ "comment": 5,
+ "source_file": "自绘制\\4630_随便仿的前端交互动效.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 164,
+ "char_count": 3578,
+ "confidence": "static_review"
+}

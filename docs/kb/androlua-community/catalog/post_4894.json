@@ -1,0 +1,21 @@
+{
+ "manual_id": 4894,
+ "type_name": "小工具",
+ "manual_name": "Lua身份证基本信息查询",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2025年07月09日 00:18:05",
+ "hits": 323,
+ "up": 1,
+ "favorite": 6,
+ "comment": 1,
+ "source_file": "小工具\\4894_Lua身份证基本信息查询.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 15031,
+ "char_count": 303852,
+ "confidence": "static_review"
+}

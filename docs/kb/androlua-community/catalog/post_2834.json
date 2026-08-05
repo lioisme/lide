@@ -1,0 +1,21 @@
+{
+ "manual_id": 2834,
+ "type_name": "小游戏",
+ "manual_name": "单摆",
+ "author": "Duo",
+ "platform": "所有环境",
+ "source_date": "2023年05月21日 18:32:52",
+ "hits": 209,
+ "up": 5,
+ "favorite": 6,
+ "comment": 1,
+ "source_file": "小游戏\\2834_单摆.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 93,
+ "char_count": 1940,
+ "confidence": "static_review"
+}

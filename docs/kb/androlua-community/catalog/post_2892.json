@@ -1,0 +1,23 @@
+{
+ "manual_id": 2892,
+ "type_name": "Androlua教程",
+ "manual_name": "从最近的任务管理器中隐藏",
+ "author": "诶害",
+ "platform": "所有环境",
+ "source_date": "2023年06月03日 03:57:29",
+ "hits": 169,
+ "up": 6,
+ "favorite": 20,
+ "comment": 2,
+ "source_file": "Androlua教程\\2892_从最近的任务管理器中隐藏.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 22,
+ "char_count": 675,
+ "confidence": "static_review"
+}

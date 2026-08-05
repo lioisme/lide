@@ -1,0 +1,21 @@
+{
+ "manual_id": 2281,
+ "type_name": "小工具",
+ "manual_name": "License Version 五大开放源许可证版本",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2023年01月05日 17:17:47",
+ "hits": 814,
+ "up": 10,
+ "favorite": 15,
+ "comment": 2,
+ "source_file": "小工具\\2281_License_Version_五大开放源许可证版本.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 483,
+ "char_count": 59786,
+ "confidence": "static_review"
+}

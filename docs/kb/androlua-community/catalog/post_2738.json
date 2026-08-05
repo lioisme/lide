@@ -1,0 +1,23 @@
+{
+ "manual_id": 2738,
+ "type_name": "控件属性",
+ "manual_name": "ImageView属性",
+ "author": "诶害",
+ "platform": "所有环境",
+ "source_date": "2023年05月03日 09:14:12",
+ "hits": 160,
+ "up": 0,
+ "favorite": 5,
+ "comment": 0,
+ "source_file": "控件属性\\2738_ImageView属性.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "text_only"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 29,
+ "char_count": 738,
+ "confidence": "static_review"
+}

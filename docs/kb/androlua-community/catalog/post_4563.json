@@ -1,0 +1,23 @@
+{
+ "manual_id": 4563,
+ "type_name": "基础代码",
+ "manual_name": "gps实时定位(1.0.1随时优化版)",
+ "author": "ᅟᅠ        ‌",
+ "platform": "OpenLuaX",
+ "source_date": "2025年02月28日 19:29:33",
+ "hits": 184,
+ "up": 0,
+ "favorite": 3,
+ "comment": 0,
+ "source_file": "基础代码\\4563_gps实时定位(1.0.1随时优化版).lua",
+ "kind": "code_demo",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 113,
+ "char_count": 3045,
+ "confidence": "static_review"
+}

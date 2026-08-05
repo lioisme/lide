@@ -1,0 +1,23 @@
+{
+ "manual_id": 4737,
+ "type_name": "Layout布局",
+ "manual_name": "ConstraintLayout详解",
+ "author": "小然",
+ "platform": "所有环境",
+ "source_date": "2025年05月04日 18:56:14",
+ "hits": 360,
+ "up": 7,
+ "favorite": 7,
+ "comment": 1,
+ "source_file": "Layout布局\\4737_ConstraintLayout详解.lua",
+ "kind": "code_demo",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 515,
+ "char_count": 15876,
+ "confidence": "static_review"
+}

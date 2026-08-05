@@ -1,0 +1,21 @@
+{
+ "manual_id": 4582,
+ "type_name": "Intent通信",
+ "manual_name": "ScanFileDialog通知系统更新文件工具",
+ "author": "海纳百氚，有容乃大",
+ "platform": "Fusion App2,reOpenLua,OpenLuaX",
+ "source_date": "2025年03月09日 22:59:41",
+ "hits": 461,
+ "up": 6,
+ "favorite": 22,
+ "comment": 8,
+ "source_file": "Intent通信\\4582_ScanFileDialog通知系统更新文件工具.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 268,
+ "char_count": 8066,
+ "confidence": "static_review"
+}

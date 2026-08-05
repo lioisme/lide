@@ -1,0 +1,21 @@
+{
+ "manual_id": 4316,
+ "type_name": "文件操作",
+ "manual_name": "利用漏洞简单操作 Android/data",
+ "author": "狸猫🐱",
+ "platform": "所有环境",
+ "source_date": "2024年10月20日 16:53:58",
+ "hits": 482,
+ "up": 2,
+ "favorite": 7,
+ "comment": 3,
+ "source_file": "文件操作\\4316_利用漏洞简单操作_Android_data.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 19,
+ "char_count": 381,
+ "confidence": "static_review"
+}

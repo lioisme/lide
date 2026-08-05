@@ -1,0 +1,21 @@
+{
+ "manual_id": 2187,
+ "type_name": "实用代码",
+ "manual_name": "判断字符串是否含有汉字",
+ "author": "奥姆",
+ "platform": "所有环境",
+ "source_date": "2022年12月16日 00:17:21",
+ "hits": 177,
+ "up": 2,
+ "favorite": 3,
+ "comment": 8,
+ "source_file": "实用代码\\2187_判断字符串是否含有汉字.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 32,
+ "char_count": 635,
+ "confidence": "static_review"
+}

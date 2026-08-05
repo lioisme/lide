@@ -1,0 +1,21 @@
+{
+ "manual_id": 731,
+ "type_name": "浏览器",
+ "manual_name": "拦截网页apk安装包",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 132,
+ "up": 1,
+ "favorite": 5,
+ "comment": 0,
+ "source_file": "浏览器\\731_拦截网页apk安装包.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 9,
+ "char_count": 147,
+ "confidence": "static_review"
+}

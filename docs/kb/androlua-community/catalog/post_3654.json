@@ -1,0 +1,21 @@
+{
+ "manual_id": 3654,
+ "type_name": "Lua代码",
+ "manual_name": "监测函数调用次数",
+ "author": "NekoLaska",
+ "platform": "所有环境",
+ "source_date": "2023年12月12日 12:25:03",
+ "hits": 182,
+ "up": 2,
+ "favorite": 7,
+ "comment": 0,
+ "source_file": "Lua代码\\3654_监测函数调用次数.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 12,
+ "char_count": 268,
+ "confidence": "static_review"
+}

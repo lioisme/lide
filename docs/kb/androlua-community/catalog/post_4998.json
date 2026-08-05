@@ -1,0 +1,21 @@
+{
+ "manual_id": 4998,
+ "type_name": "Intent通信",
+ "manual_name": "ACTION_CREATE_DOCUMENT",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2025年08月22日 15:50:16",
+ "hits": 110,
+ "up": 0,
+ "favorite": 4,
+ "comment": 0,
+ "source_file": "Intent通信\\4998_ACTION_CREATE_DOCUMENT.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 49,
+ "char_count": 1442,
+ "confidence": "static_review"
+}

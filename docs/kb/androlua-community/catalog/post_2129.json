@@ -1,0 +1,24 @@
+{
+ "manual_id": 2129,
+ "type_name": "网络操作",
+ "manual_name": "API接口大全及使用",
+ "author": "博士",
+ "platform": "所有环境",
+ "source_date": "2022年12月02日 01:19:48",
+ "hits": 1536,
+ "up": 16,
+ "favorite": 65,
+ "comment": 8,
+ "source_file": "网络操作\\2129_API接口大全及使用.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 1070,
+ "char_count": 28465,
+ "confidence": "static_review"
+}

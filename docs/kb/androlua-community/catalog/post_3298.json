@@ -1,0 +1,21 @@
+{
+ "manual_id": 3298,
+ "type_name": "Lua代码",
+ "manual_name": "通过任意View获取Bitmap并保存图片本地",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2023年08月21日 20:58:25",
+ "hits": 692,
+ "up": 4,
+ "favorite": 25,
+ "comment": 7,
+ "source_file": "Lua代码\\3298_通过任意View获取Bitmap并保存图片本地.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 529,
+ "char_count": 15313,
+ "confidence": "static_review"
+}

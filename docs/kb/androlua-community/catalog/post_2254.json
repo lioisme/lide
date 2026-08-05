@@ -1,0 +1,21 @@
+{
+ "manual_id": 2254,
+ "type_name": "Intent通信",
+ "manual_name": "申请所有文件访问权限",
+ "author": "智",
+ "platform": "所有环境",
+ "source_date": "2022年12月27日 08:54:25",
+ "hits": 971,
+ "up": 17,
+ "favorite": 62,
+ "comment": 12,
+ "source_file": "Intent通信\\2254_申请所有文件访问权限.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 12,
+ "char_count": 349,
+ "confidence": "static_review"
+}

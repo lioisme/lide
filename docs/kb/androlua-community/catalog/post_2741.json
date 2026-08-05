@@ -1,0 +1,23 @@
+{
+ "manual_id": 2741,
+ "type_name": "控件属性",
+ "manual_name": "ProgressBar属性",
+ "author": "诶害",
+ "platform": "所有环境",
+ "source_date": "2023年05月03日 09:33:40",
+ "hits": 297,
+ "up": 1,
+ "favorite": 6,
+ "comment": 1,
+ "source_file": "控件属性\\2741_ProgressBar属性.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "text_only"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 17,
+ "char_count": 797,
+ "confidence": "static_review"
+}

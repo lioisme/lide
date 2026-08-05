@@ -1,0 +1,21 @@
+{
+ "manual_id": 4895,
+ "type_name": "网络请求",
+ "manual_name": "B站链接获取短链",
+ "author": "琪琪子",
+ "platform": "AndLua",
+ "source_date": "2025年07月09日 06:50:20",
+ "hits": 207,
+ "up": 1,
+ "favorite": 5,
+ "comment": 0,
+ "source_file": "网络请求\\4895_B站链接获取短链.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 51,
+ "char_count": 1395,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 1994,
+ "type_name": "UI控件",
+ "manual_name": "PullingLayout刷新控件",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "AndroLua,AndLua",
+ "source_date": "2022年10月24日 20:28:31",
+ "hits": 1244,
+ "up": 20,
+ "favorite": 63,
+ "comment": 8,
+ "source_file": "UI控件\\1994_PullingLayout刷新控件.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 73,
+ "char_count": 1181,
+ "confidence": "static_review"
+}

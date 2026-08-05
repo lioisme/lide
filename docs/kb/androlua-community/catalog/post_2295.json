@@ -1,0 +1,21 @@
+{
+ "manual_id": 2295,
+ "type_name": "Androlua教程",
+ "manual_name": "获取本地视频图片",
+ "author": "ㄛㄙ飞ㄋ",
+ "platform": "AndroLua",
+ "source_date": "2023年01月08日 00:46:57",
+ "hits": 337,
+ "up": 1,
+ "favorite": 3,
+ "comment": 0,
+ "source_file": "Androlua教程\\2295_获取本地视频图片.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 129,
+ "char_count": 2459,
+ "confidence": "static_review"
+}

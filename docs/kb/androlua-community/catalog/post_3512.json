@@ -1,0 +1,21 @@
+{
+ "manual_id": 3512,
+ "type_name": "系统",
+ "manual_name": "获取系统语言和时区",
+ "author": "夜白1007",
+ "platform": "所有环境",
+ "source_date": "2023年10月19日 02:37:59",
+ "hits": 243,
+ "up": 1,
+ "favorite": 9,
+ "comment": 1,
+ "source_file": "系统\\3512_获取系统语言和时区.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 26,
+ "char_count": 626,
+ "confidence": "static_review"
+}

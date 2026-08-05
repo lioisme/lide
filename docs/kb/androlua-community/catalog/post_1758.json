@@ -1,0 +1,24 @@
+{
+ "manual_id": 1758,
+ "type_name": "布局教程",
+ "manual_name": "ViewPager2 使用实例（滑动动画）",
+ "author": "小白·马",
+ "platform": "Fusion App2",
+ "source_date": "2022年08月19日 20:55:00",
+ "hits": 835,
+ "up": 9,
+ "favorite": 32,
+ "comment": 3,
+ "source_file": "布局教程\\1758_ViewPager2_使用实例（滑动动画）.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 181,
+ "char_count": 4678,
+ "confidence": "static_review"
+}

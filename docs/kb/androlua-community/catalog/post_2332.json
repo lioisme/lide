@@ -1,0 +1,21 @@
+{
+ "manual_id": 2332,
+ "type_name": "布局教程",
+ "manual_name": "Android 12 高斯模糊",
+ "author": "wzsy233",
+ "platform": "所有环境",
+ "source_date": "2023年01月16日 19:27:24",
+ "hits": 923,
+ "up": 5,
+ "favorite": 25,
+ "comment": 5,
+ "source_file": "布局教程\\2332_Android_12_高斯模糊.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "truncated_tail",
+ "line_count": 111,
+ "char_count": 2805,
+ "confidence": "static_review"
+}

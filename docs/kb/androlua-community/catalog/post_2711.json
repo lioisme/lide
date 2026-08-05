@@ -1,0 +1,21 @@
+{
+ "manual_id": 2711,
+ "type_name": "Androlua教程",
+ "manual_name": "Glide SimpleTarget",
+ "author": "kamihitoe",
+ "platform": "所有环境",
+ "source_date": "2023年04月30日 06:18:20",
+ "hits": 426,
+ "up": 4,
+ "favorite": 14,
+ "comment": 6,
+ "source_file": "Androlua教程\\2711_Glide_SimpleTarget.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 52,
+ "char_count": 1323,
+ "confidence": "static_review"
+}

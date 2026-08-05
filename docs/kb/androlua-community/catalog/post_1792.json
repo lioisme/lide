@@ -1,0 +1,23 @@
+{
+ "manual_id": 1792,
+ "type_name": "实用代码",
+ "manual_name": "微Q加加",
+ "author": "追风少年",
+ "platform": "所有环境",
+ "source_date": "2022年08月22日 12:23:03",
+ "hits": 1110,
+ "up": 15,
+ "favorite": 60,
+ "comment": 9,
+ "source_file": "实用代码\\1792_微Q加加.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 242,
+ "char_count": 6188,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 2877,
+ "type_name": "自绘制",
+ "manual_name": "一个进度条",
+ "author": "⁧",
+ "platform": "所有环境",
+ "source_date": "2023年05月29日 21:37:39",
+ "hits": 342,
+ "up": 8,
+ "favorite": 34,
+ "comment": 2,
+ "source_file": "自绘制\\2877_一个进度条.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 81,
+ "char_count": 1597,
+ "confidence": "static_review"
+}

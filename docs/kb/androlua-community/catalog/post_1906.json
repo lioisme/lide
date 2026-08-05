@@ -1,0 +1,23 @@
+{
+ "manual_id": 1906,
+ "type_name": "小工具",
+ "manual_name": "日本传统色",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2022年09月23日 16:40:39",
+ "hits": 382,
+ "up": 8,
+ "favorite": 28,
+ "comment": 4,
+ "source_file": "小工具\\1906_日本传统色.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 534,
+ "char_count": 14868,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 1868,
+ "type_name": "小工具",
+ "manual_name": "罗盘时钟",
+ "author": "机不可失🅥",
+ "platform": "所有环境",
+ "source_date": "2022年09月10日 14:56:54",
+ "hits": 1028,
+ "up": 20,
+ "favorite": 72,
+ "comment": 12,
+ "source_file": "小工具\\1868_罗盘时钟.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 466,
+ "char_count": 12428,
+ "confidence": "static_review"
+}

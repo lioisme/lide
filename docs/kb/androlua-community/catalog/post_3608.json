@@ -1,0 +1,21 @@
+{
+ "manual_id": 3608,
+ "type_name": "Lua教程",
+ "manual_name": "协程、并发、并行与生成器",
+ "author": "",
+ "platform": "所有环境",
+ "source_date": "2023年11月26日 16:31:19",
+ "hits": 374,
+ "up": 7,
+ "favorite": 7,
+ "comment": 2,
+ "source_file": "Lua教程\\3608_协程、并发、并行与生成器.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 111,
+ "char_count": 2375,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 1314,
+ "type_name": "Java教程",
+ "manual_name": "Java的File类",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2022年01月11日 21:16:07",
+ "hits": 610,
+ "up": 7,
+ "favorite": 42,
+ "comment": 0,
+ "source_file": "Java教程\\1314_Java的File类.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 73,
+ "char_count": 981,
+ "confidence": "static_review"
+}

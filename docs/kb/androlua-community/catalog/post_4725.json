@@ -1,0 +1,23 @@
+{
+ "manual_id": 4725,
+ "type_name": "Lua代码",
+ "manual_name": "apply和implicit receiver",
+ "author": "NekoLaska",
+ "platform": "所有环境",
+ "source_date": "2025年04月30日 00:35:17",
+ "hits": 700,
+ "up": 5,
+ "favorite": 1,
+ "comment": 5,
+ "source_file": "Lua代码\\4725_apply和implicit_receiver.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 131,
+ "char_count": 2691,
+ "confidence": "static_review"
+}

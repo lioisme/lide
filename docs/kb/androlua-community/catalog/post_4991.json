@@ -1,0 +1,24 @@
+{
+ "manual_id": 4991,
+ "type_name": "UI控件",
+ "manual_name": "Listview制作的简易歌词控件",
+ "author": "😈",
+ "platform": "所有环境",
+ "source_date": "2025年08月20日 19:51:24",
+ "hits": 427,
+ "up": 4,
+ "favorite": 12,
+ "comment": 0,
+ "source_file": "UI控件\\4991_Listview制作的简易歌词控件.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "global_pollution",
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 312,
+ "char_count": 7326,
+ "confidence": "static_review"
+}

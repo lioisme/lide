@@ -1,0 +1,21 @@
+{
+ "manual_id": 5236,
+ "type_name": "Lua代码",
+ "manual_name": "截图监听",
+ "author": "琪琪子",
+ "platform": "AndLua",
+ "source_date": "2026年02月07日 11:46:27",
+ "hits": 263,
+ "up": 2,
+ "favorite": 5,
+ "comment": 1,
+ "source_file": "Lua代码\\5236_截图监听.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 82,
+ "char_count": 2306,
+ "confidence": "static_review"
+}

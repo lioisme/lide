@@ -1,0 +1,25 @@
+{
+ "manual_id": 2105,
+ "type_name": "布局教程",
+ "manual_name": "影视分组选集功能演示",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "Fusion App2",
+ "source_date": "2022年11月22日 22:22:25",
+ "hits": 1131,
+ "up": 7,
+ "favorite": 43,
+ "comment": 9,
+ "source_file": "布局教程\\2105_影视分组选集功能演示.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 163,
+ "char_count": 3695,
+ "confidence": "static_review"
+}

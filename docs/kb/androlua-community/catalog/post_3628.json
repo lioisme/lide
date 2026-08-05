@@ -1,0 +1,21 @@
+{
+ "manual_id": 3628,
+ "type_name": "Intent通信",
+ "manual_name": "DragAndDropDemo",
+ "author": "提蘇（事ML哦）",
+ "platform": "所有环境",
+ "source_date": "2023年12月03日 12:03:23",
+ "hits": 436,
+ "up": 2,
+ "favorite": 15,
+ "comment": 4,
+ "source_file": "Intent通信\\3628_DragAndDropDemo.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 244,
+ "char_count": 8228,
+ "confidence": "static_review"
+}

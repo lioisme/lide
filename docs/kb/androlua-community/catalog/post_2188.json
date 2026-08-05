@@ -1,0 +1,23 @@
+{
+ "manual_id": 2188,
+ "type_name": "布局教程",
+ "manual_name": "Google水平动态加载条",
+ "author": "Duo",
+ "platform": "所有环境",
+ "source_date": "2022年12月16日 06:39:59",
+ "hits": 438,
+ "up": 9,
+ "favorite": 17,
+ "comment": 13,
+ "source_file": "布局教程\\2188_Google水平动态加载条.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 77,
+ "char_count": 1645,
+ "confidence": "static_review"
+}

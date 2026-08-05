@@ -1,0 +1,21 @@
+{
+ "manual_id": 3485,
+ "type_name": "实用代码",
+ "manual_name": "检测后台是否有音乐播放",
+ "author": "•⤙•/k",
+ "platform": "AndLua",
+ "source_date": "2023年10月12日 09:49:22",
+ "hits": 399,
+ "up": 11,
+ "favorite": 42,
+ "comment": 13,
+ "source_file": "实用代码\\3485_检测后台是否有音乐播放.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 26,
+ "char_count": 491,
+ "confidence": "static_review"
+}

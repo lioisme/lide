@@ -1,0 +1,21 @@
+{
+ "manual_id": 843,
+ "type_name": "适配器",
+ "manual_name": "获取LiveView垂直坐标",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 122,
+ "up": 0,
+ "favorite": 0,
+ "comment": 1,
+ "source_file": "适配器\\843_获取LiveView垂直坐标.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 6,
+ "char_count": 191,
+ "confidence": "static_review"
+}

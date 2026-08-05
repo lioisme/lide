@@ -1,0 +1,23 @@
+{
+ "manual_id": 1560,
+ "type_name": "小工具",
+ "manual_name": "QQ彩色群昵称生成",
+ "author": "訫念是你",
+ "platform": "AndroLua,AndLua",
+ "source_date": "2022年06月26日 14:40:36",
+ "hits": 455,
+ "up": 12,
+ "favorite": 33,
+ "comment": 5,
+ "source_file": "小工具\\1560_QQ彩色群昵称生成.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 250,
+ "char_count": 6359,
+ "confidence": "static_review"
+}

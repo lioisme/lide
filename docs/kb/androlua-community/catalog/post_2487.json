@@ -1,0 +1,25 @@
+{
+ "manual_id": 2487,
+ "type_name": "实用代码",
+ "manual_name": "一个开关(非原创)+网络加载dex(ChatGPT优化版)",
+ "author": "迷糊.",
+ "platform": "所有环境",
+ "source_date": "2023年02月19日 21:31:36",
+ "hits": 467,
+ "up": 5,
+ "favorite": 15,
+ "comment": 1,
+ "source_file": "实用代码\\2487_一个开关(非原创)+网络加载dex(ChatGPT优化版).lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "remote_exec"
+ ],
+ "truncation": "complete",
+ "line_count": 90,
+ "char_count": 2421,
+ "confidence": "static_review"
+}

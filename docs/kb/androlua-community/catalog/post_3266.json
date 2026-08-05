@@ -1,0 +1,24 @@
+{
+ "manual_id": 3266,
+ "type_name": "小游戏",
+ "manual_name": "火",
+ "author": "Duo",
+ "platform": "所有环境",
+ "source_date": "2023年08月16日 07:47:05",
+ "hits": 677,
+ "up": 10,
+ "favorite": 21,
+ "comment": 3,
+ "source_file": "小游戏\\3266_火.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier",
+  "global_pollution"
+ ],
+ "truncation": "complete",
+ "line_count": 997,
+ "char_count": 21953,
+ "confidence": "static_review"
+}

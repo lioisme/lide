@@ -1,0 +1,21 @@
+{
+ "manual_id": 2474,
+ "type_name": "文件操作",
+ "manual_name": "获取某路径下所有文件的绝对/相对路径",
+ "author": "提蘇（事ML哦）",
+ "platform": "所有环境",
+ "source_date": "2023年02月17日 22:19:51",
+ "hits": 272,
+ "up": 2,
+ "favorite": 5,
+ "comment": 13,
+ "source_file": "文件操作\\2474_获取某路径下所有文件的绝对_相对路径.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 63,
+ "char_count": 1920,
+ "confidence": "static_review"
+}

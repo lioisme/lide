@@ -1,0 +1,21 @@
+{
+ "manual_id": 78,
+ "type_name": "Intent通信",
+ "manual_name": "分享（卡片）",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 576,
+ "up": 6,
+ "favorite": 20,
+ "comment": 3,
+ "source_file": "Intent通信\\78_分享（卡片）.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 33,
+ "char_count": 1384,
+ "confidence": "static_review"
+}

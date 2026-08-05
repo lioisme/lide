@@ -1,0 +1,21 @@
+{
+ "manual_id": 2488,
+ "type_name": "控件属性",
+ "manual_name": "TextInputEditText密码框文本显示与隐藏",
+ "author": "迷糊.",
+ "platform": "Fusion App2",
+ "source_date": "2023年02月19日 22:50:04",
+ "hits": 359,
+ "up": 11,
+ "favorite": 23,
+ "comment": 6,
+ "source_file": "控件属性\\2488_TextInputEditText密码框文本显示与隐藏.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 42,
+ "char_count": 1171,
+ "confidence": "static_review"
+}

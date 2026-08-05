@@ -1,0 +1,21 @@
+{
+ "manual_id": 3603,
+ "type_name": "Lua代码",
+ "manual_name": "有权重的模糊匹配",
+ "author": "胡斯凯",
+ "platform": "所有环境",
+ "source_date": "2023年11月23日 00:21:06",
+ "hits": 345,
+ "up": 0,
+ "favorite": 7,
+ "comment": 0,
+ "source_file": "Lua代码\\3603_有权重的模糊匹配.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 44,
+ "char_count": 948,
+ "confidence": "static_review"
+}

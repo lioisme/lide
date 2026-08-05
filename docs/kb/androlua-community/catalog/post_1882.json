@@ -1,0 +1,24 @@
+{
+ "manual_id": 1882,
+ "type_name": "实用代码",
+ "manual_name": "JSON解析与启动统计",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2022年09月14日 00:02:44",
+ "hits": 678,
+ "up": 9,
+ "favorite": 29,
+ "comment": 4,
+ "source_file": "实用代码\\1882_JSON解析与启动统计.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 516,
+ "char_count": 11636,
+ "confidence": "static_review"
+}

@@ -1,0 +1,26 @@
+{
+ "manual_id": 3667,
+ "type_name": "JS教程",
+ "manual_name": "Vue页面渲染",
+ "author": "壹影",
+ "platform": "所有环境",
+ "source_date": "2023年12月17日 19:03:01",
+ "hits": 462,
+ "up": 1,
+ "favorite": 6,
+ "comment": 5,
+ "source_file": "JS教程\\3667_Vue页面渲染.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound",
+  "global_pollution",
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 533,
+ "char_count": 7921,
+ "confidence": "static_review"
+}

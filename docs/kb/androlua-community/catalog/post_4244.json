@@ -1,0 +1,21 @@
+{
+ "manual_id": 4244,
+ "type_name": "消息通知",
+ "manual_name": "流畅显示多条Toast消息",
+ "author": "兜兜转转，又回到原点！",
+ "platform": "所有环境",
+ "source_date": "2024年09月12日 00:21:14",
+ "hits": 434,
+ "up": 9,
+ "favorite": 21,
+ "comment": 2,
+ "source_file": "消息通知\\4244_流畅显示多条Toast消息.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 21,
+ "char_count": 358,
+ "confidence": "static_review"
+}

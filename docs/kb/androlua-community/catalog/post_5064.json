@@ -1,0 +1,21 @@
+{
+ "manual_id": 5064,
+ "type_name": "安卓教程",
+ "manual_name": "[2nd]Lua实现折射效果？！！",
+ "author": "😈",
+ "platform": "所有环境",
+ "source_date": "2025年10月07日 14:34:51",
+ "hits": 534,
+ "up": 4,
+ "favorite": 8,
+ "comment": 6,
+ "source_file": "安卓教程\\5064_[2nd]Lua实现折射效果？！！.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 654,
+ "char_count": 19550,
+ "confidence": "static_review"
+}

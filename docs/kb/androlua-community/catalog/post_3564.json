@@ -1,0 +1,24 @@
+{
+ "manual_id": 3564,
+ "type_name": "基础代码",
+ "manual_name": "百度翻译API使用方法",
+ "author": "yinyong",
+ "platform": "所有环境",
+ "source_date": "2023年11月07日 22:53:32",
+ "hits": 442,
+ "up": 4,
+ "favorite": 9,
+ "comment": 3,
+ "source_file": "基础代码\\3564_百度翻译API使用方法.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "obsolete",
+ "flags": [
+  "obsolete",
+  "obsolete"
+ ],
+ "truncation": "complete",
+ "line_count": 118,
+ "char_count": 2323,
+ "confidence": "static_review"
+}

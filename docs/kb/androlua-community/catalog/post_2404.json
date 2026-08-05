@@ -1,0 +1,23 @@
+{
+ "manual_id": 2404,
+ "type_name": "实用代码",
+ "manual_name": "Fusion app自带的颜色选择器",
+ "author": "尼斯湖水怪",
+ "platform": "Fusion App1,Fusion App2",
+ "source_date": "2023年01月31日 12:20:42",
+ "hits": 347,
+ "up": 2,
+ "favorite": 4,
+ "comment": 5,
+ "source_file": "实用代码\\2404_Fusion_app自带的颜色选择器.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 39,
+ "char_count": 1222,
+ "confidence": "static_review"
+}

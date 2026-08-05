@@ -1,0 +1,21 @@
+{
+ "manual_id": 5036,
+ "type_name": "Lua代码",
+ "manual_name": "直链下载进度弹窗",
+ "author": "-𝕏-",
+ "platform": "所有环境",
+ "source_date": "2025年09月07日 17:06:47",
+ "hits": 623,
+ "up": 2,
+ "favorite": 8,
+ "comment": 0,
+ "source_file": "Lua代码\\5036_直链下载进度弹窗.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 613,
+ "char_count": 20539,
+ "confidence": "static_review"
+}

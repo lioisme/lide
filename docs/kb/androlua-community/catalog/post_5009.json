@@ -1,0 +1,23 @@
+{
+ "manual_id": 5009,
+ "type_name": "UI控件",
+ "manual_name": "EXOPlayer视频播放器",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "Fusion App2",
+ "source_date": "2025年08月27日 21:14:40",
+ "hits": 1935,
+ "up": 23,
+ "favorite": 57,
+ "comment": 6,
+ "source_file": "UI控件\\5009_EXOPlayer视频播放器.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 1733,
+ "char_count": 47250,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 3048,
+ "type_name": "Androlua教程",
+ "manual_name": "冒号调用JavaObject",
+ "author": "kamihitoe",
+ "platform": "所有环境",
+ "source_date": "2023年07月10日 19:06:43",
+ "hits": 137,
+ "up": 2,
+ "favorite": 4,
+ "comment": 0,
+ "source_file": "Androlua教程\\3048_冒号调用JavaObject.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 30,
+ "char_count": 609,
+ "confidence": "static_review"
+}

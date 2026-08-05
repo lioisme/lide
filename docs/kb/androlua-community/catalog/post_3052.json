@@ -1,0 +1,21 @@
+{
+ "manual_id": 3052,
+ "type_name": "Activity活动",
+ "manual_name": "AppCompatSpinner相关的使用方法实例",
+ "author": "海纳百氚，有容乃大",
+ "platform": "Fusion App2",
+ "source_date": "2023年07月11日 10:59:52",
+ "hits": 359,
+ "up": 6,
+ "favorite": 15,
+ "comment": 3,
+ "source_file": "Activity活动\\3052_AppCompatSpinner相关的使用方法实例.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "truncated_tail",
+ "line_count": 123,
+ "char_count": 2326,
+ "confidence": "static_review"
+}

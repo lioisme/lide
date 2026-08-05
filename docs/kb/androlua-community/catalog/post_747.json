@@ -1,0 +1,23 @@
+{
+ "manual_id": 747,
+ "type_name": "JS教程",
+ "manual_name": "全局js元素去除",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 122,
+ "up": 0,
+ "favorite": 4,
+ "comment": 0,
+ "source_file": "JS教程\\747_全局js元素去除.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "complete",
+ "line_count": 2,
+ "char_count": 163,
+ "confidence": "static_review"
+}

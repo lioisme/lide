@@ -1,0 +1,23 @@
+{
+ "manual_id": 2245,
+ "type_name": "小工具",
+ "manual_name": "Base64编解码实例",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2022年12月24日 20:41:37",
+ "hits": 621,
+ "up": 13,
+ "favorite": 34,
+ "comment": 0,
+ "source_file": "小工具\\2245_Base64编解码实例.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 406,
+ "char_count": 11208,
+ "confidence": "static_review"
+}

@@ -1,0 +1,25 @@
+{
+ "manual_id": 2868,
+ "type_name": "实用代码",
+ "manual_name": "Banner ViewPager2 无限轮播",
+ "author": "小白·马",
+ "platform": "Fusion App2,reOpenLua",
+ "source_date": "2023年05月28日 18:15:17",
+ "hits": 2383,
+ "up": 35,
+ "favorite": 112,
+ "comment": 31,
+ "source_file": "实用代码\\2868_Banner_ViewPager2_无限轮播.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "remote_exec"
+ ],
+ "truncation": "complete",
+ "line_count": 382,
+ "char_count": 10559,
+ "confidence": "static_review"
+}

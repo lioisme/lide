@@ -1,0 +1,24 @@
+{
+ "manual_id": 3192,
+ "type_name": "Adapter容器",
+ "manual_name": "ViewPager2示例",
+ "author": "NekoLaska",
+ "platform": "Fusion App2",
+ "source_date": "2023年08月03日 21:44:21",
+ "hits": 1119,
+ "up": 9,
+ "favorite": 36,
+ "comment": 10,
+ "source_file": "Adapter容器\\3192_ViewPager2示例.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 160,
+ "char_count": 5031,
+ "confidence": "static_review"
+}

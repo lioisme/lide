@@ -1,0 +1,21 @@
+{
+ "manual_id": 5006,
+ "type_name": "小游戏",
+ "manual_name": "星际射击（可切换难度模式）",
+ "author": "有任何问题来问我",
+ "platform": "所有环境",
+ "source_date": "2025年08月27日 00:58:09",
+ "hits": 523,
+ "up": 5,
+ "favorite": 18,
+ "comment": 8,
+ "source_file": "小游戏\\5006_星际射击（可切换难度模式）.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 2029,
+ "char_count": 81271,
+ "confidence": "static_review"
+}

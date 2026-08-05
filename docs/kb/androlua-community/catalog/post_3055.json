@@ -1,0 +1,21 @@
+{
+ "manual_id": 3055,
+ "type_name": "Lua代码",
+ "manual_name": "快速排序函数",
+ "author": "邪默",
+ "platform": "所有环境",
+ "source_date": "2023年07月12日 21:55:44",
+ "hits": 74,
+ "up": 0,
+ "favorite": 1,
+ "comment": 2,
+ "source_file": "Lua代码\\3055_快速排序函数.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 31,
+ "char_count": 658,
+ "confidence": "static_review"
+}

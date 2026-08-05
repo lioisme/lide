@@ -1,0 +1,21 @@
+{
+ "manual_id": 1282,
+ "type_name": "网络请求",
+ "manual_name": "okHttp实例代码",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2021年12月29日 21:18:47",
+ "hits": 496,
+ "up": 6,
+ "favorite": 16,
+ "comment": 1,
+ "source_file": "网络请求\\1282_okHttp实例代码.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 60,
+ "char_count": 1244,
+ "confidence": "static_review"
+}

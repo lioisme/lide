@@ -1,0 +1,21 @@
+{
+ "manual_id": 5141,
+ "type_name": "小游戏",
+ "manual_name": "贪吃蛇（npc）",
+ "author": "残梦终散 - 喵立方",
+ "platform": "所有环境",
+ "source_date": "2025年11月30日 09:44:00",
+ "hits": 554,
+ "up": 11,
+ "favorite": 13,
+ "comment": 15,
+ "source_file": "小游戏\\5141_贪吃蛇（npc）.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 693,
+ "char_count": 17982,
+ "confidence": "static_review"
+}

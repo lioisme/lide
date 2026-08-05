@@ -1,0 +1,23 @@
+{
+ "manual_id": 657,
+ "type_name": "控件属性",
+ "manual_name": "设置Sideslip点击事件|设置波纹颜色",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 167,
+ "up": 0,
+ "favorite": 4,
+ "comment": 0,
+ "source_file": "控件属性\\657_设置Sideslip点击事件_设置波纹颜色.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "global_pollution"
+ ],
+ "truncation": "complete",
+ "line_count": 56,
+ "char_count": 1965,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 3174,
+ "type_name": "自绘制",
+ "manual_name": "测屏绘制",
+ "author": "煙雨舊時光",
+ "platform": "AndroLua,AndLua",
+ "source_date": "2023年08月01日 06:21:32",
+ "hits": 414,
+ "up": 2,
+ "favorite": 5,
+ "comment": 5,
+ "source_file": "自绘制\\3174_测屏绘制.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 67,
+ "char_count": 1137,
+ "confidence": "static_review"
+}

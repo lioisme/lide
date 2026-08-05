@@ -1,0 +1,23 @@
+{
+ "manual_id": 4877,
+ "type_name": "UI控件",
+ "manual_name": "仿ios/WeChat的switch",
+ "author": "😈",
+ "platform": "所有环境",
+ "source_date": "2025年07月04日 14:43:06",
+ "hits": 662,
+ "up": 8,
+ "favorite": 19,
+ "comment": 0,
+ "source_file": "UI控件\\4877_仿ios_WeChat的switch.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 131,
+ "char_count": 3528,
+ "confidence": "static_review"
+}

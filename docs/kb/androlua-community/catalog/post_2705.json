@@ -1,0 +1,24 @@
+{
+ "manual_id": 2705,
+ "type_name": "Intent通信",
+ "manual_name": "启动Welcome",
+ "author": "NekoLaska",
+ "platform": "Fusion App2",
+ "source_date": "2023年04月27日 23:36:57",
+ "hits": 451,
+ "up": 6,
+ "favorite": 9,
+ "comment": 3,
+ "source_file": "Intent通信\\2705_启动Welcome.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "complete",
+ "line_count": 5,
+ "char_count": 220,
+ "confidence": "static_review"
+}

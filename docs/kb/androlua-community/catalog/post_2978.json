@@ -1,0 +1,21 @@
+{
+ "manual_id": 2978,
+ "type_name": "控件属性",
+ "manual_name": "ViewPager + 多个 RecyclerView 情况时滚动自动隐藏底栏",
+ "author": "ABVerterX",
+ "platform": "所有环境",
+ "source_date": "2023年06月26日 00:47:10",
+ "hits": 698,
+ "up": 9,
+ "favorite": 15,
+ "comment": 0,
+ "source_file": "控件属性\\2978_ViewPager_+_多个_RecyclerView_情况时滚动自动隐藏底栏.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 67,
+ "char_count": 1906,
+ "confidence": "static_review"
+}

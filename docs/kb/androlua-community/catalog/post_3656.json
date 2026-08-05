@@ -1,0 +1,25 @@
+{
+ "manual_id": 3656,
+ "type_name": "JS教程",
+ "manual_name": "获取网页所有文本",
+ "author": "壹影",
+ "platform": "所有环境",
+ "source_date": "2023年12月12日 22:00:00",
+ "hits": 474,
+ "up": 5,
+ "favorite": 28,
+ "comment": 1,
+ "source_file": "JS教程\\3656_获取网页所有文本.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound",
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 485,
+ "char_count": 6327,
+ "confidence": "static_review"
+}

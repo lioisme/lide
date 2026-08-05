@@ -1,0 +1,23 @@
+{
+ "manual_id": 2244,
+ "type_name": "文件操作",
+ "manual_name": "获取手机存储",
+ "author": "人生如初见",
+ "platform": "所有环境",
+ "source_date": "2022年12月24日 17:14:53",
+ "hits": 267,
+ "up": 7,
+ "favorite": 17,
+ "comment": 7,
+ "source_file": "文件操作\\2244_获取手机存储.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 118,
+ "char_count": 2782,
+ "confidence": "static_review"
+}

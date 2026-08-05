@@ -1,0 +1,23 @@
+{
+ "manual_id": 3958,
+ "type_name": "基础代码",
+ "manual_name": "文字游戏「商店与背包」",
+ "author": "兜兜转转，又回到原点！",
+ "platform": "所有环境",
+ "source_date": "2024年03月09日 17:49:32",
+ "hits": 441,
+ "up": 10,
+ "favorite": 11,
+ "comment": 4,
+ "source_file": "基础代码\\3958_文字游戏「商店与背包」.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 458,
+ "char_count": 12594,
+ "confidence": "static_review"
+}

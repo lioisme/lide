@@ -1,0 +1,26 @@
+{
+ "manual_id": 2311,
+ "type_name": "远程更新",
+ "manual_name": "远程请求",
+ "author": "Adam·Eva",
+ "platform": "所有环境",
+ "source_date": "2023年01月13日 10:43:58",
+ "hits": 942,
+ "up": 6,
+ "favorite": 17,
+ "comment": 8,
+ "source_file": "远程更新\\2311_远程请求.lua",
+ "kind": "fragment",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "incomplete_mark",
+  "androlua_private",
+  "private_api",
+  "incomplete_fragment"
+ ],
+ "truncation": "complete",
+ "line_count": 53,
+ "char_count": 1522,
+ "confidence": "static_review"
+}

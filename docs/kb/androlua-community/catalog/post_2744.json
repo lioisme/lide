@@ -1,0 +1,23 @@
+{
+ "manual_id": 2744,
+ "type_name": "控件属性",
+ "manual_name": "HorizontalScrollView属性",
+ "author": "诶害",
+ "platform": "所有环境",
+ "source_date": "2023年05月03日 09:43:55",
+ "hits": 143,
+ "up": 0,
+ "favorite": 4,
+ "comment": 0,
+ "source_file": "控件属性\\2744_HorizontalScrollView属性.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "text_only"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 12,
+ "char_count": 535,
+ "confidence": "static_review"
+}

@@ -1,0 +1,23 @@
+{
+ "manual_id": 3733,
+ "type_name": "系统",
+ "manual_name": "正确的获取所有手机号码",
+ "author": "TwO",
+ "platform": "所有环境",
+ "source_date": "2024年01月16日 14:09:34",
+ "hits": 574,
+ "up": 0,
+ "favorite": 6,
+ "comment": 5,
+ "source_file": "系统\\3733_正确的获取所有手机号码.lua",
+ "kind": "code_demo",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 37,
+ "char_count": 1105,
+ "confidence": "static_review"
+}

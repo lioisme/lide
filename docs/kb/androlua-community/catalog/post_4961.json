@@ -1,0 +1,21 @@
+{
+ "manual_id": 4961,
+ "type_name": "小工具",
+ "manual_name": "可能是SharedPreferences封装",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2025年08月02日 12:37:30",
+ "hits": 190,
+ "up": 0,
+ "favorite": 1,
+ "comment": 0,
+ "source_file": "小工具\\4961_可能是SharedPreferences封装.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 84,
+ "char_count": 1636,
+ "confidence": "static_review"
+}

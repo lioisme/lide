@@ -1,0 +1,21 @@
+{
+ "manual_id": 5210,
+ "type_name": "Lua代码",
+ "manual_name": "日地月时钟",
+ "author": "琪琪子",
+ "platform": "AndLua",
+ "source_date": "2026年02月02日 21:37:52",
+ "hits": 179,
+ "up": 0,
+ "favorite": 2,
+ "comment": 0,
+ "source_file": "Lua代码\\5210_日地月时钟.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 124,
+ "char_count": 3033,
+ "confidence": "static_review"
+}

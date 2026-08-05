@@ -1,0 +1,23 @@
+{
+ "manual_id": 1250,
+ "type_name": "SAF访问",
+ "manual_name": "调用系统选择文件",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2021年12月20日 12:25:12",
+ "hits": 706,
+ "up": 9,
+ "favorite": 36,
+ "comment": 8,
+ "source_file": "SAF访问\\1250_调用系统选择文件.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 26,
+ "char_count": 902,
+ "confidence": "static_review"
+}

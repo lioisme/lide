@@ -1,0 +1,24 @@
+{
+ "manual_id": 1739,
+ "type_name": "实用代码",
+ "manual_name": "码易支付API对接",
+ "author": "兰皋",
+ "platform": "所有环境",
+ "source_date": "2022年08月18日 01:24:03",
+ "hits": 757,
+ "up": 5,
+ "favorite": 18,
+ "comment": 3,
+ "source_file": "实用代码\\1739_码易支付API对接.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 119,
+ "char_count": 2768,
+ "confidence": "static_review"
+}

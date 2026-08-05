@@ -1,0 +1,21 @@
+{
+ "manual_id": 2398,
+ "type_name": "实用代码",
+ "manual_name": "SMTP发送邮件",
+ "author": "狸猫🐱",
+ "platform": "所有环境",
+ "source_date": "2023年01月29日 21:09:51",
+ "hits": 674,
+ "up": 15,
+ "favorite": 32,
+ "comment": 31,
+ "source_file": "实用代码\\2398_SMTP发送邮件.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "truncated_tail",
+ "line_count": 38,
+ "char_count": 795,
+ "confidence": "static_review"
+}

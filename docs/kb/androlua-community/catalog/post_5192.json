@@ -1,0 +1,24 @@
+{
+ "manual_id": 5192,
+ "type_name": "字符处理",
+ "manual_name": "创建一个无法删除的文件！",
+ "author": "cty.",
+ "platform": "所有环境",
+ "source_date": "2026年01月31日 20:46:34",
+ "hits": 390,
+ "up": 2,
+ "favorite": 2,
+ "comment": 4,
+ "source_file": "字符处理\\5192_创建一个无法删除的文件！.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "chinese_identifier",
+  "os_exec"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 83,
+ "char_count": 2431,
+ "confidence": "static_review"
+}

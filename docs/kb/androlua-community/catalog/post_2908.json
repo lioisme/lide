@@ -1,0 +1,23 @@
+{
+ "manual_id": 2908,
+ "type_name": "Lua代码",
+ "manual_name": "获取lua解释器版本",
+ "author": "YONGLE-永乐",
+ "platform": "所有环境",
+ "source_date": "2023年06月06日 19:14:12",
+ "hits": 195,
+ "up": 1,
+ "favorite": 4,
+ "comment": 3,
+ "source_file": "Lua代码\\2908_获取lua解释器版本.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "complete",
+ "line_count": 4,
+ "char_count": 18,
+ "confidence": "static_review"
+}

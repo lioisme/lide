@@ -1,0 +1,21 @@
+{
+ "manual_id": 2491,
+ "type_name": "实用代码",
+ "manual_name": "Snackbar自定义布局",
+ "author": "智",
+ "platform": "所有环境",
+ "source_date": "2023年02月20日 08:03:55",
+ "hits": 426,
+ "up": 4,
+ "favorite": 9,
+ "comment": 11,
+ "source_file": "实用代码\\2491_Snackbar自定义布局.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "truncated_tail",
+ "line_count": 79,
+ "char_count": 1707,
+ "confidence": "static_review"
+}

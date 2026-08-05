@@ -1,0 +1,23 @@
+{
+ "manual_id": 2126,
+ "type_name": "Androlua教程",
+ "manual_name": "全局设置MaterialCardView",
+ "author": "人生如初见",
+ "platform": "Fusion App2",
+ "source_date": "2022年12月01日 10:25:51",
+ "hits": 195,
+ "up": 3,
+ "favorite": 4,
+ "comment": 0,
+ "source_file": "Androlua教程\\2126_全局设置MaterialCardView.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "global_pollution"
+ ],
+ "truncation": "complete",
+ "line_count": 28,
+ "char_count": 644,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 2859,
+ "type_name": "Lua代码",
+ "manual_name": "图片像素化",
+ "author": "诺~",
+ "platform": "所有环境",
+ "source_date": "2023年05月25日 23:14:14",
+ "hits": 513,
+ "up": 5,
+ "favorite": 13,
+ "comment": 2,
+ "source_file": "Lua代码\\2859_图片像素化.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 50,
+ "char_count": 1867,
+ "confidence": "static_review"
+}

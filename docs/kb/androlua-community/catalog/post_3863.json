@@ -1,0 +1,21 @@
+{
+ "manual_id": 3863,
+ "type_name": "Layout布局",
+ "manual_name": "ViewPager2Adapter的简单封装",
+ "author": "NekoLaska",
+ "platform": "Fusion App2,reOpenLua,OpenLuaX",
+ "source_date": "2024年02月08日 23:09:28",
+ "hits": 511,
+ "up": 1,
+ "favorite": 9,
+ "comment": 0,
+ "source_file": "Layout布局\\3863_ViewPager2Adapter的简单封装.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 49,
+ "char_count": 998,
+ "confidence": "static_review"
+}

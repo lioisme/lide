@@ -1,0 +1,21 @@
+{
+ "manual_id": 3516,
+ "type_name": "小工具",
+ "manual_name": "Translate 小米翻译（二次优化）",
+ "author": "海纳百氚，有容乃大",
+ "platform": "AndroLua,Fusion App2,reOpenLua",
+ "source_date": "2023年10月20日 23:35:46",
+ "hits": 393,
+ "up": 5,
+ "favorite": 18,
+ "comment": 3,
+ "source_file": "小工具\\3516_Translate_小米翻译（二次优化）.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 243,
+ "char_count": 6878,
+ "confidence": "static_review"
+}

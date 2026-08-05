@@ -1,0 +1,23 @@
+{
+ "manual_id": 1337,
+ "type_name": "Intent通信",
+ "manual_name": "调用QQ浏览器打开网页",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2022年01月26日 18:50:00",
+ "hits": 344,
+ "up": 0,
+ "favorite": 6,
+ "comment": 1,
+ "source_file": "Intent通信\\1337_调用QQ浏览器打开网页.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 8,
+ "char_count": 218,
+ "confidence": "static_review"
+}

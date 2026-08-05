@@ -1,0 +1,21 @@
+{
+ "manual_id": 4132,
+ "type_name": "Menu菜单",
+ "manual_name": "PopupMenu修改menu字体颜色",
+ "author": "帕帝不秀",
+ "platform": "所有环境",
+ "source_date": "2024年07月17日 19:08:41",
+ "hits": 450,
+ "up": 6,
+ "favorite": 11,
+ "comment": 2,
+ "source_file": "Menu菜单\\4132_PopupMenu修改menu字体颜色.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 43,
+ "char_count": 963,
+ "confidence": "static_review"
+}

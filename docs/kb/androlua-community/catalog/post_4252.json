@@ -1,0 +1,23 @@
+{
+ "manual_id": 4252,
+ "type_name": "布局代码",
+ "manual_name": "搜索列表",
+ "author": "穹尽一生拥抱悠",
+ "platform": "AndroLua",
+ "source_date": "2024年09月17日 23:08:29",
+ "hits": 1082,
+ "up": 13,
+ "favorite": 44,
+ "comment": 8,
+ "source_file": "布局代码\\4252_搜索列表.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 167,
+ "char_count": 3340,
+ "confidence": "static_review"
+}

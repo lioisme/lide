@@ -1,0 +1,23 @@
+{
+ "manual_id": 3929,
+ "type_name": "Layout布局",
+ "manual_name": "星座运势",
+ "author": "兜兜转转，又回到原点！",
+ "platform": "所有环境",
+ "source_date": "2024年02月26日 22:01:15",
+ "hits": 310,
+ "up": 4,
+ "favorite": 13,
+ "comment": 5,
+ "source_file": "Layout布局\\3929_星座运势.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 174,
+ "char_count": 5069,
+ "confidence": "static_review"
+}

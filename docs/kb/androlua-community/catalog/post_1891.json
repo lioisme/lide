@@ -1,0 +1,21 @@
+{
+ "manual_id": 1891,
+ "type_name": "文件操作",
+ "manual_name": "遍历和处理文件",
+ "author": "Adam·Eva",
+ "platform": "所有环境",
+ "source_date": "2022年09月16日 09:59:21",
+ "hits": 464,
+ "up": 8,
+ "favorite": 18,
+ "comment": 3,
+ "source_file": "文件操作\\1891_遍历和处理文件.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 51,
+ "char_count": 1205,
+ "confidence": "static_review"
+}

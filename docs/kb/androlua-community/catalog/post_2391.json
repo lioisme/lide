@@ -1,0 +1,21 @@
+{
+ "manual_id": 2391,
+ "type_name": "实用代码",
+ "manual_name": "检测WiFi代理 VPN",
+ "author": "小白·马",
+ "platform": "所有环境",
+ "source_date": "2023年01月28日 23:46:14",
+ "hits": 415,
+ "up": 2,
+ "favorite": 22,
+ "comment": 7,
+ "source_file": "实用代码\\2391_检测WiFi代理_VPN.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 51,
+ "char_count": 1669,
+ "confidence": "static_review"
+}

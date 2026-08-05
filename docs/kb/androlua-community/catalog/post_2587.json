@@ -1,0 +1,23 @@
+{
+ "manual_id": 2587,
+ "type_name": "实用代码",
+ "manual_name": "简单躲避球动画实战",
+ "author": "⁢",
+ "platform": "所有环境",
+ "source_date": "2023年03月18日 19:54:36",
+ "hits": 194,
+ "up": 6,
+ "favorite": 9,
+ "comment": 1,
+ "source_file": "实用代码\\2587_简单躲避球动画实战.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 70,
+ "char_count": 2010,
+ "confidence": "static_review"
+}

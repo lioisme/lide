@@ -1,0 +1,21 @@
+{
+ "manual_id": 2415,
+ "type_name": "控件属性",
+ "manual_name": "popupmenu滑动选择项目(actionbar同款)",
+ "author": "1111",
+ "platform": "所有环境",
+ "source_date": "2023年02月02日 14:11:54",
+ "hits": 386,
+ "up": 6,
+ "favorite": 12,
+ "comment": 0,
+ "source_file": "控件属性\\2415_popupmenu滑动选择项目(actionbar同款).lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 29,
+ "char_count": 568,
+ "confidence": "static_review"
+}

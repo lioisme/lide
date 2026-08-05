@@ -1,0 +1,24 @@
+{
+ "manual_id": 2123,
+ "type_name": "小工具",
+ "manual_name": "大字板",
+ "author": "智",
+ "platform": "Fusion App2",
+ "source_date": "2022年11月28日 18:35:52",
+ "hits": 419,
+ "up": 7,
+ "favorite": 14,
+ "comment": 10,
+ "source_file": "小工具\\2123_大字板.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier",
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 557,
+ "char_count": 18689,
+ "confidence": "static_review"
+}

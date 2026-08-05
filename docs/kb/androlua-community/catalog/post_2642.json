@@ -1,0 +1,23 @@
+{
+ "manual_id": 2642,
+ "type_name": "JS教程",
+ "manual_name": "网页自动登陆js",
+ "author": "小孩，别闹！",
+ "platform": "Fusion App2",
+ "source_date": "2023年04月10日 09:27:05",
+ "hits": 409,
+ "up": 4,
+ "favorite": 25,
+ "comment": 0,
+ "source_file": "JS教程\\2642_网页自动登陆js.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 27,
+ "char_count": 593,
+ "confidence": "static_review"
+}

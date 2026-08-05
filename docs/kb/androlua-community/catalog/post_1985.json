@@ -1,0 +1,21 @@
+{
+ "manual_id": 1985,
+ "type_name": "自绘制",
+ "manual_name": "方圆形 Squircle",
+ "author": "胡斯凯",
+ "platform": "所有环境",
+ "source_date": "2022年10月19日 23:04:50",
+ "hits": 246,
+ "up": 6,
+ "favorite": 16,
+ "comment": 2,
+ "source_file": "自绘制\\1985_方圆形_Squircle.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 57,
+ "char_count": 1567,
+ "confidence": "static_review"
+}

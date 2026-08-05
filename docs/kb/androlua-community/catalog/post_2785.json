@@ -1,0 +1,26 @@
+{
+ "manual_id": 2785,
+ "type_name": "小工具",
+ "manual_name": "MD配色参考",
+ "author": "YONGLE-永乐",
+ "platform": "所有环境",
+ "source_date": "2023年05月08日 03:33:38",
+ "hits": 795,
+ "up": 21,
+ "favorite": 74,
+ "comment": 3,
+ "source_file": "小工具\\2785_MD配色参考.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "chinese_identifier",
+  "global_pollution"
+ ],
+ "truncation": "complete",
+ "line_count": 687,
+ "char_count": 15997,
+ "confidence": "static_review"
+}

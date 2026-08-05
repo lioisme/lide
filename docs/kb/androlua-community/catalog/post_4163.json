@@ -1,0 +1,21 @@
+{
+ "manual_id": 4163,
+ "type_name": "小工具",
+ "manual_name": "随机数学题验证框",
+ "author": "小白·马",
+ "platform": "Fusion App2,reOpenLua,OpenLuaX",
+ "source_date": "2024年08月09日 20:05:15",
+ "hits": 415,
+ "up": 8,
+ "favorite": 23,
+ "comment": 2,
+ "source_file": "小工具\\4163_随机数学题验证框.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 109,
+ "char_count": 2384,
+ "confidence": "static_review"
+}

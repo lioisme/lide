@@ -1,0 +1,27 @@
+{
+ "manual_id": 4305,
+ "type_name": "Androlua教程",
+ "manual_name": "LrcView歌词控件",
+ "author": "烬夜",
+ "platform": "所有环境",
+ "source_date": "2024年10月15日 16:13:41",
+ "hits": 1152,
+ "up": 16,
+ "favorite": 38,
+ "comment": 22,
+ "source_file": "Androlua教程\\4305_LrcView歌词控件.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "chinese_identifier",
+  "remote_exec",
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 468,
+ "char_count": 13866,
+ "confidence": "static_review"
+}

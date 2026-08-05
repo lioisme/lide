@@ -1,0 +1,21 @@
+{
+ "manual_id": 4906,
+ "type_name": "小工具",
+ "manual_name": "dlna投屏图片",
+ "author": "。。",
+ "platform": "所有环境",
+ "source_date": "2025年07月11日 19:17:15",
+ "hits": 628,
+ "up": 3,
+ "favorite": 8,
+ "comment": 4,
+ "source_file": "小工具\\4906_dlna投屏图片.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 123,
+ "char_count": 3723,
+ "confidence": "static_review"
+}

@@ -1,0 +1,24 @@
+{
+ "manual_id": 2007,
+ "type_name": "控件属性",
+ "manual_name": "底栏BottomNavigationView滑动隐藏",
+ "author": "苦小怕",
+ "platform": "Fusion App2",
+ "source_date": "2022年10月27日 13:33:32",
+ "hits": 1654,
+ "up": 25,
+ "favorite": 74,
+ "comment": 2,
+ "source_file": "控件属性\\2007_底栏BottomNavigationView滑动隐藏.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 161,
+ "char_count": 3798,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 1381,
+ "type_name": "控件属性",
+ "manual_name": "监听控件按下送开状态",
+ "author": "阿布拉小钢六",
+ "platform": "所有环境",
+ "source_date": "2022年02月24日 21:48:38",
+ "hits": 163,
+ "up": 2,
+ "favorite": 9,
+ "comment": 1,
+ "source_file": "控件属性\\1381_监听控件按下送开状态.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 11,
+ "char_count": 194,
+ "confidence": "static_review"
+}

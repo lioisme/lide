@@ -1,0 +1,23 @@
+{
+ "manual_id": 5242,
+ "type_name": "自绘制",
+ "manual_name": "烟花",
+ "author": "fo",
+ "platform": "OpenLuaX",
+ "source_date": "2026年02月15日 22:20:30",
+ "hits": 332,
+ "up": 2,
+ "favorite": 3,
+ "comment": 0,
+ "source_file": "自绘制\\5242_烟花.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "global_pollution"
+ ],
+ "truncation": "complete",
+ "line_count": 252,
+ "char_count": 6844,
+ "confidence": "static_review"
+}

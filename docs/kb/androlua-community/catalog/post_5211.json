@@ -1,0 +1,23 @@
+{
+ "manual_id": 5211,
+ "type_name": "Lua代码",
+ "manual_name": "Flip Clock（翻页时钟）",
+ "author": "琪琪子",
+ "platform": "AndLua",
+ "source_date": "2026年02月02日 22:20:21",
+ "hits": 216,
+ "up": 4,
+ "favorite": 12,
+ "comment": 0,
+ "source_file": "Lua代码\\5211_Flip_Clock（翻页时钟）.lua",
+ "kind": "code_demo",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 159,
+ "char_count": 3909,
+ "confidence": "static_review"
+}

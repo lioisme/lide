@@ -1,0 +1,21 @@
+{
+ "manual_id": 2213,
+ "type_name": "小工具",
+ "manual_name": "扇贝一言",
+ "author": "智",
+ "platform": "所有环境",
+ "source_date": "2022年12月18日 21:40:57",
+ "hits": 237,
+ "up": 0,
+ "favorite": 5,
+ "comment": 0,
+ "source_file": "小工具\\2213_扇贝一言.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "truncated_tail",
+ "line_count": 42,
+ "char_count": 1437,
+ "confidence": "static_review"
+}

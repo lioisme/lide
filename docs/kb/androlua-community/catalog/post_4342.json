@@ -1,0 +1,21 @@
+{
+ "manual_id": 4342,
+ "type_name": "Lua代码",
+ "manual_name": "简陋音乐",
+ "author": "QQ少年",
+ "platform": "Fusion App2",
+ "source_date": "2024年11月02日 16:34:19",
+ "hits": 764,
+ "up": 12,
+ "favorite": 30,
+ "comment": 2,
+ "source_file": "Lua代码\\4342_简陋音乐.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 460,
+ "char_count": 12516,
+ "confidence": "static_review"
+}

@@ -1,0 +1,23 @@
+{
+ "manual_id": 2787,
+ "type_name": "Intent通信",
+ "manual_name": "打开手册用户主页",
+ "author": "kamihitoe",
+ "platform": "",
+ "source_date": "2023年05月10日 13:12:15",
+ "hits": 309,
+ "up": 2,
+ "favorite": 3,
+ "comment": 1,
+ "source_file": "Intent通信\\2787_打开手册用户主页.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "complete",
+ "line_count": 4,
+ "char_count": 53,
+ "confidence": "static_review"
+}

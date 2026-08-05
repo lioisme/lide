@@ -1,0 +1,23 @@
+{
+ "manual_id": 2246,
+ "type_name": "控件属性",
+ "manual_name": "画布缩放,长按,连点,点击事件",
+ "author": "诺~",
+ "platform": "所有环境",
+ "source_date": "2022年12月24日 22:07:21",
+ "hits": 484,
+ "up": 4,
+ "favorite": 9,
+ "comment": 2,
+ "source_file": "控件属性\\2246_画布缩放,长按,连点,点击事件.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 122,
+ "char_count": 2564,
+ "confidence": "static_review"
+}

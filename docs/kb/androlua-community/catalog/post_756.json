@@ -1,0 +1,23 @@
+{
+ "manual_id": 756,
+ "type_name": "布局教程",
+ "manual_name": "部分布局代码",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 1799,
+ "up": 22,
+ "favorite": 74,
+ "comment": 1,
+ "source_file": "布局教程\\756_部分布局代码.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "text_only"
+ ],
+ "truncation": "complete",
+ "line_count": 616,
+ "char_count": 10021,
+ "confidence": "static_review"
+}

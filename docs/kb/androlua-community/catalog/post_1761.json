@@ -1,0 +1,23 @@
+{
+ "manual_id": 1761,
+ "type_name": "实用代码",
+ "manual_name": "二进制转十进制函数（做着玩）",
+ "author": "奥姆",
+ "platform": "所有环境",
+ "source_date": "2022年08月19日 21:42:08",
+ "hits": 184,
+ "up": 5,
+ "favorite": 7,
+ "comment": 2,
+ "source_file": "实用代码\\1761_二进制转十进制函数（做着玩）.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 26,
+ "char_count": 494,
+ "confidence": "static_review"
+}

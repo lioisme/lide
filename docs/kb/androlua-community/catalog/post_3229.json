@@ -1,0 +1,23 @@
+{
+ "manual_id": 3229,
+ "type_name": "小工具",
+ "manual_name": "文本转PDF",
+ "author": "美窝框艺/专业裱画做框",
+ "platform": "所有环境",
+ "source_date": "2023年08月10日 16:39:41",
+ "hits": 223,
+ "up": 3,
+ "favorite": 4,
+ "comment": 4,
+ "source_file": "小工具\\3229_文本转PDF.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 134,
+ "char_count": 2961,
+ "confidence": "static_review"
+}

@@ -1,0 +1,24 @@
+{
+ "manual_id": 3738,
+ "type_name": "网络请求",
+ "manual_name": "有道arXiv论文翻译接口",
+ "author": "阙月",
+ "platform": "所有环境",
+ "source_date": "2024年01月18日 12:38:48",
+ "hits": 165,
+ "up": 1,
+ "favorite": 2,
+ "comment": 2,
+ "source_file": "网络请求\\3738_有道arXiv论文翻译接口.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 155,
+ "char_count": 4322,
+ "confidence": "static_review"
+}

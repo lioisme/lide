@@ -1,0 +1,24 @@
+{
+ "manual_id": 1363,
+ "type_name": "布局教程",
+ "manual_name": "浏览页添加自定义布局",
+ "author": "小白·马",
+ "platform": "Fusion App2",
+ "source_date": "2022年02月08日 15:44:53",
+ "hits": 473,
+ "up": 2,
+ "favorite": 14,
+ "comment": 0,
+ "source_file": "布局教程\\1363_浏览页添加自定义布局.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 11,
+ "char_count": 283,
+ "confidence": "static_review"
+}

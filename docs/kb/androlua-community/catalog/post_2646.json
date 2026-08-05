@@ -1,0 +1,21 @@
+{
+ "manual_id": 2646,
+ "type_name": "实用代码",
+ "manual_name": "字符串加密解密",
+ "author": "小孩，别闹！",
+ "platform": "所有环境",
+ "source_date": "2023年04月11日 20:24:09",
+ "hits": 493,
+ "up": 6,
+ "favorite": 24,
+ "comment": 4,
+ "source_file": "实用代码\\2646_字符串加密解密.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "truncated_tail",
+ "line_count": 75,
+ "char_count": 1848,
+ "confidence": "static_review"
+}

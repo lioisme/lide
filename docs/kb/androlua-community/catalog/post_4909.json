@@ -1,0 +1,21 @@
+{
+ "manual_id": 4909,
+ "type_name": "基础代码",
+ "manual_name": "随机身份证",
+ "author": "121211",
+ "platform": "AndroLua",
+ "source_date": "2025年07月12日 13:30:02",
+ "hits": 255,
+ "up": 1,
+ "favorite": 9,
+ "comment": 0,
+ "source_file": "基础代码\\4909_随机身份证.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 277,
+ "char_count": 7285,
+ "confidence": "static_review"
+}

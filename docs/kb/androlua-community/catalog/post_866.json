@@ -1,0 +1,23 @@
+{
+ "manual_id": 866,
+ "type_name": "控件属性",
+ "manual_name": "波纹特效v2",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 109,
+ "up": 0,
+ "favorite": 1,
+ "comment": 0,
+ "source_file": "控件属性\\866_波纹特效v2.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 8,
+ "char_count": 337,
+ "confidence": "static_review"
+}

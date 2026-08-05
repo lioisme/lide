@@ -1,0 +1,21 @@
+{
+ "manual_id": 4625,
+ "type_name": "安卓教程",
+ "manual_name": "倒计时",
+ "author": "寒雪落花静云月",
+ "platform": "AndroLua",
+ "source_date": "2025年03月23日 16:40:14",
+ "hits": 285,
+ "up": 4,
+ "favorite": 5,
+ "comment": 0,
+ "source_file": "安卓教程\\4625_倒计时.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 389,
+ "char_count": 9346,
+ "confidence": "static_review"
+}

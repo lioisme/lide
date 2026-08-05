@@ -1,0 +1,21 @@
+{
+ "manual_id": 2451,
+ "type_name": "Lua代码",
+ "manual_name": "Lua函数柯里化",
+ "author": "壹影",
+ "platform": "所有环境",
+ "source_date": "2023年02月10日 09:28:06",
+ "hits": 112,
+ "up": 2,
+ "favorite": 4,
+ "comment": 1,
+ "source_file": "Lua代码\\2451_Lua函数柯里化.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 11,
+ "char_count": 120,
+ "confidence": "static_review"
+}

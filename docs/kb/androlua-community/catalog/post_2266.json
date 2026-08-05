@@ -1,0 +1,24 @@
+{
+ "manual_id": 2266,
+ "type_name": "布局教程",
+ "manual_name": "简函主页布局",
+ "author": "No one cares",
+ "platform": "Fusion App2",
+ "source_date": "2022年12月31日 17:03:45",
+ "hits": 2113,
+ "up": 15,
+ "favorite": 68,
+ "comment": 8,
+ "source_file": "布局教程\\2266_简函主页布局.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 179,
+ "char_count": 4451,
+ "confidence": "static_review"
+}

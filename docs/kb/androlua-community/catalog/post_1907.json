@@ -1,0 +1,25 @@
+{
+ "manual_id": 1907,
+ "type_name": "小工具",
+ "manual_name": "获取应用权限&判断是否赋予",
+ "author": "苦小怕",
+ "platform": "Fusion App2",
+ "source_date": "2022年09月23日 17:19:23",
+ "hits": 394,
+ "up": 3,
+ "favorite": 17,
+ "comment": 0,
+ "source_file": "小工具\\1907_获取应用权限&判断是否赋予.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 191,
+ "char_count": 4983,
+ "confidence": "static_review"
+}

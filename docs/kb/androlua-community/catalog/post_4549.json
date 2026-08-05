@@ -1,0 +1,21 @@
+{
+ "manual_id": 4549,
+ "type_name": "Activity活动",
+ "manual_name": "通过系统打开文件的函数 V1",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2025年02月19日 18:32:29",
+ "hits": 291,
+ "up": 0,
+ "favorite": 3,
+ "comment": 1,
+ "source_file": "Activity活动\\4549_通过系统打开文件的函数_V1.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 92,
+ "char_count": 2362,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 4499,
+ "type_name": "Lua代码",
+ "manual_name": "简易解释器",
+ "author": "⁣​",
+ "platform": "所有环境",
+ "source_date": "2025年01月28日 01:09:19",
+ "hits": 217,
+ "up": 1,
+ "favorite": 2,
+ "comment": 0,
+ "source_file": "Lua代码\\4499_简易解释器.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 590,
+ "char_count": 14190,
+ "confidence": "static_review"
+}

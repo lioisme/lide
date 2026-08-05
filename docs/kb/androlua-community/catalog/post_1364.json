@@ -1,0 +1,21 @@
+{
+ "manual_id": 1364,
+ "type_name": "UI控件",
+ "manual_name": "时间控件",
+ "author": "小白·马",
+ "platform": "所有环境",
+ "source_date": "2022年02月08日 18:41:05",
+ "hits": 609,
+ "up": 6,
+ "favorite": 14,
+ "comment": 1,
+ "source_file": "UI控件\\1364_时间控件.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 37,
+ "char_count": 926,
+ "confidence": "static_review"
+}

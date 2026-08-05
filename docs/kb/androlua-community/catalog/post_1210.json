@@ -1,0 +1,21 @@
+{
+ "manual_id": 1210,
+ "type_name": "远程更新",
+ "manual_name": "QQ收藏内容解析",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2021年11月08日 15:57:17",
+ "hits": 923,
+ "up": 8,
+ "favorite": 45,
+ "comment": 1,
+ "source_file": "远程更新\\1210_QQ收藏内容解析.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 68,
+ "char_count": 2256,
+ "confidence": "static_review"
+}

@@ -1,0 +1,23 @@
+{
+ "manual_id": 3949,
+ "type_name": "基础代码",
+ "manual_name": "随机小姐姐视频接口大全",
+ "author": "兜兜转转，又回到原点！",
+ "platform": "所有环境",
+ "source_date": "2024年03月05日 10:11:03",
+ "hits": 801,
+ "up": 11,
+ "favorite": 29,
+ "comment": 4,
+ "source_file": "基础代码\\3949_随机小姐姐视频接口大全.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 37,
+ "char_count": 614,
+ "confidence": "static_review"
+}

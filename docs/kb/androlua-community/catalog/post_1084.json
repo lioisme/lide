@@ -1,0 +1,23 @@
+{
+ "manual_id": 1084,
+ "type_name": "控件属性",
+ "manual_name": "跳转页面视图",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 311,
+ "up": 0,
+ "favorite": 4,
+ "comment": 2,
+ "source_file": "控件属性\\1084_跳转页面视图.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 1,
+ "char_count": 36,
+ "confidence": "static_review"
+}

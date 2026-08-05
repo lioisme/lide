@@ -1,0 +1,23 @@
+{
+ "manual_id": 4200,
+ "type_name": "UI控件",
+ "manual_name": "关于丝滑的插值器解",
+ "author": "⑨φZL",
+ "platform": "Fusion App2",
+ "source_date": "2024年08月21日 19:04:04",
+ "hits": 630,
+ "up": 15,
+ "favorite": 30,
+ "comment": 1,
+ "source_file": "UI控件\\4200_关于丝滑的插值器解.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "global_pollution"
+ ],
+ "truncation": "complete",
+ "line_count": 332,
+ "char_count": 10415,
+ "confidence": "static_review"
+}

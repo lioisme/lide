@@ -1,0 +1,21 @@
+{
+ "manual_id": 2108,
+ "type_name": "编码转换",
+ "manual_name": "字符串取MD5",
+ "author": "机不可失🅥",
+ "platform": "所有环境",
+ "source_date": "2022年11月24日 20:22:41",
+ "hits": 388,
+ "up": 1,
+ "favorite": 7,
+ "comment": 7,
+ "source_file": "编码转换\\2108_字符串取MD5.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 14,
+ "char_count": 365,
+ "confidence": "static_review"
+}

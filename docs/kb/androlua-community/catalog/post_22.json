@@ -1,0 +1,21 @@
+{
+ "manual_id": 22,
+ "type_name": "JS教程",
+ "manual_name": "悬浮球视频解析js",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 291,
+ "up": 1,
+ "favorite": 8,
+ "comment": 0,
+ "source_file": "JS教程\\22_悬浮球视频解析js.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 1,
+ "char_count": 3115,
+ "confidence": "static_review"
+}

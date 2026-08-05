@@ -1,0 +1,23 @@
+{
+ "manual_id": 4561,
+ "type_name": "基础代码",
+ "manual_name": "贴边悬浮窗(2.0优化版)",
+ "author": "ᅟᅠ        ‌",
+ "platform": "OpenLuaX",
+ "source_date": "2025年02月27日 19:44:59",
+ "hits": 610,
+ "up": 7,
+ "favorite": 24,
+ "comment": 0,
+ "source_file": "基础代码\\4561_贴边悬浮窗(2.0优化版).lua",
+ "kind": "code_demo",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 175,
+ "char_count": 5194,
+ "confidence": "static_review"
+}

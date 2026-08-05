@@ -1,0 +1,23 @@
+{
+ "manual_id": 5314,
+ "type_name": "小工具",
+ "manual_name": "迷你世界0.1",
+ "author": "热爱从不降温",
+ "platform": "所有环境",
+ "source_date": "2026年05月11日 06:10:54",
+ "hits": 506,
+ "up": 5,
+ "favorite": 11,
+ "comment": 3,
+ "source_file": "小工具\\5314_迷你世界0.1.lua",
+ "kind": "code_demo",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 1706,
+ "char_count": 42110,
+ "confidence": "static_review"
+}

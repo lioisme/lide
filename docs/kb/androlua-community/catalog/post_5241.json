@@ -1,0 +1,21 @@
+{
+ "manual_id": 5241,
+ "type_name": "Layout布局",
+ "manual_name": "流体渐变背景",
+ "author": "🤓🤓🤓",
+ "platform": "AndroLua,AndLua",
+ "source_date": "2026年02月15日 20:13:19",
+ "hits": 502,
+ "up": 12,
+ "favorite": 22,
+ "comment": 1,
+ "source_file": "Layout布局\\5241_流体渐变背景.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 167,
+ "char_count": 3934,
+ "confidence": "static_review"
+}

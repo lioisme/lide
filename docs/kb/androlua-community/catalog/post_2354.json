@@ -1,0 +1,24 @@
+{
+ "manual_id": 2354,
+ "type_name": "实用代码",
+ "manual_name": "下拉刷新",
+ "author": "Atomic fish",
+ "platform": "Fusion App2",
+ "source_date": "2023年01月20日 14:25:51",
+ "hits": 642,
+ "up": 11,
+ "favorite": 42,
+ "comment": 9,
+ "source_file": "实用代码\\2354_下拉刷新.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "complete",
+ "line_count": 20,
+ "char_count": 655,
+ "confidence": "static_review"
+}

@@ -1,0 +1,24 @@
+{
+ "manual_id": 3505,
+ "type_name": "JS教程",
+ "manual_name": "JSFuck!?",
+ "author": "壹影",
+ "platform": "所有环境",
+ "source_date": "2023年10月17日 10:15:17",
+ "hits": 184,
+ "up": 3,
+ "favorite": 4,
+ "comment": 0,
+ "source_file": "JS教程\\3505_JSFuck!.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "complete",
+ "line_count": 139,
+ "char_count": 11678,
+ "confidence": "static_review"
+}

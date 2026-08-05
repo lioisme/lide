@@ -1,0 +1,21 @@
+{
+ "manual_id": 2677,
+ "type_name": "实用代码",
+ "manual_name": "对话框根视图操作",
+ "author": "Aqora",
+ "platform": "所有环境",
+ "source_date": "2023年04月20日 17:58:24",
+ "hits": 369,
+ "up": 7,
+ "favorite": 13,
+ "comment": 0,
+ "source_file": "实用代码\\2677_对话框根视图操作.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 41,
+ "char_count": 1090,
+ "confidence": "static_review"
+}

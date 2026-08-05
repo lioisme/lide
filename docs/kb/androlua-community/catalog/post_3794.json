@@ -1,0 +1,23 @@
+{
+ "manual_id": 3794,
+ "type_name": "网络请求",
+ "manual_name": "有道ai写作接口，突破免费次数限制",
+ "author": "阙月",
+ "platform": "",
+ "source_date": "2024年01月26日 22:12:04",
+ "hits": 425,
+ "up": 5,
+ "favorite": 11,
+ "comment": 4,
+ "source_file": "网络请求\\3794_有道ai写作接口，突破免费次数限制.lua",
+ "kind": "code_demo",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 368,
+ "char_count": 10237,
+ "confidence": "static_review"
+}

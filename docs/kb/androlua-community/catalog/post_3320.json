@@ -1,0 +1,21 @@
+{
+ "manual_id": 3320,
+ "type_name": "手册公告",
+ "manual_name": "Android储存路径",
+ "author": "Adam·Eva",
+ "platform": "所有环境",
+ "source_date": "2023年08月27日 02:54:58",
+ "hits": 885,
+ "up": 22,
+ "favorite": 47,
+ "comment": 14,
+ "source_file": "手册公告\\3320_Android储存路径.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 152,
+ "char_count": 4862,
+ "confidence": "static_review"
+}

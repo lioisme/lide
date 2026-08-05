@@ -1,0 +1,24 @@
+{
+ "manual_id": 3456,
+ "type_name": "实用代码",
+ "manual_name": "适配器随机排列",
+ "author": "Ayou",
+ "platform": "所有环境",
+ "source_date": "2023年10月04日 09:51:13",
+ "hits": 338,
+ "up": 3,
+ "favorite": 12,
+ "comment": 1,
+ "source_file": "实用代码\\3456_适配器随机排列.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "complete",
+ "line_count": 150,
+ "char_count": 2326,
+ "confidence": "static_review"
+}

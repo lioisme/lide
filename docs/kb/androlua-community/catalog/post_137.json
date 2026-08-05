@@ -1,0 +1,23 @@
+{
+ "manual_id": 137,
+ "type_name": "基础代码",
+ "manual_name": "Lua，垃圾回收",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 318,
+ "up": 1,
+ "favorite": 6,
+ "comment": 0,
+ "source_file": "基础代码\\137_Lua，垃圾回收.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "text_only"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 37,
+ "char_count": 1541,
+ "confidence": "static_review"
+}

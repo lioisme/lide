@@ -1,0 +1,21 @@
+{
+ "manual_id": 2827,
+ "type_name": "Androlua教程",
+ "manual_name": "rgb和16进制互转",
+ "author": "诶害",
+ "platform": "所有环境",
+ "source_date": "2023年05月21日 02:43:39",
+ "hits": 105,
+ "up": 1,
+ "favorite": 4,
+ "comment": 0,
+ "source_file": "Androlua教程\\2827_rgb和16进制互转.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 25,
+ "char_count": 577,
+ "confidence": "static_review"
+}

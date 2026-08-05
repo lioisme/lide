@@ -1,0 +1,21 @@
+{
+ "manual_id": 3637,
+ "type_name": "小工具",
+ "manual_name": "粒子特效-触摸反馈",
+ "author": "琪琪子",
+ "platform": "AndLua",
+ "source_date": "2023年12月07日 08:21:17",
+ "hits": 573,
+ "up": 20,
+ "favorite": 58,
+ "comment": 6,
+ "source_file": "小工具\\3637_粒子特效-触摸反馈.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 65,
+ "char_count": 1550,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 3853,
+ "type_name": "Activity活动",
+ "manual_name": "视差滚动（补档）",
+ "author": "•⤙•/k",
+ "platform": "AndLua",
+ "source_date": "2024年02月05日 12:58:04",
+ "hits": 378,
+ "up": 8,
+ "favorite": 27,
+ "comment": 2,
+ "source_file": "Activity活动\\3853_视差滚动（补档）.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 59,
+ "char_count": 1511,
+ "confidence": "static_review"
+}

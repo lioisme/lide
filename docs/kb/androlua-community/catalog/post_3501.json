@@ -1,0 +1,21 @@
+{
+ "manual_id": 3501,
+ "type_name": "实用代码",
+ "manual_name": "http post请求体手动序列化",
+ "author": "ᅟᅠ        ‌",
+ "platform": "所有环境",
+ "source_date": "2023年10月16日 17:10:15",
+ "hits": 299,
+ "up": 4,
+ "favorite": 8,
+ "comment": 5,
+ "source_file": "实用代码\\3501_http_post请求体手动序列化.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 53,
+ "char_count": 1385,
+ "confidence": "static_review"
+}

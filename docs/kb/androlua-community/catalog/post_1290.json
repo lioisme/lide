@@ -1,0 +1,23 @@
+{
+ "manual_id": 1290,
+ "type_name": "UI控件",
+ "manual_name": "WebView浏览器控件",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2022年01月03日 17:25:28",
+ "hits": 3591,
+ "up": 37,
+ "favorite": 112,
+ "comment": 8,
+ "source_file": "UI控件\\1290_WebView浏览器控件.lua",
+ "kind": "code_demo",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 125,
+ "char_count": 3845,
+ "confidence": "static_review"
+}

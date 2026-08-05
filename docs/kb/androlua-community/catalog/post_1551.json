@@ -1,0 +1,23 @@
+{
+ "manual_id": 1551,
+ "type_name": "小工具",
+ "manual_name": "【究极二改】文字图标制作",
+ "author": "訫念是你",
+ "platform": "所有环境",
+ "source_date": "2022年06月19日 20:21:48",
+ "hits": 444,
+ "up": 12,
+ "favorite": 24,
+ "comment": 3,
+ "source_file": "小工具\\1551_【究极二改】文字图标制作.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 733,
+ "char_count": 18510,
+ "confidence": "static_review"
+}

@@ -1,0 +1,25 @@
+{
+ "manual_id": 1908,
+ "type_name": "小工具",
+ "manual_name": "获取应用所有活动",
+ "author": "苦小怕",
+ "platform": "Fusion App2",
+ "source_date": "2022年09月23日 18:24:27",
+ "hits": 301,
+ "up": 4,
+ "favorite": 9,
+ "comment": 0,
+ "source_file": "小工具\\1908_获取应用所有活动.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 197,
+ "char_count": 4983,
+ "confidence": "static_review"
+}

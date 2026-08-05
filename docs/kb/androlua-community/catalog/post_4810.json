@@ -1,0 +1,21 @@
+{
+ "manual_id": 4810,
+ "type_name": "Lua代码",
+ "manual_name": "流体浅变",
+ "author": "JCY012",
+ "platform": "Fusion App2,AndLua",
+ "source_date": "2025年06月03日 03:33:37",
+ "hits": 937,
+ "up": 13,
+ "favorite": 29,
+ "comment": 4,
+ "source_file": "Lua代码\\4810_流体浅变.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 618,
+ "char_count": 20205,
+ "confidence": "static_review"
+}

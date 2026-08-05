@@ -1,0 +1,24 @@
+{
+ "manual_id": 2211,
+ "type_name": "UI控件",
+ "manual_name": "ScrollView滑动控件",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2022年12月18日 18:58:34",
+ "hits": 884,
+ "up": 11,
+ "favorite": 31,
+ "comment": 1,
+ "source_file": "UI控件\\2211_ScrollView滑动控件.lua",
+ "kind": "fragment",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "incomplete_mark",
+  "incomplete_fragment"
+ ],
+ "truncation": "complete",
+ "line_count": 129,
+ "char_count": 2615,
+ "confidence": "static_review"
+}

@@ -1,0 +1,25 @@
+{
+ "manual_id": 3097,
+ "type_name": "实用代码",
+ "manual_name": "天气预报",
+ "author": "◕ ̯͡◕",
+ "platform": "所有环境",
+ "source_date": "2023年07月18日 13:26:27",
+ "hits": 637,
+ "up": 4,
+ "favorite": 17,
+ "comment": 6,
+ "source_file": "实用代码\\3097_天气预报.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 746,
+ "char_count": 23856,
+ "confidence": "static_review"
+}

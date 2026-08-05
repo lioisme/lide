@@ -1,0 +1,21 @@
+{
+ "manual_id": 4359,
+ "type_name": "控件属性",
+ "manual_name": "ProgressIndicator 来自Google非常优雅的进度条",
+ "author": "海纳百氚，有容乃大",
+ "platform": "OpenLuaX",
+ "source_date": "2024年11月14日 20:48:20",
+ "hits": 854,
+ "up": 5,
+ "favorite": 17,
+ "comment": 4,
+ "source_file": "控件属性\\4359_ProgressIndicator_来自Google非常优雅的进度条.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 550,
+ "char_count": 17657,
+ "confidence": "static_review"
+}

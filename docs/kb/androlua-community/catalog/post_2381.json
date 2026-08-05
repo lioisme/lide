@@ -1,0 +1,23 @@
+{
+ "manual_id": 2381,
+ "type_name": "布局教程",
+ "manual_name": "双指缩放图片",
+ "author": "智",
+ "platform": "所有环境",
+ "source_date": "2023年01月26日 20:33:44",
+ "hits": 537,
+ "up": 13,
+ "favorite": 34,
+ "comment": 9,
+ "source_file": "布局教程\\2381_双指缩放图片.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "global_pollution"
+ ],
+ "truncation": "complete",
+ "line_count": 80,
+ "char_count": 1690,
+ "confidence": "static_review"
+}

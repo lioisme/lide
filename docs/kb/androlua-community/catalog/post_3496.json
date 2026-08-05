@@ -1,0 +1,23 @@
+{
+ "manual_id": 3496,
+ "type_name": "小工具",
+ "manual_name": "非常水的底部淡出淡入提示",
+ "author": "•⤙•/k",
+ "platform": "AndLua",
+ "source_date": "2023年10月15日 14:40:56",
+ "hits": 482,
+ "up": 3,
+ "favorite": 24,
+ "comment": 2,
+ "source_file": "小工具\\3496_非常水的底部淡出淡入提示.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 116,
+ "char_count": 3010,
+ "confidence": "static_review"
+}

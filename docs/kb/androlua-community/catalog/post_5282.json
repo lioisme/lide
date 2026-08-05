@@ -1,0 +1,23 @@
+{
+ "manual_id": 5282,
+ "type_name": "小工具",
+ "manual_name": "百度搜图，二改功能更完善",
+ "author": "白茸Toparo",
+ "platform": "Fusion App2",
+ "source_date": "2026年03月30日 22:45:10",
+ "hits": 331,
+ "up": 4,
+ "favorite": 7,
+ "comment": 2,
+ "source_file": "小工具\\5282_百度搜图，二改功能更完善.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 253,
+ "char_count": 5741,
+ "confidence": "static_review"
+}

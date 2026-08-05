@@ -1,0 +1,23 @@
+{
+ "manual_id": 2784,
+ "type_name": "实用代码",
+ "manual_name": "拟态绘制(二改版)",
+ "author": "•⤙•/k",
+ "platform": "AndLua",
+ "source_date": "2023年05月08日 00:10:07",
+ "hits": 354,
+ "up": 7,
+ "favorite": 28,
+ "comment": 0,
+ "source_file": "实用代码\\2784_拟态绘制(二改版).lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 224,
+ "char_count": 5168,
+ "confidence": "static_review"
+}

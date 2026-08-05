@@ -1,0 +1,21 @@
+{
+ "manual_id": 4369,
+ "type_name": "小游戏",
+ "manual_name": "数字连线",
+ "author": "青柠(YouCun)",
+ "platform": "所有环境",
+ "source_date": "2024年11月22日 21:42:00",
+ "hits": 316,
+ "up": 5,
+ "favorite": 7,
+ "comment": 0,
+ "source_file": "小游戏\\4369_数字连线.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 262,
+ "char_count": 6902,
+ "confidence": "static_review"
+}

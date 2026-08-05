@@ -1,0 +1,23 @@
+{
+ "manual_id": 76,
+ "type_name": "实用代码",
+ "manual_name": "隐藏输入法",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 155,
+ "up": 1,
+ "favorite": 5,
+ "comment": 0,
+ "source_file": "实用代码\\76_隐藏输入法.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 8,
+ "char_count": 240,
+ "confidence": "static_review"
+}

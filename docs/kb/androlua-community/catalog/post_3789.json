@@ -1,0 +1,21 @@
+{
+ "manual_id": 3789,
+ "type_name": "Lua代码",
+ "manual_name": "列表item点击效果",
+ "author": "琪琪子",
+ "platform": "AndLua",
+ "source_date": "2024年01月26日 13:19:53",
+ "hits": 651,
+ "up": 14,
+ "favorite": 48,
+ "comment": 1,
+ "source_file": "Lua代码\\3789_列表item点击效果.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 235,
+ "char_count": 5941,
+ "confidence": "static_review"
+}

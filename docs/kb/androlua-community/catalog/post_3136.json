@@ -1,0 +1,21 @@
+{
+ "manual_id": 3136,
+ "type_name": "实用代码",
+ "manual_name": "进入极暗界面",
+ "author": "水仙花",
+ "platform": "所有环境",
+ "source_date": "2023年07月23日 23:19:14",
+ "hits": 361,
+ "up": 5,
+ "favorite": 20,
+ "comment": 2,
+ "source_file": "实用代码\\3136_进入极暗界面.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 31,
+ "char_count": 819,
+ "confidence": "static_review"
+}

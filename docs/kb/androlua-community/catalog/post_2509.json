@@ -1,0 +1,23 @@
+{
+ "manual_id": 2509,
+ "type_name": "小工具",
+ "manual_name": "留言板 - 2.0",
+ "author": "老黑",
+ "platform": "所有环境",
+ "source_date": "2023年02月24日 21:56:01",
+ "hits": 1095,
+ "up": 9,
+ "favorite": 32,
+ "comment": 86,
+ "source_file": "小工具\\2509_留言板_-_2.0.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 315,
+ "char_count": 9416,
+ "confidence": "static_review"
+}

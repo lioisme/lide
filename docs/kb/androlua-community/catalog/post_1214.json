@@ -1,0 +1,21 @@
+{
+ "manual_id": 1214,
+ "type_name": "控件属性",
+ "manual_name": "文本框控件属性",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2021年12月12日 14:20:45",
+ "hits": 527,
+ "up": 6,
+ "favorite": 27,
+ "comment": 0,
+ "source_file": "控件属性\\1214_文本框控件属性.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 186,
+ "char_count": 3423,
+ "confidence": "static_review"
+}

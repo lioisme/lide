@@ -1,0 +1,21 @@
+{
+ "manual_id": 2122,
+ "type_name": "布局教程",
+ "manual_name": "竖着的SeekBar",
+ "author": "智",
+ "platform": "所有环境",
+ "source_date": "2022年11月28日 17:41:56",
+ "hits": 370,
+ "up": 4,
+ "favorite": 14,
+ "comment": 11,
+ "source_file": "布局教程\\2122_竖着的SeekBar.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 19,
+ "char_count": 332,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 2971,
+ "type_name": "系统",
+ "manual_name": "快捷加电池白名单",
+ "author": "",
+ "platform": "所有环境",
+ "source_date": "2023年06月24日 15:48:09",
+ "hits": 201,
+ "up": 2,
+ "favorite": 13,
+ "comment": 3,
+ "source_file": "系统\\2971_快捷加电池白名单.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "truncated_tail",
+ "line_count": 7,
+ "char_count": 276,
+ "confidence": "static_review"
+}

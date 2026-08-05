@@ -1,0 +1,25 @@
+{
+ "manual_id": 3632,
+ "type_name": "基础代码",
+ "manual_name": "蓝奏云链接解析(api)",
+ "author": "永痕",
+ "platform": "所有环境",
+ "source_date": "2023年12月04日 03:05:26",
+ "hits": 675,
+ "up": 6,
+ "favorite": 24,
+ "comment": 12,
+ "source_file": "基础代码\\3632_蓝奏云链接解析(api).lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 251,
+ "char_count": 6659,
+ "confidence": "static_review"
+}

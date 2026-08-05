@@ -1,0 +1,21 @@
+{
+ "manual_id": 4300,
+ "type_name": "基础代码",
+ "manual_name": "\nDES加解密",
+ "author": "左转",
+ "platform": "所有环境",
+ "source_date": "2024年10月13日 19:38:23",
+ "hits": 442,
+ "up": 8,
+ "favorite": 21,
+ "comment": 2,
+ "source_file": "基础代码\\4300_DES加解密.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 35,
+ "char_count": 1224,
+ "confidence": "static_review"
+}

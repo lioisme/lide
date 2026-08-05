@@ -1,0 +1,23 @@
+{
+ "manual_id": 284,
+ "type_name": "文件操作",
+ "manual_name": "获取文件或文件夹最后修改时间",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 206,
+ "up": 5,
+ "favorite": 4,
+ "comment": 0,
+ "source_file": "文件操作\\284_获取文件或文件夹最后修改时间.lua",
+ "kind": "code_demo",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 7,
+ "char_count": 181,
+ "confidence": "static_review"
+}

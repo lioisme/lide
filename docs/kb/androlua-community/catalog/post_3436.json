@@ -1,0 +1,21 @@
+{
+ "manual_id": 3436,
+ "type_name": "UI控件",
+ "manual_name": "滚动选择器（NumberPicker）",
+ "author": "kamihitoe",
+ "platform": "所有环境",
+ "source_date": "2023年09月28日 14:19:32",
+ "hits": 372,
+ "up": 10,
+ "favorite": 37,
+ "comment": 1,
+ "source_file": "UI控件\\3436_滚动选择器（NumberPicker）.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 78,
+ "char_count": 1899,
+ "confidence": "static_review"
+}

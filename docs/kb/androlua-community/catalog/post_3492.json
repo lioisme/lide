@@ -1,0 +1,23 @@
+{
+ "manual_id": 3492,
+ "type_name": "布局教程",
+ "manual_name": "tip气泡提示布局",
+ "author": "•⤙•/k",
+ "platform": "AndLua",
+ "source_date": "2023年10月13日 23:57:00",
+ "hits": 467,
+ "up": 4,
+ "favorite": 18,
+ "comment": 0,
+ "source_file": "布局教程\\3492_tip气泡提示布局.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 59,
+ "char_count": 1451,
+ "confidence": "static_review"
+}

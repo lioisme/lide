@@ -1,0 +1,21 @@
+{
+ "manual_id": 3107,
+ "type_name": "小工具",
+ "manual_name": "一个判断是否为素数的函数（二次优化）",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2023年07月20日 17:12:56",
+ "hits": 159,
+ "up": 2,
+ "favorite": 1,
+ "comment": 2,
+ "source_file": "小工具\\3107_一个判断是否为素数的函数（二次优化）.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "truncated_tail",
+ "line_count": 117,
+ "char_count": 2170,
+ "confidence": "static_review"
+}

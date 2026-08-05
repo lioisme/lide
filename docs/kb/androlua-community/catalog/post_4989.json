@@ -1,0 +1,24 @@
+{
+ "manual_id": 4989,
+ "type_name": "Layout布局",
+ "manual_name": "newloadlayout",
+ "author": "绷",
+ "platform": "所有环境",
+ "source_date": "2025年08月19日 19:51:54",
+ "hits": 577,
+ "up": 4,
+ "favorite": 7,
+ "comment": 5,
+ "source_file": "Layout布局\\4989_newloadlayout.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 961,
+ "char_count": 26025,
+ "confidence": "static_review"
+}

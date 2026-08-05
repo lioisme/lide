@@ -1,0 +1,23 @@
+{
+ "manual_id": 4820,
+ "type_name": "Lua教程",
+ "manual_name": "帧率测试",
+ "author": "YONGLE-永乐",
+ "platform": "所有环境",
+ "source_date": "2025年06月09日 08:08:39",
+ "hits": 607,
+ "up": 7,
+ "favorite": 13,
+ "comment": 5,
+ "source_file": "Lua教程\\4820_帧率测试.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "global_pollution"
+ ],
+ "truncation": "complete",
+ "line_count": 224,
+ "char_count": 5816,
+ "confidence": "static_review"
+}

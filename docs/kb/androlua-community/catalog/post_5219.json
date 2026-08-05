@@ -1,0 +1,23 @@
+{
+ "manual_id": 5219,
+ "type_name": "小游戏",
+ "manual_name": "伪3D迷宫游戏",
+ "author": "琪琪子",
+ "platform": "AndLua",
+ "source_date": "2026年02月03日 18:54:01",
+ "hits": 269,
+ "up": 9,
+ "favorite": 9,
+ "comment": 3,
+ "source_file": "小游戏\\5219_伪3D迷宫游戏.lua",
+ "kind": "code_demo",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 281,
+ "char_count": 8045,
+ "confidence": "static_review"
+}

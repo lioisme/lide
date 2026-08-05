@@ -1,0 +1,25 @@
+{
+ "manual_id": 1869,
+ "type_name": "系统",
+ "manual_name": "Notification",
+ "author": "苦小怕",
+ "platform": "所有环境",
+ "source_date": "2022年09月10日 19:32:03",
+ "hits": 500,
+ "up": 14,
+ "favorite": 34,
+ "comment": 5,
+ "source_file": "系统\\1869_Notification.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 52,
+ "char_count": 1826,
+ "confidence": "static_review"
+}

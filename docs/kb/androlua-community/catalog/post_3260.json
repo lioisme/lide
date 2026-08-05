@@ -1,0 +1,23 @@
+{
+ "manual_id": 3260,
+ "type_name": "实用代码",
+ "manual_name": "蓝奏解析",
+ "author": "巴黎小雨",
+ "platform": "所有环境",
+ "source_date": "2023年08月15日 14:59:01",
+ "hits": 293,
+ "up": 0,
+ "favorite": 1,
+ "comment": 4,
+ "source_file": "实用代码\\3260_蓝奏解析.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 134,
+ "char_count": 3772,
+ "confidence": "static_review"
+}

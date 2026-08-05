@@ -1,0 +1,21 @@
+{
+ "manual_id": 549,
+ "type_name": "JS教程",
+ "manual_name": "网页记住密码JS",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 254,
+ "up": 0,
+ "favorite": 11,
+ "comment": 0,
+ "source_file": "JS教程\\549_网页记住密码JS.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 170,
+ "char_count": 2805,
+ "confidence": "static_review"
+}

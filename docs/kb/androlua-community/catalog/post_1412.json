@@ -1,0 +1,21 @@
+{
+ "manual_id": 1412,
+ "type_name": "布局教程",
+ "manual_name": "轮播图",
+ "author": "YONGLE-永乐",
+ "platform": "Fusion App2",
+ "source_date": "2022年03月21日 22:00:28",
+ "hits": 1201,
+ "up": 16,
+ "favorite": 48,
+ "comment": 11,
+ "source_file": "布局教程\\1412_轮播图.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 160,
+ "char_count": 3682,
+ "confidence": "static_review"
+}

@@ -1,0 +1,24 @@
+{
+ "manual_id": 3014,
+ "type_name": "布局教程",
+ "manual_name": "仿哔哩哔哩的视频播放布局",
+ "author": "•⤙•/k",
+ "platform": "AndLua",
+ "source_date": "2023年07月02日 17:36:37",
+ "hits": 1437,
+ "up": 8,
+ "favorite": 32,
+ "comment": 29,
+ "source_file": "布局教程\\3014_仿哔哩哔哩的视频播放布局.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier",
+  "global_pollution"
+ ],
+ "truncation": "complete",
+ "line_count": 2228,
+ "char_count": 68147,
+ "confidence": "static_review"
+}

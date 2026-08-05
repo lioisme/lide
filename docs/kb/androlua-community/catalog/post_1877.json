@@ -1,0 +1,25 @@
+{
+ "manual_id": 1877,
+ "type_name": "系统",
+ "manual_name": "常驻通知&刷屏通知",
+ "author": "苦小怕",
+ "platform": "所有环境",
+ "source_date": "2022年09月12日 15:09:51",
+ "hits": 1449,
+ "up": 27,
+ "favorite": 83,
+ "comment": 25,
+ "source_file": "系统\\1877_常驻通知&刷屏通知.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 64,
+ "char_count": 2007,
+ "confidence": "static_review"
+}

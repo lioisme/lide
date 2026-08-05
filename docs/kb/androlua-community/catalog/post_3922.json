@@ -1,0 +1,21 @@
+{
+ "manual_id": 3922,
+ "type_name": "小游戏",
+ "manual_name": "不写引号的import",
+ "author": "kamihitoe",
+ "platform": "所有环境",
+ "source_date": "2024年02月24日 18:24:17",
+ "hits": 257,
+ "up": 1,
+ "favorite": 1,
+ "comment": 0,
+ "source_file": "小游戏\\3922_不写引号的import.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 37,
+ "char_count": 788,
+ "confidence": "static_review"
+}

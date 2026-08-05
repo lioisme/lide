@@ -1,0 +1,23 @@
+{
+ "manual_id": 4869,
+ "type_name": "Lua代码",
+ "manual_name": "时钟效果",
+ "author": "琪琪子",
+ "platform": "AndLua",
+ "source_date": "2025年06月29日 11:17:32",
+ "hits": 240,
+ "up": 6,
+ "favorite": 11,
+ "comment": 0,
+ "source_file": "Lua代码\\4869_时钟效果.lua",
+ "kind": "code_demo",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 164,
+ "char_count": 4167,
+ "confidence": "static_review"
+}

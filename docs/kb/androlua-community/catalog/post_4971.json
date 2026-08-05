@@ -1,0 +1,21 @@
+{
+ "manual_id": 4971,
+ "type_name": "布局教程",
+ "manual_name": "文件树",
+ "author": "⁣​",
+ "platform": "Fusion App2,reOpenLua,OpenLuaX",
+ "source_date": "2025年08月07日 15:08:02",
+ "hits": 493,
+ "up": 6,
+ "favorite": 12,
+ "comment": 3,
+ "source_file": "布局教程\\4971_文件树.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 134,
+ "char_count": 4180,
+ "confidence": "static_review"
+}

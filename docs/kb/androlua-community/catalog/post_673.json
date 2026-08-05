@@ -1,0 +1,21 @@
+{
+ "manual_id": 673,
+ "type_name": "浏览器",
+ "manual_name": "禁用标签栏模板进度条下拉刷新",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 146,
+ "up": 0,
+ "favorite": 1,
+ "comment": 0,
+ "source_file": "浏览器\\673_禁用标签栏模板进度条下拉刷新.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 7,
+ "char_count": 120,
+ "confidence": "static_review"
+}

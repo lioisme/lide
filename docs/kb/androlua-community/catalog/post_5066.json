@@ -1,0 +1,24 @@
+{
+ "manual_id": 5066,
+ "type_name": "网络请求",
+ "manual_name": "蓝奏云解析计算acw_sc__v2",
+ "author": "迷糊.",
+ "platform": "所有环境",
+ "source_date": "2025年10月07日 15:09:59",
+ "hits": 196,
+ "up": 1,
+ "favorite": 0,
+ "comment": 0,
+ "source_file": "网络请求\\5066_蓝奏云解析计算acw_sc__v2.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 128,
+ "char_count": 3644,
+ "confidence": "static_review"
+}

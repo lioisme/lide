@@ -1,0 +1,23 @@
+{
+ "manual_id": 1539,
+ "type_name": "Intent通信",
+ "manual_name": "常用url scheme",
+ "author": "易富焙",
+ "platform": "所有环境",
+ "source_date": "2022年06月11日 18:49:39",
+ "hits": 1959,
+ "up": 38,
+ "favorite": 108,
+ "comment": 13,
+ "source_file": "Intent通信\\1539_常用url_scheme.lua",
+ "kind": "code_demo",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 39,
+ "char_count": 2424,
+ "confidence": "static_review"
+}

@@ -1,0 +1,23 @@
+{
+ "manual_id": 760,
+ "type_name": "动画教程",
+ "manual_name": "PageView动画教程",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 676,
+ "up": 3,
+ "favorite": 9,
+ "comment": 1,
+ "source_file": "动画教程\\760_PageView动画教程.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 73,
+ "char_count": 1788,
+ "confidence": "static_review"
+}

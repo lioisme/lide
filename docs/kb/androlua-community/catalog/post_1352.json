@@ -1,0 +1,21 @@
+{
+ "manual_id": 1352,
+ "type_name": "浏览器",
+ "manual_name": "WebView 滚动到底监听",
+ "author": "jies辰",
+ "platform": "所有环境",
+ "source_date": "2022年01月31日 22:59:50",
+ "hits": 173,
+ "up": 3,
+ "favorite": 9,
+ "comment": 0,
+ "source_file": "浏览器\\1352_WebView_滚动到底监听.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 11,
+ "char_count": 336,
+ "confidence": "static_review"
+}

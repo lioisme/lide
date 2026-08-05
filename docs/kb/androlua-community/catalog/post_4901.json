@@ -1,0 +1,21 @@
+{
+ "manual_id": 4901,
+ "type_name": "布局代码",
+ "manual_name": "高仿微信《我》的界面",
+ "author": ".",
+ "platform": "AndLua",
+ "source_date": "2025年07月09日 17:57:06",
+ "hits": 629,
+ "up": 4,
+ "favorite": 8,
+ "comment": 0,
+ "source_file": "布局代码\\4901_高仿微信《我》的界面.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 411,
+ "char_count": 11636,
+ "confidence": "static_review"
+}

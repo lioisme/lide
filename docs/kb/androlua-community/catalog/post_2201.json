@@ -1,0 +1,21 @@
+{
+ "manual_id": 2201,
+ "type_name": "Adapter容器",
+ "manual_name": "GridView网格控件",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2022年12月18日 15:03:52",
+ "hits": 745,
+ "up": 5,
+ "favorite": 33,
+ "comment": 1,
+ "source_file": "Adapter容器\\2201_GridView网格控件.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 70,
+ "char_count": 1087,
+ "confidence": "static_review"
+}

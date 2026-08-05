@@ -1,0 +1,21 @@
+{
+ "manual_id": 5280,
+ "type_name": "Lua代码",
+ "manual_name": "卡片拖动验证码",
+ "author": "琪琪子",
+ "platform": "AndLua",
+ "source_date": "2026年03月21日 14:32:27",
+ "hits": 196,
+ "up": 3,
+ "favorite": 14,
+ "comment": 0,
+ "source_file": "Lua代码\\5280_卡片拖动验证码.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 246,
+ "char_count": 6278,
+ "confidence": "static_review"
+}

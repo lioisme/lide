@@ -1,0 +1,21 @@
+{
+ "manual_id": 675,
+ "type_name": "浏览器",
+ "manual_name": "FusionApp严重漏洞封堵代码",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 128,
+ "up": 1,
+ "favorite": 3,
+ "comment": 0,
+ "source_file": "浏览器\\675_FusionApp严重漏洞封堵代码.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 4,
+ "char_count": 103,
+ "confidence": "static_review"
+}

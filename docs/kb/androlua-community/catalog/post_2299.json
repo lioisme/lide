@@ -1,0 +1,23 @@
+{
+ "manual_id": 2299,
+ "type_name": "小工具",
+ "manual_name": "随机小说 - json解析",
+ "author": "老黑",
+ "platform": "AndroLua,AppLua,AndLua,LuaApp",
+ "source_date": "2023年01月10日 16:54:35",
+ "hits": 468,
+ "up": 7,
+ "favorite": 11,
+ "comment": 24,
+ "source_file": "小工具\\2299_随机小说_-_json解析.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 260,
+ "char_count": 6413,
+ "confidence": "static_review"
+}

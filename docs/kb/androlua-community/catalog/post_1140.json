@@ -1,0 +1,21 @@
+{
+ "manual_id": 1140,
+ "type_name": "布局教程",
+ "manual_name": "ShapeDrawable测试",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 109,
+ "up": 0,
+ "favorite": 2,
+ "comment": 0,
+ "source_file": "布局教程\\1140_ShapeDrawable测试.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 83,
+ "char_count": 2279,
+ "confidence": "static_review"
+}

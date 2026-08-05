@@ -1,0 +1,21 @@
+{
+ "manual_id": 3923,
+ "type_name": "小工具",
+ "manual_name": "主题切换(布局+动画)",
+ "author": "Robin",
+ "platform": "所有环境",
+ "source_date": "2024年02月25日 17:35:15",
+ "hits": 741,
+ "up": 9,
+ "favorite": 41,
+ "comment": 1,
+ "source_file": "小工具\\3923_主题切换(布局+动画).lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 188,
+ "char_count": 3847,
+ "confidence": "static_review"
+}

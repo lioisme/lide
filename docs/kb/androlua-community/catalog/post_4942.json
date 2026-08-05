@@ -1,0 +1,25 @@
+{
+ "manual_id": 4942,
+ "type_name": "Layout布局",
+ "manual_name": "简单优雅好看的帖子列表",
+ "author": "该困",
+ "platform": "Fusion App2",
+ "source_date": "2025年07月21日 18:09:46",
+ "hits": 802,
+ "up": 6,
+ "favorite": 22,
+ "comment": 3,
+ "source_file": "Layout布局\\4942_简单优雅好看的帖子列表.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 571,
+ "char_count": 14457,
+ "confidence": "static_review"
+}

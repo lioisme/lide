@@ -1,0 +1,25 @@
+{
+ "manual_id": 2037,
+ "type_name": "小工具",
+ "manual_name": "动漫_追番表",
+ "author": "碳昔",
+ "platform": "所有环境",
+ "source_date": "2022年11月05日 22:58:51",
+ "hits": 529,
+ "up": 11,
+ "favorite": 34,
+ "comment": 4,
+ "source_file": "小工具\\2037_动漫_追番表.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 245,
+ "char_count": 6056,
+ "confidence": "static_review"
+}

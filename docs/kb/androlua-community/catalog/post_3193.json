@@ -1,0 +1,21 @@
+{
+ "manual_id": 3193,
+ "type_name": "自绘制",
+ "manual_name": "绅士图",
+ "author": "煙雨舊時光",
+ "platform": "所有环境",
+ "source_date": "2023年08月04日 04:58:39",
+ "hits": 325,
+ "up": 1,
+ "favorite": 1,
+ "comment": 16,
+ "source_file": "自绘制\\3193_绅士图.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 72,
+ "char_count": 1736,
+ "confidence": "static_review"
+}

@@ -1,0 +1,24 @@
+{
+ "manual_id": 4424,
+ "type_name": "Intent通信",
+ "manual_name": "Some URL Scheme might be useful",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2024年12月25日 03:03:16",
+ "hits": 638,
+ "up": 4,
+ "favorite": 18,
+ "comment": 0,
+ "source_file": "Intent通信\\4424_Some_URL_Scheme_might_be_useful.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "text_only",
+  "sensitive_permission"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 281,
+ "char_count": 8156,
+ "confidence": "static_review"
+}

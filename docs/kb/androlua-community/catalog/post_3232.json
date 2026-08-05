@@ -1,0 +1,24 @@
+{
+ "manual_id": 3232,
+ "type_name": "自绘制",
+ "manual_name": "通过两点一角创建正四边形",
+ "author": "诺~",
+ "platform": "所有环境",
+ "source_date": "2023年08月11日 00:00:20",
+ "hits": 360,
+ "up": 1,
+ "favorite": 3,
+ "comment": 3,
+ "source_file": "自绘制\\3232_通过两点一角创建正四边形.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 104,
+ "char_count": 4758,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 4007,
+ "type_name": "基础代码",
+ "manual_name": "任务队列",
+ "author": "ㄛㄙ飞ㄋ",
+ "platform": "所有环境",
+ "source_date": "2024年04月05日 07:20:16",
+ "hits": 333,
+ "up": 2,
+ "favorite": 9,
+ "comment": 2,
+ "source_file": "基础代码\\4007_任务队列.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 58,
+ "char_count": 1064,
+ "confidence": "static_review"
+}

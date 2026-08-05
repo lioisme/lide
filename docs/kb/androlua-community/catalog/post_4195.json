@@ -1,0 +1,24 @@
+{
+ "manual_id": 4195,
+ "type_name": "动画教程",
+ "manual_name": "丝滑的缓冲seekBar",
+ "author": "•⤙•/k",
+ "platform": "AndLua",
+ "source_date": "2024年08月21日 08:36:45",
+ "hits": 1448,
+ "up": 11,
+ "favorite": 38,
+ "comment": 3,
+ "source_file": "动画教程\\4195_丝滑的缓冲seekBar.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier",
+  "sensitive_permission"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 330,
+ "char_count": 7263,
+ "confidence": "static_review"
+}

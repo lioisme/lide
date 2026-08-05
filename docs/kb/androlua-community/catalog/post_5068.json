@@ -1,0 +1,21 @@
+{
+ "manual_id": 5068,
+ "type_name": "Lua代码",
+ "manual_name": "3D粒子爆炸",
+ "author": "JCY012",
+ "platform": "Fusion App2",
+ "source_date": "2025年10月09日 08:59:46",
+ "hits": 275,
+ "up": 1,
+ "favorite": 1,
+ "comment": 0,
+ "source_file": "Lua代码\\5068_3D粒子爆炸.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 771,
+ "char_count": 21252,
+ "confidence": "static_review"
+}

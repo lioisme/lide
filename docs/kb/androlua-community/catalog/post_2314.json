@@ -1,0 +1,21 @@
+{
+ "manual_id": 2314,
+ "type_name": "Lua代码",
+ "manual_name": "string byte数组 互转",
+ "author": "狸猫🐱",
+ "platform": "所有环境",
+ "source_date": "2023年01月13日 19:18:50",
+ "hits": 148,
+ "up": 5,
+ "favorite": 8,
+ "comment": 0,
+ "source_file": "Lua代码\\2314_string_byte数组_互转.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 18,
+ "char_count": 287,
+ "confidence": "static_review"
+}

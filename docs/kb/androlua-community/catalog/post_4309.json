@@ -1,0 +1,21 @@
+{
+ "manual_id": 4309,
+ "type_name": "基础代码",
+ "manual_name": "文字游戏「地图列表」",
+ "author": "兜兜转转，又回到原点！",
+ "platform": "所有环境",
+ "source_date": "2024年10月17日 22:19:28",
+ "hits": 291,
+ "up": 4,
+ "favorite": 5,
+ "comment": 1,
+ "source_file": "基础代码\\4309_文字游戏「地图列表」.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 204,
+ "char_count": 7021,
+ "confidence": "static_review"
+}

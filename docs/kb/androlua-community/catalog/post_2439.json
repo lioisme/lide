@@ -1,0 +1,23 @@
+{
+ "manual_id": 2439,
+ "type_name": "实用代码",
+ "manual_name": "气泡排序",
+ "author": "Miss",
+ "platform": "所有环境",
+ "source_date": "2023年02月07日 16:45:00",
+ "hits": 119,
+ "up": 0,
+ "favorite": 2,
+ "comment": 0,
+ "source_file": "实用代码\\2439_气泡排序.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 25,
+ "char_count": 425,
+ "confidence": "static_review"
+}

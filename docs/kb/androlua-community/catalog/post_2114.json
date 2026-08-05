@@ -1,0 +1,25 @@
+{
+ "manual_id": 2114,
+ "type_name": "控件属性",
+ "manual_name": "资源嗅探框架实例",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2022年11月26日 14:27:41",
+ "hits": 1226,
+ "up": 9,
+ "favorite": 40,
+ "comment": 6,
+ "source_file": "控件属性\\2114_资源嗅探框架实例.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 1742,
+ "char_count": 52366,
+ "confidence": "static_review"
+}

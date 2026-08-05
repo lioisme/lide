@@ -1,0 +1,21 @@
+{
+ "manual_id": 2805,
+ "type_name": "实用代码",
+ "manual_name": "Materializer",
+ "author": "NekoLaska",
+ "platform": "所有环境",
+ "source_date": "2023年05月15日 20:36:54",
+ "hits": 1111,
+ "up": 26,
+ "favorite": 63,
+ "comment": 14,
+ "source_file": "实用代码\\2805_Materializer.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 245,
+ "char_count": 7613,
+ "confidence": "static_review"
+}

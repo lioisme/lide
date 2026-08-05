@@ -1,0 +1,23 @@
+{
+ "manual_id": 1319,
+ "type_name": "Java教程",
+ "manual_name": "匹配所有 Emoji 的正则表达式",
+ "author": "jies辰",
+ "platform": "所有环境",
+ "source_date": "2022年01月13日 20:25:28",
+ "hits": 141,
+ "up": 0,
+ "favorite": 0,
+ "comment": 0,
+ "source_file": "Java教程\\1319_匹配所有_Emoji_的正则表达式.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 5,
+ "char_count": 866,
+ "confidence": "static_review"
+}

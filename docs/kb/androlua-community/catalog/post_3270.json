@@ -1,0 +1,21 @@
+{
+ "manual_id": 3270,
+ "type_name": "Lua代码",
+ "manual_name": "类kt的布尔值取反",
+ "author": "NekoLaska",
+ "platform": "所有环境",
+ "source_date": "2023年08月16日 14:19:58",
+ "hits": 155,
+ "up": 1,
+ "favorite": 0,
+ "comment": 3,
+ "source_file": "Lua代码\\3270_类kt的布尔值取反.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 27,
+ "char_count": 542,
+ "confidence": "static_review"
+}

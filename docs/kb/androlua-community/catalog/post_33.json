@@ -1,0 +1,23 @@
+{
+ "manual_id": 33,
+ "type_name": "实用代码",
+ "manual_name": "FA已知控件ID",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 454,
+ "up": 5,
+ "favorite": 14,
+ "comment": 2,
+ "source_file": "实用代码\\33_FA已知控件ID.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 14,
+ "char_count": 320,
+ "confidence": "static_review"
+}

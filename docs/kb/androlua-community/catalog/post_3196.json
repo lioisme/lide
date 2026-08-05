@@ -1,0 +1,23 @@
+{
+ "manual_id": 3196,
+ "type_name": "系统",
+ "manual_name": "申请授予权限，判断授予权限",
+ "author": "孤独的山峰",
+ "platform": "所有环境",
+ "source_date": "2023年08月04日 17:45:16",
+ "hits": 552,
+ "up": 4,
+ "favorite": 34,
+ "comment": 0,
+ "source_file": "系统\\3196_申请授予权限，判断授予权限.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 88,
+ "char_count": 2093,
+ "confidence": "static_review"
+}

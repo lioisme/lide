@@ -1,0 +1,21 @@
+{
+ "manual_id": 3374,
+ "type_name": "小工具",
+ "manual_name": "一个切积木的网页H5小游戏（全屏显示）",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2023年09月05日 19:21:30",
+ "hits": 475,
+ "up": 4,
+ "favorite": 14,
+ "comment": 13,
+ "source_file": "小工具\\3374_一个切积木的网页H5小游戏（全屏显示）.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 61,
+ "char_count": 1616,
+ "confidence": "static_review"
+}

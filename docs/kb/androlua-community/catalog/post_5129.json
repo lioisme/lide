@@ -1,0 +1,24 @@
+{
+ "manual_id": 5129,
+ "type_name": "小游戏",
+ "manual_name": "贪吃蛇优化版",
+ "author": "小然",
+ "platform": "所有环境",
+ "source_date": "2025年11月16日 15:26:25",
+ "hits": 447,
+ "up": 6,
+ "favorite": 8,
+ "comment": 3,
+ "source_file": "小游戏\\5129_贪吃蛇优化版.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 321,
+ "char_count": 13838,
+ "confidence": "static_review"
+}

@@ -1,0 +1,24 @@
+{
+ "manual_id": 4324,
+ "type_name": "小游戏",
+ "manual_name": "翻翻看（Matching Pairs）游戏",
+ "author": "青柠(YouCun)",
+ "platform": "所有环境",
+ "source_date": "2024年10月26日 03:31:57",
+ "hits": 504,
+ "up": 8,
+ "favorite": 27,
+ "comment": 3,
+ "source_file": "小游戏\\4324_翻翻看（Matching_Pairs）游戏.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 484,
+ "char_count": 14794,
+ "confidence": "static_review"
+}

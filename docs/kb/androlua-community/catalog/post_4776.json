@@ -1,0 +1,23 @@
+{
+ "manual_id": 4776,
+ "type_name": "浏览器",
+ "manual_name": "关于手机",
+ "author": "云鹤衫",
+ "platform": "所有环境",
+ "source_date": "2025年05月20日 01:32:26",
+ "hits": 640,
+ "up": 6,
+ "favorite": 18,
+ "comment": 1,
+ "source_file": "浏览器\\4776_关于手机.lua",
+ "kind": "code_demo",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 353,
+ "char_count": 10484,
+ "confidence": "static_review"
+}

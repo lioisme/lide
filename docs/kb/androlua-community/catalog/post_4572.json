@@ -1,0 +1,21 @@
+{
+ "manual_id": 4572,
+ "type_name": "Lua教程",
+ "manual_name": "bson库",
+ "author": "YONGLE-永乐",
+ "platform": "所有环境",
+ "source_date": "2025年03月06日 23:50:26",
+ "hits": 254,
+ "up": 0,
+ "favorite": 1,
+ "comment": 0,
+ "source_file": "Lua教程\\4572_bson库.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 27,
+ "char_count": 645,
+ "confidence": "static_review"
+}

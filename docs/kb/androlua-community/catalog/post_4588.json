@@ -1,0 +1,23 @@
+{
+ "manual_id": 4588,
+ "type_name": "Intent通信",
+ "manual_name": "Settings关于设置的Intent处理方法",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2025年03月10日 21:53:02",
+ "hits": 429,
+ "up": 3,
+ "favorite": 8,
+ "comment": 0,
+ "source_file": "Intent通信\\4588_Settings关于设置的Intent处理方法.lua",
+ "kind": "code_demo",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "sensitive_permission"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 176,
+ "char_count": 6443,
+ "confidence": "static_review"
+}

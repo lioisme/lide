@@ -1,0 +1,21 @@
+{
+ "manual_id": 2167,
+ "type_name": "布局教程",
+ "manual_name": "颜色混合,更改透明度,比例混合,判断亮暗色用lua写ColorUtils部分功能",
+ "author": "1111",
+ "platform": "所有环境",
+ "source_date": "2022年12月11日 01:37:37",
+ "hits": 382,
+ "up": 7,
+ "favorite": 16,
+ "comment": 4,
+ "source_file": "布局教程\\2167_颜色混合,更改透明度,比例混合,判断亮暗色用lua写ColorUtils部分功能.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "truncated_tail",
+ "line_count": 267,
+ "char_count": 5989,
+ "confidence": "static_review"
+}

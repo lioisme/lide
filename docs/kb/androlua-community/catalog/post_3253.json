@@ -1,0 +1,23 @@
+{
+ "manual_id": 3253,
+ "type_name": "小游戏",
+ "manual_name": "Duo星系",
+ "author": "Duo",
+ "platform": "所有环境",
+ "source_date": "2023年08月14日 11:22:08",
+ "hits": 698,
+ "up": 8,
+ "favorite": 10,
+ "comment": 3,
+ "source_file": "小游戏\\3253_Duo星系.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 3084,
+ "char_count": 74653,
+ "confidence": "static_review"
+}

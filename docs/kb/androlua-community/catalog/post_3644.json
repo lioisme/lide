@@ -1,0 +1,21 @@
+{
+ "manual_id": 3644,
+ "type_name": "Lua代码",
+ "manual_name": "揭露动画-夜间/日间",
+ "author": "琪琪子",
+ "platform": "AndLua",
+ "source_date": "2023年12月09日 22:06:19",
+ "hits": 568,
+ "up": 14,
+ "favorite": 37,
+ "comment": 8,
+ "source_file": "Lua代码\\3644_揭露动画-夜间_日间.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 81,
+ "char_count": 2224,
+ "confidence": "static_review"
+}

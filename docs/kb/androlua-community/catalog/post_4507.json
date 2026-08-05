@@ -1,0 +1,21 @@
+{
+ "manual_id": 4507,
+ "type_name": "基础代码",
+ "manual_name": "测试操作符",
+ "author": "YONGLE-永乐",
+ "platform": "所有环境",
+ "source_date": "2025年01月30日 14:32:41",
+ "hits": 198,
+ "up": 1,
+ "favorite": 0,
+ "comment": 0,
+ "source_file": "基础代码\\4507_测试操作符.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "truncated_tail",
+ "line_count": 22,
+ "char_count": 841,
+ "confidence": "static_review"
+}

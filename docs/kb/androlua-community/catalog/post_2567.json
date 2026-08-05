@@ -1,0 +1,24 @@
+{
+ "manual_id": 2567,
+ "type_name": "自绘制",
+ "manual_name": "編輯框",
+ "author": "诺~",
+ "platform": "所有环境",
+ "source_date": "2023年03月09日 00:56:01",
+ "hits": 1009,
+ "up": 4,
+ "favorite": 10,
+ "comment": 9,
+ "source_file": "自绘制\\2567_編輯框.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 597,
+ "char_count": 15701,
+ "confidence": "static_review"
+}

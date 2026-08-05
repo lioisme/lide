@@ -1,0 +1,21 @@
+{
+ "manual_id": 2854,
+ "type_name": "Lua代码",
+ "manual_name": "N阶贝塞尔曲线",
+ "author": "诺~",
+ "platform": "所有环境",
+ "source_date": "2023年05月25日 15:29:43",
+ "hits": 230,
+ "up": 6,
+ "favorite": 8,
+ "comment": 2,
+ "source_file": "Lua代码\\2854_N阶贝塞尔曲线.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 82,
+ "char_count": 2110,
+ "confidence": "static_review"
+}

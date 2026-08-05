@@ -1,0 +1,21 @@
+{
+ "manual_id": 1215,
+ "type_name": "布局教程",
+ "manual_name": "编辑框控件属性",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2021年12月12日 14:23:33",
+ "hits": 884,
+ "up": 14,
+ "favorite": 47,
+ "comment": 1,
+ "source_file": "布局教程\\1215_编辑框控件属性.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 115,
+ "char_count": 2086,
+ "confidence": "static_review"
+}

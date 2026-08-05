@@ -1,0 +1,25 @@
+{
+ "manual_id": 4673,
+ "type_name": "小工具",
+ "manual_name": "MEIZU Weather简单美观的魅族天气",
+ "author": "海纳百氚，有容乃大",
+ "platform": "Fusion App2,reOpenLua,OpenLuaX",
+ "source_date": "2025年04月05日 11:13:20",
+ "hits": 1087,
+ "up": 10,
+ "favorite": 36,
+ "comment": 7,
+ "source_file": "小工具\\4673_MEIZU_Weather简单美观的魅族天气.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 11023,
+ "char_count": 203503,
+ "confidence": "static_review"
+}

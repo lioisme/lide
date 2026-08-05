@@ -1,0 +1,24 @@
+{
+ "manual_id": 1874,
+ "type_name": "控件属性",
+ "manual_name": "fa2侧滑栏项目列表控件获取",
+ "author": "小白·马",
+ "platform": "Fusion App2",
+ "source_date": "2022年09月11日 14:10:11",
+ "hits": 656,
+ "up": 5,
+ "favorite": 15,
+ "comment": 7,
+ "source_file": "控件属性\\1874_fa2侧滑栏项目列表控件获取.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "complete",
+ "line_count": 14,
+ "char_count": 528,
+ "confidence": "static_review"
+}

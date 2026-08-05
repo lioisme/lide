@@ -1,0 +1,23 @@
+{
+ "manual_id": 292,
+ "type_name": "UI控件",
+ "manual_name": "DatePicker(日期选择器)",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 226,
+ "up": 0,
+ "favorite": 1,
+ "comment": 1,
+ "source_file": "UI控件\\292_DatePicker(日期选择器).lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "complete",
+ "line_count": 6,
+ "char_count": 128,
+ "confidence": "static_review"
+}

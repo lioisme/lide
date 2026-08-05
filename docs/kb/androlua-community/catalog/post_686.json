@@ -1,0 +1,21 @@
+{
+ "manual_id": 686,
+ "type_name": "控件属性",
+ "manual_name": "侧滑页面效果",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 1116,
+ "up": 5,
+ "favorite": 12,
+ "comment": 4,
+ "source_file": "控件属性\\686_侧滑页面效果.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "truncated_tail",
+ "line_count": 104,
+ "char_count": 2172,
+ "confidence": "static_review"
+}

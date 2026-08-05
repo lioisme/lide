@@ -1,0 +1,24 @@
+{
+ "manual_id": 1944,
+ "type_name": "小工具",
+ "manual_name": "节奏闪烁的闪光灯",
+ "author": "Duo",
+ "platform": "所有环境",
+ "source_date": "2022年10月03日 13:38:03",
+ "hits": 387,
+ "up": 8,
+ "favorite": 22,
+ "comment": 1,
+ "source_file": "小工具\\1944_节奏闪烁的闪光灯.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "chinese_identifier",
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 60,
+ "char_count": 1083,
+ "confidence": "static_review"
+}

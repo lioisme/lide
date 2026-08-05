@@ -1,0 +1,21 @@
+{
+ "manual_id": 4130,
+ "type_name": "基础代码",
+ "manual_name": "Lua模拟C++ V1",
+ "author": "沐风 - MFCompany",
+ "platform": "所有环境",
+ "source_date": "2024年07月13日 20:14:35",
+ "hits": 285,
+ "up": 2,
+ "favorite": 2,
+ "comment": 0,
+ "source_file": "基础代码\\4130_Lua模拟C++_V1.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 20,
+ "char_count": 443,
+ "confidence": "static_review"
+}

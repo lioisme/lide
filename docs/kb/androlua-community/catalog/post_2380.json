@@ -1,0 +1,21 @@
+{
+ "manual_id": 2380,
+ "type_name": "布局教程",
+ "manual_name": "仿小米的消息输出提示",
+ "author": "奥姆",
+ "platform": "Fusion App2",
+ "source_date": "2023年01月26日 12:23:25",
+ "hits": 734,
+ "up": 11,
+ "favorite": 36,
+ "comment": 8,
+ "source_file": "布局教程\\2380_仿小米的消息输出提示.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 39,
+ "char_count": 923,
+ "confidence": "static_review"
+}

@@ -1,0 +1,23 @@
+{
+ "manual_id": 4302,
+ "type_name": "基础代码",
+ "manual_name": "Android SDK 获取",
+ "author": "小白·马",
+ "platform": "所有环境",
+ "source_date": "2024年10月15日 12:22:49",
+ "hits": 264,
+ "up": 3,
+ "favorite": 12,
+ "comment": 2,
+ "source_file": "基础代码\\4302_Android_SDK_获取.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "complete",
+ "line_count": 5,
+ "char_count": 129,
+ "confidence": "static_review"
+}

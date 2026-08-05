@@ -1,0 +1,25 @@
+{
+ "manual_id": 4818,
+ "type_name": "安卓教程",
+ "manual_name": "Android Build 类完整参考指南",
+ "author": "程国荣",
+ "platform": "所有环境",
+ "source_date": "2025年06月07日 10:36:13",
+ "hits": 356,
+ "up": 9,
+ "favorite": 12,
+ "comment": 0,
+ "source_file": "安卓教程\\4818_Android_Build_类完整参考指南.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "obsolete",
+ "flags": [
+  "obsolete",
+  "obsolete",
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 244,
+ "char_count": 5090,
+ "confidence": "static_review"
+}

@@ -1,0 +1,24 @@
+{
+ "manual_id": 4248,
+ "type_name": "布局代码",
+ "manual_name": "验证码输入框(带通知提示)",
+ "author": "⁧拾玖⁧‭",
+ "platform": "所有环境",
+ "source_date": "2024年09月15日 18:44:14",
+ "hits": 1036,
+ "up": 18,
+ "favorite": 45,
+ "comment": 3,
+ "source_file": "布局代码\\4248_验证码输入框(带通知提示).lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "complete",
+ "line_count": 162,
+ "char_count": 3672,
+ "confidence": "static_review"
+}

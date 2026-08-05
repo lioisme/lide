@@ -1,0 +1,21 @@
+{
+ "manual_id": 2112,
+ "type_name": "编码转换",
+ "manual_name": "json解析",
+ "author": "机不可失🅥",
+ "platform": "所有环境",
+ "source_date": "2022年11月25日 19:37:25",
+ "hits": 341,
+ "up": 4,
+ "favorite": 12,
+ "comment": 2,
+ "source_file": "编码转换\\2112_json解析.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 15,
+ "char_count": 374,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 1207,
+ "type_name": "系统",
+ "manual_name": "﻿判断横屏竖屏并执行操作",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2021年11月01日 20:15:51",
+ "hits": 354,
+ "up": 4,
+ "favorite": 17,
+ "comment": 0,
+ "source_file": "系统\\1207_﻿判断横屏竖屏并执行操作.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "truncated_tail",
+ "line_count": 44,
+ "char_count": 915,
+ "confidence": "static_review"
+}

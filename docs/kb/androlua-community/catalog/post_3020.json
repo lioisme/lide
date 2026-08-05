@@ -1,0 +1,24 @@
+{
+ "manual_id": 3020,
+ "type_name": "Activity活动",
+ "manual_name": "设置当前窗口不可触摸",
+ "author": "Cheese",
+ "platform": "所有环境",
+ "source_date": "2023年07月03日 13:57:58",
+ "hits": 228,
+ "up": 6,
+ "favorite": 18,
+ "comment": 0,
+ "source_file": "Activity活动\\3020_设置当前窗口不可触摸.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "complete",
+ "line_count": 45,
+ "char_count": 988,
+ "confidence": "static_review"
+}

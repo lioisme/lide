@@ -1,0 +1,23 @@
+{
+ "manual_id": 65,
+ "type_name": "浏览器",
+ "manual_name": "小说浏览工具栏（实用）",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 562,
+ "up": 1,
+ "favorite": 7,
+ "comment": 1,
+ "source_file": "浏览器\\65_小说浏览工具栏（实用）.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "global_pollution"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 224,
+ "char_count": 10689,
+ "confidence": "static_review"
+}

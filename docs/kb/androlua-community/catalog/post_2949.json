@@ -1,0 +1,24 @@
+{
+ "manual_id": 2949,
+ "type_name": "小游戏",
+ "manual_name": "绳",
+ "author": "Duo",
+ "platform": "所有环境",
+ "source_date": "2023年06月17日 22:55:50",
+ "hits": 542,
+ "up": 10,
+ "favorite": 11,
+ "comment": 4,
+ "source_file": "小游戏\\2949_绳.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier",
+  "global_pollution"
+ ],
+ "truncation": "complete",
+ "line_count": 1376,
+ "char_count": 28284,
+ "confidence": "static_review"
+}

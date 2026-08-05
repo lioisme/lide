@@ -1,0 +1,26 @@
+{
+ "manual_id": 2702,
+ "type_name": "Androlua教程",
+ "manual_name": "Andlua调用shizuku",
+ "author": "咲拖孩",
+ "platform": "AndroLua,AndLua",
+ "source_date": "2023年04月26日 01:04:09",
+ "hits": 896,
+ "up": 4,
+ "favorite": 16,
+ "comment": 8,
+ "source_file": "Androlua教程\\2702_Andlua调用shizuku.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "chinese_identifier",
+  "os_exec"
+ ],
+ "truncation": "complete",
+ "line_count": 387,
+ "char_count": 8307,
+ "confidence": "static_review"
+}

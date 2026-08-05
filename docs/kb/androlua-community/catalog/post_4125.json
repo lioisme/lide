@@ -1,0 +1,21 @@
+{
+ "manual_id": 4125,
+ "type_name": "消息通知",
+ "manual_name": "独立消息显示系统html+lua",
+ "author": "•⤙•/k",
+ "platform": "所有环境",
+ "source_date": "2024年07月05日 10:42:32",
+ "hits": 1239,
+ "up": 15,
+ "favorite": 39,
+ "comment": 3,
+ "source_file": "消息通知\\4125_独立消息显示系统html+lua.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 426,
+ "char_count": 11505,
+ "confidence": "static_review"
+}

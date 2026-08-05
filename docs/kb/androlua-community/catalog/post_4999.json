@@ -1,0 +1,21 @@
+{
+ "manual_id": 4999,
+ "type_name": "Intent通信",
+ "manual_name": "ACTION_OPEN_DOCUMENT",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2025年08月22日 15:51:17",
+ "hits": 187,
+ "up": 2,
+ "favorite": 5,
+ "comment": 0,
+ "source_file": "Intent通信\\4999_ACTION_OPEN_DOCUMENT.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 61,
+ "char_count": 2023,
+ "confidence": "static_review"
+}

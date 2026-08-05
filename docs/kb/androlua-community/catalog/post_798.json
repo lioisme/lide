@@ -1,0 +1,21 @@
+{
+ "manual_id": 798,
+ "type_name": "Menu菜单",
+ "manual_name": "标题栏菜单按钮",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 320,
+ "up": 0,
+ "favorite": 5,
+ "comment": 0,
+ "source_file": "Menu菜单\\798_标题栏菜单按钮.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 24,
+ "char_count": 454,
+ "confidence": "static_review"
+}

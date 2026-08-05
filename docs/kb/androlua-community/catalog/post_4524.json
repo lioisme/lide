@@ -1,0 +1,21 @@
+{
+ "manual_id": 4524,
+ "type_name": "网络请求",
+ "manual_name": "文件上传带进度条",
+ "author": "█████",
+ "platform": "AndroLua",
+ "source_date": "2025年02月09日 13:17:55",
+ "hits": 606,
+ "up": 2,
+ "favorite": 13,
+ "comment": 2,
+ "source_file": "网络请求\\4524_文件上传带进度条.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 132,
+ "char_count": 4501,
+ "confidence": "static_review"
+}

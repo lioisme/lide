@@ -1,0 +1,21 @@
+{
+ "manual_id": 1370,
+ "type_name": "实用代码",
+ "manual_name": "优化输入QQ获取头像代码",
+ "author": "随忆",
+ "platform": "Fusion App2",
+ "source_date": "2022年02月12日 00:17:49",
+ "hits": 504,
+ "up": 16,
+ "favorite": 37,
+ "comment": 2,
+ "source_file": "实用代码\\1370_优化输入QQ获取头像代码.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 184,
+ "char_count": 4144,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 4291,
+ "type_name": "实用代码",
+ "manual_name": "比较优美的验证码输入页",
+ "author": "小白·马",
+ "platform": "Fusion App2,reOpenLua,OpenLuaX",
+ "source_date": "2024年10月06日 23:11:08",
+ "hits": 1031,
+ "up": 33,
+ "favorite": 77,
+ "comment": 7,
+ "source_file": "实用代码\\4291_比较优美的验证码输入页.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 442,
+ "char_count": 11534,
+ "confidence": "static_review"
+}

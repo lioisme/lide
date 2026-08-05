@@ -1,0 +1,21 @@
+{
+ "manual_id": 4963,
+ "type_name": "基础代码",
+ "manual_name": "LuaJava 框架性能测试",
+ "author": "Cheese",
+ "platform": "所有环境",
+ "source_date": "2025年08月03日 17:07:08",
+ "hits": 261,
+ "up": 1,
+ "favorite": 2,
+ "comment": 0,
+ "source_file": "基础代码\\4963_LuaJava_框架性能测试.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 208,
+ "char_count": 4270,
+ "confidence": "static_review"
+}

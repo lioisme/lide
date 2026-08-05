@@ -1,0 +1,21 @@
+{
+ "manual_id": 3369,
+ "type_name": "布局教程",
+ "manual_name": "手动试试效果",
+ "author": "荷花",
+ "platform": "所有环境",
+ "source_date": "2023年09月03日 14:33:51",
+ "hits": 300,
+ "up": 1,
+ "favorite": 2,
+ "comment": 0,
+ "source_file": "布局教程\\3369_手动试试效果.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 34,
+ "char_count": 784,
+ "confidence": "static_review"
+}

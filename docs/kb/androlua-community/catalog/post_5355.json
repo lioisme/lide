@@ -1,0 +1,25 @@
+{
+ "manual_id": 5355,
+ "type_name": "UI控件",
+ "manual_name": "BreadcrumbRecyclerView",
+ "author": "⁧拾玖⁧‭",
+ "platform": "所有环境",
+ "source_date": "2026年07月16日 04:02:33",
+ "hits": 297,
+ "up": 0,
+ "favorite": 0,
+ "comment": 1,
+ "source_file": "UI控件\\5355_BreadcrumbRecyclerView.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound",
+  "remote_exec"
+ ],
+ "truncation": "complete",
+ "line_count": 63,
+ "char_count": 1718,
+ "confidence": "static_review"
+}

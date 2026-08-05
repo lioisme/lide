@@ -1,0 +1,25 @@
+{
+ "manual_id": 2363,
+ "type_name": "小工具",
+ "manual_name": "仿金铲铲之战弹窗",
+ "author": "归鸿",
+ "platform": "所有环境",
+ "source_date": "2023年01月22日 19:46:40",
+ "hits": 654,
+ "up": 16,
+ "favorite": 39,
+ "comment": 2,
+ "source_file": "小工具\\2363_仿金铲铲之战弹窗.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 211,
+ "char_count": 7022,
+ "confidence": "static_review"
+}

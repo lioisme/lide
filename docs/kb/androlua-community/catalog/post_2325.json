@@ -1,0 +1,21 @@
+{
+ "manual_id": 2325,
+ "type_name": "Intent通信",
+ "manual_name": "调用系统安装器安装 APK 文件",
+ "author": "ABVerterX",
+ "platform": "所有环境",
+ "source_date": "2023年01月15日 16:27:55",
+ "hits": 300,
+ "up": 8,
+ "favorite": 18,
+ "comment": 0,
+ "source_file": "Intent通信\\2325_调用系统安装器安装_APK_文件.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "truncated_tail",
+ "line_count": 32,
+ "char_count": 953,
+ "confidence": "static_review"
+}

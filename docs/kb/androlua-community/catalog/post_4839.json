@@ -1,0 +1,21 @@
+{
+ "manual_id": 4839,
+ "type_name": "Lua代码",
+ "manual_name": "百度图集解析",
+ "author": "琪琪子",
+ "platform": "AndLua",
+ "source_date": "2025年06月18日 07:47:55",
+ "hits": 230,
+ "up": 1,
+ "favorite": 4,
+ "comment": 1,
+ "source_file": "Lua代码\\4839_百度图集解析.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 73,
+ "char_count": 1507,
+ "confidence": "static_review"
+}

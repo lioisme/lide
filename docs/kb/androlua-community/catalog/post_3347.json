@@ -1,0 +1,21 @@
+{
+ "manual_id": 3347,
+ "type_name": "Androlua教程",
+ "manual_name": "alua独有语法：lambda循环",
+ "author": "",
+ "platform": "所有环境",
+ "source_date": "2023年08月30日 17:45:54",
+ "hits": 235,
+ "up": 5,
+ "favorite": 8,
+ "comment": 2,
+ "source_file": "Androlua教程\\3347_alua独有语法：lambda循环.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "truncated_tail",
+ "line_count": 31,
+ "char_count": 929,
+ "confidence": "static_review"
+}

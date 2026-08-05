@@ -1,0 +1,21 @@
+{
+ "manual_id": 1390,
+ "type_name": "系统",
+ "manual_name": "WiFi相关",
+ "author": "海纳百氚，有容乃大",
+ "platform": "Fusion App2",
+ "source_date": "2022年03月07日 23:19:28",
+ "hits": 232,
+ "up": 3,
+ "favorite": 8,
+ "comment": 0,
+ "source_file": "系统\\1390_WiFi相关.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 60,
+ "char_count": 1474,
+ "confidence": "static_review"
+}

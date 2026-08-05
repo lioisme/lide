@@ -1,0 +1,23 @@
+{
+ "manual_id": 2165,
+ "type_name": "小工具",
+ "manual_name": "FPS",
+ "author": "A.耀",
+ "platform": "AndLua",
+ "source_date": "2022年12月10日 14:33:13",
+ "hits": 250,
+ "up": 1,
+ "favorite": 3,
+ "comment": 0,
+ "source_file": "小工具\\2165_FPS.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 34,
+ "char_count": 520,
+ "confidence": "static_review"
+}

@@ -1,0 +1,23 @@
+{
+ "manual_id": 4445,
+ "type_name": "基础代码",
+ "manual_name": "旋转函数",
+ "author": "Sera",
+ "platform": "所有环境",
+ "source_date": "2025年01月04日 20:21:56",
+ "hits": 224,
+ "up": 0,
+ "favorite": 0,
+ "comment": 0,
+ "source_file": "基础代码\\4445_旋转函数.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 69,
+ "char_count": 1245,
+ "confidence": "static_review"
+}

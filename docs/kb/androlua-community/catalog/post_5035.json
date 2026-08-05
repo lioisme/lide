@@ -1,0 +1,21 @@
+{
+ "manual_id": 5035,
+ "type_name": "安卓教程",
+ "manual_name": "太空防御者游戏(二次优化)",
+ "author": "寒雪落花静云月",
+ "platform": "AndroLua,AndLua",
+ "source_date": "2025年09月06日 07:53:56",
+ "hits": 274,
+ "up": 2,
+ "favorite": 5,
+ "comment": 0,
+ "source_file": "安卓教程\\5035_太空防御者游戏(二次优化).lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 965,
+ "char_count": 35052,
+ "confidence": "static_review"
+}

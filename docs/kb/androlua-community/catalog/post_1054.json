@@ -1,0 +1,23 @@
+{
+ "manual_id": 1054,
+ "type_name": "Intent通信",
+ "manual_name": "微信扫一扫",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 462,
+ "up": 7,
+ "favorite": 27,
+ "comment": 3,
+ "source_file": "Intent通信\\1054_微信扫一扫.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 14,
+ "char_count": 387,
+ "confidence": "static_review"
+}

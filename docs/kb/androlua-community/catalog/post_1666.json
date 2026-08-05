@@ -1,0 +1,21 @@
+{
+ "manual_id": 1666,
+ "type_name": "自绘制",
+ "manual_name": "手绘蝴蝶线动画",
+ "author": "帕帝天秀",
+ "platform": "所有环境",
+ "source_date": "2022年08月05日 21:38:59",
+ "hits": 660,
+ "up": 9,
+ "favorite": 14,
+ "comment": 2,
+ "source_file": "自绘制\\1666_手绘蝴蝶线动画.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 80,
+ "char_count": 2221,
+ "confidence": "static_review"
+}

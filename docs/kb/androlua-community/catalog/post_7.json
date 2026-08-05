@@ -1,0 +1,21 @@
+{
+ "manual_id": 7,
+ "type_name": "系统",
+ "manual_name": "OpenGL模块",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 188,
+ "up": 0,
+ "favorite": 3,
+ "comment": 0,
+ "source_file": "系统\\7_OpenGL模块.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 57,
+ "char_count": 1731,
+ "confidence": "static_review"
+}

@@ -1,0 +1,26 @@
+{
+ "manual_id": 2449,
+ "type_name": "实用代码",
+ "manual_name": "SpannableStringBuilder 文本样式",
+ "author": "小白·马",
+ "platform": "所有环境",
+ "source_date": "2023年02月09日 11:29:52",
+ "hits": 1587,
+ "up": 47,
+ "favorite": 108,
+ "comment": 17,
+ "source_file": "实用代码\\2449_SpannableStringBuilder_文本样式.lua",
+ "kind": "fragment",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "incomplete_mark",
+  "editor_bound",
+  "editor_bound",
+  "incomplete_fragment"
+ ],
+ "truncation": "complete",
+ "line_count": 367,
+ "char_count": 12035,
+ "confidence": "static_review"
+}

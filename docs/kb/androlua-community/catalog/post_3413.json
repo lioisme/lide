@@ -1,0 +1,21 @@
+{
+ "manual_id": 3413,
+ "type_name": "布局教程",
+ "manual_name": "ShapeAppearanceModel",
+ "author": "kamihitoe",
+ "platform": "所有环境",
+ "source_date": "2023年09月20日 22:14:37",
+ "hits": 272,
+ "up": 11,
+ "favorite": 27,
+ "comment": 2,
+ "source_file": "布局教程\\3413_ShapeAppearanceModel.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 44,
+ "char_count": 1195,
+ "confidence": "static_review"
+}

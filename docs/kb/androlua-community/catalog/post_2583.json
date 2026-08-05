@@ -1,0 +1,21 @@
+{
+ "manual_id": 2583,
+ "type_name": "实用代码",
+ "manual_name": "仿小米应用消息输出提示，带应用图标的toast",
+ "author": "破晓",
+ "platform": "Fusion App2",
+ "source_date": "2023年03月18日 15:26:59",
+ "hits": 735,
+ "up": 13,
+ "favorite": 52,
+ "comment": 2,
+ "source_file": "实用代码\\2583_仿小米应用消息输出提示，带应用图标的toast.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 89,
+ "char_count": 1970,
+ "confidence": "static_review"
+}

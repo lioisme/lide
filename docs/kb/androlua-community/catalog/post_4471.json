@@ -1,0 +1,21 @@
+{
+ "manual_id": 4471,
+ "type_name": "网络请求",
+ "manual_name": "OpenAI非流式大模型请求工具",
+ "author": "海纳百氚，有容乃大",
+ "platform": "Fusion App2,reOpenLua,OpenLuaX",
+ "source_date": "2025年01月17日 11:23:45",
+ "hits": 639,
+ "up": 8,
+ "favorite": 17,
+ "comment": 8,
+ "source_file": "网络请求\\4471_OpenAI非流式大模型请求工具.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 141,
+ "char_count": 3911,
+ "confidence": "static_review"
+}

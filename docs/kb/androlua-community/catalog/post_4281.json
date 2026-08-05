@@ -1,0 +1,21 @@
+{
+ "manual_id": 4281,
+ "type_name": "小工具",
+ "manual_name": "星座今日运势",
+ "author": "繁事",
+ "platform": "所有环境",
+ "source_date": "2024年09月29日 12:56:50",
+ "hits": 396,
+ "up": 1,
+ "favorite": 7,
+ "comment": 4,
+ "source_file": "小工具\\4281_星座今日运势.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 135,
+ "char_count": 3921,
+ "confidence": "static_review"
+}

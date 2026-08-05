@@ -1,0 +1,21 @@
+{
+ "manual_id": 3072,
+ "type_name": "实用代码",
+ "manual_name": "内存信息",
+ "author": "热爱从不降温",
+ "platform": "所有环境",
+ "source_date": "2023年07月13日 19:05:10",
+ "hits": 268,
+ "up": 2,
+ "favorite": 6,
+ "comment": 3,
+ "source_file": "实用代码\\3072_内存信息.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 21,
+ "char_count": 499,
+ "confidence": "static_review"
+}

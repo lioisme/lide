@@ -1,0 +1,21 @@
+{
+ "manual_id": 2504,
+ "type_name": "文件操作",
+ "manual_name": "FTP上传文件",
+ "author": "Cheese",
+ "platform": "AndroLua,AndLua",
+ "source_date": "2023年02月23日 19:04:51",
+ "hits": 734,
+ "up": 7,
+ "favorite": 26,
+ "comment": 7,
+ "source_file": "文件操作\\2504_FTP上传文件.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 58,
+ "char_count": 1539,
+ "confidence": "static_review"
+}

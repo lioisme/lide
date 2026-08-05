@@ -1,0 +1,21 @@
+{
+ "manual_id": 5181,
+ "type_name": "Lua代码",
+ "manual_name": "等级系统",
+ "author": "听风诉说",
+ "platform": "AndLua",
+ "source_date": "2026年01月18日 13:59:22",
+ "hits": 408,
+ "up": 3,
+ "favorite": 8,
+ "comment": 1,
+ "source_file": "Lua代码\\5181_等级系统.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 158,
+ "char_count": 3612,
+ "confidence": "static_review"
+}

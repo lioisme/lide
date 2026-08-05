@@ -1,0 +1,23 @@
+{
+ "manual_id": 2839,
+ "type_name": "小工具",
+ "manual_name": "Chart",
+ "author": "Duo",
+ "platform": "所有环境",
+ "source_date": "2023年05月22日 11:18:32",
+ "hits": 235,
+ "up": 2,
+ "favorite": 3,
+ "comment": 6,
+ "source_file": "小工具\\2839_Chart.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "global_pollution"
+ ],
+ "truncation": "complete",
+ "line_count": 232,
+ "char_count": 4469,
+ "confidence": "static_review"
+}

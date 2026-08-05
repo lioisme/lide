@@ -1,0 +1,23 @@
+{
+ "manual_id": 5352,
+ "type_name": "基础代码",
+ "manual_name": "流动渐变边框",
+ "author": "喵Miao..͇͉͔̖",
+ "platform": "AndLua",
+ "source_date": "2026年07月07日 22:47:23",
+ "hits": 285,
+ "up": 4,
+ "favorite": 7,
+ "comment": 0,
+ "source_file": "基础代码\\5352_流动渐变边框.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 211,
+ "char_count": 4847,
+ "confidence": "static_review"
+}

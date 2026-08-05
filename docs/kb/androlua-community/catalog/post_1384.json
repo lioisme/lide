@@ -1,0 +1,23 @@
+{
+ "manual_id": 1384,
+ "type_name": "实用代码",
+ "manual_name": "[正则提取消息标题] 提取消息标题摘要 JS 正则 ProMaxPlusSuper艹",
+ "author": "jies辰",
+ "platform": "所有环境",
+ "source_date": "2022年03月01日 21:50:58",
+ "hits": 223,
+ "up": 1,
+ "favorite": 1,
+ "comment": 0,
+ "source_file": "实用代码\\1384_[正则提取消息标题]_提取消息标题摘要_JS_正则_ProMaxPlusSuper艹.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "text_only"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 31,
+ "char_count": 830,
+ "confidence": "static_review"
+}

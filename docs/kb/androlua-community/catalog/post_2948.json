@@ -1,0 +1,21 @@
+{
+ "manual_id": 2948,
+ "type_name": "小工具",
+ "manual_name": "小天气",
+ "author": "智",
+ "platform": "所有环境",
+ "source_date": "2023年06月17日 21:03:53",
+ "hits": 493,
+ "up": 4,
+ "favorite": 6,
+ "comment": 11,
+ "source_file": "小工具\\2948_小天气.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 292,
+ "char_count": 8400,
+ "confidence": "static_review"
+}

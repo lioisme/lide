@@ -1,0 +1,23 @@
+{
+ "manual_id": 3488,
+ "type_name": "布局教程",
+ "manual_name": "伪拖动条_仿imgui",
+ "author": "•⤙•/k",
+ "platform": "AndLua",
+ "source_date": "2023年10月13日 10:15:45",
+ "hits": 470,
+ "up": 5,
+ "favorite": 12,
+ "comment": 4,
+ "source_file": "布局教程\\3488_伪拖动条_仿imgui.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 131,
+ "char_count": 3343,
+ "confidence": "static_review"
+}

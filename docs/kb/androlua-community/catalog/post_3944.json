@@ -1,0 +1,23 @@
+{
+ "manual_id": 3944,
+ "type_name": "小工具",
+ "manual_name": "HyperOS/MIUI 小米电池容量分析工具",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2024年03月02日 23:54:28",
+ "hits": 372,
+ "up": 2,
+ "favorite": 14,
+ "comment": 0,
+ "source_file": "小工具\\3944_HyperOS_MIUI_小米电池容量分析工具.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "hardcoded_secret"
+ ],
+ "truncation": "complete",
+ "line_count": 9848,
+ "char_count": 501183,
+ "confidence": "static_review"
+}

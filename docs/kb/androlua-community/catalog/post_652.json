@@ -1,0 +1,24 @@
+{
+ "manual_id": 652,
+ "type_name": "浏览器",
+ "manual_name": "x5缓存设置",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 224,
+ "up": 0,
+ "favorite": 1,
+ "comment": 0,
+ "source_file": "浏览器\\652_x5缓存设置.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier",
+  "os_exec"
+ ],
+ "truncation": "complete",
+ "line_count": 93,
+ "char_count": 3190,
+ "confidence": "static_review"
+}

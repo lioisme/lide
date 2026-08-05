@@ -1,0 +1,23 @@
+{
+ "manual_id": 4122,
+ "type_name": "网络操作",
+ "manual_name": "QQ群管理",
+ "author": "█████",
+ "platform": "所有环境",
+ "source_date": "2024年06月29日 19:58:04",
+ "hits": 625,
+ "up": 5,
+ "favorite": 19,
+ "comment": 4,
+ "source_file": "网络操作\\4122_QQ群管理.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 464,
+ "char_count": 12164,
+ "confidence": "static_review"
+}

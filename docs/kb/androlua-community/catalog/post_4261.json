@@ -1,0 +1,24 @@
+{
+ "manual_id": 4261,
+ "type_name": "远程验证",
+ "manual_name": "微信授权登录",
+ "author": "煙雨舊時光",
+ "platform": "AndroLua,AndLua",
+ "source_date": "2024年09月22日 13:13:24",
+ "hits": 429,
+ "up": 6,
+ "favorite": 18,
+ "comment": 1,
+ "source_file": "远程验证\\4261_微信授权登录.lua",
+ "kind": "fragment",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "incomplete_mark",
+  "incomplete_fragment"
+ ],
+ "truncation": "complete",
+ "line_count": 109,
+ "char_count": 2266,
+ "confidence": "static_review"
+}

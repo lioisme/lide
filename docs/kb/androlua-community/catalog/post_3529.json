@@ -1,0 +1,24 @@
+{
+ "manual_id": 3529,
+ "type_name": "小工具",
+ "manual_name": "执行表中的请求",
+ "author": "碳昔",
+ "platform": "所有环境",
+ "source_date": "2023年10月28日 09:31:09",
+ "hits": 342,
+ "up": 3,
+ "favorite": 8,
+ "comment": 1,
+ "source_file": "小工具\\3529_执行表中的请求.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 200,
+ "char_count": 6714,
+ "confidence": "static_review"
+}

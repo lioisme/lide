@@ -1,0 +1,23 @@
+{
+ "manual_id": 2714,
+ "type_name": "布局教程",
+ "manual_name": "奇人共赏web",
+ "author": "绅士",
+ "platform": "所有环境",
+ "source_date": "2023年04月30日 12:53:19",
+ "hits": 915,
+ "up": 21,
+ "favorite": 63,
+ "comment": 33,
+ "source_file": "布局教程\\2714_奇人共赏web.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 27,
+ "char_count": 632,
+ "confidence": "static_review"
+}

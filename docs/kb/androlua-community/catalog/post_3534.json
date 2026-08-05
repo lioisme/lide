@@ -1,0 +1,21 @@
+{
+ "manual_id": 3534,
+ "type_name": "Androlua教程",
+ "manual_name": "_G全局对象",
+ "author": "壹影",
+ "platform": "所有环境",
+ "source_date": "2023年10月29日 18:11:09",
+ "hits": 199,
+ "up": 5,
+ "favorite": 7,
+ "comment": 3,
+ "source_file": "Androlua教程\\3534_G全局对象.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 194,
+ "char_count": 3304,
+ "confidence": "static_review"
+}

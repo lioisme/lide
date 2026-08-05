@@ -1,0 +1,23 @@
+{
+ "manual_id": 1315,
+ "type_name": "Activity活动",
+ "manual_name": "动态修改布局",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2022年01月11日 21:24:02",
+ "hits": 549,
+ "up": 10,
+ "favorite": 30,
+ "comment": 0,
+ "source_file": "Activity活动\\1315_动态修改布局.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "complete",
+ "line_count": 19,
+ "char_count": 214,
+ "confidence": "static_review"
+}

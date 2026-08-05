@@ -1,0 +1,26 @@
+{
+ "manual_id": 1506,
+ "type_name": "小工具",
+ "manual_name": "必应每日壁纸(官方接口)",
+ "author": "Adam·Eva",
+ "platform": "Fusion App2",
+ "source_date": "2022年06月02日 14:43:24",
+ "hits": 1036,
+ "up": 8,
+ "favorite": 30,
+ "comment": 11,
+ "source_file": "小工具\\1506_必应每日壁纸(官方接口).lua",
+ "kind": "fragment",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "incomplete_mark",
+  "androlua_private",
+  "private_api",
+  "incomplete_fragment"
+ ],
+ "truncation": "complete",
+ "line_count": 257,
+ "char_count": 6849,
+ "confidence": "static_review"
+}

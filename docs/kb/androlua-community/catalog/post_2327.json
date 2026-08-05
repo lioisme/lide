@@ -1,0 +1,23 @@
+{
+ "manual_id": 2327,
+ "type_name": "小工具",
+ "manual_name": "充电特效",
+ "author": "智",
+ "platform": "所有环境",
+ "source_date": "2023年01月15日 17:43:10",
+ "hits": 816,
+ "up": 8,
+ "favorite": 18,
+ "comment": 16,
+ "source_file": "小工具\\2327_充电特效.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 83,
+ "char_count": 2205,
+ "confidence": "static_review"
+}

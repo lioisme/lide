@@ -1,0 +1,21 @@
+{
+ "manual_id": 3042,
+ "type_name": "Androlua教程",
+ "manual_name": "调用自带相机拍照",
+ "author": "诶害",
+ "platform": "所有环境",
+ "source_date": "2023年07月07日 22:53:55",
+ "hits": 234,
+ "up": 3,
+ "favorite": 8,
+ "comment": 2,
+ "source_file": "Androlua教程\\3042_调用自带相机拍照.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 42,
+ "char_count": 1287,
+ "confidence": "static_review"
+}

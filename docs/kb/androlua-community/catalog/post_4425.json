@@ -1,0 +1,21 @@
+{
+ "manual_id": 4425,
+ "type_name": "Intent通信",
+ "manual_name": "调用图库选择多张图片",
+ "author": "ᅟᅠ        ‌",
+ "platform": "所有环境",
+ "source_date": "2024年12月25日 05:49:26",
+ "hits": 213,
+ "up": 4,
+ "favorite": 12,
+ "comment": 0,
+ "source_file": "Intent通信\\4425_调用图库选择多张图片.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 53,
+ "char_count": 1662,
+ "confidence": "static_review"
+}

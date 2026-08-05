@@ -1,0 +1,24 @@
+{
+ "manual_id": 1919,
+ "type_name": "小工具",
+ "manual_name": "电阻换算 原：胡星",
+ "author": "⑨φZL",
+ "platform": "所有环境",
+ "source_date": "2022年09月26日 15:29:44",
+ "hits": 373,
+ "up": 3,
+ "favorite": 5,
+ "comment": 2,
+ "source_file": "小工具\\1919_电阻换算_原：胡星.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 105,
+ "char_count": 2364,
+ "confidence": "static_review"
+}

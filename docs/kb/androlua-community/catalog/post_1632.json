@@ -1,0 +1,25 @@
+{
+ "manual_id": 1632,
+ "type_name": "小游戏",
+ "manual_name": "五子棋Ai",
+ "author": "苦小怕",
+ "platform": "Fusion App2,AndLua",
+ "source_date": "2022年07月31日 13:42:00",
+ "hits": 1129,
+ "up": 23,
+ "favorite": 56,
+ "comment": 27,
+ "source_file": "小游戏\\1632_五子棋Ai.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "chinese_identifier"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 595,
+ "char_count": 13515,
+ "confidence": "static_review"
+}

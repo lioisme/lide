@@ -1,0 +1,21 @@
+{
+ "manual_id": 2428,
+ "type_name": "实用代码",
+ "manual_name": "阿拉伯数字转换为中文数字",
+ "author": "ABVerterX",
+ "platform": "所有环境",
+ "source_date": "2023年02月04日 01:18:52",
+ "hits": 154,
+ "up": 7,
+ "favorite": 11,
+ "comment": 0,
+ "source_file": "实用代码\\2428_阿拉伯数字转换为中文数字.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "truncated_tail",
+ "line_count": 150,
+ "char_count": 3361,
+ "confidence": "static_review"
+}

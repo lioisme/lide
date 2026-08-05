@@ -1,0 +1,21 @@
+{
+ "manual_id": 396,
+ "type_name": "Intent通信",
+ "manual_name": "发送彩信",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 78,
+ "up": 0,
+ "favorite": 1,
+ "comment": 0,
+ "source_file": "Intent通信\\396_发送彩信.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 10,
+ "char_count": 344,
+ "confidence": "static_review"
+}

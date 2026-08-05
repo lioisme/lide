@@ -1,0 +1,23 @@
+{
+ "manual_id": 5058,
+ "type_name": "小工具",
+ "manual_name": "tiksave 海外抖音视频图集解析工具",
+ "author": "氘-Deuterium",
+ "platform": "所有环境",
+ "source_date": "2025年10月04日 13:37:08",
+ "hits": 255,
+ "up": 1,
+ "favorite": 7,
+ "comment": 0,
+ "source_file": "小工具\\5058_tiksave_海外抖音视频图集解析工具.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "hardcoded_secret"
+ ],
+ "truncation": "complete",
+ "line_count": 221,
+ "char_count": 5696,
+ "confidence": "static_review"
+}

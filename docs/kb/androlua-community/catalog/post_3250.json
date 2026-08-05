@@ -1,0 +1,23 @@
+{
+ "manual_id": 3250,
+ "type_name": "自绘制",
+ "manual_name": "自绘制图层",
+ "author": "煙雨舊時光",
+ "platform": "所有环境",
+ "source_date": "2023年08月14日 00:53:20",
+ "hits": 560,
+ "up": 2,
+ "favorite": 10,
+ "comment": 2,
+ "source_file": "自绘制\\3250_自绘制图层.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 53,
+ "char_count": 891,
+ "confidence": "static_review"
+}

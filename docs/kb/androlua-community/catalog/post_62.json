@@ -1,0 +1,21 @@
+{
+ "manual_id": 62,
+ "type_name": "浏览器",
+ "manual_name": "网页查找（查询定位网页内你输入的关键词）",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 247,
+ "up": 3,
+ "favorite": 15,
+ "comment": 0,
+ "source_file": "浏览器\\62_网页查找（查询定位网页内你输入的关键词）.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 43,
+ "char_count": 1038,
+ "confidence": "static_review"
+}

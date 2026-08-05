@@ -1,0 +1,24 @@
+{
+ "manual_id": 2006,
+ "type_name": "布局教程",
+ "manual_name": "仿MIUI Dialog",
+ "author": "白隐Hakuin",
+ "platform": "所有环境",
+ "source_date": "2022年10月27日 10:17:54",
+ "hits": 648,
+ "up": 8,
+ "favorite": 26,
+ "comment": 8,
+ "source_file": "布局教程\\2006_仿MIUI_Dialog.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "complete",
+ "line_count": 213,
+ "char_count": 5846,
+ "confidence": "static_review"
+}

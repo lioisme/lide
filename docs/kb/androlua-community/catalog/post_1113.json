@@ -1,0 +1,21 @@
+{
+ "manual_id": 1113,
+ "type_name": "动画教程",
+ "manual_name": "旋转动画教程",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 148,
+ "up": 1,
+ "favorite": 3,
+ "comment": 0,
+ "source_file": "动画教程\\1113_旋转动画教程.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 45,
+ "char_count": 1308,
+ "confidence": "static_review"
+}

@@ -1,0 +1,23 @@
+{
+ "manual_id": 3724,
+ "type_name": "加密解密",
+ "manual_name": "JCE加密解密 for luajava",
+ "author": "⑨φZL",
+ "platform": "所有环境",
+ "source_date": "2024年01月14日 18:42:14",
+ "hits": 420,
+ "up": 1,
+ "favorite": 10,
+ "comment": 6,
+ "source_file": "加密解密\\3724_JCE加密解密_for_luajava.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "global_pollution"
+ ],
+ "truncation": "complete",
+ "line_count": 88,
+ "char_count": 3824,
+ "confidence": "static_review"
+}

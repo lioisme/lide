@@ -1,0 +1,23 @@
+{
+ "manual_id": 3665,
+ "type_name": "自绘制",
+ "manual_name": "音频可视化",
+ "author": "AstarLC",
+ "platform": "所有环境",
+ "source_date": "2023年12月17日 11:58:21",
+ "hits": 696,
+ "up": 0,
+ "favorite": 3,
+ "comment": 9,
+ "source_file": "自绘制\\3665_音频可视化.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "global_pollution"
+ ],
+ "truncation": "complete",
+ "line_count": 477,
+ "char_count": 15304,
+ "confidence": "static_review"
+}

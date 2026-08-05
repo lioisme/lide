@@ -1,0 +1,25 @@
+{
+ "manual_id": 1473,
+ "type_name": "安卓教程",
+ "manual_name": "FAB",
+ "author": "苦小怕",
+ "platform": "Fusion App2",
+ "source_date": "2022年05月15日 12:54:39",
+ "hits": 808,
+ "up": 15,
+ "favorite": 42,
+ "comment": 2,
+ "source_file": "安卓教程\\1473_FAB.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 490,
+ "char_count": 13847,
+ "confidence": "static_review"
+}

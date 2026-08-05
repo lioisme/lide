@@ -1,0 +1,25 @@
+{
+ "manual_id": 1206,
+ "type_name": "网络操作",
+ "manual_name": "绘制纸感标签",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2021年10月22日 12:44:42",
+ "hits": 544,
+ "up": 13,
+ "favorite": 53,
+ "comment": 2,
+ "source_file": "网络操作\\1206_绘制纸感标签.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 136,
+ "char_count": 3749,
+ "confidence": "static_review"
+}

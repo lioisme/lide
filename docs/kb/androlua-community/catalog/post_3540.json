@@ -1,0 +1,21 @@
+{
+ "manual_id": 3540,
+ "type_name": "Androlua教程",
+ "manual_name": "Lua协程演示",
+ "author": "壹影",
+ "platform": "所有环境",
+ "source_date": "2023年10月30日 10:33:48",
+ "hits": 265,
+ "up": 1,
+ "favorite": 11,
+ "comment": 1,
+ "source_file": "Androlua教程\\3540_Lua协程演示.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 67,
+ "char_count": 1727,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 1567,
+ "type_name": "实用代码",
+ "manual_name": "打开部分 FA 自带页面",
+ "author": "张爱芝",
+ "platform": "Fusion App2",
+ "source_date": "2022年07月02日 16:07:55",
+ "hits": 177,
+ "up": 3,
+ "favorite": 3,
+ "comment": 2,
+ "source_file": "实用代码\\1567_打开部分_FA_自带页面.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "truncated_tail",
+ "line_count": 7,
+ "char_count": 199,
+ "confidence": "static_review"
+}

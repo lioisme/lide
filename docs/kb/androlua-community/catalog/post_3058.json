@@ -1,0 +1,21 @@
+{
+ "manual_id": 3058,
+ "type_name": "Lua代码",
+ "manual_name": "希尔排序",
+ "author": "邪默",
+ "platform": "所有环境",
+ "source_date": "2023年07月12日 22:13:07",
+ "hits": 62,
+ "up": 0,
+ "favorite": 0,
+ "comment": 0,
+ "source_file": "Lua代码\\3058_希尔排序.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 30,
+ "char_count": 535,
+ "confidence": "static_review"
+}

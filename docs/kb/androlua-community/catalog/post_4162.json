@@ -1,0 +1,26 @@
+{
+ "manual_id": 4162,
+ "type_name": "小工具",
+ "manual_name": "随机计算题(仿FA2)",
+ "author": "⁧拾玖⁧‭",
+ "platform": "所有环境",
+ "source_date": "2024年08月09日 14:07:03",
+ "hits": 321,
+ "up": 1,
+ "favorite": 3,
+ "comment": 6,
+ "source_file": "小工具\\4162_随机计算题(仿FA2).lua",
+ "kind": "fragment",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "incomplete_mark",
+  "editor_bound",
+  "editor_bound",
+  "incomplete_fragment"
+ ],
+ "truncation": "complete",
+ "line_count": 29,
+ "char_count": 1551,
+ "confidence": "static_review"
+}

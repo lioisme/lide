@@ -1,0 +1,24 @@
+{
+ "manual_id": 3314,
+ "type_name": "系统",
+ "manual_name": "Android常用类库包介绍",
+ "author": "热爱从不降温",
+ "platform": "所有环境",
+ "source_date": "2023年08月25日 20:28:26",
+ "hits": 205,
+ "up": 5,
+ "favorite": 5,
+ "comment": 1,
+ "source_file": "系统\\3314_Android常用类库包介绍.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "short_text",
+  "sensitive_permission"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 31,
+ "char_count": 592,
+ "confidence": "static_review"
+}

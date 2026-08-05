@@ -1,0 +1,23 @@
+{
+ "manual_id": 3467,
+ "type_name": "小工具",
+ "manual_name": "gif Toast",
+ "author": "•⤙•/k",
+ "platform": "AndLua",
+ "source_date": "2023年10月06日 20:07:16",
+ "hits": 361,
+ "up": 1,
+ "favorite": 10,
+ "comment": 6,
+ "source_file": "小工具\\3467_gif_Toast.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 70,
+ "char_count": 1907,
+ "confidence": "static_review"
+}

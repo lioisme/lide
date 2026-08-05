@@ -1,0 +1,24 @@
+{
+ "manual_id": 1523,
+ "type_name": "实用代码",
+ "manual_name": "加载失败",
+ "author": "苦小怕",
+ "platform": "Fusion App2",
+ "source_date": "2022年06月07日 16:39:20",
+ "hits": 495,
+ "up": 10,
+ "favorite": 19,
+ "comment": 7,
+ "source_file": "实用代码\\1523_加载失败.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "complete",
+ "line_count": 4,
+ "char_count": 137,
+ "confidence": "static_review"
+}

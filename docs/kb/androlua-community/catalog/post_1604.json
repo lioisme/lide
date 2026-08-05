@@ -1,0 +1,21 @@
+{
+ "manual_id": 1604,
+ "type_name": "实用代码",
+ "manual_name": "全网紧急通知",
+ "author": "海世",
+ "platform": "所有环境",
+ "source_date": "2022年07月21日 10:09:45",
+ "hits": 814,
+ "up": 12,
+ "favorite": 12,
+ "comment": 26,
+ "source_file": "实用代码\\1604_全网紧急通知.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "truncated_tail",
+ "line_count": 42,
+ "char_count": 473,
+ "confidence": "static_review"
+}

@@ -1,0 +1,24 @@
+{
+ "manual_id": 4728,
+ "type_name": "UI控件",
+ "manual_name": "Markwon文档教程",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2025年05月01日 12:19:00",
+ "hits": 840,
+ "up": 7,
+ "favorite": 21,
+ "comment": 4,
+ "source_file": "UI控件\\4728_Markwon文档教程.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "complete",
+ "line_count": 133,
+ "char_count": 2749,
+ "confidence": "static_review"
+}

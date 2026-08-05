@@ -1,0 +1,21 @@
+{
+ "manual_id": 1385,
+ "type_name": "Activity活动",
+ "manual_name": "AlertDialog对话框阴影强度/透明度",
+ "author": "小白·马",
+ "platform": "所有环境",
+ "source_date": "2022年03月04日 18:48:38",
+ "hits": 457,
+ "up": 1,
+ "favorite": 6,
+ "comment": 0,
+ "source_file": "Activity活动\\1385_AlertDialog对话框阴影强度_透明度.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "truncated_tail",
+ "line_count": 65,
+ "char_count": 1510,
+ "confidence": "static_review"
+}

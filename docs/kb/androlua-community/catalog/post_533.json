@@ -1,0 +1,21 @@
+{
+ "manual_id": 533,
+ "type_name": "Intent通信",
+ "manual_name": "调用系统浏览器搜索关键字",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 163,
+ "up": 0,
+ "favorite": 14,
+ "comment": 0,
+ "source_file": "Intent通信\\533_调用系统浏览器搜索关键字.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 6,
+ "char_count": 207,
+ "confidence": "static_review"
+}

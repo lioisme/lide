@@ -1,0 +1,21 @@
+{
+ "manual_id": 5250,
+ "type_name": "Lua代码",
+ "manual_name": "GBK与UTF-8转换",
+ "author": "YONGLE-永乐",
+ "platform": "所有环境",
+ "source_date": "2026年03月01日 00:04:11",
+ "hits": 176,
+ "up": 2,
+ "favorite": 2,
+ "comment": 0,
+ "source_file": "Lua代码\\5250_GBK与UTF-8转换.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 14,
+ "char_count": 194,
+ "confidence": "static_review"
+}

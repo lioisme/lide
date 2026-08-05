@@ -1,0 +1,25 @@
+{
+ "manual_id": 1715,
+ "type_name": "小工具",
+ "manual_name": "随机短视频3.6",
+ "author": "碳昔",
+ "platform": "所有环境",
+ "source_date": "2022年08月14日 18:40:12",
+ "hits": 1138,
+ "up": 33,
+ "favorite": 80,
+ "comment": 60,
+ "source_file": "小工具\\1715_随机短视频3.6.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 618,
+ "char_count": 16051,
+ "confidence": "static_review"
+}

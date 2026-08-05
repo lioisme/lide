@@ -1,0 +1,21 @@
+{
+ "manual_id": 4746,
+ "type_name": "安卓教程",
+ "manual_name": "三变向按钮",
+ "author": "1860年的美国黑人",
+ "platform": "所有环境",
+ "source_date": "2025年05月08日 23:42:55",
+ "hits": 564,
+ "up": 16,
+ "favorite": 32,
+ "comment": 14,
+ "source_file": "安卓教程\\4746_三变向按钮.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 91,
+ "char_count": 1940,
+ "confidence": "static_review"
+}

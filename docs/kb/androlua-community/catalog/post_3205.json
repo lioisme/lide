@@ -1,0 +1,21 @@
+{
+ "manual_id": 3205,
+ "type_name": "Androlua教程",
+ "manual_name": "defer",
+ "author": "",
+ "platform": "所有环境",
+ "source_date": "2023年08月05日 16:04:21",
+ "hits": 169,
+ "up": 1,
+ "favorite": 2,
+ "comment": 1,
+ "source_file": "Androlua教程\\3205_defer.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 68,
+ "char_count": 1226,
+ "confidence": "static_review"
+}

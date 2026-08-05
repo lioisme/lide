@@ -1,0 +1,21 @@
+{
+ "manual_id": 3757,
+ "type_name": "Intent通信",
+ "manual_name": "使用UDP实现广播",
+ "author": "破晓",
+ "platform": "所有环境",
+ "source_date": "2024年01月20日 11:32:50",
+ "hits": 234,
+ "up": 3,
+ "favorite": 7,
+ "comment": 0,
+ "source_file": "Intent通信\\3757_使用UDP实现广播.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 67,
+ "char_count": 1622,
+ "confidence": "static_review"
+}

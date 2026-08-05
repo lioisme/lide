@@ -1,0 +1,26 @@
+{
+ "manual_id": 5135,
+ "type_name": "安卓教程",
+ "manual_name": "读取小米手环心率广播数据",
+ "author": "",
+ "platform": "AndroLua,AndLua",
+ "source_date": "2025年11月23日 16:44:29",
+ "hits": 288,
+ "up": 2,
+ "favorite": 2,
+ "comment": 0,
+ "source_file": "安卓教程\\5135_读取小米手环心率广播数据.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "obsolete",
+ "flags": [
+  "obsolete",
+  "obsolete",
+  "chinese_identifier",
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 303,
+ "char_count": 6545,
+ "confidence": "static_review"
+}

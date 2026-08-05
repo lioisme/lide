@@ -1,0 +1,21 @@
+{
+ "manual_id": 2241,
+ "type_name": "布局教程",
+ "manual_name": "启动图",
+ "author": "♡yue",
+ "platform": "所有环境",
+ "source_date": "2022年12月23日 18:22:18",
+ "hits": 693,
+ "up": 15,
+ "favorite": 49,
+ "comment": 5,
+ "source_file": "布局教程\\2241_启动图.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 129,
+ "char_count": 2748,
+ "confidence": "static_review"
+}

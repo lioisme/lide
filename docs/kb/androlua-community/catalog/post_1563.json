@@ -1,0 +1,23 @@
+{
+ "manual_id": 1563,
+ "type_name": "网络操作",
+ "manual_name": "【爬虫】点点文档搜索",
+ "author": "訫念是你",
+ "platform": "AndroLua,AndLua",
+ "source_date": "2022年06月27日 20:01:43",
+ "hits": 601,
+ "up": 9,
+ "favorite": 15,
+ "comment": 1,
+ "source_file": "网络操作\\1563_【爬虫】点点文档搜索.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 346,
+ "char_count": 8597,
+ "confidence": "static_review"
+}

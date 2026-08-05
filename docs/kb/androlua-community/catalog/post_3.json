@@ -1,0 +1,23 @@
+{
+ "manual_id": 3,
+ "type_name": "实用代码",
+ "manual_name": "取小数点后面的n位",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 168,
+ "up": 0,
+ "favorite": 2,
+ "comment": 0,
+ "source_file": "实用代码\\3_取小数点后面的n位.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 10,
+ "char_count": 281,
+ "confidence": "static_review"
+}

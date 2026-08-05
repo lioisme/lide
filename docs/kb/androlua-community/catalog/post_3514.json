@@ -1,0 +1,23 @@
+{
+ "manual_id": 3514,
+ "type_name": "实用代码",
+ "manual_name": "各种弹出_弹入",
+ "author": "•⤙•/k",
+ "platform": "AndLua",
+ "source_date": "2023年10月20日 08:45:05",
+ "hits": 294,
+ "up": 7,
+ "favorite": 22,
+ "comment": 0,
+ "source_file": "实用代码\\3514_各种弹出_弹入.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 39,
+ "char_count": 1209,
+ "confidence": "static_review"
+}

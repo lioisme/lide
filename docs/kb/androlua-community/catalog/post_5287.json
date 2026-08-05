@@ -1,0 +1,23 @@
+{
+ "manual_id": 5287,
+ "type_name": "加密解密",
+ "manual_name": "数字压缩加密",
+ "author": "靐圝齉齾麤龖齉龘",
+ "platform": "所有环境",
+ "source_date": "2026年04月06日 20:08:43",
+ "hits": 252,
+ "up": 0,
+ "favorite": 0,
+ "comment": 1,
+ "source_file": "加密解密\\5287_数字压缩加密.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 86,
+ "char_count": 1822,
+ "confidence": "static_review"
+}

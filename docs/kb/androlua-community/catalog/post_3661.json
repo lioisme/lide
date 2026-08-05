@@ -1,0 +1,21 @@
+{
+ "manual_id": 3661,
+ "type_name": "Androlua教程",
+ "manual_name": "组件封装Demo",
+ "author": "壹影",
+ "platform": "所有环境",
+ "source_date": "2023年12月16日 17:52:08",
+ "hits": 389,
+ "up": 0,
+ "favorite": 13,
+ "comment": 3,
+ "source_file": "Androlua教程\\3661_组件封装Demo.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 590,
+ "char_count": 8188,
+ "confidence": "static_review"
+}

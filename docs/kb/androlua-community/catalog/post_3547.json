@@ -1,0 +1,25 @@
+{
+ "manual_id": 3547,
+ "type_name": "Activity活动",
+ "manual_name": "手册自定义主题配色",
+ "author": "破晓",
+ "platform": "Fusion App2",
+ "source_date": "2023年11月03日 15:24:45",
+ "hits": 1295,
+ "up": 10,
+ "favorite": 36,
+ "comment": 6,
+ "source_file": "Activity活动\\3547_手册自定义主题配色.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "obsolete",
+ "flags": [
+  "obsolete",
+  "obsolete",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 365,
+ "char_count": 10183,
+ "confidence": "static_review"
+}

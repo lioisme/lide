@@ -1,0 +1,25 @@
+{
+ "manual_id": 2911,
+ "type_name": "Activity活动",
+ "manual_name": "仿Lua代码手册留言板布局v2",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2023年06月06日 22:01:27",
+ "hits": 1049,
+ "up": 6,
+ "favorite": 45,
+ "comment": 22,
+ "source_file": "Activity活动\\2911_仿Lua代码手册留言板布局v2.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 479,
+ "char_count": 13148,
+ "confidence": "static_review"
+}

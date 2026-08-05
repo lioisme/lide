@@ -1,0 +1,21 @@
+{
+ "manual_id": 1575,
+ "type_name": "实用代码",
+ "manual_name": "软件启动次数",
+ "author": "123",
+ "platform": "所有环境",
+ "source_date": "2022年07月07日 01:53:37",
+ "hits": 340,
+ "up": 4,
+ "favorite": 12,
+ "comment": 1,
+ "source_file": "实用代码\\1575_软件启动次数.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 23,
+ "char_count": 481,
+ "confidence": "static_review"
+}

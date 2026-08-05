@@ -1,0 +1,21 @@
+{
+ "manual_id": 3921,
+ "type_name": "Lua代码",
+ "manual_name": "创建任意 Java 数组",
+ "author": "ABVerterX",
+ "platform": "所有环境",
+ "source_date": "2024年02月24日 18:04:56",
+ "hits": 138,
+ "up": 1,
+ "favorite": 3,
+ "comment": 0,
+ "source_file": "Lua代码\\3921_创建任意_Java_数组.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 25,
+ "char_count": 530,
+ "confidence": "static_review"
+}

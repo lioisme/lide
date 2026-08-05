@@ -1,0 +1,21 @@
+{
+ "manual_id": 4932,
+ "type_name": "安卓教程",
+ "manual_name": "随机短视频",
+ "author": ".",
+ "platform": "所有环境",
+ "source_date": "2025年07月15日 19:48:52",
+ "hits": 304,
+ "up": 1,
+ "favorite": 15,
+ "comment": 0,
+ "source_file": "安卓教程\\4932_随机短视频.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 534,
+ "char_count": 16706,
+ "confidence": "static_review"
+}

@@ -1,0 +1,25 @@
+{
+ "manual_id": 2998,
+ "type_name": "小工具",
+ "manual_name": "LuaDexLoader 动态外部加载dex",
+ "author": "迷糊.",
+ "platform": "所有环境",
+ "source_date": "2023年07月01日 14:04:37",
+ "hits": 584,
+ "up": 7,
+ "favorite": 16,
+ "comment": 2,
+ "source_file": "小工具\\2998_LuaDexLoader_动态外部加载dex.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "remote_exec"
+ ],
+ "truncation": "complete",
+ "line_count": 74,
+ "char_count": 1912,
+ "confidence": "static_review"
+}

@@ -1,0 +1,23 @@
+{
+ "manual_id": 2053,
+ "type_name": "文件操作",
+ "manual_name": "AFS - data访问",
+ "author": "狸猫🐱",
+ "platform": "所有环境",
+ "source_date": "2022年11月08日 02:21:23",
+ "hits": 1522,
+ "up": 28,
+ "favorite": 61,
+ "comment": 55,
+ "source_file": "文件操作\\2053_AFS_-_data访问.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 13,
+ "char_count": 246,
+ "confidence": "static_review"
+}

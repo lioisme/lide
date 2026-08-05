@@ -1,0 +1,24 @@
+{
+ "manual_id": 3235,
+ "type_name": "Lua代码",
+ "manual_name": "两点创建一正方形",
+ "author": "诺~",
+ "platform": "所有环境",
+ "source_date": "2023年08月11日 14:53:05",
+ "hits": 143,
+ "up": 1,
+ "favorite": 2,
+ "comment": 0,
+ "source_file": "Lua代码\\3235_两点创建一正方形.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 83,
+ "char_count": 3584,
+ "confidence": "static_review"
+}

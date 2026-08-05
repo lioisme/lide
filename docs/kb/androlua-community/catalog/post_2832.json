@@ -1,0 +1,21 @@
+{
+ "manual_id": 2832,
+ "type_name": "安卓教程",
+ "manual_name": "（修正）ListView+CheckBox列表复选框",
+ "author": "狸猫🐱",
+ "platform": "所有环境",
+ "source_date": "2023年05月21日 11:50:34",
+ "hits": 508,
+ "up": 10,
+ "favorite": 33,
+ "comment": 4,
+ "source_file": "安卓教程\\2832_（修正）ListView+CheckBox列表复选框.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 121,
+ "char_count": 1824,
+ "confidence": "static_review"
+}

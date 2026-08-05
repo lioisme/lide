@@ -1,0 +1,23 @@
+{
+ "manual_id": 4168,
+ "type_name": "小游戏",
+ "manual_name": "拼手速",
+ "author": "fo",
+ "platform": "AndLua",
+ "source_date": "2024年08月11日 04:34:16",
+ "hits": 328,
+ "up": 7,
+ "favorite": 9,
+ "comment": 3,
+ "source_file": "小游戏\\4168_拼手速.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 210,
+ "char_count": 4101,
+ "confidence": "static_review"
+}

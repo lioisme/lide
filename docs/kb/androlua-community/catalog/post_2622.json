@@ -1,0 +1,21 @@
+{
+ "manual_id": 2622,
+ "type_name": "Lua代码",
+ "manual_name": "6指触控",
+ "author": "诺~",
+ "platform": "所有环境",
+ "source_date": "2023年04月02日 20:14:42",
+ "hits": 180,
+ "up": 2,
+ "favorite": 5,
+ "comment": 9,
+ "source_file": "Lua代码\\2622_6指触控.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 11,
+ "char_count": 434,
+ "confidence": "static_review"
+}

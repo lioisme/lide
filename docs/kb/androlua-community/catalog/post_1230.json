@@ -1,0 +1,24 @@
+{
+ "manual_id": 1230,
+ "type_name": "实用代码",
+ "manual_name": "侧护栏点击事件",
+ "author": "jies辰",
+ "platform": "",
+ "source_date": "2021年12月19日 18:08:58",
+ "hits": 381,
+ "up": 1,
+ "favorite": 11,
+ "comment": 0,
+ "source_file": "实用代码\\1230_侧护栏点击事件.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "complete",
+ "line_count": 22,
+ "char_count": 595,
+ "confidence": "static_review"
+}

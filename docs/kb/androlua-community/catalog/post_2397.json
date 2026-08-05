@@ -1,0 +1,25 @@
+{
+ "manual_id": 2397,
+ "type_name": "UI控件",
+ "manual_name": "SoraEditor编辑器",
+ "author": "尼斯湖水怪",
+ "platform": "所有环境",
+ "source_date": "2023年01月29日 15:37:17",
+ "hits": 2263,
+ "up": 18,
+ "favorite": 47,
+ "comment": 22,
+ "source_file": "UI控件\\2397_SoraEditor编辑器.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "chinese_identifier"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 153,
+ "char_count": 3203,
+ "confidence": "static_review"
+}

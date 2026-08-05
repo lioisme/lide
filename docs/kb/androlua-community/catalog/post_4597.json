@@ -1,0 +1,21 @@
+{
+ "manual_id": 4597,
+ "type_name": "Lua教程",
+ "manual_name": "数独解密",
+ "author": "伊藤诚",
+ "platform": "所有环境",
+ "source_date": "2025年03月14日 23:13:30",
+ "hits": 365,
+ "up": 2,
+ "favorite": 12,
+ "comment": 1,
+ "source_file": "Lua教程\\4597_数独解密.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 339,
+ "char_count": 9308,
+ "confidence": "static_review"
+}

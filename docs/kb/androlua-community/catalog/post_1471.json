@@ -1,0 +1,25 @@
+{
+ "manual_id": 1471,
+ "type_name": "实用代码",
+ "manual_name": "应用栏顶栏去阴影",
+ "author": "jies辰",
+ "platform": "Fusion App2",
+ "source_date": "2022年05月10日 16:12:43",
+ "hits": 208,
+ "up": 6,
+ "favorite": 13,
+ "comment": 1,
+ "source_file": "实用代码\\1471_应用栏顶栏去阴影.lua",
+ "kind": "text_note",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "short_text",
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "complete",
+ "line_count": 2,
+ "char_count": 54,
+ "confidence": "static_review"
+}

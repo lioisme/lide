@@ -1,0 +1,21 @@
+{
+ "manual_id": 2566,
+ "type_name": "实用代码",
+ "manual_name": "扩展table标准库添加函数",
+ "author": "dingyi",
+ "platform": "所有环境",
+ "source_date": "2023年03月08日 23:31:43",
+ "hits": 173,
+ "up": 2,
+ "favorite": 7,
+ "comment": 0,
+ "source_file": "实用代码\\2566_扩展table标准库添加函数.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 66,
+ "char_count": 1392,
+ "confidence": "static_review"
+}

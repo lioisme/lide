@@ -1,0 +1,24 @@
+{
+ "manual_id": 2102,
+ "type_name": "小工具",
+ "manual_name": "数学公式编辑器",
+ "author": "Duo",
+ "platform": "Fusion App2",
+ "source_date": "2022年11月22日 11:29:18",
+ "hits": 688,
+ "up": 11,
+ "favorite": 20,
+ "comment": 9,
+ "source_file": "小工具\\2102_数学公式编辑器.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "complete",
+ "line_count": 917,
+ "char_count": 22199,
+ "confidence": "static_review"
+}

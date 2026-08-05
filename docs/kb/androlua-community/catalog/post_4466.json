@@ -1,0 +1,21 @@
+{
+ "manual_id": 4466,
+ "type_name": "小工具",
+ "manual_name": "改 · 可能是获取图片平均色函数V2",
+ "author": "海纳百氚，有容乃大",
+ "platform": "Fusion App2,reOpenLua,OpenLuaX",
+ "source_date": "2025年01月16日 13:57:52",
+ "hits": 277,
+ "up": 2,
+ "favorite": 3,
+ "comment": 0,
+ "source_file": "小工具\\4466_改_·_可能是获取图片平均色函数V2.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 158,
+ "char_count": 5038,
+ "confidence": "static_review"
+}

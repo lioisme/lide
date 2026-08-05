@@ -1,0 +1,23 @@
+{
+ "manual_id": 3850,
+ "type_name": "系统",
+ "manual_name": "不执行 su 命令检测 su",
+ "author": "wzsy233",
+ "platform": "所有环境",
+ "source_date": "2024年02月05日 00:35:57",
+ "hits": 159,
+ "up": 0,
+ "favorite": 3,
+ "comment": 0,
+ "source_file": "系统\\3850_不执行_su_命令检测_su.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "os_exec"
+ ],
+ "truncation": "complete",
+ "line_count": 13,
+ "char_count": 304,
+ "confidence": "static_review"
+}

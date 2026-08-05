@@ -1,0 +1,24 @@
+{
+ "manual_id": 3233,
+ "type_name": "小工具",
+ "manual_name": "获取图片文件并返回BitmapDrawable对象",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2023年08月11日 10:32:04",
+ "hits": 392,
+ "up": 5,
+ "favorite": 15,
+ "comment": 7,
+ "source_file": "小工具\\3233_获取图片文件并返回BitmapDrawable对象.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 49,
+ "char_count": 1485,
+ "confidence": "static_review"
+}

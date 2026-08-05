@@ -1,0 +1,24 @@
+{
+ "manual_id": 3280,
+ "type_name": "小游戏",
+ "manual_name": "支持宏的Lua",
+ "author": "苦小怕",
+ "platform": "所有环境",
+ "source_date": "2023年08月17日 15:30:57",
+ "hits": 829,
+ "up": 7,
+ "favorite": 15,
+ "comment": 4,
+ "source_file": "小游戏\\3280_支持宏的Lua.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 227,
+ "char_count": 4119,
+ "confidence": "static_review"
+}

@@ -1,0 +1,24 @@
+{
+ "manual_id": 1228,
+ "type_name": "控件属性",
+ "manual_name": "自定义搜索提示",
+ "author": "jies辰",
+ "platform": "",
+ "source_date": "2021年12月19日 18:07:26",
+ "hits": 304,
+ "up": 0,
+ "favorite": 7,
+ "comment": 1,
+ "source_file": "控件属性\\1228_自定义搜索提示.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "complete",
+ "line_count": 4,
+ "char_count": 98,
+ "confidence": "static_review"
+}

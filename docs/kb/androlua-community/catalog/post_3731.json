@@ -1,0 +1,24 @@
+{
+ "manual_id": 3731,
+ "type_name": "Layout布局",
+ "manual_name": "网络波动曲线图",
+ "author": "鸽咕鸽",
+ "platform": "所有环境",
+ "source_date": "2024年01月15日 22:41:52",
+ "hits": 221,
+ "up": 1,
+ "favorite": 3,
+ "comment": 2,
+ "source_file": "Layout布局\\3731_网络波动曲线图.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier",
+  "global_pollution"
+ ],
+ "truncation": "complete",
+ "line_count": 148,
+ "char_count": 3833,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 5157,
+ "type_name": "Lua代码",
+ "manual_name": "自动寻路",
+ "author": "⁧拾玖⁧‭",
+ "platform": "所有环境",
+ "source_date": "2025年12月27日 22:40:34",
+ "hits": 424,
+ "up": 8,
+ "favorite": 7,
+ "comment": 1,
+ "source_file": "Lua代码\\5157_自动寻路.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 630,
+ "char_count": 14914,
+ "confidence": "static_review"
+}

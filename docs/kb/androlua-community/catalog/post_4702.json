@@ -1,0 +1,21 @@
+{
+ "manual_id": 4702,
+ "type_name": "Intent通信",
+ "manual_name": "带附件地发送邮件",
+ "author": "⁧拾玖⁧‭",
+ "platform": "所有环境",
+ "source_date": "2025年04月20日 10:12:08",
+ "hits": 252,
+ "up": 2,
+ "favorite": 7,
+ "comment": 0,
+ "source_file": "Intent通信\\4702_带附件地发送邮件.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 51,
+ "char_count": 1339,
+ "confidence": "static_review"
+}

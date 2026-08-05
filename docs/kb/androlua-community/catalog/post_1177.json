@@ -1,0 +1,21 @@
+{
+ "manual_id": 1177,
+ "type_name": "Lua代码",
+ "manual_name": "String基础概述",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 550,
+ "up": 4,
+ "favorite": 27,
+ "comment": 0,
+ "source_file": "Lua代码\\1177_String基础概述.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "truncated_tail",
+ "line_count": 156,
+ "char_count": 4638,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 2169,
+ "type_name": "table表",
+ "manual_name": "洗牌算法：数组打乱",
+ "author": "机不可失🅥",
+ "platform": "所有环境",
+ "source_date": "2022年12月11日 18:26:12",
+ "hits": 192,
+ "up": 1,
+ "favorite": 10,
+ "comment": 5,
+ "source_file": "table表\\2169_洗牌算法：数组打乱.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 19,
+ "char_count": 355,
+ "confidence": "static_review"
+}

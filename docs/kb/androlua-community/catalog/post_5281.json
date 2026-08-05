@@ -1,0 +1,21 @@
+{
+ "manual_id": 5281,
+ "type_name": "Lua代码",
+ "manual_name": "滚轮时钟",
+ "author": "琪琪子",
+ "platform": "AndLua",
+ "source_date": "2026年03月27日 12:01:26",
+ "hits": 186,
+ "up": 4,
+ "favorite": 3,
+ "comment": 0,
+ "source_file": "Lua代码\\5281_滚轮时钟.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 174,
+ "char_count": 4350,
+ "confidence": "static_review"
+}

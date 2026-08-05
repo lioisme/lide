@@ -1,0 +1,23 @@
+{
+ "manual_id": 1246,
+ "type_name": "实用代码",
+ "manual_name": "获取现在精准毫秒数",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2021年12月19日 18:36:28",
+ "hits": 157,
+ "up": 2,
+ "favorite": 9,
+ "comment": 0,
+ "source_file": "实用代码\\1246_获取现在精准毫秒数.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "complete",
+ "line_count": 2,
+ "char_count": 65,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 358,
+ "type_name": "小工具",
+ "manual_name": "弹窗版计算器",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 311,
+ "up": 5,
+ "favorite": 14,
+ "comment": 0,
+ "source_file": "小工具\\358_弹窗版计算器.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 283,
+ "char_count": 5113,
+ "confidence": "static_review"
+}

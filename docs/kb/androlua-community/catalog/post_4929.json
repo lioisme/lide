@@ -1,0 +1,21 @@
+{
+ "manual_id": 4929,
+ "type_name": "安卓教程",
+ "manual_name": "随机小姐姐视频",
+ "author": ".",
+ "platform": "所有环境",
+ "source_date": "2025年07月15日 12:29:14",
+ "hits": 429,
+ "up": 4,
+ "favorite": 23,
+ "comment": 1,
+ "source_file": "安卓教程\\4929_随机小姐姐视频.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 213,
+ "char_count": 6458,
+ "confidence": "static_review"
+}

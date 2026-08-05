@@ -1,0 +1,23 @@
+{
+ "manual_id": 5255,
+ "type_name": "基础代码",
+ "manual_name": "霓虹文字脉冲矩阵",
+ "author": "喵Miao..͇͉͔̖",
+ "platform": "AndLua",
+ "source_date": "2026年03月04日 00:09:09",
+ "hits": 568,
+ "up": 6,
+ "favorite": 18,
+ "comment": 2,
+ "source_file": "基础代码\\5255_霓虹文字脉冲矩阵.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 264,
+ "char_count": 7428,
+ "confidence": "static_review"
+}

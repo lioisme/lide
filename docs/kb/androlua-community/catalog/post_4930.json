@@ -1,0 +1,21 @@
+{
+ "manual_id": 4930,
+ "type_name": "安卓教程",
+ "manual_name": "bing壁纸",
+ "author": ".",
+ "platform": "所有环境",
+ "source_date": "2025年07月15日 12:31:43",
+ "hits": 360,
+ "up": 3,
+ "favorite": 12,
+ "comment": 0,
+ "source_file": "安卓教程\\4930_bing壁纸.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 573,
+ "char_count": 19148,
+ "confidence": "static_review"
+}

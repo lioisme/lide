@@ -1,0 +1,21 @@
+{
+ "manual_id": 5102,
+ "type_name": "网络爬虫",
+ "manual_name": "每日60秒、聚合热搜榜、历史上的今天",
+ "author": "海纳百氚，有容乃大",
+ "platform": "Fusion App2,reOpenLua,OpenLuaX",
+ "source_date": "2025年10月20日 14:52:55",
+ "hits": 341,
+ "up": 0,
+ "favorite": 9,
+ "comment": 0,
+ "source_file": "网络爬虫\\5102_每日60秒、聚合热搜榜、历史上的今天.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 112,
+ "char_count": 2905,
+ "confidence": "static_review"
+}

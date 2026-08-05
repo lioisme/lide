@@ -1,0 +1,21 @@
+{
+ "manual_id": 2682,
+ "type_name": "小工具",
+ "manual_name": "获取ip",
+ "author": "🦂蝎子🕷爱咬人",
+ "platform": "AndLua",
+ "source_date": "2023年04月20日 21:26:44",
+ "hits": 188,
+ "up": 0,
+ "favorite": 3,
+ "comment": 4,
+ "source_file": "小工具\\2682_获取ip.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 5,
+ "char_count": 129,
+ "confidence": "static_review"
+}

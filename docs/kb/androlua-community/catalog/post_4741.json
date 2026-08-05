@@ -1,0 +1,21 @@
+{
+ "manual_id": 4741,
+ "type_name": "小游戏",
+ "manual_name": "H5 网页叠砖块小游戏（抽象实现）",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2025年05月07日 06:12:54",
+ "hits": 634,
+ "up": 6,
+ "favorite": 17,
+ "comment": 8,
+ "source_file": "小游戏\\4741_H5_网页叠砖块小游戏（抽象实现）.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 1471,
+ "char_count": 113645,
+ "confidence": "static_review"
+}

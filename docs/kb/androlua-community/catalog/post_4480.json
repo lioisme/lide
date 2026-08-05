@@ -1,0 +1,24 @@
+{
+ "manual_id": 4480,
+ "type_name": "网络请求",
+ "manual_name": "M3U8下载(支持解密、合并ts)",
+ "author": "迷糊.",
+ "platform": "所有环境",
+ "source_date": "2025年01月22日 13:11:51",
+ "hits": 658,
+ "up": 2,
+ "favorite": 19,
+ "comment": 2,
+ "source_file": "网络请求\\4480_M3U8下载(支持解密、合并ts).lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "obsolete",
+ "flags": [
+  "obsolete",
+  "obsolete"
+ ],
+ "truncation": "complete",
+ "line_count": 299,
+ "char_count": 7477,
+ "confidence": "static_review"
+}

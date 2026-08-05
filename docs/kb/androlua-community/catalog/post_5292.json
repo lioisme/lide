@@ -1,0 +1,21 @@
+{
+ "manual_id": 5292,
+ "type_name": "网络爬虫",
+ "manual_name": "随机小姐姐短视频获取函数（附带demo示例）",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2026年04月12日 03:22:08",
+ "hits": 225,
+ "up": 2,
+ "favorite": 4,
+ "comment": 0,
+ "source_file": "网络爬虫\\5292_随机小姐姐短视频获取函数（附带demo示例）.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 201,
+ "char_count": 5214,
+ "confidence": "static_review"
+}

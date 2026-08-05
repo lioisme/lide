@@ -1,0 +1,21 @@
+{
+ "manual_id": 347,
+ "type_name": "适配器",
+ "manual_name": "滑动监听",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 370,
+ "up": 2,
+ "favorite": 8,
+ "comment": 2,
+ "source_file": "适配器\\347_滑动监听.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 15,
+ "char_count": 236,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 1543,
+ "type_name": "手册公告",
+ "manual_name": "FA2的API浏览器使用说明",
+ "author": "Adam·Eva",
+ "platform": "Fusion App2",
+ "source_date": "2022年06月12日 10:10:18",
+ "hits": 521,
+ "up": 5,
+ "favorite": 9,
+ "comment": 0,
+ "source_file": "手册公告\\1543_FA2的API浏览器使用说明.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 30,
+ "char_count": 1492,
+ "confidence": "static_review"
+}

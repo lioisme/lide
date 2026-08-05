@@ -1,0 +1,24 @@
+{
+ "manual_id": 3802,
+ "type_name": "小游戏",
+ "manual_name": "Material Design 之 侧边栏对话框的笔记",
+ "author": "zzzzzxxx",
+ "platform": "reOpenLua,OpenLuaX",
+ "source_date": "2024年01月27日 20:29:41",
+ "hits": 635,
+ "up": 1,
+ "favorite": 4,
+ "comment": 8,
+ "source_file": "小游戏\\3802_Material_Design_之_侧边栏对话框的笔记.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "obsolete",
+ "flags": [
+  "obsolete",
+  "obsolete"
+ ],
+ "truncation": "complete",
+ "line_count": 99,
+ "char_count": 3351,
+ "confidence": "static_review"
+}

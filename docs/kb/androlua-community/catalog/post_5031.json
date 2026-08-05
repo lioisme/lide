@@ -1,0 +1,24 @@
+{
+ "manual_id": 5031,
+ "type_name": "布局代码",
+ "manual_name": "标签栏UI",
+ "author": "🐷",
+ "platform": "Fusion App2",
+ "source_date": "2025年09月03日 22:02:44",
+ "hits": 1232,
+ "up": 8,
+ "favorite": 35,
+ "comment": 1,
+ "source_file": "布局代码\\5031_标签栏UI.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "complete",
+ "line_count": 2097,
+ "char_count": 54035,
+ "confidence": "static_review"
+}

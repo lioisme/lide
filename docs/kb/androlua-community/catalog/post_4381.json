@@ -1,0 +1,25 @@
+{
+ "manual_id": 4381,
+ "type_name": "小工具",
+ "manual_name": "注释 注释块和长字符串",
+ "author": "⁧拾玖⁧‭",
+ "platform": "所有环境",
+ "source_date": "2024年11月29日 21:07:13",
+ "hits": 176,
+ "up": 0,
+ "favorite": 1,
+ "comment": 1,
+ "source_file": "小工具\\4381_注释_注释块和长字符串.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 16,
+ "char_count": 526,
+ "confidence": "static_review"
+}

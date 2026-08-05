@@ -1,0 +1,23 @@
+{
+ "manual_id": 2564,
+ "type_name": "文件操作",
+ "manual_name": "缓存文件清理",
+ "author": "渡鹤影",
+ "platform": "AndroLua,AndLua",
+ "source_date": "2023年03月08日 15:23:09",
+ "hits": 325,
+ "up": 2,
+ "favorite": 10,
+ "comment": 0,
+ "source_file": "文件操作\\2564_缓存文件清理.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "os_exec"
+ ],
+ "truncation": "complete",
+ "line_count": 64,
+ "char_count": 1707,
+ "confidence": "static_review"
+}

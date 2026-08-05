@@ -1,0 +1,24 @@
+{
+ "manual_id": 2871,
+ "type_name": "布局教程",
+ "manual_name": "手册自适应主题文本",
+ "author": "Cheese",
+ "platform": "所有环境",
+ "source_date": "2023年05月28日 18:56:19",
+ "hits": 274,
+ "up": 3,
+ "favorite": 7,
+ "comment": 0,
+ "source_file": "布局教程\\2871_手册自适应主题文本.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "complete",
+ "line_count": 32,
+ "char_count": 747,
+ "confidence": "static_review"
+}

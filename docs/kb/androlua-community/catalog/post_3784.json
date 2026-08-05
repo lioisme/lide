@@ -1,0 +1,21 @@
+{
+ "manual_id": 3784,
+ "type_name": "布局代码",
+ "manual_name": "好看的个人主页",
+ "author": "兜兜转转，又回到原点！",
+ "platform": "所有环境",
+ "source_date": "2024年01月25日 10:13:37",
+ "hits": 1319,
+ "up": 10,
+ "favorite": 35,
+ "comment": 17,
+ "source_file": "布局代码\\3784_好看的个人主页.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 271,
+ "char_count": 9314,
+ "confidence": "static_review"
+}

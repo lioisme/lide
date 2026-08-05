@@ -1,0 +1,21 @@
+{
+ "manual_id": 2982,
+ "type_name": "布局教程",
+ "manual_name": "PopupMenu反射修改背景",
+ "author": "狸猫🐱",
+ "platform": "所有环境",
+ "source_date": "2023年06月27日 22:36:23",
+ "hits": 846,
+ "up": 15,
+ "favorite": 37,
+ "comment": 15,
+ "source_file": "布局教程\\2982_PopupMenu反射修改背景.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 46,
+ "char_count": 842,
+ "confidence": "static_review"
+}

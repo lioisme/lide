@@ -1,0 +1,21 @@
+{
+ "manual_id": 4712,
+ "type_name": "布局代码",
+ "manual_name": "APP下载页",
+ "author": "只想做你🌼的女王",
+ "platform": "Fusion App1",
+ "source_date": "2025年04月24日 18:27:42",
+ "hits": 482,
+ "up": 5,
+ "favorite": 20,
+ "comment": 0,
+ "source_file": "布局代码\\4712_APP下载页.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 161,
+ "char_count": 4576,
+ "confidence": "static_review"
+}

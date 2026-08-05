@@ -1,0 +1,24 @@
+{
+ "manual_id": 5297,
+ "type_name": "小工具",
+ "manual_name": "白噪音",
+ "author": "海纳百氚，有容乃大",
+ "platform": "Fusion App2,reOpenLua,OpenLuaX",
+ "source_date": "2026年04月15日 00:36:22",
+ "hits": 389,
+ "up": 2,
+ "favorite": 5,
+ "comment": 3,
+ "source_file": "小工具\\5297_白噪音.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 670,
+ "char_count": 20912,
+ "confidence": "static_review"
+}

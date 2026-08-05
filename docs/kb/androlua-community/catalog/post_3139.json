@@ -1,0 +1,23 @@
+{
+ "manual_id": 3139,
+ "type_name": "动画教程",
+ "manual_name": "ChangeBounds Transition",
+ "author": "Cheese",
+ "platform": "所有环境",
+ "source_date": "2023年07月24日 02:33:16",
+ "hits": 888,
+ "up": 26,
+ "favorite": 48,
+ "comment": 21,
+ "source_file": "动画教程\\3139_ChangeBounds_Transition.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 44,
+ "char_count": 1076,
+ "confidence": "static_review"
+}

@@ -1,0 +1,23 @@
+{
+ "manual_id": 3472,
+ "type_name": "自绘制",
+ "manual_name": "仿imgui拖动条2.0版",
+ "author": "油炸小可爱",
+ "platform": "所有环境",
+ "source_date": "2023年10月06日 23:17:10",
+ "hits": 728,
+ "up": 13,
+ "favorite": 36,
+ "comment": 2,
+ "source_file": "自绘制\\3472_仿imgui拖动条2.0版.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 179,
+ "char_count": 5033,
+ "confidence": "static_review"
+}

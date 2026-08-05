@@ -1,0 +1,24 @@
+{
+ "manual_id": 4216,
+ "type_name": "UI控件",
+ "manual_name": "FA2子标题设置跑马灯",
+ "author": "⁧拾玖⁧‭",
+ "platform": "Fusion App1,Fusion App2",
+ "source_date": "2024年08月24日 08:51:29",
+ "hits": 412,
+ "up": 3,
+ "favorite": 28,
+ "comment": 2,
+ "source_file": "UI控件\\4216_FA2子标题设置跑马灯.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 10,
+ "char_count": 486,
+ "confidence": "static_review"
+}

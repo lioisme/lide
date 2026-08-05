@@ -1,0 +1,27 @@
+{
+ "manual_id": 5298,
+ "type_name": "JS教程",
+ "manual_name": "兴许更美观的AndroLua参考文档",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2026年04月16日 19:15:30",
+ "hits": 444,
+ "up": 5,
+ "favorite": 7,
+ "comment": 0,
+ "source_file": "JS教程\\5298_兴许更美观的AndroLua参考文档.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "global_pollution",
+  "remote_exec",
+  "os_exec"
+ ],
+ "truncation": "complete",
+ "line_count": 1154,
+ "char_count": 67596,
+ "confidence": "static_review"
+}

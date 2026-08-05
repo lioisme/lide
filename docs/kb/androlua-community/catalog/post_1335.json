@@ -1,0 +1,21 @@
+{
+ "manual_id": 1335,
+ "type_name": "UI控件",
+ "manual_name": "Button纽扣控件",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2022年01月23日 21:36:35",
+ "hits": 817,
+ "up": 3,
+ "favorite": 16,
+ "comment": 5,
+ "source_file": "UI控件\\1335_Button纽扣控件.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 48,
+ "char_count": 834,
+ "confidence": "static_review"
+}

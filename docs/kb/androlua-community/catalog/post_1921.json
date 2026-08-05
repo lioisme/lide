@@ -1,0 +1,24 @@
+{
+ "manual_id": 1921,
+ "type_name": "Intent通信",
+ "manual_name": "动态快捷方式shortcuts",
+ "author": "苦小怕",
+ "platform": "Fusion App2",
+ "source_date": "2022年09月28日 11:28:52",
+ "hits": 872,
+ "up": 20,
+ "favorite": 44,
+ "comment": 10,
+ "source_file": "Intent通信\\1921_动态快捷方式shortcuts.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "complete",
+ "line_count": 99,
+ "char_count": 2492,
+ "confidence": "static_review"
+}

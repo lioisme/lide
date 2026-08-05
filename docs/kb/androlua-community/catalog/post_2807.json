@@ -1,0 +1,21 @@
+{
+ "manual_id": 2807,
+ "type_name": "小游戏",
+ "manual_name": "后现代派作品——UglyDesignComponents之：UglyText",
+ "author": "kamihitoe",
+ "platform": "所有环境",
+ "source_date": "2023年05月16日 14:59:28",
+ "hits": 374,
+ "up": 7,
+ "favorite": 9,
+ "comment": 10,
+ "source_file": "小游戏\\2807_后现代派作品——UglyDesignComponents之：UglyText.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 196,
+ "char_count": 4675,
+ "confidence": "static_review"
+}

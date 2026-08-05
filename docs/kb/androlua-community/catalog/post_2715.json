@@ -1,0 +1,23 @@
+{
+ "manual_id": 2715,
+ "type_name": "自绘制",
+ "manual_name": "一个纯用一个Drawable做的舟网站的指针效果(乱做的)",
+ "author": "AstarLC",
+ "platform": "所有环境",
+ "source_date": "2023年04月30日 19:51:36",
+ "hits": 248,
+ "up": 6,
+ "favorite": 10,
+ "comment": 6,
+ "source_file": "自绘制\\2715_一个纯用一个Drawable做的舟网站的指针效果(乱做的).lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "global_pollution"
+ ],
+ "truncation": "complete",
+ "line_count": 370,
+ "char_count": 10041,
+ "confidence": "static_review"
+}

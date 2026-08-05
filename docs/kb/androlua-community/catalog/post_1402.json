@@ -1,0 +1,25 @@
+{
+ "manual_id": 1402,
+ "type_name": "小游戏",
+ "manual_name": "五子棋",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2022年03月15日 19:24:07",
+ "hits": 729,
+ "up": 11,
+ "favorite": 29,
+ "comment": 4,
+ "source_file": "小游戏\\1402_五子棋.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 177,
+ "char_count": 3982,
+ "confidence": "static_review"
+}

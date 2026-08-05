@@ -1,0 +1,21 @@
+{
+ "manual_id": 5351,
+ "type_name": "Layout布局",
+ "manual_name": "TextView渐变文本",
+ "author": "😈",
+ "platform": "所有环境",
+ "source_date": "2026年07月07日 08:17:57",
+ "hits": 296,
+ "up": 4,
+ "favorite": 6,
+ "comment": 3,
+ "source_file": "Layout布局\\5351_TextView渐变文本.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 61,
+ "char_count": 1265,
+ "confidence": "static_review"
+}

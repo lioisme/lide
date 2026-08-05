@@ -1,0 +1,25 @@
+{
+ "manual_id": 2875,
+ "type_name": "实用代码",
+ "manual_name": "获取设备是否支持震动",
+ "author": "诶害",
+ "platform": "所有环境",
+ "source_date": "2023年05月29日 20:24:50",
+ "hits": 189,
+ "up": 0,
+ "favorite": 6,
+ "comment": 2,
+ "source_file": "实用代码\\2875_获取设备是否支持震动.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "obsolete",
+ "flags": [
+  "obsolete",
+  "obsolete",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 24,
+ "char_count": 547,
+ "confidence": "static_review"
+}

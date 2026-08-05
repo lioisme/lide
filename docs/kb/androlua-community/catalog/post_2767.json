@@ -1,0 +1,25 @@
+{
+ "manual_id": 2767,
+ "type_name": "xpath",
+ "manual_name": "小说自定义Xpath规则",
+ "author": "破晓",
+ "platform": "Fusion App2",
+ "source_date": "2023年05月05日 22:40:55",
+ "hits": 777,
+ "up": 8,
+ "favorite": 31,
+ "comment": 11,
+ "source_file": "xpath\\2767_小说自定义Xpath规则.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 399,
+ "char_count": 10335,
+ "confidence": "static_review"
+}

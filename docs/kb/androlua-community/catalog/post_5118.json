@@ -1,0 +1,25 @@
+{
+ "manual_id": 5118,
+ "type_name": "安卓教程",
+ "manual_name": "小说阅读器三次优化",
+ "author": "寒雪落花静云月",
+ "platform": "AndroLua,AndLua",
+ "source_date": "2025年11月08日 07:41:36",
+ "hits": 369,
+ "up": 1,
+ "favorite": 1,
+ "comment": 0,
+ "source_file": "安卓教程\\5118_小说阅读器三次优化.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 2802,
+ "char_count": 77304,
+ "confidence": "static_review"
+}

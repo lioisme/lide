@@ -1,0 +1,21 @@
+{
+ "manual_id": 3994,
+ "type_name": "自绘制",
+ "manual_name": "CircularSeekBar（圆形拖动条）",
+ "author": "kamihitoe",
+ "platform": "所有环境",
+ "source_date": "2024年03月26日 08:30:27",
+ "hits": 801,
+ "up": 12,
+ "favorite": 34,
+ "comment": 5,
+ "source_file": "自绘制\\3994_CircularSeekBar（圆形拖动条）.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 222,
+ "char_count": 8799,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 4439,
+ "type_name": "网络操作",
+ "manual_name": "Glide还没写完的低阶用法V1",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2024年12月31日 05:19:51",
+ "hits": 511,
+ "up": 1,
+ "favorite": 11,
+ "comment": 4,
+ "source_file": "网络操作\\4439_Glide还没写完的低阶用法V1.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 298,
+ "char_count": 5535,
+ "confidence": "static_review"
+}

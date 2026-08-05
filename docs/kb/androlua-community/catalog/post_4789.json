@@ -1,0 +1,23 @@
+{
+ "manual_id": 4789,
+ "type_name": "布局代码",
+ "manual_name": "一个不算精致的个人主页",
+ "author": "该困",
+ "platform": "Fusion App2",
+ "source_date": "2025年05月24日 20:47:13",
+ "hits": 1048,
+ "up": 9,
+ "favorite": 36,
+ "comment": 3,
+ "source_file": "布局代码\\4789_一个不算精致的个人主页.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 473,
+ "char_count": 11182,
+ "confidence": "static_review"
+}

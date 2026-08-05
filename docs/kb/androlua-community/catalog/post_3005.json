@@ -1,0 +1,21 @@
+{
+ "manual_id": 3005,
+ "type_name": "Androlua教程",
+ "manual_name": "MediaStore保存图片（",
+ "author": "NekoLaska",
+ "platform": "所有环境",
+ "source_date": "2023年07月01日 21:17:49",
+ "hits": 282,
+ "up": 2,
+ "favorite": 4,
+ "comment": 1,
+ "source_file": "Androlua教程\\3005_MediaStore保存图片（.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 25,
+ "char_count": 1089,
+ "confidence": "static_review"
+}

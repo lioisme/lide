@@ -1,0 +1,21 @@
+{
+ "manual_id": 5344,
+ "type_name": "Lua代码",
+ "manual_name": "Android Graphics Shading Language",
+ "author": "光之国大帝",
+ "platform": "AndLua",
+ "source_date": "2026年06月18日 16:14:45",
+ "hits": 437,
+ "up": 1,
+ "favorite": 3,
+ "comment": 1,
+ "source_file": "Lua代码\\5344_Android_Graphics_Shading_Language.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 177,
+ "char_count": 5168,
+ "confidence": "static_review"
+}

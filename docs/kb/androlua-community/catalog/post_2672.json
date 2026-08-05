@@ -1,0 +1,24 @@
+{
+ "manual_id": 2672,
+ "type_name": "小游戏",
+ "manual_name": "罕见图",
+ "author": "NekoLaska",
+ "platform": "Fusion App2",
+ "source_date": "2023年04月20日 13:41:39",
+ "hits": 293,
+ "up": 4,
+ "favorite": 12,
+ "comment": 6,
+ "source_file": "小游戏\\2672_罕见图.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "complete",
+ "line_count": 105,
+ "char_count": 5411,
+ "confidence": "static_review"
+}

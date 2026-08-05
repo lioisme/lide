@@ -1,0 +1,21 @@
+{
+ "manual_id": 5050,
+ "type_name": "小工具",
+ "manual_name": "timestamp date differ",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2025年10月02日 02:03:07",
+ "hits": 250,
+ "up": 0,
+ "favorite": 3,
+ "comment": 0,
+ "source_file": "小工具\\5050_timestamp_date_differ.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 50,
+ "char_count": 1175,
+ "confidence": "static_review"
+}

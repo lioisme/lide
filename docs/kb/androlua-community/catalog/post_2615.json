@@ -1,0 +1,24 @@
+{
+ "manual_id": 2615,
+ "type_name": "自绘制",
+ "manual_name": "星球模拟",
+ "author": "诺~",
+ "platform": "所有环境",
+ "source_date": "2023年03月31日 14:41:29",
+ "hits": 342,
+ "up": 2,
+ "favorite": 3,
+ "comment": 5,
+ "source_file": "自绘制\\2615_星球模拟.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 220,
+ "char_count": 6255,
+ "confidence": "static_review"
+}

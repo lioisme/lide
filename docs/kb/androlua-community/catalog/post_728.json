@@ -1,0 +1,21 @@
+{
+ "manual_id": 728,
+ "type_name": "JS教程",
+ "manual_name": "取米侠浏览器去广告规则",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 171,
+ "up": 0,
+ "favorite": 3,
+ "comment": 1,
+ "source_file": "JS教程\\728_取米侠浏览器去广告规则.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 4,
+ "char_count": 1268,
+ "confidence": "static_review"
+}

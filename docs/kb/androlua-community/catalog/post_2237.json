@@ -1,0 +1,21 @@
+{
+ "manual_id": 2237,
+ "type_name": "自绘制",
+ "manual_name": "画一个电量",
+ "author": "ㄛㄙ飞ㄋ",
+ "platform": "所有环境",
+ "source_date": "2022年12月23日 08:45:41",
+ "hits": 384,
+ "up": 5,
+ "favorite": 22,
+ "comment": 0,
+ "source_file": "自绘制\\2237_画一个电量.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 119,
+ "char_count": 3349,
+ "confidence": "static_review"
+}

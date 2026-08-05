@@ -1,0 +1,24 @@
+{
+ "manual_id": 3574,
+ "type_name": "自绘制",
+ "manual_name": "音频可视化(二改版)",
+ "author": "•⤙•/k",
+ "platform": "AndLua",
+ "source_date": "2023年11月10日 15:33:55",
+ "hits": 394,
+ "up": 4,
+ "favorite": 8,
+ "comment": 3,
+ "source_file": "自绘制\\3574_音频可视化(二改版).lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "obsolete",
+ "flags": [
+  "obsolete",
+  "obsolete"
+ ],
+ "truncation": "complete",
+ "line_count": 113,
+ "char_count": 2972,
+ "confidence": "static_review"
+}

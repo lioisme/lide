@@ -1,0 +1,24 @@
+{
+ "manual_id": 3503,
+ "type_name": "JS教程",
+ "manual_name": "Js混淆?-1",
+ "author": "壹影",
+ "platform": "所有环境",
+ "source_date": "2023年10月17日 09:55:24",
+ "hits": 111,
+ "up": 1,
+ "favorite": 2,
+ "comment": 0,
+ "source_file": "JS教程\\3503_Js混淆_-1.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "complete",
+ "line_count": 155,
+ "char_count": 3760,
+ "confidence": "static_review"
+}

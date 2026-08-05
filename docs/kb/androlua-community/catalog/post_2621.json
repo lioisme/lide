@@ -1,0 +1,23 @@
+{
+ "manual_id": 2621,
+ "type_name": "小工具",
+ "manual_name": "利用叠加控件实现伪绘制开关",
+ "author": "•⤙•/k",
+ "platform": "AndLua",
+ "source_date": "2023年04月02日 18:48:50",
+ "hits": 328,
+ "up": 0,
+ "favorite": 7,
+ "comment": 10,
+ "source_file": "小工具\\2621_利用叠加控件实现伪绘制开关.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 104,
+ "char_count": 2228,
+ "confidence": "static_review"
+}

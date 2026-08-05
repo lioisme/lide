@@ -1,0 +1,23 @@
+{
+ "manual_id": 414,
+ "type_name": "Androlua教程",
+ "manual_name": "初识AndroLua",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 83,
+ "up": 0,
+ "favorite": 0,
+ "comment": 0,
+ "source_file": "Androlua教程\\414_初识AndroLua.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 6,
+ "char_count": 158,
+ "confidence": "static_review"
+}

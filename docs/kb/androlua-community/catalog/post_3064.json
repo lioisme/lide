@@ -1,0 +1,21 @@
+{
+ "manual_id": 3064,
+ "type_name": "Lua代码",
+ "manual_name": "选择排序",
+ "author": "邪默",
+ "platform": "所有环境",
+ "source_date": "2023年07月12日 22:33:30",
+ "hits": 129,
+ "up": 1,
+ "favorite": 7,
+ "comment": 5,
+ "source_file": "Lua代码\\3064_选择排序.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 25,
+ "char_count": 505,
+ "confidence": "static_review"
+}

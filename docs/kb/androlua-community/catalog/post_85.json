@@ -1,0 +1,23 @@
+{
+ "manual_id": 85,
+ "type_name": "系统",
+ "manual_name": "shell操作",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 610,
+ "up": 2,
+ "favorite": 12,
+ "comment": 3,
+ "source_file": "系统\\85_shell操作.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "os_exec"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 33,
+ "char_count": 373,
+ "confidence": "static_review"
+}

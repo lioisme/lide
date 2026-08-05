@@ -1,0 +1,25 @@
+{
+ "manual_id": 5353,
+ "type_name": "基础代码",
+ "manual_name": "【EZ】调试日志",
+ "author": "𝗦𝗼𝗹𝗮𝗰𝗲⁧𝗘.⁧",
+ "platform": "AndLua",
+ "source_date": "2026年07月08日 04:18:41",
+ "hits": 180,
+ "up": 2,
+ "favorite": 3,
+ "comment": 0,
+ "source_file": "基础代码\\5353_【EZ】调试日志.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 622,
+ "char_count": 20170,
+ "confidence": "static_review"
+}

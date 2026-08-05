@@ -1,0 +1,21 @@
+{
+ "manual_id": 2467,
+ "type_name": "实用代码",
+ "manual_name": "伪谷歌悬浮球按钮",
+ "author": "看向7月.",
+ "platform": "所有环境",
+ "source_date": "2023年02月14日 23:57:15",
+ "hits": 351,
+ "up": 8,
+ "favorite": 15,
+ "comment": 3,
+ "source_file": "实用代码\\2467_伪谷歌悬浮球按钮.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "truncated_tail",
+ "line_count": 103,
+ "char_count": 2859,
+ "confidence": "static_review"
+}

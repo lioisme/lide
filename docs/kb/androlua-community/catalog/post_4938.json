@@ -1,0 +1,21 @@
+{
+ "manual_id": 4938,
+ "type_name": "Lua教程",
+ "manual_name": "图集",
+ "author": "Shiroko",
+ "platform": "AndroLua,reOpenLua,OpenLuaX",
+ "source_date": "2025年07月19日 22:13:02",
+ "hits": 1488,
+ "up": 15,
+ "favorite": 44,
+ "comment": 8,
+ "source_file": "Lua教程\\4938_图集.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 310,
+ "char_count": 7929,
+ "confidence": "static_review"
+}

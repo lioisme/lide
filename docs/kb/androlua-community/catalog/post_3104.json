@@ -1,0 +1,23 @@
+{
+ "manual_id": 3104,
+ "type_name": "小工具",
+ "manual_name": "一言 Demo",
+ "author": "清汀琉璃",
+ "platform": "Fusion App2",
+ "source_date": "2023年07月19日 23:54:42",
+ "hits": 1524,
+ "up": 22,
+ "favorite": 76,
+ "comment": 16,
+ "source_file": "小工具\\3104_一言_Demo.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 638,
+ "char_count": 16607,
+ "confidence": "static_review"
+}

@@ -1,0 +1,24 @@
+{
+ "manual_id": 3119,
+ "type_name": "Lua代码",
+ "manual_name": "拖动控件",
+ "author": "诺~",
+ "platform": "所有环境",
+ "source_date": "2023年07月22日 10:41:56",
+ "hits": 329,
+ "up": 6,
+ "favorite": 15,
+ "comment": 4,
+ "source_file": "Lua代码\\3119_拖动控件.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 199,
+ "char_count": 4240,
+ "confidence": "static_review"
+}

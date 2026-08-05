@@ -1,0 +1,21 @@
+{
+ "manual_id": 1366,
+ "type_name": "Activity活动",
+ "manual_name": "Slider 颜色属性",
+ "author": "jies辰",
+ "platform": "所有环境",
+ "source_date": "2022年02月09日 19:18:13",
+ "hits": 196,
+ "up": 3,
+ "favorite": 8,
+ "comment": 0,
+ "source_file": "Activity活动\\1366_Slider_颜色属性.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 22,
+ "char_count": 806,
+ "confidence": "static_review"
+}

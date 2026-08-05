@@ -1,0 +1,21 @@
+{
+ "manual_id": 118,
+ "type_name": "Lua代码",
+ "manual_name": "导入包或类",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 85,
+ "up": 0,
+ "favorite": 0,
+ "comment": 0,
+ "source_file": "Lua代码\\118_导入包或类.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "truncated_tail",
+ "line_count": 13,
+ "char_count": 287,
+ "confidence": "static_review"
+}

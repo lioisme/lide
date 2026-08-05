@@ -1,0 +1,21 @@
+{
+ "manual_id": 4233,
+ "type_name": "实用代码",
+ "manual_name": "授权/sdcard/Android/data/",
+ "author": "琪琪子",
+ "platform": "AndLua",
+ "source_date": "2024年09月05日 23:46:54",
+ "hits": 829,
+ "up": 19,
+ "favorite": 40,
+ "comment": 7,
+ "source_file": "实用代码\\4233_授权_sdcard_Android_data.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 85,
+ "char_count": 3893,
+ "confidence": "static_review"
+}

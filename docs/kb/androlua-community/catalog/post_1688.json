@@ -1,0 +1,24 @@
+{
+ "manual_id": 1688,
+ "type_name": "Adapter容器",
+ "manual_name": "ViewPager2 使用实例（竖向滑动）",
+ "author": "小白·马",
+ "platform": "Fusion App2",
+ "source_date": "2022年08月09日 10:26:12",
+ "hits": 872,
+ "up": 11,
+ "favorite": 43,
+ "comment": 4,
+ "source_file": "Adapter容器\\1688_ViewPager2_使用实例（竖向滑动）.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 196,
+ "char_count": 5210,
+ "confidence": "static_review"
+}

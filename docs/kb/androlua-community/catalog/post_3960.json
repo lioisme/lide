@@ -1,0 +1,24 @@
+{
+ "manual_id": 3960,
+ "type_name": "Androlua教程",
+ "manual_name": "MeLua",
+ "author": "kamihitoe",
+ "platform": "所有环境",
+ "source_date": "2024年03月10日 10:48:14",
+ "hits": 654,
+ "up": 12,
+ "favorite": 26,
+ "comment": 0,
+ "source_file": "Androlua教程\\3960_MeLua.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "complete",
+ "line_count": 236,
+ "char_count": 5736,
+ "confidence": "static_review"
+}

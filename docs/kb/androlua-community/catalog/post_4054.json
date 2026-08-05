@@ -1,0 +1,21 @@
+{
+ "manual_id": 4054,
+ "type_name": "浏览器",
+ "manual_name": "html悬停效果示例",
+ "author": "•⤙•/k",
+ "platform": "所有环境",
+ "source_date": "2024年05月11日 19:21:24",
+ "hits": 377,
+ "up": 8,
+ "favorite": 12,
+ "comment": 0,
+ "source_file": "浏览器\\4054_html悬停效果示例.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 50,
+ "char_count": 1168,
+ "confidence": "static_review"
+}

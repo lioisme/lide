@@ -1,0 +1,24 @@
+{
+ "manual_id": 3561,
+ "type_name": "自绘制",
+ "manual_name": "点连接动画",
+ "author": "诺~",
+ "platform": "所有环境",
+ "source_date": "2023年11月07日 10:11:40",
+ "hits": 620,
+ "up": 6,
+ "favorite": 13,
+ "comment": 10,
+ "source_file": "自绘制\\3561_点连接动画.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 300,
+ "char_count": 8807,
+ "confidence": "static_review"
+}

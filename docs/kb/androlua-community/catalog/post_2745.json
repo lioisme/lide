@@ -1,0 +1,23 @@
+{
+ "manual_id": 2745,
+ "type_name": "布局教程",
+ "manual_name": "LinerLayout属性",
+ "author": "诶害",
+ "platform": "所有环境",
+ "source_date": "2023年05月03日 09:50:52",
+ "hits": 122,
+ "up": 0,
+ "favorite": 6,
+ "comment": 0,
+ "source_file": "布局教程\\2745_LinerLayout属性.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 36,
+ "char_count": 828,
+ "confidence": "static_review"
+}

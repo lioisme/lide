@@ -1,0 +1,21 @@
+{
+ "manual_id": 3900,
+ "type_name": "UI控件",
+ "manual_name": "为文本自动高亮超链接(组合的实际应用)",
+ "author": "",
+ "platform": "AndroLua",
+ "source_date": "2024年02月17日 17:40:26",
+ "hits": 287,
+ "up": 5,
+ "favorite": 12,
+ "comment": 0,
+ "source_file": "UI控件\\3900_为文本自动高亮超链接(组合的实际应用).lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 246,
+ "char_count": 6485,
+ "confidence": "static_review"
+}

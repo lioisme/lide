@@ -1,0 +1,21 @@
+{
+ "manual_id": 5201,
+ "type_name": "安卓教程",
+ "manual_name": "liquidglass新增玻璃按钮",
+ "author": "😈",
+ "platform": "所有环境",
+ "source_date": "2026年02月01日 12:31:13",
+ "hits": 676,
+ "up": 5,
+ "favorite": 5,
+ "comment": 8,
+ "source_file": "安卓教程\\5201_liquidglass新增玻璃按钮.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 265,
+ "char_count": 9817,
+ "confidence": "static_review"
+}

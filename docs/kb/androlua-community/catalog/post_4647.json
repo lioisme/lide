@@ -1,0 +1,24 @@
+{
+ "manual_id": 4647,
+ "type_name": "安卓教程",
+ "manual_name": "备忘录v1.1",
+ "author": "寒雪落花静云月",
+ "platform": "AndroLua",
+ "source_date": "2025年03月29日 15:53:44",
+ "hits": 439,
+ "up": 6,
+ "favorite": 20,
+ "comment": 1,
+ "source_file": "安卓教程\\4647_备忘录v1.1.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 714,
+ "char_count": 25254,
+ "confidence": "static_review"
+}

@@ -1,0 +1,42 @@
+# Gradle / Android build output
+.gradle/
+build/
+app/build/
+
+# Kotlin daemon / sessions cache
+.kotlin/
+
+# 源码包目录名为 build（打包器模块），需要保留跟踪
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# IDE
+.idea/
+*.iml
+.DS_Store
+
+# Local configuration
+local.properties
+
+# Logs and crash dumps
+*.log
+hs_err_pid*.log
+replay_pid*.log
+
+# Build error captures
+build-java-errors*.txt
+
+# Stray artifacts
+classes.jar
+
+# Built-in examples .alp are generated at build time from build-scripts/examples-src/
+# (Gradle task :app:generateExamples); never commit the generated archives.
+app/src/main/assets/examples/*.alp
+
+# Engine native libs: built from source by AGP externalNativeBuild (app/src/main/cpp/);
+# AGP outputs to app/build/ which is already ignored above; NEVER commit binaries.
+# Downloaded reference projects (never committed)
+docs/reference/
+
+# Legacy guard: 参考资料/ was merged into docs/reference/ (2026-08); block re-creation
+参考资料/

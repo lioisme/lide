@@ -1,0 +1,24 @@
+{
+ "manual_id": 1840,
+ "type_name": "Activity活动",
+ "manual_name": "状态栏、导航栏沉浸（WindowInsetsController）",
+ "author": "ABVerterX",
+ "platform": "AndroLua,Fusion App2",
+ "source_date": "2022年08月29日 15:47:36",
+ "hits": 434,
+ "up": 4,
+ "favorite": 16,
+ "comment": 0,
+ "source_file": "Activity活动\\1840_状态栏、导航栏沉浸（WindowInsetsController）.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 28,
+ "char_count": 816,
+ "confidence": "static_review"
+}

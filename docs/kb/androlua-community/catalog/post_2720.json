@@ -1,0 +1,24 @@
+{
+ "manual_id": 2720,
+ "type_name": "文件操作",
+ "manual_name": "android.os.Environment",
+ "author": "智",
+ "platform": "所有环境",
+ "source_date": "2023年05月01日 07:22:31",
+ "hits": 267,
+ "up": 7,
+ "favorite": 13,
+ "comment": 4,
+ "source_file": "文件操作\\2720_android.os.Environment.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "obsolete",
+ "flags": [
+  "obsolete",
+  "obsolete"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 40,
+ "char_count": 1143,
+ "confidence": "static_review"
+}

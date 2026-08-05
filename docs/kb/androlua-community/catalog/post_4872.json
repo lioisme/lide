@@ -1,0 +1,23 @@
+{
+ "manual_id": 4872,
+ "type_name": "基础代码",
+ "manual_name": "ClipboardManager部分剪切板操作",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2025年06月29日 23:08:28",
+ "hits": 481,
+ "up": 5,
+ "favorite": 15,
+ "comment": 0,
+ "source_file": "基础代码\\4872_ClipboardManager部分剪切板操作.lua",
+ "kind": "reference_sheet",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "xml_list"
+ ],
+ "truncation": "complete",
+ "line_count": 153,
+ "char_count": 5260,
+ "confidence": "static_review"
+}

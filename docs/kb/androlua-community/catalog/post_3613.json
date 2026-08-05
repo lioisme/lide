@@ -1,0 +1,21 @@
+{
+ "manual_id": 3613,
+ "type_name": "Java教程",
+ "manual_name": "线程顺序执行",
+ "author": "壹影",
+ "platform": "所有环境",
+ "source_date": "2023年11月29日 13:18:51",
+ "hits": 299,
+ "up": 5,
+ "favorite": 17,
+ "comment": 5,
+ "source_file": "Java教程\\3613_线程顺序执行.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 30,
+ "char_count": 826,
+ "confidence": "static_review"
+}

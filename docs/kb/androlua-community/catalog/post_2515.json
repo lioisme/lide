@@ -1,0 +1,23 @@
+{
+ "manual_id": 2515,
+ "type_name": "布局教程",
+ "manual_name": "兴许是一个简洁美观的主页布局",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2023年02月25日 21:35:53",
+ "hits": 3936,
+ "up": 45,
+ "favorite": 105,
+ "comment": 22,
+ "source_file": "布局教程\\2515_兴许是一个简洁美观的主页布局.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 1153,
+ "char_count": 38082,
+ "confidence": "static_review"
+}

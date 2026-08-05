@@ -1,0 +1,21 @@
+{
+ "manual_id": 2004,
+ "type_name": "实用代码",
+ "manual_name": "夜间睡眠提醒",
+ "author": "白隐Hakuin",
+ "platform": "所有环境",
+ "source_date": "2022年10月27日 08:42:55",
+ "hits": 232,
+ "up": 6,
+ "favorite": 16,
+ "comment": 4,
+ "source_file": "实用代码\\2004_夜间睡眠提醒.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 6,
+ "char_count": 193,
+ "confidence": "static_review"
+}

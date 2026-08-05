@@ -1,0 +1,21 @@
+{
+ "manual_id": 1310,
+ "type_name": "Intent通信",
+ "manual_name": "activity页面返回传参",
+ "author": "jies辰",
+ "platform": "所有环境",
+ "source_date": "2022年01月10日 20:07:10",
+ "hits": 586,
+ "up": 6,
+ "favorite": 44,
+ "comment": 4,
+ "source_file": "Intent通信\\1310_activity页面返回传参.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 22,
+ "char_count": 482,
+ "confidence": "static_review"
+}

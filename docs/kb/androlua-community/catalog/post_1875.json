@@ -1,0 +1,21 @@
+{
+ "manual_id": 1875,
+ "type_name": "布局教程",
+ "manual_name": "启动图",
+ "author": "Adam·Eva",
+ "platform": "所有环境",
+ "source_date": "2022年09月11日 21:13:10",
+ "hits": 2020,
+ "up": 32,
+ "favorite": 102,
+ "comment": 11,
+ "source_file": "布局教程\\1875_启动图.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "truncated_tail",
+ "line_count": 104,
+ "char_count": 2416,
+ "confidence": "static_review"
+}

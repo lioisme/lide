@@ -1,0 +1,24 @@
+{
+ "manual_id": 5310,
+ "type_name": "小工具",
+ "manual_name": "LUA环境分析",
+ "author": "sky",
+ "platform": "所有环境",
+ "source_date": "2026年05月03日 10:56:37",
+ "hits": 496,
+ "up": 3,
+ "favorite": 9,
+ "comment": 4,
+ "source_file": "小工具\\5310_LUA环境分析.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "obsolete",
+ "flags": [
+  "obsolete",
+  "obsolete"
+ ],
+ "truncation": "complete",
+ "line_count": 3203,
+ "char_count": 151395,
+ "confidence": "static_review"
+}

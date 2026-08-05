@@ -1,0 +1,21 @@
+{
+ "manual_id": 4581,
+ "type_name": "小工具",
+ "manual_name": "简谱音乐实时演算（全损版）",
+ "author": "Genouka",
+ "platform": "所有环境",
+ "source_date": "2025年03月09日 12:33:53",
+ "hits": 757,
+ "up": 4,
+ "favorite": 9,
+ "comment": 5,
+ "source_file": "小工具\\4581_简谱音乐实时演算（全损版）.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 597,
+ "char_count": 19912,
+ "confidence": "static_review"
+}

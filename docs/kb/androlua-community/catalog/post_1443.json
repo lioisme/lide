@@ -1,0 +1,21 @@
+{
+ "manual_id": 1443,
+ "type_name": "浏览器",
+ "manual_name": "下拉刷新",
+ "author": "Hangx work",
+ "platform": "Fusion App1",
+ "source_date": "2022年04月14日 09:41:08",
+ "hits": 892,
+ "up": 10,
+ "favorite": 41,
+ "comment": 3,
+ "source_file": "浏览器\\1443_下拉刷新.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 22,
+ "char_count": 546,
+ "confidence": "static_review"
+}

@@ -1,0 +1,26 @@
+{
+ "manual_id": 1724,
+ "type_name": "布局教程",
+ "manual_name": "随诗 3.0",
+ "author": "Atomic fish",
+ "platform": "Fusion App2",
+ "source_date": "2022年08月17日 12:45:09",
+ "hits": 627,
+ "up": 12,
+ "favorite": 39,
+ "comment": 0,
+ "source_file": "布局教程\\1724_随诗_3.0.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "chinese_identifier",
+  "remote_exec"
+ ],
+ "truncation": "complete",
+ "line_count": 1037,
+ "char_count": 31937,
+ "confidence": "static_review"
+}

@@ -1,0 +1,23 @@
+{
+ "manual_id": 466,
+ "type_name": "小工具",
+ "manual_name": "指南针",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 180,
+ "up": 4,
+ "favorite": 7,
+ "comment": 0,
+ "source_file": "小工具\\466_指南针.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 187,
+ "char_count": 4142,
+ "confidence": "static_review"
+}

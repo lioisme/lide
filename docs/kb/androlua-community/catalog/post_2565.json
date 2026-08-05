@@ -1,0 +1,21 @@
+{
+ "manual_id": 2565,
+ "type_name": "实用代码",
+ "manual_name": "桶排序",
+ "author": "NekoLaska",
+ "platform": "所有环境",
+ "source_date": "2023年03月08日 21:05:18",
+ "hits": 145,
+ "up": 1,
+ "favorite": 1,
+ "comment": 0,
+ "source_file": "实用代码\\2565_桶排序.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 48,
+ "char_count": 1093,
+ "confidence": "static_review"
+}

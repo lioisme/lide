@@ -1,0 +1,23 @@
+{
+ "manual_id": 4707,
+ "type_name": "网络爬虫",
+ "manual_name": "匹配bilibili",
+ "author": "zzzzzxxx",
+ "platform": "所有环境",
+ "source_date": "2025年04月21日 05:08:20",
+ "hits": 260,
+ "up": 0,
+ "favorite": 4,
+ "comment": 0,
+ "source_file": "网络爬虫\\4707_匹配bilibili.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 7,
+ "char_count": 318,
+ "confidence": "static_review"
+}

@@ -1,0 +1,24 @@
+{
+ "manual_id": 1561,
+ "type_name": "布局教程",
+ "manual_name": "教程用：初始化所需布局",
+ "author": "Adam·Eva",
+ "platform": "Fusion App2",
+ "source_date": "2022年06月26日 14:45:38",
+ "hits": 414,
+ "up": 4,
+ "favorite": 11,
+ "comment": 1,
+ "source_file": "布局教程\\1561_教程用：初始化所需布局.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "complete",
+ "line_count": 90,
+ "char_count": 1835,
+ "confidence": "static_review"
+}

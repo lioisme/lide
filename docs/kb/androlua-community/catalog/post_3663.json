@@ -1,0 +1,23 @@
+{
+ "manual_id": 3663,
+ "type_name": "网络请求",
+ "manual_name": "超星学习通pc及app模拟登录",
+ "author": "阙月",
+ "platform": "所有环境",
+ "source_date": "2023年12月16日 19:54:48",
+ "hits": 297,
+ "up": 0,
+ "favorite": 9,
+ "comment": 2,
+ "source_file": "网络请求\\3663_超星学习通pc及app模拟登录.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "hardcoded_secret"
+ ],
+ "truncation": "complete",
+ "line_count": 102,
+ "char_count": 3148,
+ "confidence": "static_review"
+}

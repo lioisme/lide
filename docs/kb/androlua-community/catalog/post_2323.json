@@ -1,0 +1,21 @@
+{
+ "manual_id": 2323,
+ "type_name": "小工具",
+ "manual_name": "随便写的加密",
+ "author": "诺~",
+ "platform": "所有环境",
+ "source_date": "2023年01月15日 12:41:46",
+ "hits": 367,
+ "up": 3,
+ "favorite": 10,
+ "comment": 0,
+ "source_file": "小工具\\2323_随便写的加密.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "truncated_tail",
+ "line_count": 117,
+ "char_count": 2925,
+ "confidence": "static_review"
+}

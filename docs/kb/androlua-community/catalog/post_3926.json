@@ -1,0 +1,24 @@
+{
+ "manual_id": 3926,
+ "type_name": "UI控件",
+ "manual_name": "RecyclerView 拖拽排序和滑动删除",
+ "author": "Aqora",
+ "platform": "Fusion App2,reOpenLua,OpenLuaX",
+ "source_date": "2024年02月25日 20:50:00",
+ "hits": 816,
+ "up": 17,
+ "favorite": 48,
+ "comment": 12,
+ "source_file": "UI控件\\3926_RecyclerView_拖拽排序和滑动删除.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 216,
+ "char_count": 5509,
+ "confidence": "static_review"
+}

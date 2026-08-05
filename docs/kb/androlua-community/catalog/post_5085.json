@@ -1,0 +1,24 @@
+{
+ "manual_id": 5085,
+ "type_name": "小工具",
+ "manual_name": "带自动缓存管理的番剧更新周更表",
+ "author": "海纳百氚，有容乃大",
+ "platform": "Fusion App2,reOpenLua,OpenLuaX",
+ "source_date": "2025年10月15日 08:11:33",
+ "hits": 364,
+ "up": 0,
+ "favorite": 6,
+ "comment": 0,
+ "source_file": "小工具\\5085_带自动缓存管理的番剧更新周更表.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 1250,
+ "char_count": 36802,
+ "confidence": "static_review"
+}

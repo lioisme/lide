@@ -1,0 +1,24 @@
+{
+ "manual_id": 1693,
+ "type_name": "Androlua教程",
+ "manual_name": "全自动静默安装apk",
+ "author": "W. by",
+ "platform": "所有环境",
+ "source_date": "2022年08月10日 12:01:39",
+ "hits": 463,
+ "up": 3,
+ "favorite": 21,
+ "comment": 2,
+ "source_file": "Androlua教程\\1693_全自动静默安装apk.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "chinese_identifier",
+  "os_exec"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 6,
+ "char_count": 226,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 3011,
+ "type_name": "小工具",
+ "manual_name": "二维码生成",
+ "author": "kamihitoe",
+ "platform": "所有环境",
+ "source_date": "2023年07月02日 10:14:16",
+ "hits": 663,
+ "up": 9,
+ "favorite": 33,
+ "comment": 5,
+ "source_file": "小工具\\3011_二维码生成.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 60,
+ "char_count": 25749,
+ "confidence": "static_review"
+}

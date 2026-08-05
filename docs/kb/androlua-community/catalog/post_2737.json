@@ -1,0 +1,23 @@
+{
+ "manual_id": 2737,
+ "type_name": "控件属性",
+ "manual_name": "mediaplayer属性",
+ "author": "诶害",
+ "platform": "所有环境",
+ "source_date": "2023年05月03日 09:11:46",
+ "hits": 190,
+ "up": 3,
+ "favorite": 10,
+ "comment": 0,
+ "source_file": "控件属性\\2737_mediaplayer属性.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "text_only"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 16,
+ "char_count": 317,
+ "confidence": "static_review"
+}

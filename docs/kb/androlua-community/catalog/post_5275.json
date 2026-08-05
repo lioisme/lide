@@ -1,0 +1,21 @@
+{
+ "manual_id": 5275,
+ "type_name": "Lua代码",
+ "manual_name": "LuLPeg",
+ "author": "⁧拾玖⁧‭",
+ "platform": "所有环境",
+ "source_date": "2026年03月15日 03:14:27",
+ "hits": 260,
+ "up": 0,
+ "favorite": 1,
+ "comment": 0,
+ "source_file": "Lua代码\\5275_LuLPeg.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "truncated_tail",
+ "line_count": 2980,
+ "char_count": 89213,
+ "confidence": "static_review"
+}

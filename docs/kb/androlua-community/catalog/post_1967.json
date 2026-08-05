@@ -1,0 +1,21 @@
+{
+ "manual_id": 1967,
+ "type_name": "实用代码",
+ "manual_name": "获取今天星期几",
+ "author": "Tom",
+ "platform": "所有环境",
+ "source_date": "2022年10月13日 17:12:47",
+ "hits": 188,
+ "up": 6,
+ "favorite": 5,
+ "comment": 4,
+ "source_file": "实用代码\\1967_获取今天星期几.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 27,
+ "char_count": 591,
+ "confidence": "static_review"
+}

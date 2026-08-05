@@ -1,0 +1,21 @@
+{
+ "manual_id": 3808,
+ "type_name": "布局教程",
+ "manual_name": "图片裁切圆角",
+ "author": "NekoLaska",
+ "platform": "所有环境",
+ "source_date": "2024年01月28日 21:03:07",
+ "hits": 705,
+ "up": 9,
+ "favorite": 26,
+ "comment": 11,
+ "source_file": "布局教程\\3808_图片裁切圆角.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 178,
+ "char_count": 4896,
+ "confidence": "static_review"
+}

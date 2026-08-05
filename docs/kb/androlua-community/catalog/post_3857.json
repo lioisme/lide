@@ -1,0 +1,24 @@
+{
+ "manual_id": 3857,
+ "type_name": "小游戏",
+ "manual_name": "小体量航天游戏Demo",
+ "author": "AstarLC",
+ "platform": "所有环境",
+ "source_date": "2024年02月05日 20:00:40",
+ "hits": 413,
+ "up": 9,
+ "favorite": 13,
+ "comment": 13,
+ "source_file": "小游戏\\3857_小体量航天游戏Demo.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "global_pollution",
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 900,
+ "char_count": 29407,
+ "confidence": "static_review"
+}

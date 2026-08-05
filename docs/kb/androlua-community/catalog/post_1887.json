@@ -1,0 +1,26 @@
+{
+ "manual_id": 1887,
+ "type_name": "实用代码",
+ "manual_name": "隐藏/获取 进度条",
+ "author": "如果爱有遗憾",
+ "platform": "Fusion App2",
+ "source_date": "2022年09月15日 00:59:51",
+ "hits": 225,
+ "up": 2,
+ "favorite": 10,
+ "comment": 0,
+ "source_file": "实用代码\\1887_隐藏_获取_进度条.lua",
+ "kind": "text_note",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "short_text",
+  "editor_bound",
+  "editor_bound",
+  "sensitive_permission"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 15,
+ "char_count": 218,
+ "confidence": "static_review"
+}

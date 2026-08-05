@@ -1,0 +1,21 @@
+{
+ "manual_id": 1211,
+ "type_name": "Intent通信",
+ "manual_name": "调用图库选择多张图片",
+ "author": "迷糊.",
+ "platform": "",
+ "source_date": "2021年11月28日 17:42:04",
+ "hits": 229,
+ "up": 10,
+ "favorite": 19,
+ "comment": 2,
+ "source_file": "Intent通信\\1211_调用图库选择多张图片.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 26,
+ "char_count": 804,
+ "confidence": "static_review"
+}

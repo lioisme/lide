@@ -1,0 +1,23 @@
+{
+ "manual_id": 5098,
+ "type_name": "布局代码",
+ "manual_name": "日月按钮",
+ "author": "ㅤ",
+ "platform": "AndLua",
+ "source_date": "2025年10月19日 11:35:10",
+ "hits": 658,
+ "up": 8,
+ "favorite": 21,
+ "comment": 4,
+ "source_file": "布局代码\\5098_日月按钮.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 286,
+ "char_count": 6864,
+ "confidence": "static_review"
+}

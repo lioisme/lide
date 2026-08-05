@@ -1,0 +1,24 @@
+{
+ "manual_id": 3366,
+ "type_name": "小工具",
+ "manual_name": "Json格式化",
+ "author": "Aqora",
+ "platform": "所有环境",
+ "source_date": "2023年09月03日 11:21:44",
+ "hits": 733,
+ "up": 12,
+ "favorite": 39,
+ "comment": 8,
+ "source_file": "小工具\\3366_Json格式化.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "complete",
+ "line_count": 331,
+ "char_count": 10598,
+ "confidence": "static_review"
+}

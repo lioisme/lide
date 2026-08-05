@@ -1,0 +1,23 @@
+{
+ "manual_id": 200,
+ "type_name": "动画教程",
+ "manual_name": "点击波纹",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 332,
+ "up": 0,
+ "favorite": 6,
+ "comment": 0,
+ "source_file": "动画教程\\200_点击波纹.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 47,
+ "char_count": 1049,
+ "confidence": "static_review"
+}

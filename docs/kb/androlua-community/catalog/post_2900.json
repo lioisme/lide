@@ -1,0 +1,23 @@
+{
+ "manual_id": 2900,
+ "type_name": "布局教程",
+ "manual_name": "毒鸡汤",
+ "author": "QQ少年",
+ "platform": "Fusion App1",
+ "source_date": "2023年06月05日 12:44:51",
+ "hits": 241,
+ "up": 5,
+ "favorite": 13,
+ "comment": 5,
+ "source_file": "布局教程\\2900_毒鸡汤.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 129,
+ "char_count": 3231,
+ "confidence": "static_review"
+}

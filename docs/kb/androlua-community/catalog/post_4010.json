@@ -1,0 +1,24 @@
+{
+ "manual_id": 4010,
+ "type_name": "Java教程",
+ "manual_name": "线程池",
+ "author": "ㄛㄙ飞ㄋ",
+ "platform": "所有环境",
+ "source_date": "2024年04月07日 18:48:50",
+ "hits": 875,
+ "up": 10,
+ "favorite": 26,
+ "comment": 11,
+ "source_file": "Java教程\\4010_线程池.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 223,
+ "char_count": 6157,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 1357,
+ "type_name": "字符处理",
+ "manual_name": "字符串转数组",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2022年02月03日 19:54:49",
+ "hits": 208,
+ "up": 0,
+ "favorite": 3,
+ "comment": 1,
+ "source_file": "字符处理\\1357_字符串转数组.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 19,
+ "char_count": 608,
+ "confidence": "static_review"
+}

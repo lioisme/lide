@@ -1,0 +1,21 @@
+{
+ "manual_id": 938,
+ "type_name": "控件属性",
+ "manual_name": "侧滑栏自动定义",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 265,
+ "up": 1,
+ "favorite": 6,
+ "comment": 0,
+ "source_file": "控件属性\\938_侧滑栏自动定义.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 26,
+ "char_count": 819,
+ "confidence": "static_review"
+}

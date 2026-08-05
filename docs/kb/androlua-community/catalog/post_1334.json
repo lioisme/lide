@@ -1,0 +1,21 @@
+{
+ "manual_id": 1334,
+ "type_name": "UI控件",
+ "manual_name": "ImageView图片控件",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2022年01月23日 21:15:59",
+ "hits": 934,
+ "up": 9,
+ "favorite": 26,
+ "comment": 1,
+ "source_file": "UI控件\\1334_ImageView图片控件.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 65,
+ "char_count": 1311,
+ "confidence": "static_review"
+}

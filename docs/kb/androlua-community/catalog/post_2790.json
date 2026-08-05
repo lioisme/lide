@@ -1,0 +1,24 @@
+{
+ "manual_id": 2790,
+ "type_name": "Lua代码",
+ "manual_name": "性能测试",
+ "author": "NekoLaska",
+ "platform": "所有环境",
+ "source_date": "2023年05月11日 20:06:14",
+ "hits": 269,
+ "up": 2,
+ "favorite": 5,
+ "comment": 2,
+ "source_file": "Lua代码\\2790_性能测试.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "complete",
+ "line_count": 211,
+ "char_count": 5493,
+ "confidence": "static_review"
+}

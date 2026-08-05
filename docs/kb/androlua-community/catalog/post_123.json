@@ -1,0 +1,21 @@
+{
+ "manual_id": 123,
+ "type_name": "小工具",
+ "manual_name": "计算器改版",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 310,
+ "up": 3,
+ "favorite": 3,
+ "comment": 1,
+ "source_file": "小工具\\123_计算器改版.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 288,
+ "char_count": 5217,
+ "confidence": "static_review"
+}

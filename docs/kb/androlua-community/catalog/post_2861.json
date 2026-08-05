@@ -1,0 +1,24 @@
+{
+ "manual_id": 2861,
+ "type_name": "自绘制",
+ "manual_name": "光照阴影",
+ "author": "诺~",
+ "platform": "所有环境",
+ "source_date": "2023年05月26日 13:36:27",
+ "hits": 417,
+ "up": 10,
+ "favorite": 19,
+ "comment": 5,
+ "source_file": "自绘制\\2861_光照阴影.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "obsolete",
+ "flags": [
+  "obsolete",
+  "obsolete"
+ ],
+ "truncation": "complete",
+ "line_count": 80,
+ "char_count": 2105,
+ "confidence": "static_review"
+}

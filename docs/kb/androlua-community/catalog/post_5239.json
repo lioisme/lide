@@ -1,0 +1,23 @@
+{
+ "manual_id": 5239,
+ "type_name": "小游戏",
+ "manual_name": "html5 3d拼图",
+ "author": "小黄鱼",
+ "platform": "",
+ "source_date": "2026年02月14日 18:39:30",
+ "hits": 473,
+ "up": 5,
+ "favorite": 11,
+ "comment": 0,
+ "source_file": "小游戏\\5239_html5_3d拼图.lua",
+ "kind": "code_demo",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 806,
+ "char_count": 31918,
+ "confidence": "static_review"
+}

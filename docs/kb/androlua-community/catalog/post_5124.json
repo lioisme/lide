@@ -1,0 +1,24 @@
+{
+ "manual_id": 5124,
+ "type_name": "自绘制",
+ "manual_name": "悬浮窗帧率显示",
+ "author": "•⤙•/k",
+ "platform": "AndLua",
+ "source_date": "2025年11月14日 16:10:44",
+ "hits": 433,
+ "up": 4,
+ "favorite": 5,
+ "comment": 0,
+ "source_file": "自绘制\\5124_悬浮窗帧率显示.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier",
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 419,
+ "char_count": 11417,
+ "confidence": "static_review"
+}

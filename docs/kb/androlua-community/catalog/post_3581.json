@@ -1,0 +1,21 @@
+{
+ "manual_id": 3581,
+ "type_name": "小工具",
+ "manual_name": "Thumb显示进度",
+ "author": "琪琪子",
+ "platform": "AndLua",
+ "source_date": "2023年11月14日 12:19:54",
+ "hits": 451,
+ "up": 7,
+ "favorite": 15,
+ "comment": 14,
+ "source_file": "小工具\\3581_Thumb显示进度.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 53,
+ "char_count": 1562,
+ "confidence": "static_review"
+}

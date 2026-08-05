@@ -1,0 +1,24 @@
+{
+ "manual_id": 3423,
+ "type_name": "Activity活动",
+ "manual_name": "高仿某个手机系统设置界面布局（疑似）",
+ "author": "海纳百氚，有容乃大",
+ "platform": "Fusion App2",
+ "source_date": "2023年09月24日 09:05:31",
+ "hits": 1202,
+ "up": 10,
+ "favorite": 32,
+ "comment": 10,
+ "source_file": "Activity活动\\3423_高仿某个手机系统设置界面布局（疑似）.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 438,
+ "char_count": 13044,
+ "confidence": "static_review"
+}

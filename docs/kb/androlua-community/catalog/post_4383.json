@@ -1,0 +1,25 @@
+{
+ "manual_id": 4383,
+ "type_name": "小工具",
+ "manual_name": "手写数字识别",
+ "author": "小白·马",
+ "platform": "Fusion App2",
+ "source_date": "2024年11月30日 23:19:36",
+ "hits": 725,
+ "up": 6,
+ "favorite": 21,
+ "comment": 8,
+ "source_file": "小工具\\4383_手写数字识别.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "remote_exec"
+ ],
+ "truncation": "complete",
+ "line_count": 503,
+ "char_count": 11515,
+ "confidence": "static_review"
+}

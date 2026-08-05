@@ -1,0 +1,23 @@
+{
+ "manual_id": 2747,
+ "type_name": "布局教程",
+ "manual_name": "RelativeLayout属性",
+ "author": "诶害",
+ "platform": "所有环境",
+ "source_date": "2023年05月03日 09:55:58",
+ "hits": 131,
+ "up": 0,
+ "favorite": 5,
+ "comment": 0,
+ "source_file": "布局教程\\2747_RelativeLayout属性.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "complete",
+ "line_count": 17,
+ "char_count": 1308,
+ "confidence": "static_review"
+}

@@ -1,0 +1,23 @@
+{
+ "manual_id": 1338,
+ "type_name": "文件操作",
+ "manual_name": "Lua文件IO操作",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2022年01月28日 18:46:30",
+ "hits": 765,
+ "up": 8,
+ "favorite": 37,
+ "comment": 2,
+ "source_file": "文件操作\\1338_Lua文件IO操作.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 34,
+ "char_count": 456,
+ "confidence": "static_review"
+}

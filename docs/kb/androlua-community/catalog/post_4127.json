@@ -1,0 +1,21 @@
+{
+ "manual_id": 4127,
+ "type_name": "Adapter容器",
+ "manual_name": "简单的适配器嵌套",
+ "author": "归鸿",
+ "platform": "所有环境",
+ "source_date": "2024年07月07日 09:56:55",
+ "hits": 476,
+ "up": 5,
+ "favorite": 10,
+ "comment": 1,
+ "source_file": "Adapter容器\\4127_简单的适配器嵌套.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 67,
+ "char_count": 971,
+ "confidence": "static_review"
+}

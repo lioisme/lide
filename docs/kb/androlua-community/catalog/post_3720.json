@@ -1,0 +1,21 @@
+{
+ "manual_id": 3720,
+ "type_name": "Layout布局",
+ "manual_name": "SearchBar and SearchView",
+ "author": "智",
+ "platform": "reOpenLua,OpenLuaX",
+ "source_date": "2024年01月13日 05:51:26",
+ "hits": 617,
+ "up": 0,
+ "favorite": 4,
+ "comment": 2,
+ "source_file": "Layout布局\\3720_SearchBar_and_SearchView.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 27,
+ "char_count": 713,
+ "confidence": "static_review"
+}

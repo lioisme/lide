@@ -1,0 +1,23 @@
+{
+ "manual_id": 1209,
+ "type_name": "控件属性",
+ "manual_name": "安卓布局属性代码中文注解",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2021年11月01日 20:19:25",
+ "hits": 842,
+ "up": 19,
+ "favorite": 56,
+ "comment": 1,
+ "source_file": "控件属性\\1209_安卓布局属性代码中文注解.lua",
+ "kind": "code_demo",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "sensitive_permission"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 625,
+ "char_count": 15583,
+ "confidence": "static_review"
+}

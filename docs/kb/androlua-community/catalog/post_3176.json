@@ -1,0 +1,23 @@
+{
+ "manual_id": 3176,
+ "type_name": "安卓教程",
+ "manual_name": "iOS对话框和部分UI的模仿",
+ "author": "L.",
+ "platform": "所有环境",
+ "source_date": "2023年08月01日 12:50:48",
+ "hits": 1118,
+ "up": 16,
+ "favorite": 56,
+ "comment": 11,
+ "source_file": "安卓教程\\3176_iOS对话框和部分UI的模仿.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 636,
+ "char_count": 15865,
+ "confidence": "static_review"
+}

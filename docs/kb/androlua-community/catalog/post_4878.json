@@ -1,0 +1,25 @@
+{
+ "manual_id": 4878,
+ "type_name": "小工具",
+ "manual_name": "视频播放器手势控制工具",
+ "author": "吾心",
+ "platform": "所有环境",
+ "source_date": "2025年07月04日 18:05:12",
+ "hits": 719,
+ "up": 6,
+ "favorite": 22,
+ "comment": 4,
+ "source_file": "小工具\\4878_视频播放器手势控制工具.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "remote_exec"
+ ],
+ "truncation": "complete",
+ "line_count": 107,
+ "char_count": 2404,
+ "confidence": "static_review"
+}

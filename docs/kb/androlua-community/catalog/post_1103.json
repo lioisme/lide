@@ -1,0 +1,23 @@
+{
+ "manual_id": 1103,
+ "type_name": "动画教程",
+ "manual_name": "动画圆形进度条实战",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 353,
+ "up": 2,
+ "favorite": 17,
+ "comment": 1,
+ "source_file": "动画教程\\1103_动画圆形进度条实战.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 162,
+ "char_count": 4210,
+ "confidence": "static_review"
+}

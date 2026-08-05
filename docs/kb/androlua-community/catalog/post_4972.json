@@ -1,0 +1,21 @@
+{
+ "manual_id": 4972,
+ "type_name": "安卓教程",
+ "manual_name": "拖动与尺寸缩放",
+ "author": "伊藤诚",
+ "platform": "所有环境",
+ "source_date": "2025年08月08日 01:22:25",
+ "hits": 497,
+ "up": 14,
+ "favorite": 28,
+ "comment": 4,
+ "source_file": "安卓教程\\4972_拖动与尺寸缩放.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 166,
+ "char_count": 4499,
+ "confidence": "static_review"
+}

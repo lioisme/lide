@@ -1,0 +1,23 @@
+{
+ "manual_id": 4238,
+ "type_name": "自绘制",
+ "manual_name": "心跳加载动画",
+ "author": "雾栖.",
+ "platform": "所有环境",
+ "source_date": "2024年09月07日 21:42:24",
+ "hits": 617,
+ "up": 10,
+ "favorite": 30,
+ "comment": 0,
+ "source_file": "自绘制\\4238_心跳加载动画.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 61,
+ "char_count": 1599,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 2139,
+ "type_name": "实用代码",
+ "manual_name": "利用正则表达式自动识别文本链接",
+ "author": "博士",
+ "platform": "所有环境",
+ "source_date": "2022年12月03日 08:34:40",
+ "hits": 578,
+ "up": 12,
+ "favorite": 30,
+ "comment": 4,
+ "source_file": "实用代码\\2139_利用正则表达式自动识别文本链接.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 111,
+ "char_count": 2145,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 4567,
+ "type_name": "小工具",
+ "manual_name": "数据雷达图（二改优化）",
+ "author": "伊藤诚",
+ "platform": "所有环境",
+ "source_date": "2025年03月03日 11:02:43",
+ "hits": 650,
+ "up": 3,
+ "favorite": 14,
+ "comment": 2,
+ "source_file": "小工具\\4567_数据雷达图（二改优化）.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 322,
+ "char_count": 8632,
+ "confidence": "static_review"
+}

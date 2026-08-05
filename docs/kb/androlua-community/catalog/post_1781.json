@@ -1,0 +1,23 @@
+{
+ "manual_id": 1781,
+ "type_name": "小工具",
+ "manual_name": "在手册里看小说什么体验",
+ "author": "訫念是你",
+ "platform": "AndLua",
+ "source_date": "2022年08月21日 10:47:16",
+ "hits": 501,
+ "up": 6,
+ "favorite": 11,
+ "comment": 8,
+ "source_file": "小工具\\1781_在手册里看小说什么体验.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 313,
+ "char_count": 7214,
+ "confidence": "static_review"
+}

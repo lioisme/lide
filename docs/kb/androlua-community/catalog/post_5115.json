@@ -1,0 +1,25 @@
+{
+ "manual_id": 5115,
+ "type_name": "布局代码",
+ "manual_name": "主题风格管理",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "Fusion App2",
+ "source_date": "2025年11月01日 14:53:39",
+ "hits": 1209,
+ "up": 7,
+ "favorite": 20,
+ "comment": 5,
+ "source_file": "布局代码\\5115_主题风格管理.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 196,
+ "char_count": 5930,
+ "confidence": "static_review"
+}

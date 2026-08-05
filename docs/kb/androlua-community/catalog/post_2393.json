@@ -1,0 +1,21 @@
+{
+ "manual_id": 2393,
+ "type_name": "小工具",
+ "manual_name": "颜色圈",
+ "author": "智",
+ "platform": "所有环境",
+ "source_date": "2023年01月29日 08:07:35",
+ "hits": 392,
+ "up": 4,
+ "favorite": 11,
+ "comment": 7,
+ "source_file": "小工具\\2393_颜色圈.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "truncated_tail",
+ "line_count": 278,
+ "char_count": 8340,
+ "confidence": "static_review"
+}

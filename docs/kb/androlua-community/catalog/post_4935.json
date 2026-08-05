@@ -1,0 +1,23 @@
+{
+ "manual_id": 4935,
+ "type_name": "Lua代码",
+ "manual_name": "图表库MPAndroidChart-3.1.0的使用教学",
+ "author": "伊藤诚",
+ "platform": "所有环境",
+ "source_date": "2025年07月18日 07:26:32",
+ "hits": 495,
+ "up": 8,
+ "favorite": 21,
+ "comment": 9,
+ "source_file": "Lua代码\\4935_图表库MPAndroidChart-3.1.0的使用教学.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "remote_exec"
+ ],
+ "truncation": "complete",
+ "line_count": 314,
+ "char_count": 8621,
+ "confidence": "static_review"
+}

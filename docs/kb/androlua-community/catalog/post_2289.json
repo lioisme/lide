@@ -1,0 +1,25 @@
+{
+ "manual_id": 2289,
+ "type_name": "小工具",
+ "manual_name": "哔哩哔哩视频解析（三次优化）",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2023年01月07日 13:06:26",
+ "hits": 975,
+ "up": 18,
+ "favorite": 53,
+ "comment": 17,
+ "source_file": "小工具\\2289_哔哩哔哩视频解析（三次优化）.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 760,
+ "char_count": 22450,
+ "confidence": "static_review"
+}

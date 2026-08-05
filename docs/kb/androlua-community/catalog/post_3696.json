@@ -1,0 +1,25 @@
+{
+ "manual_id": 3696,
+ "type_name": "实用代码",
+ "manual_name": "应用列表",
+ "author": "NekoLaska",
+ "platform": "Fusion App2",
+ "source_date": "2023年12月28日 10:27:36",
+ "hits": 968,
+ "up": 2,
+ "favorite": 23,
+ "comment": 1,
+ "source_file": "实用代码\\3696_应用列表.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 177,
+ "char_count": 4865,
+ "confidence": "static_review"
+}

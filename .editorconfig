@@ -1,0 +1,42 @@
+# 统一编码与格式基线（T6）：UTF-8 / LF / 4 空格
+# ktlint 1.x 直接读取本文件的 *.kt/*.kts 段作为规则源（与 ktlint 配置一致，无独立配置文件）
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.{kt,kts}]
+indent_style = space
+indent_size = 4
+max_line_length = 120
+# ktlint 标准规则显式声明（值与上一致；ktlint 无独立 .ktlintrc，规则即 .editorconfig）
+ktlint_standard_indent = 4
+ktlint_standard_max-line-length = 120
+ktlint_standard_import-ordering = default
+ktlint_standard_no-wildcard-imports = enabled
+ktlint_standard_final-newline = enabled
+ktlint_standard_no-trailing-spaces = enabled
+
+[*.{java,c,h,cpp,hpp}]
+indent_style = space
+indent_size = 4
+max_line_length = 120
+
+[*.lua]
+indent_style = space
+indent_size = 4
+max_line_length = 120
+
+[*.xml]
+indent_style = space
+indent_size = 4
+
+[*.{json,jsonl,yml,yaml,toml}]
+indent_style = space
+indent_size = 2
+
+[*.md]
+trim_trailing_whitespace = false

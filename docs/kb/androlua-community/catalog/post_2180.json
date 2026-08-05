@@ -1,0 +1,21 @@
+{
+ "manual_id": 2180,
+ "type_name": "小工具",
+ "manual_name": "快图浏览",
+ "author": "智",
+ "platform": "所有环境",
+ "source_date": "2022年12月13日 19:55:42",
+ "hits": 264,
+ "up": 1,
+ "favorite": 1,
+ "comment": 5,
+ "source_file": "小工具\\2180_快图浏览.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 76,
+ "char_count": 1344,
+ "confidence": "static_review"
+}

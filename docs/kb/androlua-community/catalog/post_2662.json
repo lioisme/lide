@@ -1,0 +1,21 @@
+{
+ "manual_id": 2662,
+ "type_name": "系统",
+ "manual_name": "(伪)左右立体环绕",
+ "author": "Full Stack Devel",
+ "platform": "所有环境",
+ "source_date": "2023年04月17日 07:55:46",
+ "hits": 365,
+ "up": 6,
+ "favorite": 22,
+ "comment": 6,
+ "source_file": "系统\\2662_(伪)左右立体环绕.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 42,
+ "char_count": 858,
+ "confidence": "static_review"
+}

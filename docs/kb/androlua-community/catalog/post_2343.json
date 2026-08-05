@@ -1,0 +1,21 @@
+{
+ "manual_id": 2343,
+ "type_name": "系统",
+ "manual_name": "SensorManager",
+ "author": "智",
+ "platform": "所有环境",
+ "source_date": "2023年01月18日 18:12:46",
+ "hits": 187,
+ "up": 3,
+ "favorite": 5,
+ "comment": 6,
+ "source_file": "系统\\2343_SensorManager.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "truncated_tail",
+ "line_count": 20,
+ "char_count": 568,
+ "confidence": "static_review"
+}

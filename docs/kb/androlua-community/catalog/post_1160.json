@@ -1,0 +1,21 @@
+{
+ "manual_id": 1160,
+ "type_name": "动画教程",
+ "manual_name": "悬浮按钮点击动画",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 321,
+ "up": 1,
+ "favorite": 0,
+ "comment": 0,
+ "source_file": "动画教程\\1160_悬浮按钮点击动画.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 126,
+ "char_count": 3543,
+ "confidence": "static_review"
+}

@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Common -->
+    <string name="app_name">LIDE</string>
+    <string name="back">返回</string>
+    <string name="cancel">取消</string>
+    <string name="create">创建</string>
+    <string name="project_name">项目名称</string>
+    <string name="select_file">选择文件</string>
+    <string name="cd_go_up">上一级</string>
+    <string name="cd_close">关闭</string>
+    <string name="back_to_parent">返回上一目录</string>
+
+    <!-- Project List -->
+    <string name="new_project">新建项目</string>
+    <string name="no_projects">暂无项目</string>
+    <string name="tap_to_create">点击 + 创建项目</string>
+    <string name="import_alp">导入 .alp</string>
+    <string name="import_success">已从 .alp 导入项目</string>
+    <string name="import_failed">导入 .alp 失败</string>
+    <string name="import_projects_success">已导入 %1$d 个工程</string>
+    <string name="import_plugin_success">已导入 %1$d 个插件</string>
+    <string name="import_mixed_success">已导入 %1$d 个工程、%2$d 个插件</string>
+    <string name="export_alp">导出为 .alp</string>
+    <string name="export_success">项目已导出为 .alp</string>
+    <string name="export_failed">导出失败</string>
+
+
+    <!-- Settings sections -->
+    <string name="settings">设置</string>
+    <string name="display">显示</string>
+    <string name="general">通用</string>
+    <string name="editor">编辑器</string>
+
+    <!-- Settings items -->
+    <string name="appearance">外观</string>
+    <string name="follow_system">跟随系统</string>
+    <string name="light_mode">浅色模式</string>
+    <string name="dark_mode">深色模式</string>
+    <string name="theme_color">主题色</string>
+    <string name="follow_wallpaper">跟随壁纸</string>
+    <string name="custom_accent">自定义强调色</string>
+    <string name="language">语言</string>
+    <string name="system_default">系统默认</string>
+    <string name="word_wrap">自动换行</string>
+    <string name="word_wrap_on">已启用</string>
+    <string name="word_wrap_off">已关闭</string>
+    <string name="show_whitespace">显示空白字符</string>
+    <string name="whitespace_on">可见</string>
+    <string name="whitespace_off">隐藏</string>
+    <string name="font_size">字体大小</string>
+    <string name="tab_size">制表符大小</string>
+    <string name="about">关于</string>
+    <string name="version">LIDE v1.0</string>
+    <string name="lua_manual">Lua 手册</string>
+    <string name="lua_manual_missing">未找到离线手册。</string>
+    <string name="system_wallpaper">系统壁纸</string>
+    <string name="wallpaper_desc">壁纸动态取色</string>
+    <string name="pick_accent">选择强调色</string>
+    <string name="lang_en">English</string>
+    <string name="lang_zh">中文</string>
+
+    <!-- Permissions -->
+    <string name="permission_management">权限管理</string>
+    <string name="perm_subtitle">管理应用权限</string>
+    <string name="perm_special_section">特殊权限</string>
+    <string name="perm_regular_section">常规权限</string>
+    <string name="perm_note">部分权限需在系统设置中开启。点击请求打开设置页。</string>
+    <string name="perm_granted">已授权</string>
+    <string name="perm_denied">未授权</string>
+    <string name="perm_request">请求</string>
+    <string name="perm_project_title">工程权限</string>
+    <string name="perm_project_section">当前工程声明权限（%1$s）</string>
+    <string name="perm_project_hint">勾选该工程请求的权限。选择结果写入 init.lua（user_permission），构建打包时写入产物 APK 的 manifest。</string>
+    <string name="perm_project_save">保存</string>
+    <string name="perm_project_saved">已保存</string>
+    <string name="perm_project_save_failed">保存失败</string>
+    <string name="perm_host_section">宿主应用权限</string>
+    <string name="perm_host_hint">LIDE 宿主应用自身的权限。它们适用于 IDE 及宿主内运行的脚本。</string>
+    <string name="perm_package_only">仅写入打包 APK</string>
+    <string name="project_permissions">工程权限</string>
+    <string name="project_info">工程信息</string>
+    <string name="build_apk">构建 APK</string>
+
+    <!-- Project info (WP-004) -->
+    <string name="info_title">工程信息</string>
+    <string name="info_basic_group">基础</string>
+    <string name="info_appname">应用名称</string>
+    <string name="info_appver">应用版本</string>
+    <string name="info_appcode">版本号</string>
+    <string name="info_appsdk">目标 SDK</string>
+    <string name="info_path_pattern">屏幕方向</string>
+    <string name="info_packagename">包名</string>
+    <string name="info_theme">主题</string>
+    <string name="info_app_key">应用密钥</string>
+    <string name="info_app_channel">渠道</string>
+    <string name="info_developer">开发者</string>
+    <string name="info_description">描述</string>
+    <string name="info_debugmode">调试模式</string>
+    <string name="info_permissions_btn">用户权限（%1$d）</string>
+    <string name="info_permissions_title">选择用户权限</string>
+    <string name="info_permissions_confirm">完成</string>
+    <string name="info_save">保存</string>
+    <string name="info_save_success">已保存</string>
+    <string name="info_save_failed">保存失败</string>
+    <string name="info_load_failed">未找到 init.lua</string>
+    <string name="project_info_menu">工程信息</string>
+
+    <!-- Build APK (WP-005) -->
+    <string name="build_title">构建 APK</string>
+    <string name="build_summary_group">打包配置</string>
+    <string name="build_hint">以下配置读取自工程 init.lua</string>
+    <string name="build_appname">应用名称</string>
+    <string name="build_package">包名</string>
+    <string name="build_version">版本 %1$s（%2$s）</string>
+    <string name="build_permissions">权限（%1$d 项）</string>
+    <string name="build_button">构建</string>
+    <string name="build_not_ready">构建功能尚未完成</string>
+    <string name="build_working">构建中…</string>
+    <string name="build_success">构建完成</string>
+    <string name="build_fail">构建失败：%1$s</string>
+    <string name="build_share">分享 APK</string>
+    <string name="build_need_package">请先在 init.lua 中填写 packagename</string>
+    <string name="build_stage_read_host">读取宿主 APK</string>
+    <string name="build_stage_collect">收集工程 Lua 文件</string>
+    <string name="build_stage_compile">编译 Lua</string>
+    <string name="build_stage_assemble">打包 APK</string>
+    <string name="build_stage_sign">签名 APK</string>
+    <string name="run_permission_denied_hint">已拒绝 %1$d 项权限，继续运行</string>
+    <string name="run_finished">运行结束</string>
+    <string name="run_error_title">运行出错</string>
+    <string name="run_jump_to_line">跳到出错行</string>
+    <string name="run_insert_import">插入 import \"%1$s\"</string>
+    <string name="run_import_suggestion">提示：可尝试 import \"%1$s\"</string>
+
+    <!-- Plugins -->
+    <string name="plugins">插件</string>
+    <string name="plugins_subtitle">管理已安装的插件</string>
+    <string name="plugin_empty_title">暂无已安装的插件</string>
+    <string name="plugin_empty_hint">通过 + 按钮安装 .alp 文件</string>
+    <string name="plugin_installed">已安装插件 \'%1$s\'</string>
+    <string name="plugin_invalid">不是有效的插件包 (.alp)</string>
+    <string name="plugin_run">运行</string>
+    <string name="plugin_install_alp">安装 .alp</string>
+    <string name="plugin_version">v%1$s</string>
+    <string name="plugin_version_author">v%1$s，作者 %2$s</string>
+
+    <!-- Examples -->
+    <string name="examples">示例</string>
+    <string name="examples_subtitle">内置 .alp 示例，导入后即可出现在工程列表中。</string>
+    <string name="examples_import">导入</string>
+    <string name="examples_reimport">重新导入</string>
+    <string name="examples_installed">已导入</string>
+    <string name="examples_import_success">示例已导入</string>
+    <string name="example_name_demo">demo</string>
+    <string name="example_desc_demo">ListView + dkjson 网络请求示例</string>
+    <string name="example_name_demoproject">DemoProject</string>
+    <string name="example_desc_demoproject">多页面工程 + libs 目录 dex 加载示例</string>
+    <string name="example_name_hello">hello</string>
+    <string name="example_desc_hello">loadlayout 入门示例</string>
+    <string name="example_name_kleinbottle">kleinbottle</string>
+    <string name="example_desc_kleinbottle">OpenGL 克莱因瓶 3D 渲染示例</string>
+    <string name="example_name_listview">listview</string>
+    <string name="example_desc_listview">LuaAdapter 列表绑定示例</string>
+    <string name="example_name_testjson">TestJson</string>
+    <string name="example_desc_testjson">dkjson 编解码测试</string>
+
+
+    <string name="cannot_read_file">无法读取文件</string>
+    <string name="error_prefix">错误：%1$s</string>
+
+    <!-- Permission catalog -->
+    <string name="perm_read_external_storage">读取外部存储</string>
+    <string name="perm_write_external_storage">写入外部存储</string>
+    <string name="perm_internet">访问网络</string>
+    <string name="perm_access_network_state">网络状态</string>
+    <string name="perm_access_wifi_state">WiFi状态</string>
+    <string name="perm_camera">相机</string>
+    <string name="perm_record_audio">录音</string>
+    <string name="perm_read_contacts">读取联系人</string>
+    <string name="perm_write_contacts">写联系人</string>
+    <string name="perm_read_calendar">读取日历</string>
+    <string name="perm_write_calendar">写日历</string>
+    <string name="perm_access_fine_location">精确定位</string>
+    <string name="perm_access_coarse_location">粗略定位</string>
+    <string name="perm_read_phone_state">读取设备信息</string>
+    <string name="perm_call_phone">拨打电话</string>
+    <string name="perm_send_sms">发送短信</string>
+    <string name="perm_read_sms">读取短信</string>
+    <string name="perm_receive_sms">接收短信</string>
+    <string name="perm_bluetooth">蓝牙</string>
+    <string name="perm_bluetooth_admin">蓝牙管理</string>
+    <string name="perm_nfc">NFC</string>
+    <string name="perm_post_notifications">通知</string>
+    <string name="perm_foreground_service">前台服务</string>
+    <string name="perm_vibrate">振动</string>
+    <string name="perm_wake_lock">唤醒锁</string>
+
+    <!-- Special permissions -->
+    <string name="perm_special_overlay">悬浮窗</string>
+    <string name="perm_special_write_settings">修改系统设置</string>
+    <string name="perm_special_all_files">管理所有文件</string>
+    <string name="perm_special_battery">忽略电池优化</string>
+    <string name="perm_special_install_unknown">安装未知来源应用</string>
+    <string name="perm_special_usage_stats">使用情况访问权限</string>
+
+    <!-- Build APK fallbacks -->
+    <string name="build_install_failed">安装失败</string>
+    <string name="build_share_failed">分享失败</string>
+
+
+    <!-- Project list -->
+    <string name="project_delete">删除</string>
+    <string name="delete_project_title">删除 %1$s？</string>
+    <string name="delete_project_message">工程 \"%1$s\" 及其全部文件将被永久删除。</string>
+    <string name="project_delete_failed">删除工程 \'%1$s\' 失败</string>
+    <string name="project_create_failed">创建工程 \'%1$s\' 失败</string>
+
+    <!-- Editor storage permission -->
+    <string name="editor_storage_permission_warning">未授予存储权限，更改将无法保存</string>
+    <string name="editor_storage_permission_grant">去授权</string>
+
+    <!-- Editor session -->
+    <string name="editor_no_file">未打开文件</string>
+    <string name="close_file_title">未保存的修改</string>
+    <string name="close_file_message">关闭前保存 %1$s 的修改？</string>
+    <string name="save">保存</string>
+    <string name="discard">放弃</string>
+    <string name="file_not_supported_open">不支持打开该文件</string>
+
+    <!-- Content descriptions -->
+    <string name="cd_new_project">新建项目</string>
+    <string name="cd_settings">设置</string>
+    <string name="cd_more_options">更多选项</string>
+    <string name="cd_back">返回</string>
+    <string name="cd_replace">替换</string>
+    <string name="cd_replace_all">全部替换</string>
+    <string name="menu_category_file">文件</string>
+    <string name="menu_category_project">工程</string>
+    <string name="cd_open_file_tree">打开文件树</string>
+    <string name="cd_search">搜索</string>
+    <string name="accessibility_service_description">LIDE 无障碍服务：为 Lua 脚本提供自动化能力（点击、滑动、截图）。</string>
+    <!-- API 浏览器（WP-008） -->
+    <string name="api_browser">API 浏览器</string>
+    <string name="api_browser_subtitle">浏览 Lua 可调用的 Java 类</string>
+    <string name="api_search_hint">搜索类名…</string>
+    <string name="api_member_filter_hint">过滤成员…</string>
+    <string name="api_loading">正在构建索引…</string>
+    <string name="api_no_result">无匹配结果</string>
+    <string name="api_detail_failed">该类反射失败</string>
+    <string name="api_retry">重试</string>
+    <string name="api_copied">已复制到剪贴板</string>
+    <string name="api_group_constructors">构建方法</string>
+    <string name="api_group_events">公有事件</string>
+    <string name="api_group_getters">公有 getter</string>
+    <string name="api_group_setters">公有 setter</string>
+    <string name="api_group_fields">公有字段</string>
+    <string name="api_group_methods">公有方法</string>
+    <string name="api_native_module_desc">原生 C 模块。其函数表仅在引擎运行期 luaopen_* 之后存在于 Lua 内存中，无法静态识别。</string>
+    <string name="api_category_all">全部</string>
+    <string name="api_category_common">常用控件</string>
+    <string name="api_category_material">谷歌质感库控件</string>
+    <string name="api_category_androidx">AndroidX 控件</string>
+    <string name="api_category_r">R 资源类</string>
+    <string name="api_category_androlua">AndroLua 扩展</string>
+    <string name="api_category_framework">Android 框架</string>
+    <string name="api_category_java">Java 标准库</string>
+    <string name="api_category_project">工程库</string>
+    <string name="api_category_native">原生库</string>
+    <string name="api_category_other">其他</string>
+    <string name="cd_api_browser">API 浏览器</string>
+    <string name="api_filter">按 分 类 筛 选</string>
+    <string name="api_clear_search">清 空 搜 索</string>
+
+    <string name="api_usage_title">按用途</string>
+    <string name="api_usage_adapter">适配器</string>
+    <string name="api_usage_container">容器控件</string>
+    <string name="api_usage_input">输入框类控件</string>
+    <string name="api_usage_utility">工具类</string>
+    <string name="api_usage_button">按钮控件</string>
+    <string name="api_usage_state">状态类控件</string>
+    <string name="api_usage_view">视图控件</string>
+    <string name="api_usage_popup">弹出式窗口</string>
+    <string name="api_usage_dropdown">下拉菜单控件</string>
+    <string name="api_kind_interface">接口</string>
+    <string name="api_kind_class">类</string>
+</resources>

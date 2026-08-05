@@ -1,0 +1,21 @@
+{
+ "manual_id": 194,
+ "type_name": "基础代码",
+ "manual_name": "多状态的迭代器",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 75,
+ "up": 0,
+ "favorite": 1,
+ "comment": 0,
+ "source_file": "基础代码\\194_多状态的迭代器.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "truncated_tail",
+ "line_count": 31,
+ "char_count": 562,
+ "confidence": "static_review"
+}

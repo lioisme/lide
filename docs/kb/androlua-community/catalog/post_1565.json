@@ -1,0 +1,24 @@
+{
+ "manual_id": 1565,
+ "type_name": "布局教程",
+ "manual_name": "主页轮播图-重构版",
+ "author": "小白·马",
+ "platform": "Fusion App2",
+ "source_date": "2022年06月28日 16:54:11",
+ "hits": 1606,
+ "up": 24,
+ "favorite": 68,
+ "comment": 6,
+ "source_file": "布局教程\\1565_主页轮播图-重构版.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 192,
+ "char_count": 5257,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 3046,
+ "type_name": "布局教程",
+ "manual_name": "BaseAdapter使用",
+ "author": "NekoLaska",
+ "platform": "所有环境",
+ "source_date": "2023年07月09日 19:20:35",
+ "hits": 626,
+ "up": 3,
+ "favorite": 9,
+ "comment": 14,
+ "source_file": "布局教程\\3046_BaseAdapter使用.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 75,
+ "char_count": 1577,
+ "confidence": "static_review"
+}

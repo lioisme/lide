@@ -1,0 +1,21 @@
+{
+ "manual_id": 4221,
+ "type_name": "小工具",
+ "manual_name": "历史上的今天（抓360导航）",
+ "author": "海纳百氚，有容乃大",
+ "platform": "reOpenLua,OpenLuaX",
+ "source_date": "2024年08月26日 23:19:03",
+ "hits": 475,
+ "up": 2,
+ "favorite": 0,
+ "comment": 3,
+ "source_file": "小工具\\4221_历史上的今天（抓360导航）.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 28,
+ "char_count": 682,
+ "confidence": "static_review"
+}

@@ -1,0 +1,24 @@
+{
+ "manual_id": 4064,
+ "type_name": "网络请求",
+ "manual_name": "蓝奏云 LanzouyunAPI 封装版",
+ "author": "青柠(YouCun)",
+ "platform": "所有环境",
+ "source_date": "2024年05月16日 01:56:47",
+ "hits": 1457,
+ "up": 12,
+ "favorite": 29,
+ "comment": 17,
+ "source_file": "网络请求\\4064_蓝奏云_LanzouyunAPI_封装版.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 866,
+ "char_count": 23869,
+ "confidence": "static_review"
+}

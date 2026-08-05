@@ -1,0 +1,24 @@
+{
+ "manual_id": 1232,
+ "type_name": "实用代码",
+ "manual_name": "音量键翻页滚动",
+ "author": "jies辰",
+ "platform": "",
+ "source_date": "2021年12月19日 18:11:22",
+ "hits": 196,
+ "up": 1,
+ "favorite": 8,
+ "comment": 0,
+ "source_file": "实用代码\\1232_音量键翻页滚动.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "complete",
+ "line_count": 22,
+ "char_count": 582,
+ "confidence": "static_review"
+}

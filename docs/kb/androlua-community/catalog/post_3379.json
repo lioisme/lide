@@ -1,0 +1,21 @@
+{
+ "manual_id": 3379,
+ "type_name": "Androlua教程",
+ "manual_name": "bindPackage",
+ "author": "kamihitoe",
+ "platform": "所有环境",
+ "source_date": "2023年09月08日 21:43:36",
+ "hits": 146,
+ "up": 2,
+ "favorite": 4,
+ "comment": 1,
+ "source_file": "Androlua教程\\3379_bindPackage.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 17,
+ "char_count": 395,
+ "confidence": "static_review"
+}

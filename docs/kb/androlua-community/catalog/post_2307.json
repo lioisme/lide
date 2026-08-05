@@ -1,0 +1,25 @@
+{
+ "manual_id": 2307,
+ "type_name": "小工具",
+ "manual_name": "图片取色升级版",
+ "author": "ㄛㄙ飞ㄋ",
+ "platform": "所有环境",
+ "source_date": "2023年01月11日 19:20:31",
+ "hits": 485,
+ "up": 7,
+ "favorite": 30,
+ "comment": 5,
+ "source_file": "小工具\\2307_图片取色升级版.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 345,
+ "char_count": 7468,
+ "confidence": "static_review"
+}

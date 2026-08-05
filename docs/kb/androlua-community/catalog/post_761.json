@@ -1,0 +1,21 @@
+{
+ "manual_id": 761,
+ "type_name": "自绘制",
+ "manual_name": "绘制三角形",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 128,
+ "up": 2,
+ "favorite": 3,
+ "comment": 0,
+ "source_file": "自绘制\\761_绘制三角形.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 20,
+ "char_count": 491,
+ "confidence": "static_review"
+}

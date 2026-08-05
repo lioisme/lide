@@ -1,0 +1,21 @@
+{
+ "manual_id": 766,
+ "type_name": "布局教程",
+ "manual_name": "仿UI参考任务卡布局",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 709,
+ "up": 5,
+ "favorite": 21,
+ "comment": 4,
+ "source_file": "布局教程\\766_仿UI参考任务卡布局.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 96,
+ "char_count": 2149,
+ "confidence": "static_review"
+}

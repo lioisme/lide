@@ -1,0 +1,23 @@
+{
+ "manual_id": 1479,
+ "type_name": "小工具",
+ "manual_name": "代理机场节点过滤正则",
+ "author": "jies辰",
+ "platform": "",
+ "source_date": "2022年05月20日 12:32:21",
+ "hits": 173,
+ "up": 2,
+ "favorite": 1,
+ "comment": 0,
+ "source_file": "小工具\\1479_代理机场节点过滤正则.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 3,
+ "char_count": 173,
+ "confidence": "static_review"
+}

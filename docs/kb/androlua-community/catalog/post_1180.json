@@ -1,0 +1,21 @@
+{
+ "manual_id": 1180,
+ "type_name": "网络操作",
+ "manual_name": "爬取ip与地理位置实战",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 651,
+ "up": 9,
+ "favorite": 36,
+ "comment": 15,
+ "source_file": "网络操作\\1180_爬取ip与地理位置实战.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 41,
+ "char_count": 1045,
+ "confidence": "static_review"
+}

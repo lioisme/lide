@@ -1,0 +1,23 @@
+{
+ "manual_id": 3075,
+ "type_name": "小工具",
+ "manual_name": "自带socket进行UDP传输",
+ "author": "老黑",
+ "platform": "所有环境",
+ "source_date": "2023年07月14日 16:38:03",
+ "hits": 272,
+ "up": 9,
+ "favorite": 23,
+ "comment": 2,
+ "source_file": "小工具\\3075_自带socket进行UDP传输.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 276,
+ "char_count": 6662,
+ "confidence": "static_review"
+}

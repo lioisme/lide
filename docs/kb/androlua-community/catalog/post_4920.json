@@ -1,0 +1,21 @@
+{
+ "manual_id": 4920,
+ "type_name": "安卓教程",
+ "manual_name": "更现代的状态栏和导航栏沉浸方案——EdgeToEdge",
+ "author": "由风",
+ "platform": "所有环境",
+ "source_date": "2025年07月14日 14:04:14",
+ "hits": 694,
+ "up": 2,
+ "favorite": 7,
+ "comment": 3,
+ "source_file": "安卓教程\\4920_更现代的状态栏和导航栏沉浸方案——EdgeToEdge.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 11,
+ "char_count": 347,
+ "confidence": "static_review"
+}

@@ -1,0 +1,23 @@
+{
+ "manual_id": 3038,
+ "type_name": "小游戏",
+ "manual_name": "Flappy Bird(重力加速度完美版)",
+ "author": "花园",
+ "platform": "所有环境",
+ "source_date": "2023年07月07日 12:52:41",
+ "hits": 615,
+ "up": 21,
+ "favorite": 33,
+ "comment": 8,
+ "source_file": "小游戏\\3038_Flappy_Bird(重力加速度完美版).lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 179,
+ "char_count": 4471,
+ "confidence": "static_review"
+}

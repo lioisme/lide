@@ -1,0 +1,23 @@
+{
+ "manual_id": 3251,
+ "type_name": "小游戏",
+ "manual_name": "3D 三体",
+ "author": "Duo",
+ "platform": "所有环境",
+ "source_date": "2023年08月14日 09:14:06",
+ "hits": 474,
+ "up": 6,
+ "favorite": 10,
+ "comment": 4,
+ "source_file": "小游戏\\3251_3D_三体.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 3055,
+ "char_count": 74146,
+ "confidence": "static_review"
+}

@@ -1,0 +1,25 @@
+{
+ "manual_id": 4362,
+ "type_name": "网络爬虫",
+ "manual_name": "导入网易云歌单",
+ "author": "Cталин",
+ "platform": "Fusion App2",
+ "source_date": "2024年11月16日 00:13:34",
+ "hits": 348,
+ "up": 3,
+ "favorite": 6,
+ "comment": 0,
+ "source_file": "网络爬虫\\4362_导入网易云歌单.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "os_exec"
+ ],
+ "truncation": "complete",
+ "line_count": 229,
+ "char_count": 5109,
+ "confidence": "static_review"
+}

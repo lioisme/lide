@@ -1,0 +1,25 @@
+{
+ "manual_id": 1700,
+ "type_name": "Androlua教程",
+ "manual_name": "抖音解析",
+ "author": "筱",
+ "platform": "Fusion App1",
+ "source_date": "2022年08月11日 15:18:23",
+ "hits": 720,
+ "up": 4,
+ "favorite": 34,
+ "comment": 8,
+ "source_file": "Androlua教程\\1700_抖音解析.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "chinese_identifier"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 274,
+ "char_count": 7887,
+ "confidence": "static_review"
+}

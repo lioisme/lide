@@ -1,0 +1,23 @@
+{
+ "manual_id": 70,
+ "type_name": "适配器",
+ "manual_name": "LuaAdapter适配器",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 421,
+ "up": 3,
+ "favorite": 9,
+ "comment": 0,
+ "source_file": "适配器\\70_LuaAdapter适配器.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 23,
+ "char_count": 523,
+ "confidence": "static_review"
+}

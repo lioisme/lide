@@ -1,0 +1,21 @@
+{
+ "manual_id": 3955,
+ "type_name": "小游戏",
+ "manual_name": "剪刀石头布",
+ "author": "小白·马",
+ "platform": "所有环境",
+ "source_date": "2024年03月09日 01:07:00",
+ "hits": 232,
+ "up": 1,
+ "favorite": 4,
+ "comment": 0,
+ "source_file": "小游戏\\3955_剪刀石头布.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 34,
+ "char_count": 576,
+ "confidence": "static_review"
+}

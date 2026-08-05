@@ -1,0 +1,21 @@
+{
+ "manual_id": 1465,
+ "type_name": "手册公告",
+ "manual_name": "应该如何写优秀的示例代码",
+ "author": "Adam·Eva",
+ "platform": "所有环境",
+ "source_date": "2022年05月02日 18:19:36",
+ "hits": 876,
+ "up": 18,
+ "favorite": 13,
+ "comment": 2,
+ "source_file": "手册公告\\1465_应该如何写优秀的示例代码.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "truncated_tail",
+ "line_count": 47,
+ "char_count": 1560,
+ "confidence": "static_review"
+}

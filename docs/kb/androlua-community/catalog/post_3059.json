@@ -1,0 +1,21 @@
+{
+ "manual_id": 3059,
+ "type_name": "Lua代码",
+ "manual_name": "归并排序",
+ "author": "邪默",
+ "platform": "所有环境",
+ "source_date": "2023年07月12日 22:17:43",
+ "hits": 56,
+ "up": 1,
+ "favorite": 0,
+ "comment": 0,
+ "source_file": "Lua代码\\3059_归并排序.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 61,
+ "char_count": 1163,
+ "confidence": "static_review"
+}

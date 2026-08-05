@@ -1,0 +1,21 @@
+{
+ "manual_id": 3639,
+ "type_name": "Lua代码",
+ "manual_name": "使用协程进行HTTP请求",
+ "author": "",
+ "platform": "AndroLua",
+ "source_date": "2023年12月07日 18:23:06",
+ "hits": 900,
+ "up": 2,
+ "favorite": 14,
+ "comment": 2,
+ "source_file": "Lua代码\\3639_使用协程进行HTTP请求.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 164,
+ "char_count": 4310,
+ "confidence": "static_review"
+}

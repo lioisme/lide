@@ -1,0 +1,23 @@
+{
+ "manual_id": 3937,
+ "type_name": "小游戏",
+ "manual_name": "在alua中不使用关键字和load实现递归计算斐波那契数列第N项",
+ "author": "kamihitoe",
+ "platform": "所有环境",
+ "source_date": "2024年02月29日 11:58:28",
+ "hits": 156,
+ "up": 2,
+ "favorite": 1,
+ "comment": 0,
+ "source_file": "小游戏\\3937_在alua中不使用关键字和load实现递归计算斐波那契数列第N项.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "text_only"
+ ],
+ "truncation": "complete",
+ "line_count": 24,
+ "char_count": 895,
+ "confidence": "static_review"
+}

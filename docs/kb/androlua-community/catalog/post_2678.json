@@ -1,0 +1,23 @@
+{
+ "manual_id": 2678,
+ "type_name": "实用代码",
+ "manual_name": "时间差函数封装",
+ "author": "ᅟᅠ        ‌",
+ "platform": "AndroLua,reOpenLua,AndLua",
+ "source_date": "2023年04月20日 18:00:03",
+ "hits": 169,
+ "up": 5,
+ "favorite": 17,
+ "comment": 0,
+ "source_file": "实用代码\\2678_时间差函数封装.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 42,
+ "char_count": 1115,
+ "confidence": "static_review"
+}

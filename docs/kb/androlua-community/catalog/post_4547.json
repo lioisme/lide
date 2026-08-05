@@ -1,0 +1,21 @@
+{
+ "manual_id": 4547,
+ "type_name": "基础代码",
+ "manual_name": "伪3D_可移动_含视角移动",
+ "author": "关",
+ "platform": "所有环境",
+ "source_date": "2025年02月18日 19:54:54",
+ "hits": 445,
+ "up": 1,
+ "favorite": 2,
+ "comment": 2,
+ "source_file": "基础代码\\4547_伪3D_可移动_含视角移动.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "truncated_tail",
+ "line_count": 550,
+ "char_count": 14522,
+ "confidence": "static_review"
+}

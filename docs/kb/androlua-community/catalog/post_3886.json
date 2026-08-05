@@ -1,0 +1,23 @@
+{
+ "manual_id": 3886,
+ "type_name": "浏览器",
+ "manual_name": "网页 静音/解除",
+ "author": "•⤙•/k",
+ "platform": "AndLua",
+ "source_date": "2024年02月15日 11:52:39",
+ "hits": 172,
+ "up": 1,
+ "favorite": 9,
+ "comment": 0,
+ "source_file": "浏览器\\3886_网页_静音_解除.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 14,
+ "char_count": 547,
+ "confidence": "static_review"
+}

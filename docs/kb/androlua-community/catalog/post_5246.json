@@ -1,0 +1,21 @@
+{
+ "manual_id": 5246,
+ "type_name": "基础代码",
+ "manual_name": "马尔可夫 数学模型",
+ "author": "青柠(YouCun)",
+ "platform": "所有环境",
+ "source_date": "2026年02月22日 10:55:18",
+ "hits": 285,
+ "up": 4,
+ "favorite": 4,
+ "comment": 0,
+ "source_file": "基础代码\\5246_马尔可夫_数学模型.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 473,
+ "char_count": 14204,
+ "confidence": "static_review"
+}

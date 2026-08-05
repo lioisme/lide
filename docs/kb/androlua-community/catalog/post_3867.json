@@ -1,0 +1,21 @@
+{
+ "manual_id": 3867,
+ "type_name": "基础代码",
+ "manual_name": "新形势下lua的面向对象",
+ "author": "",
+ "platform": "所有环境",
+ "source_date": "2024年02月09日 19:26:10",
+ "hits": 344,
+ "up": 1,
+ "favorite": 6,
+ "comment": 4,
+ "source_file": "基础代码\\3867_新形势下lua的面向对象.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 165,
+ "char_count": 4582,
+ "confidence": "static_review"
+}

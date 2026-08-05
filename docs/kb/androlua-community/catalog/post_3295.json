@@ -1,0 +1,21 @@
+{
+ "manual_id": 3295,
+ "type_name": "Lua代码",
+ "manual_name": "用os.time实现时间与时间戳的互换",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2023年08月21日 12:54:57",
+ "hits": 277,
+ "up": 4,
+ "favorite": 24,
+ "comment": 1,
+ "source_file": "Lua代码\\3295_用os.time实现时间与时间戳的互换.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 46,
+ "char_count": 1067,
+ "confidence": "static_review"
+}

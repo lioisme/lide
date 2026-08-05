@@ -1,0 +1,23 @@
+{
+ "manual_id": 2756,
+ "type_name": "Androlua教程",
+ "manual_name": "alua神奇特性2",
+ "author": "kamihitoe",
+ "platform": "所有环境",
+ "source_date": "2023年05月03日 21:16:52",
+ "hits": 335,
+ "up": 1,
+ "favorite": 1,
+ "comment": 6,
+ "source_file": "Androlua教程\\2756_alua神奇特性2.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "text_only"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 33,
+ "char_count": 3249,
+ "confidence": "static_review"
+}

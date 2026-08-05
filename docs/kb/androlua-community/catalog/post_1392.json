@@ -1,0 +1,21 @@
+{
+ "manual_id": 1392,
+ "type_name": "字符处理",
+ "manual_name": "去掉反斜杠",
+ "author": "花柏",
+ "platform": "所有环境",
+ "source_date": "2022年03月08日 14:50:03",
+ "hits": 144,
+ "up": 2,
+ "favorite": 3,
+ "comment": 0,
+ "source_file": "字符处理\\1392_去掉反斜杠.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 15,
+ "char_count": 257,
+ "confidence": "static_review"
+}

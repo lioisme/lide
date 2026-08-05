@@ -1,0 +1,21 @@
+{
+ "manual_id": 4192,
+ "type_name": "Layout布局",
+ "manual_name": "listView自定义普通滑条和快速滑条样式",
+ "author": "1111",
+ "platform": "所有环境",
+ "source_date": "2024年08月19日 15:44:05",
+ "hits": 430,
+ "up": 3,
+ "favorite": 12,
+ "comment": 4,
+ "source_file": "Layout布局\\4192_listView自定义普通滑条和快速滑条样式.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 125,
+ "char_count": 3289,
+ "confidence": "static_review"
+}

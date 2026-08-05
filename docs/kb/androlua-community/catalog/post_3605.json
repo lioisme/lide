@@ -1,0 +1,23 @@
+{
+ "manual_id": 3605,
+ "type_name": "Layout布局",
+ "manual_name": "圆角数值随DPI改变",
+ "author": "池⁧~喵⁧‭",
+ "platform": "所有环境",
+ "source_date": "2023年11月24日 16:18:07",
+ "hits": 230,
+ "up": 1,
+ "favorite": 9,
+ "comment": 2,
+ "source_file": "Layout布局\\3605_圆角数值随DPI改变.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 10,
+ "char_count": 300,
+ "confidence": "static_review"
+}

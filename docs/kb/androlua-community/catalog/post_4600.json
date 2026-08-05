@@ -1,0 +1,21 @@
+{
+ "manual_id": 4600,
+ "type_name": "小工具",
+ "manual_name": "PackageUtil安装包信息工具类V1",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2025年03月15日 18:39:40",
+ "hits": 449,
+ "up": 1,
+ "favorite": 5,
+ "comment": 0,
+ "source_file": "小工具\\4600_PackageUtil安装包信息工具类V1.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 169,
+ "char_count": 5293,
+ "confidence": "static_review"
+}

@@ -1,0 +1,26 @@
+{
+ "manual_id": 4307,
+ "type_name": "Lua代码",
+ "manual_name": "TitleBarView自定义标题栏控件",
+ "author": "烬夜",
+ "platform": "所有环境",
+ "source_date": "2024年10月17日 19:20:59",
+ "hits": 824,
+ "up": 4,
+ "favorite": 7,
+ "comment": 1,
+ "source_file": "Lua代码\\4307_TitleBarView自定义标题栏控件.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "chinese_identifier",
+  "remote_exec"
+ ],
+ "truncation": "complete",
+ "line_count": 566,
+ "char_count": 15570,
+ "confidence": "static_review"
+}

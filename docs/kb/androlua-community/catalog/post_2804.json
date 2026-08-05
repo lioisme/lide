@@ -1,0 +1,21 @@
+{
+ "manual_id": 2804,
+ "type_name": "布局教程",
+ "manual_name": "斜着滑动屏幕",
+ "author": "•⤙•/k",
+ "platform": "AndLua",
+ "source_date": "2023年05月15日 17:24:09",
+ "hits": 283,
+ "up": 4,
+ "favorite": 4,
+ "comment": 7,
+ "source_file": "布局教程\\2804_斜着滑动屏幕.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 77,
+ "char_count": 1417,
+ "confidence": "static_review"
+}

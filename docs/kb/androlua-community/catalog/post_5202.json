@@ -1,0 +1,21 @@
+{
+ "manual_id": 5202,
+ "type_name": "安卓教程",
+ "manual_name": "liquidglassSeekbar",
+ "author": "😈",
+ "platform": "所有环境",
+ "source_date": "2026年02月01日 14:06:33",
+ "hits": 266,
+ "up": 4,
+ "favorite": 4,
+ "comment": 0,
+ "source_file": "安卓教程\\5202_liquidglassSeekbar.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 225,
+ "char_count": 8477,
+ "confidence": "static_review"
+}

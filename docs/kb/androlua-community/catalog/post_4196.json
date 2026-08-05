@@ -1,0 +1,24 @@
+{
+ "manual_id": 4196,
+ "type_name": "Lua代码",
+ "manual_name": "给Editor格式化增加缩进",
+ "author": "呱呱",
+ "platform": "AndroLua",
+ "source_date": "2024年08月21日 14:59:32",
+ "hits": 368,
+ "up": 5,
+ "favorite": 13,
+ "comment": 2,
+ "source_file": "Lua代码\\4196_给Editor格式化增加缩进.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 136,
+ "char_count": 2743,
+ "confidence": "static_review"
+}

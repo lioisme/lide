@@ -1,0 +1,21 @@
+{
+ "manual_id": 4275,
+ "type_name": "UI控件",
+ "manual_name": "双层边框",
+ "author": "🌟",
+ "platform": "所有环境",
+ "source_date": "2024年09月27日 11:43:44",
+ "hits": 1308,
+ "up": 9,
+ "favorite": 28,
+ "comment": 1,
+ "source_file": "UI控件\\4275_双层边框.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 147,
+ "char_count": 4193,
+ "confidence": "static_review"
+}

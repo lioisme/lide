@@ -1,0 +1,24 @@
+{
+ "manual_id": 4189,
+ "type_name": "小工具",
+ "manual_name": "FA2浏览页自定义布局",
+ "author": "⁧拾玖⁧‭",
+ "platform": "Fusion App2",
+ "source_date": "2024年08月18日 10:10:27",
+ "hits": 600,
+ "up": 1,
+ "favorite": 14,
+ "comment": 0,
+ "source_file": "小工具\\4189_FA2浏览页自定义布局.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 21,
+ "char_count": 509,
+ "confidence": "static_review"
+}

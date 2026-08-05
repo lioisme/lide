@@ -1,0 +1,25 @@
+{
+ "manual_id": 1410,
+ "type_name": "Intent通信",
+ "manual_name": "启动LuaActivity",
+ "author": "清·圆",
+ "platform": "所有环境",
+ "source_date": "2022年03月16日 18:26:54",
+ "hits": 263,
+ "up": 3,
+ "favorite": 11,
+ "comment": 0,
+ "source_file": "Intent通信\\1410_启动LuaActivity.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "chinese_identifier"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 10,
+ "char_count": 343,
+ "confidence": "static_review"
+}

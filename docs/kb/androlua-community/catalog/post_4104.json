@@ -1,0 +1,23 @@
+{
+ "manual_id": 4104,
+ "type_name": "SAF访问",
+ "manual_name": "调用系统保存文件",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2024年06月08日 07:41:14",
+ "hits": 504,
+ "up": 11,
+ "favorite": 39,
+ "comment": 2,
+ "source_file": "SAF访问\\4104_调用系统保存文件.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 28,
+ "char_count": 1010,
+ "confidence": "static_review"
+}

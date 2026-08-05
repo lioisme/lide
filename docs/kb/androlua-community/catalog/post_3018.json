@@ -1,0 +1,23 @@
+{
+ "manual_id": 3018,
+ "type_name": "table表",
+ "manual_name": "最简单的面向对象2.1版",
+ "author": "鲲宝",
+ "platform": "所有环境",
+ "source_date": "2023年07月03日 13:12:55",
+ "hits": 228,
+ "up": 6,
+ "favorite": 6,
+ "comment": 3,
+ "source_file": "table表\\3018_最简单的面向对象2.1版.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 52,
+ "char_count": 1119,
+ "confidence": "static_review"
+}

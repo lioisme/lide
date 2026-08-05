@@ -1,0 +1,25 @@
+{
+ "manual_id": 1878,
+ "type_name": "实用代码",
+ "manual_name": "FA2去除加载进度条",
+ "author": "迷糊.",
+ "platform": "Fusion App2",
+ "source_date": "2022年09月12日 19:37:48",
+ "hits": 387,
+ "up": 5,
+ "favorite": 24,
+ "comment": 4,
+ "source_file": "实用代码\\1878_FA2去除加载进度条.lua",
+ "kind": "text_note",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "short_text",
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "complete",
+ "line_count": 1,
+ "char_count": 64,
+ "confidence": "static_review"
+}

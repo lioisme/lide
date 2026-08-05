@@ -1,0 +1,21 @@
+{
+ "manual_id": 5272,
+ "type_name": "Lua教程",
+ "manual_name": "3D 噪声计算",
+ "author": "YONGLE-永乐",
+ "platform": "所有环境",
+ "source_date": "2026年03月13日 01:37:30",
+ "hits": 418,
+ "up": 2,
+ "favorite": 3,
+ "comment": 1,
+ "source_file": "Lua教程\\5272_3D_噪声计算.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 258,
+ "char_count": 7439,
+ "confidence": "static_review"
+}

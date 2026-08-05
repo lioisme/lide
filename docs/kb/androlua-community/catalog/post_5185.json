@@ -1,0 +1,21 @@
+{
+ "manual_id": 5185,
+ "type_name": "Lua代码",
+ "manual_name": "抖音图集解析",
+ "author": "琪琪子",
+ "platform": "AndLua",
+ "source_date": "2026年01月25日 15:33:18",
+ "hits": 252,
+ "up": 3,
+ "favorite": 8,
+ "comment": 1,
+ "source_file": "Lua代码\\5185_抖音图集解析.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 70,
+ "char_count": 1546,
+ "confidence": "static_review"
+}

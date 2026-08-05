@@ -1,0 +1,23 @@
+{
+ "manual_id": 1778,
+ "type_name": "实用代码",
+ "manual_name": "os.execute返回值研究",
+ "author": "W. by",
+ "platform": "所有环境",
+ "source_date": "2022年08月21日 02:18:28",
+ "hits": 195,
+ "up": 2,
+ "favorite": 4,
+ "comment": 0,
+ "source_file": "实用代码\\1778_os.execute返回值研究.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "os_exec"
+ ],
+ "truncation": "complete",
+ "line_count": 8,
+ "char_count": 235,
+ "confidence": "static_review"
+}

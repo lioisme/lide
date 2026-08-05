@@ -1,0 +1,21 @@
+{
+ "manual_id": 3117,
+ "type_name": "安卓教程",
+ "manual_name": "控件随手指移动",
+ "author": "Cheese",
+ "platform": "所有环境",
+ "source_date": "2023年07月21日 17:54:48",
+ "hits": 1005,
+ "up": 24,
+ "favorite": 61,
+ "comment": 18,
+ "source_file": "安卓教程\\3117_控件随手指移动.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 33,
+ "char_count": 691,
+ "confidence": "static_review"
+}

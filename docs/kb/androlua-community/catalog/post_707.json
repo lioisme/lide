@@ -1,0 +1,21 @@
+{
+ "manual_id": 707,
+ "type_name": "浏览器",
+ "manual_name": "网页夜间模式",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 289,
+ "up": 2,
+ "favorite": 15,
+ "comment": 3,
+ "source_file": "浏览器\\707_网页夜间模式.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "truncated_tail",
+ "line_count": 20,
+ "char_count": 937,
+ "confidence": "static_review"
+}

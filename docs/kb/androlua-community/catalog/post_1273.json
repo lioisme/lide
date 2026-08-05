@@ -1,0 +1,24 @@
+{
+ "manual_id": 1273,
+ "type_name": "布局教程",
+ "manual_name": "跟随系统深色模式",
+ "author": "jies辰",
+ "platform": "Fusion App2",
+ "source_date": "2021年12月25日 12:56:55",
+ "hits": 468,
+ "up": 7,
+ "favorite": 19,
+ "comment": 5,
+ "source_file": "布局教程\\1273_跟随系统深色模式.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "complete",
+ "line_count": 19,
+ "char_count": 839,
+ "confidence": "static_review"
+}

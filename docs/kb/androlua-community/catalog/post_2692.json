@@ -1,0 +1,24 @@
+{
+ "manual_id": 2692,
+ "type_name": "小游戏",
+ "manual_name": "贪吃蛇",
+ "author": "诺~",
+ "platform": "所有环境",
+ "source_date": "2023年04月22日 19:07:14",
+ "hits": 561,
+ "up": 9,
+ "favorite": 12,
+ "comment": 20,
+ "source_file": "小游戏\\2692_贪吃蛇.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 248,
+ "char_count": 13008,
+ "confidence": "static_review"
+}

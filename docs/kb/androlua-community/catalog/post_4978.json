@@ -1,0 +1,21 @@
+{
+ "manual_id": 4978,
+ "type_name": "Lua代码",
+ "manual_name": "Permissions反射获取所有权限信息列表",
+ "author": "海纳百氚，有容乃大",
+ "platform": "Fusion App2,reOpenLua,OpenLuaX",
+ "source_date": "2025年08月09日 21:36:03",
+ "hits": 605,
+ "up": 5,
+ "favorite": 14,
+ "comment": 0,
+ "source_file": "Lua代码\\4978_Permissions反射获取所有权限信息列表.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 250,
+ "char_count": 7252,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 4699,
+ "type_name": "安卓教程",
+ "manual_name": "WebDav 模块",
+ "author": "兰皋",
+ "platform": "所有环境",
+ "source_date": "2025年04月18日 22:45:58",
+ "hits": 422,
+ "up": 4,
+ "favorite": 10,
+ "comment": 1,
+ "source_file": "安卓教程\\4699_WebDav_模块.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 270,
+ "char_count": 6624,
+ "confidence": "static_review"
+}

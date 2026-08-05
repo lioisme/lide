@@ -1,0 +1,21 @@
+{
+ "manual_id": 4464,
+ "type_name": "小工具",
+ "manual_name": "一个简约的计算器（好像并没有什么用",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2025年01月13日 14:46:00",
+ "hits": 631,
+ "up": 7,
+ "favorite": 10,
+ "comment": 3,
+ "source_file": "小工具\\4464_一个简约的计算器（好像并没有什么用.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 493,
+ "char_count": 12485,
+ "confidence": "static_review"
+}

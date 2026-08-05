@@ -1,0 +1,21 @@
+{
+ "manual_id": 2997,
+ "type_name": "字符处理",
+ "manual_name": "各类加密算法",
+ "author": "破晓",
+ "platform": "所有环境",
+ "source_date": "2023年07月01日 13:33:18",
+ "hits": 377,
+ "up": 5,
+ "favorite": 15,
+ "comment": 0,
+ "source_file": "字符处理\\2997_各类加密算法.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 340,
+ "char_count": 9786,
+ "confidence": "static_review"
+}

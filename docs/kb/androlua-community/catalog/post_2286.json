@@ -1,0 +1,21 @@
+{
+ "manual_id": 2286,
+ "type_name": "Lua代码",
+ "manual_name": "网易云音乐",
+ "author": "智",
+ "platform": "所有环境",
+ "source_date": "2023年01月07日 06:23:00",
+ "hits": 599,
+ "up": 4,
+ "favorite": 11,
+ "comment": 4,
+ "source_file": "Lua代码\\2286_网易云音乐.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 7,
+ "char_count": 203,
+ "confidence": "static_review"
+}

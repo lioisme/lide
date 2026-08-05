@@ -1,0 +1,21 @@
+{
+ "manual_id": 4418,
+ "type_name": "Intent通信",
+ "manual_name": "正确的Uri文件读取（无需存储权限）",
+ "author": "狸猫🐱",
+ "platform": "所有环境",
+ "source_date": "2024年12月16日 21:14:27",
+ "hits": 487,
+ "up": 6,
+ "favorite": 17,
+ "comment": 2,
+ "source_file": "Intent通信\\4418_正确的Uri文件读取（无需存储权限）.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "truncated_tail",
+ "line_count": 45,
+ "char_count": 1085,
+ "confidence": "static_review"
+}

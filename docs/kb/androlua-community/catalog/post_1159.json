@@ -1,0 +1,21 @@
+{
+ "manual_id": 1159,
+ "type_name": "布局教程",
+ "manual_name": "自定义阴影颜色测试",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 90,
+ "up": 0,
+ "favorite": 0,
+ "comment": 0,
+ "source_file": "布局教程\\1159_自定义阴影颜色测试.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 39,
+ "char_count": 1219,
+ "confidence": "static_review"
+}

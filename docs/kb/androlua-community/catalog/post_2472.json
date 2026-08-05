@@ -1,0 +1,21 @@
+{
+ "manual_id": 2472,
+ "type_name": "小工具",
+ "manual_name": "系统drawable资源",
+ "author": "智",
+ "platform": "所有环境",
+ "source_date": "2023年02月16日 16:10:35",
+ "hits": 308,
+ "up": 7,
+ "favorite": 15,
+ "comment": 4,
+ "source_file": "小工具\\2472_系统drawable资源.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 101,
+ "char_count": 1676,
+ "confidence": "static_review"
+}

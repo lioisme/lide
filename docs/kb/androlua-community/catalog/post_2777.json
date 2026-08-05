@@ -1,0 +1,24 @@
+{
+ "manual_id": 2777,
+ "type_name": "Androlua教程",
+ "manual_name": "定时任务",
+ "author": "NekoLaska",
+ "platform": "所有环境",
+ "source_date": "2023年05月07日 20:36:50",
+ "hits": 506,
+ "up": 3,
+ "favorite": 20,
+ "comment": 0,
+ "source_file": "Androlua教程\\2777_定时任务.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 80,
+ "char_count": 1683,
+ "confidence": "static_review"
+}

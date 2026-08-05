@@ -1,0 +1,23 @@
+{
+ "manual_id": 2591,
+ "type_name": "系统",
+ "manual_name": "获取手机连接WiFi",
+ "author": "迷糊.",
+ "platform": "所有环境",
+ "source_date": "2023年03月20日 07:05:26",
+ "hits": 239,
+ "up": 5,
+ "favorite": 5,
+ "comment": 0,
+ "source_file": "系统\\2591_获取手机连接WiFi.lua",
+ "kind": "reference_sheet",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "xml_list"
+ ],
+ "truncation": "complete",
+ "line_count": 24,
+ "char_count": 772,
+ "confidence": "static_review"
+}

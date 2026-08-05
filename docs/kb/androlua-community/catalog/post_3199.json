@@ -1,0 +1,21 @@
+{
+ "manual_id": 3199,
+ "type_name": "自绘制",
+ "manual_name": "小球每次碰到线，小球数量就会增加1个",
+ "author": "煙雨舊時光",
+ "platform": "所有环境",
+ "source_date": "2023年08月05日 04:46:02",
+ "hits": 188,
+ "up": 1,
+ "favorite": 0,
+ "comment": 4,
+ "source_file": "自绘制\\3199_小球每次碰到线，小球数量就会增加1个.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 74,
+ "char_count": 1417,
+ "confidence": "static_review"
+}

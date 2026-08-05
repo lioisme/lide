@@ -1,0 +1,23 @@
+{
+ "manual_id": 241,
+ "type_name": "控件属性",
+ "manual_name": "关于V4的圆形下拉刷新",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 272,
+ "up": 0,
+ "favorite": 3,
+ "comment": 0,
+ "source_file": "控件属性\\241_关于V4的圆形下拉刷新.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "complete",
+ "line_count": 10,
+ "char_count": 365,
+ "confidence": "static_review"
+}

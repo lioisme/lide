@@ -1,0 +1,24 @@
+{
+ "manual_id": 3690,
+ "type_name": "动画教程",
+ "manual_name": "项目点击 提前至首位 动画布局",
+ "author": "121211",
+ "platform": "Fusion App2",
+ "source_date": "2023年12月25日 17:03:29",
+ "hits": 806,
+ "up": 7,
+ "favorite": 24,
+ "comment": 14,
+ "source_file": "动画教程\\3690_项目点击_提前至首位_动画布局.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 224,
+ "char_count": 6099,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 3951,
+ "type_name": "Lua代码",
+ "manual_name": "分割图片",
+ "author": "青柠(YouCun)",
+ "platform": "所有环境",
+ "source_date": "2024年03月05日 11:15:38",
+ "hits": 270,
+ "up": 4,
+ "favorite": 11,
+ "comment": 0,
+ "source_file": "Lua代码\\3951_分割图片.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 99,
+ "char_count": 2279,
+ "confidence": "static_review"
+}

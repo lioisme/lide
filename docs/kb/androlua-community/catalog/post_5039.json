@@ -1,0 +1,21 @@
+{
+ "manual_id": 5039,
+ "type_name": "Layout布局",
+ "manual_name": "推拉门窗",
+ "author": "伊藤诚",
+ "platform": "所有环境",
+ "source_date": "2025年09月12日 18:45:58",
+ "hits": 562,
+ "up": 5,
+ "favorite": 8,
+ "comment": 3,
+ "source_file": "Layout布局\\5039_推拉门窗.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 213,
+ "char_count": 5671,
+ "confidence": "static_review"
+}

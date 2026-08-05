@@ -1,0 +1,23 @@
+{
+ "manual_id": 4899,
+ "type_name": "小工具",
+ "manual_name": "蓝奏云解析，支持文件夹，支持密码",
+ "author": "赋生",
+ "platform": "所有环境",
+ "source_date": "2025年07月09日 16:55:42",
+ "hits": 265,
+ "up": 1,
+ "favorite": 3,
+ "comment": 0,
+ "source_file": "小工具\\4899_蓝奏云解析，支持文件夹，支持密码.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "universal",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 207,
+ "char_count": 6177,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 4448,
+ "type_name": "UI控件",
+ "manual_name": "ImageFilterView实现圆角图片",
+ "author": "NekoLaska",
+ "platform": "Fusion App2,reOpenLua,OpenLuaX",
+ "source_date": "2025年01月05日 11:55:13",
+ "hits": 530,
+ "up": 8,
+ "favorite": 24,
+ "comment": 1,
+ "source_file": "UI控件\\4448_ImageFilterView实现圆角图片.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 78,
+ "char_count": 1615,
+ "confidence": "static_review"
+}

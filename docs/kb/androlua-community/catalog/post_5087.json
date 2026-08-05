@@ -1,0 +1,23 @@
+{
+ "manual_id": 5087,
+ "type_name": "Intent通信",
+ "manual_name": "调用迅雷下载文件",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2025年10月15日 12:38:48",
+ "hits": 166,
+ "up": 1,
+ "favorite": 11,
+ "comment": 0,
+ "source_file": "Intent通信\\5087_调用迅雷下载文件.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 15,
+ "char_count": 477,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 1401,
+ "type_name": "Adapter容器",
+ "manual_name": "ExpandableListView折叠列表",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2022年03月15日 13:25:11",
+ "hits": 1121,
+ "up": 3,
+ "favorite": 44,
+ "comment": 4,
+ "source_file": "Adapter容器\\1401_ExpandableListView折叠列表.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 55,
+ "char_count": 1014,
+ "confidence": "static_review"
+}

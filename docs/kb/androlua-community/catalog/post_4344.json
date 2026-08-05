@@ -1,0 +1,23 @@
+{
+ "manual_id": 4344,
+ "type_name": "自绘制",
+ "manual_name": "动态几何",
+ "author": "残梦终散 - 喵立方",
+ "platform": "所有环境",
+ "source_date": "2024年11月04日 18:24:09",
+ "hits": 1635,
+ "up": 22,
+ "favorite": 55,
+ "comment": 10,
+ "source_file": "自绘制\\4344_动态几何.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "global_pollution"
+ ],
+ "truncation": "complete",
+ "line_count": 200,
+ "char_count": 5086,
+ "confidence": "static_review"
+}

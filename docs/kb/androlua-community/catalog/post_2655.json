@@ -1,0 +1,21 @@
+{
+ "manual_id": 2655,
+ "type_name": "字符处理",
+ "manual_name": "字符串按开头结尾数字大小正序排序",
+ "author": "一個冬瓜",
+ "platform": "所有环境",
+ "source_date": "2023年04月15日 10:46:22",
+ "hits": 154,
+ "up": 2,
+ "favorite": 4,
+ "comment": 0,
+ "source_file": "字符处理\\2655_字符串按开头结尾数字大小正序排序.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "truncated_tail",
+ "line_count": 32,
+ "char_count": 732,
+ "confidence": "static_review"
+}

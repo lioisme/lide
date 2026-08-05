@@ -1,0 +1,25 @@
+{
+ "manual_id": 1925,
+ "type_name": "小工具",
+ "manual_name": "[RSS] RSS订阅在Lua中的应用",
+ "author": "清汀琉璃",
+ "platform": "Fusion App2",
+ "source_date": "2022年10月01日 09:37:59",
+ "hits": 1297,
+ "up": 22,
+ "favorite": 69,
+ "comment": 15,
+ "source_file": "小工具\\1925_[RSS]_RSS订阅在Lua中的应用.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 672,
+ "char_count": 19763,
+ "confidence": "static_review"
+}

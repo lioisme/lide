@@ -1,0 +1,21 @@
+{
+ "manual_id": 679,
+ "type_name": "控件属性",
+ "manual_name": "自定义搜索事件",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 157,
+ "up": 0,
+ "favorite": 1,
+ "comment": 0,
+ "source_file": "控件属性\\679_自定义搜索事件.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 12,
+ "char_count": 362,
+ "confidence": "static_review"
+}

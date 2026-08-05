@@ -1,0 +1,23 @@
+{
+ "manual_id": 2829,
+ "type_name": "自绘制",
+ "manual_name": "简单的Shader着色器演示",
+ "author": "AstarLC",
+ "platform": "所有环境",
+ "source_date": "2023年05月21日 09:18:48",
+ "hits": 287,
+ "up": 3,
+ "favorite": 5,
+ "comment": 1,
+ "source_file": "自绘制\\2829_简单的Shader着色器演示.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "global_pollution"
+ ],
+ "truncation": "complete",
+ "line_count": 118,
+ "char_count": 4070,
+ "confidence": "static_review"
+}

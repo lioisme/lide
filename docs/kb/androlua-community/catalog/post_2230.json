@@ -1,0 +1,23 @@
+{
+ "manual_id": 2230,
+ "type_name": "小工具",
+ "manual_name": "快手去水印",
+ "author": "祁画",
+ "platform": "Fusion App1,AndLua",
+ "source_date": "2022年12月21日 13:58:13",
+ "hits": 1162,
+ "up": 16,
+ "favorite": 51,
+ "comment": 13,
+ "source_file": "小工具\\2230_快手去水印.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 331,
+ "char_count": 10472,
+ "confidence": "static_review"
+}

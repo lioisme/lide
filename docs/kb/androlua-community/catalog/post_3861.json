@@ -1,0 +1,24 @@
+{
+ "manual_id": 3861,
+ "type_name": "设备系统",
+ "manual_name": "PageTransformer 修改 ViewPager 滑动动画V2",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2024年02月06日 22:37:31",
+ "hits": 1405,
+ "up": 21,
+ "favorite": 65,
+ "comment": 6,
+ "source_file": "设备系统\\3861_PageTransformer_修改_ViewPager_滑动动画V2.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 461,
+ "char_count": 13061,
+ "confidence": "static_review"
+}

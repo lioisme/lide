@@ -1,0 +1,23 @@
+{
+ "manual_id": 2951,
+ "type_name": "实用代码",
+ "manual_name": "低仿MIUI软件更新弹窗布局",
+ "author": "小华哥.",
+ "platform": "Fusion App1",
+ "source_date": "2023年06月18日 20:08:22",
+ "hits": 630,
+ "up": 3,
+ "favorite": 20,
+ "comment": 11,
+ "source_file": "实用代码\\2951_低仿MIUI软件更新弹窗布局.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 233,
+ "char_count": 6838,
+ "confidence": "static_review"
+}

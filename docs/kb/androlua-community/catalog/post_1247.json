@@ -1,0 +1,21 @@
+{
+ "manual_id": 1247,
+ "type_name": "文件操作",
+ "manual_name": "免ROOT申请Android/data访问读写权限",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2021年12月19日 18:38:16",
+ "hits": 553,
+ "up": 8,
+ "favorite": 40,
+ "comment": 2,
+ "source_file": "文件操作\\1247_免ROOT申请Android_data访问读写权限.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 9,
+ "char_count": 608,
+ "confidence": "static_review"
+}

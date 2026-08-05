@@ -1,0 +1,23 @@
+{
+ "manual_id": 993,
+ "type_name": "浏览器",
+ "manual_name": "返回网页底部",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 85,
+ "up": 0,
+ "favorite": 2,
+ "comment": 0,
+ "source_file": "浏览器\\993_返回网页底部.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "complete",
+ "line_count": 1,
+ "char_count": 126,
+ "confidence": "static_review"
+}

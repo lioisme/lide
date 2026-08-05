@@ -1,0 +1,24 @@
+{
+ "manual_id": 1421,
+ "type_name": "浏览器",
+ "manual_name": "WebView上传文件 格式优化版，含 when",
+ "author": "jies辰",
+ "platform": "Fusion App2",
+ "source_date": "2022年03月28日 20:37:09",
+ "hits": 471,
+ "up": 4,
+ "favorite": 18,
+ "comment": 6,
+ "source_file": "浏览器\\1421_WebView上传文件_格式优化版，含_when.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "complete",
+ "line_count": 39,
+ "char_count": 1241,
+ "confidence": "static_review"
+}

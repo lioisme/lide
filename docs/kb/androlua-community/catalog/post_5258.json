@@ -1,0 +1,23 @@
+{
+ "manual_id": 5258,
+ "type_name": "基础代码",
+ "manual_name": "html-YOU加载动画",
+ "author": "喵Miao..͇͉͔̖",
+ "platform": "AndLua",
+ "source_date": "2026年03月04日 23:28:49",
+ "hits": 567,
+ "up": 5,
+ "favorite": 9,
+ "comment": 5,
+ "source_file": "基础代码\\5258_html-YOU加载动画.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 252,
+ "char_count": 9221,
+ "confidence": "static_review"
+}

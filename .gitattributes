@@ -1,0 +1,59 @@
+# 统一行尾：文本 LF 入库；Windows 批处理 CRLF；二进制禁止转换
+# 详见 docs/in-progress/REPO_HARDENING_WORK_ORDER.md T5
+* text=auto
+
+# 文本：强制 LF（含 C/C++ 源、脚本、文档、数据）
+*.c        text eol=lf
+*.h        text eol=lf
+*.cpp      text eol=lf
+*.hpp      text eol=lf
+*.cc       text eol=lf
+*.cxx      text eol=lf
+*.java     text eol=lf
+*.kt       text eol=lf
+*.kts      text eol=lf
+*.lua      text eol=lf
+*.mk       text eol=lf
+*.sh       text eol=lf
+*.ps1      text eol=lf
+*.py       text eol=lf
+*.js       text eol=lf
+*.ts       text eol=lf
+*.json     text eol=lf
+*.jsonl    text eol=lf
+*.xml      text eol=lf
+*.yml      text eol=lf
+*.yaml     text eol=lf
+*.md       text eol=lf
+*.txt      text eol=lf
+*.html     text eol=lf
+*.css      text eol=lf
+*.properties text eol=lf
+*.toml     text eol=lf
+*.pro      text eol=lf
+*.mtn      text eol=lf
+*.aly      text eol=lf
+*.pem      text eol=lf
+gradlew    text eol=lf
+.githooks/* text eol=lf
+
+# Windows 批处理：CRLF（cmd 兼容）
+*.bat      text eol=crlf
+
+# 二进制：禁止行尾转换 / diff
+*.so       -text
+*.png      -text
+*.gif      -text
+*.jpg      -text
+*.jpeg     -text
+*.jar      -text
+*.jks      -text
+*.keystore -text
+*.pk8      -text
+*.class    -text
+*.moc      -text
+*.bin      -text
+*.dex      -text
+*.zip      -text
+*.apk      -text
+*.alp      -text

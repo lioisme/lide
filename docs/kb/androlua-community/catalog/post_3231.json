@@ -1,0 +1,25 @@
+{
+ "manual_id": 3231,
+ "type_name": "小工具",
+ "manual_name": "（修正）音乐+歌词",
+ "author": "Aqora",
+ "platform": "Fusion App2",
+ "source_date": "2023年08月10日 20:21:47",
+ "hits": 753,
+ "up": 14,
+ "favorite": 28,
+ "comment": 13,
+ "source_file": "小工具\\3231_（修正）音乐+歌词.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "remote_exec"
+ ],
+ "truncation": "complete",
+ "line_count": 375,
+ "char_count": 11242,
+ "confidence": "static_review"
+}

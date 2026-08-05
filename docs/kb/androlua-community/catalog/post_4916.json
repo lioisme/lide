@@ -1,0 +1,24 @@
+{
+ "manual_id": 4916,
+ "type_name": "Layout布局",
+ "manual_name": "loadlayout",
+ "author": "⁣​",
+ "platform": "reOpenLua,OpenLuaX",
+ "source_date": "2025年07月13日 22:13:49",
+ "hits": 1465,
+ "up": 16,
+ "favorite": 19,
+ "comment": 24,
+ "source_file": "Layout布局\\4916_loadlayout.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 1057,
+ "char_count": 34613,
+ "confidence": "static_review"
+}

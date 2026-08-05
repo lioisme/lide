@@ -1,0 +1,25 @@
+{
+ "manual_id": 1464,
+ "type_name": "浏览器",
+ "manual_name": "WebView使用指南：WebViewClient，WebChromeClient和Download",
+ "author": "Adam·Eva",
+ "platform": "所有环境",
+ "source_date": "2022年05月01日 17:03:17",
+ "hits": 3310,
+ "up": 50,
+ "favorite": 130,
+ "comment": 26,
+ "source_file": "浏览器\\1464_WebView使用指南：WebViewClient，WebChromeClient和Download.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound",
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 439,
+ "char_count": 15575,
+ "confidence": "static_review"
+}

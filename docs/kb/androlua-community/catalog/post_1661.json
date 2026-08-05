@@ -1,0 +1,21 @@
+{
+ "manual_id": 1661,
+ "type_name": "自绘制",
+ "manual_name": "自绘制开关",
+ "author": "帕帝天秀",
+ "platform": "所有环境",
+ "source_date": "2022年08月05日 21:25:54",
+ "hits": 906,
+ "up": 19,
+ "favorite": 51,
+ "comment": 0,
+ "source_file": "自绘制\\1661_自绘制开关.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "truncated_tail",
+ "line_count": 107,
+ "char_count": 2827,
+ "confidence": "static_review"
+}

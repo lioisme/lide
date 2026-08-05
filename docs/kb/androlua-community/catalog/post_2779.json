@@ -1,0 +1,25 @@
+{
+ "manual_id": 2779,
+ "type_name": "小工具",
+ "manual_name": "高质量头像",
+ "author": "YONGLE-永乐",
+ "platform": "所有环境",
+ "source_date": "2023年05月07日 21:40:59",
+ "hits": 760,
+ "up": 6,
+ "favorite": 32,
+ "comment": 3,
+ "source_file": "小工具\\2779_高质量头像.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "chinese_identifier"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 276,
+ "char_count": 6516,
+ "confidence": "static_review"
+}

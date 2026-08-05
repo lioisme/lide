@@ -1,0 +1,24 @@
+{
+ "manual_id": 1544,
+ "type_name": "安卓教程",
+ "manual_name": "Palette 强大而简单的调色板",
+ "author": "",
+ "platform": "所有环境",
+ "source_date": "2022年06月12日 11:52:08",
+ "hits": 379,
+ "up": 7,
+ "favorite": 5,
+ "comment": 7,
+ "source_file": "安卓教程\\1544_Palette_强大而简单的调色板.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 51,
+ "char_count": 1234,
+ "confidence": "static_review"
+}

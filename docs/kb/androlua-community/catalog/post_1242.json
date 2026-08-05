@@ -1,0 +1,23 @@
+{
+ "manual_id": 1242,
+ "type_name": "布局教程",
+ "manual_name": "RelativeLayout 属性大全",
+ "author": "jies辰",
+ "platform": "",
+ "source_date": "2021年12月19日 18:30:10",
+ "hits": 135,
+ "up": 2,
+ "favorite": 4,
+ "comment": 0,
+ "source_file": "布局教程\\1242_RelativeLayout_属性大全.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "text_only"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 51,
+ "char_count": 798,
+ "confidence": "static_review"
+}

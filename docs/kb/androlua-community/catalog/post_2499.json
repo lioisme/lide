@@ -1,0 +1,25 @@
+{
+ "manual_id": 2499,
+ "type_name": "布局教程",
+ "manual_name": "简约浏览器UA切换，ListView布局",
+ "author": "破晓",
+ "platform": "Fusion App2",
+ "source_date": "2023年02月22日 20:13:12",
+ "hits": 732,
+ "up": 3,
+ "favorite": 37,
+ "comment": 9,
+ "source_file": "布局教程\\2499_简约浏览器UA切换，ListView布局.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 232,
+ "char_count": 5928,
+ "confidence": "static_review"
+}

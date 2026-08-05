@@ -1,0 +1,21 @@
+{
+ "manual_id": 2845,
+ "type_name": "小游戏",
+ "manual_name": "生命游戏",
+ "author": "NekoLaska",
+ "platform": "所有环境",
+ "source_date": "2023年05月23日 20:52:25",
+ "hits": 544,
+ "up": 3,
+ "favorite": 3,
+ "comment": 8,
+ "source_file": "小游戏\\2845_生命游戏.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 168,
+ "char_count": 3720,
+ "confidence": "static_review"
+}

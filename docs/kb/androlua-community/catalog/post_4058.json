@@ -1,0 +1,21 @@
+{
+ "manual_id": 4058,
+ "type_name": "基础代码",
+ "manual_name": "消息发布距离现在的时长",
+ "author": "兜兜转转，又回到原点！",
+ "platform": "所有环境",
+ "source_date": "2024年05月13日 18:42:54",
+ "hits": 380,
+ "up": 3,
+ "favorite": 14,
+ "comment": 0,
+ "source_file": "基础代码\\4058_消息发布距离现在的时长.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 32,
+ "char_count": 964,
+ "confidence": "static_review"
+}

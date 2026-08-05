@@ -1,0 +1,23 @@
+{
+ "manual_id": 3673,
+ "type_name": "小工具",
+ "manual_name": "视频静音导出",
+ "author": "琪琪子",
+ "platform": "AndLua",
+ "source_date": "2023年12月20日 14:45:46",
+ "hits": 223,
+ "up": 2,
+ "favorite": 8,
+ "comment": 1,
+ "source_file": "小工具\\3673_视频静音导出.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "global_pollution"
+ ],
+ "truncation": "complete",
+ "line_count": 42,
+ "char_count": 1447,
+ "confidence": "static_review"
+}

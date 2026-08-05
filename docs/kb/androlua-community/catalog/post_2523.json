@@ -1,0 +1,25 @@
+{
+ "manual_id": 2523,
+ "type_name": "Java教程",
+ "manual_name": "爱发电赞助页",
+ "author": "Adam·Eva",
+ "platform": "Fusion App2",
+ "source_date": "2023年02月27日 03:26:56",
+ "hits": 1413,
+ "up": 15,
+ "favorite": 55,
+ "comment": 3,
+ "source_file": "Java教程\\2523_爱发电赞助页.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 442,
+ "char_count": 13999,
+ "confidence": "static_review"
+}

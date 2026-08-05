@@ -1,0 +1,21 @@
+{
+ "manual_id": 5011,
+ "type_name": "布局教程",
+ "manual_name": "卡片拖动展开动画",
+ "author": "⁣​",
+ "platform": "",
+ "source_date": "2025年08月28日 14:41:56",
+ "hits": 877,
+ "up": 2,
+ "favorite": 1,
+ "comment": 2,
+ "source_file": "布局教程\\5011_卡片拖动展开动画.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 165,
+ "char_count": 5006,
+ "confidence": "static_review"
+}

@@ -1,0 +1,24 @@
+{
+ "manual_id": 1231,
+ "type_name": "布局教程",
+ "manual_name": "浏览页自定义布局",
+ "author": "jies辰",
+ "platform": "",
+ "source_date": "2021年12月19日 18:10:02",
+ "hits": 209,
+ "up": 1,
+ "favorite": 9,
+ "comment": 0,
+ "source_file": "布局教程\\1231_浏览页自定义布局.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "complete",
+ "line_count": 3,
+ "char_count": 191,
+ "confidence": "static_review"
+}

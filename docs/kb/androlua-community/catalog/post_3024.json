@@ -1,0 +1,21 @@
+{
+ "manual_id": 3024,
+ "type_name": "浏览器",
+ "manual_name": "对不起，我们跑路了(html)",
+ "author": "迷糊.",
+ "platform": "所有环境",
+ "source_date": "2023年07月04日 07:03:51",
+ "hits": 681,
+ "up": 29,
+ "favorite": 77,
+ "comment": 8,
+ "source_file": "浏览器\\3024_对不起，我们跑路了(html).lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 172,
+ "char_count": 4613,
+ "confidence": "static_review"
+}

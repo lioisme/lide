@@ -1,0 +1,26 @@
+{
+ "manual_id": 4417,
+ "type_name": "Lua代码",
+ "manual_name": "关于 alua操作 excel",
+ "author": "橘猫",
+ "platform": "所有环境",
+ "source_date": "2024年12月16日 11:07:15",
+ "hits": 547,
+ "up": 3,
+ "favorite": 9,
+ "comment": 7,
+ "source_file": "Lua代码\\4417_关于_alua操作_excel.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "remote_exec",
+  "os_exec"
+ ],
+ "truncation": "complete",
+ "line_count": 72,
+ "char_count": 1835,
+ "confidence": "static_review"
+}

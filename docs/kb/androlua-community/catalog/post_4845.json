@@ -1,0 +1,21 @@
+{
+ "manual_id": 4845,
+ "type_name": "安卓教程",
+ "manual_name": "mid播放器 v1",
+ "author": "寒雪落花静云月",
+ "platform": "所有环境",
+ "source_date": "2025年06月19日 07:42:33",
+ "hits": 304,
+ "up": 5,
+ "favorite": 4,
+ "comment": 1,
+ "source_file": "安卓教程\\4845_mid播放器_v1.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 292,
+ "char_count": 10196,
+ "confidence": "static_review"
+}

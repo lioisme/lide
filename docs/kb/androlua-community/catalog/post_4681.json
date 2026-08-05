@@ -1,0 +1,25 @@
+{
+ "manual_id": 4681,
+ "type_name": "小工具",
+ "manual_name": "ApplicationManager 简约的应用包管理器",
+ "author": "海纳百氚，有容乃大",
+ "platform": "Fusion App2,reOpenLua,OpenLuaX",
+ "source_date": "2025年04月08日 08:08:08",
+ "hits": 1376,
+ "up": 18,
+ "favorite": 48,
+ "comment": 5,
+ "source_file": "小工具\\4681_ApplicationManager_简约的应用包管理器.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 968,
+ "char_count": 29619,
+ "confidence": "static_review"
+}

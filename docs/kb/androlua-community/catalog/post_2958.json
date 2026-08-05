@@ -1,0 +1,24 @@
+{
+ "manual_id": 2958,
+ "type_name": "自绘制",
+ "manual_name": "光线反射",
+ "author": "诺~",
+ "platform": "所有环境",
+ "source_date": "2023年06月20日 14:57:18",
+ "hits": 267,
+ "up": 2,
+ "favorite": 5,
+ "comment": 4,
+ "source_file": "自绘制\\2958_光线反射.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 304,
+ "char_count": 9632,
+ "confidence": "static_review"
+}

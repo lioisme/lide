@@ -1,0 +1,23 @@
+{
+ "manual_id": 428,
+ "type_name": "字符处理",
+ "manual_name": "取随机数",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 115,
+ "up": 1,
+ "favorite": 1,
+ "comment": 0,
+ "source_file": "字符处理\\428_取随机数.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "complete",
+ "line_count": 1,
+ "char_count": 20,
+ "confidence": "static_review"
+}

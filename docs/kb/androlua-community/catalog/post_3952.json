@@ -1,0 +1,21 @@
+{
+ "manual_id": 3952,
+ "type_name": "Androlua教程",
+ "manual_name": "通过屏幕尺寸判断设备是否为平板",
+ "author": "kamihitoe",
+ "platform": "所有环境",
+ "source_date": "2024年03月07日 15:53:09",
+ "hits": 238,
+ "up": 10,
+ "favorite": 18,
+ "comment": 0,
+ "source_file": "Androlua教程\\3952_通过屏幕尺寸判断设备是否为平板.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 10,
+ "char_count": 260,
+ "confidence": "static_review"
+}

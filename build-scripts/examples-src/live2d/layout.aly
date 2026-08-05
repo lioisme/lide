@@ -1,0 +1,39 @@
+{
+LinearLayout;
+orientation="vertical";
+layout_height="fill";
+layout_width="fill";
+{
+FrameLayout;
+  layout_width="fill";
+  id="frame";
+  layout_height="0px";
+  layout_weight="1";
+  {
+  ImageView;
+    src="res/change.png";
+    layout_margin="10dp";
+    layout_gravity="left|bottom";
+    id="change";
+    };
+  };
+  {
+LinearLayout;
+backgroundColor="0xFF748071";
+layout_height="wrap_content";
+layout_width="match_parent";
+padding="10dp";
+orientation="vertical";
+{
+TextView;
+text="Live2D 引擎";
+textSize="20sp";
+textColor="0xFFFFFFFF";
+};
+{
+TextView;
+text="双指拖动舞台可以改变远近同时与角色互动！";
+textColor="0xFFA5C0A3";
+};
+};
+};

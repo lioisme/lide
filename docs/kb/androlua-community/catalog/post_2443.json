@@ -1,0 +1,23 @@
+{
+ "manual_id": 2443,
+ "type_name": "自绘制",
+ "manual_name": "自绘制SeekBar拖动条",
+ "author": "花园",
+ "platform": "所有环境",
+ "source_date": "2023年02月07日 20:23:32",
+ "hits": 775,
+ "up": 19,
+ "favorite": 36,
+ "comment": 9,
+ "source_file": "自绘制\\2443_自绘制SeekBar拖动条.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 147,
+ "char_count": 3644,
+ "confidence": "static_review"
+}

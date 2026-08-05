@@ -1,0 +1,21 @@
+{
+ "manual_id": 3033,
+ "type_name": "布局代码",
+ "manual_name": "仿QQ登录-ConstraintLayout",
+ "author": "小白·马",
+ "platform": "Fusion App2,reOpenLua",
+ "source_date": "2023年07月06日 11:20:28",
+ "hits": 851,
+ "up": 9,
+ "favorite": 41,
+ "comment": 9,
+ "source_file": "布局代码\\3033_仿QQ登录-ConstraintLayout.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 400,
+ "char_count": 13811,
+ "confidence": "static_review"
+}

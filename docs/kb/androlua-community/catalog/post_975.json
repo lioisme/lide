@@ -1,0 +1,21 @@
+{
+ "manual_id": 975,
+ "type_name": "Activity活动",
+ "manual_name": "fas空白模板专用",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 116,
+ "up": 0,
+ "favorite": 0,
+ "comment": 0,
+ "source_file": "Activity活动\\975_fas空白模板专用.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 3,
+ "char_count": 163,
+ "confidence": "static_review"
+}

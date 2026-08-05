@@ -1,0 +1,25 @@
+{
+ "manual_id": 3023,
+ "type_name": "小工具",
+ "manual_name": "GPT API 调用，支持网络搜索，图片显示",
+ "author": "dingyi",
+ "platform": "Fusion App2,reOpenLua,OpenLuaX",
+ "source_date": "2023年07月04日 05:59:57",
+ "hits": 1727,
+ "up": 19,
+ "favorite": 44,
+ "comment": 9,
+ "source_file": "小工具\\3023_GPT_API_调用，支持网络搜索，图片显示.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "remote_exec"
+ ],
+ "truncation": "complete",
+ "line_count": 2108,
+ "char_count": 60334,
+ "confidence": "static_review"
+}

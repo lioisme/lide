@@ -1,0 +1,21 @@
+{
+ "manual_id": 3868,
+ "type_name": "实用代码",
+ "manual_name": "在 WebView 中调暗 Web 内容（网页暗黑模式）",
+ "author": "小白·马",
+ "platform": "Fusion App2,reOpenLua,OpenLuaX",
+ "source_date": "2024年02月09日 20:07:20",
+ "hits": 334,
+ "up": 4,
+ "favorite": 9,
+ "comment": 8,
+ "source_file": "实用代码\\3868_在_WebView_中调暗_Web_内容（网页暗黑模式）.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 23,
+ "char_count": 886,
+ "confidence": "static_review"
+}

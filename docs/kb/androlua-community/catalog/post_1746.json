@@ -1,0 +1,25 @@
+{
+ "manual_id": 1746,
+ "type_name": "小工具",
+ "manual_name": "音乐+歌词",
+ "author": "清汀琉璃",
+ "platform": "Fusion App2",
+ "source_date": "2022年08月18日 16:33:05",
+ "hits": 1742,
+ "up": 16,
+ "favorite": 47,
+ "comment": 21,
+ "source_file": "小工具\\1746_音乐+歌词.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "remote_exec"
+ ],
+ "truncation": "complete",
+ "line_count": 367,
+ "char_count": 11137,
+ "confidence": "static_review"
+}

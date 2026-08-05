@@ -1,0 +1,21 @@
+{
+ "manual_id": 2536,
+ "type_name": "Lua代码",
+ "manual_name": "table链式调用-对象版-有序迭代",
+ "author": "Adam·Eva",
+ "platform": "所有环境",
+ "source_date": "2023年03月03日 11:05:04",
+ "hits": 503,
+ "up": 9,
+ "favorite": 8,
+ "comment": 3,
+ "source_file": "Lua代码\\2536_table链式调用-对象版-有序迭代.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 172,
+ "char_count": 3650,
+ "confidence": "static_review"
+}

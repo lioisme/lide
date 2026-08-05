@@ -1,0 +1,24 @@
+{
+ "manual_id": 1482,
+ "type_name": "Activity活动",
+ "manual_name": "得到 FusionApp 2 自带应用栏菜单 View",
+ "author": "jies辰",
+ "platform": "Fusion App2",
+ "source_date": "2022年05月22日 16:19:42",
+ "hits": 303,
+ "up": 3,
+ "favorite": 6,
+ "comment": 0,
+ "source_file": "Activity活动\\1482_得到_FusionApp_2_自带应用栏菜单_View.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "complete",
+ "line_count": 4,
+ "char_count": 142,
+ "confidence": "static_review"
+}

@@ -1,0 +1,25 @@
+{
+ "manual_id": 1652,
+ "type_name": "小工具",
+ "manual_name": "翻译测试版Demo",
+ "author": "清汀琉璃",
+ "platform": "Fusion App2",
+ "source_date": "2022年08月03日 16:28:45",
+ "hits": 731,
+ "up": 13,
+ "favorite": 24,
+ "comment": 1,
+ "source_file": "小工具\\1652_翻译测试版Demo.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound",
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 912,
+ "char_count": 28209,
+ "confidence": "static_review"
+}

@@ -1,0 +1,23 @@
+{
+ "manual_id": 2490,
+ "type_name": "布局教程",
+ "manual_name": "美化PopMenu实例 修复版",
+ "author": "ㅤ",
+ "platform": "所有环境",
+ "source_date": "2023年02月19日 23:41:53",
+ "hits": 1524,
+ "up": 17,
+ "favorite": 56,
+ "comment": 0,
+ "source_file": "布局教程\\2490_美化PopMenu实例_修复版.lua",
+ "kind": "code_demo",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 179,
+ "char_count": 4479,
+ "confidence": "static_review"
+}

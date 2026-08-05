@@ -1,0 +1,23 @@
+{
+ "manual_id": 542,
+ "type_name": "文件操作",
+ "manual_name": "简单的文件选择",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 217,
+ "up": 1,
+ "favorite": 5,
+ "comment": 0,
+ "source_file": "文件操作\\542_简单的文件选择.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 33,
+ "char_count": 650,
+ "confidence": "static_review"
+}

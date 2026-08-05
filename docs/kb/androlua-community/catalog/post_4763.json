@@ -1,0 +1,21 @@
+{
+ "manual_id": 4763,
+ "type_name": "Lua代码",
+ "manual_name": "图案密码/手势密码",
+ "author": "琪琪子",
+ "platform": "AndLua",
+ "source_date": "2025年05月15日 14:41:57",
+ "hits": 417,
+ "up": 7,
+ "favorite": 34,
+ "comment": 1,
+ "source_file": "Lua代码\\4763_图案密码_手势密码.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 178,
+ "char_count": 4271,
+ "confidence": "static_review"
+}

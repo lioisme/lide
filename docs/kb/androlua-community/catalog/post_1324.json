@@ -1,0 +1,24 @@
+{
+ "manual_id": 1324,
+ "type_name": "控件属性",
+ "manual_name": "UiManager API参考",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "Fusion App2",
+ "source_date": "2022年01月16日 10:58:38",
+ "hits": 652,
+ "up": 10,
+ "favorite": 36,
+ "comment": 1,
+ "source_file": "控件属性\\1324_UiManager_API参考.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 108,
+ "char_count": 1626,
+ "confidence": "static_review"
+}

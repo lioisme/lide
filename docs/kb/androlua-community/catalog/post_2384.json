@@ -1,0 +1,24 @@
+{
+ "manual_id": 2384,
+ "type_name": "浏览器",
+ "manual_name": "屏蔽 网页粘贴板操作",
+ "author": "ㄛㄙ飞ㄋ",
+ "platform": "所有环境",
+ "source_date": "2023年01月27日 18:31:10",
+ "hits": 472,
+ "up": 5,
+ "favorite": 21,
+ "comment": 3,
+ "source_file": "浏览器\\2384_屏蔽_网页粘贴板操作.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "complete",
+ "line_count": 98,
+ "char_count": 2239,
+ "confidence": "static_review"
+}

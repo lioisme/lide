@@ -1,0 +1,21 @@
+{
+ "manual_id": 2362,
+ "type_name": "实用代码",
+ "manual_name": "纠正代码dp,px,sp之间的转换 ",
+ "author": "刃痛",
+ "platform": "所有环境",
+ "source_date": "2023年01月22日 19:11:15",
+ "hits": 134,
+ "up": 7,
+ "favorite": 7,
+ "comment": 0,
+ "source_file": "实用代码\\2362_纠正代码dp,px,sp之间的转换.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 27,
+ "char_count": 656,
+ "confidence": "static_review"
+}

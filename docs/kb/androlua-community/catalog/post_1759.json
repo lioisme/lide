@@ -1,0 +1,23 @@
+{
+ "manual_id": 1759,
+ "type_name": "布局教程",
+ "manual_name": "仿微信首页布局FA2专版",
+ "author": "机不可失🅥",
+ "platform": "Fusion App2",
+ "source_date": "2022年08月19日 21:10:25",
+ "hits": 983,
+ "up": 6,
+ "favorite": 26,
+ "comment": 8,
+ "source_file": "布局教程\\1759_仿微信首页布局FA2专版.lua",
+ "kind": "code_demo",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 1438,
+ "char_count": 42315,
+ "confidence": "static_review"
+}

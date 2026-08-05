@@ -1,0 +1,25 @@
+{
+ "manual_id": 2872,
+ "type_name": "小工具",
+ "manual_name": "手册补全计划",
+ "author": "NekoLaska",
+ "platform": "Fusion App2",
+ "source_date": "2023年05月29日 00:02:40",
+ "hits": 1038,
+ "up": 12,
+ "favorite": 32,
+ "comment": 13,
+ "source_file": "小工具\\2872_手册补全计划.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "remote_exec"
+ ],
+ "truncation": "complete",
+ "line_count": 243,
+ "char_count": 7346,
+ "confidence": "static_review"
+}

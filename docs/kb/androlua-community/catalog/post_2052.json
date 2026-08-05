@@ -1,0 +1,23 @@
+{
+ "manual_id": 2052,
+ "type_name": "数据存储",
+ "manual_name": "LuaDB: 基于Lua的kv数据库",
+ "author": "狸猫🐱",
+ "platform": "所有环境",
+ "source_date": "2022年11月08日 02:02:30",
+ "hits": 783,
+ "up": 14,
+ "favorite": 16,
+ "comment": 9,
+ "source_file": "数据存储\\2052_LuaDB__基于Lua的kv数据库.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "text_only"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 60,
+ "char_count": 912,
+ "confidence": "static_review"
+}

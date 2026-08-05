@@ -1,0 +1,23 @@
+{
+ "manual_id": 2726,
+ "type_name": "Activity活动",
+ "manual_name": "RandomPhotos用图片详情界面布局",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2023年05月02日 01:16:57",
+ "hits": 734,
+ "up": 4,
+ "favorite": 29,
+ "comment": 8,
+ "source_file": "Activity活动\\2726_RandomPhotos用图片详情界面布局.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 246,
+ "char_count": 6726,
+ "confidence": "static_review"
+}

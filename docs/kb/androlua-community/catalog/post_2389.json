@@ -1,0 +1,21 @@
+{
+ "manual_id": 2389,
+ "type_name": "布局教程",
+ "manual_name": "来自己写个点击动效吧（一）（onTouch）",
+ "author": "奥姆",
+ "platform": "Fusion App2",
+ "source_date": "2023年01月28日 18:29:58",
+ "hits": 401,
+ "up": 9,
+ "favorite": 22,
+ "comment": 0,
+ "source_file": "布局教程\\2389_来自己写个点击动效吧（一）（onTouch）.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 78,
+ "char_count": 1919,
+ "confidence": "static_review"
+}

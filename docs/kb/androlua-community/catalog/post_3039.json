@@ -1,0 +1,23 @@
+{
+ "manual_id": 3039,
+ "type_name": "小工具",
+ "manual_name": "二维码生成（搬运）",
+ "author": "2163841047",
+ "platform": "所有环境",
+ "source_date": "2023年07月07日 14:46:10",
+ "hits": 324,
+ "up": 6,
+ "favorite": 11,
+ "comment": 2,
+ "source_file": "小工具\\3039_二维码生成（搬运）.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 155,
+ "char_count": 3823,
+ "confidence": "static_review"
+}

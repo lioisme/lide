@@ -1,0 +1,21 @@
+{
+ "manual_id": 1564,
+ "type_name": "浏览器",
+ "manual_name": "Android Support Custom Tabs",
+ "author": "Adam·Eva",
+ "platform": "所有环境",
+ "source_date": "2022年06月27日 20:50:40",
+ "hits": 436,
+ "up": 10,
+ "favorite": 17,
+ "comment": 0,
+ "source_file": "浏览器\\1564_Android_Support_Custom_Tabs.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 69,
+ "char_count": 2292,
+ "confidence": "static_review"
+}

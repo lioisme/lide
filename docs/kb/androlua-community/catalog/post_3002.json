@@ -1,0 +1,24 @@
+{
+ "manual_id": 3002,
+ "type_name": "系统",
+ "manual_name": "android.R.drawable",
+ "author": "苦小怕",
+ "platform": "所有环境",
+ "source_date": "2023年07月01日 17:28:56",
+ "hits": 905,
+ "up": 7,
+ "favorite": 21,
+ "comment": 6,
+ "source_file": "系统\\3002_android.R.drawable.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 126,
+ "char_count": 2888,
+ "confidence": "static_review"
+}

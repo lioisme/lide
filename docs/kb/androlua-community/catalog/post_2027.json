@@ -1,0 +1,23 @@
+{
+ "manual_id": 2027,
+ "type_name": "浏览器",
+ "manual_name": "百度搜索无广告",
+ "author": "No one cares",
+ "platform": "所有环境",
+ "source_date": "2022年11月02日 08:01:34",
+ "hits": 326,
+ "up": 4,
+ "favorite": 15,
+ "comment": 1,
+ "source_file": "浏览器\\2027_百度搜索无广告.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 5,
+ "char_count": 298,
+ "confidence": "static_review"
+}

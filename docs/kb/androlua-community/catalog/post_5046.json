@@ -1,0 +1,21 @@
+{
+ "manual_id": 5046,
+ "type_name": "UI控件",
+ "manual_name": "SmartTable表格展示框架",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2025年09月27日 12:32:48",
+ "hits": 505,
+ "up": 9,
+ "favorite": 27,
+ "comment": 1,
+ "source_file": "UI控件\\5046_SmartTable表格展示框架.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "truncated_tail",
+ "line_count": 87,
+ "char_count": 4377,
+ "confidence": "static_review"
+}

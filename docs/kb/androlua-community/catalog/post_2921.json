@@ -1,0 +1,23 @@
+{
+ "manual_id": 2921,
+ "type_name": "小工具",
+ "manual_name": "仿句子控卡片布局（一次优化）",
+ "author": "海纳百氚，有容乃大",
+ "platform": "所有环境",
+ "source_date": "2023年06月11日 04:54:19",
+ "hits": 599,
+ "up": 10,
+ "favorite": 34,
+ "comment": 3,
+ "source_file": "小工具\\2921_仿句子控卡片布局（一次优化）.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 241,
+ "char_count": 5976,
+ "confidence": "static_review"
+}

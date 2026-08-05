@@ -1,0 +1,23 @@
+{
+ "manual_id": 4591,
+ "type_name": "加密解密",
+ "manual_name": "对于“简单的小说”求助解决方法",
+ "author": "小白·马",
+ "platform": "所有环境",
+ "source_date": "2025年03月12日 21:49:02",
+ "hits": 289,
+ "up": 1,
+ "favorite": 2,
+ "comment": 3,
+ "source_file": "加密解密\\4591_对于“简单的小说”求助解决方法.lua",
+ "kind": "code_demo",
+ "verdict": "neutral",
+ "portability": "android_api",
+ "flags": [
+  "sensitive_permission"
+ ],
+ "truncation": "complete",
+ "line_count": 144,
+ "char_count": 12173,
+ "confidence": "static_review"
+}

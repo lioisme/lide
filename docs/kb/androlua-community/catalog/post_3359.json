@@ -1,0 +1,21 @@
+{
+ "manual_id": 3359,
+ "type_name": "布局教程",
+ "manual_name": "miku 16 周年 (心血来潮写的ui)",
+ "author": "•⤙•/k",
+ "platform": "AndLua",
+ "source_date": "2023年09月01日 23:00:01",
+ "hits": 478,
+ "up": 6,
+ "favorite": 11,
+ "comment": 8,
+ "source_file": "布局教程\\3359_miku_16_周年_(心血来潮写的ui).lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 197,
+ "char_count": 5584,
+ "confidence": "static_review"
+}

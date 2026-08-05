@@ -1,0 +1,23 @@
+{
+ "manual_id": 298,
+ "type_name": "布局教程",
+ "manual_name": "美观卡片布局",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 760,
+ "up": 3,
+ "favorite": 23,
+ "comment": 0,
+ "source_file": "布局教程\\298_美观卡片布局.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 630,
+ "char_count": 14673,
+ "confidence": "static_review"
+}

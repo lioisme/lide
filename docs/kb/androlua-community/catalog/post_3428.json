@@ -1,0 +1,24 @@
+{
+ "manual_id": 3428,
+ "type_name": "小工具",
+ "manual_name": "用BottomSheetDialog仿某个浏览器菜单弹窗v2",
+ "author": "海纳百氚，有容乃大",
+ "platform": "Fusion App2",
+ "source_date": "2023年09月25日 16:35:39",
+ "hits": 1259,
+ "up": 14,
+ "favorite": 38,
+ "comment": 16,
+ "source_file": "小工具\\3428_用BottomSheetDialog仿某个浏览器菜单弹窗v2.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 432,
+ "char_count": 15862,
+ "confidence": "static_review"
+}

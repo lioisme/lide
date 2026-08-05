@@ -1,0 +1,23 @@
+{
+ "manual_id": 2285,
+ "type_name": "实用代码",
+ "manual_name": "DownloadManager扩展与指南-完美修复",
+ "author": "智",
+ "platform": "所有环境",
+ "source_date": "2023年01月06日 18:32:20",
+ "hits": 863,
+ "up": 12,
+ "favorite": 37,
+ "comment": 13,
+ "source_file": "实用代码\\2285_DownloadManager扩展与指南-完美修复.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "android_api",
+ "flags": [
+  "chinese_identifier"
+ ],
+ "truncation": "complete",
+ "line_count": 249,
+ "char_count": 7395,
+ "confidence": "static_review"
+}

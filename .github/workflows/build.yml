@@ -1,0 +1,158 @@
+name: lide CI
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths-ignore:
+      - 'docs/**'
+      - '**.md'
+      - '.github/**'
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Run lint
+        run: ./gradlew lintArm64Debug
+
+  unit-test:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Run JVM unit tests
+        run: ./gradlew :app:testX64DebugUnitTest :editor:testDebugUnitTest
+
+  build-arm64:
+    name: Build ARM64 APK
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      # Native engine (.so) is built by AGP externalNativeBuild from
+      # app/src/main/cpp at assemble time; only the NDK component is provisioned.
+      - name: Install NDK component
+        run: |
+          yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --install 'ndk;29.0.14206865'
+
+      - name: Build ARM64 debug APK (engine built by AGP)
+        run: ./gradlew assembleArm64Debug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: lide-arm64-debug
+          path: app/build/outputs/apk/arm64/debug/*.apk
+
+  build-x64:
+    name: Build x86_64 APK
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install NDK component
+        run: |
+          yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --install 'ndk;29.0.14206865'
+
+      - name: Build x86_64 debug APK (engine built by AGP)
+        run: ./gradlew assembleX64Debug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: lide-x64-debug
+          path: app/build/outputs/apk/x64/debug/*.apk
+
+  verify-release:
+    name: Verify Release R8 Surface
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install NDK component
+        run: |
+          yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --install 'ndk;29.0.14206865'
+
+      - name: Build release + verify Lua-visible API surface
+        run: ./gradlew verifyReleaseLuaSurface
+
+  verify-no-binaries:
+    name: Verify No Prebuilt Binaries in Repo
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # R5 red line: native engine exists ONLY as source (app/src/main/cpp);
+      # no prebuilt .so/.dex/.zip and no jar other than the wrapper bootstrap
+      # may be tracked. AGP builds engines at src time, so this stays green.
+      - name: Verify no binaries are tracked
+        run: |
+          test "$(git ls-files '*.so' | wc -l)" = "0"
+          test "$(git ls-files '*.dex' | wc -l)" = "0"
+          test "$(git ls-files '*.zip' | wc -l)" = "0"
+          test "$(git ls-files '*.jar' | grep -v 'gradle/wrapper/gradle-wrapper.jar' | wc -l)" = "0"
+          echo "OK: no binary .so/.dex/.zip/.jar tracked (wrapper jar exempt)"

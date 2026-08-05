@@ -1,0 +1,23 @@
+{
+ "manual_id": 2736,
+ "type_name": "控件属性",
+ "manual_name": "Button属性",
+ "author": "诶害",
+ "platform": "所有环境",
+ "source_date": "2023年05月03日 09:10:13",
+ "hits": 128,
+ "up": 0,
+ "favorite": 3,
+ "comment": 0,
+ "source_file": "控件属性\\2736_Button属性.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "short_text"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 13,
+ "char_count": 441,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 5154,
+ "type_name": "Layout布局",
+ "manual_name": "彩色弥散",
+ "author": "伊藤诚",
+ "platform": "所有环境",
+ "source_date": "2025年12月24日 01:23:58",
+ "hits": 578,
+ "up": 8,
+ "favorite": 21,
+ "comment": 2,
+ "source_file": "Layout布局\\5154_彩色弥散.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 286,
+ "char_count": 7087,
+ "confidence": "static_review"
+}

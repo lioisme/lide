@@ -1,0 +1,21 @@
+{
+ "manual_id": 5034,
+ "type_name": "Layout布局",
+ "manual_name": "FlowLayout流式布局",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2025年09月05日 21:06:47",
+ "hits": 411,
+ "up": 4,
+ "favorite": 14,
+ "comment": 0,
+ "source_file": "Layout布局\\5034_FlowLayout流式布局.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 33,
+ "char_count": 579,
+ "confidence": "static_review"
+}

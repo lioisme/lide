@@ -1,0 +1,21 @@
+{
+ "manual_id": 5221,
+ "type_name": "小游戏",
+ "manual_name": "舒特尔表游戏",
+ "author": "琪琪子",
+ "platform": "AndLua",
+ "source_date": "2026年02月04日 08:40:52",
+ "hits": 204,
+ "up": 2,
+ "favorite": 6,
+ "comment": 1,
+ "source_file": "小游戏\\5221_舒特尔表游戏.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 142,
+ "char_count": 3290,
+ "confidence": "static_review"
+}

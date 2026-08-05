@@ -1,0 +1,21 @@
+{
+ "manual_id": 1794,
+ "type_name": "Androlua教程",
+ "manual_name": "获取绑定的蓝牙设备",
+ "author": "NekoLaska",
+ "platform": "所有环境",
+ "source_date": "2022年08月22日 23:29:22",
+ "hits": 380,
+ "up": 6,
+ "favorite": 19,
+ "comment": 1,
+ "source_file": "Androlua教程\\1794_获取绑定的蓝牙设备.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 51,
+ "char_count": 1495,
+ "confidence": "static_review"
+}

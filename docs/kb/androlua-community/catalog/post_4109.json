@@ -1,0 +1,25 @@
+{
+ "manual_id": 4109,
+ "type_name": "文件操作",
+ "manual_name": "aidelua 自动提取APK和修改唯一包名",
+ "author": "kruger",
+ "platform": "AndroLua",
+ "source_date": "2024年06月17日 15:13:19",
+ "hits": 344,
+ "up": 3,
+ "favorite": 7,
+ "comment": 1,
+ "source_file": "文件操作\\4109_aidelua_自动提取APK和修改唯一包名.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api",
+  "os_exec"
+ ],
+ "truncation": "complete",
+ "line_count": 160,
+ "char_count": 4096,
+ "confidence": "static_review"
+}

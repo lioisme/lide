@@ -1,0 +1,21 @@
+{
+ "manual_id": 2206,
+ "type_name": "布局教程",
+ "manual_name": "控件随手势移动函数",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "所有环境",
+ "source_date": "2022年12月18日 16:07:47",
+ "hits": 768,
+ "up": 9,
+ "favorite": 33,
+ "comment": 5,
+ "source_file": "布局教程\\2206_控件随手势移动函数.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 57,
+ "char_count": 1105,
+ "confidence": "static_review"
+}

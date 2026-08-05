@@ -1,0 +1,21 @@
+{
+ "manual_id": 4875,
+ "type_name": "table表",
+ "manual_name": "table拓展函数",
+ "author": "⁧拾玖⁧‭",
+ "platform": "所有环境",
+ "source_date": "2025年07月01日 08:53:06",
+ "hits": 342,
+ "up": 3,
+ "favorite": 6,
+ "comment": 0,
+ "source_file": "table表\\4875_table拓展函数.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 326,
+ "char_count": 5728,
+ "confidence": "static_review"
+}

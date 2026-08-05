@@ -1,0 +1,24 @@
+{
+ "manual_id": 3940,
+ "type_name": "UI控件",
+ "manual_name": "Outlined Input",
+ "author": "kamihitoe",
+ "platform": "Fusion App2,reOpenLua,OpenLuaX",
+ "source_date": "2024年03月01日 09:06:51",
+ "hits": 455,
+ "up": 6,
+ "favorite": 18,
+ "comment": 4,
+ "source_file": "UI控件\\3940_Outlined_Input.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "complete",
+ "line_count": 54,
+ "char_count": 1457,
+ "confidence": "static_review"
+}

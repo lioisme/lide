@@ -1,0 +1,24 @@
+{
+ "manual_id": 3687,
+ "type_name": "基础代码",
+ "manual_name": "绘制函数的3D图像(SVG)",
+ "author": "",
+ "platform": "所有环境",
+ "source_date": "2023年12月24日 13:43:13",
+ "hits": 384,
+ "up": 4,
+ "favorite": 12,
+ "comment": 3,
+ "source_file": "基础代码\\3687_绘制函数的3D图像(SVG).lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 96,
+ "char_count": 2352,
+ "confidence": "static_review"
+}

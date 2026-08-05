@@ -1,0 +1,24 @@
+{
+ "manual_id": 2612,
+ "type_name": "实用代码",
+ "manual_name": "menu添加checkbox和RadioButton",
+ "author": "Aqora",
+ "platform": "所有环境",
+ "source_date": "2023年03月29日 00:06:04",
+ "hits": 320,
+ "up": 6,
+ "favorite": 9,
+ "comment": 0,
+ "source_file": "实用代码\\2612_menu添加checkbox和RadioButton.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "host_private",
+ "flags": [
+  "androlua_private",
+  "private_api"
+ ],
+ "truncation": "complete",
+ "line_count": 23,
+ "char_count": 677,
+ "confidence": "static_review"
+}

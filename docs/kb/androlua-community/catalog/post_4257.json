@@ -1,0 +1,21 @@
+{
+ "manual_id": 4257,
+ "type_name": "安卓教程",
+ "manual_name": "轮询使用",
+ "author": "橘猫",
+ "platform": "所有环境",
+ "source_date": "2024年09月21日 22:59:16",
+ "hits": 299,
+ "up": 2,
+ "favorite": 11,
+ "comment": 6,
+ "source_file": "安卓教程\\4257_轮询使用.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 30,
+ "char_count": 538,
+ "confidence": "static_review"
+}

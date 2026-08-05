@@ -1,0 +1,21 @@
+{
+ "manual_id": 5220,
+ "type_name": "Lua代码",
+ "manual_name": "验证码输入框",
+ "author": "琪琪子",
+ "platform": "AndLua",
+ "source_date": "2026年02月03日 19:47:59",
+ "hits": 251,
+ "up": 3,
+ "favorite": 11,
+ "comment": 0,
+ "source_file": "Lua代码\\5220_验证码输入框.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 129,
+ "char_count": 2877,
+ "confidence": "static_review"
+}

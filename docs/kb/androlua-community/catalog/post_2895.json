@@ -1,0 +1,21 @@
+{
+ "manual_id": 2895,
+ "type_name": "自绘制",
+ "manual_name": "Atan2的简单应用",
+ "author": "AstarLC",
+ "platform": "所有环境",
+ "source_date": "2023年06月03日 21:37:33",
+ "hits": 200,
+ "up": 2,
+ "favorite": 2,
+ "comment": 3,
+ "source_file": "自绘制\\2895_Atan2的简单应用.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 80,
+ "char_count": 2498,
+ "confidence": "static_review"
+}

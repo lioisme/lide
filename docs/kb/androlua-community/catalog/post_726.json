@@ -1,0 +1,21 @@
+{
+ "manual_id": 726,
+ "type_name": "JS教程",
+ "manual_name": "去除网页图片元素",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 87,
+ "up": 1,
+ "favorite": 1,
+ "comment": 0,
+ "source_file": "JS教程\\726_去除网页图片元素.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 10,
+ "char_count": 198,
+ "confidence": "static_review"
+}

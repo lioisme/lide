@@ -1,0 +1,21 @@
+{
+ "manual_id": 1636,
+ "type_name": "实用代码",
+ "manual_name": "艺南上传头像",
+ "author": "邪默",
+ "platform": "AndLua",
+ "source_date": "2022年07月31日 22:57:31",
+ "hits": 322,
+ "up": 1,
+ "favorite": 4,
+ "comment": 1,
+ "source_file": "实用代码\\1636_艺南上传头像.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 39,
+ "char_count": 1033,
+ "confidence": "static_review"
+}

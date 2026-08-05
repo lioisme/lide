@@ -1,0 +1,24 @@
+{
+ "manual_id": 3407,
+ "type_name": "Lua代码",
+ "manual_name": "dump table",
+ "author": "kamihitoe",
+ "platform": "所有环境",
+ "source_date": "2023年09月18日 10:42:40",
+ "hits": 208,
+ "up": 5,
+ "favorite": 6,
+ "comment": 1,
+ "source_file": "Lua代码\\3407_dump_table.lua",
+ "kind": "code_demo",
+ "verdict": "negative",
+ "portability": "editor_bound",
+ "flags": [
+  "editor_bound",
+  "editor_bound"
+ ],
+ "truncation": "complete",
+ "line_count": 149,
+ "char_count": 2898,
+ "confidence": "static_review"
+}

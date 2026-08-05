@@ -1,0 +1,21 @@
+{
+ "manual_id": 4390,
+ "type_name": "自绘制",
+ "manual_name": "基于分形算法生成艺术图案",
+ "author": "美窝框艺/专业裱画做框",
+ "platform": "所有环境",
+ "source_date": "2024年12月05日 22:48:30",
+ "hits": 237,
+ "up": 2,
+ "favorite": 2,
+ "comment": 0,
+ "source_file": "自绘制\\4390_基于分形算法生成艺术图案.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "android_api",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 73,
+ "char_count": 1620,
+ "confidence": "static_review"
+}

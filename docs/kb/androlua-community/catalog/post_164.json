@@ -1,0 +1,23 @@
+{
+ "manual_id": 164,
+ "type_name": "布局教程",
+ "manual_name": "布局简介",
+ "author": "oゞ夜色乄未央ぁ",
+ "platform": "",
+ "source_date": "2020年05月01日 12:26:18",
+ "hits": 295,
+ "up": 2,
+ "favorite": 3,
+ "comment": 0,
+ "source_file": "布局教程\\164_布局简介.lua",
+ "kind": "text_note",
+ "verdict": "neutral",
+ "portability": "universal",
+ "flags": [
+  "text_only"
+ ],
+ "truncation": "truncated_tail",
+ "line_count": 19,
+ "char_count": 761,
+ "confidence": "static_review"
+}

@@ -1,0 +1,21 @@
+{
+ "manual_id": 2874,
+ "type_name": "实用代码",
+ "manual_name": "按两次返回键退出",
+ "author": "yinyong",
+ "platform": "所有环境",
+ "source_date": "2023年05月29日 18:15:51",
+ "hits": 187,
+ "up": 1,
+ "favorite": 13,
+ "comment": 0,
+ "source_file": "实用代码\\2874_按两次返回键退出.lua",
+ "kind": "code_demo",
+ "verdict": "positive",
+ "portability": "universal",
+ "flags": [],
+ "truncation": "complete",
+ "line_count": 17,
+ "char_count": 515,
+ "confidence": "static_review"
+}
