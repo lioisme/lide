@@ -121,12 +121,13 @@ repositories {
     mavenCentral()
 }
 
-// 内置示例 .alp：构建时从 build-scripts/examples-src/ 重新打包（跨平台，替代仅 Windows
-// 可用的 make-examples.ps1）。产物落 src/main/assets/examples/，并被 Android assets 打进 APK。
+// 内置示例 .alp：构建时从 scripts/examples-src/ 重新打包（跨平台，替代仅 Windows
+// 可用的 make-examples.ps1），打包器脚本与示例源统一收纳于 scripts/。产物写入
+// src/main/assets/examples/，构建后随 APK 发布；*.alp 不入库（.gitignore）。
 val generateExamples = tasks.register("generateExamples") {
     group = "build"
-    description = "从 build-scripts/examples-src/ 重新生成内置示例 .alp 文件"
-    val srcRoot = rootProject.file("build-scripts/examples-src")
+    description = "从 scripts/examples-src/ 重新生成内置示例 .alp 文件"
+    val srcRoot = rootProject.file("scripts/examples-src")
     val outDir = layout.projectDirectory.dir("src/main/assets/examples").asFile
     inputs.dir(srcRoot)
     outputs.dir(outDir)

@@ -1,8 +1,8 @@
 # make-examples.ps1
 # Regenerates the built-in .alp example files under app/src/main/assets/examples/
-# from the canonical source trees under build-scripts/examples-src/.
+# from the canonical source trees under scripts/examples-src/.
 #
-# Usage:  powershell -ExecutionPolicy Bypass -File build-scripts\make-examples.ps1
+# Usage:  powershell -ExecutionPolicy Bypass -File scripts\make-examples.ps1
 # Output: one .alp per example dir, named after the dir (the target project
 #         directory name is resolved at import time from init.lua appname).
 $ErrorActionPreference = "Stop"

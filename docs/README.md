@@ -54,7 +54,7 @@ docs/
 4. **决策反转**：决策类结论（含反转）统一入 [DECISIONS.md](kb/DECISIONS.md)，源文档保留原文并交叉引用。
 5. **参考基线只读**：`reference/` 下的参考项目与语料禁止修改、禁止 `git add`；
    根目录上游库归档 `third_party/`（`androlua`/`prebuilt`/`patches`）同样只读。
-6. **root 文档职责**：根目录仅保留源码、构建脚本与仓库配置（`README.md`、`AGENTS.md`、Gradle 骨架、`build-apks.*`）；文档一律入 `docs/`（进度台账 `PROGRESS.md`、白皮书 `WHITEPAPER.md` 亦驻 `docs/` 根），不再新增散落文档。
+6. **root 文档职责**：根目录仅保留源码、构建脚本与仓库配置（`README.md`、`AGENTS.md`、Gradle 骨架）；脚本一律入 `scripts/`（打包/示例/回归）；文档一律入 `docs/`（进度台账 `PROGRESS.md`、白皮书 `WHITEPAPER.md` 亦驻 `docs/` 根），不再新增散落文档。
 
 ## 4. 根目录入口文档
 

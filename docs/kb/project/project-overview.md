@@ -21,9 +21,8 @@
 delua/
 ├── app/        # :app 宿主应用 —— Compose IDE、EngineActivity、打包器（ApkBuilder/ApkSigner）、设置
 ├── editor/     # :editor 纯编辑器模块 —— 行级词法诊断/补全/高亮/搜索（纯 Kotlin，禁止触碰原生引擎）
-├── build-scripts/  # 原生引擎构建工具链（jni/、patches/、examples-src/、live2d）
-├── scripts/        # 开发脚本（rebuild_engine、adb_regress）；构建脚本 build-apks.* 在根目录
-├── third_party/    # 上游库统一收纳：androlua（:androlua 模块）、prebuilt（原生 .so + Lua 模块）、patches
+├── scripts/    # 脚本统一目录 —— 打包 build-apks.*、示例源 examples-src/ 与 make-examples.ps1、回归 adb_regress.ps1
+├── third_party/    # 上游库统一收纳：androlua（:androlua 模块）、patches
 └── docs/           # 文档中心（kb / completed / in-progress / planned / log / reference）
 ```
 

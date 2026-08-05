@@ -78,7 +78,7 @@ adb shell am start -a android.intent.action.VIEW -d "file:///storage/emulated/0/
 
 ## 9. 示例 .alp 资产与导入
 
-- 资产源：`build-scripts/examples-src/`（6 工程）；生成：`build-scripts/make-examples.ps1` → `app/src/main/assets/examples/*.alp`。
+- 资产源：`scripts/examples-src/`（6 工程）；生成：`scripts/make-examples.ps1`（或 Gradle `:app:generateExamples`）→ `app/src/main/assets/examples/*.alp`。
 - **改了示例源必须重新生成 .alp 并重建 APK 重装**，否则导入的是旧内容（实测教训：listview 数据元素修成 LuaTable 后未重新生成，lide 端复现 pro 同款 ClassCastException；重新生成 + 重装 + 重新导入后双端一致）。
 - 导入目录名由 init.lua 的 `appname` 决定，与 .alp 文件名无关（例：`TestJson.alp` → 工程目录 `TestJson/`，appname `com.mycompany.myapp3`）。
 - 导入覆盖语义：重新导入会覆盖已存在目录内容（实测 listview 覆盖导入生效）。

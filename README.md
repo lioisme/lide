@@ -14,11 +14,10 @@ Lua 编译与运行底座（由 AGP `externalNativeBuild` 在 `assemble` 时直�
 |---|---|
 | `app/` | **宿主应用**（`:app`）：Compose IDE、EngineActivity、打包器、设置持久化 |
 | `editor/` | **编辑器模块**（`:editor`）：纯 Kotlin 文本能力（行级诊断/补全/高亮/搜索），不触碰原生引擎 |
-| `build-scripts/` | 内置示例源码包（examples-src/，构建时生成 `.alp`）；`make-examples.ps1` 兼容脚本 |
-| `scripts/` | 开发脚本：双端回归 `adb_regress.ps1` |
+| `scripts/` | **脚本统一目录**：内置示例源（`examples-src/`，构建时生成 `.alp`）、`make-examples.ps1`、双端回归 `adb_regress.ps1`、4 变体打包 `build-apks.bat/.ps1` |
 | `third_party/` | **上游库统一收纳**（只读，后续新增上游库一律入此）：`androlua/`（Gradle 模块 `:androlua`）、`patches/`（material3 SearchBar 实验补丁） |
 | `docs/` | **文档中心**：进度台账（`PROGRESS.md`）、白皮书（`WHITEPAPER.md`）、知识库（`kb/`）、完成/进行中/计划（`completed|in-progress|planned`）、日志（`log/`）、参考基线（`reference/`，gitignore 排除、不提交、只读） |
-| `gradle/` `gradlew*` `settings/build.gradle` `build-apks.*` | Gradle 工程骨架 + 根级构建脚本 |
+| `gradle/` `gradlew*` `settings/build.gradle` | Gradle 工程骨架 + 根级构建脚本 |
 
 ## 常用入口
 
@@ -36,7 +35,7 @@ Lua 编译与运行底座（由 AGP `externalNativeBuild` 在 `assemble` 时直�
 ```powershell
 .\gradlew.bat :app:compileArm64DebugKotlin   # Kotlin 编译检查
 .\gradlew.bat :app:assembleArm64Debug        # 完整构建（arm64；原生引擎由 AGP 从 app/src/main/cpp/ 自动构建）
-.\build-apks.ps1                             # 4 个变体 APK（x64/arm64 × Debug/Release）
+.\scripts\build-apks.ps1                       # 4 个变体 APK（x64/arm64 × Debug/Release）
 ```
 
 ## 二进制策略
@@ -45,7 +44,7 @@ Lua 编译与运行底座（由 AGP `externalNativeBuild` 在 `assemble` 时直�
   `Application.mk` 为 ndk-build 定义，`live2d/` 为独立模块；C/Kotlin 宿主不携带 `.so`/`.dex`/`.jar`/`.zip`）。
 - 原生引擎由 AGP `externalNativeBuild`（ndk-build）在 `assemble` 时直接从 `app/src/main/cpp/` 源码构建并打进 APK，
   无 jniLibs 缓存目录、无 rebuild 脚本（旧 `scripts/rebuild_engine.*` 已废弃删除）。NDK 版本 `29.0.14206865`。
-- 例外：`gradle/wrapper/gradle-wrapper.jar`（Gradle 官方引导，非宿主产物）；`.alp` 作为工程包可直接存在（构建时由 `:app:generateExamples` 从 `build-scripts/examples-src/` 生成）。
+- 例外：`gradle/wrapper/gradle-wrapper.jar`（Gradle 官方引导，非宿主产物）；`.alp` 作为工程包可直接存在（构建时由 `:app:generateExamples` 从 `scripts/examples-src/` 生成）。
 
 ## 许可证
 

@@ -17,7 +17,7 @@
   由 AGP `externalNativeBuild`（ndk-build）在 `assemble` 时直接从源码构建并打包进 APK，
   不设任何 jniLibs 缓存目录，也无 rebuild 脚本（`scripts/rebuild_engine.*` 已废弃删除）。
   NDK 版本固定为 `29.0.14206865`（`app/build.gradle.kts` `ndkVersion`）。
-  例外：`.alp` 作为工程包可直接存在（构建时由 `:app:generateExamples` 从 `build-scripts/examples-src/` 生成）。
+  例外：`.alp` 作为工程包可直接存在（构建时由 `:app:generateExamples` 从 `scripts/examples-src/` 生成）。
 
 验证命令（以下必须全部成立）：
 
