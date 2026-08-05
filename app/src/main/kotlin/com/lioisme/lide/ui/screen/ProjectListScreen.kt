@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.FileDownload
 import androidx.compose.material.icons.filled.FileUpload
 import androidx.compose.material.icons.filled.Folder
@@ -32,13 +33,13 @@ import androidx.compose.ui.unit.dp
 import com.lioisme.lide.R
 import com.lioisme.lide.androlua.AlpManager
 import com.lioisme.lide.androlua.AlpManager.AlpKind
+import com.lioisme.lide.editor.TipIconButton
 import com.lioisme.lide.model.Project
 import com.lioisme.lide.project.ProjectManager
-import com.lioisme.lide.editor.TipIconButton
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
@@ -62,6 +63,9 @@ fun ProjectListScreen(
     var sheetProject by remember { mutableStateOf<Project?>(null) }
     // 主界面精简（用户决策）：示例 / API 浏览器迁入设置，导入收进 ⋮ 溢出菜单。
     var menuExpanded by remember { mutableStateOf(false) }
+    // WP-005 工程重命名：挂起对象 + 名称输入。
+    var pendingRenameProject by remember { mutableStateOf<Project?>(null) }
+    var renameInput by remember { mutableStateOf("") }
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
     val haptics = LocalHapticFeedback.current
@@ -69,6 +73,8 @@ fun ProjectListScreen(
     val strImportFailed = stringResource(R.string.import_failed)
     val strExportSuccess = stringResource(R.string.export_success)
     val strExportFailed = stringResource(R.string.export_failed)
+    val strRenameDone = stringResource(R.string.project_renamed)
+    val strRenameFailed = stringResource(R.string.project_rename_failed)
 
     // 单一刷新入口：首次进入 / 工程属性保存（refreshKey 自增）/ 导入完成后各触发一次；
     // 列表数据为 NavHost 层缓存（导航往返不销毁），刷新期间先展示缓存，无空态闪烁；
@@ -87,6 +93,110 @@ fun ProjectListScreen(
 
     val snackbarHostState = remember { SnackbarHostState() }
 
+    // WP-015 批量导入队列 + 同名冲突挂起：逐个处理，遇冲突暂停等确认（覆盖/改名/取消）。
+    var importQueue by remember { mutableStateOf<List<android.net.Uri>>(emptyList()) }
+    var conflictPending by remember { mutableStateOf<ConflictPending?>(null) }
+    var importCounts by remember { mutableStateOf(0 to 0) }
+
+    /** 将 uri 复制到缓存临时文件（planImport 需要真实文件路径）。 */
+    fun copyToTemp(uri: android.net.Uri): String? =
+        try {
+            context.contentResolver.openInputStream(uri)?.use { input ->
+                val rawName = java.io.File(uri.lastPathSegment ?: "import.alp").name
+                val f = java.io.File(context.cacheDir, "alp_${System.currentTimeMillis()}_$rawName")
+                f.parentFile?.mkdirs()
+                input.copyTo(f.outputStream())
+                f.absolutePath
+            }
+        } catch (_: Throwable) {
+            null
+        }
+
+    fun tallyImport(result: AlpManager.AlpImportResult?) {
+        val (projectCount, pluginCount) = importCounts
+        when (result?.kind) {
+            AlpKind.PROJECT -> {
+                importCounts = projectCount + 1 to pluginCount
+            }
+
+            AlpKind.PLUGIN -> {
+                importCounts = projectCount to pluginCount + 1
+            }
+
+            null -> {}
+        }
+    }
+
+    /** 队列结束汇总：Toast 结果 + 刷新列表 + 清计数。 */
+    fun finishImportBatch() {
+        val (projectCount, pluginCount) = importCounts
+        if (projectCount + pluginCount > 0) {
+            val message =
+                when {
+                    pluginCount > 0 && projectCount == 0 -> {
+                        context.getString(R.string.import_plugin_success, pluginCount)
+                    }
+
+                    pluginCount == 0 -> {
+                        context.getString(R.string.import_projects_success, projectCount)
+                    }
+
+                    else -> {
+                        context.getString(R.string.import_mixed_success, projectCount, pluginCount)
+                    }
+                }
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            scope.launch { refresh() }
+        } else {
+            errorMsg = strImportFailed
+        }
+        importCounts = 0 to 0
+    }
+
+    /** 队列推进：当前项完成（或失败/取消）后调用，直到队列空后汇总。 */
+    fun advanceImportQueue() {
+        val next =
+            importQueue.firstOrNull() ?: run {
+                finishImportBatch()
+                return
+            }
+        importQueue = importQueue.drop(1)
+        scope.launch {
+            val tempPath = withContext(Dispatchers.IO) { copyToTemp(next) }
+            if (tempPath == null) {
+                advanceImportQueue()
+                return@launch
+            }
+            val plan = withContext(Dispatchers.IO) { AlpManager(context).planImport(tempPath) }
+            if (plan == null) {
+                withContext(Dispatchers.IO) { java.io.File(tempPath).delete() }
+                advanceImportQueue()
+                return@launch
+            }
+            if (plan.conflict) {
+                conflictPending = ConflictPending(tempPath, plan)
+                return@launch
+            }
+            val result = withContext(Dispatchers.IO) { AlpManager(context).import(tempPath) }
+            withContext(Dispatchers.IO) { java.io.File(tempPath).delete() }
+            tallyImport(result)
+            advanceImportQueue()
+        }
+    }
+
+    /** 冲突确认后的执行入口：以所选模式导入挂起项并继续队列。 */
+    fun resolveConflict(mode: AlpManager.ImportMode) {
+        val pending = conflictPending ?: return
+        conflictPending = null
+        val tempPath = pending.tempPath
+        scope.launch {
+            val result = withContext(Dispatchers.IO) { AlpManager(context).import(tempPath, mode) }
+            withContext(Dispatchers.IO) { java.io.File(tempPath).delete() }
+            tallyImport(result)
+            advanceImportQueue()
+        }
+    }
+
     LaunchedEffect(errorMsg) {
         if (errorMsg != null) {
             snackbarHostState.showSnackbar(errorMsg!!)
@@ -95,64 +205,40 @@ fun ProjectListScreen(
         }
     }
 
-    val exportLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.CreateDocument("application/zip")
-    ) { uri ->
-        val project = pendingExportProject ?: return@rememberLauncherForActivityResult
-        pendingExportProject = null
-        if (uri == null) return@rememberLauncherForActivityResult
-        scope.launch {
-            val ok = withContext(Dispatchers.IO) {
-                AlpManager(context).export(project.path, uri)
-            }
-            if (ok) {
-                Toast.makeText(context, strExportSuccess, Toast.LENGTH_SHORT).show()
-            } else {
-                errorMsg = strExportFailed
+    val exportLauncher =
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.CreateDocument("application/zip"),
+        ) { uri ->
+            val project = pendingExportProject ?: return@rememberLauncherForActivityResult
+            pendingExportProject = null
+            if (uri == null) return@rememberLauncherForActivityResult
+            scope.launch {
+                val ok =
+                    withContext(Dispatchers.IO) {
+                        AlpManager(context).export(project.path, uri)
+                    }
+                if (ok) {
+                    Toast.makeText(context, strExportSuccess, Toast.LENGTH_SHORT).show()
+                } else {
+                    errorMsg = strExportFailed
+                }
             }
         }
-    }
 
-    val importLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.OpenMultipleDocuments()
-    ) { uris ->
-        if (uris.isEmpty()) return@rememberLauncherForActivityResult
-        scope.launch {
-            var projectCount = 0
-            var pluginCount = 0
-            for (uri in uris) {
-                val result = withContext(Dispatchers.IO) {
-                    AlpManager(context).import(uri)
-                }
-                when (result?.kind) {
-                    AlpKind.PROJECT -> projectCount++
-                    AlpKind.PLUGIN -> pluginCount++
-                    null -> {}
-                }
-            }
-            val imported = projectCount + pluginCount
-            if (imported > 0) {
-                val message = when {
-                    pluginCount > 0 && projectCount == 0 ->
-                        context.getString(R.string.import_plugin_success, pluginCount)
-                    pluginCount == 0 ->
-                        context.getString(R.string.import_projects_success, projectCount)
-                    else ->
-                        context.getString(R.string.import_mixed_success, projectCount, pluginCount)
-                }
-                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-                scope.launch { refresh() }
-            } else {
-                errorMsg = strImportFailed
-            }
+    val importLauncher =
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.OpenMultipleDocuments(),
+        ) { uris ->
+            if (uris.isEmpty()) return@rememberLauncherForActivityResult
+            importQueue = uris
+            advanceImportQueue()
         }
-    }
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
-                title = { Text("LIDE", fontWeight = FontWeight.Medium) },
+                title = { Text(stringResource(R.string.app_name), fontWeight = FontWeight.Medium) },
                 actions = {
                     TipIconButton(
                         tooltip = stringResource(R.string.cd_new_project),
@@ -177,7 +263,7 @@ fun ProjectListScreen(
                         DropdownMenu(expanded = menuExpanded, onDismissRequest = { menuExpanded = false }) {
                             DropdownMenuItem(
                                 text = { Text(stringResource(R.string.import_alp)) },
-                                leadingIcon = { Icon(Icons.Default.FileDownload, null) },
+                                leadingIcon = { Icon(Icons.Default.FileDownload, stringResource(R.string.import_alp)) },
                                 onClick = {
                                     menuExpanded = false
                                     importLauncher.launch(arrayOf("application/zip", "application/octet-stream"))
@@ -186,19 +272,21 @@ fun ProjectListScreen(
                         }
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                    titleContentColor = MaterialTheme.colorScheme.onSurface,
-                ),
+                colors =
+                    TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        titleContentColor = MaterialTheme.colorScheme.onSurface,
+                    ),
             )
-        }
+        },
     ) { padding ->
         PullToRefreshBox(
             isRefreshing = isRefreshing,
             onRefresh = { isRefreshing = true },
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(padding),
         ) {
             if (projects.isEmpty()) {
                 Box(
@@ -231,16 +319,16 @@ fun ProjectListScreen(
                     item { Spacer(Modifier.height(4.dp)) }
                     itemsIndexed(projects, key = { _, project -> project.path }) { index, project ->
                         Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .combinedClickable(
-                                    onClick = { onProjectClick(project) },
-                                    onLongClick = {
-                                        haptics.performHapticFeedback(HapticFeedbackType.LongPress)
-                                        sheetProject = project
-                                    },
-                                )
-                                .padding(horizontal = 16.dp, vertical = 12.dp),
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .combinedClickable(
+                                        onClick = { onProjectClick(project) },
+                                        onLongClick = {
+                                            haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+                                            sheetProject = project
+                                        },
+                                    ).padding(horizontal = 16.dp, vertical = 12.dp),
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
                             Icon(
@@ -291,23 +379,23 @@ fun ProjectListScreen(
                 )
             },
             confirmButton = {
-            TextButton(
-                onClick = {
-                    val name = newName.trim()
-                    if (name.isNotBlank()) {
-                        showCreateDialog = false
-                        newName = ""
-                        scope.launch {
-                            val created = withContext(Dispatchers.IO) { projectManager.createProject(name) }
-                            if (created != null) {
-                                scope.launch { refresh() }
-                            } else {
-                                errorMsg = context.getString(R.string.project_create_failed, name)
+                TextButton(
+                    onClick = {
+                        val name = newName.trim()
+                        if (name.isNotBlank()) {
+                            showCreateDialog = false
+                            newName = ""
+                            scope.launch {
+                                val created = withContext(Dispatchers.IO) { projectManager.createProject(name) }
+                                if (created != null) {
+                                    scope.launch { refresh() }
+                                } else {
+                                    errorMsg = context.getString(R.string.project_create_failed, name)
+                                }
                             }
                         }
-                    }
-                }
-            ) { Text(stringResource(R.string.create)) }
+                    },
+                ) { Text(stringResource(R.string.create)) }
             },
             dismissButton = {
                 TextButton(onClick = { showCreateDialog = false }) { Text(stringResource(R.string.cancel)) }
@@ -315,15 +403,16 @@ fun ProjectListScreen(
         )
     }
 
-    // 长按工程 item 的底部对话框：工程信息 / 导出 .alp / 删除。
+    // 长按工程 item 的底部对话框：工程信息 / 重命名 / 导出 .alp / 删除。
     sheetProject?.let { project ->
         ModalBottomSheet(
             onDismissRequest = { sheetProject = null },
         ) {
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 32.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 32.dp),
             ) {
                 Text(
                     text = project.name,
@@ -341,13 +430,17 @@ fun ProjectListScreen(
                 }
                 Spacer(Modifier.height(8.dp))
                 Row(
-                    modifier = Modifier.fillMaxWidth().clickable {
-                        sheetProject = null
-                        onProjectInfoClick(project)
-                    }.padding(horizontal = 24.dp, vertical = 14.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                sheetProject = null
+                                onProjectInfoClick(project)
+                            }.padding(horizontal = 24.dp, vertical = 14.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Icon(Icons.Default.Info, null, tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(24.dp))
+                    // P2#19：图标 contentDescription 与相邻行文本一致（无障碍朗读）。
+                    Icon(Icons.Default.Info, stringResource(R.string.project_info_menu), tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(24.dp))
                     Spacer(Modifier.width(16.dp))
                     Text(
                         stringResource(R.string.project_info_menu),
@@ -357,14 +450,37 @@ fun ProjectListScreen(
                     )
                 }
                 Row(
-                    modifier = Modifier.fillMaxWidth().clickable {
-                        sheetProject = null
-                        pendingExportProject = project
-                        exportLauncher.launch("${project.name}.alp")
-                    }.padding(horizontal = 24.dp, vertical = 14.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                sheetProject = null
+                                pendingRenameProject = project
+                                renameInput = project.name
+                            }.padding(horizontal = 24.dp, vertical = 14.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Icon(Icons.Default.FileUpload, null, tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(24.dp))
+                    Icon(Icons.Default.Edit, stringResource(R.string.project_rename), tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(24.dp))
+                    Spacer(Modifier.width(16.dp))
+                    Text(
+                        stringResource(R.string.project_rename),
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier.weight(1f),
+                    )
+                }
+                Row(
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                sheetProject = null
+                                pendingExportProject = project
+                                exportLauncher.launch("${project.name}.alp")
+                            }.padding(horizontal = 24.dp, vertical = 14.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Icon(Icons.Default.FileUpload, stringResource(R.string.export_alp), tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(24.dp))
                     Spacer(Modifier.width(16.dp))
                     Text(
                         stringResource(R.string.export_alp),
@@ -374,13 +490,16 @@ fun ProjectListScreen(
                     )
                 }
                 Row(
-                    modifier = Modifier.fillMaxWidth().clickable {
-                        sheetProject = null
-                        pendingDeleteProject = project
-                    }.padding(horizontal = 24.dp, vertical = 14.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                sheetProject = null
+                                pendingDeleteProject = project
+                            }.padding(horizontal = 24.dp, vertical = 14.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Icon(Icons.Default.Delete, null, tint = MaterialTheme.colorScheme.error, modifier = Modifier.size(24.dp))
+                    Icon(Icons.Default.Delete, stringResource(R.string.project_delete), tint = MaterialTheme.colorScheme.error, modifier = Modifier.size(24.dp))
                     Spacer(Modifier.width(16.dp))
                     Text(
                         stringResource(R.string.project_delete),
@@ -403,9 +522,10 @@ fun ProjectListScreen(
                 TextButton(onClick = {
                     pendingDeleteProject = null
                     scope.launch {
-                        val deleted = withContext(Dispatchers.IO) {
-                            projectManager.deleteProject(project)
-                        }
+                        val deleted =
+                            withContext(Dispatchers.IO) {
+                                projectManager.deleteProject(project)
+                            }
                         if (deleted) {
                             scope.launch { refresh() }
                         } else {
@@ -419,4 +539,73 @@ fun ProjectListScreen(
             },
         )
     }
+
+    // WP-005 工程重命名：目录改名 + init.lua appname 同步（重名自动去重 -1/-2）。
+    pendingRenameProject?.let { project ->
+        AlertDialog(
+            onDismissRequest = { pendingRenameProject = null },
+            title = { Text(stringResource(R.string.project_rename_title, project.name)) },
+            text = {
+                Column {
+                    Text(
+                        stringResource(R.string.project_rename_hint),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                    Spacer(Modifier.height(8.dp))
+                    OutlinedTextField(
+                        value = renameInput,
+                        onValueChange = { renameInput = it },
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        val target = pendingRenameProject ?: return@TextButton
+                        pendingRenameProject = null
+                        scope.launch {
+                            val renamed =
+                                withContext(Dispatchers.IO) {
+                                    projectManager.renameProject(target, renameInput)
+                                }
+                            if (renamed != null) {
+                                Toast.makeText(context, strRenameDone, Toast.LENGTH_SHORT).show()
+                                scope.launch { refresh() }
+                            } else {
+                                errorMsg = strRenameFailed
+                            }
+                        }
+                    },
+                    enabled = projectManager.isValidEntryName(renameInput),
+                ) {
+                    Text(stringResource(R.string.confirm))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { pendingRenameProject = null }) { Text(stringResource(R.string.cancel)) }
+            },
+        )
+    }
+
+    conflictPending?.let { pending ->
+        AlpImportConflictDialog(
+            name = pending.plan.name,
+            onOverwrite = { resolveConflict(AlpManager.ImportMode.OVERWRITE) },
+            onRename = { resolveConflict(AlpManager.ImportMode.RENAME) },
+            onCancel = {
+                conflictPending = null
+                scope.launch { withContext(Dispatchers.IO) { java.io.File(pending.tempPath).delete() } }
+                advanceImportQueue()
+            },
+        )
+    }
 }
+
+/** WP-015 待确认导入：临时 .alp 文件路径 + 已解析的导入计划。 */
+private data class ConflictPending(
+    val tempPath: String,
+    val plan: AlpManager.ImportPlan,
+)

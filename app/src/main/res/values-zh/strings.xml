@@ -5,6 +5,11 @@
     <string name="app_name">LIDE</string>
     <string name="back">返回</string>
     <string name="cancel">取消</string>
+    <string name="confirm">确定</string>
+    <string name="alp_conflict_title">导入冲突</string>
+    <string name="alp_conflict_message">已存在名为 \"%1$s\" 的工程或插件。</string>
+    <string name="alp_conflict_overwrite">覆盖</string>
+    <string name="alp_conflict_rename">改名</string>
     <string name="create">创建</string>
     <string name="project_name">项目名称</string>
     <string name="select_file">选择文件</string>
@@ -23,6 +28,11 @@
     <string name="import_plugin_success">已导入 %1$d 个插件</string>
     <string name="import_mixed_success">已导入 %1$d 个工程、%2$d 个插件</string>
     <string name="export_alp">导出为 .alp</string>
+    <string name="project_rename">重命名</string>
+    <string name="project_rename_title">重命名工程</string>
+    <string name="project_rename_hint">重命名工程目录并同步 init.lua 的 appname。名称已存在时自动追加 -1/-2 后缀。</string>
+    <string name="project_renamed">工程已重命名</string>
+    <string name="project_rename_failed">工程重命名失败</string>
     <string name="export_success">项目已导出为 .alp</string>
     <string name="export_failed">导出失败</string>
 
@@ -51,6 +61,38 @@
     <string name="whitespace_off">隐藏</string>
     <string name="font_size">字体大小</string>
     <string name="tab_size">制表符大小</string>
+    <string name="font_size_value">%1$d sp</string>
+    <string name="tab_size_value">%1$d</string>
+
+    <!-- Editor settings screen (D1) -->
+    <string name="editor_settings">编辑器设置</string>
+    <string name="editor_settings_subtitle">字体、编辑、视图与输入选项</string>
+    <string name="editor_settings_editing">编辑</string>
+    <string name="editor_settings_view">视图</string>
+    <string name="editor_settings_input">输入</string>
+    <string name="setting_on">开</string>
+    <string name="setting_off">关</string>
+    <string name="use_tab">使用制表符</string>
+    <string name="auto_indent">自动缩进</string>
+    <string name="auto_close_brackets">自动闭合括号</string>
+    <string name="auto_completion">自动补全</string>
+    <string name="identifier_completion">标识符补全</string>
+    <string name="lexical_diagnostics">语法诊断</string>
+    <string name="read_only">只读</string>
+    <string name="line_numbers">行号</string>
+    <string name="highlight_current_line">高亮当前行</string>
+    <string name="highlight_bracket_pair">高亮括号配对</string>
+    <string name="highlight_current_block">高亮当前块</string>
+    <string name="minimap">迷你地图</string>
+    <string name="sticky_scroll">粘性滚动</string>
+    <string name="ln_panel">行面板</string>
+    <string name="scalable">双指缩放</string>
+    <string name="cursor_animation">光标动画</string>
+    <string name="disable_soft_kbd_if_hard">硬键盘优先</string>
+    <string name="help">帮助</string>
+    <string name="help_subtitle">使用指南</string>
+    <string name="help_title">帮助</string>
+    <string name="help_missing">未找到帮助内容。</string>
     <string name="about">关于</string>
     <string name="version">LIDE v1.0</string>
     <string name="lua_manual">Lua 手册</string>
@@ -142,9 +184,15 @@
     <string name="plugin_installed">已安装插件 \'%1$s\'</string>
     <string name="plugin_invalid">不是有效的插件包 (.alp)</string>
     <string name="plugin_run">运行</string>
+    <string name="plugin_uninstall">卸载插件</string>
     <string name="plugin_install_alp">安装 .alp</string>
     <string name="plugin_version">v%1$s</string>
     <string name="plugin_version_author">v%1$s，作者 %2$s</string>
+    <string name="plugin_uninstall_title">卸载插件</string>
+    <string name="plugin_uninstall_message">移除 \"%1$s\"？其文件将被永久删除。</string>
+    <string name="plugin_uninstall_confirm">卸载</string>
+    <string name="plugin_uninstall_done">插件已卸载</string>
+    <string name="plugin_uninstall_failed">插件卸载失败</string>
 
     <!-- Examples -->
     <string name="examples">示例</string>
@@ -163,6 +211,8 @@
     <string name="example_desc_kleinbottle">OpenGL 克莱因瓶 3D 渲染示例</string>
     <string name="example_name_listview">listview</string>
     <string name="example_desc_listview">LuaAdapter 列表绑定示例</string>
+    <string name="example_name_live2d">live2d</string>
+    <string name="example_desc_live2d">原生引擎 Live2D 形象（Lua 直调 C）</string>
     <string name="example_name_testjson">TestJson</string>
     <string name="example_desc_testjson">dkjson 编解码测试</string>
 
@@ -204,6 +254,7 @@
     <string name="perm_special_battery">忽略电池优化</string>
     <string name="perm_special_install_unknown">安装未知来源应用</string>
     <string name="perm_special_usage_stats">使用情况访问权限</string>
+    <string name="perm_settings_unavailable">系统设置不可用</string>
 
     <!-- Build APK fallbacks -->
     <string name="build_install_failed">安装失败</string>
@@ -229,6 +280,24 @@
     <string name="discard">放弃</string>
     <string name="file_not_supported_open">不支持打开该文件</string>
 
+    <!-- WP-005 File operations -->
+    <string name="filetree_new">新建</string>
+    <string name="filetree_new_file">新建 Lua 文件</string>
+    <string name="filetree_new_dir">新建目录</string>
+    <string name="filetree_rename">重命名</string>
+    <string name="filetree_delete">删除</string>
+    <string name="filetree_delete_title">删除条目</string>
+    <string name="filetree_delete_message">删除 \"%1$s\"？</string>
+    <string name="filetree_delete_dir_message">删除目录 \"%1$s\" 及其全部内容？</string>
+    <string name="filetree_current_dir_hint">长按条目可进行文件操作</string>
+    <string name="filetree_new_file_hint">将创建于 %1$s</string>
+    <string name="filetree_new_dir_hint">将创建于 %1$s</string>
+    <string name="filetree_new_file_placeholder">例如 script.lua</string>
+    <string name="filetree_new_dir_placeholder">例如 assets</string>
+    <string name="filetree_rename_hint">重命名 \"%1$s\"。重名将自动追加 -1/-2 后缀。</string>
+    <string name="filetree_op_failed">操作失败</string>
+    <string name="filetree_anchor_protected">main.lua 与 init.lua 是工程必需文件，不可修改</string>
+
     <!-- Content descriptions -->
     <string name="cd_new_project">新建项目</string>
     <string name="cd_settings">设置</string>
@@ -238,6 +307,7 @@
     <string name="cd_replace_all">全部替换</string>
     <string name="menu_category_file">文件</string>
     <string name="menu_category_project">工程</string>
+    <string name="menu_category_text">文本</string>
     <string name="cd_open_file_tree">打开文件树</string>
     <string name="cd_search">搜索</string>
     <string name="accessibility_service_description">LIDE 无障碍服务：为 Lua 脚本提供自动化能力（点击、滑动、截图）。</string>

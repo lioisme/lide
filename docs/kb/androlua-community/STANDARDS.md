@@ -7,7 +7,7 @@
 
 ## 1. 目标对象与边界
 
-- 对象：`docs/reference/代码手册社区/lua_files/**` 下的每一篇帖子源码。
+- 对象：`reference/代码手册社区/lua_files/**` 下的每一篇帖子源码。
 - 只对**文本内容**做评定；`✅实测` 级结论必须经设备验证（SKILL `androlua-project-validation`），
   未经实测一律标注 `未实测` 或 `静态评审`。
 

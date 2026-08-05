@@ -9,6 +9,9 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import com.androlua.LuaApplication
 import com.lioisme.lide.androlua.AlpManager
@@ -19,13 +22,20 @@ import com.lioisme.lide.i18n.LocaleManager
 import com.lioisme.lide.ui.navigation.LideNavHost
 import com.lioisme.lide.ui.theme.LideTheme
 import com.lioisme.lide.ui.theme.SettingsManager
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 
 class MainActivity : ComponentActivity() {
-
-    private val pendingImport: MutableSet<String> = mutableSetOf()
-    private val pendingOpenFiles: MutableList<Pair<String, String>> = mutableListOf()
-    private var pendingPluginImport: Boolean = false
+    // 启动意图产物以 Compose state 承载（P2#11 修复）：.alp 解压导入 / 独立 .lua 收养
+    // 原在 onCreate/onNewIntent 主线程同步执行（冷启动与点按卡顿），现移入
+    // lifecycleScope + Dispatchers.IO，完成后写 state 触发重组。
+    // 附带修复：onNewIntent 在 setContent 之后到达时，旧实现（plain MutableSet/List）
+    // 追加的条目永远不会被组合消费——state 承载后迟到条目仍会被读取。
+    private var pendingImportPaths by mutableStateOf<List<String>>(emptyList())
+    private var pendingOpenFiles by mutableStateOf<List<Pair<String, String>>>(emptyList())
+    private var pendingPluginImport by mutableStateOf(false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,11 +56,19 @@ class MainActivity : ComponentActivity() {
             val config by SettingsManager.themeConfig.collectAsState()
             LideTheme(config = config) {
                 val navController = rememberNavController()
+                // 一次性消费语义：组合期读取并立即清空（与旧 pendingImport.clear() 等价）；
+                // 异步完成后到达的意图产物经 state 变更触发重组，仍会被本次读取消费。
+                val imports = pendingImportPaths
+                pendingImportPaths = emptyList()
+                val openFiles = pendingOpenFiles
+                pendingOpenFiles = emptyList()
+                val pluginImport = pendingPluginImport
+                pendingPluginImport = false
                 LideNavHost(
                     navController = navController,
-                    pendingImportPaths = pendingImport.toList().also { pendingImport.clear() },
-                    pendingOpenFiles = pendingOpenFiles.toList().also { pendingOpenFiles.clear() },
-                    pendingPluginImport = pendingPluginImport.also { pendingPluginImport = false },
+                    pendingImportPaths = imports,
+                    pendingOpenFiles = openFiles,
+                    pendingPluginImport = pluginImport,
                 )
             }
         }
@@ -73,17 +91,29 @@ class MainActivity : ComponentActivity() {
         val path = resolveFilePath(uri) ?: return
         when {
             path.endsWith(".alp", ignoreCase = true) -> {
-                val result = AlpManager(this).import(path)
-                if (result != null) {
-                    Log.d("MainActivity", "imported .alp to ${result.dir} (${result.kind})")
-                    if (result.kind == AlpKind.PLUGIN) {
-                        pendingPluginImport = true
-                    } else {
-                        pendingImport.add(path)
+                // 解压落盘在 IO 线程（P2#11），完成后经 state 通知列表刷新。
+                lifecycleScope.launch {
+                    val result =
+                        withContext(Dispatchers.IO) {
+                            // WP-015：系统拉起属自动导入路径，冲突时改名（-1/-2）而非覆盖，
+                            // 避免静默删除用户已有工程。
+                            AlpManager(this@MainActivity).import(path, AlpManager.ImportMode.RENAME)
+                        }
+                    if (result != null) {
+                        // 隐私（P3-7）：不打印导入目录绝对路径，仅记录类型。
+                        Log.d("MainActivity", "imported .alp (${result.kind})")
+                        if (result.kind == AlpKind.PLUGIN) {
+                            pendingPluginImport = true
+                        } else {
+                            pendingImportPaths = pendingImportPaths + path
+                        }
                     }
                 }
             }
-            path.endsWith(".lua", ignoreCase = true) -> openOrAdoptLuaFile(path)
+
+            path.endsWith(".lua", ignoreCase = true) -> {
+                openOrAdoptLuaFile(path)
+            }
         }
     }
 
@@ -114,19 +144,25 @@ class MainActivity : ComponentActivity() {
     /**
      * .lua 打开：若文件位于已知工程目录（含 init.lua 的祖先目录）→ 直接打开编辑；
      * 独立文件 → 收养为单文件工程（复制进 project/<name>/ 并生成 init.lua）再打开。
+     * 文件树回溯与收养（拷贝 + init.lua 生成）在 IO 线程执行（P2#11）。
      */
     private fun openOrAdoptLuaFile(path: String) {
         val file = File(path)
         if (!file.isFile) return
-        val projectDir = findProjectDir(file)
-        if (projectDir != null) {
-            val relative = file.absolutePath.substring(projectDir.absolutePath.length + 1)
-            pendingOpenFiles.add(projectDir.absolutePath to relative)
-            return
-        }
-        val adopted = adoptStandaloneFile(file)
-        if (adopted != null) {
-            pendingOpenFiles.add(adopted.first to adopted.second)
+        lifecycleScope.launch {
+            val opened =
+                withContext(Dispatchers.IO) {
+                    val projectDir = findProjectDir(file)
+                    if (projectDir != null) {
+                        val relative = file.absolutePath.substring(projectDir.absolutePath.length + 1)
+                        projectDir.absolutePath to relative
+                    } else {
+                        adoptStandaloneFile(file)
+                    }
+                }
+            if (opened != null) {
+                pendingOpenFiles = pendingOpenFiles + opened
+            }
         }
     }
 
@@ -139,8 +175,8 @@ class MainActivity : ComponentActivity() {
         return null
     }
 
-    private fun adoptStandaloneFile(file: File): Pair<String, String>? {
-        return try {
+    private fun adoptStandaloneFile(file: File): Pair<String, String>? =
+        try {
             val baseName = file.nameWithoutExtension
             val projectBase = File(LuaApplication.getInstance().luaExtDir, "project")
             projectBase.mkdirs()
@@ -162,18 +198,20 @@ class MainActivity : ComponentActivity() {
                 icon = nil
                 pages = {"main"}
                 user_permission = {}
-                """.trimIndent()
+                """.trimIndent(),
             )
             projectDir.absolutePath to file.name
         } catch (e: Exception) {
             Log.e("MainActivity", "adopt standalone lua failed: ${e.message}")
             null
         }
-    }
 
     private fun resolveFilePath(uri: Uri): String? {
         return when (uri.scheme) {
-            "file" -> uri.path
+            "file" -> {
+                uri.path
+            }
+
             "content" -> {
                 try {
                     val cursor = contentResolver.query(uri, arrayOf("_data"), null, null, null)
@@ -187,7 +225,10 @@ class MainActivity : ComponentActivity() {
                 }
                 uri.path
             }
-            else -> uri.path
+
+            else -> {
+                uri.path
+            }
         }
     }
 

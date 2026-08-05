@@ -16,7 +16,6 @@ import java.util.zip.ZipInputStream
 import java.util.zip.ZipOutputStream
 
 class ApkBuilderTest {
-
     private val key: java.security.PrivateKey by lazy {
         val der = loadResource("keys/testkey.pk8")
         KeyFactory.getInstance("RSA").generatePrivate(PKCS8EncodedKeySpec(der))
@@ -24,26 +23,31 @@ class ApkBuilderTest {
 
     private val cert: java.security.cert.X509Certificate by lazy {
         val pem = String(loadResource("keys/testkey.x509.pem"), Charsets.UTF_8)
-        CertificateFactory.getInstance("X.509")
+        CertificateFactory
+            .getInstance("X.509")
             .generateCertificate(pem.byteInputStream()) as java.security.cert.X509Certificate
     }
 
-    private fun loadResource(name: String): ByteArray =
-        checkNotNull(checkNotNull(javaClass.classLoader).getResourceAsStream(name)).readBytes()
+    private fun loadResource(name: String): ByteArray = checkNotNull(checkNotNull(javaClass.classLoader).getResourceAsStream(name)).readBytes()
 
     /** 以真实宿主 manifest 为蓝本的合成宿主 APK。 */
     private fun syntheticHostApk(): ByteArray {
         val manifest = loadResource("manifest_sample.bin")
         val out = ByteArrayOutputStream()
         ZipOutputStream(out).use { zos ->
-            fun put(name: String, bytes: ByteArray, stored: Boolean = false) {
-                val entry = ZipEntry(name).apply {
-                    method = if (stored) ZipEntry.STORED else ZipEntry.DEFLATED
-                    if (stored) {
-                        size = bytes.size.toLong()
-                        crc = CRC32().apply { update(bytes) }.value
+            fun put(
+                name: String,
+                bytes: ByteArray,
+                stored: Boolean = false,
+            ) {
+                val entry =
+                    ZipEntry(name).apply {
+                        method = if (stored) ZipEntry.STORED else ZipEntry.DEFLATED
+                        if (stored) {
+                            size = bytes.size.toLong()
+                            crc = CRC32().apply { update(bytes) }.value
+                        }
                     }
-                }
                 zos.putNextEntry(entry)
                 zos.write(bytes)
                 zos.closeEntry()
@@ -62,25 +66,28 @@ class ApkBuilderTest {
         return out.toByteArray()
     }
 
-    private fun input(): ApkBuilder.ProjectInput = ApkBuilder.ProjectInput(
-        packageName = "com.demo.app",
-        appName = "Demo",
-        versionName = "2.0",
-        versionCode = 1234,
-        declaredPermissions = listOf(
-            "android.permission.INTERNET",
-            "android.permission.CAMERA",
-            "android.permission.VIBRATE",
-            "android.permission.INVALID_NOT_IN_HOST",
-        ),
-        luaSources = mapOf(
-            "main.lua" to "print('hello')\n".toByteArray(),
-            "init.lua" to "-- config\nappname='Demo'\n".toByteArray(),
-            "lib/util.lua" to "-- helper\n".toByteArray(),
-        ),
-        // 需求②：宿主引擎 Lua 库按需保留，未列出的整包剔除。
-        engineLuaLibs = listOf("bin.lua"),
-    )
+    private fun input(): ApkBuilder.ProjectInput =
+        ApkBuilder.ProjectInput(
+            packageName = "com.demo.app",
+            appName = "Demo",
+            versionName = "2.0",
+            versionCode = 1234,
+            declaredPermissions =
+                listOf(
+                    "android.permission.INTERNET",
+                    "android.permission.CAMERA",
+                    "android.permission.VIBRATE",
+                    "android.permission.INVALID_NOT_IN_HOST",
+                ),
+            luaSources =
+                mapOf(
+                    "main.lua" to "print('hello')\n".toByteArray(),
+                    "init.lua" to "-- config\nappname='Demo'\n".toByteArray(),
+                    "lib/util.lua" to "-- helper\n".toByteArray(),
+                ),
+            // 需求②：宿主引擎 Lua 库按需保留，未列出的整包剔除。
+            engineLuaLibs = listOf("bin.lua"),
+        )
 
     private fun entriesOf(apk: ByteArray): Map<String, ByteArray> {
         val map = LinkedHashMap<String, ByteArray>()
@@ -161,12 +168,14 @@ class ApkBuilderTest {
 
     @Test
     fun `project files override same-name host engine lib`() {
-        val input = input().copy(
-            engineLuaLibs = listOf("bin.lua"),
-            luaSources = input().luaSources.toMutableMap().apply {
-                this["bin.lua"] = "-- project bin".toByteArray()
-            },
-        )
+        val input =
+            input().copy(
+                engineLuaLibs = listOf("bin.lua"),
+                luaSources =
+                    input().luaSources.toMutableMap().apply {
+                        this["bin.lua"] = "-- project bin".toByteArray()
+                    },
+            )
         val apk = ApkBuilder.build(syntheticHostApk(), input, key, cert, fakeCompiler())
         val entries = entriesOf(apk)
 
@@ -175,11 +184,13 @@ class ApkBuilderTest {
 
     @Test
     fun `compile error surfaces as BuildException`() {
-        val badInput = input().copy(
-            luaSources = input().luaSources.toMutableMap().apply {
-                this["main.lua"] = "function (".toByteArray()
-            },
-        )
+        val badInput =
+            input().copy(
+                luaSources =
+                    input().luaSources.toMutableMap().apply {
+                        this["main.lua"] = "function (".toByteArray()
+                    },
+            )
         try {
             ApkBuilder.build(
                 syntheticHostApk(),
@@ -200,28 +211,41 @@ class ApkBuilderTest {
         // resources.arsc 是 STORED 条目：R+ 安装校验要求数据区 4 字节对齐。
         val offset = storedDataOffset(apk, "resources.arsc")
         assertTrue("resources.arsc data offset $offset must be 4-aligned", offset % 4 == 0L)
-        assertTrue(ZipInputStream(apk.inputStream()).use { zis ->
-            var stored = false
-            while (true) {
-                val e = zis.nextEntry ?: break
-                if (e.name == "resources.arsc") stored = e.method == ZipEntry.STORED
-            }
-            stored
-        })
+        assertTrue(
+            ZipInputStream(apk.inputStream()).use { zis ->
+                var stored = false
+                while (true) {
+                    val e = zis.nextEntry ?: break
+                    if (e.name == "resources.arsc") stored = e.method == ZipEntry.STORED
+                }
+                stored
+            },
+        )
     }
 
     /** 经 CEN→LOC 手工解析 STORED 条目的数据区偏移。 */
-    private fun storedDataOffset(apk: ByteArray, target: String): Long {
+    private fun storedDataOffset(
+        apk: ByteArray,
+        target: String,
+    ): Long {
         var eocd = apk.size - 22
-        while (eocd >= 0 && !(apk[eocd] == 0x50.toByte() && apk[eocd + 1] == 0x4B.toByte() &&
-                apk[eocd + 2] == 0x05.toByte() && apk[eocd + 3] == 0x06.toByte())) eocd--
+        while (eocd >= 0 &&
+            !(
+                apk[eocd] == 0x50.toByte() && apk[eocd + 1] == 0x4B.toByte() &&
+                    apk[eocd + 2] == 0x05.toByte() && apk[eocd + 3] == 0x06.toByte()
+            )
+        ) {
+            eocd--
+        }
         require(eocd >= 0) { "no EOCD" }
         val cdOffset = readU32(apk, eocd + 16)
         val cdSize = readU32(apk, eocd + 12)
         var pos = cdOffset
         while (pos < cdOffset + cdSize) {
-            require(apk[pos] == 0x50.toByte() && apk[pos + 1] == 0x4B.toByte() &&
-                apk[pos + 2] == 0x01.toByte() && apk[pos + 3] == 0x02.toByte()) { "bad CEN" }
+            require(
+                apk[pos] == 0x50.toByte() && apk[pos + 1] == 0x4B.toByte() &&
+                    apk[pos + 2] == 0x01.toByte() && apk[pos + 3] == 0x02.toByte(),
+            ) { "bad CEN" }
             val nameLen = readU16(apk, pos + 28)
             val extraLen = readU16(apk, pos + 30)
             val commentLen = readU16(apk, pos + 32)
@@ -237,9 +261,13 @@ class ApkBuilderTest {
         throw AssertionError("entry not found: $target")
     }
 
-    private fun readU16(b: ByteArray, off: Int): Int =
-        (b[off].toInt() and 0xFF) or ((b[off + 1].toInt() and 0xFF) shl 8)
+    private fun readU16(
+        b: ByteArray,
+        off: Int,
+    ): Int = (b[off].toInt() and 0xFF) or ((b[off + 1].toInt() and 0xFF) shl 8)
 
-    private fun readU32(b: ByteArray, off: Int): Int =
-        readU16(b, off) or (readU16(b, off + 2) shl 16)
+    private fun readU32(
+        b: ByteArray,
+        off: Int,
+    ): Int = readU16(b, off) or (readU16(b, off + 2) shl 16)
 }

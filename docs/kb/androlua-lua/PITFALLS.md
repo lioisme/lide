@@ -44,7 +44,7 @@
 - 现象：`math.tointeger` 为 `nil`，调用报错。
 - 根因：pro 魔改引擎把 `tointeger` 提为全局函数（`jni/lua/lbaselib.c`）。
 - 规避：用全局 `tointeger(x)`。
-- 验证：探针工程 `docs/reference/project/probe/`（`PROBE tointeger=1` / `PROBE math.tointeger=nil` 双端逐字一致）。
+- 验证：探针工程 `reference/project/probe/`（`PROBE tointeger=1` / `PROBE math.tointeger=nil` 双端逐字一致）。
 
 ## 8. 字节码不兼容标准 Lua
 
@@ -64,7 +64,7 @@
 ## 11. `tostring(0/0)` 的 NaN 符号位：`nan` vs `-nan`（工具链噪声）✅双端一致
 
 - 现象：探针 `0/0` 项，pro 输出 `nan`，lide 输出 `-nan`，原始字符串比较失败。
-- 根因：引擎源码同源（lide 基于 `docs/reference/androlua/AndroLua_pro-master` 参考树 + NDK r29 重建），`luaO_tostring` 均走 `%.14g` 的 NaN 特判（`lobject.c:371-387`）；`0/0` 结果是 NaN，**符号位**在不同 ABI/翻译层下不同，bionic `sprintf` 按符号位输出 `-nan`。Lua 规范不保证 NaN 的字符串形式。
+- 根因：引擎源码同源（lide 基于 `AndroLuaPro v4.4.2 上游源码（移植后唯一真源 `third_party/androlua/` + `app/src/main/cpp/`）` 参考树 + NDK r29 重建），`luaO_tostring` 均走 `%.14g` 的 NaN 特判（`lobject.c:371-387`）；`0/0` 结果是 NaN，**符号位**在不同 ABI/翻译层下不同，bionic `sprintf` 按符号位输出 `-nan`。Lua 规范不保证 NaN 的字符串形式。
 - 定性：**非 lide 缺陷**；探针在 `val()` 中归一化 `-nan→nan`（engine.lua:91-96），其余 281 项仍逐字一致。
 - 验证：双端重跑后 `0/0` 为 `[OK]`，报告总分 pro 283/284、lide 280/284。
 
@@ -226,7 +226,7 @@
 
 ## 看板娘工程已去 pro 化（⚠仅 lide）
 
-- docs/reference/project/看板娘/ 与示例 uild-scripts/examples-src/live2d/：已删除 pro 回退代码（import "jp.live2d.*"、SoundManager/FileManager/LAppLive2DManager 分支）与资产（libs/live2D.dex），仅支持 lide 原生库 liblive2d.so（equire "live2dapp" 失败即明确报错退出）。
+- reference/project/看板娘/ 与示例 uild-scripts/examples-src/live2d/：已删除 pro 回退代码（import "jp.live2d.*"、SoundManager/FileManager/LAppLive2DManager 分支）与资产（libs/live2D.dex），仅支持 lide 原生库 liblive2d.so（equire "live2dapp" 失败即明确报错退出）。
 - 真机回归全 PASS：haru→shizuku→wanko→haru_01+02 四分支轮换、tap/flick 交互、FPS 60 glErr=0、无 Runtime error。
 - live2dapp.lua 内 dex @xxx 实证 注释为行为来源标注（官方 v2 引擎语义），非 pro 兼容代码，保留。
 

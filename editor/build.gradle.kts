@@ -32,13 +32,6 @@ android {
     }
 }
 
-repositories {
-    maven { url = uri("https://maven.aliyun.com/repository/public") }
-    maven { url = uri("https://maven.aliyun.com/repository/google") }
-    google()
-    mavenCentral()
-}
-
 dependencies {
     // 必须与 :app 运行时完全同版（BOM 2025.06.00 → material3 1.4.0）：
     // 曾用 BOM 2024.09.00（material3 1.2.1）编译 TipIconButton 的 PlainTooltip，

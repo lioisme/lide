@@ -1,6 +1,6 @@
 # AndroLua 社区项目知识库（类型 × 用途 × 正负标注）
 
-> 文档编号：KB-COMM-002 ｜ 数据源：`docs/reference/代码手册社区/lua_files/`（2144 篇全量）
+> 文档编号：KB-COMM-002 ｜ 数据源：`reference/代码手册社区/lua_files/`（2144 篇全量）
 > 判定口径：`TASK_ORDER.md` + `STANDARDS.md`（三轴体系）｜ 置信度：`static_review`（静态文本评审，未实测）
 > 数据生成：`tools/analyze.py` → `catalog/`（post_*.json / aggregate.json / quality_report.md / triage_shortlist.md）
 

@@ -11,7 +11,6 @@ import java.util.LinkedHashSet
  * 事件推导规则与 pro 一致：setOnXxxListener → onXxx。
  */
 object ApiReflection {
-
     data class Detail(
         val header: String,
         val constructors: List<String>,
@@ -38,13 +37,14 @@ object ApiReflection {
             if (!ApiIndex.isLoadable(className)) return null
             val clazz = Class.forName(className)
             val methods = clazz.methods.toList()
-            val header = buildString {
-                append(clazz.toString())
-                clazz.superclass?.let {
-                    append(" extends ")
-                    append(it.name)
+            val header =
+                buildString {
+                    append(clazz.toString())
+                    clazz.superclass?.let {
+                        append(" extends ")
+                        append(it.name)
+                    }
                 }
-            }
             Detail(
                 header = header,
                 constructors = clazz.constructors.map { it.toString() },

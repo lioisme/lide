@@ -22,7 +22,6 @@ import java.util.concurrent.atomic.AtomicBoolean
  * 初始化完成（[CountDownLatch]），保证调用返回后注册表必然可用。
  */
 object TextMateInitializer {
-
     private val started = AtomicBoolean(false)
     private val done = CountDownLatch(1)
 
@@ -65,7 +64,7 @@ object TextMateInitializer {
         AsyncIncrementalAnalyzeManager.setUseShallowCopyByDefault(true)
 
         FileProviderRegistry.getInstance().addFileProvider(
-            AssetsFileResolver(context.assets)
+            AssetsFileResolver(context.assets),
         )
 
         val themeRegistry = ThemeRegistry.getInstance()
@@ -75,7 +74,7 @@ object TextMateInitializer {
                 val input = FileProviderRegistry.getInstance().tryGetInputStream(path)
                 if (input != null) {
                     themeRegistry.loadTheme(
-                        ThemeModel(IThemeSource.fromInputStream(input, path, null), name)
+                        ThemeModel(IThemeSource.fromInputStream(input, path, null), name),
                     )
                 }
             } catch (_: Exception) {
@@ -83,13 +82,25 @@ object TextMateInitializer {
         }
         themeRegistry.setTheme("quietlight")
 
-        GrammarRegistry.getInstance().loadGrammars(languages {
-            language("lua") {
-                grammar = "textmate/lua/syntaxes/lua.tmLanguage.json"
-                scopeName = "source.lua"
-                languageConfiguration = "textmate/lua/language-configuration.json"
+        // 多语言化（任务单 EDITOR_ALL_LANGUAGES_SUPPORT_WORK_ORDER P1/P2）：
+        // 通过 LanguageCatalog 全量注册 38 种 TextMate 文法（一次性后台预编译）。
+        // 任一文法加载失败仅记录日志，不中断其余文法（降级原则）。
+        val grammarRegistry = GrammarRegistry.getInstance()
+        for (spec in LanguageCatalog.all) {
+            try {
+                grammarRegistry.loadGrammar(
+                    languages {
+                        language(spec.name) {
+                            grammar = "textmate/${spec.grammar}"
+                            scopeName = spec.scopeName
+                            languageConfiguration = "textmate/${spec.languageConfiguration}"
+                        }
+                    }.build().single(),
+                )
+            } catch (t: Throwable) {
+                Log.w(TAG, "grammar load failed: ${spec.name}", t)
             }
-        })
+        }
     }
 
     private const val TAG = "TextMateInitializer"

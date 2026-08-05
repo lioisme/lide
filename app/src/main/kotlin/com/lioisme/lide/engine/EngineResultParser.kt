@@ -7,9 +7,11 @@ package com.lioisme.lide.engine
  * 职责：错误判定、`路径:行号:` 定位、`nil global 'X'` import 建议提取。
  */
 object EngineResultParser {
-
     /** 命中的错误位置（文件相对工程目录；行号为 1 基，编辑器内部转 0 基）。 */
-    data class ErrorLocation(val file: String, val line: Int)
+    data class ErrorLocation(
+        val file: String,
+        val line: Int,
+    )
 
     /**
      * 从输出文本提取错误位置。Lua 5.3 的错误消息首行定位格式为 `路径:行号:`

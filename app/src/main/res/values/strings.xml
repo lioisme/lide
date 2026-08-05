@@ -5,6 +5,11 @@
     <string name="app_name">LIDE</string>
     <string name="back">Back</string>
     <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
+    <string name="alp_conflict_title">Import conflict</string>
+    <string name="alp_conflict_message">A project or plugin named \"%1$s\" already exists.</string>
+    <string name="alp_conflict_overwrite">Overwrite</string>
+    <string name="alp_conflict_rename">Rename</string>
     <string name="create">Create</string>
     <string name="project_name">Project name</string>
     <string name="select_file">Select File</string>
@@ -23,6 +28,11 @@
     <string name="import_plugin_success">Imported %1$d plugin(s)</string>
     <string name="import_mixed_success">Imported %1$d project(s), %2$d plugin(s)</string>
     <string name="export_alp">Export as .alp</string>
+    <string name="project_rename">Rename</string>
+    <string name="project_rename_title">Rename project</string>
+    <string name="project_rename_hint">Renames the project folder and updates appname in init.lua. If the name already exists, a -1/-2 suffix is added automatically.</string>
+    <string name="project_renamed">Project renamed</string>
+    <string name="project_rename_failed">Failed to rename project</string>
     <string name="export_success">Project exported as .alp</string>
     <string name="export_failed">Failed to export project</string>
 
@@ -51,6 +61,38 @@
     <string name="whitespace_off">Hidden</string>
     <string name="font_size">Font Size</string>
     <string name="tab_size">Tab Size</string>
+    <string name="font_size_value">%1$d sp</string>
+    <string name="tab_size_value">%1$d</string>
+
+    <!-- Editor settings screen (D1) -->
+    <string name="editor_settings">Editor Settings</string>
+    <string name="editor_settings_subtitle">Font, editing, view and input options</string>
+    <string name="editor_settings_editing">Editing</string>
+    <string name="editor_settings_view">View</string>
+    <string name="editor_settings_input">Input</string>
+    <string name="setting_on">On</string>
+    <string name="setting_off">Off</string>
+    <string name="use_tab">Use Tabs</string>
+    <string name="auto_indent">Auto Indent</string>
+    <string name="auto_close_brackets">Auto Close Brackets</string>
+    <string name="auto_completion">Auto Completion</string>
+    <string name="identifier_completion">Identifier Completion</string>
+    <string name="lexical_diagnostics">Syntax Diagnostics</string>
+    <string name="read_only">Read Only</string>
+    <string name="line_numbers">Line Numbers</string>
+    <string name="highlight_current_line">Highlight Current Line</string>
+    <string name="highlight_bracket_pair">Highlight Bracket Pair</string>
+    <string name="highlight_current_block">Highlight Current Block</string>
+    <string name="minimap">Minimap</string>
+    <string name="sticky_scroll">Sticky Scroll</string>
+    <string name="ln_panel">Line Panel</string>
+    <string name="scalable">Pinch Zoom</string>
+    <string name="cursor_animation">Cursor Animation</string>
+    <string name="disable_soft_kbd_if_hard">Hardware Keyboard First</string>
+    <string name="help">Help</string>
+    <string name="help_subtitle">Usage guide</string>
+    <string name="help_title">Help</string>
+    <string name="help_missing">Help content not found.</string>
     <string name="about">About</string>
     <string name="version">LIDE v1.0</string>
     <string name="lua_manual">Lua Manual</string>
@@ -142,9 +184,15 @@
     <string name="plugin_installed">Plugin \'%1$s\' installed</string>
     <string name="plugin_invalid">Not a valid plugin (.alp)</string>
     <string name="plugin_run">Run</string>
+    <string name="plugin_uninstall">Uninstall plugin</string>
     <string name="plugin_install_alp">Install .alp</string>
     <string name="plugin_version">v%1$s</string>
     <string name="plugin_version_author">v%1$s by %2$s</string>
+    <string name="plugin_uninstall_title">Uninstall plugin</string>
+    <string name="plugin_uninstall_message">Remove \"%1$s\"? Its files will be permanently deleted.</string>
+    <string name="plugin_uninstall_confirm">Uninstall</string>
+    <string name="plugin_uninstall_done">Plugin removed</string>
+    <string name="plugin_uninstall_failed">Failed to uninstall plugin</string>
 
     <!-- Examples -->
     <string name="examples">Examples</string>
@@ -206,6 +254,7 @@
     <string name="perm_special_battery">Ignore battery optimizations</string>
     <string name="perm_special_install_unknown">Install unknown apps</string>
     <string name="perm_special_usage_stats">Usage access</string>
+    <string name="perm_settings_unavailable">System settings unavailable</string>
 
     <!-- Build APK fallbacks -->
     <string name="build_install_failed">Install failed</string>
@@ -231,6 +280,24 @@
     <string name="discard">Discard</string>
     <string name="file_not_supported_open">Unsupported file type - cannot open</string>
 
+    <!-- WP-005 File operations -->
+    <string name="filetree_new">New</string>
+    <string name="filetree_new_file">New Lua file</string>
+    <string name="filetree_new_dir">New folder</string>
+    <string name="filetree_rename">Rename</string>
+    <string name="filetree_delete">Delete</string>
+    <string name="filetree_delete_title">Delete entry</string>
+    <string name="filetree_delete_message">Delete \"%1$s\"?</string>
+    <string name="filetree_delete_dir_message">Delete folder \"%1$s\" and everything inside it?</string>
+    <string name="filetree_current_dir_hint">Long-press an entry for actions</string>
+    <string name="filetree_new_file_hint">Will be created in %1$s</string>
+    <string name="filetree_new_dir_hint">Will be created in %1$s</string>
+    <string name="filetree_new_file_placeholder">e.g. script.lua</string>
+    <string name="filetree_new_dir_placeholder">e.g. assets</string>
+    <string name="filetree_rename_hint">Renaming \"%1$s\". Duplicate names get a -1/-2 suffix.</string>
+    <string name="filetree_op_failed">Operation failed</string>
+    <string name="filetree_anchor_protected">main.lua and init.lua are required for the project and cannot be changed</string>
+
     <!-- Content descriptions -->
     <string name="cd_new_project">New Project</string>
     <string name="cd_settings">Settings</string>
@@ -240,6 +307,7 @@
     <string name="cd_replace_all">Replace all</string>
     <string name="menu_category_file">File</string>
     <string name="menu_category_project">Project</string>
+    <string name="menu_category_text">Text</string>
     <string name="cd_open_file_tree">Open file tree</string>
     <string name="cd_search">Search</string>
     <string name="accessibility_service_description">LIDE 无障碍服务：为 Lua 脚本提供自动化能力（点击、滑动、截图）。</string>

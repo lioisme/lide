@@ -5,6 +5,7 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import java.io.ByteArrayOutputStream
 
 class AXmlManifestTest {
 
@@ -216,6 +217,154 @@ class AXmlManifestTest {
             pos += size
         }
         assertTrue("未找到 application 元素", found)
+    }
+
+    // ===== UTF-8 字符串池专项（aapt ENCODE_LENGTH 变长前缀） =====
+
+    @Test
+    fun `utf8 pool decodes mixed-length prefixes correctly`() {
+        // 索引 4 = 中文串：charLen<0x80（单字节前缀）、byteLen>=0x80（两字节前缀）。
+        // 旧实现固定 u16 + 反序读取在此必错，回归锚点。
+        val axml = buildUtf8Axml(packageIndex = 4)
+        assertEquals("测试".repeat(45), AXmlManifest.readPackageName(axml))
+    }
+
+    @Test
+    fun `utf8 pool decodes lengths above 0x80 for both prefixes`() {
+        // 索引 3 = 130 个 ASCII：charLen 与 byteLen 均为两字节前缀。
+        val axml = buildUtf8Axml(packageIndex = 3)
+        assertEquals("a".repeat(130), AXmlManifest.readPackageName(axml))
+    }
+
+    @Test
+    fun `patch rebuilds utf8 source pool to utf16 output`() {
+        val axml = buildUtf8Axml(packageIndex = 4)
+        val edit = ManifestEdit(
+            packageName = "com.demo.app",
+            appLabel = "Demo",
+            versionCode = 2,
+            versionName = "2.0",
+            usesPermissions = listOf("android.permission.INTERNET"),
+        )
+        val patched = AXmlManifest.patch(axml, edit)
+        assertEquals("com.demo.app", AXmlManifest.readPackageName(patched))
+        // 输出池固定为 UTF-16（flags=0），不再含 UTF-8 标志。
+        assertEquals(0L, u32(patched, 8 + 16))
+        assertEquals("Demo", readFirstLabel(patched))
+    }
+
+    private fun readFirstLabel(patched: ByteArray): String {
+        val count = u32(patched, 16).toInt()
+        val stringsStart = u32(patched, 28).toInt()
+        val out = ArrayList<String>(count)
+        for (i in 0 until count) {
+            val o = u32(patched, 36 + 4 * i).toInt()
+            val p = 8 + stringsStart + o
+            val len = u16(patched, p)
+            out += String(patched, p + 2, len * 2, Charsets.UTF_16LE)
+        }
+        return out.firstOrNull { it == "Demo" } ?: ""
+    }
+
+    private fun encodeUtf8Len(len: Int): ByteArray {
+        return if (len < 0x80) byteArrayOf(len.toByte())
+        else byteArrayOf((0x80 or (len shr 8)).toByte(), (len and 0xFF).toByte())
+    }
+
+    private fun encodeUtf8Entry(s: String): ByteArray {
+        val bytes = s.encodeToByteArray()
+        val out = ByteArrayOutputStream()
+        out.write(encodeUtf8Len(s.length))
+        out.write(encodeUtf8Len(bytes.size))
+        out.write(bytes)
+        out.write(0)
+        return out.toByteArray()
+    }
+
+    /** 构建最小 UTF-8 池 AXML：池 + manifest 元素（含一个 package 属性）。 */
+    private fun buildUtf8Axml(packageIndex: Int): ByteArray {
+        val strings = listOf(
+            "http://schemas.android.com/apk/res/android",
+            "manifest",
+            "package",
+            "a".repeat(130), // charLen 与 byteLen 均两字节前缀
+            "测试".repeat(45), // charLen 单字节 / byteLen 两字节前缀
+            "ok",
+        )
+        check(packageIndex in strings.indices && packageIndex >= 3)
+
+        val stringsStart = 28 + 4 * strings.size
+        var dataSize = 0
+        val offsets = IntArray(strings.size)
+        for (i in strings.indices) {
+            offsets[i] = dataSize
+            dataSize += encodeUtf8Entry(strings[i]).size
+        }
+        val pool = ByteArray(28 + 4 * strings.size + dataSize)
+        putU16(pool, 0, 0x0001)
+        putU16(pool, 2, 28)
+        putU32(pool, 4, pool.size.toLong())
+        putU32(pool, 8, strings.size.toLong())
+        putU32(pool, 12, 0)
+        putU32(pool, 16, 0x100) // UTF8_FLAG
+        putU32(pool, 20, stringsStart.toLong())
+        putU32(pool, 24, 0)
+        for (i in strings.indices) putU32(pool, 28 + 4 * i, offsets[i].toLong())
+        for (i in strings.indices) {
+            val entry = encodeUtf8Entry(strings[i])
+            entry.copyInto(pool, stringsStart + offsets[i])
+        }
+
+        // manifest start 元素：ns=android URI，attr=package（值为 packageIndex 处字符串）。
+        val element = ByteArray(56)
+        putU16(element, 0, 0x0102)
+        putU16(element, 2, 16)
+        putU32(element, 4, element.size.toLong())
+        putU32(element, 8, 0)
+        putU32(element, 12, 0xFFFFFFFFL)
+        putU32(element, 16, 0)
+        putU32(element, 20, 1) // "manifest"
+        putU16(element, 24, 20)
+        putU16(element, 26, 20)
+        putU16(element, 28, 1)
+        putU32(element, 36, 0) // ns=android URI
+        putU32(element, 40, 2) // "package"
+        putU32(element, 44, 0xFFFFFFFFL) // raw
+        putU16(element, 48, 8) // Res_value.size
+        element[50] = 0
+        element[51] = 0x03 // TYPE_STRING
+        putU32(element, 52, packageIndex.toLong())
+
+        val end = ByteArray(24)
+        putU16(end, 0, 0x0103)
+        putU16(end, 2, 16)
+        putU32(end, 4, end.size.toLong())
+        putU32(end, 8, 1)
+        putU32(end, 12, 0xFFFFFFFFL)
+        putU32(end, 16, 0xFFFFFFFFL)
+        putU32(end, 20, 1)
+
+        val total = 8 + pool.size + element.size + end.size
+        val out = ByteArray(total)
+        putU16(out, 0, 0x0003)
+        putU16(out, 2, 8)
+        putU32(out, 4, total.toLong())
+        pool.copyInto(out, 8)
+        element.copyInto(out, 8 + pool.size)
+        end.copyInto(out, 8 + pool.size + element.size)
+        return out
+    }
+
+    private fun putU16(out: ByteArray, o: Int, v: Int) {
+        out[o] = (v and 0xFF).toByte()
+        out[o + 1] = ((v shr 8) and 0xFF).toByte()
+    }
+
+    private fun putU32(out: ByteArray, o: Int, v: Long) {
+        out[o] = (v and 0xFF).toByte()
+        out[o + 1] = ((v shr 8) and 0xFF).toByte()
+        out[o + 2] = ((v shr 16) and 0xFF).toByte()
+        out[o + 3] = ((v shr 24) and 0xFF).toByte()
     }
 
     private fun readUtf16Strings(patched: ByteArray): List<String> {

@@ -1,3 +1,15 @@
+// 依赖仓库统一收归（审计 P2#16 同族）：原 5 处模块级 repositories 重复声明合并于此，
+// FAIL_ON_PROJECT_REPOS 强制后续模块禁止自行声明仓库（杜绝地址漂移与漏改）。
+dependencyResolutionManagement {
+    repositoriesMode = RepositoriesMode.FAIL_ON_PROJECT_REPOS
+    repositories {
+        maven { url = uri("https://maven.aliyun.com/repository/public") }
+        maven { url = uri("https://maven.aliyun.com/repository/google") }
+        google()
+        mavenCentral()
+    }
+}
+
 pluginManagement {
     repositories {
         maven { url = uri("https://maven.aliyun.com/repository/public") }

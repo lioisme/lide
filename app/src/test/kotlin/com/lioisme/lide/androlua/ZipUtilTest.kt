@@ -14,7 +14,6 @@ import java.util.zip.ZipOutputStream
  * ZipUtil zip-slip 防护与往返测试（WP-019 测试骨架）。
  */
 class ZipUtilTest {
-
     private fun zipOf(entries: Map<String, String>): ByteArray {
         val bos = ByteArrayOutputStream()
         ZipOutputStream(bos).use { zos ->

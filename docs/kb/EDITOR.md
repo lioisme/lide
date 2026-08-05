@@ -12,7 +12,9 @@
 - **TextMate 只经 `TextMateInitializer`（进程级一次性）**，不得在 UI 线程调用；已预热到进程启动（`LideApp` + `CountDownLatch`）。
 - 编辑器 API（setText / diagnostics 赋值 / subscribeEvent 回调）保持主线程；文本快照可在后台线程取（`Content.toString` 内部 ReadWriteLock）。
 - 自动保存：快照 + 写盘均 `Dispatchers.IO`，`onRelease` 兜底保存（修过 dispose 顺序丢改动）。
-- 大文件（>200 KB）：关括号高亮 / 当前块 / 自动换行，跳过行级诊断。
+- 大文件（>200 KB）降级矩阵（任务单 §6.3，LuaEditor.applyConfig）：关自动换行 / 括号高亮 / 当前块高亮 / minimap / stickyScroll / 光标动画 / 行号面板，跳过行级诊断与标识符补全，undo 栈降至 200。
+- 诊断的多错误聚合 + 可执行 quickfix：`LuaDiagnostics.check(source, quickfixSource: Content?)`，FixSpec ∈ {DeleteToken（substring 校验后删）、AppendText（行尾补闭合）、AppendAtFileEnd（跨行串/注释闭合）}；区域坐标平移由 sora `DiagnosticsContainer` 负责，quickfix 不自算。
+- 搜索支持整词（`SearchOptions.TYPE_WHOLE_WORD`）；文本操作：selectLine / deleteLine / duplicateLine / toggleCase / 词级移动（`SelectionMovement`）经 moreActions「文本」分类暴露。
 - 补全、诊断、事件回调必须 `try/catch(Throwable)` 降级，不得让异常逃逸进 sora 主循环。
 
 ---
@@ -50,17 +52,19 @@
 
 ---
 
-## 3. 性能现状与差距（V2 审计，以 Squircle-CE 为标杆）
+## 3. 性能现状与差距（V2 审计已核销，以 Squircle-CE 为标杆）
 
-| 项 | 现状 | 差距 |
+| 项 | 现状（2026-08-06 复核） | 差距 |
 |----|------|------|
-| 打字 | 每键 2~10ms（IME 组合 15~40ms），逼近 16.6ms 帧预算边缘 | **P0-B 每键整屏重组**：`editVersion++` 写 Compose state → 全屏重组 ×(2~6)；Squircle 稳态零重组（`needsUpdate` 判定 <0.1ms） |
-| 打开文件 | 77KB/901 行首帧在 UI 线程做 CodeEditor 构造 + setText(String)（O(n) + IME 重启） | **P0-A**：Squircle 在 IO 线程构造 `Content` + `reuseContentObject` 复用 |
-| 搜索 | 每键整屏重组 ×2（query state + 结果事件 state） | P1-A：结果下沉到 SearchBar |
-| 冷启动 | release 无 R8、无 baseline/startup profile | 与 Squircle（自带两份）差 2~3 倍 |
-| 大文件 | undo 栈 2500 上限，内存增长明显 | 待评估 |
+| 打字 | `editTick` StateFlow 事件驱动（EditorSession.kt:74-75,173），无每键整屏重组 | 稳态无重组已达成 |
+| 打开文件 | `Content` 构造注入 IO 线程，77KB 首帧开耗已移除 UI 线程 | device 基准可用 `scripts/perf-check.ps1 -Scenario open` |
+| 搜索 | 结果事件下沉 SearchBar，过滤在 `Dispatchers.Default`，整词已支持 | — |
+| 冷启动 | release 已开 R8（`verifyReleaseLuaSurface` 门禁防反射面破坏）+ baseline profile（`app/src/main/baseline-prof.txt` + profileinstaller，启动/编辑器首帧/打字路径） | baseline 收益待同机 A/B（`-Scenario cold`） |
+| 大文件 | undo 栈 200，minimap/stickyScroll/光标动画/行号面板/标识符补全随 >200KB 强关（§6.3 全矩阵落地） | — |
+| 代码折叠 | **无交互（事实记录）**：vendored 0.24.6 无任何折叠交互代码（`FoldingRegion` 死代码），仅块线渲染；上游 0.25+ 引入 | P3 升级管线后可复核 |
 
 健康项（已确认）：预热、无全文镜像、IO 快照写盘、大文件降级、try/catch 兜底、增量分析正常。
+性能门禁：`scripts/perf-check.ps1`（cold / gfx / open 77KB / type 200，阈值仅建议，同机 A/B 为准）。
 
 ---
 
@@ -68,26 +72,28 @@
 
 ### 4.1 已存在（阶段 B 部分落地）
 
-`:editor`：`EditorTabs.kt`、`ProjectFileTree.kt`、`SearchBar.kt`、`EditorToolbar.kt`、`LuaEditor.kt`、`LuaLanguage.kt`、`LuaDiagnostics.kt`、`LuaSnippetManager.kt`、`TextMateInitializer.kt`、`EditorConfig.kt`
-`:app`：`session/EditorSession.kt`（StateFlow 会话 + Content 缓存）、`EditorScreen.kt`
+`:editor`：`EditorTabs.kt`、`SearchBar.kt`（整词搜索）、`EditorToolbar.kt`、`LuaEditor.kt`、`LuaLanguage.kt`、`LuaDiagnostics.kt`（多错误聚合 + quickfix）、`LuaSnippetManager.kt`、`TextMateInitializer.kt`、`EditorConfig.kt`（21 项全量配置）、`EditorTextOps.kt`（selectLine/deleteLine/duplicateLine/toggleCase/词级移动）
+`:app`：`session/EditorSession.kt`（StateFlow 会话 + Content 缓存）、`EditorScreen.kt`、`ui/screen/EditorSettingsScreen.kt`（21 项设置中心，分组通用/编辑/视图/输入）、`ui/screen/SettingsScreen.kt`（编辑器分区入口）、`ui/theme/SettingsManager.kt`（21 键持久化 `lide_editor` 命名空间）
 
 ### 4.2 剩余差距（按 `EDITOR_UI_ALIGNMENT_WORK_ORDER.md`，内部 WP 编号与 PROGRESS 是两套体系）
 
 | WP | 内容 | 状态 |
 |----|------|------|
-| WP-001/002 | 抽屉返回键契约 / 关闭竞态 | ✅ 已由抽屉审计以官方 API 落地 |
-| WP-003 | Tab 拖拽排序（需 `sh.calvin.reorderable:reorderable:3.0.0`，POM 实证兼容） | 未完成 |
-| WP-004 | Tab 样式对齐 Squircle（扁平 + 3dp 底部指示条） | 未完成 |
-| WP-005 | 点击当前 Tab 弹关闭菜单 | 未完成 |
-| WP-006 | 新 Tab 自动滚动 | 未完成 |
-| WP-007 | 抽屉手势对齐（gesturesEnabled） | 未完成 |
-| WP-008 | 汉堡键语义（宽屏隐藏） | ✅ 已落地（抽屉审计 Phase 5） |
+| WP-001/002 | 抽屉返回键契约 / 关闭竞态 | ⛔ 被取代（2026-08-05：抽屉已整体删除，改 `ProjectFileBrowserDialog`） |
+| WP-003 | Tab 拖拽排序（`sh.calvin.reorderable:reorderable:3.0.0`，POM 实证兼容） | ✅ 已落地（2026-08-05 复核，EditorTabs） |
+| WP-004 | Tab 样式对齐 Squircle（扁平 + 3dp 底部指示条） | ✅ 已落地（2026-08-05 复核，EditorTabs） |
+| WP-005 | 点击当前 Tab 弹关闭菜单（DropdownMenu） | ✅ 已落地（2026-08-05 复核，EditorTabs） |
+| WP-006 | 新 Tab 自动滚动 | ✅ 已落地（2026-08-05 复核，EditorTabs） |
+| WP-007 | 抽屉手势对齐（gesturesEnabled） | ⛔ 被取代（2026-08-05：抽屉已删除） |
+| WP-008 | 汉堡键语义（宽屏隐藏） | ⛔ 被取代（2026-08-05：汉堡键随抽屉移除，EditorComponents.kt:112） |
 | WP-009 | 文件树横向滚动（最小宽 248dp） | 未完成 |
 | WP-010 | 版本目录（version catalog，P2 可选） | 未完成 |
 
-### 4.3 功能缺失（V2 阶段 C，可选）
+### 4.3 功能缺失（任务单已完成项移出；剩余为 P2 以外事项）
 
-诊断 tooltip（DiagnosticsContainer）、原生 SnippetController、Inlay hints / minimap、TextMateNewlineHandler、增量保存。
+- ✅ 已落地（2026-08-06，任务单 EDITOR_FEATURE_COMPLETION_WORK_ORDER G1~G9/G1x）：设置中心 21 项、原生 SnippetController、诊断多错误聚合 + quickfix、整词搜索、文本操作、标识符补全（默认关）、迷你地图、行为开关。
+- ⛔ 折叠交互：vendored 0.24.6 无此能力（上游 0.25+），保持「仅渲染不交互」；待 P3 升级管线后复核。
+- 未做：Inlay hints（上游编辑器无此能力）、未启用 Snippet 时的手写占位符剥离（P3 示例）。
 
 ---
 
@@ -96,7 +102,16 @@
 ```
 编译：  .\gradlew.bat :app:compileArm64DebugKotlin --console=plain
 构建：  .\gradlew.bat :app:assembleX64Debug --console=plain（模拟器可装）
-R1：    rg -n "luajava|androlua|loadLibrary" editor/src   # 零命中
-单测：  .\gradlew.bat :editor:testDebugUnitTest（LuaDiagnosticsTest 14 例等）
-回归：  scripts/adb_regress.ps1（4 工程矩阵 6/6 PASS）；抽屉五条回归清单（转屏、返回键、窄屏不盖顶栏、宽屏常驻）
+R1：    rg -n "luajava|androlua|loadLibrary" editor/src   # 零命中（已并入 CI job verify-r1）
+单测：  .\gradlew.bat :editor:testDebugUnitTest（LuaDiagnosticsTest 24 例等）
+回归：  scripts/adb_regress.ps1（4 工程矩阵）；scripts/perf-check.ps1（性能基准）
 ```
+
+## 6. 设置 ↔ sora API 映射（21 项全集，D1）
+
+见任务单 EDITOR_FEATURE_COMPLETION_WORK_ORDER §7 全表；分组：通用（字号 8..32 / Tab 宽 1..8 / Tab 用空格）/ 编辑（自动缩进·闭合·补全·标识符补全·行级词法断言·只读）/ 视图（换行·行号·当前行·括号对·代码块线·迷你地图·粘性滚动·行号面板）/ 输入（空白·缩放·光标动画·硬键盘优先）。
+持久化：`SettingsManager.kt`（`lide_editor` 21 键，StateFlow 镜像 + `apply()`），`:app` 只传入 `:editor` 纯值 `EditorConfig`，R4 满足。
+
+## 7. sora-editor 版本台账索引
+
+上游收纳与分层台账见 `third_party/sora-editor/README.md`（当前 0.24.6，`VERSION` 文件维护）。升级路径：`scripts/update-sora-editor.ps1`（手动）/ `.github/workflows/update-sora-editor.yml`（每周自动 PR + verify-vendor 一致性校验）。

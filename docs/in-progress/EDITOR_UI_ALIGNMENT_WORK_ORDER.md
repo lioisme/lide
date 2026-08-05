@@ -7,8 +7,9 @@
 | Author | Engineering (Audit) |
 | Stakeholders | Product, IDE Engineering, QA |
 | Priority | P0 — Blocks editor UX acceptance |
-| Baseline | lide HEAD `c7b35dd` · Squircle-CE `docs/reference/Squircle-CE-master` |
+| Baseline | lide HEAD `c7b35dd` · Squircle-CE `reference/squircle-ce-master` |
 | Est. Effort | 4–5 engineering days (M1–M5) |
+| **2026-08-05 复核** | WP-003~006 ✅ 已落地（EditorTabs.kt:104/203/223/273-291）；WP-001/002/007/008 ⛔ 被取代（抽屉已整体删除，文件树改 `ProjectFileBrowserDialog`，EditorComponents.kt:95）；WP-009/010 待办 |
 
 ---
 
@@ -134,6 +135,8 @@ lide 宿主界面（`:app`）与编辑器界面（`:editor`）的 Tab 标签栏�
 
 ### WP-001: Drawer Back-Key Contract (P0)
 
+> **（被取代）2026-08-05**：抽屉已整体删除（2026-08 决策，`EditorComponents.kt:95` 改 `ProjectFileBrowserDialog` 全屏对话框），返回键契约随之消亡；本 WP 不再实施。验收 AC-01 标注 N/A。
+
 | 属性 | 内容 |
 |------|------|
 | 目标 | 修复 E1：系统返回键在抽屉打开时**先关抽屉**，再按一次才退出编辑器（经典侧边栏抽屉契约） |
@@ -159,6 +162,8 @@ BackHandler(enabled = drawerState.isOpen) {
 ---
 
 ### WP-002: Drawer Close-Race Fix (P0)
+
+> **（被取代）2026-08-05**：同 WP-001，抽屉删除后 `openFileFromTree` 竞态不复存在；本 WP 不再实施。验收 AC-02 标注 N/A。
 
 | 属性 | 内容 |
 |------|------|
@@ -188,6 +193,8 @@ fun openFileFromTree(node: FileNode) {
 ---
 
 ### WP-003: Tab Drag-and-Drop Reorder (P0)
+
+> **（已完成）2026-08-05**：`sh.calvin.reorderable:reorderable` 依赖落地（`editor/build.gradle.kts`）；`EditorTabs.kt:104,203` 接入 `rememberReorderableLazyListState` + `ReorderableItem` + `longPressDraggableHandle`；`EditorSession.kt:231,248` 新增 `moveTab(from, to)`；`EditorScreen.kt` 接线。验收 AC-03 通过（源码核对，未做真机回归）。
 
 | 属性 | 内容 |
 |------|------|
@@ -267,6 +274,8 @@ fun moveTab(from: Int, to: Int) {
 
 ### WP-004: Tab Card Style Alignment (P1)
 
+> **（已完成）2026-08-05**：`EditorTabs.kt:223,273-291` 扁平标签 + 底部 3dp `primary` 指示条 + `•` 脏前缀落地（`DocumentTab` 式样）；`EditorComponents.kt:112,168` 对齐引用。验收 AC-04 通过（源码核对）。
+
 | 属性 | 内容 |
 |------|------|
 | 目标 | 修复 G1/G2：标签卡样式对齐 Squircle（扁平标签 + 底部指示条 + `•` 脏前缀） |
@@ -288,6 +297,8 @@ fun moveTab(from: Int, to: Int) {
 ---
 
 ### WP-005: Tab Close Menu (P1)
+
+> **（已完成）2026-08-05**：`EditorComponents.kt:112` 点击当前标签弹 `DropdownMenu`（Close / Close Others / Close All）落地；`EditorSession.kt` 配套 `closeOthers/closeAll`。验收 AC-05 通过（源码核对）。
 
 | 属性 | 内容 |
 |------|------|
@@ -314,6 +325,8 @@ fun moveTab(from: Int, to: Int) {
 ---
 
 ### WP-006: New-Tab Auto-Scroll (P1)
+
+> **（已完成）2026-08-05**：`EditorTabs.kt` 追加标签后 `animateScrollToItem(size-1)` 落地（计数增幅判定）。验收 AC-06 通过（源码核对）。
 
 | 属性 | 内容 |
 |------|------|
@@ -343,6 +356,8 @@ LaunchedEffect(tabs.size) {
 
 ### WP-007: Drawer Gesture Alignment (P1)
 
+> **（被取代）2026-08-05**：同 WP-001，抽屉删除后手势对齐目标不复存在；本 WP 不再实施。验收 AC-07 标注 N/A。
+
 | 属性 | 内容 |
 |------|------|
 | 目标 | 修复 G8：抽屉打开状态下支持拖拽关闭（经典抽屉手势）；不引入边缘滑开（避免与编辑器手势冲突） |
@@ -368,6 +383,8 @@ ModalNavigationDrawer(
 ---
 
 ### WP-008: Hamburger Toggle Semantics (P2)
+
+> **（被取代）2026-08-05**：同 WP-001，汉堡键随抽屉一并移除（`EditorComponents.kt:112`）；本 WP 不再实施。验收 AC-08 标注 N/A。
 
 | 属性 | 内容 |
 |------|------|
@@ -493,7 +510,7 @@ onToggleDrawer = { scope.launch { if (drawerState.isOpen) drawerState.close() el
 ### N-08 仓库卫生
 
 - 每次提交后跑 §8 门禁；`docs/` 审计报告类文件不随功能提交（除非显式要求）。
-- 不修改 `docs/reference/`（gitignored 参照物）。
+- 不修改 `reference/`（gitignored 参照物）。
 
 ---
 
@@ -514,16 +531,16 @@ onToggleDrawer = { scope.launch { if (drawerState.isOpen) drawerState.close() el
 
 | AC | 验收标准 | 来源 | 验证 | 状态 |
 |----|----------|------|------|------|
-| AC-01 | 抽屉打开时系统返回键先关抽屉；再按才退出 | WP-001 / E1 | TC-01/02/03 | ⬜ |
-| AC-02 | 打开文件时抽屉立即关闭；无"IO 期间敞开"窗口；失败不影响抽屉 | WP-002 / E3 | TC-03/04 | ⬜ |
-| AC-03 | 长按拖拽重排；选中/脏标记跟随；不重建编辑器；键无冲突 | WP-003 / G3 | TC-05/06 | ⬜ |
-| AC-04 | 标签为扁平样式 + 底部指示条 + `•` 脏前缀；深浅主题可辨识 | WP-004 / G1/G2 | TC-14/15 | ⬜ |
-| AC-05 | 点击当前标签弹关闭菜单；关闭/其他/全部行为正确；脏文件确认不丢数据 | WP-005 / G4 | TC-07 | ⬜ |
-| AC-06 | 新标签自动滚到末尾；关闭/重排不滚动；一屏内无动画 | WP-006 / G5 | TC-08 | ⬜ |
-| AC-07 | 打开状态可拖拽关闭；边缘滑开不触发；scrim 点击关闭可用 | WP-007 / G8 | TC-09 | ⬜ |
-| AC-08 | 汉堡键开合切换 | WP-008 / G9 | TC-10 | ⬜ |
-| AC-09 | 树长路径可横向滚动；与抽屉关闭手势无干扰 | WP-009 / G10 | TC-11/12 | ⬜ |
-| AC-10 | 版本目录迁移零版本漂移；全模块编译通过 | WP-010（可选） | G-02 | ⬜ |
+| AC-01 | 抽屉打开时系统返回键先关抽屉；再按才退出 | WP-001 / E1 | TC-01/02/03 | N/A（被取代，2026-08-05） |
+| AC-02 | 打开文件时抽屉立即关闭；无"IO 期间敞开"窗口；失败不影响抽屉 | WP-002 / E3 | TC-03/04 | N/A（被取代，2026-08-05） |
+| AC-03 | 长按拖拽重排；选中/脏标记跟随；不重建编辑器；键无冲突 | WP-003 / G3 | TC-05/06 | ✅ 已完成（源码核对，2026-08-05） |
+| AC-04 | 标签为扁平样式 + 底部指示条 + `•` 脏前缀；深浅主题可辨识 | WP-004 / G1/G2 | TC-14/15 | ✅ 已完成（源码核对，2026-08-05） |
+| AC-05 | 点击当前标签弹关闭菜单；关闭/其他/全部行为正确；脏文件确认不丢数据 | WP-005 / G4 | TC-07 | ✅ 已完成（源码核对，2026-08-05） |
+| AC-06 | 新标签自动滚到末尾；关闭/重排不滚动；一屏内无动画 | WP-006 / G5 | TC-08 | ✅ 已完成（源码核对，2026-08-05） |
+| AC-07 | 打开状态可拖拽关闭；边缘滑开不触发；scrim 点击关闭可用 | WP-007 / G8 | TC-09 | N/A（被取代，2026-08-05） |
+| AC-08 | 汉堡键开合切换 | WP-008 / G9 | TC-10 | N/A（被取代，2026-08-05） |
+| AC-09 | 树长路径可横向滚动；与抽屉关闭手势无干扰 | WP-009 / G10 | TC-11/12 | ⬜ 未完成 |
+| AC-10 | 版本目录迁移零版本漂移；全模块编译通过 | WP-010（可选） | G-02 | ⬜ 未完成（可选） |
 | AC-11 | 架构边界零违规（G-03）；`:editor` 无宿主依赖 | 全局 | G-03 | ⬜ |
 | AC-12 | 新增文案中英双语齐全、无硬编码 | 全局 | G-04 | ⬜ |
 | AC-13 | 大文件（>200 KB）编辑路径无回归 | 全局 | TC-13 | ⬜ |

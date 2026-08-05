@@ -15,7 +15,7 @@
 | AndroLua（mkottman） | ❌ | Lua 5.1.5、2011 年归档 |
 | AndroLuaX（Jesse205） | ❌ | 核心为反编译预编译 JAR + 18 个无符号表 .so，无法审计（SEC-01~05） |
 
-参考源：`docs/reference/androlua/AndroLua_pro-master/`（v4.4.2，权威纯净源，逐字节比对基准）。
+参考源：`reference/androlua/AndroLua_pro-master/`（v4.4.2，权威纯净源，逐字节比对基准）。
 
 **引擎魔改事实**：pro 对 Lua 5.3.3 深度魔改——至少 10 个核心 C 文件（llex/lparser/lcode/lvm/lapi 等）含 "//mod by nirenr"，
 新增 9 个自定义语法（continue/switch/lambda/defer/when/toclose/table.const/`[]`/省略 then do），且 `LUA_VERSION_NUM` 未改。
@@ -35,8 +35,8 @@
 | 有意不提供 | **lluv**（与 luv 功能重叠）、**tcc**（NDK 仅 armeabi-v7a 有目标） |
 | lide 超集 | `mime`（pro 未内置） |
 
-- 产物：`third_party/prebuilt/{arm64-v8a,armeabi-v7a,x86_64}/`；构建配置与源码在 `build-scripts/jni/`（含 lfs/lsqlite3 子目录与 patches）。
-- 一键重建：`scripts/rebuild_engine.{ps1,sh}`（`DISABLED_MODULES=("lluv","tcc")`）。
+- 产物：引擎由 AGP `externalNativeBuild`（ndk-build）在 `assemble` 时直接从源码构建并打包进 APK（NDK 固定 `29.0.14206865`）；源码与模块定义统一归档于 `app/src/main/cpp/`（顶层 `Android.mk` + `Application.mk`，`live2d/` 独立模块），无 `jniLibs` 缓存目录、无 `third_party/prebuilt/`（已删除，R5 红线：禁止二进制原生产物入库）。
+- 构建：AGP `externalNativeBuild`（ndk-build）自动执行，无手动重建脚本（`scripts/rebuild_engine.*` 已废弃删除）；lfs/lsqlite3 随引擎源码构建。
 - 缺失/第三方 .so 补偿：工程 `libs/` 自备 → `libsloader` 优先命中，否则 `package.loadlib("./libs/lib…so", "luaopen_…")`。
 - 加载路径：`luaCpath = nativeLibraryDir + "/lib?.so" + libDir + "/lib?.so"`，无需宿主代码配合。
 
@@ -103,4 +103,4 @@ Lua → C（.so）调用为纯 C 路径不经 Java（`require "zip"` = `package.
 | dex/so 加载 | `androlua/src/main/java/com/androlua/LuaDexLoader.java`（W^X 内存加载） |
 | 打包链 | `androlua/.../LuaCompiler.kt`、`AXmlManifest.kt`、`app/.../build/{ApkBuilder,ApkSigner,V2Signer,ZipUtils}.kt`、`BuildApkScreen.kt` |
 | 资产提取 | `LuaApplication.extractLuaScripts()`（递归 + MD5 版本化） |
-| 原生模块构建 | `build-scripts/jni/`、`scripts/rebuild_engine.*`、`third_party/prebuilt/` |
+| 原生模块构建 | `app/src/main/cpp/`（顶层 `Android.mk` + `Application.mk` 为 ndk-build 定义，`live2d/` 独立模块），AGP `externalNativeBuild` 自动构建（NDK 29.0.14206865） |

@@ -1,5 +1,5 @@
-# LuaJ - keep as-is (unmodified core, 脚本通过 luajava 按类名引用)
--keep class org.luaj.** { *; }
+# 注：LuaJ（org.luaj.*）已于引擎迁移时移除（Lua 5.3 AndroLua C fork 取代），
+# 仓库无此包，无对应 keep 规则（2026-08-06 P3-5 清理）。
 
 # luajava - libluajava.so 的 JNI 桥接层（LuaState/LuaJavaAPI/LuaObject 等 16 类）。
 # native 侧经 FindClass/GetStaticMethodID 按字面量类名与方法名绑定，R8 的 Java 引用图
@@ -31,3 +31,17 @@
 
 # 反射所需的属性信息
 -keepattributes *Annotation*,InnerClasses,EnclosingMethod,Signature
+
+# ── sora-editor language-textmate（Gson 反射反序列化 model 类）────────────────
+# language-textmate 的 languages.json / language-configuration.json 由 Gson 按字段名反射
+# 反序列化：部分 model 类没有 @SerializedName，字段名混淆会静默丢字段；且 R8 class-merging
+# 会把 model 类改写为抽象类，运行时 Gson 报 "Abstract classes can't be instantiated!"
+# （见 https://github.com/google/gson/blob/main/Troubleshooting.md#r8-abstract-class，
+# 真机 release 扫描 39 个 grammar 全部加载失败，见 EDITOR_ALL_LANGUAGES_SUPPORT_WORK_ORDER）。
+-keep class org.eclipse.tm4e.languageconfiguration.internal.model.** { *; }
+-keep class io.github.rosemoe.sora.langs.textmate.registry.reader.** { *; }
+
+# Joni 正则引擎（tm4e 的 RegExPattern 依赖）：R8 优化会破坏其 AST 内部类静态初始化
+# （org.joni.ast.QuantifierNode <clinit> NPE / NoClassDefFoundError），整体 keep。
+-keep class org.joni.** { *; }
+-keep class org.jcodings.** { *; }

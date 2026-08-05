@@ -8,8 +8,17 @@
     <string name="replace_all">全部替换</string>
     <string name="case_sensitive">区分大小写</string>
     <string name="regex">正则表达式</string>
+    <string name="whole_word">整词匹配</string>
 
     <!-- Editor toolbar -->
+
+    <!-- Editor text operations -->
+    <string name="text_op_select_line">选择整行</string>
+    <string name="text_op_delete_line">删除整行</string>
+    <string name="text_op_duplicate_line">复制整行</string>
+    <string name="text_op_toggle_case">大小写转换</string>
+    <string name="text_op_word_prev">左移一个词</string>
+    <string name="text_op_word_next">右移一个词</string>
 
     <!-- Editor tabs -->
     <string name="cd_close_tab">关闭标签</string>

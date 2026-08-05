@@ -17,10 +17,11 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import com.lioisme.lide.R
 import com.lioisme.lide.androlua.LuaConfigParser
-import com.lioisme.lide.editor.TipIconButton
 import com.lioisme.lide.build.ApkBuilder
+import com.lioisme.lide.editor.TipIconButton
 import com.lioisme.lide.model.Project
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -37,8 +38,13 @@ private data class BuildState(
 )
 
 private sealed interface BuildResult {
-    data class Success(val apkFile: File) : BuildResult
-    data class Failure(val message: String) : BuildResult
+    data class Success(
+        val apkFile: File,
+    ) : BuildResult
+
+    data class Failure(
+        val message: String,
+    ) : BuildResult
 }
 
 /**
@@ -60,27 +66,35 @@ fun BuildApkScreen(
     var building by remember { mutableStateOf(false) }
     var buildStage by remember { mutableStateOf<ApkBuilder.BuildStage?>(null) }
     var result by remember { mutableStateOf<BuildResult?>(null) }
+    // 构建阶段回调经 Channel 桥回主线程（P2#10）：doBuild 在 IO 线程内回调 onStage，
+    // 若直接写 buildStage 属 IO 线程写 Compose state，违反主线程约定；Channel 由下方
+    // LaunchedEffect（Main）消费，BUFFERED 避免回调侧背压（trySend 永不挂起）。
+    val stageChannel = remember { Channel<ApkBuilder.BuildStage>(Channel.BUFFERED) }
+    LaunchedEffect(stageChannel) {
+        for (stage in stageChannel) buildStage = stage
+    }
     val strLoadFailed = stringResource(R.string.info_load_failed)
     val strBuildFail = stringResource(R.string.build_fail)
     val strNeedPackage = stringResource(R.string.build_need_package)
     val strBuildSuccess = stringResource(R.string.build_success)
 
     LaunchedEffect(project) {
-        state = withContext(Dispatchers.IO) {
-            val file = File(project.path, "init.lua")
-            if (!file.exists()) {
-                null
-            } else {
-                val content = file.readText()
-                BuildState(
-                    appName = LuaConfigParser.stringField(content, "appname") ?: project.name,
-                    packageName = LuaConfigParser.stringField(content, "packagename").orEmpty(),
-                    version = LuaConfigParser.stringField(content, "appver") ?: "1.0",
-                    versionCode = LuaConfigParser.stringField(content, "appcode") ?: "1",
-                    permissionCount = LuaConfigParser.stringArrayField(content, "user_permission").size,
-                )
+        state =
+            withContext(Dispatchers.IO) {
+                val file = File(project.path, "init.lua")
+                if (!file.exists()) {
+                    null
+                } else {
+                    val content = file.readText()
+                    BuildState(
+                        appName = LuaConfigParser.stringField(content, "appname") ?: project.name,
+                        packageName = LuaConfigParser.stringField(content, "packagename").orEmpty(),
+                        version = LuaConfigParser.stringField(content, "appver") ?: "1.0",
+                        versionCode = LuaConfigParser.stringField(content, "appcode") ?: "1",
+                        permissionCount = LuaConfigParser.stringArrayField(content, "user_permission").size,
+                    )
+                }
             }
-        }
         if (state == null) {
             Toast.makeText(context, strLoadFailed, Toast.LENGTH_SHORT).show()
             onBack()
@@ -96,9 +110,10 @@ fun BuildApkScreen(
         buildStage = null
         result = null
         scope.launch {
-            val res = withContext(Dispatchers.IO) {
-                doBuild(context, project, s) { stage -> buildStage = stage }
-            }
+            val res =
+                withContext(Dispatchers.IO) {
+                    doBuild(context, project, s) { stage -> stageChannel.trySend(stage) }
+                }
             building = false
             buildStage = null
             result = res
@@ -108,8 +123,10 @@ fun BuildApkScreen(
                     // 与 AndroLua Pro 一致：打包完成后自动调起系统安装器。
                     installApk(context, res.apkFile)
                 }
-                is BuildResult.Failure ->
+
+                is BuildResult.Failure -> {
                     Toast.makeText(context, String.format(strBuildFail, res.message), Toast.LENGTH_LONG).show()
+                }
             }
         }
     }
@@ -142,7 +159,7 @@ fun BuildApkScreen(
                     }
                 },
             )
-        }
+        },
     ) { padding ->
         val s = state
         if (s == null) {
@@ -180,23 +197,31 @@ fun BuildApkScreen(
                 }
             }
             when (val r = result) {
-                is BuildResult.Failure -> item {
-                    Text(
-                        r.message,
-                        color = MaterialTheme.colorScheme.error,
-                        style = MaterialTheme.typography.bodyMedium,
-                    )
-                }
-                is BuildResult.Success -> item {
-                    OutlinedCard(modifier = Modifier.fillMaxWidth()) {
+                is BuildResult.Failure -> {
+                    item {
                         Text(
-                            r.apkFile.absolutePath,
-                            modifier = Modifier.padding(16.dp),
-                            style = MaterialTheme.typography.bodySmall,
+                            r.message,
+                            color = MaterialTheme.colorScheme.error,
+                            style = MaterialTheme.typography.bodyMedium,
                         )
                     }
                 }
-                null -> Unit
+
+                is BuildResult.Success -> {
+                    item {
+                        OutlinedCard(modifier = Modifier.fillMaxWidth()) {
+                            Text(
+                                r.apkFile.absolutePath,
+                                modifier = Modifier.padding(16.dp),
+                                style = MaterialTheme.typography.bodySmall,
+                            )
+                        }
+                    }
+                }
+
+                null -> {
+                    Unit
+                }
             }
             item { Spacer(Modifier.height(8.dp)) }
             item {
@@ -238,8 +263,8 @@ private fun doBuild(
     project: Project,
     s: BuildState,
     onStage: (ApkBuilder.BuildStage) -> Unit,
-): BuildResult {
-    return try {
+): BuildResult =
+    try {
         onStage(ApkBuilder.BuildStage.READ_HOST)
         val pm = context.packageManager
         val sourceDir = pm.getApplicationInfo(context.packageName, 0).sourceDir
@@ -247,10 +272,14 @@ private fun doBuild(
 
         val keyBytes = context.assets.open("keys/testkey.pk8").use { it.readBytes() }
         val pemBytes = context.assets.open("keys/testkey.x509.pem").use { it.readBytes() }
-        val key = KeyFactory.getInstance("RSA")
-            .generatePrivate(PKCS8EncodedKeySpec(keyBytes))
-        val cert = CertificateFactory.getInstance("X.509")
-            .generateCertificate(pemBytes.inputStream()) as java.security.cert.X509Certificate
+        val key =
+            KeyFactory
+                .getInstance("RSA")
+                .generatePrivate(PKCS8EncodedKeySpec(keyBytes))
+        val cert =
+            CertificateFactory
+                .getInstance("X.509")
+                .generateCertificate(pemBytes.inputStream()) as java.security.cert.X509Certificate
 
         onStage(ApkBuilder.BuildStage.COLLECT_LUA)
         val projectFiles = LinkedHashMap<String, ByteArray>()
@@ -258,19 +287,23 @@ private fun doBuild(
         collectProjectFiles(File(project.path), "", projectFiles, usingFiles)
         val engineLibs = engineLuaLibs(projectFiles, usingFiles, hostLuaAssets(context))
 
-        val input = ApkBuilder.ProjectInput(
-            packageName = s.packageName,
-            appName = s.appName,
-            versionName = s.version,
-            versionCode = s.versionCode.toIntOrNull() ?: 1,
-            declaredPermissions = declaredPermissions(project),
-            luaSources = projectFiles,
-            engineLuaLibs = engineLibs,
-        )
+        val input =
+            ApkBuilder.ProjectInput(
+                packageName = s.packageName,
+                appName = s.appName,
+                versionName = s.version,
+                versionCode = s.versionCode.toIntOrNull() ?: 1,
+                declaredPermissions = declaredPermissions(project),
+                luaSources = projectFiles,
+                engineLuaLibs = engineLibs,
+            )
         val apkBytes = ApkBuilder.build(hostApk, input, key, cert, onStage = onStage)
 
         // 产物位置与 AndroLua Pro 一致：<luaExtDir>/apk/（即 /storage/emulated/0/AndroLua/apk/）。
-        val luaExtDir = com.androlua.LuaApplication.getInstance().getLuaExtDir()
+        val luaExtDir =
+            com.androlua.LuaApplication
+                .getInstance()
+                .getLuaExtDir()
         val outDir = File(luaExtDir, "apk").apply { mkdirs() }
         val fileName = "${sanitizeName(s.packageName)}-${sanitizeName(s.version)}.apk"
         val outFile = File(outDir, fileName)
@@ -279,16 +312,16 @@ private fun doBuild(
     } catch (e: Exception) {
         BuildResult.Failure(e.message ?: e.javaClass.simpleName)
     }
-}
 
 /** 构建阶段 → 文案资源。 */
-private fun stageLabelRes(stage: ApkBuilder.BuildStage?): Int = when (stage) {
-    null, ApkBuilder.BuildStage.READ_HOST -> R.string.build_stage_read_host
-    ApkBuilder.BuildStage.COLLECT_LUA -> R.string.build_stage_collect
-    ApkBuilder.BuildStage.COMPILE_LUA -> R.string.build_stage_compile
-    ApkBuilder.BuildStage.ASSEMBLE -> R.string.build_stage_assemble
-    ApkBuilder.BuildStage.SIGN -> R.string.build_stage_sign
-}
+private fun stageLabelRes(stage: ApkBuilder.BuildStage?): Int =
+    when (stage) {
+        null, ApkBuilder.BuildStage.READ_HOST -> R.string.build_stage_read_host
+        ApkBuilder.BuildStage.COLLECT_LUA -> R.string.build_stage_collect
+        ApkBuilder.BuildStage.COMPILE_LUA -> R.string.build_stage_compile
+        ApkBuilder.BuildStage.ASSEMBLE -> R.string.build_stage_assemble
+        ApkBuilder.BuildStage.SIGN -> R.string.build_stage_sign
+    }
 
 /**
  * 自动安装：ACTION_INSTALL_PACKAGE 直连系统安装器（InstallStart）。
@@ -296,28 +329,36 @@ private fun stageLabelRes(stage: ApkBuilder.BuildStage?): Int = when (stage) {
  * 会弹出"打开方式"选择器而非直接安装。
  * 未授予"安装未知来源应用"时系统会先弹授权页，授予后直达安装确认。
  */
-private fun installApk(context: android.content.Context, apkFile: File) {
+private fun installApk(
+    context: android.content.Context,
+    apkFile: File,
+) {
     try {
         val uri: Uri = FileProvider.getUriForFile(context, context.packageName, apkFile)
-        val intent = Intent(Intent.ACTION_INSTALL_PACKAGE).apply {
-            setDataAndType(uri, "application/vnd.android.package-archive")
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        }
+        val intent =
+            Intent(Intent.ACTION_INSTALL_PACKAGE).apply {
+                setDataAndType(uri, "application/vnd.android.package-archive")
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
         context.startActivity(intent)
     } catch (e: Exception) {
         Toast.makeText(context, e.message ?: context.getString(R.string.build_install_failed), Toast.LENGTH_LONG).show()
     }
 }
 
-private fun declaredPermissions(project: Project): List<String> = try {
-    val initFile = File(project.path, "init.lua")
-    if (initFile.exists()) {
-        com.lioisme.lide.androlua.PermissionResolver.declared(initFile.readText())
-    } else emptyList()
-} catch (_: Exception) {
-    emptyList()
-}
+private fun declaredPermissions(project: Project): List<String> =
+    try {
+        val initFile = File(project.path, "init.lua")
+        if (initFile.exists()) {
+            com.lioisme.lide.androlua.PermissionResolver
+                .declared(initFile.readText())
+        } else {
+            emptyList()
+        }
+    } catch (_: Exception) {
+        emptyList()
+    }
 
 /**
  * 收集工程目录全部文件（注入 assets/lua/<相对路径>，打包后即工程目录）：
@@ -356,25 +397,31 @@ internal fun collectProjectFiles(
 }
 
 /** 打包必须保留的宿主引擎 Lua 库（import.lua 无条件加载这三者，permission 供权限提示）。 */
-private val ENGINE_LUA_WHITELIST = setOf(
-    "import.lua",
-    "loadlayout.lua",
-    "loadlayout2.lua",
-    "loadlayout3.lua",
-    "loadbitmap.lua",
-    "loadmenu.lua",
-    "permission.lua",
-)
+private val ENGINE_LUA_WHITELIST =
+    setOf(
+        "import.lua",
+        "loadlayout.lua",
+        "loadlayout2.lua",
+        "loadlayout3.lua",
+        "loadbitmap.lua",
+        "loadmenu.lua",
+        "permission.lua",
+    )
 
 /** 宿主 assets/lua 下的全部库相对名（目录无点则递归，与 LuaApplication.extractLuaDir 同口径）。 */
 private fun hostLuaAssets(context: android.content.Context): Set<String> {
     val out = HashSet<String>()
-    fun walk(assetDir: String, relPrefix: String) {
-        val names = try {
-            context.assets.list(assetDir) ?: emptyArray()
-        } catch (_: Throwable) {
-            return
-        }
+
+    fun walk(
+        assetDir: String,
+        relPrefix: String,
+    ) {
+        val names =
+            try {
+                context.assets.list(assetDir) ?: emptyArray()
+            } catch (_: Throwable) {
+                return
+            }
         for (n in names) {
             val rel = if (relPrefix.isEmpty()) n else "$relPrefix/$n"
             if (n.contains('.')) out += rel else walk("$assetDir/$n", rel)
@@ -422,17 +469,20 @@ internal fun engineLuaLibs(
         .sorted()
 }
 
-private fun sanitizeName(s: String): String =
-    s.replace(Regex("[^A-Za-z0-9_.-]"), "_").take(60)
+private fun sanitizeName(s: String): String = s.replace(Regex("[^A-Za-z0-9_.-]"), "_").take(60)
 
-private fun shareApk(context: android.content.Context, apkFile: File) {
+private fun shareApk(
+    context: android.content.Context,
+    apkFile: File,
+) {
     try {
         val uri: Uri = FileProvider.getUriForFile(context, context.packageName, apkFile)
-        val intent = Intent(Intent.ACTION_SEND).apply {
-            type = "application/vnd.android.package-archive"
-            putExtra(Intent.EXTRA_STREAM, uri)
-            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        }
+        val intent =
+            Intent(Intent.ACTION_SEND).apply {
+                type = "application/vnd.android.package-archive"
+                putExtra(Intent.EXTRA_STREAM, uri)
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
         context.startActivity(Intent.createChooser(intent, null))
     } catch (e: Exception) {
         Toast.makeText(context, e.message ?: context.getString(R.string.build_share_failed), Toast.LENGTH_LONG).show()

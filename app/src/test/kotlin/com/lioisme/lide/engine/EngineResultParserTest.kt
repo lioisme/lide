@@ -7,15 +7,15 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class EngineResultParserTest {
-
     @Test
     fun `findErrorLocation extracts file and line`() {
-        val output = """
+        val output =
+            """
             print ok
             Runtime error: /storage/emulated/0/AndroLua/project/demo/main.lua:12: attempt to index a nil value (global 'http')
             stack traceback:
             	.../main.lua:12: in main chunk
-        """.trimIndent()
+            """.trimIndent()
         assertEquals(
             EngineResultParser.ErrorLocation("main.lua", 12),
             EngineResultParser.findErrorLocation(output),
@@ -24,12 +24,13 @@ class EngineResultParserTest {
 
     @Test
     fun `findErrorLocation takes first location from error line`() {
-        val output = """
+        val output =
+            """
             Runtime error: /p/main.lua:3: attempt to call a nil value
             stack traceback:
             	/p/helper.lua:8: in function 'inner'
             	/p/main.lua:5: in main chunk
-        """.trimIndent()
+            """.trimIndent()
         // 错误消息首行定位 = 真正报错点；traceback 帧为调用点，不取。
         assertEquals(
             EngineResultParser.ErrorLocation("main.lua", 3),
@@ -46,9 +47,10 @@ class EngineResultParserTest {
 
     @Test
     fun `findNilGlobal extracts quoted name`() {
-        val output = """
+        val output =
+            """
             Runtime error: /p/main.lua:3: attempt to index a nil value (global 'http')
-        """.trimIndent()
+            """.trimIndent()
         assertEquals("http", EngineResultParser.findNilGlobal(output))
     }
 

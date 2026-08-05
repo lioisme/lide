@@ -1,5 +1,6 @@
 package com.lioisme.lide.editor
 
+import io.github.rosemoe.sora.text.Content
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -8,13 +9,12 @@ import org.junit.Test
  * LuaDiagnostics 词法校验（WP-019 测试骨架）。
  */
 class LuaDiagnosticsTest {
-
-    private fun errors(source: String): List<String> =
-        LuaDiagnostics.checkSyntax(source).map { it.detail.briefMessage.toString() }
+    private fun errors(source: String): List<String> = LuaDiagnostics.checkSyntax(source).map { it.detail.briefMessage.toString() }
 
     @Test
     fun `干净脚本零错误`() {
-        val src = """
+        val src =
+            """
             local function greet(name)
                 if name then
                     print("hello, " .. name)
@@ -26,7 +26,7 @@ class LuaDiagnosticsTest {
                 repeat print(1) until true
             end
             greet("world")
-        """.trimIndent()
+            """.trimIndent()
         assertTrue(errors(src).isEmpty())
     }
 
@@ -63,13 +63,14 @@ class LuaDiagnosticsTest {
 
     @Test
     fun `长注释跨行不影响结构`() {
-        val src = """
+        val src =
+            """
             --[[
             if ( broken
             end
             ]]
             print("ok")
-        """.trimIndent()
+            """.trimIndent()
         assertTrue(errors(src).isEmpty())
     }
 
@@ -118,5 +119,87 @@ class LuaDiagnosticsTest {
     @Test
     fun `注释中的 appname 不产生结构错误`() {
         assertTrue(errors("-- appname = \"demo\"\nprint(1)").isEmpty())
+    }
+
+    /** 执行第一个错误的第一个 quickfix，返回执行后的文本。 */
+    private fun applyFirstFix(source: String): String {
+        val content = Content(source)
+        val regions = LuaDiagnostics.Incremental().check(source, content)
+        val fixes = regions.flatMap { it.detail.quickfixes.orEmpty() }
+        assertTrue("期望存在 quickfix: $source", fixes.isNotEmpty())
+        fixes.first().executeQuickfix()
+        return content.toString()
+    }
+
+    @Test
+    fun `多余 end 的 quickfix 删除该 token`() {
+        assertEquals("print(1)\n", applyFirstFix("print(1)\nend"))
+    }
+
+    @Test
+    fun `多余的 until 的 quickfix 删除该 token`() {
+        assertEquals("print(1)\n", applyFirstFix("print(1)\nuntil"))
+    }
+
+    @Test
+    fun `不匹配右括号的 quickfix 删除该字符`() {
+        assertEquals("print(1", applyFirstFix("print(1]"))
+    }
+
+    @Test
+    fun `未闭合字符串的 quickfix 在行尾补引号`() {
+        assertEquals("local s = \"abc\"", applyFirstFix("local s = \"abc"))
+    }
+
+    @Test
+    fun `未闭合括号的 quickfix 在起始行行尾补闭合符`() {
+        assertEquals("print(1)", applyFirstFix("print(1"))
+        assertEquals("local t = {1, 2}", applyFirstFix("local t = {1, 2"))
+    }
+
+    @Test
+    fun `未闭合块的多错误聚合均附补 end quickfix`() {
+        val source = "local function f()\nif x then"
+        // 区域坐标基于检查时快照：两个 fix 各自在独立内容上执行（容器平移是宿主侧职责）。
+        val c1 = Content(source)
+        val fixes1 = LuaDiagnostics.Incremental().check(source, c1).flatMap { it.detail.quickfixes.orEmpty() }
+        assertEquals(2, fixes1.size)
+        fixes1[0].executeQuickfix()
+        assertEquals("local function f()end\nif x then", c1.toString())
+        val c2 = Content(source)
+        val fixes2 = LuaDiagnostics.Incremental().check(source, c2).flatMap { it.detail.quickfixes.orEmpty() }
+        fixes2[1].executeQuickfix()
+        assertEquals("local function f()\nif x thenend", c2.toString())
+    }
+
+    @Test
+    fun `未闭合长字符串的 quickfix 在文件末尾补关闭序列`() {
+        assertEquals("local t = [[\nx]]", applyFirstFix("local t = [[\nx"))
+        assertEquals("local t = [=[\nx]=]", applyFirstFix("local t = [=[\nx"))
+    }
+
+    @Test
+    fun `未闭合 if 的 quickfix 在行尾补 end`() {
+        assertEquals("if a thenend", applyFirstFix("if a then"))
+    }
+
+    @Test
+    fun `stale quickfix 因预期文本不符而放弃修改`() {
+        val source = "print(1)\nend"
+        val content = Content(source)
+        val regions = LuaDiagnostics.Incremental().check(source, content)
+        val fixes = regions.flatMap { it.detail.quickfixes.orEmpty() }
+        assertTrue(fixes.isNotEmpty())
+        // 模拟行内编辑：token 前插入字符，未平移区域坐标 → 预期文本校验失败，静默放弃。
+        content.insert(1, 0, "x")
+        fixes.first().executeQuickfix()
+        assertEquals("print(1)\nxend", content.toString())
+    }
+
+    @Test
+    fun `无 Content 时不生成 quickfix`() {
+        val regions = LuaDiagnostics.checkSyntax("print(1")
+        assertTrue(regions.isNotEmpty())
+        assertTrue(regions.all { it.detail.quickfixes.isNullOrEmpty() })
     }
 }

@@ -232,7 +232,6 @@ public class LuaActivity extends Activity implements LuaBroadcastReceiver.OnRece
 
             mLuaDexLoader = new LuaDexLoader(this);
             mLuaDexLoader.loadLibs();
-            //MultiDex.installLibs(this);
             sLuaActivityMap.put(pageName, this);
             doFile(luaPath, arg);
             isCreate = true;

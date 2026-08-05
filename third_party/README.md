@@ -9,7 +9,7 @@
 | `patches/` | 第三方代码补丁（如 `material3_searchbar_patch`） | 实验/历史归档，未接入构建 |
 
 > 上游参考源码 / 参考工程（sora-editor-main、luaj、Squircle-CE、AndroLua_pro 等）仍收纳在
-> `docs/reference/`（文档数据湖，git ignored、只读、不提交）。
+> `reference/`（参考基线数据湖，git ignored、只读、不提交；2026-08 自 docs/reference/ 迁出）。
 >
 > 原生引擎二进制已去重（2026-08 T2），源码已归一（2026-08 T11）：不再保留 `third_party/prebuilt/`，
 > 也不再有 `app/src/main/jniLibs/` 缓存目录；引擎 `.so` 唯一真源为 `app/src/main/cpp/`，
@@ -19,11 +19,11 @@
 ### 引擎 C 源码（vendored，2026-08 T1 入库 / T11 归一）
 
 AndroLua 引擎 JNI C/C++ 源码（上游 `AndroLua_pro` 派生，GPL 许可证，见
-`docs/reference/androlua/` 内 LICENSE）已完整 vendor 并统一归档到 `app/src/main/cpp/`：
+`third_party/androlua/` 内 LICENSE*.txt）已完整 vendor 并统一归档到 `app/src/main/cpp/`：
 
 - 位置：`app/src/main/cpp/<模块>/`（与 lide 定制版 `Android.mk` 同目录，AGP 构建直接引用该源码）；
   `app/src/main/cpp/live2d/` 为 Live2D 独立模块（同一 ndk-build 工程，链接近邻 `luajava`）。
-- 来源：`docs/reference/androlua/AndroLua_pro-master/app/src/main/jni`（历史参考，构建链已不再引用）。
+- 来源：AndroLuaPro v4.4.2 上游 `app/src/main/jni`（原版基线已去重归档，恢复配方见 `reference/README.md`；构建链已不再引用）。
 - 排除：disabled 模块 `lluv`/`tcc`（luv 已代替 lluv；tcc 无 arm64/x86_64 目标）、独立可执行文件
   `lua.c`/`luac.c`、上游源码中的 Android.mk/Application.mk/Makefile 等构建配置。
 - 构建入口：AGP `externalNativeBuild`（`app/build.gradle.kts`，ndk-build 指向 `app/src/main/cpp/Android.mk`）；

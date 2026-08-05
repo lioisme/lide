@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  网络安全策略（安全审计 P1）：将原 application 级 usesCleartextTraffic="true"
+  收拢为显式、可评审的策略文件。
+
+  决策：base-config 仍允许明文流量。宿主自身代码不发起任何 http 请求，
+  但运行时引擎内的用户 Lua 脚本/插件以 luajava 直连任意主机（AndroLua Pro
+  兼容行为，脚本可能访问 http:// 接口），无法做域白名单。此策略保持与
+  AndroLua Pro 一致的运行时能力，同时把"全进程明文"固化为显式声明以接受评审。
+  若未来宿主内置网络功能，应在 domain-config 增补白名单并收紧 base-config。
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true" />
+</network-security-config>

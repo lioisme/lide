@@ -9,9 +9,7 @@ import java.nio.file.Files
 
 /** 打包装配（需求②）：工程文件收集 + 宿主引擎库按需保留。 */
 class BuildPackagingTest {
-
-    private fun tempDir(name: String): File =
-        Files.createTempDirectory(name).toFile().apply { deleteOnExit() }
+    private fun tempDir(name: String): File = Files.createTempDirectory(name).toFile().apply { deleteOnExit() }
 
     @Test
     fun collectProjectFiles_keepsWholeDir_skipsHidden_usingReported() {
@@ -46,15 +44,25 @@ class BuildPackagingTest {
 
     @Test
     fun engineLuaLibs_whitelistPlusRequireScan_filtersProjectOwnedAndUnknown() {
-        val projectFiles = mapOf(
-            "main.lua" to "require \"import\"\nrequire \"json\"\nimport \"socket.http\"\nimport \"console\"\n".toByteArray(),
-            "json.lua" to "return {}".toByteArray(),
-        )
-        val host = setOf(
-            "import.lua", "loadlayout.lua", "loadlayout2.lua", "loadlayout3.lua",
-            "loadbitmap.lua", "loadmenu.lua", "permission.lua",
-            "json.lua", "socket/http.lua", "console.lua", "notused.lua",
-        )
+        val projectFiles =
+            mapOf(
+                "main.lua" to "require \"import\"\nrequire \"json\"\nimport \"socket.http\"\nimport \"console\"\n".toByteArray(),
+                "json.lua" to "return {}".toByteArray(),
+            )
+        val host =
+            setOf(
+                "import.lua",
+                "loadlayout.lua",
+                "loadlayout2.lua",
+                "loadlayout3.lua",
+                "loadbitmap.lua",
+                "loadmenu.lua",
+                "permission.lua",
+                "json.lua",
+                "socket/http.lua",
+                "console.lua",
+                "notused.lua",
+            )
 
         val libs = engineLuaLibs(projectFiles, emptyList(), host)
 

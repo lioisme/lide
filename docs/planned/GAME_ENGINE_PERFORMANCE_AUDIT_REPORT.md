@@ -1,7 +1,7 @@
 # 游戏引擎 Demo 性能审计报告（看板娘 / 石头）
 
 日期：2026-08-01
-范围：`docs/reference/project/看板娘`、`docs/reference/project/石头`，以及 lide 宿主运行时
+范围：`reference/project/看板娘`、`reference/project/石头`，以及 lide 宿主运行时
 （`:androlua` 模块 `LuaActivity` / `LuaDexLoader` / `com.luajava` 桥、`import.lua` libs 机制）。
 
 ---
@@ -117,4 +117,4 @@
 
 运行期每次调用：Lua VM → C 函数指针（`lua_CFunction`），**栈上没有 Java 帧**。Java 只参与：一次性文件复制（`LuaDexLoader.loadLib`）、`getLibrarys()` 路径查询（`LuaActivity.java:153-155`）、以及 `libsloader` 注册——都是加载期动作，不是调用期动作。
 
-验证事实：`docs/completed/LIBS_SUPPORT_WORK_ORDER.md
+验证事实：`docs/discard/LIBS_SUPPORT_WORK_ORDER.md`

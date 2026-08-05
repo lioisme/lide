@@ -1,7 +1,7 @@
 # 能力清单：API 与能力边界（Capability Inventory）
 
 > 记录可用 API 与机制、以及 pro 有而 lide 无的能力边界。
-> 依据：`docs/completed/ANDROLUA_FEATURE_PARITY_AUDIT.md`、`ANDROLUA_PARITY_FULL_AUDIT_REPORT.md`、双端实测。
+> 依据：`docs/discard/ANDROLUA_FEATURE_PARITY_AUDIT.md`、`ANDROLUA_PARITY_FULL_AUDIT_REPORT.md`、双端实测。
 
 ## 1. 工程骨架能力（✅双端一致）
 

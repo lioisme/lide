@@ -23,7 +23,8 @@ data class ManifestEdit(
  *
  * 已按宿主真实产物逐字节核验的格式要点：
  * - 字符串池：u32 count@8, u32 flags@16（0=UTF-16，0x100=UTF-8），u32 stringsStart@20，
- *   u32 偏移表@28；UTF-16 条目 = u16 字符数 + 数据 + u16 终止符；UTF-8 条目带长度高位变体。
+ *   u32 偏移表@28；UTF-16 条目 = u16 字符数 + 数据 + u16 终止符；UTF-8 条目 =
+ *   变长长度前缀 × 2（charLen 在前、byteLen 在后，0x80 标志的两字节变长编码）+ 数据 + 0 终止。
  * - 属性：ns u32 + name u32（aapt2 风格 = 字符串池索引，前 32 个经 resource map 映射资源 ID）
  *   + rawValue u32 + Res_value（size u16=8, res0 u8=0, dataType u8, data u32）。
  * - 元素：0x0102，line@8 comment@12 ns@16 name@20 attrStart@24 attrSize@26 attrCount@28；
@@ -423,19 +424,22 @@ object AXmlManifest {
 
     private fun readUtf8(b: ByteArray, o: Int): String {
         var p = o
-        var byteLen = u16(b, p)
-        p += 2
-        var charLen = u16(b, p)
-        p += 2
-        if (byteLen and 0x8000 != 0) {
-            byteLen = (byteLen and 0x7FFF) shl 16 or u16(b, p)
-            p += 2
-        }
-        if (charLen and 0x8000 != 0) {
-            charLen = (charLen and 0x7FFF) shl 16 or u16(b, p)
-            p += 2
-        }
-        return String(b, p, byteLen, Charsets.UTF_8)
+        // AXML UTF-8 池条目 = 变长长度前缀 × 2（先 charLen 后 byteLen）+ UTF-8 数据 + 0 终止。
+        // 与 aapt 的 ENCODE_LENGTH/decode_length 一致：首字节 < 0x80 时取单字节，
+        // 否则高 7 位作长度高字节、紧随一字节作低字节（两字节变长编码）。
+        val charLen = readUtf8Length(b, p)
+        p += charLen.second
+        val byteLen = readUtf8Length(b, p)
+        p += byteLen.second
+        return String(b, p, byteLen.first, Charsets.UTF_8)
+    }
+
+    /** 解码一个 AXML UTF-8 长度前缀，返回（长度, 占用字节数）。 */
+    private fun readUtf8Length(b: ByteArray, o: Int): Pair<Int, Int> {
+        val first = b[o].toInt() and 0xFF
+        if (first and 0x80 == 0) return first to 1
+        val len = (first and 0x7F) shl 8 or (b[o + 1].toInt() and 0xFF)
+        return len to 2
     }
 
     private fun rebuildPool(strings: List<String>): ByteArray {

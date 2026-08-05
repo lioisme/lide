@@ -7,10 +7,10 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
+import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDeepLink
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NamedNavArgument
 import androidx.navigation.compose.composable
 import kotlin.math.roundToInt
 
@@ -22,7 +22,6 @@ import kotlin.math.roundToInt
  * 因此新页面一律经 [slideComposable] 注册——在编译器层杜绝 fade 回归。
  */
 object NavTransitions {
-
     /**
      * 转场时长：150ms。
      *
@@ -39,24 +38,29 @@ object NavTransitions {
     /** 1/4 宽度视差推入：根页面回退浏览场景，避免多层全宽推叠。 */
     val QUARTER: RouteTransitions = slide(offsetFraction = 0.25f)
 
-    private fun slide(offsetFraction: Float): RouteTransitions = RouteTransitions(
-        enter = slideInHorizontally(
-            initialOffsetX = { (it * offsetFraction).roundToInt() },
-            animationSpec = tween(ANIM_DURATION_MS),
-        ),
-        exit = slideOutHorizontally(
-            targetOffsetX = { -(it * offsetFraction).roundToInt() },
-            animationSpec = tween(ANIM_DURATION_MS),
-        ),
-        popEnter = slideInHorizontally(
-            initialOffsetX = { -(it * offsetFraction).roundToInt() },
-            animationSpec = tween(ANIM_DURATION_MS),
-        ),
-        popExit = slideOutHorizontally(
-            targetOffsetX = { (it * offsetFraction).roundToInt() },
-            animationSpec = tween(ANIM_DURATION_MS),
-        ),
-    )
+    private fun slide(offsetFraction: Float): RouteTransitions =
+        RouteTransitions(
+            enter =
+                slideInHorizontally(
+                    initialOffsetX = { (it * offsetFraction).roundToInt() },
+                    animationSpec = tween(ANIM_DURATION_MS),
+                ),
+            exit =
+                slideOutHorizontally(
+                    targetOffsetX = { -(it * offsetFraction).roundToInt() },
+                    animationSpec = tween(ANIM_DURATION_MS),
+                ),
+            popEnter =
+                slideInHorizontally(
+                    initialOffsetX = { -(it * offsetFraction).roundToInt() },
+                    animationSpec = tween(ANIM_DURATION_MS),
+                ),
+            popExit =
+                slideOutHorizontally(
+                    targetOffsetX = { (it * offsetFraction).roundToInt() },
+                    animationSpec = tween(ANIM_DURATION_MS),
+                ),
+        )
 }
 
 /** 单页面的四段转场（进入 / 退出 / pop 进入 / pop 退出），见 [NavTransitions]。 */

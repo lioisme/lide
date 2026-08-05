@@ -28,7 +28,9 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Run lint
-        run: ./gradlew lintArm64Debug
+        # :app lint 已依赖自身 ktlintCheck；:editor 的 ktlint 门禁此前从不进 CI
+        # （:editor:lint 未被调用，门禁休眠——2026-08-05 修复并显式纳入本 job）。
+        run: ./gradlew lintArm64Debug :editor:ktlintCheck
 
   unit-test:
     name: Unit Tests
@@ -49,7 +51,9 @@ jobs:
         uses: android-actions/setup-android@v3
 
       - name: Run JVM unit tests
-        run: ./gradlew :app:testX64DebugUnitTest :editor:testDebugUnitTest
+        # :androlua tests included (P2#17): AXml manifest patch round-trip against
+        # regenerated aapt2 fixture + Lua compiler/config/permission resolvers.
+        run: ./gradlew :app:testX64DebugUnitTest :editor:testDebugUnitTest :androlua:testDebugUnitTest
 
   build-arm64:
     name: Build ARM64 APK
@@ -156,3 +160,20 @@ jobs:
           test "$(git ls-files '*.zip' | wc -l)" = "0"
           test "$(git ls-files '*.jar' | grep -v 'gradle/wrapper/gradle-wrapper.jar' | wc -l)" = "0"
           echo "OK: no binary .so/.dex/.zip/.jar tracked (wrapper jar exempt)"
+
+  verify-r1:
+    name: Verify R1 Boundary (editor/src clean)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # R1 red line: :editor module must stay pure JVM (no luajava/androlua/
+      # System.loadLibrary). Editor-process Lint/diagnostics/completion are
+      # pure Kotlin/Java; Lua runtime lives in :app host only.
+      - name: R1 grep gate (P3)
+        run: |
+          if grep -rnE 'luajava|androlua|loadLibrary' editor/src; then
+            echo "FAIL: R1 boundary violated in editor/src (luajava|androlua|loadLibrary)"
+            exit 1
+          fi
+          echo "OK: no luajava|androlua|loadLibrary in editor/src"

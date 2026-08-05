@@ -25,13 +25,6 @@ android {
     }
 }
 
-repositories {
-    maven { url = uri("https://maven.aliyun.com/repository/public") }
-    maven { url = uri("https://maven.aliyun.com/repository/google") }
-    google()
-    mavenCentral()
-}
-
 dependencies {
     compileOnly(project(":sora-editor:editor"))
     implementation("com.google.code.gson:gson:2.13.2")

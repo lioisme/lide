@@ -23,13 +23,6 @@ android {
     }
 }
 
-repositories {
-    maven { url = uri("https://maven.aliyun.com/repository/public") }
-    maven { url = uri("https://maven.aliyun.com/repository/google") }
-    google()
-    mavenCentral()
-}
-
 dependencies {
     api("androidx.annotation:annotation:1.10.0")
     implementation("androidx.collection:collection:1.5.0")

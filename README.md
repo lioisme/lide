@@ -16,7 +16,7 @@ Lua 编译与运行底座（由 AGP `externalNativeBuild` 在 `assemble` 时直�
 | `editor/` | **编辑器模块**（`:editor`）：纯 Kotlin 文本能力（行级诊断/补全/高亮/搜索），不触碰原生引擎 |
 | `scripts/` | **脚本统一目录**：内置示例源（`examples-src/`，构建时生成 `.alp`）、`make-examples.ps1`、双端回归 `adb_regress.ps1`、4 变体打包 `build-apks.bat/.ps1` |
 | `third_party/` | **上游库统一收纳**（只读，后续新增上游库一律入此）：`androlua/`（Gradle 模块 `:androlua`）、`patches/`（material3 SearchBar 实验补丁） |
-| `docs/` | **文档中心**：进度台账（`PROGRESS.md`）、白皮书（`WHITEPAPER.md`）、知识库（`kb/`）、完成/进行中/计划（`completed|in-progress|planned`）、日志（`log/`）、参考基线（`reference/`，gitignore 排除、不提交、只读） |
+| `docs/` | **文档中心**：进度台账（`PROGRESS.md`）、白皮书（`WHITEPAPER.md`）、知识库（`kb/`，唯一事实来源）、进行中/计划中（`in-progress|planned`）、丢弃区（`discard/`，已完成/过时文档唯一出口）、参考基线（`reference/`，gitignore 排除、不提交、只读） |
 | `gradle/` `gradlew*` `settings/build.gradle` | Gradle 工程骨架 + 根级构建脚本 |
 
 ## 常用入口
@@ -53,6 +53,6 @@ Lua 编译与运行底座（由 AGP `externalNativeBuild` 在 `assemble` 时直�
 
 ## 约定
 
-- 上游库与参考基线只读：`third_party/`（`androlua`、`patches`）、`docs/reference/`（不提交）。
+- 上游库与参考基线只读：`third_party/`（`androlua`、`patches`，构建模块）、`reference/`（参考基线 / 验收素材 / 社区语料，不提交）。
 - 新增上游库统一放 `third_party/<库名>/`，并登记到 [settings.gradle.kts](settings.gradle.kts)（模块型库用 `projectDir` 指向）。
-- 新增文档一律落入 `docs/completed|in-progress|planned|kb`，并在索引登记，禁止在 `docs/` 根直接新增 `.md`。
+- 新增文档一律落入 `docs/in-progress|planned|discard|kb`（任务文档完成后 `git mv` 至 `discard/` 并在索引登记），禁止在 `docs/` 根直接新增 `.md`。

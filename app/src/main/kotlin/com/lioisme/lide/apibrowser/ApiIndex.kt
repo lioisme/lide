@@ -4,12 +4,12 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.view.View
 import dalvik.system.DexFile
-import java.io.File
-import java.util.Collections
-import java.util.concurrent.ConcurrentHashMap
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.withContext
+import java.io.File
+import java.util.Collections
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * API 索引：静态类表（assets/javaapi/android.lua，pro 类表平移 + 扩展）
@@ -24,11 +24,14 @@ import kotlinx.coroutines.withContext
  * 全部反射路径 try/catch(Throwable) 降级（AGENTS.md 约定）。
  */
 object ApiIndex {
-
     private const val ASSET_CLASS_TABLE = "javaapi/android.lua"
 
     /** 用途分类反射推断的时间预算（毫秒），超时余量置 null，保证索引构建有上界。 */
     private const val USAGE_BUDGET_MS = 2000L
+
+    /** 分类反射细化预算（毫秒）：widget/view 包条目 View 子类验证（isViewSubclass 缓存命中后
+     *  接近零成本），超时余量保持 buildBase 占位分类（FRAMEWORK），保证构建有上界。 */
+    private const val CATEGORY_REFINE_BUDGET_MS = 1500L
 
     /** 列表行信息（类形态 + 可加载性）预热预算（毫秒），build 后批量填充缓存，超时余量跳过，构建有上界。
      *  2500ms：负缓存（非空 RowInfo）生效后每类名仅扫描一次，预算利用率高，可覆盖更多首屏行。 */
@@ -51,10 +54,27 @@ object ApiIndex {
     )
 
     /** 引擎内置 C 模块（cpath = nativeLibraryDir/lib?.so + 工程 libs）。 */
-    private val builtinNativeModules = listOf(
-        "bson", "canvas", "cjson", "crypt", "ftp", "gl", "http", "import",
-        "md5", "mime", "regex", "sensor", "smtp", "socket", "xml", "zip", "zlib", "luv",
-    )
+    private val builtinNativeModules =
+        listOf(
+            "bson",
+            "canvas",
+            "cjson",
+            "crypt",
+            "ftp",
+            "gl",
+            "http",
+            "import",
+            "md5",
+            "mime",
+            "regex",
+            "sensor",
+            "smtp",
+            "socket",
+            "xml",
+            "zip",
+            "zlib",
+            "luv",
+        )
 
     /** 不可变快照。 */
     data class Snapshot(
@@ -121,9 +141,15 @@ object ApiIndex {
      * 发布基础快照（用途/行信息未补全），列表可立即显示；反射补全见 [completeBuild]。
      * 进程级缓存：工程根未变化时复用当前快照（含已补全的完整快照）。
      * 必须在 IO 线程调用；支持并发调用（内部互斥单飞）。
+     *
+     * SuppressLint(WrongThread)：内部自建 IO 合约（AGENTS.md 两阶段构建），不做线程断言；
+     * 调用方一律 withContext(Dispatchers.IO)，lint 无跨文件数据流分析，故显式压制并在此声明缘由。
      */
     @SuppressLint("WrongThread")
-    fun buildBase(context: Context, projectRoots: List<File>): Snapshot {
+    fun buildBase(
+        context: Context,
+        projectRoots: List<File>,
+    ): Snapshot {
         val roots = projectRoots.map { it.absolutePath }.toSet()
         hostClassLoader = context.classLoader
         snapshot?.let { s -> if (builtProjectRoots == roots) return s }
@@ -137,7 +163,7 @@ object ApiIndex {
             // 1) 静态类表（pro 平移 + material/androidx 精选扩展）
             val staticNames = parseClassTable(context)
             for (name in staticNames) {
-                entries.putIfAbsent(name, ApiClassEntry(name, ApiCategoryClassifier.categorize(name), fromProject = false))
+                entries.putIfAbsent(name, ApiClassEntry(name, ApiCategoryClassifier.categorizeBase(name), fromProject = false))
             }
 
             // 2) 宿主 dex 枚举（androidx/material 动态补齐）
@@ -145,15 +171,16 @@ object ApiIndex {
             // 匹配前缀后才做 '$' 内部类过滤（仅 ~16K 命中条目触发整串扫描）。
             enumerateDexFile(File(context.applicationInfo.sourceDir)) { name ->
                 if ((name.startsWith("androidx.") || name.startsWith("com.google.android.material.")) && '$' !in name) {
-                    entries.putIfAbsent(name, ApiClassEntry(name, ApiCategoryClassifier.categorize(name), fromProject = false))
+                    entries.putIfAbsent(name, ApiClassEntry(name, ApiCategoryClassifier.categorizeBase(name), fromProject = false))
                 }
             }
 
             // 3) 工程 libs/ 下 dex|jar 枚举（真·自动识别）
             for (root in roots) {
                 val libsDir = File(root, "libs")
-                val libFiles = libsDir.listFiles { f -> f.isFile && (f.name.endsWith(".dex") || f.name.endsWith(".jar")) }
-                    ?: continue
+                val libFiles =
+                    libsDir.listFiles { f -> f.isFile && (f.name.endsWith(".dex") || f.name.endsWith(".jar")) }
+                        ?: continue
                 for (lib in libFiles) {
                     enumerateDexFile(lib) { name ->
                         if ('$' !in name) {
@@ -162,8 +189,9 @@ object ApiIndex {
                     }
                 }
                 // 原生库：libs/lib*.so → 模块名（仅模块名级识别，函数级不可静态获取）
-                val soFiles = libsDir.listFiles { f -> f.isFile && f.name.startsWith("lib") && f.name.endsWith(".so") }
-                    ?: continue
+                val soFiles =
+                    libsDir.listFiles { f -> f.isFile && f.name.startsWith("lib") && f.name.endsWith(".so") }
+                        ?: continue
                 for (so in soFiles) {
                     nativeModules += so.name.removePrefix("lib").removeSuffix(".so")
                 }
@@ -184,13 +212,14 @@ object ApiIndex {
 
             val classList = entries.values.toList()
             val categories = classList.indices.groupBy { classList[it].category }
-            val base = Snapshot(
-                classes = classList,
-                nameLower = classList.map { it.name.lowercase() },
-                categories = categories,
-                categoryCounts = categories.mapValues { it.value.size },
-                nativeModules = nativeModules.toList().sorted(),
-            )
+            val base =
+                Snapshot(
+                    classes = classList,
+                    nameLower = classList.map { it.name.lowercase() },
+                    categories = categories,
+                    categoryCounts = categories.mapValues { it.value.size },
+                    nativeModules = nativeModules.toList().sorted(),
+                )
             snapshot = base
             completePhaseDone = false
             builtProjectRoots = roots
@@ -211,6 +240,7 @@ object ApiIndex {
             if (completePhaseDone) return
             val start = System.currentTimeMillis()
             assignUsages()
+            refineCategories()
             warmUpRowInfo()
             completePhaseDone = true
             android.util.Log.d("ApiIndex", "complete phase done in ${System.currentTimeMillis() - start}ms")
@@ -223,14 +253,46 @@ object ApiIndex {
         val deadline = System.currentTimeMillis() + USAGE_BUDGET_MS
         var checked = 0
         var timedOut = false
-        val classes = s.classes.map { entry ->
-            if (timedOut || entry.fromProject) return@map entry
-            val usage = ApiUsageClassifier.classify(entry.name)
-            checked++
-            if (checked % 64 == 0 && System.currentTimeMillis() > deadline) timedOut = true
-            if (usage == entry.usage) entry else entry.copy(usage = usage)
-        }
+        val classes =
+            s.classes.map { entry ->
+                if (timedOut || entry.fromProject) return@map entry
+                val usage = ApiUsageClassifier.classify(entry.name)
+                checked++
+                if (checked % 64 == 0 && System.currentTimeMillis() > deadline) timedOut = true
+                if (usage == entry.usage) entry else entry.copy(usage = usage)
+            }
         snapshot = s.copy(classes = classes)
+    }
+
+    /**
+     * 分类细化（反射阶段，completeBuild 内调用）：widget/view 包条目经 View 子类反射验证
+     * 细化 COMMON_WIDGETS（buildBase 为非反射契约，占位 FRAMEWORK）。时间预算内尽力，
+     * 超时余量保持占位分类；分类变化时原子重建 categories/categoryCounts 并发布。
+     */
+    private fun refineCategories() {
+        val s = snapshot ?: return
+        val deadline = System.currentTimeMillis() + CATEGORY_REFINE_BUDGET_MS
+        var changed = false
+        val classes =
+            s.classes.map { entry ->
+                if (entry.fromProject || !ApiCategoryClassifier.isWidgetPackage(entry.name)) return@map entry
+                if (System.currentTimeMillis() > deadline) return@map entry
+                val refined = ApiCategoryClassifier.categorize(entry.name)
+                if (refined == entry.category) {
+                    entry
+                } else {
+                    changed = true
+                    entry.copy(category = refined)
+                }
+            }
+        if (!changed) return
+        val categories = classes.indices.groupBy { classes[it].category }
+        snapshot =
+            s.copy(
+                classes = classes,
+                categories = categories,
+                categoryCounts = categories.mapValues { it.value.size },
+            )
     }
 
     /**
@@ -263,7 +325,11 @@ object ApiIndex {
     private fun parseClassTable(context: Context): List<String> {
         val result = ArrayList<String>()
         try {
-            val text = context.assets.open(ASSET_CLASS_TABLE).bufferedReader(Charsets.UTF_8).use { it.readText() }
+            val text =
+                context.assets
+                    .open(ASSET_CLASS_TABLE)
+                    .bufferedReader(Charsets.UTF_8)
+                    .use { it.readText() }
             var from = 0
             while (true) {
                 val open = text.indexOf('"', from)
@@ -279,14 +345,23 @@ object ApiIndex {
         return result
     }
 
-    /** 枚举 dex 文件中全部类名（API 26+ deprecated 但功能保留，异常降级）。 */
-    private fun enumerateDexFile(file: File, sink: (String) -> Unit) {
+    /**
+     * 枚举 dex 文件中全部类名。
+     * DexFile（API 26+ deprecated）：无公开替代的纯类名枚举 API（PackageManager 无法枚举
+     * 全部类），功能保留，异常降级；仅 IO 线程调用。
+     */
+    @Suppress("DEPRECATION")
+    private fun enumerateDexFile(
+        file: File,
+        sink: (String) -> Unit,
+    ) {
         if (!file.exists() || file.length() == 0L) return
-        val dex = try {
-            DexFile(file)
-        } catch (_: Throwable) {
-            return
-        }
+        val dex =
+            try {
+                DexFile(file)
+            } catch (_: Throwable) {
+                return
+            }
         try {
             val entries = dex.entries() ?: return
             while (entries.hasMoreElements()) {
@@ -326,18 +401,20 @@ object ApiIndex {
     }
 
     private fun computeRowInfo(name: String): RowInfo {
-        val kind = try {
-            val clazz = Class.forName(name, false, hostClassLoader ?: ApiIndex::class.java.classLoader)
-            val signature = buildString {
-                append(if (clazz.isInterface) "interface" else "class")
-                append(" ")
-                append(clazz.name)
-                clazz.superclass?.let { append(" extends ").append(it.name) }
+        val kind =
+            try {
+                val clazz = Class.forName(name, false, hostClassLoader ?: ApiIndex::class.java.classLoader)
+                val signature =
+                    buildString {
+                        append(if (clazz.isInterface) "interface" else "class")
+                        append(" ")
+                        append(clazz.name)
+                        clazz.superclass?.let { append(" extends ").append(it.name) }
+                    }
+                ClassKind(clazz.isInterface, signature)
+            } catch (_: Throwable) {
+                null
             }
-            ClassKind(clazz.isInterface, signature)
-        } catch (_: Throwable) {
-            null
-        }
         return RowInfo(kind = kind, loadable = kind != null)
     }
 
@@ -348,8 +425,8 @@ object ApiIndex {
     fun classKind(name: String): ClassKind? = rowInfo(name).kind
 
     /** 是否为 View 子类（反射验证，带缓存）。 */
-    fun isViewSubclass(name: String): Boolean {
-        return viewAssignCache.getOrPut(name) {
+    fun isViewSubclass(name: String): Boolean =
+        viewAssignCache.getOrPut(name) {
             try {
                 val clazz = Class.forName(name, false, hostClassLoader ?: ApiIndex::class.java.classLoader)
                 View::class.java.isAssignableFrom(clazz)
@@ -357,5 +434,4 @@ object ApiIndex {
                 false
             }
         }
-    }
 }

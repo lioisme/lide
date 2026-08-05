@@ -30,7 +30,6 @@ import java.security.cert.X509Certificate
  *   注意：新版 v2 规范（2023+）中 0x0101 已改为 PSS-SHA256，PKCS1-SHA256 为 0x0103。
  */
 object V2Signer {
-
     private const val MAGIC = "APK Sig Block 42"
     private const val V2_BLOCK_ID = 0x7109871A
     private const val ALGO_RSA_PKCS1_SHA256 = 0x0103
@@ -38,47 +37,59 @@ object V2Signer {
     private const val CHUNK_SIZE = 1 shl 20
 
     /** 对 [apk]（v1 签名完成的整包字节）插入 v2 签名块并改写 EOCD 偏移。 */
-    fun sign(apk: ByteArray, key: PrivateKey, cert: X509Certificate): ByteArray {
+    fun sign(
+        apk: ByteArray,
+        key: PrivateKey,
+        cert: X509Certificate,
+    ): ByteArray {
         val eocd = findEocd(apk) ?: throw IllegalArgumentException("EOCD not found in APK")
         val cdOffset = eocd.cdOffset
 
-        val sections = listOf(
-            apk.copyOfRange(0, cdOffset),
-            apk.copyOfRange(cdOffset, eocd.offset),
-            apk.copyOfRange(eocd.offset, apk.size),
-        )
+        val sections =
+            listOf(
+                apk.copyOfRange(0, cdOffset),
+                apk.copyOfRange(cdOffset, eocd.offset),
+                apk.copyOfRange(eocd.offset, apk.size),
+            )
         val wholeFileDigest = chunkedSha256(sections)
 
         val certBytes = cert.encoded
-        val (algoId, jca) = when (key.algorithm) {
-            "EC" -> ALGO_ECDSA_SHA256 to "SHA256withECDSA"
-            else -> ALGO_RSA_PKCS1_SHA256 to "SHA256withRSA"
-        }
+        val (algoId, jca) =
+            when (key.algorithm) {
+                "EC" -> ALGO_ECDSA_SHA256 to "SHA256withECDSA"
+                else -> ALGO_RSA_PKCS1_SHA256 to "SHA256withRSA"
+            }
         // digests 记录里的 int 是签名算法 id（与 signatures 记录一致，由校验端交叉核对）
-        val digests = concat(
-            u32(4 + 4 + 32),
-            u32(algoId),
-            u32(32),
-            wholeFileDigest,
-        )
+        val digests =
+            concat(
+                u32(4 + 4 + 32),
+                u32(algoId),
+                u32(32),
+                wholeFileDigest,
+            )
         val certs = concat(u32(certBytes.size), certBytes)
         // signedData = [u32 len][digests][u32 len][certs][u32 len=0][attrs(空)]，无外层长度
         val signedData = concat(u32(digests.size), digests, u32(certs.size), certs, u32(0))
 
-        val signature = Signature.getInstance(jca).run {
-            initSign(key)
-            update(signedData)
-            sign()
-        }
+        val signature =
+            Signature.getInstance(jca).run {
+                initSign(key)
+                update(signedData)
+                sign()
+            }
         val signatures = concat(u32(4 + 4 + signature.size), u32(algoId), u32(signature.size), signature)
 
         val pubKey = cert.publicKey.encoded
         // signer = [u32 len][signedData][u32 len][signatures][u32 len][publicKey]（v2 无 certificates / attrs 字段）
-        val signer = concat(
-            u32(signedData.size), signedData,
-            u32(signatures.size), signatures,
-            u32(pubKey.size), pubKey,
-        )
+        val signer =
+            concat(
+                u32(signedData.size),
+                signedData,
+                u32(signatures.size),
+                signatures,
+                u32(pubKey.size),
+                pubKey,
+            )
         // value = [u32 外层长度][u32 signer 长度][signer]（两层，与 apksig 一致）
         val value = concat(u32(4 + signer.size), u32(signer.size), signer)
         val pair = concat(u64(4L + value.size), u32(V2_BLOCK_ID), value)
@@ -122,7 +133,10 @@ object V2Signer {
         return whole.digest()
     }
 
-    private class Eocd(val offset: Int, val cdOffset: Int)
+    private class Eocd(
+        val offset: Int,
+        val cdOffset: Int,
+    )
 
     private fun findEocd(apk: ByteArray): Eocd? {
         val limit = maxOf(0, apk.size - 22 - 0xFFFF)
@@ -147,34 +161,45 @@ object V2Signer {
         return out.toByteArray()
     }
 
-    private fun u32(v: Int): ByteArray = byteArrayOf(
-        (v and 0xFF).toByte(),
-        ((v ushr 8) and 0xFF).toByte(),
-        ((v ushr 16) and 0xFF).toByte(),
-        ((v ushr 24) and 0xFF).toByte(),
-    )
+    private fun u32(v: Int): ByteArray =
+        byteArrayOf(
+            (v and 0xFF).toByte(),
+            ((v ushr 8) and 0xFF).toByte(),
+            ((v ushr 16) and 0xFF).toByte(),
+            ((v ushr 24) and 0xFF).toByte(),
+        )
 
-    private fun u64(v: Long): ByteArray = byteArrayOf(
-        (v and 0xFF).toByte(),
-        ((v ushr 8) and 0xFF).toByte(),
-        ((v ushr 16) and 0xFF).toByte(),
-        ((v ushr 24) and 0xFF).toByte(),
-        ((v ushr 32) and 0xFF).toByte(),
-        ((v ushr 40) and 0xFF).toByte(),
-        ((v ushr 48) and 0xFF).toByte(),
-        ((v ushr 56) and 0xFF).toByte(),
-    )
+    private fun u64(v: Long): ByteArray =
+        byteArrayOf(
+            (v and 0xFF).toByte(),
+            ((v ushr 8) and 0xFF).toByte(),
+            ((v ushr 16) and 0xFF).toByte(),
+            ((v ushr 24) and 0xFF).toByte(),
+            ((v ushr 32) and 0xFF).toByte(),
+            ((v ushr 40) and 0xFF).toByte(),
+            ((v ushr 48) and 0xFF).toByte(),
+            ((v ushr 56) and 0xFF).toByte(),
+        )
 
-    private fun u32(b: ByteArray, off: Int): Int =
+    private fun u32(
+        b: ByteArray,
+        off: Int,
+    ): Int =
         (b[off].toInt() and 0xFF) or
             ((b[off + 1].toInt() and 0xFF) shl 8) or
             ((b[off + 2].toInt() and 0xFF) shl 16) or
             ((b[off + 3].toInt() and 0xFF) shl 24)
 
-    private fun u16(b: ByteArray, off: Int): Int =
-        (b[off].toInt() and 0xFF) or ((b[off + 1].toInt() and 0xFF) shl 8)
+    private fun u16(
+        b: ByteArray,
+        off: Int,
+    ): Int = (b[off].toInt() and 0xFF) or ((b[off + 1].toInt() and 0xFF) shl 8)
 
-    private fun writeU32(b: ByteArray, off: Int, v: Int) {
+    private fun writeU32(
+        b: ByteArray,
+        off: Int,
+        v: Int,
+    ) {
         b[off] = (v and 0xFF).toByte()
         b[off + 1] = ((v ushr 8) and 0xFF).toByte()
         b[off + 2] = ((v ushr 16) and 0xFF).toByte()

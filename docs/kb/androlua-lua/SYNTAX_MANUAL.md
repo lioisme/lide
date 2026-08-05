@@ -4,7 +4,7 @@
 > **未经设备实测**，属"**未经测试，仅供参考**"内容。文中标注的源码引用位置（路径 + 行号）供复核用，
 > 不构成行为保证；与真机/模拟器实测结论冲突时**一律以实测为准**（双端验证方法见 `TECHNIQUES.md` §3）。
 >
-> 依据：AndroLua Pro 4.4.2 源码（`docs/reference/androlua/AndroLua_pro-master/`）+ 官方 Lua 5.3 参考手册（该工程自带 `app/src/main/assets/luadoc/manual.html`）。
+> 依据：AndroLua Pro 4.4.2 源码（`reference/androlua/AndroLua_pro-master/`）+ 官方 Lua 5.3 参考手册（该工程自带 `app/src/main/assets/luadoc/manual.html`）。
 > 本手册描述的是 **pro 原版** 的 Lua 工程侧语法与 API；lide 若出现差异以实测为准（见 `FEATURES.md` / `PITFALLS.md`）。
 > 涉及源码的结论均标注引用位置（相对该工程的路径，行号取自本次审计）。
 

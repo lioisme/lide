@@ -35,8 +35,8 @@
 
 ### 3.1 来源
 
-- 目录：`docs/reference/代码手册社区/lua_files/`（45 个分类子目录，共 **2144 篇** `.lua`）
-- 元数据：`docs/reference/代码手册社区/lua_manual.db`（SQLite，字段见 `tools/catalog.py` 注释）
+- 目录：`reference/代码手册社区/lua_files/`（45 个分类子目录，共 **2144 篇** `.lua`）
+- 元数据：`reference/代码手册社区/lua_manual.db`（SQLite，字段见 `tools/catalog.py` 注释）
 - 采集脚本：`fetch_lua.py`（仅用于原始拉取，本库**不依赖**线上 API）
 
 ### 3.2 现状量化（全量扫描结论，见 `catalog/quality_report.md`）
@@ -112,7 +112,7 @@ docs/kb/androlua-community/
 ├── training/              ← LLM 微调数据集输出（schema + jsonl）
 ├── tools/                 ← 分析/生成脚本（analyze.py 等）
 └── 数据原文只读引用
-   docs/reference/代码手册社区/lua_files/  （只读，不迁移）
+   reference/代码手册社区/lua_files/  （只读，不迁移）
 ```
 
 ## 7. 验收口径（Definition of Done）

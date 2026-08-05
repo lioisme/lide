@@ -17,11 +17,12 @@ import java.util.zip.ZipOutputStream
  * [CountingOutputStream] 统计真实写出的字节数作为下一条目偏移。
  */
 object ZipUtils {
-
     const val LOC_HEADER_SIZE = 30
 
     /** 统计写出的字节数，作为 ZIP 内下一条目的真实偏移。 */
-    class CountingOutputStream(private val out: OutputStream) : OutputStream() {
+    class CountingOutputStream(
+        private val out: OutputStream,
+    ) : OutputStream() {
         var count: Long = 0
             private set
 
@@ -30,14 +31,22 @@ object ZipUtils {
             count++
         }
 
-        override fun write(b: ByteArray, off: Int, len: Int) {
+        override fun write(
+            b: ByteArray,
+            off: Int,
+            len: Int,
+        ) {
             out.write(b, off, len)
             count += len
         }
     }
 
     /** 计算使 STORED 条目数据区 4 对齐所需的 extra 填充长度；非 STORED 返回 0。 */
-    fun alignExtra(name: String, method: Int, pos: Long): Int {
+    fun alignExtra(
+        name: String,
+        method: Int,
+        pos: Long,
+    ): Int {
         if (method != ZipEntry.STORED) return 0
         val nameLen = name.toByteArray(Charsets.UTF_8).size
         return ((4 - ((pos + LOC_HEADER_SIZE + nameLen) % 4)) % 4).toInt()
@@ -55,14 +64,15 @@ object ZipUtils {
         data: ByteArray,
     ) {
         val extraLen = alignExtra(name, method, counter.count)
-        val entry = ZipEntry(name).apply {
-            this.method = method
-            if (method == ZipEntry.STORED) {
-                size = data.size.toLong()
-                crc = CRC32().apply { update(data) }.value
-                if (extraLen > 0) setExtra(ByteArray(extraLen))
+        val entry =
+            ZipEntry(name).apply {
+                this.method = method
+                if (method == ZipEntry.STORED) {
+                    size = data.size.toLong()
+                    crc = CRC32().apply { update(data) }.value
+                    if (extraLen > 0) setExtra(ByteArray(extraLen))
+                }
             }
-        }
         zos.putNextEntry(entry)
         zos.write(data)
         zos.closeEntry()

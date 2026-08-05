@@ -43,6 +43,7 @@ fun SearchBar(
     var replaceQuery by remember { mutableStateOf("") }
     var isCaseSensitive by remember { mutableStateOf(false) }
     var isRegex by remember { mutableStateOf(false) }
+    var isWholeWord by remember { mutableStateOf(false) }
     var showReplace by remember { mutableStateOf(false) }
     var matchCount by remember { mutableStateOf(0) }
     var currentMatch by remember { mutableStateOf(0) }
@@ -53,22 +54,23 @@ fun SearchBar(
         if (editor == null) {
             onDispose { }
         } else {
-            val receipt = editor.subscribeAlways(PublishSearchResultEvent::class.java) { _ ->
-                try {
-                    val searcher = editor.getSearcher()
-                    if (searcher.hasQuery()) {
-                        val index = searcher.getCurrentMatchedPositionIndex()
-                        matchCount = searcher.getMatchedPositionCount()
-                        currentMatch = if (index >= 0) index + 1 else 0
-                    } else {
+            val receipt =
+                editor.subscribeAlways(PublishSearchResultEvent::class.java) { _ ->
+                    try {
+                        val searcher = editor.getSearcher()
+                        if (searcher.hasQuery()) {
+                            val index = searcher.getCurrentMatchedPositionIndex()
+                            matchCount = searcher.getMatchedPositionCount()
+                            currentMatch = if (index >= 0) index + 1 else 0
+                        } else {
+                            matchCount = 0
+                            currentMatch = 0
+                        }
+                    } catch (t: Throwable) {
                         matchCount = 0
                         currentMatch = 0
                     }
-                } catch (t: Throwable) {
-                    matchCount = 0
-                    currentMatch = 0
                 }
-            }
             onDispose { receipt.unsubscribe() }
         }
     }
@@ -83,8 +85,12 @@ fun SearchBar(
             currentMatch = 0
             return
         }
-        val searchType = if (isRegex) EditorSearcher.SearchOptions.TYPE_REGULAR_EXPRESSION
-                         else EditorSearcher.SearchOptions.TYPE_NORMAL
+        val searchType =
+            when {
+                isRegex -> EditorSearcher.SearchOptions.TYPE_REGULAR_EXPRESSION
+                isWholeWord -> EditorSearcher.SearchOptions.TYPE_WHOLE_WORD
+                else -> EditorSearcher.SearchOptions.TYPE_NORMAL
+            }
         val options = EditorSearcher.SearchOptions(searchType, !isCaseSensitive)
         try {
             searcher.search(query, options)
@@ -97,7 +103,7 @@ fun SearchBar(
     // 防抖：连续键入只触发一次搜索。sora `EditorSearcher.search` 的全文快照
     // （content.toStringBuilder）发生在调用线程（主线程），大文件下每键 O(n) 拷贝
     // 必须抑制；防抖由 LaunchedEffect 重启语义天然提供取消。
-    LaunchedEffect(query, isCaseSensitive, isRegex) {
+    LaunchedEffect(query, isCaseSensitive, isRegex, isWholeWord) {
         delay(SEARCH_DEBOUNCE_MS)
         performSearch()
     }
@@ -106,18 +112,22 @@ fun SearchBar(
         modifier = modifier.padding(8.dp),
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-        ),
+        colors =
+            CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+            ),
     ) {
         Column(modifier = Modifier.padding(8.dp)) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                Icon(Icons.Default.Search, null,
+                Icon(
+                    Icons.Default.Search,
+                    null,
                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.size(20.dp).padding(start = 4.dp))
+                    modifier = Modifier.size(20.dp).padding(start = 4.dp),
+                )
                 Spacer(Modifier.width(8.dp))
 
                 OutlinedTextField(
@@ -127,24 +137,30 @@ fun SearchBar(
                     singleLine = true,
                     textStyle = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.weight(1f).height(48.dp),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        unfocusedBorderColor = Color.Transparent,
-                        focusedBorderColor = Color.Transparent,
-                        unfocusedContainerColor = Color.Transparent,
-                        focusedContainerColor = Color.Transparent,
-                    ),
-                    keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(
-                        keyboardType = KeyboardType.Ascii,
-                        imeAction = ImeAction.Search,
-                    ),
+                    colors =
+                        OutlinedTextFieldDefaults.colors(
+                            unfocusedBorderColor = Color.Transparent,
+                            focusedBorderColor = Color.Transparent,
+                            unfocusedContainerColor = Color.Transparent,
+                            focusedContainerColor = Color.Transparent,
+                        ),
+                    keyboardOptions =
+                        androidx.compose.foundation.text.KeyboardOptions(
+                            keyboardType = KeyboardType.Ascii,
+                            imeAction = ImeAction.Search,
+                        ),
                 )
 
                 if (query.isNotEmpty()) {
                     Text(
                         "$currentMatch/$matchCount",
                         style = MaterialTheme.typography.labelSmall,
-                        color = if (matchCount > 0) MaterialTheme.colorScheme.onSurfaceVariant
-                               else MaterialTheme.colorScheme.error,
+                        color =
+                            if (matchCount > 0) {
+                                MaterialTheme.colorScheme.onSurfaceVariant
+                            } else {
+                                MaterialTheme.colorScheme.error
+                            },
                         modifier = Modifier.padding(horizontal = 8.dp),
                     )
 
@@ -153,18 +169,22 @@ fun SearchBar(
                         onClick = { editorProvider()?.getSearcher()?.gotoPrevious() },
                         modifier = Modifier.size(32.dp),
                     ) {
-                        Icon(Icons.Default.KeyboardArrowUp,
+                        Icon(
+                            Icons.Default.KeyboardArrowUp,
                             stringResource(R.string.cd_search_prev),
-                            modifier = Modifier.size(20.dp))
+                            modifier = Modifier.size(20.dp),
+                        )
                     }
                     TipIconButton(
                         tooltip = stringResource(R.string.cd_search_next),
                         onClick = { editorProvider()?.getSearcher()?.gotoNext() },
                         modifier = Modifier.size(32.dp),
                     ) {
-                        Icon(Icons.Default.KeyboardArrowDown,
+                        Icon(
+                            Icons.Default.KeyboardArrowDown,
                             stringResource(R.string.cd_search_next),
-                            modifier = Modifier.size(20.dp))
+                            modifier = Modifier.size(20.dp),
+                        )
                     }
                 }
 
@@ -173,9 +193,11 @@ fun SearchBar(
                     onClick = onClose,
                     modifier = Modifier.size(32.dp),
                 ) {
-                    Icon(Icons.Default.Close,
+                    Icon(
+                        Icons.Default.Close,
                         stringResource(R.string.cd_search_close),
-                        modifier = Modifier.size(20.dp))
+                        modifier = Modifier.size(20.dp),
+                    )
                 }
             }
 
@@ -190,16 +212,18 @@ fun SearchBar(
                     singleLine = true,
                     textStyle = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.weight(1f).height(48.dp),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        unfocusedBorderColor = Color.Transparent,
-                        focusedBorderColor = Color.Transparent,
-                        unfocusedContainerColor = Color.Transparent,
-                        focusedContainerColor = Color.Transparent,
-                    ),
-                    keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(
-                        keyboardType = KeyboardType.Ascii,
-                        imeAction = ImeAction.Done,
-                    ),
+                    colors =
+                        OutlinedTextFieldDefaults.colors(
+                            unfocusedBorderColor = Color.Transparent,
+                            focusedBorderColor = Color.Transparent,
+                            unfocusedContainerColor = Color.Transparent,
+                            focusedContainerColor = Color.Transparent,
+                        ),
+                    keyboardOptions =
+                        androidx.compose.foundation.text.KeyboardOptions(
+                            keyboardType = KeyboardType.Ascii,
+                            imeAction = ImeAction.Done,
+                        ),
                 )
 
                 Spacer(Modifier.width(4.dp))
@@ -209,9 +233,10 @@ fun SearchBar(
                     },
                     enabled = query.isNotEmpty() && matchCount > 0,
                     contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
-                    modifier = Modifier
-                        .height(32.dp)
-                        .pressAndHoldHapticFeedback(),
+                    modifier =
+                        Modifier
+                            .height(32.dp)
+                            .pressAndHoldHapticFeedback(),
                 ) {
                     Text(stringResource(R.string.replace), style = MaterialTheme.typography.labelSmall)
                 }
@@ -222,9 +247,10 @@ fun SearchBar(
                     },
                     enabled = query.isNotEmpty() && matchCount > 0,
                     contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
-                    modifier = Modifier
-                        .height(32.dp)
-                        .pressAndHoldHapticFeedback(),
+                    modifier =
+                        Modifier
+                            .height(32.dp)
+                            .pressAndHoldHapticFeedback(),
                 ) {
                     Text(stringResource(R.string.replace_all), style = MaterialTheme.typography.labelSmall)
                 }
@@ -238,17 +264,28 @@ fun SearchBar(
                     selected = isCaseSensitive,
                     onClick = { isCaseSensitive = !isCaseSensitive },
                     label = { Text(stringResource(R.string.case_sensitive), style = MaterialTheme.typography.labelSmall) },
-                    modifier = Modifier
-                        .height(28.dp)
-                        .pressAndHoldHapticFeedback(),
+                    modifier =
+                        Modifier
+                            .height(28.dp)
+                            .pressAndHoldHapticFeedback(),
                 )
                 FilterChip(
                     selected = isRegex,
                     onClick = { isRegex = !isRegex },
                     label = { Text(stringResource(R.string.regex), style = MaterialTheme.typography.labelSmall) },
-                    modifier = Modifier
-                        .height(28.dp)
-                        .pressAndHoldHapticFeedback(),
+                    modifier =
+                        Modifier
+                            .height(28.dp)
+                            .pressAndHoldHapticFeedback(),
+                )
+                FilterChip(
+                    selected = isWholeWord,
+                    onClick = { isWholeWord = !isWholeWord },
+                    label = { Text(stringResource(R.string.whole_word), style = MaterialTheme.typography.labelSmall) },
+                    modifier =
+                        Modifier
+                            .height(28.dp)
+                            .pressAndHoldHapticFeedback(),
                 )
             }
         }

@@ -9,9 +9,9 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -25,6 +25,7 @@ import io.github.rosemoe.sora.langs.textmate.TextMateColorScheme
 import io.github.rosemoe.sora.langs.textmate.registry.ThemeRegistry
 import io.github.rosemoe.sora.text.Content
 import io.github.rosemoe.sora.widget.CodeEditor
+import io.github.rosemoe.sora.widget.minimap.MinimapConfig
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -54,12 +55,24 @@ import java.util.concurrent.atomic.AtomicReference
  *   每次进入编辑器只支付 setText + 布局，不再重建视图 / 语言 / 主题方案（实测省 ~100ms/次）；
  * - 事件回调经池内桥接字段按次注入（attachCallbacks），订阅只建立一次；
  * - 主题切换由 [ThemeRegistry] 广播给缓存的 [TextMateColorScheme]，无需重建。
+ *
+ * 配置同步（P0 设置中心）：
+ * - 全部设置经 [EditorViewPool.applyConfig] 守卫式 diff（值不变不赋值），
+ *   防止每键 setter 触发全量重排；
+ * - 语言级设置（useTab / 缩进 / 闭合对 / 补全 / tabSize）一次应用；
+ * - 标识符补全（collectIdentifiers）为构造级参数，设置变化时重建语言
+ *   （一次全量分析，仅设置变更时发生）；
+ * - 大文件降级矩阵（§6.3）：wordwrap / 括号高亮 / 当前块 / minimap / stickyScroll /
+ *   光标动画 / 行号面板随 >200KB 强制关闭，标识符补全强制关。
  */
 private const val LARGE_FILE_THRESHOLD = 200 * 1024
 private const val LARGE_FILE_UNDO_STACK = 200
 private const val DEFAULT_UNDO_STACK = 2500
 private const val DIAGNOSTIC_DEBOUNCE_MS = 500L
 private const val TAG = "LuaEditor"
+
+/** scope 未解析时的默认语言：Lua（IDE 主要工程语言；未知扩展名文件落此）。显式 scope 走匹配项。 */
+internal const val DEFAULT_SCOPE = "source.lua"
 
 /**
  * 进程级单例 TextMateColorScheme。
@@ -71,8 +84,7 @@ private const val TAG = "LuaEditor"
 private object TextMateColorSchemeCache {
     private var scheme: TextMateColorScheme? = null
 
-    fun forTheme(registry: ThemeRegistry): TextMateColorScheme =
-        scheme ?: TextMateColorScheme.create(registry).also { scheme = it }
+    fun forTheme(registry: ThemeRegistry): TextMateColorScheme = scheme ?: TextMateColorScheme.create(registry).also { scheme = it }
 }
 
 /**
@@ -83,15 +95,21 @@ private object TextMateColorSchemeCache {
  * 组合销毁（页面退出）不销毁视图，仅由宿主停用（AndroidView 自动分离，onRelease 兜底保存）。
  *
  * 线程：全部状态主线程访问；[diagTick] 为 StateFlow，事件回调（主线程）写入。
+ * [applyConfig] 为主线程调用（Compose AndroidView update 阶段），内部有守卫。
  */
 internal object EditorViewPool {
-
     /** 编辑事件节流信号：每键 +1，不触发重组；宿主经 collectLatest 防抖消费。 */
     val diagTick = MutableStateFlow(0)
 
     private val syntaxChecker = LuaDiagnostics.Incremental()
     private var lastDiagSignature = ""
     private var editor: CodeEditor? = null
+
+    /** 语言装配期是否已开启标识符补全（主线程读 / 写，决定是否重建语言）。 */
+    private var languageIdentifiersEnabled = false
+
+    /** 最近一次已应用的语言级配置快照（symbolPairs 无 getter，diff 用快照比对）。 */
+    private var lastAppliedConfig: EditorConfig? = null
 
     private val contentModifiedRef = AtomicReference<() -> Unit>({})
     private val undoRedoRef = AtomicReference<(Boolean, Boolean) -> Unit>({ _, _ -> })
@@ -106,7 +124,10 @@ internal object EditorViewPool {
     }
 
     /** 后台线程增量校验入口（诊断防抖协程调用，内部同步线程安全）。 */
-    fun syntaxCheck(source: String): List<DiagnosticRegion> = syntaxChecker.check(source)
+    fun syntaxCheck(
+        source: String,
+        quickfixSource: Content? = null,
+    ): List<DiagnosticRegion> = syntaxChecker.check(source, quickfixSource)
 
     /** 最近一次已应用的诊断签名（主线程读）。 */
     fun lastSignature(): String = lastDiagSignature
@@ -116,73 +137,187 @@ internal object EditorViewPool {
         lastDiagSignature = signature
     }
 
+    /**
+     * 守卫式配置同步（主线程，AndroidView update 阶段调用）。
+     *
+     * 原则：读当前值比对，值不变不赋值（防每键 setter 全量重排）。
+     * 语言级字段以 [lastAppliedConfig] 快照比对（symbolPairs 无 getter）；
+     * 视图级字段直接读 editor getter。
+     *
+     * [isLargeFile] 为 >200KB 降级矩阵开关：高成本功能强制关闭，与设置值无关。
+     */
+    fun applyConfig(
+        editor: CodeEditor,
+        config: EditorConfig,
+        scope: String?,
+        isLargeFile: Boolean,
+    ) {
+        val applied = lastAppliedConfig
+        val resolvedScope = scope ?: DEFAULT_SCOPE
+        val effectiveIdentifiers = config.identifierCompletion && !isLargeFile
+        val lang = editor.editorLanguage as? EditorLanguage
+
+        if (
+            lang == null ||
+            lang.scopeName != resolvedScope ||
+            effectiveIdentifiers != languageIdentifiersEnabled
+        ) {
+            // 语言或标识符补全（构造级参数）变化时重建语言（一次全量分析，仅设置变更发生）。
+            val newLang =
+                EditorLanguage(resolvedScope, collectIdentifiers = effectiveIdentifiers).apply {
+                    setCompleterKeywords(LanguageKeywordRegistry.keywordsFor(resolvedScope))
+                    configure(config)
+                    attachEditor(editor)
+                }
+            editor.setEditorLanguage(newLang)
+            languageIdentifiersEnabled = effectiveIdentifiers
+            // setEditorLanguage 会清空 diagnostics：强制诊断重跑并复位签名。
+            updateSignature("")
+            diagTick.value++
+        } else if (lang != null) {
+            if (applied == null || applied.useTab != config.useTab) lang.useTab(config.useTab)
+            if (applied == null || applied.autoIndent != config.autoIndent) {
+                lang.newlineHandler.isEnabled = config.autoIndent
+            }
+            if (applied == null || applied.autoCloseBrackets != config.autoCloseBrackets) {
+                lang.symbolPairs.setEnabled(config.autoCloseBrackets)
+            }
+            if (applied == null || applied.autoCompletion != config.autoCompletion) {
+                lang.setAutoCompleteEnabled(config.autoCompletion)
+            }
+            if (applied == null || applied.tabSize != config.tabSize) lang.setTabSize(config.tabSize)
+        }
+
+        // === 视图级守卫式同步（含大文件降级矩阵，任务单 §6.3） ===
+        val expectedWordWrap = config.wordWrap && !isLargeFile
+        if (editor.isWordwrap != expectedWordWrap) {
+            editor.isWordwrap = expectedWordWrap
+        }
+        if (editor.isHighlightBracketPair != (config.highlightBracketPair && !isLargeFile)) {
+            editor.isHighlightBracketPair = config.highlightBracketPair && !isLargeFile
+        }
+        if (editor.isHighlightCurrentBlock != (config.highlightCurrentBlock && !isLargeFile)) {
+            editor.isHighlightCurrentBlock = config.highlightCurrentBlock && !isLargeFile
+        }
+        if (editor.isHighlightCurrentLine != config.highlightCurrentLine) {
+            editor.isHighlightCurrentLine = config.highlightCurrentLine
+        }
+        if (editor.isLineNumberEnabled != config.lineNumbers) {
+            editor.isLineNumberEnabled = config.lineNumbers
+        }
+        if (editor.tabWidth != config.tabSize) {
+            editor.tabWidth = config.tabSize
+        }
+        if (editor.props.showMinimap != (config.minimap && !isLargeFile)) {
+            editor.props.showMinimap = config.minimap && !isLargeFile
+        }
+        if (editor.props.stickyScroll != (config.stickyScroll && !isLargeFile)) {
+            editor.props.stickyScroll = config.stickyScroll && !isLargeFile
+        }
+        if (editor.isCursorAnimationEnabled != (config.cursorAnimation && !isLargeFile)) {
+            editor.isCursorAnimationEnabled = config.cursorAnimation && !isLargeFile
+        }
+        if (editor.isDisplayLnPanel != (config.lnPanel && !isLargeFile)) {
+            editor.isDisplayLnPanel = config.lnPanel && !isLargeFile
+        }
+        if (editor.isScalable != config.scalable) {
+            editor.isScalable = config.scalable
+        }
+        if (editor.isEditable != !config.readOnly) {
+            editor.isEditable = !config.readOnly
+        }
+        if (editor.isDisableSoftKbdIfHardKbdAvailable != config.disableSoftKbdIfHardKbd) {
+            editor.setDisableSoftKbdIfHardKbdAvailable(config.disableSoftKbdIfHardKbd)
+        }
+        val expectedFlags = nonPrintableFlags(config)
+        if (editor.nonPrintablePaintingFlags != expectedFlags) {
+            editor.nonPrintablePaintingFlags = expectedFlags
+        }
+        val expectedTextSizePx =
+            TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_SP,
+                config.fontSize.toFloat(),
+                editor.resources.displayMetrics,
+            )
+        if (editor.textSizePx != expectedTextSizePx) {
+            editor.setTextSize(config.fontSize.toFloat())
+        }
+        lastAppliedConfig = config
+    }
+
     /** 获取（必要时创建）池化编辑器。首次创建完成一次性装配与订阅。 */
-    fun acquire(context: Context, config: EditorConfig): CodeEditor {
+    fun acquire(
+        context: Context,
+        config: EditorConfig,
+        scope: String? = null,
+    ): CodeEditor {
         editor?.let { return it }
         // 使用 applicationContext 持有池化视图：CodeEditor 不绑定窗口/主题资源，
         // 避免旋转等 Activity 重建时池仍强引用旧 Activity（内存泄漏）。
-        val ed = CodeEditor(context.applicationContext).apply outer@{
-            // 官方 demo 顺序：colorScheme → language → setText，
-            // 使分析器重启都发生在空文本阶段，setText 成为唯一一次全量分析。
-            colorScheme = TextMateColorSchemeCache.forTheme(ThemeRegistry.getInstance())
+        val ed =
+            CodeEditor(context.applicationContext).apply outer@{
+                // 官方 demo 顺序：colorScheme → language → setText，
+                // 使分析器重启都发生在空文本阶段，setText 成为唯一一次全量分析。
+                colorScheme = TextMateColorSchemeCache.forTheme(ThemeRegistry.getInstance())
 
-            val lang = LuaLanguage(collectIdentifiers = false).apply {
-                setAutoCompleteEnabled(true)
-                setCompleterKeywords(
-                    arrayOf(
-                        "and", "break", "do", "else", "elseif", "end", "false",
-                        "for", "function", "goto", "if", "in", "local", "nil",
-                        "not", "or", "repeat", "return", "then", "true", "until", "while",
-                        "print", "require", "type", "pairs", "ipairs", "tostring", "tonumber",
-                        "table", "string", "math", "io", "os", "coroutine", "debug",
-                    )
-                )
-                attachEditor(this@outer)
-            }
-            setEditorLanguage(lang)
-
-            isLineNumberEnabled = true
-            isHighlightCurrentLine = true
-            tabWidth = config.tabSize
-            setBlockLineWidth(3f)
-
-            isUndoEnabled = true
-
-            applyNonPrintableFlags(config)
-
-            setTextSize(config.fontSize.toFloat())
-
-            var lastCanUndo = false
-            var lastCanRedo = false
-            subscribeEvent(ContentChangeEvent::class.java) { event, _ ->
-                try {
-                    when (event.action) {
-                        ContentChangeEvent.ACTION_INSERT, ContentChangeEvent.ACTION_DELETE -> {
-                            // 记录编辑行区间供增量诊断；sora 事件回调位于主线程，
-                            // Incremental.onEdit 内部同步，线程安全。
-                            syntaxChecker.onEdit(event.changeStart.line, event.changeEnd.line)
-                            contentModifiedRef.get().invoke()
-                            if (text.length <= LARGE_FILE_THRESHOLD) diagTick.value++
-                        }
-                        ContentChangeEvent.ACTION_SET_NEW_TEXT -> {
-                            diagnostics = null
-                            syntaxChecker.onNewText()
-                            lastDiagSignature = ""
-                            if (text.length <= LARGE_FILE_THRESHOLD) diagTick.value++
-                        }
+                val resolvedScope = scope ?: DEFAULT_SCOPE
+                val lang =
+                    EditorLanguage(resolvedScope, collectIdentifiers = config.identifierCompletion).apply {
+                        setAutoCompleteEnabled(true)
+                        setCompleterKeywords(LanguageKeywordRegistry.keywordsFor(resolvedScope))
+                        configure(config)
+                        attachEditor(this@outer)
                     }
-                    val canU = canUndo()
-                    val canR = canRedo()
-                    if (canU != lastCanUndo || canR != lastCanRedo) {
-                        lastCanUndo = canU
-                        lastCanRedo = canR
-                        undoRedoRef.get().invoke(canU, canR)
+                languageIdentifiersEnabled = config.identifierCompletion
+                setEditorLanguage(lang)
+
+                isLineNumberEnabled = true
+                isHighlightCurrentLine = true
+                tabWidth = config.tabSize
+                setBlockLineWidth(3f)
+
+                isUndoEnabled = true
+
+                applyNonPrintableFlags(config)
+
+                setTextSize(config.fontSize.toFloat())
+
+                // 迷你地图字符块模式（任务单 G8：0.24.6 原生，默认关由 applyConfig 控制）。
+                props.minimapConfig = MinimapConfig(minimapDrawTextAsBlocks = true)
+
+                var lastCanUndo = false
+                var lastCanRedo = false
+                subscribeEvent(ContentChangeEvent::class.java) { event, _ ->
+                    try {
+                        when (event.action) {
+                            ContentChangeEvent.ACTION_INSERT, ContentChangeEvent.ACTION_DELETE -> {
+                                // 记录编辑行区间供增量诊断；sora 事件回调位于主线程，
+                                // Incremental.onEdit 内部同步，线程安全。
+                                syntaxChecker.onEdit(event.changeStart.line, event.changeEnd.line)
+                                contentModifiedRef.get().invoke()
+                                if (text.length <= LARGE_FILE_THRESHOLD) diagTick.value++
+                            }
+
+                            ContentChangeEvent.ACTION_SET_NEW_TEXT -> {
+                                diagnostics = null
+                                syntaxChecker.onNewText()
+                                lastDiagSignature = ""
+                                if (text.length <= LARGE_FILE_THRESHOLD) diagTick.value++
+                            }
+                        }
+                        val canU = canUndo()
+                        val canR = canRedo()
+                        if (canU != lastCanUndo || canR != lastCanRedo) {
+                            lastCanUndo = canU
+                            lastCanRedo = canR
+                            undoRedoRef.get().invoke(canU, canR)
+                        }
+                    } catch (t: Throwable) {
+                        Log.w(TAG, "content change callback failed", t)
                     }
-                } catch (t: Throwable) {
-                    Log.w(TAG, "content change callback failed", t)
                 }
             }
-        }
+        lastAppliedConfig = config
         editor = ed
         return ed
     }
@@ -221,16 +356,24 @@ fun LuaEditor(
     content: Content,
     isDarkTheme: Boolean,
     config: EditorConfig,
+    fileName: String?,
     onContentModified: () -> Unit,
     onUndoRedoStateChanged: (canUndo: Boolean, canRedo: Boolean) -> Unit,
     onRelease: () -> Unit,
-    editorRef: MutableState<CodeEditor?>,
+    editorRef: AtomicReference<CodeEditor?>,
     modifier: Modifier = Modifier,
 ) {
     val initReady = rememberTextMateInitializer()
     val currentOnContentModified by rememberUpdatedState(onContentModified)
     val currentOnUndoRedoStateChanged by rememberUpdatedState(onUndoRedoStateChanged)
     val currentOnRelease by rememberUpdatedState(onRelease)
+    val currentConfig by rememberUpdatedState(config)
+    // 文件 → 语言 scope 由 :editor 解析（文本级能力，宿主只传文件名）。
+    // 传入值可能是完整路径，先取 basename 再按扩展名/精确名映射。
+    val resolvedScope = remember(fileName) {
+        val base = fileName?.substringAfterLast('/')?.substringAfterLast('\\') ?: return@remember null
+        LanguageDetector.detect(base)
+    }
 
     // rememberUpdatedState：事件回调 / factory / update 块中读取「最新」值而不触发重组。
     val currentContent = rememberUpdatedState(content)
@@ -250,7 +393,7 @@ fun LuaEditor(
 
     AndroidView(
         factory = { ctx ->
-            val editor = EditorViewPool.acquire(ctx, config)
+            val editor = EditorViewPool.acquire(ctx, config, resolvedScope)
             EditorViewPool.attachCallbacks(currentOnContentModified, currentOnUndoRedoStateChanged)
             // 池化视图可能残留上次文件内容：进入即按当前 Content 同步，避免闪旧文本。
             if (editor.text !== currentContent.value) {
@@ -261,36 +404,12 @@ fun LuaEditor(
         update = { editor ->
             // 视图就绪后发布到宿主。写入发生在 update 阶段而非 factory 组合期，
             // 同一实例只发布一次，避免组合期间的状态写竞争。
-            if (editorRef.value !== editor) {
-                editorRef.value = editor
+            if (editorRef.get() !== editor) {
+                editorRef.set(editor)
             }
             val contentValue = currentContent.value
             val isLargeFile = contentValue.length > LARGE_FILE_THRESHOLD
-            val expectedWordWrap = config.wordWrap && !isLargeFile
-            if (editor.isWordwrap != expectedWordWrap) {
-                editor.isWordwrap = expectedWordWrap
-            }
-            if (editor.isHighlightBracketPair != !isLargeFile) {
-                editor.isHighlightBracketPair = !isLargeFile
-            }
-            if (editor.isHighlightCurrentBlock != !isLargeFile) {
-                editor.isHighlightCurrentBlock = !isLargeFile
-            }
-            if (editor.tabWidth != config.tabSize) {
-                editor.tabWidth = config.tabSize
-            }
-            val expectedFlags = nonPrintableFlags(config)
-            if (editor.nonPrintablePaintingFlags != expectedFlags) {
-                editor.nonPrintablePaintingFlags = expectedFlags
-            }
-            val expectedTextSizePx = TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_SP,
-                config.fontSize.toFloat(),
-                editor.resources.displayMetrics,
-            )
-            if (editor.textSizePx != expectedTextSizePx) {
-                editor.setTextSize(config.fontSize.toFloat())
-            }
+            EditorViewPool.applyConfig(editor, currentConfig, resolvedScope, isLargeFile)
         },
         modifier = modifier,
     )
@@ -299,33 +418,54 @@ fun LuaEditor(
     // 每份 Content 的 undo 栈深度按文件大小降级，避免大文件内存膨胀。
     LaunchedEffect(content) {
         content.undoManager.setMaxUndoStackSize(
-            if (content.length > LARGE_FILE_THRESHOLD) LARGE_FILE_UNDO_STACK else DEFAULT_UNDO_STACK
+            if (content.length > LARGE_FILE_THRESHOLD) LARGE_FILE_UNDO_STACK else DEFAULT_UNDO_STACK,
         )
-        val editor = editorRef.value ?: return@LaunchedEffect
+        val editor = editorRef.get() ?: return@LaunchedEffect
         if (editor.text !== content) {
             editor.setText(content)
         }
     }
 
     // 500ms 防抖诊断：后台线程增量扫描 + 签名比对去重。
+    // 「行级词法诊断」设置关闭时跳过扫描并清空诊断（重启后签名复位，恢复时自动重跑）。
     LaunchedEffect(Unit) {
         EditorViewPool.diagTick.collectLatest {
             if (it == 0) return@collectLatest
             delay(DIAGNOSTIC_DEBOUNCE_MS)
-            val editor = editorRef.value ?: return@collectLatest
-            val (regions, signature) = withContext(Dispatchers.Default) {
-                val source = editor.text.toString()
-                if (source.length > LARGE_FILE_THRESHOLD) return@withContext emptyList<DiagnosticRegion>() to ""
-                val result = EditorViewPool.syntaxCheck(source)
-                result to diagnosticSignature(result)
+            val editor = editorRef.get() ?: return@collectLatest
+            // 行级词法诊断仅 Lua 文法（LuaDiagnostics 专用解析器）；其他语言跳过。
+            if (resolvedScope != DEFAULT_SCOPE) {
+                if (editor.diagnostics != null) {
+                    editor.diagnostics = null
+                    EditorViewPool.updateSignature("")
+                }
+                return@collectLatest
             }
+            if (!currentConfig.lexicalDiagnostics) {
+                if (editor.diagnostics != null) {
+                    editor.diagnostics = null
+                    EditorViewPool.updateSignature("")
+                }
+                return@collectLatest
+            }
+            val (regions, signature) =
+                withContext(Dispatchers.Default) {
+                    val source = editor.text.toString()
+                    if (source.length > LARGE_FILE_THRESHOLD) return@withContext emptyList<DiagnosticRegion>() to ""
+                    val result = EditorViewPool.syntaxCheck(source, editor.text)
+                    result to diagnosticSignature(result)
+                }
             if (signature == EditorViewPool.lastSignature()) return@collectLatest
             EditorViewPool.updateSignature(signature)
             try {
-                editor.diagnostics = if (regions.isEmpty()) null
-                else DiagnosticsContainer().apply {
-                    addDiagnostics(regions)
-                }
+                editor.diagnostics =
+                    if (regions.isEmpty()) {
+                        null
+                    } else {
+                        DiagnosticsContainer().apply {
+                            addDiagnostics(regions)
+                        }
+                    }
             } catch (t: Throwable) {
                 Log.w(TAG, "apply diagnostics failed", t)
             }
@@ -337,31 +477,33 @@ fun LuaEditor(
             // 兜底保存：宿主持有 Content 引用（会话缓存），无需在此做主线程 O(n) 快照，
             // 由宿主在 IO 线程自行读取并落盘。
             currentOnRelease()
-            editorRef.value = null
+            editorRef.set(null)
         }
     }
 }
 
-private fun diagnosticSignature(regions: List<DiagnosticRegion>): String = buildString {
-    for (r in regions) {
-        append(r.startIndex).append(':')
-        append(r.endIndex).append(':')
-        append(r.severity).append(':')
-        append(r.detail?.briefMessage).append('|')
+private fun diagnosticSignature(regions: List<DiagnosticRegion>): String =
+    buildString {
+        for (r in regions) {
+            append(r.startIndex).append(':')
+            append(r.endIndex).append(':')
+            append(r.severity).append(':')
+            append(r.detail?.briefMessage).append('|')
+        }
     }
-}
 
-private fun nonPrintableFlags(config: EditorConfig): Int {
-    return if (config.showWhitespace)
+private fun nonPrintableFlags(config: EditorConfig): Int =
+    if (config.showWhitespace) {
         CodeEditor.FLAG_DRAW_WHITESPACE_LEADING or
-        CodeEditor.FLAG_DRAW_WHITESPACE_INNER or
-        CodeEditor.FLAG_DRAW_WHITESPACE_TRAILING or
-        CodeEditor.FLAG_DRAW_WHITESPACE_FOR_EMPTY_LINE or
-        CodeEditor.FLAG_DRAW_LINE_SEPARATOR or
-        CodeEditor.FLAG_DRAW_WHITESPACE_IN_SELECTION or
-        (if (config.wordWrap) CodeEditor.FLAG_DRAW_SOFT_WRAP else 0)
-    else 0
-}
+            CodeEditor.FLAG_DRAW_WHITESPACE_INNER or
+            CodeEditor.FLAG_DRAW_WHITESPACE_TRAILING or
+            CodeEditor.FLAG_DRAW_WHITESPACE_FOR_EMPTY_LINE or
+            CodeEditor.FLAG_DRAW_LINE_SEPARATOR or
+            CodeEditor.FLAG_DRAW_WHITESPACE_IN_SELECTION or
+            (if (config.wordWrap) CodeEditor.FLAG_DRAW_SOFT_WRAP else 0)
+    } else {
+        0
+    }
 
 private fun CodeEditor.applyNonPrintableFlags(config: EditorConfig) {
     setNonPrintablePaintingFlags(nonPrintableFlags(config))

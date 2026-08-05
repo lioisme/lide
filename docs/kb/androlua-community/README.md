@@ -1,6 +1,6 @@
 # AndroLua 社区帖子训练知识库（androlua-community）
 
-> 本目录是**社区帖子语料**的评注化知识库：对 `docs/reference/代码手册社区/lua_files/`
+> 本目录是**社区帖子语料**的评注化知识库：对 `reference/代码手册社区/lua_files/`
 > 全部 **2144 篇**社区帖子做三轴判定（质地 kind / 质量 verdict / 可移植性 portability），
 > 抽取出**正面方法与思路**、**负面反例**，并输出 **LLM 微调训练语料**。
 >
@@ -57,7 +57,7 @@ androlua-community/
    从 `catalog/` 取数时保留 `manual_id` 可回溯。
 3. **判定升级**：`static_review` → `device_tested` 必须附双端验证记录（见 androlua-lua 库）。
 4. 变更登记：本文档 §5 追加一行。
-5. 原始语料**只读**：不迁移、不修改 `docs/reference/代码手册社区/` 下文件。
+5. 原始语料**只读**：不修改、不再移动（2026-08 随 reference 整体迁出 docs/） `reference/代码手册社区/` 下文件。
 
 ## 5. 变更登记
 

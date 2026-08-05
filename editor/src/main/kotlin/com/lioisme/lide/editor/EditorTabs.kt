@@ -81,7 +81,7 @@ data class EditorTab(
 private val MaxTabWidth = 160.dp
 
 /** 拖拽中条目透明度（对齐 Squircle DragAlpha 常量）。 */
-private const val DragAlpha = 0.5f
+private const val DRAG_ALPHA = 0.5f
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -106,15 +106,17 @@ fun EditorTabs(
         previousCount.intValue = tabs.size
     }
 
-    val reorderableState = rememberReorderableLazyListState(state) { from, to ->
-        onTabMoved(from.index, to.index)
-    }
+    val reorderableState =
+        rememberReorderableLazyListState(state) { from, to ->
+            onTabMoved(from.index, to.index)
+        }
 
     LazyRow(
         state = state,
-        modifier = modifier
-            .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.surface),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.surface),
         // 产品规范：标签与标签栏之间无距离（垂直内边距为 0，标签贴满条带）。
         contentPadding = PaddingValues(horizontal = 8.dp),
         horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -130,8 +132,9 @@ fun EditorTabs(
                     onCloseAll = onCloseAll,
                     isDragging = isDragging,
                     dragScope = this,
-                    modifier = Modifier
-                        .alpha(if (isDragging) DragAlpha else 1f),
+                    modifier =
+                        Modifier
+                            .alpha(if (isDragging) DRAG_ALPHA else 1f),
                 )
             }
         }
@@ -158,78 +161,82 @@ private fun EditorTabItem(
     val dragMoved = remember(tab.fileName) { mutableStateOf(false) }
     val interactionSource = remember(tab.fileName) { MutableInteractionSource() }
     // 标签标题：仅显示文件名（去目录路径），过长省略号截断。
-    val displayName = remember(tab.fileName) {
-        tab.fileName.substringAfterLast('/').substringAfterLast('\\')
-    }
+    val displayName =
+        remember(tab.fileName) {
+            tab.fileName.substringAfterLast('/').substringAfterLast('\\')
+        }
 
     Box(
-        modifier = modifier
-            .height(36.dp)
-            // 只读位移观察：不消费任何事件，仅累计记录本手势是否有超过触摸阈值的位移
-            // （阈值来自系统 ViewConfiguration.touchSlop，非自定义距离判定）。
-            .pointerInput(tab.fileName) {
-                awaitEachGesture {
-                    dragMoved.value = false
-                    var accumulated = Offset.Zero
-                    val down = awaitFirstDown(requireUnconsumed = false) ?: return@awaitEachGesture
-                    while (true) {
-                        val event = awaitPointerEvent()
-                        val change = event.changes.firstOrNull { it.id == down.id } ?: continue
-                        if (!change.pressed) break
-                        accumulated += change.position - change.previousPosition
-                        if (!dragMoved.value &&
-                            accumulated.getDistance() >= viewConfiguration.touchSlop
-                        ) {
-                            dragMoved.value = true
+        modifier =
+            modifier
+                .height(36.dp)
+                // 只读位移观察：不消费任何事件，仅累计记录本手势是否有超过触摸阈值的位移
+                // （阈值来自系统 ViewConfiguration.touchSlop，非自定义距离判定）。
+                .pointerInput(tab.fileName) {
+                    awaitEachGesture {
+                        dragMoved.value = false
+                        var accumulated = Offset.Zero
+                        val down = awaitFirstDown(requireUnconsumed = false) ?: return@awaitEachGesture
+                        while (true) {
+                            val event = awaitPointerEvent()
+                            val change = event.changes.firstOrNull { it.id == down.id } ?: continue
+                            if (!change.pressed) break
+                            accumulated += change.position - change.previousPosition
+                            if (!dragMoved.value &&
+                                accumulated.getDistance() >= viewConfiguration.touchSlop
+                            ) {
+                                dragMoved.value = true
+                            }
                         }
                     }
                 }
-            }
-            // 单击（短按松手）= 切换标签（clickable；selected 语义供无障碍/自动化识别）。
-            .clickable(
-                role = Role.Tab,
-                onClick = onClick,
-            )
-            .semantics { this.selected = selected }
-            // reorderable 3.0.0 原生手势（库内为 detectDragGesturesAfterLongPress）：
-            // 长按 = 拖拽排序启动（onDragStarted，原生长按振动）；
-            // 长按后未超过触摸阈值位移直接松手 = onDragStopped → 关闭菜单。
-            .then(
-                with(dragScope) {
-                    Modifier.longPressDraggableHandle(
-                        enabled = true,
-                        interactionSource = interactionSource,
-                        onDragStarted = {
-                            haptics.performHapticFeedback(HapticFeedbackType.LongPress)
-                        },
-                        onDragStopped = {
-                            if (!dragMoved.value) menuExpanded = true
-                        },
-                    )
-                },
-            ),
+                // 单击（短按松手）= 切换标签（clickable；selected 语义供无障碍/自动化识别）。
+                .clickable(
+                    role = Role.Tab,
+                    onClick = onClick,
+                ).semantics { this.selected = selected }
+                // reorderable 3.0.0 原生手势（库内为 detectDragGesturesAfterLongPress）：
+                // 长按 = 拖拽排序启动（onDragStarted，原生长按振动）；
+                // 长按后未超过触摸阈值位移直接松手 = onDragStopped → 关闭菜单。
+                .then(
+                    with(dragScope) {
+                        Modifier.longPressDraggableHandle(
+                            enabled = true,
+                            interactionSource = interactionSource,
+                            onDragStarted = {
+                                haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+                            },
+                            onDragStopped = {
+                                if (!dragMoved.value) menuExpanded = true
+                            },
+                        )
+                    },
+                ),
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxHeight()
-                .padding(horizontal = 12.dp)
-                // 过长标签省略号截断（LazyRow 子项宽度无上限，必须显式封顶）。
-                .widthIn(max = MaxTabWidth),
+            modifier =
+                Modifier
+                    .fillMaxHeight()
+                    .padding(horizontal = 12.dp)
+                    // 过长标签省略号截断（LazyRow 子项宽度无上限，必须显式封顶）。
+                    .widthIn(max = MaxTabWidth),
         ) {
             Text(
-                text = if (tab.dirty) {
-                    stringResource(R.string.dirty_marker) + displayName
-                } else {
-                    displayName
-                },
+                text =
+                    if (tab.dirty) {
+                        stringResource(R.string.dirty_marker) + displayName
+                    } else {
+                        displayName
+                    },
                 style = MaterialTheme.typography.labelMedium,
                 fontWeight = if (selected) FontWeight.Medium else FontWeight.Normal,
-                color = if (selected) {
-                    MaterialTheme.colorScheme.primary
-                } else {
-                    MaterialTheme.colorScheme.onSurfaceVariant
-                },
+                color =
+                    if (selected) {
+                        MaterialTheme.colorScheme.primary
+                    } else {
+                        MaterialTheme.colorScheme.onSurfaceVariant
+                    },
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
@@ -244,21 +251,23 @@ private fun EditorTabItem(
                 contentAlignment = Alignment.BottomCenter,
             ) {
                 Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(3.dp)
-                        .clip(RoundedCornerShape(topStart = 2.dp, topEnd = 2.dp))
-                        .background(MaterialTheme.colorScheme.primary),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .height(3.dp)
+                            .clip(RoundedCornerShape(topStart = 2.dp, topEnd = 2.dp))
+                            .background(MaterialTheme.colorScheme.primary),
                 )
             }
         } else {
             Box(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = 3.dp)
-                    .size(5.dp)
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.primary),
+                modifier =
+                    Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 3.dp)
+                        .size(5.dp)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.primary),
             )
         }
         DropdownMenu(

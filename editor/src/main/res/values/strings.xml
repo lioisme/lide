@@ -8,8 +8,17 @@
     <string name="replace_all">Replace All</string>
     <string name="case_sensitive">Case sensitive</string>
     <string name="regex">Regex</string>
+    <string name="whole_word">Whole word</string>
 
     <!-- Editor toolbar -->
+
+    <!-- Editor text operations -->
+    <string name="text_op_select_line">Select Line</string>
+    <string name="text_op_delete_line">Delete Line</string>
+    <string name="text_op_duplicate_line">Duplicate Line</string>
+    <string name="text_op_toggle_case">Toggle Case</string>
+    <string name="text_op_word_prev">Word Left</string>
+    <string name="text_op_word_next">Word Right</string>
 
     <!-- Editor tabs -->
     <string name="cd_close_tab">Close tab</string>

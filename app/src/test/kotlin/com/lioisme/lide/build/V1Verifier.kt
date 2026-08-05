@@ -1,8 +1,8 @@
 package com.lioisme.lide.build
 
 import java.security.MessageDigest
-import java.security.cert.X509Certificate
 import java.security.Signature
+import java.security.cert.X509Certificate
 import java.util.Base64
 import java.util.zip.ZipInputStream
 
@@ -15,10 +15,12 @@ import java.util.zip.ZipInputStream
  *    与 JDK / Android libcore / apksig 的 JAR 校验路径等效。
  */
 object V1Verifier {
-
     private val B64: Base64.Decoder = Base64.getDecoder()
 
-    fun verify(apk: ByteArray, cert: X509Certificate): Boolean {
+    fun verify(
+        apk: ByteArray,
+        cert: X509Certificate,
+    ): Boolean {
         val entries = HashMap<String, ByteArray>()
         ZipInputStream(apk.inputStream()).use { zis ->
             while (true) {
@@ -35,7 +37,10 @@ object V1Verifier {
         return verifyCms(rsa, sf, cert)
     }
 
-    private fun verifyManifestSections(manifest: ByteArray, entries: Map<String, ByteArray>): Boolean {
+    private fun verifyManifestSections(
+        manifest: ByteArray,
+        entries: Map<String, ByteArray>,
+    ): Boolean {
         val sections = parseSections(String(manifest, Charsets.UTF_8))
         for ((name, section) in sections) {
             if (name == null) continue // header 段无摘要
@@ -46,7 +51,10 @@ object V1Verifier {
         return true
     }
 
-    private fun verifySfDigests(sf: ByteArray, manifest: ByteArray): Boolean {
+    private fun verifySfDigests(
+        sf: ByteArray,
+        manifest: ByteArray,
+    ): Boolean {
         val sections = parseSections(String(sf, Charsets.UTF_8))
         val header = sections.entries.firstOrNull() ?: return false
         val whole = header.value["SHA-256-Digest-Manifest"] ?: return false
@@ -76,7 +84,10 @@ object V1Verifier {
             out[null] = attrs
         }
         while (i < lines.size) {
-            if (!lines[i].startsWith("Name: ")) { i++; continue }
+            if (!lines[i].startsWith("Name: ")) {
+                i++
+                continue
+            }
             val name = lines[i].substring(6)
             val attrs = HashMap<String, String>()
             i++
@@ -92,7 +103,10 @@ object V1Verifier {
     }
 
     /** 在 MANIFEST.MF 中定位某条目 section 的原始字节（含尾部空行）。 */
-    private fun findManifestSection(manifest: ByteArray, name: String): ByteArray? {
+    private fun findManifestSection(
+        manifest: ByteArray,
+        name: String,
+    ): ByteArray? {
         val text = String(manifest, Charsets.UTF_8)
         val marker = "Name: $name\r\n"
         val start = text.indexOf(marker)
@@ -102,7 +116,11 @@ object V1Verifier {
         return text.substring(start, last).toByteArray(Charsets.UTF_8)
     }
 
-    private fun verifyCms(rsa: ByteArray, sf: ByteArray, cert: X509Certificate): Boolean {
+    private fun verifyCms(
+        rsa: ByteArray,
+        sf: ByteArray,
+        cert: X509Certificate,
+    ): Boolean {
         val contentInfo = Der.read(rsa, 0) ?: return false
         val ciParts = Der.children(contentInfo.content, 0) ?: return false
         if (ciParts.size < 2) return false
@@ -145,13 +163,19 @@ object V1Verifier {
         return signature.verify(sig.content)
     }
 
-    private fun sha256(bytes: ByteArray): ByteArray =
-        MessageDigest.getInstance("SHA-256").digest(bytes)
+    private fun sha256(bytes: ByteArray): ByteArray = MessageDigest.getInstance("SHA-256").digest(bytes)
 
-    private class Tlv(val tag: Int, val content: ByteArray, val end: Int)
+    private class Tlv(
+        val tag: Int,
+        val content: ByteArray,
+        val end: Int,
+    )
 
     private object Der {
-        fun read(bytes: ByteArray, offset: Int): Tlv? {
+        fun read(
+            bytes: ByteArray,
+            offset: Int,
+        ): Tlv? {
             if (offset + 2 > bytes.size) return null
             val tag = bytes[offset].toInt() and 0xFF
             var lenByte = bytes[offset + 1].toInt() and 0xFF
@@ -169,7 +193,10 @@ object V1Verifier {
         }
 
         /** 解析 SEQUENCE/SET 的内容为子元素列表。 */
-        fun children(content: ByteArray, offset: Int): List<Tlv>? {
+        fun children(
+            content: ByteArray,
+            offset: Int,
+        ): List<Tlv>? {
             val out = ArrayList<Tlv>()
             var pos = offset
             while (pos < content.size) {
@@ -181,7 +208,10 @@ object V1Verifier {
         }
 
         /** 组一个 TLV（长度用短形式，≤127 字节时与标准 SET 编码一致）。 */
-        fun tlv(tag: Int, content: ByteArray): ByteArray {
+        fun tlv(
+            tag: Int,
+            content: ByteArray,
+        ): ByteArray {
             require(content.size < 0x80) { "attrs too large" }
             val out = ByteArray(content.size + 2)
             out[0] = tag.toByte()

@@ -25,21 +25,25 @@ import kotlinx.coroutines.withContext
 import java.io.File
 
 /** 工程属性页字段元信息（字段名 → 标签资源）。顺序与 pro projectinfo 页面一致。 */
-private data class InfoField(val key: String, val labelRes: Int)
-
-private val STRING_FIELDS = listOf(
-    InfoField("appname", R.string.info_appname),
-    InfoField("appver", R.string.info_appver),
-    InfoField("appcode", R.string.info_appcode),
-    InfoField("appsdk", R.string.info_appsdk),
-    InfoField("path_pattern", R.string.info_path_pattern),
-    InfoField("packagename", R.string.info_packagename),
-    InfoField("theme", R.string.info_theme),
-    InfoField("app_key", R.string.info_app_key),
-    InfoField("app_channel", R.string.info_app_channel),
-    InfoField("developer", R.string.info_developer),
-    InfoField("description", R.string.info_description),
+private data class InfoField(
+    val key: String,
+    val labelRes: Int,
 )
+
+private val STRING_FIELDS =
+    listOf(
+        InfoField("appname", R.string.info_appname),
+        InfoField("appver", R.string.info_appver),
+        InfoField("appcode", R.string.info_appcode),
+        InfoField("appsdk", R.string.info_appsdk),
+        InfoField("path_pattern", R.string.info_path_pattern),
+        InfoField("packagename", R.string.info_packagename),
+        InfoField("theme", R.string.info_theme),
+        InfoField("app_key", R.string.info_app_key),
+        InfoField("app_channel", R.string.info_app_channel),
+        InfoField("developer", R.string.info_developer),
+        InfoField("description", R.string.info_description),
+    )
 
 private data class InfoState(
     val values: Map<String, String>,
@@ -71,24 +75,27 @@ fun ProjectInfoScreen(
     val strLoadFailed = stringResource(R.string.info_load_failed)
 
     LaunchedEffect(project) {
-        state = withContext(Dispatchers.IO) {
-            val file = File(project.path, "init.lua")
-            if (!file.exists()) {
-                null
-            } else {
-                val content = file.readText()
-                val values = STRING_FIELDS.associate { f ->
-                    f.key to (LuaConfigParser.stringField(content, f.key) ?: "")
+        state =
+            withContext(Dispatchers.IO) {
+                val file = File(project.path, "init.lua")
+                if (!file.exists()) {
+                    null
+                } else {
+                    val content = file.readText()
+                    val values =
+                        STRING_FIELDS.associate { f ->
+                            f.key to (LuaConfigParser.stringField(content, f.key) ?: "")
+                        }
+                    InfoState(
+                        values = values,
+                        debugMode =
+                            LuaConfigParser.stringField(content, "debugmode")?.let {
+                                it != "false" && it != "0"
+                            } ?: true,
+                        permissions = LuaConfigParser.stringArrayField(content, "user_permission"),
+                    )
                 }
-                InfoState(
-                    values = values,
-                    debugMode = LuaConfigParser.stringField(content, "debugmode")?.let {
-                        it != "false" && it != "0"
-                    } ?: true,
-                    permissions = LuaConfigParser.stringArrayField(content, "user_permission"),
-                )
             }
-        }
         if (state == null) {
             Toast.makeText(context, strLoadFailed, Toast.LENGTH_SHORT).show()
             onBack()
@@ -100,27 +107,37 @@ fun ProjectInfoScreen(
     fun save() {
         val s = state ?: return
         scope.launch {
-            val ok = withContext(Dispatchers.IO) {
-                try {
-                    val file = File(project.path, "init.lua")
-                    if (!file.exists()) return@withContext false
-                    var content = file.readText()
-                    for (f in STRING_FIELDS) {
-                        val v = s.values[f.key]?.trim().orEmpty()
-                        content = LuaConfigParser.setField(content, f.key, LuaConfigParser.quoteLuaString(v))
+            val ok =
+                withContext(Dispatchers.IO) {
+                    try {
+                        val file = File(project.path, "init.lua")
+                        if (!file.exists()) return@withContext false
+                        var content = file.readText()
+                        for (f in STRING_FIELDS) {
+                            val v = s.values[f.key]?.trim().orEmpty()
+                            content = LuaConfigParser.setField(content, f.key, LuaConfigParser.quoteLuaString(v))
+                        }
+                        content =
+                            LuaConfigParser.setField(
+                                content,
+                                "debugmode",
+                                if (s.debugMode) "true" else "false",
+                            )
+                        content =
+                            LuaConfigParser.setStringArrayField(
+                                content,
+                                "user_permission",
+                                s.permissions.map {
+                                    com.lioisme.lide.androlua.PermissionResolver
+                                        .normalize(it)
+                                },
+                            )
+                        file.writeText(content)
+                        true
+                    } catch (t: Throwable) {
+                        false
                     }
-                    content = LuaConfigParser.setField(
-                        content, "debugmode", if (s.debugMode) "true" else "false"
-                    )
-                    content = LuaConfigParser.setStringArrayField(
-                        content, "user_permission", s.permissions.map { com.lioisme.lide.androlua.PermissionResolver.normalize(it) }
-                    )
-                    file.writeText(content)
-                    true
-                } catch (t: Throwable) {
-                    false
                 }
-            }
             if (ok) {
                 Toast.makeText(context, strSaveSuccess, Toast.LENGTH_SHORT).show()
                 onSaved()
@@ -140,7 +157,7 @@ fun ProjectInfoScreen(
                     }
                 },
             )
-        }
+        },
     ) { padding ->
         val s = state
         if (s == null) {
@@ -212,10 +229,11 @@ fun ProjectInfoScreen(
                 LazyColumn(Modifier.heightIn(max = 420.dp)) {
                     items(allOptions) { (perm, labelRes) ->
                         Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { draft = if (perm in draft) draft - perm else draft + perm }
-                                .padding(vertical = 6.dp),
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .clickable { draft = if (perm in draft) draft - perm else draft + perm }
+                                    .padding(vertical = 6.dp),
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
                             Checkbox(
@@ -245,4 +263,3 @@ fun ProjectInfoScreen(
         )
     }
 }
-

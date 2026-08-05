@@ -9,21 +9,21 @@
 
 ```
 docs/
-├── kb/            ← 本知识库（索引 + 分主题条目）
-├── completed/     ← 已完成文档（14 篇）
+├── kb/            ← 本知识库（索引 + 分主题条目；唯一事实来源）
 ├── in-progress/   ← 进行中文档（3 篇）
-├── planned/       ← 计划中文档（3 篇）
-├── log/           ← 探针测试日志（数据资产）
-└── reference/     ← 参考源码资产（AndroLua_pro-master / sora / Squircle-CE / luaj / 参考工程）
+├── planned/       ← 计划中文档（4 篇）
+├── discard/       ← 丢弃区（唯一出口）：已完成/过时文档 41 篇，只追溯不维护
+└── reference/     ← 参考源码资产（gitignored：androlua / sora-editor / Squircle-CE / project / 代码手册社区）
 ```
 
 > 物理归档目录与 §2 状态分类一一对应；`docs/` 根目录不再平铺文档文件。
+> （`docs/log/` 探针日志为历史资产，未收录进本仓库。）
 
 | 文件 | 内容 | 对应原文档 |
 |------|------|-----------|
 | `README.md`（本文件） | 总索引 + **文档分类状态矩阵** + 阅读导航 | 全部 |
-| `ARCHITECTURE.md` | 架构知识：三层模块、R1~R4 边界、关键机制、引擎初始化时序 | ENGINE_MIGRATION / ANDROLUA_INTEGRATION_PLAN / ANDROLUA_SOURCE_CODE_AUDIT / AGENTS.md / WHITEPAPER |
-| `ENGINE_RUNTIME.md` | 引擎与运行时知识：选型、源码谱系、原生模块清单、兼容性证据链、已知差异 | ENGINE_LEVEL_COMPARISON / NATIVE_LIB_AUDIT / LIBS_SUPPORT_WORK_ORDER / EMULATOR_RUNTIME_AUDIT / GAME_ENGINE_PERFORMANCE_AUDIT / docs/log |
+| `ARCHITECTURE.md` | 架构知识：模块拓扑（含 :sora-editor）、R1~R5 边界、关键机制、引擎初始化时序 | ENGINE_MIGRATION / ANDROLUA_INTEGRATION_PLAN / ANDROLUA_SOURCE_CODE_AUDIT / AGENTS.md / WHITEPAPER |
+| `ENGINE_RUNTIME.md` | 引擎与运行时知识：选型、源码谱系、原生模块清单、兼容性证据链、已知差异 | ENGINE_LEVEL_COMPARISON / NATIVE_LIB_AUDIT / LIBS_SUPPORT_WORK_ORDER / EMULATOR_RUNTIME_AUDIT / GAME_ENGINE_PERFORMANCE_AUDIT |
 | `EDITOR.md` | 编辑器知识：sora 集成约定、性能基线、历史事故教训、UI 对齐现状与剩余 | EDITOR_CRASH_ANALYSIS / EDITOR_DRAWER_AUDIT / EDITOR_PERFORMANCE_AUDIT(_V2) / EDITOR_UI_ALIGNMENT_WORK_ORDER |
 | `DECISIONS.md` | 关键决策记录（按时间线，含反转决策） | 全部决策性文档 |
 | `ROADMAP.md` | 计划中 / 进行中工作与文档维护事项 | PARITY_COMPLETION_WORK_ORDER / XPOSED_MODULE_FEASIBILITY_REPORT / 各审计报告行动项 |
@@ -34,57 +34,49 @@ docs/
 
 ## 2. 文档分类状态矩阵
 
-> 分类口径：**已完成** = 行动项全部落地或审计结论已定案；**进行中** = 工作单未关闭 / 路线图未执行完；
-> **计划中** = 研究已毕但实施未排期（或历史草案）。文档自述状态与结论不一致处已在「注意」列标注。
+> 分类口径：**进行中** = 工作单未关闭 / 路线图未执行完；
+> **计划中** = 研究已毕但实施未排期（或历史草案）；**已丢弃** = 已完成 / 已过时 / 被取代
+> （统一移入 `docs/discard/`，见 [discard/README.md](../discard/README.md) §3 清单，不再参与状态管理）。
 
-### 2.1 已完成（15 篇）
+### 2.1 已完成（全部移入 discard/，共 30 篇）
 
-| 文档 | 日期 | 内容一句话 | 对应 WP | 注意 |
-|------|------|-----------|---------|------|
-| `ENGINE_MIGRATION_WORK_ORDER.md` | 立项期 | LuaJ→AndroLua C 引擎迁移总规划（7 WP / 21 天 / 8 ACC） | WP-001~006 | 标题仍为 Draft，但其全部 WP 已执行完毕，属历史规划文档 |
-| `ANDROLUA_SOURCE_CODE_AUDIT_REPORT.md` | 2026-07-31 | 三源码树谱系审计：选 Pro、拒 AndroLuaX（闭源），确认 Lua 5.3.3 深度魔改 9 语法 | WP-001 选型 | 终稿；魔改字节码与标准 Lua 5.3.3 不兼容 |
-| `ANDROLUA_INTEGRATION_PLAN.md` | 2026-07-31 | 引擎集成 7 Phase 方案（Java EngineActivity 继承 LuaActivity、静态编译替代 engine.dex） | WP-002/003 | 方案已全部落地；engine.dex 备用建议被 WP-002 否决 |
-| `NATIVE_LIB_AUDIT.md` | 2026-07-31 | 缺失 13 原生库，修复构建源后 NDK 29 全量编译 42/42 成功 | WP-001/WP-010 | 自述「阶段 B 待执行」，实际已由 LIBS-003/006 收尾，**文档未回填** |
-| `ENGINE_LEVEL_COMPARISON_REPORT.md` | 2026-07-31 | 探针 878 vs 879/956，定案 socket 失败 = 资产解包子目录缺陷并已修复 | WP-004 验证 | 重跑验证已由 EMULATOR_RUNTIME_AUDIT 覆盖 |
-| `ANDROLUA_FEATURE_PARITY_AUDIT.md` | 2026-07-31 | 工程/库/插件/模块一致性审计，P0/P1/P2 全部完成 | WP-007 | P2-12「保留全局仓库」终态后被 WP-009 反转 |
-| `ANDROLUA_PARITY_FULL_AUDIT_REPORT.md` | 2026-07-31 | 独立全量复核：运行时 100% 对齐、§12 行动全收口（含架构反转注记） | WP-008 | 对等审计的最新版，supersedes 早期结论 |
-| `DEPENDENCY_MODEL_AUDIT_REPORT.md` | 2026-07-31 | 全局依赖仓库（common/）去留审计，方案 A 已执行（净删 ~1700 行） | WP-009 | 反转 WP-007 P2-12 / WP-008 P1-4~9 决策 |
-| `LIBS_SUPPORT_WORK_ORDER.md` | 2026-08-01 | /libs 全链路收口 LIBS-001~007，真机矩阵 V-01~V-10 全绿；修复 W^X dex 加载 | WP-010 | 标题仍为 Draft（状态字段遗留，内容已完成） |
-| `FULL_AUDIT_REPORT_2026-08-01.md` | 2026-08-01 | 全量审计（基准 36eac8c）：引擎 100% 对齐且超集、IDE 对齐 ~6 成、P0/P1/P2 共 21 项 | PARITY 工作单 | 其行动项由 PARITY_COMPLETION_WORK_ORDER 承接 |
-| `EMULATOR_RUNTIME_AUDIT_REPORT.md` | 2026-08-01 | 12 参考工程 lide vs pro 日志逐字一致；修复 LuaActivity 未注册 + cleartext 两缺陷 | WP-010 验证 | ⚠ 该文件尚未 `git add`（未跟踪） |
-| `EDITOR_CRASH_ANALYSIS_REPORT.md` | 2026-07-31 | 闪退根因 = 编辑器边界违规引入 luajava，已通过 `:editor` 独立模块 + R1~R4 恢复 | 编辑器重构期 | 定稿；P0~P2 全部落地 |
-| `EDITOR_DRAWER_AUDIT_REPORT.md` | 2026-08-01 | 抽屉三缺陷修复 + 宽屏 Permanent 适配，Phase 0~6 全部完成 | WP-001（工作单） | 真机回归 5 项已由「工作单 WP-001」验证通过 |
-| `EDITOR_PERFORMANCE_AUDIT_REPORT.md` | 2026-07-31 | 定位 4 个 P0 性能灾难链路（每键重建 scheme 等），根因已修复 | 编辑器重构期 | 阶段 B/C 建议并入 V2 报告继续跟踪 |
-| `NAVIGATION_FREEZE_FIX_REPORT.md` | 2026-08-04 | 快速进出界面冻结根因 = NavHost$33$1 转场收尾回调在「转场中 pop」时丢失（entry 销毁内容残留）；单一漏斗门控（NavigationGate，RESUMED 后才导航）根治；4 界面 ×100 次循环零冻结零崩溃 | 导航冻结修复 | 定稿；未升级 navigation 2.9.x（方案 B 留待评估） |
+> 2026-08-05 起已完成文档不再驻留 `docs/completed/`，统一 `git mv` 至 `docs/discard/`。
+> 完整清单（含每篇一句话 + 结论蒸馏去向）见 `docs/discard/README.md` §3.1；
+> 结论本身以本知识库（`ARCHITECTURE` / `ENGINE_RUNTIME` / `EDITOR` / `DECISIONS` / `ROADMAP`）为准。
 
-### 2.2 进行中（3 篇 + 3 篇实时文档）
+### 2.2 进行中（2 篇 + 3 篇实时文档）
 
 | 文档 | 日期 | 内容一句话 | 进度 | 注意 |
 |------|------|-----------|------|------|
-| `PARITY_COMPLETION_WORK_ORDER.md` | 2026-08-01 | 19 个 WP 补齐 pro 宿主 IDE 功能（对齐度 ~6 成 → 目标全齐） | **6/19 完成**：WP-001 编译修复、WP-002 运行诊断闭环、WP-003 user_permission、WP-004 工程属性页、WP-017 解析结构化、WP-019 测试骨架 | 剩余 WP-005~016、WP-018（详见 ROADMAP.md） |
-| `EDITOR_PERFORMANCE_AUDIT_V2_REPORT.md` | 2026-07-31 | 确认 V1 的 P0 已修复；剩余差距：每键整屏重组（P0-B）、首帧初始化（P0-A）、功能缺失 | 阶段 B 部分落地（EditorTabs / EditorSession / ProjectFileTree 已存在）；阶段 A 未全执行；阶段 C 未开始 | 以 Squircle-CE 为标杆 |
-| `EDITOR_UI_ALIGNMENT_WORK_ORDER.md` | 基线 c7b35dd | 10 WP 对齐 Squircle-CE 抽屉/Tab/文件树（禁手搓、仅官方组件） | WP-001/002/008 已被抽屉审计以官方 API 落地；Tab 卡/文件树组件已建，WP-003~007/009/010 未完成 | 草案待批准；内部 WP 编号与 PROGRESS 编号是两套体系 |
+| `PARITY_COMPLETION_WORK_ORDER.md` | 2026-08-01 | 19 个 WP 补齐 pro 宿主 IDE 功能（对齐度 ~6 成 → 目标全齐） | **13/19 完成**：WP-001/002/003/004/005/008/013/014/015/016/017/018/019（2026-08-05 补登 005/013/015/016/018）；WP-014 代码落地未真机验收 | 剩余 WP-006/007/009/010/011/012（未开工，详见 ROADMAP.md 与 TASKS.md） |
+| `EDITOR_UI_ALIGNMENT_WORK_ORDER.md` | 基线 c7b35dd | 10 WP 对齐 Squircle-CE 抽屉/Tab/文件树（禁手搓、仅官方组件） | **WP-003~006 已落地**（EditorTabs 拖拽排序 + DropdownMenu 关闭菜单，2026-08-05 复核）；WP-001/002/007/008 ⛔ 被取代（抽屉已删除→`ProjectFileBrowserDialog`）；WP-009/010 未完成 | 内部 WP 编号与 PROGRESS 编号是两套体系 |
+| `EDITOR_ALL_LANGUAGES_SUPPORT_WORK_ORDER.md` | 2026-08-06 | 全语言（39 种 TextMate 文法）支持：资产/目录/关键字表入 `:editor`；修复 Lua 高亮回归 | 已完成（2026-08-06 落地 + 模拟器验证） | 资产 81 个于 `editor/src/main/assets/textmate/`（含 `language-configuration`）；Lua 词法诊断保持 `source.lua` 专属 |
 | `androlua-community/`（子库） | 2026-08-02 | 社区帖子训练知识库：2144 篇初筛完成；正负面主题卡第一批 + 训练语料 seed 已产出 | catalog 全量完成；positives 9 卡 / negatives 5 卡 + harmful 专项 1 目录；training seed 11 条 + batch 工具就绪 | 关键事实：语料为 300 字符预览（1740/2144 截断），verdict 均 `static_review`，未实测 |
-| `PROGRESS.md`（docs/） | 实时 | 工作进度台账（WP-001~010 + 工作单 WP-001~004/017/019） | 进行中 | **最新条目未登记打包器进展**（见 2.4） |
-| `WHITEPAPER.md`（docs/） | 实时 | 白皮书 v2.0：架构/路线图/原生模块差异声明 §7.1 | 进行中 | 阶段四仍写「规划中」，但打包器代码已落地（见 2.4） |
-| `AGENTS.md`（根） | 实时 | 评审硬门槛：R1~R4 边界、构建验证命令、编辑器约定、/libs 机制约定 | 进行中 | 评审门禁，改动前必读 |
+| `PROGRESS.md`（docs/） | 实时 | 工作进度台账（WP-001~010 + 工作单尾项 + WP-014 打包器） | 进行中 | 2026-08-05 恢复自 git 历史对象 `7fc57389`（此前整行损坏）；打包器 WP-014 已补登记 |
+| `WHITEPAPER.md`（docs/） | 实时 | 白皮书 v2.0：架构/路线图/原生模块差异声明 §7.1 | 进行中 | 2026-08-05 恢复自 git 历史对象 `36eac8c1`（此前缺 §7.1/§8/附录 A 尾部）；阶段四/五待随打包器更新 |
+| `AGENTS.md`（根） | 实时 | 评审硬门槛：R1~R5 边界、构建验证命令、编辑器约定、/libs 机制约定 | 进行中 | 评审门禁，改动前必读 |
 
-### 2.3 计划中（3 篇）
+### 2.3 计划中（4 篇）
 
 | 文档 | 日期 | 内容一句话 | 状态 | 注意 |
 |------|------|-----------|------|------|
-| `WORK_ORDER.md` | 2026-07-31 | 早期 10 WP 整改清单（重命名包名、权限清理等） | 历史草案，多数条目已被实际工程演进覆盖 | 建议归档或重写，勿以其为准 |
-| `XPOSED_MODULE_FEASIBILITY_REPORT.md` | 2026-07-31 | Xposed 模块可行性：技术可行（四支柱为真）但有前提 | 研究已定稿，路线图 M1~M5 全部未启动 | 前置依赖：打包器（WHITEPAPER 阶段四/五）落地 |
-| `GAME_ENGINE_PERFORMANCE_AUDIT_REPORT.md` | 2026-08-01 | 石头/看板娘瓶颈定位，原生化端到端估算 3~15 倍 | 审计完成，优化建议未排期 | 诚实声明：倍数为工程估算，未 profiler 校准 |
+| `API_BROWSER_FREEZE_FIX_PLAN.md` | 2026-08-03 | API 浏览器卡死根因（A/B/C）修复执行单；修复已落地并真机验证 | 修复已完成 | 保留于 planned 作为搜索语义冻结红线（AGENTS.md 引用）与历史任务单 |
+| `EDITOR_FEATURE_COMPLETION_WORK_ORDER.md` | 2026-08-06 | 编辑器功能完善至 sora-editor 原生上限（F8）：sora 原生能力清单 + 差距分析 + P0~P4 分期方案 + 21 项设置映射 + 验收门槛 | 实施中：P0~P3 已完成，P4 文档已完成；仅剩设备功能验收矩阵 §8.3（推迟至模拟器复测） | 决策 D1~D4 已确认；P2 附 baseline profile（R8+`baseline-prof.txt`）与 `perf-check.ps1`；P3 附 `update-sora-editor.ps1` + `.github/workflows/update-sora-editor.yml` + R1 grep 入 CI；设备验收后归档 docs/discard |
+| `backlog.md` | 实时 | 计划中任务 & 技术债清单（TD1~TD7、F6~F8 等） | 计划中 | 新任务登记处 |
+| `XPOSED_MODULE_FEASIBILITY_REPORT.md` | 2026-07-31 | Xposed 模块可行性：技术可行（四支柱为真）但有前提 | 研究已定稿，路线图 M1~M5 全部未启动 | 前置依赖：打包器（WP-014）落地并真机验收 |
+| `GAME_ENGINE_PERFORMANCE_AUDIT_REPORT.md` | 2026-08-01 | 石头/看板娘瓶颈定位，原生化端到端估算 3~15 倍 | 审计完成，优化建议未排期 | 看板娘已原生化（LIVE2D 迁移）；石头未动；诚实声明：估算未 profiler 校准 |
 
 ### 2.4 未登记的新进展（知识库补录）
 
-以下进展存在于代码与 git 历史中，但 **PROGRESS.md / 白皮书未登记**，知识库先行记录：
+> 2026-08-05 治理后 WP-014 已补登记，无遗留未登记进展。新进展请遵循 §5 维护约定及时登记。
 
-| 进展 | 证据 | 状态 |
-|------|------|------|
-| **WP-014 独立 APK 打包器已开工**：`LuaCompiler`（luac 字节码化，14-A）、`AXmlManifest`（纯字节级 AXML 补丁，14-B）、`build/ApkBuilder + ApkSigner + V2Signer + ZipUtils`（重打包 + v1/v2 签名，14-C）、`BuildApkScreen`、打包单测 | commits 953592b / fecaa61 / 9be67b5 | 代码已落地；未登记 PROGRESS、未真机验收、白皮书阶段四未更新 |
-| 工作区未提交改动：`EditorScreen.kt` / `EditorToolbar.kt` / 中英 strings / `AndroidManifest.xml` | `git status` | 进行中（打包/权限流程相关） |
+### 2.5 已丢弃（docs/discard/，41 篇）
+
+已完成 / 过时 / 被取代文档统一移入 `docs/discard/`（`git mv` 保留历史），**不参与状态管理、不作为事实来源**：
+
+- **已完成 30 篇**（原 `docs/completed/`）：结论均已蒸馏进本知识库，逐篇一句话 + 蒸馏去向见 `docs/discard/README.md` §3.1。
+- **过时 8 篇**（原 `docs/archive/`）：`WORK_ORDER`（历史总任务书）、`IDE_RUNTIME_SEPARATION_FEASIBILITY_REPORT`（方案未采纳，与 R1~R5 冲突）、`ui-refactor`（Lua UI 时代草稿，代码已删除）、`audit-remediation`（Compose 前整改清单）、`java2kotlin-migration`（已反转：重新 vendor 上游 Java）、`architecture`/`lua-modules`/`code-map`（kb/project 三篇自标过期）。
+- 丢弃原因逐条见 `docs/discard/README.md` §3.2；治理审计依据：`docs/discard/DOCS_GOVERNANCE_AUDIT_REPORT_2026-08-05.md`。
 
 ---
 
@@ -92,10 +84,13 @@ docs/
 
 | 资产 | 内容 | 用途 |
 |------|------|------|
-| `docs/log/androluapro.log` | pro 宿主探针输出（2026-07-31 06:00:36，879/956） | lide 运行时对照基线 |
-| `docs/log/lide.log` | lide 宿主探针输出（2026-07-31 16:01:37，878/956） | 一致性验证证据 |
-| `docs/reference/androlua/`（AndroLua_pro-master） | pro 4.4.2 全量参考源码 + Lua 资产 + jni 398 个 C 文件 | 逐字节比对基准 / 移植来源 |
-| `docs/reference/{sora-editor-main, Squircle-CE-master, luaj-master, project}` | 编辑器上游源码、Squircle-CE 标杆、LuaJ（已废弃）、参考工程 | 编辑器对齐基准 / 历史比对 |
+| `docs/log/androluapro.log`（历史） | pro 宿主探针输出（2026-07-31 06:00:36，879/956） | lide 运行时对照基线；**lide 仓库未收录，为历史资产** |
+| `docs/log/lide.log`（历史） | lide 宿主探针输出（2026-07-31 16:01:37，878/956） | 一致性验证证据；同上 |
+| `third_party/androlua/`（运行时） + `app/src/main/cpp/`（引擎） | pro 4.4.2 移植工作副本（原版纯净基线已去重归档，恢复配方见 `reference/README.md`） | 运行时代码 / 引擎源码唯一真源 |
+| `third_party/sora-editor/` | sora-editor 0.24.6 vendored（editor + language-textmate；原版完整树已去重归档） | 编辑器对齐基准 |
+| `reference/squircle-ce-master/` | Squircle CE 完整 IDE 工程 | 编辑器开发参考 / UI 对齐标杆 |
+| `reference/project/` | 参考工程（demo、test、testjson、石头、看板娘 等） | 双端验证 / 探针 / 验收素材 |
+| `reference/代码手册社区/` | 社区帖子语料（lua_files 45 类 2144 篇 + lua_manual.db） | community-code-audit 数据源 |
 
 ---
 
@@ -114,7 +109,30 @@ docs/
 
 ## 5. 维护约定
 
-1. 新文档落入 `docs/completed/` / `docs/in-progress/` / `docs/planned/` 对应分类目录（`docs/` 根下不放 .md），并在本文档 §2 对应分类登记一行（一句话 + 日期 + 对应 WP）。
-2. 状态变化时（如某 WP 关闭），先 `git mv` 到新分类目录，再更新矩阵；反向也可由本矩阵驱动原文档回填（如 `LIBS_SUPPORT_WORK_ORDER` 标题 Draft、`NATIVE_LIB_AUDIT` 状态字段）。
-3. 决策类结论（含反转）统一入 `DECISIONS.md`，源文档保留原文并交叉引用。
-4. 本知识库不复制源码级细节，只做「事实、结论、位置、注意事项」四要素索引。
+1. 新文档落入 `docs/in-progress/` / `docs/planned/` 对应分类目录（`docs/` 根下不放 .md），并在本文档 §2 对应分类登记一行（一句话 + 日期 + 对应 WP）。
+2. 状态变化时（如某 WP 关闭），先 `git mv` 到新分类目录，再更新矩阵。
+3. **任务文档生命周期**：执行中每完成一项任务，在任务文档内对应条目标记「（已完成）」并备注工作内容/日期/验收证据；**整份任务文档完成后 `git mv` 到 `docs/discard/`** 并在 `docs/discard/README.md` §3 登记一行（一句话 + 日期 + 对应 WP）；过时 / 被取代 / 方案未采纳的文档同样随时移入（登记丢弃原因）。不删除 git 历史。
+4. 决策类结论（含反转）统一入 `DECISIONS.md`，源文档保留原文并交叉引用。
+5. 本知识库不复制源码级细节，只做「事实、结论、位置、注意事项」四要素索引；`docs/kb/` 是唯一事实来源，`docs/discard/` 只追溯不维护。
+
+---
+
+## 6. 2026-08-05 文档治理注记（恢复 + 重组）
+
+- **恢复**：10 份在仓库重整时损坏的文档（路径展开 bug 造成整行重复 / 截断，含 `docs/completed/*` 4 篇、
+  `docs/in-progress/*` 2 篇、`PROGRESS.md`、`WHITEPAPER.md`、`FULL_AUDIT_REPORT_2026-08-01.md`、
+  `ANDROLUA_PARITY_FULL_AUDIT_REPORT.md`、`GAME_ENGINE_PERFORMANCE_AUDIT_REPORT.md`）
+  自 git 历史完好对象恢复（内容 + 工程名重命名映射），
+  `PROGRESS.md` 补充重建 WP-009 节（原节为历史遗留乱码，依据 `DEPENDENCY_MODEL_AUDIT_REPORT.md` 重建）。
+- **重组**：6 篇已完成文档自 `planned/`/`in-progress/` 移入 `completed/`；8 篇过时文档移入 `docs/archive/`。
+- **核对**：全库链接有效性扫描通过（本批次链接更新 + 待办中链接见 `ROADMAP.md` §7 最新状态）。
+
+## 7. 2026-08-05 文档治理注记（统一丢弃区）
+
+- **丢弃区合并**：`docs/completed/`（30 篇）+ `docs/archive/`（8 篇）合并为唯一丢弃出口 `docs/discard/`
+  （现 41 篇 = 33 已完成 + 8 过时，索引见其 README §3）；`completed/`、`archive/` 两目录已删除。
+- **任务文档生命周期成文**：Agent 每完成一项任务须在文档内标记「（已完成）」+ 工作内容；整份任务文档完成后
+  `git mv` 至 `docs/discard/`。约定写入 `AGENTS.md`、`docs/README.md` §3、本文件 §5。
+- **引用修正**：`AGENTS.md`、`PROGRESS.md`、`kb/androlua-lua/*`、`kb/ROADMAP.md`、`.opencode/skills/*` 中
+  `docs/completed/`/`docs/archive/` 引用全部改为 `docs/discard/`；`SOURCE_AUDIT_REPORT_2026-08-05.md` 补登记入丢弃清单。
+- 治理审计报告：`docs/discard/DOCS_GOVERNANCE_AUDIT_REPORT_2026-08-05.md`（本批重组依据）。

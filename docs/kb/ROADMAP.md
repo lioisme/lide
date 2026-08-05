@@ -24,24 +24,18 @@
 
 ## 2. 宿主 IDE 功能补全（PARITY-COMPLETION 剩余 WP）
 
-> 6/19 已完成（WP-001 编译修复、WP-002 运行诊断闭环、WP-003 user_permission、WP-004 工程属性页、WP-017 解析结构化、WP-019 测试骨架）。
-> 2026-08-02：WP-008（Java API 浏览器）✅ 已落地，详见 `docs/planned/API_BROWSER_AUDIT_REPORT.md` §8（资产/数据层/UI/导航全量交付，x64 debug 构建通过）。
+> **13/19 已完成**（WP-001/002/003/004/005/008/013/014/015/016/017/018/019，其中 WP-014 代码落地未真机验收）。
+> 2026-08-02：WP-008（Java API 浏览器）✅ 已落地，详见 `docs/discard/API_BROWSER_AUDIT_REPORT.md` §8（资产/数据层/UI/导航全量交付，x64 debug 构建通过）。
+> 2026-08-05：补登 WP-005/013/015/016/018（代码实况核对，见 `PARITY_COMPLETION_WORK_ORDER.md` 各小节）。
 
 | WP | 标题 | 优先级 | 建议批次 |
 |----|------|--------|---------|
-| WP-005 | 编辑器文件操作 + 工程重命名（文件树新建/重命名/删除，联动 EditorSession） | P1 | 批 3 |
 | WP-006 | 查错 / 格式化 / 函数导航 / gotoLine（查错 = EngineActivity check 模式，`:app`；格式化/导航 = `:editor`） | P1 | 批 3 |
 | WP-007 | 导入分析（fiximport）+ 错误建议 import（类表数据源 = 平移 pro `android.lua` 4510 行 → **共享 WP-008 已落地的 `assets/javaapi/android.lua` 4196 条**） | P1 | 批 4 |
-| WP-008 | Java API 浏览器（类表 + 反射详情，事件推导规则对齐 pro） → **✅ 已落地并归档（2026-08-02，ACC 1/2/4~7 通过、ACC-3 环境受阻，见 §2.1 与 `API_BROWSER_AUDIT_REPORT.md` §6.1/§8）** | P1 | 批 4 |
 | WP-009 | 布局助手（9-A 预览 / 9-B 属性编辑 / 9-C 拖拽 + XML 转换器，分期独立立项） | P1 | 批 5 |
 | WP-010 | 最近文件 / 继续上次（AppStateStore：上次工程 + 标签 + 光标，上限 50） | P1 | 批 4 |
 | WP-011 | 日志查看器（logcat 过滤；API 29+ READ_LOGS 受限 → 默认本进程日志） | P1 | 批 5 |
 | WP-012 | 补全增强（生命周期 15 方法 + 类短名 + activity./service. 成员静态表） | P1 | 批 4 |
-| WP-013 | 运行入口跟随当前标签（非 main.lua 标签跑当前文件） | P1 | 批 4 |
-| WP-014 | 独立 APK 打包 → **见 §1（已开工）** | P2 | 批 7 |
-| WP-015 | 导入同名确认（覆盖/改名/取消）+ 插件卸载 | P2 | 批 6 |
-| WP-016 | 权限页细化（单项请求 + 特殊权限分组：悬浮窗/写设置/电池优化/安装未知来源） | P2 | 批 6 |
-| WP-018 | 字号/Tab 设置 UI + 帮助手册（help.lua → assets/help.txt 纯文本章节） | P2 | 批 6 |
 
 ---
 
@@ -51,14 +45,16 @@
 
 | 阶段 | 项 | 状态 |
 |------|----|------|
-| A | 消灭每键整屏重组（`editVersion` → StateFlow / Squircle `needsUpdate` 模式） | 未完成 |
-| A | 搜索链路结果下沉 SearchBar（消除 ×2 重组） | 未完成 |
-| A | 打开文件 IO 线程构造 `Content` + `setText(content: Content)` 注入 + scheme 单例 | 未完成 |
-| A | 转场淡入（100ms） | 未完成 |
-| A | release 开 R8 + baseline profile | 未完成 |
-| A | 诊断改增量扫描 | 未完成 |
+| A | 消灭每键整屏重组（`editVersion` → StateFlow / Squircle `needsUpdate` 模式） | ✅ 已落地（editTick StateFlow，EditorSession.kt） |
+| A | 搜索链路结果下沉 SearchBar（消除 ×2 重组） | ✅ 已落地（SearchBar 订阅 PublishSearchResultEvent） |
+| A | 打开文件 IO 线程构造 `Content` + `setText(content: Content)` 注入 + scheme 单例 | ✅ 已落地（LuaEditor Content 注入） |
+| A | 转场淡入（100ms） | ⛔ 被取代（2026-08-04 决策：全部页面 slide 150ms，禁用 fade） |
+| A | release 开 R8 + baseline profile | 未完成（入 backlog） |
+| A | 诊断改增量扫描 | ✅ 已落地（LuaDiagnostics Incremental） |
 | B | EditorTabs / ProjectFileTree / EditorSession / Content 缓存 | ✅ 已落地 |
-| C | 诊断 tooltip、原生 SnippetController、增量保存 | 未开始 |
+| C | 诊断 tooltip、原生 SnippetController、增量保存 | 未开始（入 backlog） |
+
+> 2026-08-05：阶段 A/B 按代码实况核销（V2 报告已归档 `docs/discard/`）；剩余 R8/baseline profile 与阶段 C 转入 `planned/backlog.md`。
 
 验收基准（AC）：gfxinfo jank=0、AsyncAnalyzer 线程唯一、styles 非空、77KB 打开耗时 ≤ Squircle、搜索流畅、R1 零命中。
 
@@ -66,14 +62,16 @@
 
 | WP | 内容 | 状态 |
 |----|------|------|
-| 001/002/008 | 抽屉返回键 / 关闭竞态 / 汉堡语义 | ✅ 已由抽屉审计落地（官方 API） |
-| 003 | Tab 拖拽排序（reorderable 3.0.0） | 待办 |
-| 004 | Tab 样式对齐（扁平 + 3dp 底部指示条） | 待办 |
-| 005 | 点击当前 Tab 弹关闭菜单 | 待办 |
-| 006 | 新 Tab 自动滚动 | 待办 |
-| 007 | 抽屉手势对齐 | 待办 |
+| 001/002/008 | 抽屉返回键 / 关闭竞态 / 汉堡语义 | ✅ 已由抽屉审计落地（官方 API）→ **2026-08-05 抽屉已整体删除**，相关项随抽屉消亡 |
+| 003 | Tab 拖拽排序（reorderable 3.0.0） | ✅ 已落地（EditorTabs） |
+| 004 | Tab 样式对齐（扁平 + 3dp 底部指示条） | ✅ 已落地（EditorTabs） |
+| 005 | 点击当前 Tab 弹关闭菜单（DropdownMenu） | ✅ 已落地（EditorTabs） |
+| 006 | 新 Tab 自动滚动 | ✅ 已落地（EditorTabs） |
+| 007 | 抽屉手势对齐 | ⛔ 被取代（抽屉已删除，2026-08-05） |
 | 009 | 文件树横向滚动（≥248dp） | 待办 |
 | 010 | 版本目录（P2 可选） | 待办 |
+
+> 2026-08-05 复核：WP-003~006 代码证据 = `EditorTabs.kt`（`sh.calvin.reorderable.*` + `DropdownMenu`）；抽屉已移除（`ProjectFileTree.kt` 不再存在），对应项改按 Tab 体系执行；文件树能力现由 `ProjectFileBrowserDialog`（EditorComponents.kt:95）承载。
 
 ---
 
@@ -122,9 +120,10 @@
 
 | 项 | 说明 |
 |----|------|
-| `LIBS_SUPPORT_WORK_ORDER.md` | 标题 Status 字段仍为 Draft，内容已完成 → 更新状态字段 |
-| `NATIVE_LIB_AUDIT.md` | 自述「阶段 B 待执行」，实际已由 WP-010 LIBS-003/006 收尾 → 回填 |
-| `WHITEPAPER.md` | 阶段四/五状态与 §7.1 需随打包器进展更新 |
-| `EMULATOR_RUNTIME_AUDIT_REPORT.md` | 未 `git add`（untracked）→ 提交 |
-| `PROGRESS.md` | 登记打包器 WP-014 进展与工作区未提交改动 |
-| `WORK_ORDER.md` | 历史草案，多数条目已过时 → 建议归档或标注 superseded |
+| `WHITEPAPER.md` | 阶段四/五状态随打包器进展更新（§7.1 已随恢复文档存在） |
+| `PROGRESS.md` | ✅ 已补登记 WP-014 打包器（2026-08-05）；工作区改动待提交后复核 |
+| `LIBS_SUPPORT_WORK_ORDER.md` | ✅ 已回填 Status 字段并移入 `docs/discard/`（2026-08-05） |
+| `NATIVE_LIB_AUDIT.md` | ✅ 已回填「阶段 B 由 LIBS-003/006 收尾」并移入 `docs/discard/`（2026-08-05） |
+| `EMULATOR_RUNTIME_AUDIT_REPORT.md` | ✅ 已跟踪并移入 `docs/discard/`（2026-08-05 复核删除旧注记） |
+| `WORK_ORDER.md` | ✅ 已丢弃至 `docs/discard/`（2026-08-05） |
+| `docs/discard/README.md` | 丢弃区索引（已完成/过时文档清单 + 登记处） |

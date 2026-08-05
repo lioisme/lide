@@ -13,7 +13,7 @@
 | D-07 | 2026-07-31 | **删除全局依赖管理层（common/ 仓库），回归 pro「工程 = 自治单元」**（WP-009 方案 A） | S1 必修缺陷：全局仓库为空时 demo 样例直接拒绝运行；S2~S7 共 7 缺陷；运行时对 common/ 零引用 | 净删 ~1700 行 + 49×2 字符串 + 4 路由；反转 D-06 及 WP-008 P1-4~9；依赖声明单一事实源 = init.lua |
 | D-08 | 2026-07-31 | **单进程口径**（AGENTS.md R2 修订为「EngineBridge → EngineActivity，同进程运行」） | 消除「独立进程」文档偏差 | R2 文本更新 |
 | D-09 | 2026-08-01 | **dex 必须内存加载，禁止回退文件路径** | Android 8+/14+ W^X 拒绝 app 可写目录加载 dex（`/sdcard` FUSE 与 `/data/data` 均被拒）；真机 V-01/V-02 实证 | `LuaDexLoader` API≥26 走 `InMemoryDexClassLoader`；成为**有意的**与 pro 的差异（工作单 §10.1 修订） |
-| D-10 | 2026-07-31 | **独立 APK 打包 v1.0 暂不支持**（WHITEPAPER 阶段四决策） | ① pro 打包器依赖仓库外的 `mao/sign` 签名 jar；② v1-only 签名 targetSdk≥30 不可安装；③ 宿主模板体积/方法数不可控；④ 与编辑/运行主链路正交 | **随后已立项开工**：`LuaCompiler`/`AXmlManifest`/`ApkBuilder`/`ApkSigner`/`V2Signer`/`BuildApkScreen` 代码已落地（commit 953592b 等），未登记 PROGRESS/白皮书 |
+| D-10 | 2026-07-31 | **独立 APK 打包 v1.0 暂不支持**（WHITEPAPER 阶段四决策） | ① pro 打包器依赖仓库外的 `mao/sign` 签名 jar；② v1-only 签名 targetSdk≥30 不可安装；③ 宿主模板体积/方法数不可控；④ 与编辑/运行主链路正交 | **随后已立项开工（WP-014）**：`LuaCompiler`/`AXmlManifest`/`ApkBuilder`/`ApkSigner`/`V2Signer`/`BuildApkScreen` 代码已落地（commit 953592b 等）；2026-08-05 已补登记 PROGRESS WP-014；白皮书阶段四/五待更新 |
 | D-11 | 2026-08-01 | **lluv / tcc 不预编译**，缺失模块由工程 `libs/` 补偿 | lluv 与 luv 功能重叠；tcc 无 arm64/x86_64 NDK 目标；lfs/lsqlite3 已补齐 | 差异声明入 WHITEPAPER §7.1 |
 | D-12 | 2026-08-01 | **布局助手：资产先行、UI 单独立项** | 5 人日高工作量（P1 最大项） | `javaapi/*.aly` 模板已入 assets/layouts；预览/拖拽/转换器（WP-009 9-A~9-C）待立项 |
 | D-13 | 2026-08-01 | **宿主 UI 一律官方/成熟组件，禁止手搓自研** | Squircle-CE 对齐约束（LIDE-UI-001） | 抽屉用官方 `ModalDrawerSheet(drawerState)`；唯一新增依赖 `reorderable:3.0.0`（Tab 拖拽） |

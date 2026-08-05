@@ -15,7 +15,15 @@ import android.widget.Spinner
  * 由反射语义推断得出（isAssignableFrom 规则链），无人工标注，失败降级 null。
  */
 enum class ApiUsage {
-    ADAPTER, CONTAINER, INPUT, UTILITY, BUTTON, STATE, VIEW, POPUP, DROPDOWN,
+    ADAPTER,
+    CONTAINER,
+    INPUT,
+    UTILITY,
+    BUTTON,
+    STATE,
+    VIEW,
+    POPUP,
+    DROPDOWN,
 }
 
 /**
@@ -24,7 +32,6 @@ enum class ApiUsage {
  * ViewGroup 须在 View 之前命中。
  */
 object ApiUsageClassifier {
-
     /**
      * 推断缓存（含失败负缓存）。
      * 仅构建期 IO 线程单线程访问（ApiIndex.assignUsages），故用普通 HashMap；
@@ -35,37 +42,55 @@ object ApiUsageClassifier {
     private val FAILED = Any()
 
     /** 明显非 UI 前缀：静态规则直接归工具类，免反射（java/javax 等加载器层不参与）。 */
-    private val utilityPrefixes = listOf(
-        "java.", "javax.", "org.", "jdk.", "sun.", "com.luajava.", "com.android.cglib.", "dalvik.",
-    )
+    private val utilityPrefixes =
+        listOf(
+            "java.",
+            "javax.",
+            "org.",
+            "jdk.",
+            "sun.",
+            "com.luajava.",
+            "com.android.cglib.",
+            "dalvik.",
+        )
 
     fun classify(name: String): ApiUsage? {
         if (name.startsWith("android.R")) return ApiUsage.UTILITY
         if (utilityPrefixes.any { name.startsWith(it) }) return ApiUsage.UTILITY
-        val cached: Any? = cache.getOrPut(name) {
-            val clazz: Any = try {
-                Class.forName(name, false, ApiIndex.hostLoader())
-            } catch (_: Throwable) {
-                FAILED
-            }
-            if (clazz === FAILED) {
-                FAILED
-            } else {
-                val c = clazz as Class<*>
-                when {
-                    Adapter::class.java.isAssignableFrom(c) -> ApiUsage.ADAPTER
-                    ViewGroup::class.java.isAssignableFrom(c) -> ApiUsage.CONTAINER
-                    EditText::class.java.isAssignableFrom(c) -> ApiUsage.INPUT
-                    Spinner::class.java.isAssignableFrom(c) -> ApiUsage.DROPDOWN
-                    Dialog::class.java.isAssignableFrom(c) ||
-                        PopupWindow::class.java.isAssignableFrom(c) -> ApiUsage.POPUP
-                    Button::class.java.isAssignableFrom(c) -> ApiUsage.BUTTON
-                    CompoundButton::class.java.isAssignableFrom(c) -> ApiUsage.STATE
-                    View::class.java.isAssignableFrom(c) -> ApiUsage.VIEW
-                    else -> ApiUsage.UTILITY
+        val cached: Any? =
+            cache.getOrPut(name) {
+                val clazz: Any =
+                    try {
+                        Class.forName(name, false, ApiIndex.hostLoader())
+                    } catch (_: Throwable) {
+                        FAILED
+                    }
+                if (clazz === FAILED) {
+                    FAILED
+                } else {
+                    val c = clazz as Class<*>
+                    when {
+                        Adapter::class.java.isAssignableFrom(c) -> ApiUsage.ADAPTER
+
+                        ViewGroup::class.java.isAssignableFrom(c) -> ApiUsage.CONTAINER
+
+                        EditText::class.java.isAssignableFrom(c) -> ApiUsage.INPUT
+
+                        Spinner::class.java.isAssignableFrom(c) -> ApiUsage.DROPDOWN
+
+                        Dialog::class.java.isAssignableFrom(c) ||
+                            PopupWindow::class.java.isAssignableFrom(c) -> ApiUsage.POPUP
+
+                        Button::class.java.isAssignableFrom(c) -> ApiUsage.BUTTON
+
+                        CompoundButton::class.java.isAssignableFrom(c) -> ApiUsage.STATE
+
+                        View::class.java.isAssignableFrom(c) -> ApiUsage.VIEW
+
+                        else -> ApiUsage.UTILITY
+                    }
                 }
             }
-        }
         return if (cached === FAILED) null else cached as ApiUsage
     }
 }

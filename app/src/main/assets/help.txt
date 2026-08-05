@@ -1,0 +1,59 @@
+@Getting Started@
+LIDE is a Lua IDE for Android, compatible with AndroLua Pro projects.
+On first launch, sample projects are listed on the home screen.
+Tap a project to open the editor, then tap the play button to run it.
+Scripts run in a separate engine screen; press back to return to the editor.
+
+@Projects and Files@
+A project is a directory containing init.lua and main.lua.
+init.lua declares metadata: appname, appver, packagename, user_permission and more.
+Edit these fields from Project Info (long-press a project on the list).
+The file tree inside the editor shows all project files; tap to open them as tabs.
+Libraries placed in the project libs/ folder (.dex / .so / .lua) load automatically.
+
+@Editor@
+The editor supports syntax highlighting, bracket matching and line diagnostics.
+Word wrap and whitespace visibility can be toggled from Settings.
+Font size and tab size are adjustable from Settings and take effect immediately.
+Ctrl+F (long-press the toolbar on screen keyboards) opens search within the file.
+Unsaved changes are flushed automatically; closing a dirty tab asks for confirmation.
+
+@Run and Diagnostics@
+Run always follows the active tab: main.lua runs the project, any other file runs itself.
+Before running, permissions declared in init.lua are requested in one dialog.
+When a script fails, the editor shows the error and can jump to the failing line.
+A "nil value (global 'X')" error offers an insert-import action for the missing module.
+
+@Permissions@
+Host permissions are listed in Settings > Permissions.
+Project permissions (from init.lua user_permission) appear in the project permissions screen.
+Special access (floating window, modify settings, battery optimization) opens system settings.
+Declared permissions are written into the packaged APK when building.
+
+@API Browser@
+The API browser (Settings > API Browser) lists every Java class visible to scripts.
+Search by name, filter by category, tap a class for constructors and methods.
+Long-press a class name to copy it to the clipboard.
+Classes not loadable at runtime are shown struck through.
+
+@Examples@
+Sample projects (.alp packages) are available from Settings > Examples.
+Importing a sample copies it into your projects list and is editable like any other project.
+
+@Build APK@
+Build APK packages the current project into an installable APK.
+The build compiles Lua sources, patches the manifest, repackages and signs (v1+v2).
+The result is saved to the app cache and can be shared or installed.
+Packaging is experimental; test the produced APK on a separate device.
+
+@Settings@
+Appearance: theme mode (system / light / dark) and accent color.
+Editor: word wrap, whitespace, font size and tab size.
+Language: English or Chinese (restarts the UI).
+Help: this guide.
+
+@Troubleshooting@
+Samples do not appear: allow all-files access for the app, then reopen the home screen.
+A script fails with "Writable dex file": move .dex libraries out of writable dirs on Android 8+.
+No sound from scripts: check that the device is not in silent mode; audio follows the system.
+Report crashes: keep the app log and describe the steps to reproduce.

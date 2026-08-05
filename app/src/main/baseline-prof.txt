@@ -1,0 +1,99 @@
+# lide Android Baseline Profile
+# 覆盖启动、项目列表首帧、编辑器装配（sora 核心类）与 TextMate 分析路径。
+# 语法（与 androidx 依赖随带规范一致，由 :app:expandArm64ReleaseArtProfileWildcards 解析）：
+#   - 类规则：L<包路径+类名>;   （如 Lio/github/rosemoe/sora/widget/CodeEditor;）
+#   - 包级类通配：L<包路径>/**; 或 L<包路径>/*;
+#   - 包级方法通配：HSPL<包路径>/**->**(**)**   （H/S/P/L 标志仅方法与通配规则支持）
+# 规则 best-effort AOT 编译，仅目标设备 install 生效。
+# 维护注：sora-editor 与 :editor 大树用「包 /**」前缀覆盖，升级（P3 更新管线）后无需逐类修正。
+
+# --- Android 框架热路径（类规则，L 标志 AOT 整类） ---
+Landroid/app/Activity;
+Landroid/app/Application;
+Landroid/app/AlertDialog;
+Landroid/app/Dialog;
+Landroid/content/Context;
+Landroid/content/ContextWrapper;
+Landroid/content/res/Resources;
+Landroid/content/res/AssetManager;
+Landroid/content/res/TypedArray;
+Landroid/content/res/Configuration;
+Landroid/graphics/Canvas;
+Landroid/graphics/Paint;
+Landroid/graphics/Rect;
+Landroid/graphics/Typeface;
+Landroid/graphics/drawable/Drawable;
+Landroid/os/Build;
+Landroid/os/Bundle;
+Landroid/os/Handler;
+Landroid/os/HandlerThread;
+Landroid/os/Looper;
+Landroid/text/TextUtils;
+Landroid/util/Base64;
+Landroid/util/DisplayMetrics;
+Landroid/util/TypedValue;
+Landroid/view/KeyEvent;
+Landroid/view/MotionEvent;
+Landroid/view/View;
+Landroid/view/ViewGroup;
+Landroid/view/ViewRootImpl;
+Landroid/view/Window;
+Landroid/view/WindowManager;
+Landroid/view/inputmethod/InputMethodManager;
+Landroid/widget/FrameLayout;
+Landroid/widget/LinearLayout;
+Landroid/widget/TextView;
+Landroid/widget/Toast;
+
+# --- AndroidX + Compose + 导航（包级通配） ---
+HSPLandroidx/activity/**->**(**)**
+HSPLandroidx/appcompat/app/**->**(**)**
+HSPLandroidx/appcompat/widget/**->**(**)**
+HSPLandroidx/collection/**->**(**)**
+HSPLandroidx/compose/runtime/**->**(**)**
+HSPLandroidx/compose/ui/window/**->**(**)**
+HSPLandroidx/compose/ui/platform/**->**(**)**
+HSPLandroidx/compose/ui/viewinterop/**->**(**)**
+HSPLandroidx/compose/ui/res/**->**(**)**
+HSPLandroidx/compose/foundation/**->**(**)**
+HSPLandroidx/compose/material3/**->**(**)**
+HSPLandroidx/compose/material/icons/**->**(**)**
+HSPLandroidx/compose/animation/**->**(**)**
+HSPLandroidx/navigation/**->**(**)**
+HSPLandroidx/core/**->**(**)**
+HSPLandroidx/lifecycle/**->**(**)**
+HSPLandroidx/annotation/**->**(**)**
+HSPLandroidx/tracing/**->**(**)**
+Landroidx/profileinstaller/ProfileInstaller;
+
+# ---- lide 宿主（启动 + 导航 + 设置中心 + 引擎面） ----
+HSPLcom/lioisme/lide/ui/navigation/**->**(**)**
+HSPLcom/lioisme/lide/ui/screen/**->**(**)**
+HSPLcom/lioisme/lide/ui/theme/**->**(**)**
+HSPLcom/lioisme/lide/session/**->**(**)**
+HSPLcom/lioisme/lide/project/**->**(**)**
+HSPLcom/lioisme/lide/i18n/**->**(**)**
+Lcom/lioisme/lide/LideApp;
+
+# ---- sora-editor 编辑器内核 + TextMate（包级通配） ----
+HSPLio/github/rosemoe/sora/widget/**->**(**)**
+HSPLio/github/rosemoe/sora/lang/**->**(**)**
+HSPLio/github/rosemoe/sora/text/**->**(**)**
+HSPLio/github/rosemoe/sora/event/**->**(**)**
+HSPLio/github/rosemoe/sora/graphics/**->**(**)**
+HSPLio/github/rosemoe/sora/langs/textmate/**->**(**)**
+HSPLio/github/rosemoe/sora/textmateapi/**->**(**)**
+Lio/github/rosemoe/sora/widget/CodeEditor;
+Lio/github/rosemoe/sora/widget/EditorRenderer;
+Lio/github/rosemoe/sora/widget/EditorTouchEventHandler;
+Lio/github/rosemoe/sora/widget/EditorKeyEventHandler;
+Lio/github/rosemoe/sora/widget/EditorSearcher;
+Lio/github/rosemoe/sora/widget/EditorScroller;
+Lio/github/rosemoe/sora/widget/EditorStyleDelegate;
+
+# ---- lide :editor 语言装配（启动 + 首开） ----
+HSPLcom/lioisme/lide/editor/**->**(**)**
+
+# ---- luajava / 宿主运行时 ----
+HSPLcom/luajava/**->**(**)**
+HSPLcom/androlua/**->**(**)**

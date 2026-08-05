@@ -11,7 +11,7 @@
   `LuaFragment` / `LuaLexer` / `LuaRecyclerAdapter` / `LuaTimer` / `LuaTimerTask` /
   `LuaTokenTypes` / `LuaUtil` / `LuaWebView` / `Ticker` / `Http` / `RootUtil` / `Welcome`
 - ⚠ **`LuaRecyclerAdapter` 在 AndroLua Pro 4.4.2 源码中不存在**（已核对
-  `docs/reference/androlua/AndroLua_pro-master`）——id 3428、3734 引用即失败。
+  `third_party/androlua/`）——id 3428、3734 引用即失败。
 
 ## 2. 代表样本
 
@@ -29,7 +29,7 @@
 
 ## 3. 判定与改造 SOP
 
-1. **先判类存在性**：查 `docs/reference/androlua/` 源码树（`grep class LuaXXX`）；
+1. **先判类存在性**：查 `third_party/androlua/` 源码树（`grep class LuaXXX`）；
 2. 不存在 → 用公开 API 重写（如 RecyclerView + 自带 Adapter 实现）；
 3. 存在但签名未知 → 双端实测（`androlua-project-validation` SKILL）后再入工程库；
 4. 任何新工程**禁止首选项**使用私有类：优先 `android.*` / `java.*` 公开 API，私有类仅作

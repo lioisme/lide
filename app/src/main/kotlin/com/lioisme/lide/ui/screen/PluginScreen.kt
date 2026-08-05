@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Extension
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.*
@@ -24,8 +25,8 @@ import androidx.compose.ui.unit.dp
 import com.androlua.LuaApplication
 import com.lioisme.lide.R
 import com.lioisme.lide.androlua.PluginInfo
-import com.lioisme.lide.editor.TipIconButton
 import com.lioisme.lide.androlua.PluginManager
+import com.lioisme.lide.editor.TipIconButton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -41,6 +42,7 @@ fun PluginScreen(
     val pluginManager = remember { PluginManager() }
     var plugins by remember { mutableStateOf(listOf<PluginInfo>()) }
     var isRefreshing by remember { mutableStateOf(false) }
+    var pendingUninstall by remember { mutableStateOf<PluginInfo?>(null) }
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val strCannotReadFile = stringResource(R.string.cannot_read_file)
@@ -50,10 +52,11 @@ fun PluginScreen(
         scope.launch {
             isRefreshing = true
             try {
-                plugins = withContext(Dispatchers.IO) {
-                    val extDir = LuaApplication.getInstance().luaExtDir
-                    pluginManager.scan("$extDir/plugin")
-                }
+                plugins =
+                    withContext(Dispatchers.IO) {
+                        val extDir = LuaApplication.getInstance().luaExtDir
+                        pluginManager.scan("$extDir/plugin")
+                    }
             } finally {
                 isRefreshing = false
             }
@@ -62,46 +65,50 @@ fun PluginScreen(
 
     LaunchedEffect(Unit) { refresh() }
 
-    val alpPickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri ->
-        if (uri == null) return@rememberLauncherForActivityResult
-        scope.launch {
-            try {
-                val inputStream = withContext(Dispatchers.IO) { context.contentResolver.openInputStream(uri) }
-                if (inputStream == null) {
-                    snackbarHostState.showSnackbar(strCannotReadFile)
-                    return@launch
+    val alpPickerLauncher =
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.GetContent(),
+        ) { uri ->
+            if (uri == null) return@rememberLauncherForActivityResult
+            scope.launch {
+                try {
+                    val inputStream = withContext(Dispatchers.IO) { context.contentResolver.openInputStream(uri) }
+                    if (inputStream == null) {
+                        snackbarHostState.showSnackbar(strCannotReadFile)
+                        return@launch
+                    }
+                    val rawName = File(uri.lastPathSegment ?: "plugin.alp").name
+                    val tempFile =
+                        withContext(Dispatchers.IO) {
+                            val f = File(context.cacheDir, "alp_${System.currentTimeMillis()}_$rawName")
+                            f.parentFile?.mkdirs()
+                            inputStream.use { it.copyTo(f.outputStream()) }
+                            f
+                        }
+                    val extDir = LuaApplication.getInstance().luaExtDir
+                    val info =
+                        withContext(Dispatchers.IO) {
+                            pluginManager.installFromAlp(tempFile.absolutePath, "$extDir/plugin")
+                        }
+                    withContext(Dispatchers.IO) { tempFile.delete() }
+                    if (info != null) {
+                        Toast
+                            .makeText(
+                                context,
+                                context.getString(R.string.plugin_installed, info.name),
+                                Toast.LENGTH_SHORT,
+                            ).show()
+                        refresh()
+                    } else {
+                        snackbarHostState.showSnackbar(strPluginInvalid)
+                    }
+                } catch (e: Exception) {
+                    snackbarHostState.showSnackbar(
+                        context.getString(R.string.error_prefix, e.message),
+                    )
                 }
-                val rawName = File(uri.lastPathSegment ?: "plugin.alp").name
-                val tempFile = withContext(Dispatchers.IO) {
-                    val f = File(context.cacheDir, "alp_${System.currentTimeMillis()}_$rawName")
-                    f.parentFile?.mkdirs()
-                    inputStream.use { it.copyTo(f.outputStream()) }
-                    f
-                }
-                val extDir = LuaApplication.getInstance().luaExtDir
-                val info = withContext(Dispatchers.IO) {
-                    pluginManager.installFromAlp(tempFile.absolutePath, "$extDir/plugin")
-                }
-                withContext(Dispatchers.IO) { tempFile.delete() }
-                if (info != null) {
-                    Toast.makeText(
-                        context,
-                        context.getString(R.string.plugin_installed, info.name),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    refresh()
-                } else {
-                    snackbarHostState.showSnackbar(strPluginInvalid)
-                }
-            } catch (e: Exception) {
-                snackbarHostState.showSnackbar(
-                    context.getString(R.string.error_prefix, e.message)
-                )
             }
         }
-    }
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -121,105 +128,153 @@ fun PluginScreen(
                         Icon(Icons.Default.Add, contentDescription = stringResource(R.string.plugin_install_alp))
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                    titleContentColor = MaterialTheme.colorScheme.onSurface,
-                ),
+                colors =
+                    TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        titleContentColor = MaterialTheme.colorScheme.onSurface,
+                    ),
             )
         },
     ) { padding ->
         PullToRefreshBox(
             isRefreshing = isRefreshing,
             onRefresh = { refresh() },
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(padding),
         ) {
             if (plugins.isEmpty()) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center,
                 ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Icon(
-                        Icons.Default.Extension,
-                        contentDescription = null,
-                        modifier = Modifier.size(64.dp),
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
-                    )
-                    Spacer(Modifier.height(16.dp))
-                    Text(
-                        stringResource(R.string.plugin_empty_title),
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                    Spacer(Modifier.height(4.dp))
-                    Text(
-                        stringResource(R.string.plugin_empty_hint),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
-                    )
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Icon(
+                            Icons.Default.Extension,
+                            contentDescription = null,
+                            modifier = Modifier.size(64.dp),
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
+                        )
+                        Spacer(Modifier.height(16.dp))
+                        Text(
+                            stringResource(R.string.plugin_empty_title),
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                        Spacer(Modifier.height(4.dp))
+                        Text(
+                            stringResource(R.string.plugin_empty_hint),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
+                        )
+                    }
                 }
-            }
-        } else {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(vertical = 8.dp),
-            ) {
-                itemsIndexed(plugins) { _, plugin ->
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 4.dp)
-                            .clickable { onRun(plugin) },
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f),
-                        ),
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth().padding(16.dp),
-                            verticalAlignment = Alignment.CenterVertically,
+            } else {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(vertical = 8.dp),
+                ) {
+                    itemsIndexed(plugins) { _, plugin ->
+                        Card(
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp, vertical = 4.dp)
+                                    .clickable { onRun(plugin) },
+                            colors =
+                                CardDefaults.cardColors(
+                                    containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f),
+                                ),
                         ) {
-                            Icon(
-                                Icons.Default.Extension,
-                                contentDescription = null,
-                                modifier = Modifier.size(32.dp),
-                                tint = MaterialTheme.colorScheme.primary,
-                            )
-                            Spacer(Modifier.width(16.dp))
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text(
-                                    plugin.name,
-                                    style = MaterialTheme.typography.bodyLarge,
-                                    fontWeight = FontWeight.Medium,
+                            Row(
+                                modifier = Modifier.fillMaxWidth().padding(16.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                Icon(
+                                    Icons.Default.Extension,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(32.dp),
+                                    tint = MaterialTheme.colorScheme.primary,
                                 )
-                                Text(
-                                    if (plugin.author.isNotBlank()) {
-                                        context.getString(R.string.plugin_version_author, plugin.version, plugin.author)
-                                    } else {
-                                        context.getString(R.string.plugin_version, plugin.version)
-                                    },
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                )
-                                if (plugin.description.isNotBlank()) {
+                                Spacer(Modifier.width(16.dp))
+                                Column(modifier = Modifier.weight(1f)) {
                                     Text(
-                                        plugin.description,
+                                        plugin.name,
+                                        style = MaterialTheme.typography.bodyLarge,
+                                        fontWeight = FontWeight.Medium,
+                                    )
+                                    Text(
+                                        if (plugin.author.isNotBlank()) {
+                                            context.getString(R.string.plugin_version_author, plugin.version, plugin.author)
+                                        } else {
+                                            context.getString(R.string.plugin_version, plugin.version)
+                                        },
                                         style = MaterialTheme.typography.bodySmall,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    )
+                                    if (plugin.description.isNotBlank()) {
+                                        Text(
+                                            plugin.description,
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
+                                        )
+                                    }
+                                }
+                                Icon(
+                                    Icons.Default.PlayArrow,
+                                    contentDescription = stringResource(R.string.plugin_run),
+                                    tint = MaterialTheme.colorScheme.primary,
+                                )
+                                Spacer(Modifier.width(4.dp))
+                                IconButton(onClick = { pendingUninstall = plugin }) {
+                                    Icon(
+                                        Icons.Default.Delete,
+                                        contentDescription = stringResource(R.string.plugin_uninstall),
+                                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                     )
                                 }
                             }
-                            Icon(
-                                Icons.Default.PlayArrow,
-                                contentDescription = stringResource(R.string.plugin_run),
-                                tint = MaterialTheme.colorScheme.primary,
-                            )
                         }
                     }
                 }
             }
-            }
         }
+    }
+
+    pendingUninstall?.let { plugin ->
+        AlertDialog(
+            onDismissRequest = { pendingUninstall = null },
+            icon = { Icon(Icons.Default.Delete, contentDescription = null) },
+            title = { Text(stringResource(R.string.plugin_uninstall_title)) },
+            text = { Text(stringResource(R.string.plugin_uninstall_message, plugin.name)) },
+            confirmButton = {
+                TextButton(onClick = {
+                    pendingUninstall = null
+                    scope.launch {
+                        val deleted =
+                            withContext(Dispatchers.IO) {
+                                File(plugin.dir).deleteRecursively()
+                            }
+                        if (deleted) {
+                            Toast
+                                .makeText(
+                                    context,
+                                    context.getString(R.string.plugin_uninstall_done, plugin.name),
+                                    Toast.LENGTH_SHORT,
+                                ).show()
+                            refresh()
+                        } else {
+                            snackbarHostState.showSnackbar(
+                                context.getString(R.string.plugin_uninstall_failed, plugin.name),
+                            )
+                        }
+                    }
+                }) { Text(stringResource(R.string.plugin_uninstall_confirm)) }
+            },
+            dismissButton = {
+                TextButton(onClick = { pendingUninstall = null }) { Text(stringResource(R.string.cancel)) }
+            },
+        )
     }
 }

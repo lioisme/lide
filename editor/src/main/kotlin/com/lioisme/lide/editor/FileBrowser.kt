@@ -46,6 +46,8 @@ data class FileNode(
  * 文件点击回调宿主打开。
  *
  * [onRefresh] 非空时启用下拉刷新（触发宿主重扫当前目录）；为空则保持纯展示组件。
+ * [onNodeLongClick] 非空时条目长按回调宿主（宿主决定上下文菜单动作），
+ * 空则不启用长按（组件保持纯展示）。
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,13 +58,15 @@ fun FileBrowser(
     modifier: Modifier = Modifier,
     isRefreshing: Boolean = false,
     onRefresh: (() -> Unit)? = null,
+    onNodeLongClick: ((FileNode) -> Unit)? = null,
 ) {
-    val sorted = remember(entries) {
-        entries.sortedWith(
-            compareByDescending<FileNode> { it.isDirectory }
-                .thenBy { it.name.lowercase() }
-        )
-    }
+    val sorted =
+        remember(entries) {
+            entries.sortedWith(
+                compareByDescending<FileNode> { it.isDirectory }
+                    .thenBy { it.name.lowercase() },
+            )
+        }
 
     val content: @Composable () -> Unit = {
         if (sorted.isEmpty()) {
@@ -75,9 +79,10 @@ fun FileBrowser(
             }
         } else {
             LazyColumn(
-                modifier = modifier
-                    .fillMaxSize()
-                    .widthIn(min = 300.dp),
+                modifier =
+                    modifier
+                        .fillMaxSize()
+                        .widthIn(min = 300.dp),
             ) {
                 items(sorted, key = { it.path }) { entry ->
                     FileBrowserRow(
@@ -85,6 +90,7 @@ fun FileBrowser(
                         onClick = {
                             if (entry.isDirectory) onOpenDirectory(entry) else onOpenFile(entry)
                         },
+                        onLongClick = onNodeLongClick?.let { { it(entry) } },
                     )
                 }
             }
@@ -95,9 +101,10 @@ fun FileBrowser(
         PullToRefreshBox(
             isRefreshing = isRefreshing,
             onRefresh = onRefresh,
-            modifier = modifier
-                .fillMaxSize()
-                .widthIn(min = 300.dp),
+            modifier =
+                modifier
+                    .fillMaxSize()
+                    .widthIn(min = 300.dp),
         ) { content() }
     } else {
         content()
@@ -109,6 +116,7 @@ fun FileBrowser(
 private fun FileBrowserRow(
     entry: FileNode,
     onClick: () -> Unit,
+    onLongClick: (() -> Unit)? = null,
 ) {
     val haptics = LocalHapticFeedback.current
     ListItem(
@@ -127,12 +135,15 @@ private fun FileBrowserRow(
                 modifier = Modifier.size(20.dp),
             )
         },
-        // 长按原生振动（与主界面工程列表同源），单击仍为打开/进入。
-        modifier = Modifier.combinedClickable(
-            onClick = onClick,
-            onLongClick = {
-                haptics.performHapticFeedback(HapticFeedbackType.LongPress)
-            },
-        ),
+        // 长按原生振动（与主界面工程列表同源），单击仍为打开/进入；
+        // 宿主注入 onLongClick 时振动 + 回调，否则仅保留振动（纯展示语义）。
+        modifier =
+            Modifier.combinedClickable(
+                onClick = onClick,
+                onLongClick = {
+                    haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+                    onLongClick?.invoke()
+                },
+            ),
     )
 }

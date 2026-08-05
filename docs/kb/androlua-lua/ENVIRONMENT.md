@@ -12,7 +12,7 @@
 | 项 | AndroLua Pro 原版 | lide |
 |---|---|---|
 | 包名 | `com.androlua`（4.4.2） | `com.lioisme.lide` |
-| 源码位置 | `docs/reference/androlua/AndroLua_pro-master/` | 本仓库（`:androlua` / `:app` / `:editor`） |
+| 源码位置 | `AndroLuaPro v4.4.2 上游（运行时代码 `third_party/androlua/`、引擎 `app/src/main/cpp/`）` | 本仓库（`:androlua` / `:app` / `:editor`） |
 | 运行时脚本 | `app/src/main/resources/lua/`（28 个） | `app/src/main/assets/lua/`（逐字节一致） |
 | 宿主入口 | `com.androlua.LuaActivity` 直挂 manifest | `EngineActivity` → `LuaActivity` 转发 |
 
@@ -28,14 +28,14 @@
 └── libs/      # 工程内库：*.jar / *.dex / lib<fn>.so（.alp 导出即携带）
 ```
 
-参考工程（pro 已验证可运行）：`docs/reference/project/` 下的
+参考工程（pro 已验证可运行）：`reference/project/` 下的
 demo、test、testjson、kleinbottle、DemoProject、probe、builddemo、「Sora editor」、简、石头、看板娘、雷达统计图。
 
 ## 4. 推工程与双端启动（实测有效）
 
 ```powershell
 adb shell mkdir -p /storage/emulated/0/AndroLua/project/<name>
-adb push docs\reference\project\<name> /storage/emulated/0/AndroLua/project/<name>
+adb push reference\project\<name> /storage/emulated/0/AndroLua/project/<name>
 
 # pro：必须带 -n 指定组件，否则进 ResolverActivity 选择器
 adb shell am start -a android.intent.action.VIEW -d "file:///storage/emulated/0/AndroLua/project/<name>/main.lua" -n com.androlua/com.androlua.LuaActivity
@@ -57,12 +57,12 @@ adb shell am start -a android.intent.action.VIEW -d "file:///storage/emulated/0/
 ## 6. 日志与基线
 
 - 引擎输出通道：logcat 标签 `lua`（`adb logcat -d -s lua:* AndroidRuntime:E`）。
-- 双端基线：`docs/log/androluapro.log`（pro）、`docs/log/lide.log`（lide）——同一 test 工程 956 项 probe。
+- 双端基线：`docs/log/androluapro.log`（pro）、`docs/log/lide.log`（lide）——同一 test 工程 956 项 probe（历史资产，lide 仓库未收录）。
 - 临时对比日志统一存 `%TEMP%\opencode\`。
 
 ## 7. 库源码（可编译 .dex 进工程 libs/）
 
-`docs/reference/libs/`：BaiduMTJ、SmartRefreshLayout、umeng 等。
+`reference/libs/`：BaiduMTJ、SmartRefreshLayout、umeng 等。
 编译方法见 `TECHNIQUES.md §5`。
 
 ## 8. 模拟器坑位（2026-08-01 实测）

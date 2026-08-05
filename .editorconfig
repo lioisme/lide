@@ -16,7 +16,13 @@ max_line_length = 120
 ktlint_standard_indent = 4
 ktlint_standard_max-line-length = 120
 ktlint_standard_import-ordering = default
-ktlint_standard_no-wildcard-imports = enabled
+# 2026-08-05 决策（对齐 Compose 惯例）：ktlint 扩展至 :app 时发现全仓 40+ 文件使用
+# androidx.compose.* 通配 import、全部顶层 composable 为 PascalCase——这是本仓既定
+# 风格而非违规（ktlint 的 function-naming 不豁免 @Composable，且此前 :editor 从未
+# 真正全绿过，CI 不跑 :editor:lint 导致门禁休眠）。故关闭这两条规则，其余规则全保留；
+# 若未来引入非 Compose 纯逻辑模块，可再按目录粒度收紧。
+ktlint_standard_no-wildcard-imports = disabled
+ktlint_standard_function-naming = disabled
 ktlint_standard_final-newline = enabled
 ktlint_standard_no-trailing-spaces = enabled
 

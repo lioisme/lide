@@ -4,12 +4,12 @@
 
 # Build 4 APKs (x64/arm64 x Debug/Release) as independent variant tasks.
 # No merged/universal build. Signed with project-local keystore.
-# Env-neutral: writes only inside $PSScriptRoot; uses project gradlew;
+# Env-neutral: writes only inside the project; uses project gradlew;
 # SDK located via local.properties / ANDROID_HOME (read-only).
 
 $ErrorActionPreference = "Stop"
 
-$Root   = $PSScriptRoot
+$Root   = Split-Path $PSScriptRoot -Parent
 $App    = Join-Path $Root "app"
 $Gradle = Join-Path $Root "gradlew.bat"
 $ksProps = Join-Path $App "keystore.properties"
@@ -44,7 +44,11 @@ function Resolve-SdkDir {
     $loc = Join-Path $Root "local.properties"
     if (Test-Path -LiteralPath $loc) {
         foreach ($line in Get-Content -LiteralPath $loc) {
-            if ($line -like "sdk.dir=*") { return $line.Substring("sdk.dir=".Length).Trim() }
+            if ($line -like "sdk.dir=*") {
+                # local.properties 是 java.util.Properties 转义语法（\: 与 \\），需还原成 Windows 路径
+                $dir = $line.Substring("sdk.dir=".Length).Trim().Replace("\:", ":").Replace("\\", "\")
+                if (Test-Path -LiteralPath $dir) { return $dir }
+            }
         }
     }
     if ($env:ANDROID_HOME) { return $env:ANDROID_HOME }

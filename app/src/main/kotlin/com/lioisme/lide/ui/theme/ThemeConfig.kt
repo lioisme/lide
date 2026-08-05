@@ -1,7 +1,9 @@
 package com.lioisme.lide.ui.theme
 
 enum class AppearanceMode {
-    SYSTEM, LIGHT, DARK
+    SYSTEM,
+    LIGHT,
+    DARK,
 }
 
 data class ThemeConfig(

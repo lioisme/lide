@@ -6,33 +6,38 @@ import android.content.ContextWrapper
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.WrapText
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material.icons.filled.Extension
+import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.PhoneAndroid
-import androidx.compose.material.icons.filled.SpaceBar
+import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.Wallpaper
-import androidx.compose.material.icons.automirrored.filled.WrapText
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -42,32 +47,46 @@ import com.lioisme.lide.R
 import com.lioisme.lide.editor.TipIconButton
 import com.lioisme.lide.i18n.LocaleManager
 import com.lioisme.lide.ui.theme.*
-import androidx.compose.material.icons.filled.Extension
-import androidx.compose.material.icons.filled.GridView
-import androidx.compose.material.icons.filled.MenuBook
 
-private val colorOptions = listOf(
-    0xFFF44336, 0xFFE91E63, 0xFF9C27B0, 0xFF673AB7,
-    0xFF3F51B5, 0xFF2196F3, 0xFF03A9F4, 0xFF00BCD4,
-    0xFF009688, 0xFF4CAF50, 0xFF8BC34A, 0xFFCDDC39,
-    0xFFFFEB3B, 0xFFFFC107, 0xFFFF9800, 0xFFFF5722,
-    0xFF795548, 0xFF607D8B, 0xFF9E9E9E, 0xFF000000,
-)
+private val colorOptions =
+    listOf(
+        0xFFF44336,
+        0xFFE91E63,
+        0xFF9C27B0,
+        0xFF673AB7,
+        0xFF3F51B5,
+        0xFF2196F3,
+        0xFF03A9F4,
+        0xFF00BCD4,
+        0xFF009688,
+        0xFF4CAF50,
+        0xFF8BC34A,
+        0xFFCDDC39,
+        0xFFFFEB3B,
+        0xFFFFC107,
+        0xFFFF9800,
+        0xFFFF5722,
+        0xFF795548,
+        0xFF607D8B,
+        0xFF9E9E9E,
+        0xFF000000,
+    )
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
     onBack: () -> Unit,
+    onEditorSettingsClick: () -> Unit = {},
     onPermissionsClick: () -> Unit = {},
     onPluginsClick: () -> Unit = {},
     onManualClick: () -> Unit = {},
     onExamplesClick: () -> Unit = {},
     onApiBrowserClick: () -> Unit = {},
+    onHelpClick: () -> Unit = {},
 ) {
     val context = LocalContext.current
     val activity = context.resolveActivity()
     val config by SettingsManager.themeConfig.collectAsState()
-    val editorConfig by SettingsManager.editorConfig.collectAsState()
 
     var showAppearanceSheet by remember { mutableStateOf(false) }
     var showColorSheet by remember { mutableStateOf(false) }
@@ -75,12 +94,13 @@ fun SettingsScreen(
 
     val currentLanguageTag = LocaleManager.currentLanguageTag
 
-    val languageSubtitle = when (currentLanguageTag) {
-        "system" -> stringResource(R.string.system_default)
-        "en" -> stringResource(R.string.lang_en)
-        "zh" -> stringResource(R.string.lang_zh)
-        else -> currentLanguageTag
-    }
+    val languageSubtitle =
+        when (currentLanguageTag) {
+            LocaleManager.TAG_SYSTEM -> stringResource(R.string.system_default)
+            LocaleManager.TAG_EN -> stringResource(R.string.lang_en)
+            LocaleManager.TAG_ZH -> stringResource(R.string.lang_zh)
+            else -> currentLanguageTag
+        }
 
     Scaffold(
         topBar = {
@@ -91,34 +111,38 @@ fun SettingsScreen(
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.cd_back))
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                    titleContentColor = MaterialTheme.colorScheme.onSurface,
-                ),
+                colors =
+                    TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        titleContentColor = MaterialTheme.colorScheme.onSurface,
+                    ),
             )
         },
     ) { padding ->
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .padding(horizontal = 16.dp)
-                .verticalScroll(rememberScrollState()),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .padding(horizontal = 16.dp)
+                    .verticalScroll(rememberScrollState()),
         ) {
             Spacer(Modifier.height(8.dp))
             SettingsSection(stringResource(R.string.display)) {
                 SettingsItem(
-                    icon = when (config.appearanceMode) {
-                        AppearanceMode.SYSTEM -> Icons.Default.PhoneAndroid
-                        AppearanceMode.LIGHT -> Icons.Default.LightMode
-                        AppearanceMode.DARK -> Icons.Default.DarkMode
-                    },
+                    icon =
+                        when (config.appearanceMode) {
+                            AppearanceMode.SYSTEM -> Icons.Default.PhoneAndroid
+                            AppearanceMode.LIGHT -> Icons.Default.LightMode
+                            AppearanceMode.DARK -> Icons.Default.DarkMode
+                        },
                     title = stringResource(R.string.appearance),
-                    subtitle = when (config.appearanceMode) {
-                        AppearanceMode.SYSTEM -> stringResource(R.string.follow_system)
-                        AppearanceMode.LIGHT -> stringResource(R.string.light_mode)
-                        AppearanceMode.DARK -> stringResource(R.string.dark_mode)
-                    },
+                    subtitle =
+                        when (config.appearanceMode) {
+                            AppearanceMode.SYSTEM -> stringResource(R.string.follow_system)
+                            AppearanceMode.LIGHT -> stringResource(R.string.light_mode)
+                            AppearanceMode.DARK -> stringResource(R.string.dark_mode)
+                        },
                     onClick = { showAppearanceSheet = true },
                 )
                 SettingsItem(
@@ -130,27 +154,12 @@ fun SettingsScreen(
             }
             Spacer(Modifier.height(24.dp))
             SettingsSection(stringResource(R.string.editor)) {
-                SettingsToggleItem(
+                // D1：21 项设置全集统一收敛到编辑器设置页（EditorSettingsScreen）。
+                SettingsItem(
                     icon = Icons.AutoMirrored.Filled.WrapText,
-                    title = stringResource(R.string.word_wrap),
-                    subtitle = if (editorConfig.wordWrap) stringResource(R.string.word_wrap_on) else stringResource(R.string.word_wrap_off),
-                    checked = editorConfig.wordWrap,
-                    onCheckedChange = {
-                        SettingsManager.updateEditor(
-                            editorConfig.copy(wordWrap = it), context
-                        )
-                    },
-                )
-                SettingsToggleItem(
-                    icon = Icons.Default.SpaceBar,
-                    title = stringResource(R.string.show_whitespace),
-                    subtitle = if (editorConfig.showWhitespace) stringResource(R.string.whitespace_on) else stringResource(R.string.whitespace_off),
-                    checked = editorConfig.showWhitespace,
-                    onCheckedChange = {
-                        SettingsManager.updateEditor(
-                            editorConfig.copy(showWhitespace = it), context
-                        )
-                    },
+                    title = stringResource(R.string.editor_settings),
+                    subtitle = stringResource(R.string.editor_settings_subtitle),
+                    onClick = onEditorSettingsClick,
                 )
             }
             Spacer(Modifier.height(24.dp))
@@ -166,6 +175,12 @@ fun SettingsScreen(
                     title = stringResource(R.string.examples),
                     subtitle = stringResource(R.string.examples_subtitle),
                     onClick = onExamplesClick,
+                )
+                SettingsItem(
+                    icon = Icons.Default.Info,
+                    title = stringResource(R.string.help),
+                    subtitle = stringResource(R.string.help_subtitle),
+                    onClick = onHelpClick,
                 )
                 SettingsItem(
                     icon = Icons.Default.Language,
@@ -237,7 +252,10 @@ fun SettingsScreen(
 }
 
 @Composable
-private fun SettingsSection(title: String, content: @Composable ColumnScope.() -> Unit) {
+internal fun SettingsSection(
+    title: String,
+    content: @Composable ColumnScope.() -> Unit,
+) {
     Text(
         text = title,
         style = MaterialTheme.typography.titleSmall,
@@ -246,20 +264,27 @@ private fun SettingsSection(title: String, content: @Composable ColumnScope.() -
         modifier = Modifier.padding(start = 4.dp, bottom = 8.dp),
     )
     Card(
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f),
-        ),
+        colors =
+            CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f),
+            ),
         shape = MaterialTheme.shapes.medium,
     ) { Column { content() } }
 }
 
 @Composable
-private fun SettingsItem(icon: ImageVector, title: String, subtitle: String, onClick: () -> Unit) {
+internal fun SettingsItem(
+    icon: ImageVector,
+    title: String,
+    subtitle: String,
+    onClick: () -> Unit,
+) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick)
-            .padding(horizontal = 16.dp, vertical = 14.dp),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .clickable(onClick = onClick)
+                .padding(horizontal = 16.dp, vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(icon, null, tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(24.dp))
@@ -274,7 +299,7 @@ private fun SettingsItem(icon: ImageVector, title: String, subtitle: String, onC
 }
 
 @Composable
-private fun SettingsToggleItem(
+internal fun SettingsToggleItem(
     icon: ImageVector,
     title: String,
     subtitle: String,
@@ -282,10 +307,11 @@ private fun SettingsToggleItem(
     onCheckedChange: (Boolean) -> Unit,
 ) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = { onCheckedChange(!checked) })
-            .padding(horizontal = 16.dp, vertical = 10.dp),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .clickable(onClick = { onCheckedChange(!checked) })
+                .padding(horizontal = 16.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(icon, null, tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(24.dp))
@@ -302,6 +328,46 @@ private fun SettingsToggleItem(
     }
 }
 
+/** WP-018 数值步进行：范围钳制 + 首尾禁用（大字号/小字号边界防误操作）。 */
+@Composable
+internal fun SettingsStepperItem(
+    icon: ImageVector,
+    title: String,
+    valueText: String,
+    value: Int,
+    range: IntRange,
+    onValueChange: (Int) -> Unit,
+) {
+    Row(
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 6.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Icon(icon, null, tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(24.dp))
+        Spacer(Modifier.width(16.dp))
+        Column(modifier = Modifier.weight(1f)) {
+            Text(title, style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurface)
+            Text(valueText, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        }
+        Spacer(Modifier.width(8.dp))
+        FilledTonalIconButton(
+            onClick = { onValueChange((value - 1).coerceIn(range)) },
+            enabled = value > range.first,
+        ) {
+            Icon(Icons.Default.Remove, contentDescription = null, modifier = Modifier.size(18.dp))
+        }
+        Spacer(Modifier.width(4.dp))
+        FilledTonalIconButton(
+            onClick = { onValueChange((value + 1).coerceIn(range)) },
+            enabled = value < range.last,
+        ) {
+            Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(18.dp))
+        }
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun LanguageSheet(
@@ -312,31 +378,41 @@ private fun LanguageSheet(
     ModalBottomSheet(onDismissRequest = onDismiss) {
         Column(modifier = Modifier.padding(bottom = 32.dp)) {
             Text(
-                stringResource(R.string.language), style = MaterialTheme.typography.titleLarge,
+                stringResource(R.string.language),
+                style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
             )
             Spacer(Modifier.height(8.dp))
 
-            val localeData = listOf(
-                Triple("system", Icons.Default.PhoneAndroid, R.string.system_default),
-                Triple("en", Icons.Default.Language, R.string.lang_en),
-                Triple("zh", Icons.Default.Language, R.string.lang_zh),
-            )
+            val localeData =
+                listOf(
+                    Triple(LocaleManager.TAG_SYSTEM, Icons.Default.PhoneAndroid, R.string.system_default),
+                    Triple(LocaleManager.TAG_EN, Icons.Default.Language, R.string.lang_en),
+                    Triple(LocaleManager.TAG_ZH, Icons.Default.Language, R.string.lang_zh),
+                )
 
             localeData.forEach { (tag, icon, labelRes) ->
                 val label = stringResource(labelRes)
                 val selected = tag == currentTag
                 Row(
-                    modifier = Modifier.fillMaxWidth().clickable { onSelect(tag) }
-                        .padding(horizontal = 24.dp, vertical = 14.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .clickable { onSelect(tag) }
+                            .padding(horizontal = 24.dp, vertical = 14.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Icon(icon, null,
+                    Icon(
+                        icon,
+                        null,
                         tint = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.size(24.dp))
+                        modifier = Modifier.size(24.dp),
+                    )
                     Spacer(Modifier.width(16.dp))
-                    Text(label, style = MaterialTheme.typography.bodyLarge,
+                    Text(
+                        label,
+                        style = MaterialTheme.typography.bodyLarge,
                         fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal,
                         color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.weight(1f),
@@ -350,35 +426,47 @@ private fun LanguageSheet(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun AppearanceSheet(current: AppearanceMode, onSelect: (AppearanceMode) -> Unit, onDismiss: () -> Unit) {
+private fun AppearanceSheet(
+    current: AppearanceMode,
+    onSelect: (AppearanceMode) -> Unit,
+    onDismiss: () -> Unit,
+) {
     ModalBottomSheet(onDismissRequest = onDismiss) {
         Column(modifier = Modifier.padding(bottom = 32.dp)) {
             Text(
-                stringResource(R.string.appearance), style = MaterialTheme.typography.titleLarge,
+                stringResource(R.string.appearance),
+                style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
             )
             Spacer(Modifier.height(8.dp))
             AppearanceMode.entries.forEach { mode ->
-                val icon = when (mode) {
-                    AppearanceMode.SYSTEM -> Icons.Default.PhoneAndroid
-                    AppearanceMode.LIGHT -> Icons.Default.LightMode
-                    AppearanceMode.DARK -> Icons.Default.DarkMode
-                }
-                val label = when (mode) {
-                    AppearanceMode.SYSTEM -> stringResource(R.string.follow_system)
-                    AppearanceMode.LIGHT -> stringResource(R.string.light_mode)
-                    AppearanceMode.DARK -> stringResource(R.string.dark_mode)
-                }
+                val icon =
+                    when (mode) {
+                        AppearanceMode.SYSTEM -> Icons.Default.PhoneAndroid
+                        AppearanceMode.LIGHT -> Icons.Default.LightMode
+                        AppearanceMode.DARK -> Icons.Default.DarkMode
+                    }
+                val label =
+                    when (mode) {
+                        AppearanceMode.SYSTEM -> stringResource(R.string.follow_system)
+                        AppearanceMode.LIGHT -> stringResource(R.string.light_mode)
+                        AppearanceMode.DARK -> stringResource(R.string.dark_mode)
+                    }
                 val selected = mode == current
                 Row(
-                    modifier = Modifier.fillMaxWidth().clickable { onSelect(mode) }
-                        .padding(horizontal = 24.dp, vertical = 14.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .clickable { onSelect(mode) }
+                            .padding(horizontal = 24.dp, vertical = 14.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Icon(icon, null, tint = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(24.dp))
                     Spacer(Modifier.width(16.dp))
-                    Text(label, style = MaterialTheme.typography.bodyLarge,
+                    Text(
+                        label,
+                        style = MaterialTheme.typography.bodyLarge,
                         fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal,
                         color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.weight(1f),
@@ -402,29 +490,38 @@ private fun ColorSheet(
     ModalBottomSheet(onDismissRequest = onDismiss) {
         Column(modifier = Modifier.padding(bottom = 32.dp)) {
             Text(
-                stringResource(R.string.theme_color), style = MaterialTheme.typography.titleLarge,
+                stringResource(R.string.theme_color),
+                style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
             )
             Spacer(Modifier.height(8.dp))
 
             Row(
-                modifier = Modifier.fillMaxWidth().clickable { onSelectWallpaper() }
-                    .padding(horizontal = 24.dp, vertical = 14.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .clickable { onSelectWallpaper() }
+                        .padding(horizontal = 24.dp, vertical = 14.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Icon(Icons.Default.Wallpaper, null,
+                Icon(
+                    Icons.Default.Wallpaper,
+                    null,
                     tint = if (useWallpaper) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.size(24.dp))
+                    modifier = Modifier.size(24.dp),
+                )
                 Spacer(Modifier.width(16.dp))
                 Column(modifier = Modifier.weight(1f)) {
-                    Text(stringResource(R.string.system_wallpaper),
+                    Text(
+                        stringResource(R.string.system_wallpaper),
                         style = MaterialTheme.typography.bodyLarge,
                         fontWeight = if (useWallpaper) FontWeight.SemiBold else FontWeight.Normal,
                         color = if (useWallpaper) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
                     )
                     if (useWallpaper) {
-                        Text(stringResource(R.string.wallpaper_desc),
+                        Text(
+                            stringResource(R.string.wallpaper_desc),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
@@ -441,8 +538,11 @@ private fun ColorSheet(
             ) {
                 Icon(Icons.Default.Palette, null, tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(24.dp))
                 Spacer(Modifier.width(16.dp))
-                Text(stringResource(R.string.pick_accent), style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurface)
+                Text(
+                    stringResource(R.string.pick_accent),
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface,
+                )
             }
 
             LazyVerticalGrid(
@@ -455,21 +555,27 @@ private fun ColorSheet(
                     val color = Color(argb)
                     val isSelected = !useWallpaper && color == selectedColor
                     Box(
-                        modifier = Modifier
-                            .aspectRatio(1f)
-                            .clip(CircleShape)
-                            .background(color)
-                            .then(
-                                if (isSelected) Modifier.border(3.dp, MaterialTheme.colorScheme.onSurface, CircleShape)
-                                else Modifier.border(1.dp, MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f), CircleShape)
-                            )
-                            .clickable { onSelectColor(argb) },
+                        modifier =
+                            Modifier
+                                .aspectRatio(1f)
+                                .clip(CircleShape)
+                                .background(color)
+                                .then(
+                                    if (isSelected) {
+                                        Modifier.border(3.dp, MaterialTheme.colorScheme.onSurface, CircleShape)
+                                    } else {
+                                        Modifier.border(1.dp, MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f), CircleShape)
+                                    },
+                                ).clickable { onSelectColor(argb) },
                         contentAlignment = Alignment.Center,
                     ) {
                         if (isSelected) {
-                            Icon(Icons.Default.Check, null,
+                            Icon(
+                                Icons.Default.Check,
+                                null,
                                 tint = if (color.luminance() > 0.5f) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.surface,
-                                modifier = Modifier.size(20.dp))
+                                modifier = Modifier.size(20.dp),
+                            )
                         }
                     }
                 }
@@ -478,12 +584,9 @@ private fun ColorSheet(
     }
 }
 
-private fun Color.luminance(): Float {
-    return 0.299f * red + 0.587f * green + 0.114f * blue
-}
-
-private tailrec fun Context.resolveActivity(): Activity? = when (this) {
-    is Activity -> this
-    is ContextWrapper -> baseContext.resolveActivity()
-    else -> null
-}
+private tailrec fun Context.resolveActivity(): Activity? =
+    when (this) {
+        is Activity -> this
+        is ContextWrapper -> baseContext.resolveActivity()
+        else -> null
+    }

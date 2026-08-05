@@ -23,29 +23,32 @@ import kotlinx.coroutines.withTimeoutOrNull
  * clickable / combinedClickable 叠加；按住所时长 ≥ 系统长按超时（与原生长按
  * 判定同源）时触发一次振动，短按 / 提前取消不触发。
  */
-fun Modifier.pressAndHoldHapticFeedback(): Modifier = composed {
-    val haptics = LocalHapticFeedback.current
-    val view = LocalView.current
-    val longPressTimeout = remember(view) {
-        ViewConfiguration.getLongPressTimeout().toLong()
-    }
-    pointerInput(longPressTimeout) {
-        awaitEachGesture {
-            val down = awaitFirstDown(requireUnconsumed = false)
-            val releasedInTime = try {
-                withTimeoutOrNull(longPressTimeout) {
-                    while (true) {
-                        val event = awaitPointerEvent()
-                        val change = event.changes.firstOrNull { it.id == down.id } ?: break
-                        if (!change.pressed) break
-                    }
-                } != null
-            } catch (_: CancellationException) {
-                true
+fun Modifier.pressAndHoldHapticFeedback(): Modifier =
+    composed {
+        val haptics = LocalHapticFeedback.current
+        val view = LocalView.current
+        val longPressTimeout =
+            remember(view) {
+                ViewConfiguration.getLongPressTimeout().toLong()
             }
-            if (!releasedInTime) {
-                haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+        pointerInput(longPressTimeout) {
+            awaitEachGesture {
+                val down = awaitFirstDown(requireUnconsumed = false)
+                val releasedInTime =
+                    try {
+                        withTimeoutOrNull(longPressTimeout) {
+                            while (true) {
+                                val event = awaitPointerEvent()
+                                val change = event.changes.firstOrNull { it.id == down.id } ?: break
+                                if (!change.pressed) break
+                            }
+                        } != null
+                    } catch (_: CancellationException) {
+                        true
+                    }
+                if (!releasedInTime) {
+                    haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+                }
             }
         }
     }
-}

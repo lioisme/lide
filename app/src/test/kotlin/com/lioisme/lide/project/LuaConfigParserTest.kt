@@ -9,8 +9,8 @@ import org.junit.Test
  * LuaConfigParser：init.lua 结构化读写（WP-017 底座；WP-003/004 依赖）。
  */
 class LuaConfigParserTest {
-
-    private val sample = """
+    private val sample =
+        """
         -- lide project init
         appname = "demo"
         appver = "1.0"
@@ -19,7 +19,7 @@ class LuaConfigParserTest {
         pages = {"main", "page_calc"}
         user_permission = { "CAMERA", "RECORD_AUDIO" }
         -- trailing comment stays
-    """.trimIndent()
+        """.trimIndent()
 
     @Test
     fun `解析顶层字段`() {
@@ -43,11 +43,11 @@ class LuaConfigParserTest {
     fun `数组字段解析`() {
         assertEquals(
             listOf("main", "page_calc"),
-            LuaConfigParser.stringArrayField(sample, "pages")
+            LuaConfigParser.stringArrayField(sample, "pages"),
         )
         assertEquals(
             listOf("CAMERA", "RECORD_AUDIO"),
-            LuaConfigParser.stringArrayField(sample, "user_permission")
+            LuaConfigParser.stringArrayField(sample, "user_permission"),
         )
         assertTrue(LuaConfigParser.stringArrayField(sample, "missing").isEmpty())
     }
@@ -66,13 +66,14 @@ class LuaConfigParserTest {
 
     @Test
     fun `长注释与长字符串内的字段不命中`() {
-        val content = """
+        val content =
+            """
             --[[ appname = "incomment" ]]
             local t = [[
                 appname = "instring"
             ]]
             appname = "real"
-        """.trimIndent()
+            """.trimIndent()
         assertEquals("real", LuaConfigParser.stringField(content, "appname"))
     }
 
@@ -84,16 +85,17 @@ class LuaConfigParserTest {
 
     @Test
     fun `多行数组字段解析`() {
-        val content = """
+        val content =
+            """
             user_permission = {
                 "CAMERA",
                 "WRITE_SETTINGS",
                 INSTALL_SHORTCUT,
             }
-        """.trimIndent()
+            """.trimIndent()
         assertEquals(
             listOf("CAMERA", "WRITE_SETTINGS", "INSTALL_SHORTCUT"),
-            LuaConfigParser.stringArrayField(content, "user_permission")
+            LuaConfigParser.stringArrayField(content, "user_permission"),
         )
     }
 
@@ -115,7 +117,7 @@ class LuaConfigParserTest {
         val after = LuaConfigParser.setStringArrayField(sample, "user_permission", listOf("CAMERA"))
         assertEquals(
             listOf("CAMERA"),
-            LuaConfigParser.stringArrayField(after, "user_permission")
+            LuaConfigParser.stringArrayField(after, "user_permission"),
         )
         // 其余字段不受影响
         assertEquals("demo", LuaConfigParser.stringField(after, "appname"))
@@ -137,7 +139,7 @@ class LuaConfigParserTest {
     fun `裸标识符数组项`() {
         assertEquals(
             listOf("CAMERA"),
-            LuaConfigParser.stringArrayField("user_permission = { CAMERA }\n", "user_permission")
+            LuaConfigParser.stringArrayField("user_permission = { CAMERA }\n", "user_permission"),
         )
     }
 

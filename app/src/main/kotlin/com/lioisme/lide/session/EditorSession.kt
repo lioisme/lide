@@ -13,6 +13,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.coroutines.CoroutineContext
+
+/** 打开的标签 [Content] 缓存上限：超出后按 LRU 逐出「未选中且非脏」标签并释放其 undo 栈。 */
+private const val CONTENT_CACHE_CAP = 12
 
 /**
  * 编辑器会话（宿主侧，:app）。
@@ -34,8 +38,11 @@ import kotlinx.coroutines.withContext
 class EditorSession(
     private val project: Project,
     private val projectManager: ProjectManager,
+    // 线程上下文可注入：默认走「主线程状态写 + IO 线程文件读写」的标准契约，
+    // 单测传入虚拟调度器获得确定性时序（无真实 IO 线程竞态）。
+    private val mainDispatcher: CoroutineContext = Dispatchers.Main.immediate,
+    private val ioDispatcher: CoroutineContext = Dispatchers.IO,
 ) {
-
     data class TabState(
         val fileName: String,
         val dirty: Boolean,
@@ -51,9 +58,11 @@ class EditorSession(
         val content: Content? = null,
     )
 
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+    private val scope = CoroutineScope(SupervisorJob() + mainDispatcher)
     private val cacheLock = Any()
-    private val contents = LinkedHashMap<String, Content>(16)
+
+    // 访问序 LRU：最近使用的排尾部，逐出时从头扫描。
+    private val contents = LinkedHashMap<String, Content>(16, 0.75f, true)
 
     private val _tabs = MutableStateFlow<List<TabState>>(emptyList())
     val tabs: StateFlow<List<TabState>> = _tabs.asStateFlow()
@@ -66,14 +75,15 @@ class EditorSession(
     val editTick: StateFlow<Long> = _editTick.asStateFlow()
 
     /** 启动：读文件列表、打开主文件并预载 Content。 */
-    suspend fun initialize() = withContext(Dispatchers.IO) {
-        val files = projectManager.listProjectFiles(project)
-        if (files.isEmpty()) return@withContext
-        val main = project.mainFile.takeIf { it in files } ?: files.first()
-        val content = loadContent(main)
-        _tabs.value = listOf(TabState(main, dirty = false, canUndo = false, canRedo = false))
-        _selection.value = Selection(main, content)
-    }
+    suspend fun initialize() =
+        withContext(ioDispatcher) {
+            val files = projectManager.listProjectFiles(project)
+            if (files.isEmpty()) return@withContext
+            val main = project.mainFile.takeIf { it in files } ?: files.first()
+            val content = loadContent(main)
+            _tabs.value = listOf(TabState(main, dirty = false, canUndo = false, canRedo = false))
+            _selection.value = Selection(main, content)
+        }
 
     private var released = false
 
@@ -83,38 +93,60 @@ class EditorSession(
      *
      * 保存与取消在同一协程内串行，保证不丢盘；与 LuaEditor onRelease 的
      * [flushSelectedDirtyAsync] 双路径对同一脏标签为幂等写，无竞态冲突。
+     * 作用域取消经 flush 协程的 invokeOnCompletion 挂接：先完成全部脏标签落盘，
+     * 再取消 scope（不在自身协程内 self-cancel，P3-2 卫生）。
      */
     fun release() {
         if (released) return
         released = true
-        scope.launch {
-            val dirty = _tabs.value.filter { it.dirty }.map { it.fileName }
-            dirty.forEach { flushDirty(it) }
-            synchronized(cacheLock) { contents.clear() }
-            scope.cancel()
-        }
+        val flushJob =
+            scope.launch {
+                val dirty = _tabs.value.filter { it.dirty }.map { it.fileName }
+                dirty.forEach { flushDirty(it) }
+                synchronized(cacheLock) { contents.clear() }
+            }
+        flushJob.invokeOnCompletion { scope.cancel() }
     }
 
     /** 打开（或选中）标签：IO 读盘 + IO 线程构造 Content 后入缓存，再切换。 */
     suspend fun openTab(fileName: String) {
-        val content = withContext(Dispatchers.IO) { loadContent(fileName) }
+        val content = withContext(ioDispatcher) { loadContent(fileName) }
         if (_tabs.value.none { it.fileName == fileName }) {
             _tabs.value = _tabs.value + TabState(fileName, dirty = false, canUndo = false, canRedo = false)
         }
         select(fileName, content)
     }
 
-    /** 切换选中（内容必须已在缓存——所有打开过的标签都满足）。 */
+    /**
+     * 切换选中：缓存命中直接切换；被 LRU 逐出的标签先置空选中（编辑器区转圈）
+     * 再后台重载，重载期间标签被关闭或用户切到其他标签则丢弃结果（最后点击生效）。
+     */
     fun select(fileName: String) {
-        val content = synchronized(cacheLock) { contents[fileName] } ?: return
-        select(fileName, content)
+        val cached = synchronized(cacheLock) { contents[fileName] }
+        if (cached != null) {
+            select(fileName, cached)
+            return
+        }
+        _selection.value = Selection(fileName, null)
+        scope.launch {
+            val reloaded = withContext(ioDispatcher) { loadContent(fileName) }
+            val current = _selection.value.file
+            if ((current == null || current == fileName) && _tabs.value.any { it.fileName == fileName }) {
+                _selection.value = Selection(fileName, reloaded)
+            } else {
+                synchronized(cacheLock) { contents.remove(fileName) }
+            }
+        }
     }
 
     /**
      * 拖拽排序（WP-003）：仅重排标签列表；选中按 fileName 语义自动跟随，
      * Content 缓存按文件名键控，重排不触碰。仅主线程调用。
      */
-    fun moveTab(from: Int, to: Int) {
+    fun moveTab(
+        from: Int,
+        to: Int,
+    ) {
         val current = _tabs.value
         if (from !in current.indices || to !in current.indices || from == to) return
         val mutable = current.toMutableList()
@@ -123,7 +155,10 @@ class EditorSession(
         _tabs.value = mutable
     }
 
-    private fun select(fileName: String, content: Content) {
+    private fun select(
+        fileName: String,
+        content: Content,
+    ) {
         _selection.value = Selection(fileName, content)
     }
 
@@ -137,22 +172,27 @@ class EditorSession(
         if (index < 0) return
         _editTick.value++
         if (current[index].dirty) return
-        _tabs.value = current.toMutableList().apply {
-            this[index] = current[index].copy(dirty = true)
-        }
+        _tabs.value =
+            current.toMutableList().apply {
+                this[index] = current[index].copy(dirty = true)
+            }
     }
 
     /** undo/redo 能力变化：仅在值变化时发射（needsUpdate 判定）。 */
-    fun onUndoRedoChanged(canUndo: Boolean, canRedo: Boolean) {
+    fun onUndoRedoChanged(
+        canUndo: Boolean,
+        canRedo: Boolean,
+    ) {
         val selected = _selection.value.file ?: return
         val current = _tabs.value
         val index = current.indexOfFirst { it.fileName == selected }
         if (index < 0) return
         val tab = current[index]
         if (tab.canUndo == canUndo && tab.canRedo == canRedo) return
-        _tabs.value = current.toMutableList().apply {
-            this[index] = tab.copy(canUndo = canUndo, canRedo = canRedo)
-        }
+        _tabs.value =
+            current.toMutableList().apply {
+                this[index] = tab.copy(canUndo = canUndo, canRedo = canRedo)
+            }
     }
 
     /**
@@ -194,6 +234,43 @@ class EditorSession(
         close(fileName)
     }
 
+    /**
+     * 磁盘文件被删除时同步标签（WP-005）：用户已在确认框确认删除，
+     * 丢弃该标签的缓存并关闭（不落盘），防自动保存复活已删文件。
+     */
+    fun removeTab(fileName: String) {
+        synchronized(cacheLock) { contents.remove(fileName) }
+        close(fileName)
+    }
+
+    /**
+     * 磁盘文件被重命名时同步标签（WP-005）：先落盘脏内容（旧路径），
+     * 再将 Content 缓存换键、更新标签名与选中状态（脏标记随落盘清除）。
+     * 仅主线程调用；[oldName]/[newName] 为工程相对路径。
+     */
+    fun renameTab(
+        oldName: String,
+        newName: String,
+    ) {
+        scope.launch {
+            flushDirty(oldName)
+            val current = _tabs.value
+            val index = current.indexOfFirst { it.fileName == oldName }
+            if (index < 0) return@launch
+            val content = synchronized(cacheLock) { contents.remove(oldName) }
+            if (content != null) {
+                synchronized(cacheLock) { contents[newName] = content }
+            }
+            _tabs.value =
+                current.toMutableList().apply {
+                    this[index] = current[index].copy(fileName = newName)
+                }
+            if (_selection.value.file == oldName) {
+                _selection.value = Selection(newName, content ?: return@launch)
+            }
+        }
+    }
+
     /** 兜底保存（onRelease / onBack）：在会话作用域上异步执行，不随页面销毁取消。 */
     fun flushSelectedDirtyAsync() {
         flushDirtyAsync(_selection.value.file)
@@ -214,16 +291,18 @@ class EditorSession(
         val tab = _tabs.value.firstOrNull { it.fileName == fileName } ?: return
         if (!tab.dirty) return
         val content = synchronized(cacheLock) { contents[fileName] } ?: return
-        val saved = withContext(Dispatchers.IO) {
-            projectManager.saveProjectScript(project, fileName, content.toString())
-        }
+        val saved =
+            withContext(ioDispatcher) {
+                projectManager.saveProjectScript(project, fileName, content.toString())
+            }
         if (saved) {
             val current = _tabs.value
             val index = current.indexOfFirst { it.fileName == fileName }
             if (index >= 0 && current[index].dirty) {
-                _tabs.value = current.toMutableList().apply {
-                    this[index] = current[index].copy(dirty = false)
-                }
+                _tabs.value =
+                    current.toMutableList().apply {
+                        this[index] = current[index].copy(dirty = false)
+                    }
             }
         }
     }
@@ -254,7 +333,29 @@ class EditorSession(
         val content = Content(text)
         synchronized(cacheLock) {
             contents[fileName] = content
+            trimCache()
         }
         return content
+    }
+
+    /**
+     * LRU 逐出：仅逐出「未选中且非脏」的标签内容。选中与脏标签绝不逐出，
+     * 保证无未保存内容丢失；被逐出标签的 undo 历史随内容一并释放（再次选中时
+     * 从磁盘重载、undo 栈重置）——仅在打开标签数超过 [CONTENT_CACHE_CAP] 时发生。
+     * 单遍扫描即终止：每轮要么前进迭代器，要么因上限达成退出。
+     */
+    private fun trimCache() {
+        synchronized(cacheLock) {
+            if (contents.size <= CONTENT_CACHE_CAP) return
+            val selected = _selection.value.file
+            val iterator = contents.entries.iterator()
+            while (iterator.hasNext() && contents.size > CONTENT_CACHE_CAP) {
+                val (fileName, _) = iterator.next()
+                if (fileName == selected) continue
+                val tab = _tabs.value.firstOrNull { it.fileName == fileName }
+                if (tab == null || tab.dirty) continue
+                iterator.remove()
+            }
+        }
     }
 }

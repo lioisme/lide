@@ -6,23 +6,24 @@
 
 ---
 
-## 1. 总体拓扑（单进程三层）
+## 1. 总体拓扑（单进程多层）
 
 ```
-settings.gradle.kts: :app + :androlua + :editor
+settings.gradle.kts: :app + :androlua + :editor + :sora-editor（:sora-editor:editor + :sora-editor:language-textmate，vendored 于 third_party/sora-editor）
 ```
 
 | 层 | 模块 | 包 | 职责 |
 |----|------|----|------|
 | IDE 宿主 | `:app` | `com.lioisme.lide` | Compose UI、项目管理、运行拉起、权限、设置持久化、打包器 |
-| 引擎运行时 | `:androlua` | `com.androlua` / `com.luajava` / `com.android.cglib`（Java 源码）+ 少量纯 Kotlin 工具 | Lua 运行时（继承自 AndroLua_pro 4.4.2 源码，编译进主 DEX） |
+| 引擎运行时 | `:androlua` | `com.androlua` / `com.luajava` / `com.android.cglib`（纯 Java 源码，402 文件）+ 少量纯 Kotlin 工具 | Lua 运行时（继承自 AndroLua_pro 4.4.2 源码，编译进主 DEX） |
 | 编辑器 | `:editor` | `com.lioisme.lide.editor` | 纯文本级能力：行级词法诊断、补全、高亮、搜索、标签页、文件树 |
+| 编辑器底座 | `:sora-editor` | `io.github.rosemoe.sora`（vendored 0.24.6，LGPL-2.1） | 编辑器核心（editor 模块 + TextMate 语言支持） |
 
 运行时模型：**单进程**（`EngineBridge` → `EngineActivity` 同进程 Activity 栈直启），无独立进程、无 engine.dex 动态加载。
 
 ---
 
-## 2. 架构边界 R1~R4（评审硬门槛）
+## 2. 架构边界 R1~R5（评审硬门槛）
 
 | 规则 | 内容 |
 |------|------|
@@ -30,6 +31,7 @@ settings.gradle.kts: :app + :androlua + :editor
 | **R2** | Lua 编译与运行能力属于 `:app`（`EngineBridge` → `EngineActivity`，同进程）。编辑器只做文本级能力，不做运行时语义 |
 | **R3** | 新增编辑器功能默认放 `:editor`；宿主专属逻辑（文件、权限、运行时、设置）放 `:app` |
 | **R4** | `:editor` 不得读取 `:app` 状态/类型；宿主一律通过参数/接口注入 |
+| **R5** | 仓库禁止任何二进制原生产物入库（`.so`/`.dex`/`.jar`/`.zip`）；原生引擎唯一形态是源码（`app/src/main/cpp/`，AGP `externalNativeBuild`/ndk-build 构建，NDK 29.0.14206865）；无 jniLibs 缓存、无 rebuild 脚本 |
 
 历史教训（`EDITOR_CRASH_ANALYSIS_REPORT.md`）：早期 `LuaDiagnostics` 从宿主导入 `com.luajava.LuaStateFactory` 进打字热路径，
 导致 `lua_close(NULL)` SIGSEGV / GBK `NewStringUTF` SIGABRT 双崩溃向量，属**边界违规**而非引擎缺陷。

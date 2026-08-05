@@ -58,19 +58,21 @@ fun ApiClassDetailScreen(
     // 详情三态（性能审计 R5d）：Loading / Loaded / Failed —— 反射失败显示明确错误 + 重试，
     // 不再误用「无匹配结果」文案并无限转圈。retryTick 递增触发 produceState 重启重试。
     var retryTick by remember { mutableStateOf(0) }
-    val detailState = produceState<DetailUiState>(
-        initialValue = DetailUiState.Loading,
-        className,
-        retryTick,
-    ) {
-        value = try {
-            withContext(Dispatchers.IO) { ApiReflection.reflect(className) }
-                ?.let { DetailUiState.Loaded(it) }
-                ?: DetailUiState.Failed
-        } catch (_: Throwable) {
-            DetailUiState.Failed
+    val detailState =
+        produceState<DetailUiState>(
+            initialValue = DetailUiState.Loading,
+            className,
+            retryTick,
+        ) {
+            value =
+                try {
+                    withContext(Dispatchers.IO) { ApiReflection.reflect(className) }
+                        ?.let { DetailUiState.Loaded(it) }
+                        ?: DetailUiState.Failed
+                } catch (_: Throwable) {
+                    DetailUiState.Failed
+                }
         }
-    }
     var query by rememberSaveable { mutableStateOf("") }
 
     Scaffold(
@@ -90,24 +92,27 @@ fun ApiClassDetailScreen(
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.cd_back))
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                    titleContentColor = MaterialTheme.colorScheme.onSurface,
-                ),
+                colors =
+                    TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        titleContentColor = MaterialTheme.colorScheme.onSurface,
+                    ),
             )
         },
     ) { padding ->
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(padding),
         ) {
             OutlinedTextField(
                 value = query,
                 onValueChange = { query = it },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
                 placeholder = { Text(stringResource(R.string.api_member_filter_hint)) },
                 leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
                 singleLine = true,
@@ -149,14 +154,15 @@ fun ApiClassDetailScreen(
                 is DetailUiState.Loaded -> {
                     val detail = state.detail
                     val q = query.trim()
-                    val titles = ApiGroupTitles(
-                        constructors = stringResource(R.string.api_group_constructors),
-                        events = stringResource(R.string.api_group_events),
-                        getters = stringResource(R.string.api_group_getters),
-                        setters = stringResource(R.string.api_group_setters),
-                        fields = stringResource(R.string.api_group_fields),
-                        methods = stringResource(R.string.api_group_methods),
-                    )
+                    val titles =
+                        ApiGroupTitles(
+                            constructors = stringResource(R.string.api_group_constructors),
+                            events = stringResource(R.string.api_group_events),
+                            getters = stringResource(R.string.api_group_getters),
+                            setters = stringResource(R.string.api_group_setters),
+                            fields = stringResource(R.string.api_group_fields),
+                            methods = stringResource(R.string.api_group_methods),
+                        )
                     // 成员元数据仅随 detail/titles 变化解析一次（memberNameOf 每成员一次 + 预小写）；
                     // 击键过滤只做一趟 nameLower.contains，零字符串解析零逐成员转换（性能审计 R4）。
                     val memberGroups = remember(detail, titles) { buildMemberGroups(detail, titles) }
@@ -196,14 +202,24 @@ fun ApiClassDetailScreen(
 }
 
 private sealed interface DetailRow {
-    data class Group(val title: String) : DetailRow
-    data class Member(val text: String, val memberName: String) : DetailRow
+    data class Group(
+        val title: String,
+    ) : DetailRow
+
+    data class Member(
+        val text: String,
+        val memberName: String,
+    ) : DetailRow
 }
 
 /** 详情反射三态（性能审计 R5d）：Loading 转圈 / Loaded 内容 / Failed 错误 + 重试。 */
 private sealed interface DetailUiState {
     data object Loading : DetailUiState
-    data class Loaded(val detail: ApiReflection.Detail) : DetailUiState
+
+    data class Loaded(
+        val detail: ApiReflection.Detail,
+    ) : DetailUiState
+
     data object Failed : DetailUiState
 }
 
@@ -225,12 +241,19 @@ private data class MemberMeta(
 )
 
 /** 成员元数据预索引：memberNameOf 每成员仅解析一次（性能审计 R4）。分组顺序与 pro 一致。 */
-private fun buildMemberGroups(detail: ApiReflection.Detail, titles: ApiGroupTitles): List<Pair<String, List<MemberMeta>>> {
-    fun group(title: String, items: List<String>): Pair<String, List<MemberMeta>> =
-        title to items.map { item ->
-            val name = memberNameOf(item)
-            MemberMeta(item, name, name.lowercase())
-        }
+private fun buildMemberGroups(
+    detail: ApiReflection.Detail,
+    titles: ApiGroupTitles,
+): List<Pair<String, List<MemberMeta>>> {
+    fun group(
+        title: String,
+        items: List<String>,
+    ): Pair<String, List<MemberMeta>> =
+        title to
+            items.map { item ->
+                val name = memberNameOf(item)
+                MemberMeta(item, name, name.lowercase())
+            }
     return listOf(
         group(titles.constructors, detail.constructors),
         group(titles.events, detail.events),
@@ -275,21 +298,21 @@ private fun memberNameOf(signature: String): String {
     return parts.lastOrNull() ?: signature
 }
 
-/** 简单名派生：与列表行一致——内部类优先取最后一个 `$` 之后，否则取最后一个 `.` 之后。 */
-private fun simpleNameOf(signature: String): String {
-    val dollar = signature.lastIndexOf('$')
-    val cut = if (dollar >= 0) dollar else signature.lastIndexOf('.')
-    return if (cut >= 0) signature.substring(cut + 1) else signature
-}
+// simpleNameOf 复用 ApiBrowserComponents.kt 的 internal 实现（同包，列表行语义一致）。
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun MemberRow(text: String, onClick: () -> Unit, onLongClick: () -> Unit) {
+private fun MemberRow(
+    text: String,
+    onClick: () -> Unit,
+    onLongClick: () -> Unit,
+) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .combinedClickable(onClick = onClick, onLongClick = onLongClick)
-            .padding(horizontal = 4.dp, vertical = 8.dp),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .combinedClickable(onClick = onClick, onLongClick = onLongClick)
+                .padding(horizontal = 4.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
@@ -304,7 +327,10 @@ private fun MemberRow(text: String, onClick: () -> Unit, onLongClick: () -> Unit
     HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f))
 }
 
-private fun copy(context: Context, text: String) {
+private fun copy(
+    context: Context,
+    text: String,
+) {
     try {
         val cm = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         cm.setPrimaryClip(ClipData.newPlainText("lide-api", text))

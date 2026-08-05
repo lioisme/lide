@@ -14,22 +14,23 @@ docs/
 ├── TASKS.md             # 任务看板（做到哪 / 下一步）
 ├── PROGRESS.md           # 引擎迁移 WP 台账（自根目录迁入，2026-08）
 ├── WHITEPAPER.md         # 产品与架构白皮书（自根目录迁入，2026-08）
-├── kb/                  # 知识库（是什么 / 为什么 / 在哪改）
+├── kb/                  # 知识库（是什么 / 为什么 / 在哪改）— 唯一事实来源
 │   ├── README.md        #   知识库总索引 + 文档状态矩阵（最权威）
 │   ├── ARCHITECTURE.md  #   架构：R1~R4 边界、编辑器/引擎约定
 │   ├── ENGINE_RUNTIME.md#   引擎与运行时碎片事实
 │   ├── EDITOR.md        #   编辑器（sora 集成）知识
 │   ├── DECISIONS.md     #   关键决策时间线（含反转决策）
 │   ├── ROADMAP.md       #   进行中/计划中工作路线
-│   ├── project/         #   项目事实性资料（overview/architecture/code-map/…）
+│   ├── project/         #   项目事实性资料（overview、changelog 维护中）
 │   ├── androlua-lua/    #   Lua 工程开发知识库（独立子库）
 │   └── androlua-community/ # 社区帖子训练知识库（独立子库：catalog/positives/negatives/training）
-├── completed/            # 已完成文档（行动项落地 / 审计已定案）
-├── in-progress/          # 进行中工作单 / 报告
-├── planned/              # 计划中 / 研究完成未排期 / 历史草案
-├── log/                  # 探针测试日志（数据资产）
+├── in-progress/          # 进行中工作单 / 报告（2 篇）
+├── planned/              # 计划中 / 研究完成未排期（4 篇）
+├── discard/              # 丢弃区（唯一出口）：已完成/过时/无价值文档 41 篇，只追溯不维护
 └── reference/            # 参考项目基线 / 社区语料（git ignored，只读，不提交）
 ```
+
+> `docs/log/`（探针日志）为历史资产，未收录进本仓库。
 
 ## 2. 检索索引
 
@@ -47,14 +48,16 @@ docs/
 
 ## 3. 文档维护约定
 
-1. **分类即状态**：新文档按状态落入 `completed/`、`in-progress/`、`planned/`；
-   状态变化时 `git mv` 到新目录，并同步更新 [kb/README.md](kb/README.md) §2 状态矩阵。
+1. **分类即状态**：新文档按状态落入 `in-progress/`、`planned/`；
+   状态变化时 `git mv` 到新目录，并同步更新 [kb/README.md](kb/README.md) §2 状态矩阵；
+   **文档全部完成或已过时后统一 `git mv` 到 [discard/](discard/README.md)（唯一丢弃出口，只追溯不维护）**。
 2. **路径必须真实**：所有引用的文件路径必须在工作区真实存在；改动路径后需复核本文档与 kb 索引。
 3. **新文档必须登记**：新增文档后必须在 [kb/README.md](kb/README.md) 登记一行（一句话 + 日期 + 关联 WP）。
 4. **决策反转**：决策类结论（含反转）统一入 [DECISIONS.md](kb/DECISIONS.md)，源文档保留原文并交叉引用。
 5. **参考基线只读**：`reference/` 下的参考项目与语料禁止修改、禁止 `git add`；
-   根目录上游库归档 `third_party/`（`androlua`/`prebuilt`/`patches`）同样只读。
+   根目录上游库归档 `third_party/`（`androlua`/`patches`/`sora-editor`）同样只读。
 6. **root 文档职责**：根目录仅保留源码、构建脚本与仓库配置（`README.md`、`AGENTS.md`、Gradle 骨架）；脚本一律入 `scripts/`（打包/示例/回归）；文档一律入 `docs/`（进度台账 `PROGRESS.md`、白皮书 `WHITEPAPER.md` 亦驻 `docs/` 根），不再新增散落文档。
+7. **任务文档生命周期（Agent 必守）**：每完成一项任务，在任务文档内对应条目标记「（已完成）」并备注工作内容/日期/验收证据；整份任务文档完成后 `git mv` 到 `discard/` 并更新本文档、[kb/README.md](kb/README.md) §2 与 [discard/README.md](discard/README.md) §3 清单。
 
 ## 4. 根目录入口文档
 

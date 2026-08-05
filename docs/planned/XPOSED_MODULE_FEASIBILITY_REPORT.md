@@ -3,7 +3,7 @@
 | 项目 | 内容 |
 |------|------|
 | 报告编号 | LIDE-AUDIT-2026-001 |
-| 审计对象 | lide 工程（`/`）+ AndroLua Pro 源码（`docs/AndroLua_pro-master/`） |
+| 审计对象 | lide 工程（`/`）+ AndroLua Pro 源码（已收纳：`third_party/androlua/`、`app/src/main/cpp/`、`app/src/main/assets/`） |
 | 审计日期 | 2026-07-31 |
 | 审计方式 | 源码阅读 + 全量检索 + 生态事实核验（Xposed/LSPosed 官方文档与社区资料） |
 | 结论 | **技术可行**，但需要为 lide 新增"Xposed 模块构建模式"（含 API 桥、骨架 DEX、签名升级、清单注入），并对现有打包器设计做 4 项增强 |
@@ -13,7 +13,7 @@
 ## 1. 结论摘要（TL;DR）
 
 1. **Xposed 模块的本质是一个普通 APK + 3 条 `<meta-data>` 声明 + `assets/xposed_init` 入口清单 + 一个实现 `IXposedHookLoadPackage` 的 Java 入口类。** 它没有超出 lide 打包器设计蓝图（WHITEPAPER 阶段四/五）的能力范围。
-2. **Lua 作为模块逻辑载体在技术上是成立的**：lide 的引擎是 AndroLua C 原生引擎（Lua 5.3.3），`libluajava.so` **静态链接 Lua、只依赖系统库**（`build-scripts/jni/luajava/Android.mk`），可在任意 Android 进程中自提取加载；`com.luajava` 反射层已具备 `setAccessible(true)` 与 `Class.forName` 按调用者类加载器解析的能力，恰好匹配 Xposed 注入到目标进程的类加载器结构。
+2. **Lua 作为模块逻辑载体在技术上是成立的**：lide 的引擎是 AndroLua C 原生引擎（Lua 5.3.3），`libluajava.so` **静态链接 Lua、只依赖系统库**（`app/src/main/cpp/luajava/Android.mk`），可在任意 Android 进程中自提取加载；`com.luajava` 反射层已具备 `setAccessible(true)` 与 `Class.forName` 按调用者类加载器解析的能力，恰好匹配 Xposed 注入到目标进程的类加载器结构。
 3. **当前状态不是"直接支持"**：lide 的打包器（阶段四）尚未实现；且现有运行链路是"IDE 内解释执行"（Intent + EngineActivity），与 Xposed 模块"目标进程内、无 UI、`Application.onCreate` 之前启动"的运行模型完全不同，必须新增一条**无头（headless）引导链路**。
 4. **必须做的支持（详见第 6 章）**：
    - 打包期：新增"Xposed 模块"构建模式 —— 骨架 DEX（`com.luajava` 精简集 + 桥类）、manifest 注入 `xposedmodule` 等元数据、`assets/xposed_init`、Lua 编译为 `.luac` 进 assets、ABI 化 `lib/`、**v1+v2 双签名**（v2 必须，AndroLua Pro 的 v1-only 签名在现代设备不可安装）。
@@ -30,9 +30,9 @@
 
 | 对象 | 路径 | 说明 |
 |------|------|------|
-| lide 主工程 | `/`（`app/`、`androlua/`、`build-scripts/`、`scripts/`、`prebuilt/`） | Kotlin/Java 混合，Compose IDE + AndroLua 运行时 |
+| lide 主工程 | `/`（`app/`、`androlua/`、`editor/`、`scripts/`） | Kotlin/Java 混合，Compose IDE + AndroLua 运行时 |
 | lide 规划文档 | `WHITEPAPER.md`（阶段四/五：构建系统与签名） | 打包器设计蓝图 |
-| AndroLua Pro | `docs/AndroLua_pro-master/` | lide 运行环境的来源，含设备端打包器 `bin.lua` |
+| AndroLua Pro | 已收纳：Java 运行时 → `third_party/androlua/`、JNI 引擎 → `app/src/main/cpp/`、Lua 资产 → `app/src/main/assets/` | lide 运行环境的来源，含设备端打包器 `bin.lua`（`app/src/main/assets/lua/bin.lua`） |
 
 ### 2.2 审计方法
 
@@ -50,13 +50,13 @@
 
 | 项 | 事实 | 证据 |
 |----|------|------|
-| 引擎 | AndroLua C 原生引擎，Lua 5.3.3，`libluajava.so` 静态链接 liblua，仅依赖 `-llog -ldl` | `build-scripts/jni/luajava/Android.mk`、`build-scripts/jni/lua/Android.mk` |
+| 引擎 | AndroLua C 原生引擎，Lua 5.3.3，`libluajava.so` 静态链接 liblua，仅依赖 `-llog -ldl` | `app/src/main/cpp/luajava/Android.mk`、`app/src/main/cpp/lua/Android.mk` |
 | ABI | 已为 arm64-v8a / armeabi-v7a / x86_64 预编译 16 个 `.so`（含 cjson、socket、crypt、md5、regex、xml、zip、zlib、luv 等） | `app/src/main/jniLibs/*/` |
 | 运行链路 | EditorScreen "运行" → `EngineBridge.createEngineIntent()` → `EngineActivity`（继承 `LuaActivity`）→ `initLua()` → `doFile(main.lua)` 解释执行；结果经 `cacheDir/engine_result.json` 回传 | `androlua/.../engine/EngineBridge.kt`、`app/src/main/java/com/lioisme/lide/engine/EngineActivity.java` |
 | 引擎初始化 | `LuaStateFactory.newLuaState()` 为纯 Java + JNI，**不依赖任何 Android Context**；`initLua()` 注册 `activity`/`this`/`print`/`set`/`call` 全局并配置 `luajava.luadir/luaextdir/luapath` | `LuaStateFactory.java:59`、`LuaActivity.java:1333` |
 | 反射层 | `LuaJavaAPI.javaBindClass` 用 `Class.forName(name)`（**按调用者类加载器解析**）；方法/字段均 `setAccessible(true)` | `LuaJavaAPI.java:574/185/231/343` |
 | 工程模型 | 目录式：`main.lua` + `init.lua`（Lua 形式的清单：appname/appver/packagename/icon/pages/user_permission/dependencies）+ 可选 `libs/`（jar/dex/so 运行时加载）+ `.alp` ZIP 交换格式 | `ProjectManager.kt`、`AlpManager.kt` |
-| 打包器 | **未实现**。WHITEPAPER 阶段四/五（规划中）：luac 编译进 assets → 从零组装 ZIP 容器（二进制 manifest、classes.dex 注入、zipalign）→ v1/v2/v3 签名（BouncyCastle + APK Signing Block） | `WHITEPAPER.md:351-364` |
+| 打包器 | **已落地（2026-08-05 复核，WP-014）**：独立 APK 打包链路 = `app/.../build/{ApkBuilder,ApkSigner,V2Signer,ZipUtils}.kt` + `LuaCompiler.kt`（luac 进 assets）+ `AXmlManifest.kt`（二进制 manifest 编解码）+ 打包单测绿；v1+v2 签名齐备。Xposed「模块构建模式」（meta-data 注入 / xposed_init / headless 引导）仍为规划（M1~M5） | `app/src/main/kotlin/com/lioisme/lide/build/` |
 | 宿主清单 | 仅注册 `MainActivity` + `EngineActivity`，无 Service/Receiver | `app/src/main/AndroidManifest.xml` |
 | SDK | minSdk 24 / targetSdk 36 / compileSdk 36；ABI 变体 x64 / arm64 | `app/build.gradle.kts:20-40` |
 | 反 Xposed 代码 | **不存在**（对比原版，见 3.2.4） | 全仓库 grep `de.robv.android.xposed` 零命中 |
@@ -64,7 +64,7 @@
 
 **3.1.2 与 Xposed 场景相关的三个关键缺口**
 
-1. **没有打包器**：用户工程目前只能在 IDE 进程内运行，无法产出独立 APK（普通应用或模块）。
+1. **打包器已落地，但无 Xposed 模块模式**：基础打包器（WP-014）已实现并可产出独立 APK；模块所需的三条 meta-data + `xposed_init` + headless 引导链路尚未构建。
 2. **运行模型不匹配**：模块必须在"目标进程 + 无 Activity + 早于 Application 初始化"的环境下运行，而 lide 现有运行链路强依赖 `LuaActivity`（UI 宿主）与 IDE 的文件目录。
 3. **清单工具链未落地**：二进制 XML 编解码（AndroLua Pro 用外部 `mao.dex` 实现，lide 规划自研）是 manifest 注入（含 xposed 元数据）的前提。
 
@@ -73,7 +73,7 @@
 **3.2.1 打包器是 Lua 脚本，不是 Java 类**
 
 - 入口：IDE 菜单 → `assets/main.lua` 的 `func.build` → `bin.lua` 的 `bin(path)` → `activity.newTask(binapk, ...)`。
-- 核心流程 `binapk(luapath, apkpath)`（`docs/AndroLua_pro-master/app/src/main/resources/lua/bin.lua:53`，约 330 行）：
+- 核心流程 `binapk(luapath, apkpath)`（`app/src/main/assets/lua/bin.lua:53`，约 330 行）：
 
 ```
 1. 以"宿主 AndroLua Pro APK"为模板：ZipInputStream 读模板 → ZipOutputStream 写新 APK
@@ -104,7 +104,7 @@
 
 **3.2.4 AndroLua Pro 原版的 Xposed 敌意（lide 已清除）**
 
-原版 `docs/AndroLua_pro-master/app/src/main/java/com/androlua/LuaActivity.java` 约 L314-374：
+原版 `third_party/androlua/src/main/java/com/androlua/LuaActivity.java` 约 L314-374：
 
 - `check2()`：反射加载 `de.robv.android.xposed.XposedBridge`，置 `disableHooks=true`；
 - `check3()`：实例化 `XposedHelpers` 并清空其 `fieldCache/methodCache/constructorCache`，弹窗"环境不安全"；
@@ -156,7 +156,7 @@ module.apk（本质 = 普通可安装 APK）
 
 | # | Xposed 模块必需能力 | lide 现状 | 差距 | 工作量等级 |
 |---|---------------------|-----------|------|-----------|
-| 1 | 产出独立 APK | 打包器未实现（阶段四规划中） | **先实现基础打包器** | 高（已有蓝图） |
+| 1 | 产出独立 APK | 基础打包器已落地（WP-014，2026-08-05 复核） | **追加 Xposed 模块模式** | 高（已有实现可扩展） |
 | 2 | manifest 新增 `xposedmodule` 等节点 | 二进制 XML 编解码规划中；AndroLua 的字符串替换法不能新增节点 | 需要**结构化解码-修改-编码**或节点级注入 | 中 |
 | 3 | 模块 dex 内含入口类 + 桥类 | 无骨架 dex 概念；现成 `com.luajava`（约 16 文件）可直接裁剪进模块 | 编译一个**精简模板 dex**（一次编译，反复使用） | 低 |
 | 4 | 目标进程内加载 Lua 引擎 | `libluajava.so` 静态链 Lua、仅依赖系统库、三 ABI 已就绪 | 仅需**自提取 + `System.load`** 的引导代码 | 低 |
@@ -167,7 +167,7 @@ module.apk（本质 = 普通可安装 APK）
 | 9 | 类加载器语义匹配 | `Class.forName`（调用者加载器）+ `setAccessible(true)` **天然匹配** | 无差距 | — |
 | 10 | 反 Xposed 障碍 | 原版 check1/2/3 已清除 | 无差距 | — |
 
-**判定**：可行性成立的四个支柱（引擎可注入性、反射语义、API 兼容性、无框架级障碍）**全部为真**；剩余差距集中在 lide 尚未落地的打包器与两个新增组件（headless 引导 + 桥类）上。
+**判定**：可行性成立的四个支柱（引擎可注入性、反射语义、API 兼容性、无框架级障碍）**全部为真**；基础打包器已落地（2026-08-05 复核，WP-014），剩余差距集中在 lide 尚未实现的「Xposed 模块构建模式」（headless 引导 + 桥类 + manifest 注入）上。
 
 ---
 
@@ -344,7 +344,7 @@ lide 导出 .alp ──► 解包 ──► PC 脚本：
 
 | 里程碑 | 内容 | 产出 | 相对工作量 |
 |--------|------|------|-----------|
-| **M1**（前置） | 基础打包器落地（WHITEPAPER 阶段四/五）：luac → assets、ZIP 组装、二进制 manifest 编解码、zipalign、v1+v2 签名 | 普通应用打包可用 | 高（已有蓝图） |
+| **M1**（前置） | 基础打包器落地（WHITEPAPER 阶段四/五）：luac → assets、ZIP 组装、二进制 manifest 编解码、zipalign、v1+v2 签名 | 普通应用打包可用 | ✅ 已完成（WP-014，2026-08-05 复核：`ApkBuilder`/`ApkSigner`/`V2Signer`/`AXmlManifest` 等 + 打包单测绿） |
 | **M2** | `tools/xposed-module-template` PC 模板 + 骨架 dex（com.luajava 裁剪 + Entry + XposedLuaHook + HeadlessLuaContext） | 手工链路跑通首个 Lua hook 模块 | 中 |
 | **M3** | lide 打包器"Xposed 模块模式"：工程类型、meta-data 注入、xposed_init、ABI lib/、scope 配置 UI | IDE 一键打包模块 | 中 |
 | **M4** | `xposed.lua` 运行库完善 + 线程模型/延迟初始化加固 + 日志与诊断（模块内 logcat、LSPosed 日志引导） | 开发体验完善 | 中 |
@@ -352,7 +352,7 @@ lide 导出 .alp ──► 解包 ──► PC 脚本：
 
 ## 9. 最终结论
 
-**能，但有前提条件。** lide 的工程开发（Lua 脚本 + init.lua 清单 + libs 依赖）+ 按 WHITEPAPER 蓝图实现的打包器，在新增"Xposed 模块构建模式"（骨架 dex、manifest 元数据注入、headless 引导、v1+v2 签名）后，可完整支撑 Xposed/LSPosed 模块的「开发 → 打包 → 激活 → 运行」全链路。核心有利因素（引擎单 `.so` 可注入、luajava 反射语义与 Xposed 类加载器结构天然匹配、原版反 Xposed 代码已被清除、三 ABI 预编译就绪）均已核实成立；主要工作量不在"能否"，而在 lide 尚未实现的打包器本身与两个新增桥接组件。
+**能，且有更实的基础。** lide 的工程开发（Lua 脚本 + init.lua 清单 + libs 依赖）+ **已落地的打包器（2026-08-05 复核，WP-014：`ApkBuilder`/`ApkSigner`/`V2Signer`/`AXmlManifest`，v1+v2 签名齐备）**，在新增"Xposed 模块构建模式"（骨架 dex、manifest 元数据注入、headless 引导）后，可完整支撑 Xposed/LSPosed 模块的「开发 → 打包 → 激活 → 运行」全链路。核心有利因素（引擎单 `.so` 可注入、luajava 反射语义与 Xposed 类加载器结构天然匹配、原版反 Xposed 代码已被清除、三 ABI 就绪）均已核实成立；剩余主要工作量集中在 lide 尚未实现的「Xposed 模块模式」与两个新增桥接组件（headless 引导 + 桥类）。
 
 ---
 
@@ -363,10 +363,10 @@ lide 导出 .alp ──► 解包 ──► PC 脚本：
 | `androlua/src/main/java/com/androlua/LuaActivity.java:1333` | `initLua()`：引擎全局注册（模块 headless 引导的参照） |
 | `androlua/src/main/java/com/luajava/LuaStateFactory.java:59` | `newLuaState()`：纯 Java 初始化，无 Context 依赖 |
 | `androlua/src/main/java/com/luajava/LuaJavaAPI.java:574/185/343` | `Class.forName`（调用者加载器）+ `setAccessible(true)` |
-| `build-scripts/jni/luajava/Android.mk` | `LOCAL_STATIC_LIBRARIES := lua`：单 `.so` 可注入的根基 |
+| `app/src/main/cpp/luajava/Android.mk` | `LOCAL_STATIC_LIBRARIES := lua`：单 `.so` 可注入的根基 |
 | `app/src/main/assets/lua/import.lua:13` | `local luacontext = activity or service`：headless 需提供轻量替代 |
-| `docs/AndroLua_pro-master/app/src/main/resources/lua/bin.lua:53` | `binapk`：AndroLua Pro 设备端打包器（机制参照） |
-| `docs/AndroLua_pro-master/app/src/main/java/com/androlua/LuaActivity.java:314-374` | 原版反 Xposed 代码（lide 已清除） |
+| `app/src/main/assets/lua/bin.lua:53` | `binapk`：AndroLua Pro 设备端打包器（机制参照，已收纳进本仓库） |
+| `third_party/androlua/src/main/java/com/androlua/LuaActivity.java:314-374` | 原版反 Xposed 代码（lide 已清除） |
 | `WHITEPAPER.md:351-364` | 阶段四/五：lide 打包器规划（本项目的前置条件） |
 | `app/build.gradle.kts:20-40` | minSdk 24 / targetSdk 36 / ABI 变体 |
 

@@ -18,7 +18,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Build;
-import android.os.Environment;
 import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
@@ -85,17 +84,18 @@ public class CrashHandler implements UncaughtExceptionHandler
 		}
 		else
 		{
-			/*try
+			// lide 修复（2026-08-06，P2#15）：原始代码此处为空白（pro 的 kill 分支被注释掉），
+			// 导致崩溃被吞掉、进程带病继续运行（状态不可知）。修复：日志落盘后仍交由系统默认
+			// 处理器终止进程（标准崩溃流程：进程退出 + 系统崩溃对话框），不吞异常。
+			if (mDefaultHandler != null)
 			{
-				Thread.sleep(3000);
+				mDefaultHandler.uncaughtException(thread, ex);
 			}
-			catch (InterruptedException e)
+			else
 			{
-				Log.e(TAG, "error : ", e);
+				android.os.Process.killProcess(android.os.Process.myPid());
+				System.exit(10);
 			}
-			//退出程序
-			android.os.Process.killProcess(android.os.Process.myPid());
-			System.exit(0);*/
 		}
 	}
 
@@ -222,20 +222,22 @@ public class CrashHandler implements UncaughtExceptionHandler
 			long timestamp = System.currentTimeMillis();
 			String time = formatter.format(new Date());
 			String fileName = "crash-" + time + "-" + timestamp + ".log";
-			if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) 
+			// lide 修复（2026-08-06，P2#15）：日志写入应用私有目录 filesDir/crash/
+			// （原 `/sdcard/androlua/crash/` 为公共可读路径，全量设备信息 + 堆栈属隐私泄露，
+			// 且 API 33+ 写共享存储需额外权限）。私有目录免权限、仅本应用可读。
+			if (mContext == null)
 			{
-				String path = "/sdcard/androlua/crash/";
-				File dir = new File(path);
-				if (!dir.exists())
-					dir.mkdirs();
-
-				FileOutputStream fos = new FileOutputStream(path + fileName);
-//				FileOutputStream fos = mContext.openFileOutput(fileName, Context.MODE_PRIVATE);
-				fos.write(sb.toString().getBytes());
-				Log.e("crash",sb.toString());
-				
-				fos.close();
+				return null;
 			}
+			File dir = new File(mContext.getFilesDir(), "crash");
+			if (!dir.exists())
+				dir.mkdirs();
+
+			FileOutputStream fos = new FileOutputStream(new File(dir, fileName));
+			fos.write(sb.toString().getBytes());
+			Log.e("crash", sb.toString());
+
+			fos.close();
 			return fileName;
 		}
 		catch (Exception e)

@@ -55,10 +55,10 @@ list.setAdapter(adapter)
 
 ## 4. 探针工程（语言语义差异快速定位）
 
-`docs/reference/project/probe/` 输出全局函数存在性（如 `PROBE tointeger=1`、`PROBE math.tointeger=nil`）。
+`reference/project/probe/` 输出全局函数存在性（如 `PROBE tointeger=1`、`PROBE math.tointeger=nil`）。
 怀疑语言语义差异时先跑它；两端输出逐字一致即排除 L5 层。
 
-## 4a. 探针工程 v2（MD3 仪表盘 + 分组报告，`docs/reference/project/test/`）
+## 4a. 探针工程 v2（MD3 仪表盘 + 分组报告，`reference/project/test/`）
 
 - 入口 `main.lua`：入口处 print `UI_ERROR: <err>` 兜底 + 每区块 `RENDER_ERROR: <err>` 捕获（PITFALLS §15）；区块卡片 + hero 总分 + 复制/分享/重新检测按钮。
 - 表达式求值 `ev(expr)`（engine.lua）：先 `load("return "..expr)` **原样编译**，失败才补 `"return "..` 前缀（避免 `return return`/`return local` 双 return）；返回 pcall 语义 `(true,值)/(nil,err)`。
@@ -72,7 +72,7 @@ list.setAdapter(adapter)
 
 `uiautomator dump` 的 XML 里 `text=` 节点即可断言（hero 总分、区块标题、按钮）；截图仅 `cmd /c "adb exec-out screencap -p > file"`（PowerShell `>` 损坏二进制），两者存 `%TEMP%\opencode\verify\`。
 
-## 5. libs 编译 .dex（`docs/reference/libs/` 用法）
+## 5. libs 编译 .dex（`reference/libs/` 用法）
 
 ```powershell
 # 用 d8（AGP 自带，路径示例，按本机 SDK 调整）把 jar/class 打成 dex
@@ -81,7 +81,7 @@ list.setAdapter(adapter)
 
 - 产出 `.dex` 放进 `<project>/libs/`，双端验证必须用**同一份**文件（先 `md5sum` 确认）。
 - `import "xxx:com.foo"` 的 `xxx` 前缀由库加载规则决定；解析失败走 PITFALLS §2 降级路径。
-- 全链路细节见 `docs/completed/LIBS_SUPPORT_WORK_ORDER.md`。
+- 全链路细节见 `docs/discard/LIBS_SUPPORT_WORK_ORDER.md`。
 
 ## 6. 诊断命令参考
 

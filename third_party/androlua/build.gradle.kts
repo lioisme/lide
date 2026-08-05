@@ -32,10 +32,3 @@ dependencies {
     implementation("androidx.core:core:1.15.0")
     testImplementation("junit:junit:4.13.2")
 }
-
-repositories {
-    maven { url = uri("https://maven.aliyun.com/repository/public") }
-    maven { url = uri("https://maven.aliyun.com/repository/google") }
-    google()
-    mavenCentral()
-}

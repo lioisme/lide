@@ -15,7 +15,6 @@ import java.util.zip.ZipInputStream
 import java.util.zip.ZipOutputStream
 
 class ApkSignerTest {
-
     private val key: java.security.PrivateKey by lazy {
         val der = loadResource("keys/testkey.pk8")
         KeyFactory.getInstance("RSA").generatePrivate(PKCS8EncodedKeySpec(der))
@@ -23,25 +22,30 @@ class ApkSignerTest {
 
     private val cert: java.security.cert.X509Certificate by lazy {
         val pem = String(loadResource("keys/testkey.x509.pem"), Charsets.UTF_8)
-        CertificateFactory.getInstance("X.509")
+        CertificateFactory
+            .getInstance("X.509")
             .generateCertificate(pem.byteInputStream()) as java.security.cert.X509Certificate
     }
 
-    private fun loadResource(name: String): ByteArray =
-        checkNotNull(checkNotNull(javaClass.classLoader).getResourceAsStream(name)).readBytes()
+    private fun loadResource(name: String): ByteArray = checkNotNull(checkNotNull(javaClass.classLoader).getResourceAsStream(name)).readBytes()
 
     private fun sampleApk(): ByteArray {
         val out = ByteArrayOutputStream()
         ZipOutputStream(out).use { zos ->
-            fun put(name: String, content: String, stored: Boolean = false) {
+            fun put(
+                name: String,
+                content: String,
+                stored: Boolean = false,
+            ) {
                 val bytes = content.toByteArray()
-                val entry = ZipEntry(name).apply {
-                    method = if (stored) ZipEntry.STORED else ZipEntry.DEFLATED
-                    if (stored) {
-                        size = bytes.size.toLong()
-                        crc = CRC32().apply { update(bytes) }.value
+                val entry =
+                    ZipEntry(name).apply {
+                        method = if (stored) ZipEntry.STORED else ZipEntry.DEFLATED
+                        if (stored) {
+                            size = bytes.size.toLong()
+                            crc = CRC32().apply { update(bytes) }.value
+                        }
                     }
-                }
                 zos.putNextEntry(entry)
                 zos.write(bytes)
                 zos.closeEntry()
@@ -80,10 +84,11 @@ class ApkSignerTest {
     @Test
     fun `manifest contains SHA-256 digests for all payload entries`() {
         val signed = ApkSigner.sign(sampleApk(), key, cert)
-        val manifest = String(
-            entriesOf(signed)["META-INF/MANIFEST.MF"]!!,
-            Charsets.UTF_8,
-        )
+        val manifest =
+            String(
+                entriesOf(signed)["META-INF/MANIFEST.MF"]!!,
+                Charsets.UTF_8,
+            )
         assertTrue(manifest.contains("Manifest-Version: 1.0"))
         assertTrue(manifest.contains("Name: assets/lua/main.lua"))
         assertTrue(manifest.contains("SHA-256-Digest: "))
@@ -128,12 +133,17 @@ class ApkSignerTest {
         val tmp = java.io.File.createTempFile("v2test", ".apk")
         try {
             tmp.writeBytes(signed)
-            val proc = ProcessBuilder(
-                "java", "-jar",
-                "D:\\Android\\build-tools\\35.0.0\\lib\\apksigner.jar",
-                "verify", "--verbose", "--min-sdk-version", "24",
-                tmp.absolutePath,
-            ).redirectErrorStream(true).start()
+            val proc =
+                ProcessBuilder(
+                    "java",
+                    "-jar",
+                    "D:\\Android\\build-tools\\35.0.0\\lib\\apksigner.jar",
+                    "verify",
+                    "--verbose",
+                    "--min-sdk-version",
+                    "24",
+                    tmp.absolutePath,
+                ).redirectErrorStream(true).start()
             val output = proc.inputStream.readBytes().toString(Charsets.UTF_8)
             val exit = proc.waitFor()
             assertTrue("apksigner exit=$exit:\n$output", exit == 0)

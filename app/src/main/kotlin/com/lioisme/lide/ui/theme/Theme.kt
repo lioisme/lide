@@ -1,7 +1,6 @@
 package com.lioisme.lide.ui.theme
 
 import android.os.Build
-import androidx.compose.foundation.isSystemInDarkTheme as platformIsDark
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
@@ -21,55 +20,67 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.isSystemInDarkTheme as platformIsDark
 
 val LocalThemeConfig = compositionLocalOf { ThemeConfig() }
 val LocalIsDarkTheme = compositionLocalOf { false }
 
-val AppTypography = Typography(
-    displayLarge = TextStyle(fontWeight = FontWeight.Normal, fontSize = 57.sp, lineHeight = 64.sp),
-    displayMedium = TextStyle(fontWeight = FontWeight.Normal, fontSize = 45.sp, lineHeight = 52.sp),
-    displaySmall = TextStyle(fontWeight = FontWeight.Normal, fontSize = 36.sp, lineHeight = 44.sp),
-    headlineLarge = TextStyle(fontWeight = FontWeight.SemiBold, fontSize = 32.sp, lineHeight = 40.sp),
-    headlineMedium = TextStyle(fontWeight = FontWeight.SemiBold, fontSize = 28.sp, lineHeight = 36.sp),
-    headlineSmall = TextStyle(fontWeight = FontWeight.SemiBold, fontSize = 24.sp, lineHeight = 32.sp),
-    titleLarge = TextStyle(fontWeight = FontWeight.Medium, fontSize = 22.sp, lineHeight = 28.sp),
-    titleMedium = TextStyle(fontWeight = FontWeight.Medium, fontSize = 16.sp, lineHeight = 24.sp, letterSpacing = 0.15.sp),
-    titleSmall = TextStyle(fontWeight = FontWeight.Medium, fontSize = 14.sp, lineHeight = 20.sp, letterSpacing = 0.1.sp),
-    bodyLarge = TextStyle(fontWeight = FontWeight.Normal, fontSize = 16.sp, lineHeight = 24.sp, letterSpacing = 0.5.sp),
-    bodyMedium = TextStyle(fontWeight = FontWeight.Normal, fontSize = 14.sp, lineHeight = 20.sp, letterSpacing = 0.25.sp),
-    bodySmall = TextStyle(fontWeight = FontWeight.Normal, fontSize = 12.sp, lineHeight = 16.sp, letterSpacing = 0.4.sp),
-    labelLarge = TextStyle(fontWeight = FontWeight.Medium, fontSize = 14.sp, lineHeight = 20.sp, letterSpacing = 0.1.sp),
-    labelMedium = TextStyle(fontWeight = FontWeight.Medium, fontSize = 12.sp, lineHeight = 16.sp, letterSpacing = 0.5.sp),
-    labelSmall = TextStyle(fontWeight = FontWeight.Medium, fontSize = 11.sp, lineHeight = 16.sp, letterSpacing = 0.5.sp),
-)
+val AppTypography =
+    Typography(
+        displayLarge = TextStyle(fontWeight = FontWeight.Normal, fontSize = 57.sp, lineHeight = 64.sp),
+        displayMedium = TextStyle(fontWeight = FontWeight.Normal, fontSize = 45.sp, lineHeight = 52.sp),
+        displaySmall = TextStyle(fontWeight = FontWeight.Normal, fontSize = 36.sp, lineHeight = 44.sp),
+        headlineLarge = TextStyle(fontWeight = FontWeight.SemiBold, fontSize = 32.sp, lineHeight = 40.sp),
+        headlineMedium = TextStyle(fontWeight = FontWeight.SemiBold, fontSize = 28.sp, lineHeight = 36.sp),
+        headlineSmall = TextStyle(fontWeight = FontWeight.SemiBold, fontSize = 24.sp, lineHeight = 32.sp),
+        titleLarge = TextStyle(fontWeight = FontWeight.Medium, fontSize = 22.sp, lineHeight = 28.sp),
+        titleMedium = TextStyle(fontWeight = FontWeight.Medium, fontSize = 16.sp, lineHeight = 24.sp, letterSpacing = 0.15.sp),
+        titleSmall = TextStyle(fontWeight = FontWeight.Medium, fontSize = 14.sp, lineHeight = 20.sp, letterSpacing = 0.1.sp),
+        bodyLarge = TextStyle(fontWeight = FontWeight.Normal, fontSize = 16.sp, lineHeight = 24.sp, letterSpacing = 0.5.sp),
+        bodyMedium = TextStyle(fontWeight = FontWeight.Normal, fontSize = 14.sp, lineHeight = 20.sp, letterSpacing = 0.25.sp),
+        bodySmall = TextStyle(fontWeight = FontWeight.Normal, fontSize = 12.sp, lineHeight = 16.sp, letterSpacing = 0.4.sp),
+        labelLarge = TextStyle(fontWeight = FontWeight.Medium, fontSize = 14.sp, lineHeight = 20.sp, letterSpacing = 0.1.sp),
+        labelMedium = TextStyle(fontWeight = FontWeight.Medium, fontSize = 12.sp, lineHeight = 16.sp, letterSpacing = 0.5.sp),
+        labelSmall = TextStyle(fontWeight = FontWeight.Medium, fontSize = 11.sp, lineHeight = 16.sp, letterSpacing = 0.5.sp),
+    )
 
-val AppShapes = Shapes(
-    small = RoundedCornerShape(8.dp),
-    medium = RoundedCornerShape(12.dp),
-    large = RoundedCornerShape(16.dp),
-)
-
-@Composable
-fun resolveIsDark(appearanceMode: AppearanceMode): Boolean = when (appearanceMode) {
-    AppearanceMode.SYSTEM -> platformIsDark()
-    AppearanceMode.LIGHT -> false
-    AppearanceMode.DARK -> true
-}
+val AppShapes =
+    Shapes(
+        small = RoundedCornerShape(8.dp),
+        medium = RoundedCornerShape(12.dp),
+        large = RoundedCornerShape(16.dp),
+    )
 
 @Composable
-fun resolveColorScheme(config: ThemeConfig, isDark: Boolean): ColorScheme = when {
-    config.useWallpaper && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-        val context = LocalContext.current
-        if (isDark) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+fun resolveIsDark(appearanceMode: AppearanceMode): Boolean =
+    when (appearanceMode) {
+        AppearanceMode.SYSTEM -> platformIsDark()
+        AppearanceMode.LIGHT -> false
+        AppearanceMode.DARK -> true
     }
-    else -> {
-        val seed = Color(config.customSeedColor)
-        if (isDark) generateDarkScheme(seed) else generateLightScheme(seed)
-    }
-}
 
 @Composable
-fun LideTheme(config: ThemeConfig = ThemeConfig(), content: @Composable () -> Unit) {
+fun resolveColorScheme(
+    config: ThemeConfig,
+    isDark: Boolean,
+): ColorScheme =
+    when {
+        config.useWallpaper && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+            val context = LocalContext.current
+            if (isDark) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+        }
+
+        else -> {
+            val seed = Color(config.customSeedColor)
+            if (isDark) generateDarkScheme(seed) else generateLightScheme(seed)
+        }
+    }
+
+@Composable
+fun LideTheme(
+    config: ThemeConfig = ThemeConfig(),
+    content: @Composable () -> Unit,
+) {
     val isDark = resolveIsDark(config.appearanceMode)
     val colorScheme = resolveColorScheme(config, isDark)
 
@@ -176,18 +187,32 @@ internal fun generateDarkScheme(primary: Color): ColorScheme {
     )
 }
 
-private fun lighten(c: Color, a: Float) = lerp(c, Color.White, a)
-private fun darken(c: Color, a: Float) = lerp(c, Color.Black, a)
+private fun lighten(
+    c: Color,
+    a: Float,
+) = lerp(c, Color.White, a)
+
+private fun darken(
+    c: Color,
+    a: Float,
+) = lerp(c, Color.Black, a)
 
 private fun contrastingColor(bg: Color): Color {
     val y = 0.299f * bg.red + 0.587f * bg.green + 0.114f * bg.blue
     return if (y > 0.5f) Color(ON_BG_LIGHT) else Color.White
 }
 
-private fun rotateHue(c: Color, deg: Float, sf: Float): Color {
+private fun rotateHue(
+    c: Color,
+    deg: Float,
+    sf: Float,
+): Color {
     val hsv = FloatArray(3)
     android.graphics.Color.RGBToHSV(
-        (c.red * 255).toInt(), (c.green * 255).toInt(), (c.blue * 255).toInt(), hsv
+        (c.red * 255).toInt(),
+        (c.green * 255).toInt(),
+        (c.blue * 255).toInt(),
+        hsv,
     )
     hsv[0] = (hsv[0] + deg) % 360f
     hsv[1] = (hsv[1] * sf).coerceIn(0f, 1f)

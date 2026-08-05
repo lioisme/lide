@@ -26,17 +26,20 @@ import java.util.zip.ZipOutputStream
  * - v1 + v2 签名（[ApkSigner]），输出可直接 adb install 的 APK 字节。
  */
 object ApkBuilder {
-
     /** 构建阶段（供 UI 进度提示；顺序即执行顺序）。 */
     enum class BuildStage {
         /** 读取宿主 APK 与签名材料。 */
         READ_HOST,
+
         /** 收集工程 Lua 源码与配置。 */
         COLLECT_LUA,
+
         /** 编译 main.lua 为字节码。 */
         COMPILE_LUA,
+
         /** 装配 APK（manifest 补丁 + 条目重写 + 注入工程 Lua）。 */
         ASSEMBLE,
+
         /** v1 + v2 签名。 */
         SIGN,
     }
@@ -55,7 +58,10 @@ object ApkBuilder {
         val mainFile: String = "main.lua",
     )
 
-    class BuildException(message: String, cause: Throwable? = null) : Exception(message, cause)
+    class BuildException(
+        message: String,
+        cause: Throwable? = null,
+    ) : Exception(message, cause)
 
     fun build(
         hostApk: ByteArray,
@@ -67,48 +73,55 @@ object ApkBuilder {
     ): ByteArray {
         onStage(BuildStage.READ_HOST)
         val hostEntries = readZip(hostApk)
-        val manifestEntry = hostEntries.firstOrNull { it.first == "AndroidManifest.xml" }
-            ?: throw BuildException("宿主 APK 缺少 AndroidManifest.xml")
+        val manifestEntry =
+            hostEntries.firstOrNull { it.first == "AndroidManifest.xml" }
+                ?: throw BuildException("宿主 APK 缺少 AndroidManifest.xml")
         val manifestBytes = manifestEntry.third
 
-        val hostPermissions = try {
-            AXmlManifest.readUsesPermissions(manifestBytes).toSet()
-        } catch (e: Exception) {
-            throw BuildException("解析宿主 manifest 失败: ${e.message}", e)
-        }
-        val selfDeclared = try {
-            AXmlManifest.readSelfDeclaredPermissions(manifestBytes)
-        } catch (e: Exception) {
-            throw BuildException("解析宿主自声明权限失败: ${e.message}", e)
-        }
-        val whitelist = dedupe(
-            input.declaredPermissions.filter { it in hostPermissions } + selfDeclared,
-        )
-
-        val patchedManifest = try {
-            AXmlManifest.patch(
-                manifestBytes,
-                ManifestEdit(
-                    packageName = input.packageName,
-                    appLabel = input.appName,
-                    versionCode = input.versionCode,
-                    versionName = input.versionName,
-                    usesPermissions = whitelist,
-                ),
+        val hostPermissions =
+            try {
+                AXmlManifest.readUsesPermissions(manifestBytes).toSet()
+            } catch (e: Exception) {
+                throw BuildException("解析宿主 manifest 失败: ${e.message}", e)
+            }
+        val selfDeclared =
+            try {
+                AXmlManifest.readSelfDeclaredPermissions(manifestBytes)
+            } catch (e: Exception) {
+                throw BuildException("解析宿主自声明权限失败: ${e.message}", e)
+            }
+        val whitelist =
+            dedupe(
+                input.declaredPermissions.filter { it in hostPermissions } + selfDeclared,
             )
-        } catch (e: Exception) {
-            throw BuildException("manifest 补丁失败: ${e.message}", e)
-        }
+
+        val patchedManifest =
+            try {
+                AXmlManifest.patch(
+                    manifestBytes,
+                    ManifestEdit(
+                        packageName = input.packageName,
+                        appLabel = input.appName,
+                        versionCode = input.versionCode,
+                        versionName = input.versionName,
+                        usesPermissions = whitelist,
+                    ),
+                )
+            } catch (e: Exception) {
+                throw BuildException("manifest 补丁失败: ${e.message}", e)
+            }
 
         onStage(BuildStage.COLLECT_LUA)
-        val mainSource = input.luaSources[input.mainFile]
-            ?: throw BuildException("工程缺少 ${input.mainFile}")
+        val mainSource =
+            input.luaSources[input.mainFile]
+                ?: throw BuildException("工程缺少 ${input.mainFile}")
         onStage(BuildStage.COMPILE_LUA)
-        val mainBytecode = try {
-            compileLua(String(mainSource, Charsets.UTF_8), input.mainFile)
-        } catch (e: Exception) {
-            throw BuildException(e.message ?: "main.lua 编译失败", e)
-        }
+        val mainBytecode =
+            try {
+                compileLua(String(mainSource, Charsets.UTF_8), input.mainFile)
+            } catch (e: Exception) {
+                throw BuildException(e.message ?: "main.lua 编译失败", e)
+            }
 
         onStage(BuildStage.ASSEMBLE)
         val out = ByteArrayOutputStream()
@@ -161,14 +174,15 @@ object ApkBuilder {
     }
 
     /** 打包产物不读取的宿主资产目录（编辑器/宿主专属，随宿主 APK 剔除）。 */
-    private val HOST_ASSET_EXCLUDED = listOf(
-        "assets/samples/",
-        "assets/textmate/",
-        "assets/keys/",
-        "assets/luadoc/",
-        "assets/plugin/",
-        "assets/layouts/",
-    )
+    private val HOST_ASSET_EXCLUDED =
+        listOf(
+            "assets/samples/",
+            "assets/textmate/",
+            "assets/keys/",
+            "assets/luadoc/",
+            "assets/plugin/",
+            "assets/layouts/",
+        )
 
     private fun readZip(apk: ByteArray): List<Triple<String, Int, ByteArray>> {
         val out = ArrayList<Triple<String, Int, ByteArray>>()

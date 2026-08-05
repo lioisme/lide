@@ -88,4 +88,26 @@ git ls-files '*.jar' | grep -v 'gradle/wrapper/gradle-wrapper.jar'
   禁止在 UI 线程同步 O(n) 过滤；行级反射信息缓存（`rowInfoCache`）必须是**非空包装**，
   禁止用返回 null 的 `getOrPut`（CHM 拒绝 null，负缓存永久失效 → 全 dex 扫描 → ART 全局锁）。
 
-## /libs 机制约定（工程 /libs 支持，详见 docs/completed/LIBS_SUPPORT_WORK_ORDER.md
+## /libs 机制约定（工程 /libs 支持，详见 docs/discard/LIBS_SUPPORT_WORK_ORDER.md）
+
+- 工程 `<project>/libs/` 三层模型（pro 原生机制，勿改动）：`*.dex|jar|apk|zip` 由
+  `LuaDexLoader.loadLibs()` 启动时自动扫描加载（`import "xxx:com.foo"` 可用）；`lib<name>.so`
+  复制到 libDir 并由 `libsloader` 按 `package.loadlib(…, "luaopen_<name>")` 加载；`lua/*.lua`
+  走 `luaDir/?.lua + luaDir/lua/?.lua + luaDir/?/init.lua` 搜索路径。
+- `import.lua` 首行 `local luacontext = activity or service` 依赖 `LuaActivity.initLua()`
+  注入的 `activity` 全局 —— 任何宿主改动不得破坏该全局注入。
+- `LuaDexLoader` 的 W^X 修复（API≥26 走 `InMemoryDexClassLoader`）为**有意的、记录在案的**
+  与 pro 的差异（工作单 §10.1），不得回退为磁盘路径加载。
+- lfs / lsqlite3 原生模块已随引擎源码构建；lluv / tcc 按差异声明不提供（WHITEPAPER §7.1）。
+
+## 文档治理约定（opencode Agent 必守）
+
+- **事实来源唯一**：当前事实一律以 `docs/kb/` 为准；当前工作以 `docs/in-progress/`、
+  `docs/planned/` 为准。**禁止把 `docs/discard/` 当作日常任务输入或事实来源**
+  （仅追溯历史结论时按需查阅）。
+- **任务文档生命周期**：新任务文档登记于 `docs/planned/`（或 `docs/in-progress/`）并登记
+  `docs/kb/README.md` §2 矩阵；**每完成一项任务，必须在任务文档对应条目标记「（已完成）」
+  并备注工作内容 + 日期 + 验收证据**（构建命令 / 设备验证 / 测试结果）。
+- **完成后归档**：整份任务文档全部完成后 `git mv` 到 `docs/discard/`（唯一丢弃出口，
+  不再使用 `completed/`、`archive/`），并同步更新 `docs/kb/README.md` §2、
+  `docs/TASKS.md`、`docs/discard/README.md` §3 清单。
