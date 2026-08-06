@@ -171,7 +171,6 @@ dependencies {
     // material3 显式 1.4.0：新版 SearchBar（SearchBarState + ExpandedFullScreenSearchBar）
     // 为 1.4.0 新增 API，需 AGP 8.6+（compose 1.9 线）。
     implementation("androidx.compose.material3:material3:1.4.0")
-    implementation("androidx.compose.material3:material3-window-size-class:1.4.0")
     implementation("androidx.compose.material:material-icons-extended")
     implementation("androidx.activity:activity-compose:1.9.3")
     implementation("androidx.navigation:navigation-compose:2.8.5")

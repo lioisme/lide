@@ -3,7 +3,6 @@
 
     <!-- Common -->
     <string name="app_name">LIDE</string>
-    <string name="back">返回</string>
     <string name="cancel">取消</string>
     <string name="confirm">确定</string>
     <string name="alp_conflict_title">导入冲突</string>
@@ -12,9 +11,6 @@
     <string name="alp_conflict_rename">改名</string>
     <string name="create">创建</string>
     <string name="project_name">项目名称</string>
-    <string name="select_file">选择文件</string>
-    <string name="cd_go_up">上一级</string>
-    <string name="cd_close">关闭</string>
     <string name="back_to_parent">返回上一目录</string>
 
     <!-- Project List -->
@@ -54,11 +50,7 @@
     <string name="language">语言</string>
     <string name="system_default">系统默认</string>
     <string name="word_wrap">自动换行</string>
-    <string name="word_wrap_on">已启用</string>
-    <string name="word_wrap_off">已关闭</string>
     <string name="show_whitespace">显示空白字符</string>
-    <string name="whitespace_on">可见</string>
-    <string name="whitespace_off">隐藏</string>
     <string name="font_size">字体大小</string>
     <string name="tab_size">制表符大小</string>
     <string name="font_size_value">%1$d sp</string>
@@ -118,7 +110,6 @@
     <string name="perm_project_save">保存</string>
     <string name="perm_project_saved">已保存</string>
     <string name="perm_project_save_failed">保存失败</string>
-    <string name="perm_host_section">宿主应用权限</string>
     <string name="perm_host_hint">LIDE 宿主应用自身的权限。它们适用于 IDE 及宿主内运行的脚本。</string>
     <string name="perm_package_only">仅写入打包 APK</string>
     <string name="project_permissions">工程权限</string>
@@ -158,7 +149,6 @@
     <string name="build_version">版本 %1$s（%2$s）</string>
     <string name="build_permissions">权限（%1$d 项）</string>
     <string name="build_button">构建</string>
-    <string name="build_not_ready">构建功能尚未完成</string>
     <string name="build_working">构建中…</string>
     <string name="build_success">构建完成</string>
     <string name="build_fail">构建失败：%1$s</string>
@@ -303,8 +293,6 @@
     <string name="cd_settings">设置</string>
     <string name="cd_more_options">更多选项</string>
     <string name="cd_back">返回</string>
-    <string name="cd_replace">替换</string>
-    <string name="cd_replace_all">全部替换</string>
     <string name="menu_category_file">文件</string>
     <string name="menu_category_project">工程</string>
     <string name="menu_category_text">文本</string>
@@ -327,7 +315,6 @@
     <string name="api_group_setters">公有 setter</string>
     <string name="api_group_fields">公有字段</string>
     <string name="api_group_methods">公有方法</string>
-    <string name="api_native_module_desc">原生 C 模块。其函数表仅在引擎运行期 luaopen_* 之后存在于 Lua 内存中，无法静态识别。</string>
     <string name="api_category_all">全部</string>
     <string name="api_category_common">常用控件</string>
     <string name="api_category_material">谷歌质感库控件</string>
@@ -337,13 +324,10 @@
     <string name="api_category_framework">Android 框架</string>
     <string name="api_category_java">Java 标准库</string>
     <string name="api_category_project">工程库</string>
-    <string name="api_category_native">原生库</string>
     <string name="api_category_other">其他</string>
-    <string name="cd_api_browser">API 浏览器</string>
     <string name="api_filter">按 分 类 筛 选</string>
     <string name="api_clear_search">清 空 搜 索</string>
 
-    <string name="api_usage_title">按用途</string>
     <string name="api_usage_adapter">适配器</string>
     <string name="api_usage_container">容器控件</string>
     <string name="api_usage_input">输入框类控件</string>
@@ -354,5 +338,4 @@
     <string name="api_usage_popup">弹出式窗口</string>
     <string name="api_usage_dropdown">下拉菜单控件</string>
     <string name="api_kind_interface">接口</string>
-    <string name="api_kind_class">类</string>
 </resources>

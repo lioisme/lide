@@ -41,3 +41,14 @@ reference/
 # Legacy guards: block re-creation of superseded locations
 参考资料/
 docs/reference/
+
+# Shadow 插件机制废弃守卫（2026-08-07 D-19：取消插件平台，androlua 仅作上游基线集成；
+# 以下位置如有残留/重建一律不跟踪，防误入库）
+third_party/shadow/
+androlua-loader/
+androlua-plugin/
+hello-loader/
+hello-plugin/
+hello-runtime/
+plugin-sdk/
+app/src/main/assets/lide-plugins/

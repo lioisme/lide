@@ -21,7 +21,6 @@
     <string name="text_op_word_next">Word Right</string>
 
     <!-- Editor tabs -->
-    <string name="cd_close_tab">Close tab</string>
     <string name="cd_open_file_tree">Open file tree</string>
     <string name="dirty_marker">• </string>
     <string name="menu_close_tab">Close</string>

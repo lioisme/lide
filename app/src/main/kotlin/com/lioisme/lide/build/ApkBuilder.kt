@@ -175,7 +175,6 @@ object ApkBuilder {
     /** 打包产物不读取的宿主资产目录（编辑器/宿主专属，随宿主 APK 剔除）。 */
     private val HOST_ASSET_EXCLUDED =
         listOf(
-            "assets/samples/",
             "assets/textmate/",
             "assets/keys/",
             "assets/luadoc/",

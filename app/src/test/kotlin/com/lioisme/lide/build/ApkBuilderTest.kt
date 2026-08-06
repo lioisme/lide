@@ -57,7 +57,6 @@ class ApkBuilderTest {
             put("resources.arsc", "arsc-bytes".toByteArray(), stored = true)
             put("assets/lua/bin.lua", "-- host bin".toByteArray())
             put("assets/lua/notused.lua", "-- host not used".toByteArray())
-            put("assets/samples/demo/main.lua", "-- sample".toByteArray())
             put("assets/keys/testkey.pk8", "key-bytes".toByteArray())
             put("assets/textmate/lua.tmLanguage.json", "{}".toByteArray())
             // 空名零字节条目（对齐/壳产物）：必须被跳过，不能触发重复条目拒绝
@@ -160,8 +159,7 @@ class ApkBuilderTest {
         // 白名单内引擎库保留；未列入的宿主引擎库剔除
         assertArrayEquals("-- host bin".toByteArray(), entries["assets/lua/bin.lua"])
         assertTrue("assets/lua/notused.lua" !in entries)
-        // 宿主专属资产（示例/签名密钥/语法高亮）不进入产物
-        assertTrue("assets/samples/demo/main.lua" !in entries)
+        // 宿主专属资产（签名密钥/语法高亮）不进入产物
         assertTrue("assets/keys/testkey.pk8" !in entries)
         assertTrue("assets/textmate/lua.tmLanguage.json" !in entries)
     }
