@@ -30,7 +30,7 @@
 | Xposed 模块路线图（M1~M5） | [planned/XPOSED_MODULE_FEASIBILITY_REPORT.md](planned/XPOSED_MODULE_FEASIBILITY_REPORT.md) | 研究定稿，未启动 |
 | 引擎性能优化建议 | [planned/GAME_ENGINE_PERFORMANCE_AUDIT_REPORT.md](planned/GAME_ENGINE_PERFORMANCE_AUDIT_REPORT.md) | 审计完成，建议未排期（看板娘已原生化，石头未动） |
 | 架构清理与重构（补丁式/重复代码收敛） | [planned/ARCHITECTURE_CLEANUP_AUDIT_REPORT.md](planned/ARCHITECTURE_CLEANUP_AUDIT_REPORT.md) | 进行中（2026-08-06：Phase A 全部 + Phase B 全部 + Phase C 部分已完成，见文档完成记录） |
-| **LIDE 插件平台（小政府）立项：开放 Plugin SDK + LIDE 聚合 androlua 首个插件** | [planned/PLUGIN_PLATFORM_REPORT.md](planned/PLUGIN_PLATFORM_REPORT.md) | 设计定稿（2026-08-06，LIDE-DESIGN-2026-001），待立项；Phase 0~5 路线图见报告 §16（前审计 LIDE-AUDIT-2026-014 已归档 discard） |
+| ~~**LIDE 插件平台（小政府）立项：开放 Plugin SDK + LIDE 聚合 androlua 首个插件**~~ | ~~[planned/PLUGIN_PLATFORM_REPORT.md](planned/PLUGIN_PLATFORM_REPORT.md)~~ | **已取消（2026-08-07）**：Shadow 插件机制拆除，androlua 维持上游基线 library 集成（D-19 反转 D-18）；设计文档已归档 `discard/PLUGIN_PLATFORM_REPORT.md`，拆除执行见 `planned/SHADOW_REMOVAL_DEAD_CODE_CLEANUP_WORK_ORDER.md` |
 
 ## 维护规则
 

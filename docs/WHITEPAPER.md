@@ -376,7 +376,7 @@ APK——不设 jniLibs 缓存目录，也无 rebuild 脚本（R5）。
   `require "lfs"` / `require "lsqlite3"` 验证通过。
 - ⏭️ **lluv**：与已内置的 luv 功能重叠（同源于 libuv），pro 生态中极少直接使用，不构建。
 - ⏭️ **tcc**：脚本内嵌 C 编译器；NDK 29 仅 armeabi-v7a 有目标（无 arm64-v8a / x86_64），对现代设备无实际可用性，不构建。
-- **补偿机制**：缺失模块（含任意第三方 .so）由工程 `libs/` 自备 —— 引擎 `loadLibs` 自动登记 `getLibrarys()`，`libsloader` 优先命中表，否则 `package.loadlib("./libs/lib…so", "luaopen_…")`。用法见 `app/src/main/assets/samples/DemoProject/libs/README.txt`。
+- **补偿机制**：缺失模块（含任意第三方 .so）由工程 `libs/` 自备 —— 引擎 `loadLibs` 自动登记 `getLibrarys()`，`libsloader` 优先命中表，否则 `package.loadlib("./libs/lib…so", "luaopen_…")`。用法见 `scripts/examples-src/DemoProject/libs/README.txt`。
 
 另注：lide 内置模块含 `gl`（OpenGL 绑定，对应 pro 的 luagl）与 `mime`（pro 未内置）等；`socket` 等常用模块与 pro 完全一致。内置 Lua 库为 pro 超集（31 文件 vs pro 28）。
 

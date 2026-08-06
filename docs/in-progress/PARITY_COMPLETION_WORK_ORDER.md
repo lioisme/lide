@@ -48,7 +48,7 @@ lide 引擎运行时层与 pro **已 100% 对齐且为超集**（`com.luajava`/`
 1. **Kotlin 原生实现**：pro 的 Lua 页面逻辑平移为 Kotlin/Compose；脚本资产（`android.lua` 类表、`layouthelper` 逻辑、`console.lua` 编译链）作为**参考数据/逻辑**平移，不把 Lua 代码当宿主跑；
 2. **边界不变**：补全/诊断/高亮/导航等文本级能力放 `:editor`（R1）；查错（luac 编译）、运行、权限、打包放 `:app`（R2）；
 3. **每 WP 完成即真机/模拟器回归**（ADB 见 §2），不只以编译通过为准；
-4. **pro 工程即验收基准**：`app/src/main/assets/samples/` 的 4 个工程（demo / DemoProject / kleinbottle / testjson）在 pro 生态可正常运行，作为每次回归的固定基准。
+4. **pro 工程即验收基准**：`scripts/examples-src/` 的 4 个工程（demo / DemoProject / kleinbottle / testjson）在 pro 生态可正常运行，作为每次回归的固定基准（构建期由 `:app:generateExamples` 打包为 `assets/examples/*.alp`，2026-08-07 起 samples/ 已随 LIDE-WO-2026-019 删除）。
 
 ---
 
@@ -68,10 +68,10 @@ lide 引擎运行时层与 pro **已 100% 对齐且为超集**（`com.luajava`/`
 
 | 工程 | 来源 | 验证能力 |
 |---|---|---|
-| `demo` | assets/samples（pro 生态移植） | ListView + HTTP + JSON + LuaAdapter |
-| `DemoProject` | assets/samples | 页面链（page_calc/page_info）+ libs 说明 |
-| `kleinbottle` | assets/samples | OpenGL（libgl.so）+ createProxy |
-| `testjson` | assets/samples | 复杂 UI（LuaDrawable/OverScroller）+ dkjson |
+| `demo` | scripts/examples-src（pro 生态移植） | ListView + HTTP + JSON + LuaAdapter |
+| `DemoProject` | scripts/examples-src | 页面链（page_calc/page_info）+ libs 说明 |
+| `kleinbottle` | scripts/examples-src | OpenGL（libgl.so）+ createProxy |
+| `testjson` | scripts/examples-src | 复杂 UI（LuaDrawable/OverScroller）+ dkjson |
 | pro IDE 页面 | pro-master `assets/{project,projectinfo,plugin,javaapi,layouthelper}/` | 功能对照基准（作为 WP-004/007/008/009 的目标行为定义） |
 
 ### 2.3 验证命令（详见附录 A）

@@ -10,9 +10,9 @@
 ```
 docs/
 ├── kb/            ← 本知识库（索引 + 分主题条目；唯一事实来源）
-├── in-progress/   ← 进行中文档（3 篇）
-├── planned/       ← 计划中文档（4 篇）
-├── discard/       ← 丢弃区（唯一出口）：已完成/过时文档 42 篇，只追溯不维护
+├── in-progress/   ← 进行中文档（2 篇）
+├── planned/       ← 计划中文档（7 篇）
+├── discard/       ← 丢弃区（唯一出口）：已完成/过时文档 45 篇，只追溯不维护
 └── reference/     ← 参考源码资产（gitignored：androlua / sora-editor / Squircle-CE / project / 代码手册社区）
 ```
 
@@ -38,7 +38,7 @@ docs/
 > **计划中** = 研究已毕但实施未排期（或历史草案）；**已丢弃** = 已完成 / 已过时 / 被取代
 > （统一移入 `docs/discard/`，见 [discard/README.md](../discard/README.md) §3 清单，不再参与状态管理）。
 
-### 2.1 已完成（全部移入 discard/，共 30 篇）
+### 2.1 已完成（全部移入 discard/，共 31 篇）
 
 > 2026-08-05 起已完成文档不再驻留 `docs/completed/`，统一 `git mv` 至 `docs/discard/`。
 > 完整清单（含每篇一句话 + 结论蒸馏去向）见 `docs/discard/README.md` §3.1；
@@ -56,7 +56,7 @@ docs/
 | `WHITEPAPER.md`（docs/） | 实时 | 白皮书 v2.0：架构/路线图/原生模块差异声明 §7.1 | 进行中 | 2026-08-05 恢复自 git 历史对象 `36eac8c1`（此前缺 §7.1/§8/附录 A 尾部）；阶段四/五待随打包器更新 |
 | `AGENTS.md`（根） | 实时 | 评审硬门槛：R1~R5 边界、构建验证命令、编辑器约定、/libs 机制约定 | 进行中 | 评审门禁，改动前必读 |
 
-### 2.3 计划中（4 篇）
+### 2.3 计划中（6 篇）
 
 | 文档 | 日期 | 内容一句话 | 状态 | 注意 |
 |------|------|-----------|------|------|
@@ -66,17 +66,16 @@ docs/
 | `XPOSED_MODULE_FEASIBILITY_REPORT.md` | 2026-07-31 | Xposed 模块可行性：技术可行（四支柱为真）但有前提 | 研究已定稿，路线图 M1~M5 全部未启动 | 前置依赖：打包器（WP-014）落地并真机验收 |
 | `ARCHITECTURE_CLEANUP_AUDIT_REPORT.md` | 2026-08-06 | 架构审计：清理补丁式/妥协性/重复性代码（5 类补丁子系统、~59 防御 catch、双源语言目录等）+ 最优解目标架构 + Phase A~D 迁移计划 | 实施中：Phase A（P0×5）与 Phase B（B-1~B-5）全部完成，Phase C 部分完成（C-3/C-4 + C-1/C-2 安全子项），Phase D 文档漂移部分完成 | 三项根因：ApiIndex 负查找（A-1 根治）、语言数据双源（A-2 根治）、navigation/m3 补丁围栏（C-1/C-2 待真机验证后拆除）；完成记录见文档 §7 |
 | `GAME_ENGINE_PERFORMANCE_AUDIT_REPORT.md` | 2026-08-01 | 石头/看板娘瓶颈定位，原生化端到端估算 3~15 倍 | 审计完成，优化建议未排期 | 看板娘已原生化（LIVE2D 迁移）；石头未动；诚实声明：估算未 profiler 校准 |
-| `PLUGIN_PLATFORM_REPORT.md` | 2026-08-06 | **插件平台设计定稿（LIDE-DESIGN-2026-001）**：LIDE「小政府」化 = 纯 IDE + 开放 Plugin SDK 插件平台（技术识别即接入，类 Xposed 模型）；契约 v1（IPluginProvider/IPluginHost/PluginDescriptor）+ 生命周期状态机 + 页面导航 + 能力模型 + 安全开放政策 + androlua 插件实例迁移清单 + Phase 0~5 路线图 + 15 项可执行验收 | 设计定稿（2026-08-06），待立项；Roadmap 见本文档 §16 | 取代并升级 `PLUGIN_SEPARATION_ARCHITECTURE_REPORT`（LIDE-AUDIT-2026-014 已归档 discard）；前审计的 11 耦合点证据与隔离 E2E 锚点继续生效 |
 
 ### 2.4 未登记的新进展（知识库补录）
 
 > 2026-08-05 治理后 WP-014 已补登记，无遗留未登记进展。新进展请遵循 §5 维护约定及时登记。
 
-### 2.5 已丢弃（docs/discard/，42 篇）
+### 2.5 已丢弃（docs/discard/，45 篇）
 
 已完成 / 过时 / 被取代文档统一移入 `docs/discard/`（`git mv` 保留历史），**不参与状态管理、不作为事实来源**：
 
-- **已完成 30 篇**（原 `docs/completed/`）：结论均已蒸馏进本知识库，逐篇一句话 + 蒸馏去向见 `docs/discard/README.md` §3.1。
+- **已完成 31 篇**（原 `docs/completed/` 30 篇 + 2026-08-07 新增 `SHADOW_REMOVAL_DEAD_CODE_CLEANUP_WORK_ORDER`）：结论均已蒸馏进本知识库，逐篇一句话 + 蒸馏去向见 `docs/discard/README.md` §3.1。
 - **过时 8 篇**（原 `docs/archive/`）：`WORK_ORDER`（历史总任务书）、`IDE_RUNTIME_SEPARATION_FEASIBILITY_REPORT`（方案未采纳，与 R1~R5 冲突）、`ui-refactor`（Lua UI 时代草稿，代码已删除）、`audit-remediation`（Compose 前整改清单）、`java2kotlin-migration`（已反转：重新 vendor 上游 Java）、`architecture`/`lua-modules`/`code-map`（kb/project 三篇自标过期）。
 - 丢弃原因逐条见 `docs/discard/README.md` §3.2；治理审计依据：`docs/discard/DOCS_GOVERNANCE_AUDIT_REPORT_2026-08-05.md`。
 

@@ -29,9 +29,9 @@
 | 历史审计结论 / 旧报告 | 本目录 §3 清单 → 对应文件 |
 | 上游基线 / 社区语料 | `reference/`（只读，gitignore；2026-08-05 自 docs/reference/ 迁出，纯净基线已去重） |
 
-## 3. 丢弃清单（42 篇）
+## 3. 丢弃清单（45 篇）
 
-### 3.1 已完成文档（原 docs/completed/，30 篇）
+### 3.1 已完成文档（原 docs/completed/ 30 篇 + 新增 1 篇，共 31 篇）
 
 > 结论均已沉淀进 `docs/kb/`；对应蒸馏位置见各条目「结论去向」。
 
@@ -70,8 +70,9 @@
 | `EDITOR_PERFORMANCE_AUDIT_V2_REPORT.md` | 2026-07-31 | 编辑器性能审计 V2：阶段 A 止血 + 阶段 B 标签卡/工程树全部落地；转场建议被 slide 决策取代 | kb/EDITOR §3 + kb/ROADMAP（剩余 R8/阶段 C 入 backlog） |
 | `DOCS_GOVERNANCE_AUDIT_REPORT_2026-08-05.md` | 2026-08-05 | 文档治理审计：全量文档去重分类、统一丢弃区重组（本目录建立依据） | docs/discard/README §1 + kb/README §6/§7 |
 | `REFERENCE_ASSETS_GOVERNANCE_AUDIT_REPORT.md` | 2026-08-05 | 上游基线资产治理：reference 数据湖迁出 docs/ + 纯净基线去重（已执行） | reference/README + kb/README §3 |
+| `SHADOW_REMOVAL_DEAD_CODE_CLEANUP_WORK_ORDER.md` | 2026-08-07 | Shadow 插件机制拆除 + 死代码/死依赖/死资产全量清除（LIDE-WO-2026-019）：删除 third_party/shadow 与 6 个 loader/plugin/sdk 残留（~503MB）、lide-plugins 资产 12.3MB、assets/samples 139.5KB、patches 空目录；移除 material3-window-size-class 死依赖 + 18 条死字符串；D-19 反转登记 D-18；全部验收门禁通过（构建/单测/APK 无插件资产） | kb/DECISIONS D-19 + kb/README §2 |
 
-### 3.2 过时 / 被取代文档（9 篇）
+### 3.2 过时 / 被取代文档（10 篇）
 
 | 文件 | 原位置 | 归档原因（一句话） |
 |------|--------|-------------------|
@@ -84,6 +85,7 @@
 | `lua-modules.md` | `kb/project/` | 自标过期（原 Lua 模块清单）；现行运行时模块见 `third_party/` 与 `reference/` |
 | `code-map.md` | `kb/project/` | 自标过期（原代码地图）；现行模块拓扑见 `docs/kb/ARCHITECTURE.md` §3 |
 | `PLUGIN_SEPARATION_ARCHITECTURE_REPORT.md` | `planned/` | 双 APK 分家审计（LIDE-AUDIT-2026-014，2026-08-06）**已被 `PLUGIN_PLATFORM_REPORT.md` 演进取代**：方案从「双 APK + 运行端口」升级为「开放 Plugin SDK 插件平台（小政府）」，其隔离缺口证据（11 耦合点）与验收锚点在platform 报告中继续交叉引用 |
+| `PLUGIN_PLATFORM_REPORT.md` | `planned/` | 插件平台「设计定稿」（LIDE-DESIGN-2026-001）——**2026-08-07 方案整体取消**（D-19 反转 D-18）：Shadow 插件机制拆除，androlua 维持上游基线 library 集成；连同前篇共三篇均为插件化历史，仅作追溯 |
 
 ### 3.3 非文档资产归档（补登）
 
