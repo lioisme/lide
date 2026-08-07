@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- P0 运行时引擎 dex manifest（runtime buildType sourceSet，与 main 合并）：
+         该变体产物经 embedRuntimeDex 解出 classes.dex 作为打包引擎 dex 资产；
+         其 manifest 的 application 必须是 com.androlua.LuaApplication（产物运行期
+         仅需 LuaApplication.extractLuaScripts 解包 assets/lua → filesDir/lua，
+         无需 IDE 初始化链）；MainActivity（IDE 入口）与 LideApp 均移出引用面，
+         R8 可达性剥离。 -->
+    <application
+        android:name="com.androlua.LuaApplication"
+        tools:replace="android:name">
+
+        <!-- 移除 IDE 主入口：runtime 变体是打包模板，不需要 IDE UI -->
+        <activity
+            android:name=".MainActivity"
+            tools:node="remove" />
+
+    </application>
+</manifest>

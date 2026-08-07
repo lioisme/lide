@@ -356,8 +356,7 @@ object ApiIndex {
         return loadClassRef(name) != null
     }
 
-    private fun isBootFramework(name: String): Boolean =
-        name.startsWith("android.") || name.startsWith("java.") || name.startsWith("javax.")
+    private fun isBootFramework(name: String): Boolean = name.startsWith("android.") || name.startsWith("java.") || name.startsWith("javax.")
 
     /**
      * 列表行反射信息（类形态 + 可加载性）。缓存路径 O(1) 查表，未命中合并缓存解析

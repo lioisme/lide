@@ -24,16 +24,11 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.MenuBook
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.SpaceBar
 import androidx.compose.material.icons.filled.Wallpaper
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -47,7 +42,10 @@ import com.lioisme.lide.editor.TipIconButton
 import com.lioisme.lide.ui.theme.LideTopBar
 import com.lioisme.lide.ui.theme.SettingsManager
 
-/** D1：21 项编辑器设置全集（分组见 [EditorConfig]，持久化经 [SettingsManager.updateEditor]）。 */
+/**
+ * 编辑器设置页：编辑器 21 项设置全集（分组见 [EditorConfig]，
+ * 持久化经 [SettingsManager.updateEditor]，含恢复默认）。
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditorSettingsScreen(
@@ -64,8 +62,21 @@ fun EditorSettingsScreen(
     Scaffold(
         topBar = {
             LideTopBar(
-                title = stringResource(R.string.editor_settings),
+                title = stringResource(R.string.editor),
                 onBack = onBack,
+                actions = {
+                    TipIconButton(
+                        tooltip = stringResource(R.string.restore_defaults),
+                        onClick = {
+                            SettingsManager.resetEditor(context)
+                            android.widget.Toast
+                                .makeText(context, context.getString(R.string.restore_defaults_done), android.widget.Toast.LENGTH_SHORT)
+                                .show()
+                        },
+                    ) {
+                        Icon(Icons.Default.Refresh, contentDescription = null)
+                    }
+                },
             )
         },
     ) { padding ->

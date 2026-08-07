@@ -1,5 +1,6 @@
 package com.lioisme.lide.ui.screen
 
+import com.lioisme.lide.build.AfterBuild
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -87,5 +88,31 @@ class BuildPackagingTest {
         val libs = engineLuaLibs(emptyMap(), listOf(using), host)
 
         assertTrue("http.lua 经 .using 应被保留", libs.contains("http.lua"))
+    }
+
+    @Test
+    fun buildOutputName_blankTemplate_fallsBackToDefault() {
+        assertEquals("com.example.app-1.0.apk", buildOutputName("com.example.app", "1.0", ""))
+        assertEquals("com.example.app-1.0.apk", buildOutputName("com.example.app", "1.0", "   "))
+    }
+
+    @Test
+    fun buildOutputName_placeholdersReplacedAndSanitized() {
+        assertEquals("com.example.app-1.0.apk", buildOutputName("com.example.app", "1.0", "{package}-{version}.apk"))
+        assertEquals("App_1.0_x.apk", buildOutputName("com.example.app", "1.0", "App {version} x.apk"))
+    }
+
+    @Test
+    fun buildOutputName_illegalCharsSanitized() {
+        assertEquals("a_b-1_0.apk", buildOutputName("a/b", "1:0", "{package}-{version}.apk"))
+    }
+
+    @Test
+    fun afterBuildParse_defaultsToInstallOnBlankOrIllegal() {
+        assertEquals(AfterBuild.INSTALL, AfterBuild.parse(null))
+        assertEquals(AfterBuild.INSTALL, AfterBuild.parse(""))
+        assertEquals(AfterBuild.INSTALL, AfterBuild.parse("AUTO"))
+        assertEquals(AfterBuild.SAVE, AfterBuild.parse("SAVE"))
+        assertEquals(AfterBuild.INSTALL, AfterBuild.parse("INSTALL"))
     }
 }

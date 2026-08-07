@@ -25,8 +25,8 @@ docs/
 │   ├── androlua-lua/    #   Lua 工程开发知识库（独立子库）
 │   └── androlua-community/ # 社区帖子训练知识库（独立子库：catalog/positives/negatives/training）
 ├── in-progress/          # 进行中工作单 / 报告（2 篇）
-├── planned/              # 计划中 / 研究完成未排期（4 篇）
-├── discard/              # 丢弃区（唯一出口）：已完成/过时/无价值文档 41 篇，只追溯不维护
+├── planned/              # 计划中 / 研究完成未排期（6 篇）
+├── discard/              # 丢弃区（唯一出口）：已完成/过时文档 30 篇（15 篇已物理删除，条目保留作墓碑），只追溯不维护
 └── reference/            # 参考项目基线 / 社区语料（git ignored，只读，不提交）
 ```
 

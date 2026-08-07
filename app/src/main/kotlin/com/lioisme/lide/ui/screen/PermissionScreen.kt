@@ -570,19 +570,10 @@ private fun buildHostPermUiState(ctx: Context): HostPermUiState =
     )
 
 private fun buildHostPermissionList(ctx: Context): List<PermissionItem> {
-    val declared = hostDeclaredPermissions(ctx)
+    val declared = PermissionCatalog.hostDeclaredPermissions(ctx)
     return PermissionCatalog.ALL
         .filter { (name, _) -> name in declared }
         .map { (name, labelRes) ->
             PermissionItem(name, labelRes, checkGranted(ctx, name))
         }
 }
-
-/** 宿主 manifest 声明的权限集合（含特殊权限）。 */
-private fun hostDeclaredPermissions(ctx: Context): Set<String> =
-    try {
-        val info = ctx.packageManager.getPackageInfo(ctx.packageName, PackageManager.GET_PERMISSIONS)
-        info.requestedPermissions?.toSet() ?: emptySet()
-    } catch (_: Throwable) {
-        emptySet()
-    }

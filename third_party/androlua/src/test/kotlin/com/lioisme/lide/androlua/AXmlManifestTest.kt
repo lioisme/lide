@@ -219,6 +219,60 @@ class AXmlManifestTest {
         assertTrue("未找到 application 元素", found)
     }
 
+    @Test
+    fun `patch rewrites application name and removes activities in dex mode`() {
+        // dex 替换模式补丁面：application 回落引擎 Application + IDE 主入口整树移除。
+        val edit = ManifestEdit(
+            packageName = "com.demo.app",
+            appLabel = "Demo",
+            versionCode = 2,
+            versionName = "2.0",
+            usesPermissions = listOf("android.permission.INTERNET"),
+            launcherActivity = "com.lioisme.lide.engine.EngineActivity",
+            applicationName = "com.androlua.LuaApplication",
+            removeActivities = listOf("com.lioisme.lide.MainActivity"),
+        )
+        val patched = AXmlManifest.patch(sample(), edit)
+        val strings = readUtf16Strings(patched)
+
+        var appName: String? = null
+        val activityNames = mutableListOf<String>()
+        var pos = 8
+        while (pos < patched.size) {
+            val type = u16(patched, pos)
+            val size = u32(patched, pos + 4).toInt()
+            if (type == 0x0102) {
+                val elName = strings.getOrNull(u32(patched, pos + 20).toInt())
+                val attrStart = u16(patched, pos + 24)
+                val attrSize = u16(patched, pos + 26)
+                val attrCount = u16(patched, pos + 28)
+                val base = pos + 16 + attrStart
+                var nameAttr: String? = null
+                for (a in 0 until attrCount) {
+                    val p = base + a * attrSize
+                    val nsStr = strings.getOrNull(u32(patched, p).toInt())
+                    val attrName = strings.getOrNull(u32(patched, p + 4).toInt())
+                    val dataType = patched[p + 15].toInt() and 0xFF
+                    if (nsStr == "http://schemas.android.com/apk/res/android" &&
+                        attrName == "name" &&
+                        dataType == 0x03
+                    ) {
+                        nameAttr = strings.getOrNull(u32(patched, p + 16).toInt())
+                    }
+                }
+                when (elName) {
+                    "application" -> appName = nameAttr
+                    "activity" -> activityNames += nameAttr ?: ""
+                }
+            }
+            assertTrue("chunk size $size at $pos", size > 0 && pos + size <= patched.size)
+            pos += size
+        }
+        assertEquals("com.androlua.LuaApplication", appName)
+        assertFalse("MainActivity 必须整树移除", "com.lioisme.lide.MainActivity" in activityNames)
+        assertTrue("EngineActivity 声明保留", "com.lioisme.lide.engine.EngineActivity" in activityNames)
+    }
+
     // ===== UTF-8 字符串池专项（aapt ENCODE_LENGTH 变长前缀） =====
 
     @Test

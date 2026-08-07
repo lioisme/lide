@@ -273,10 +273,14 @@ EngineActivity (extends LuaActivity, 独立 Activity 栈)
 
 ### 5.5 签名子系统
 
-- **调试签名**：lide 自带预生成的 debug.keystore（与 Android SDK 标准 debug 证书一致）
-- **自定义签名**：用户导入自己的 `.keystore` 或 `.jks` 文件，指定别名和密码
-- **v1 签名（JAR 签名）**：使用 `java.util.jar.JarFile` + `java.security.KeyStore` 实现
-- **v2 / v3 签名（APK 签名方案）**：使用 BouncyCastle 库 + APK Signing Block 格式实现
+签名档案（`SigningManager`）三类来源，打包页/设置页统一选择、持久化默认：
+
+- **默认签名**：内置 AOSP 调试钥（`assets/keys/testkey.pk8` + `testkey.x509.pem`，即 `debug-testkey` 档案，零迁移）
+- **自定义导入**：SAF 导入 `.jks` / `.p12`，列别名 → 存档案（密钥库复制入应用私目录，密码与 pro 一致明文存私有偏好）
+- **应用内自生成**：`SigningCrypto.generate` 零依赖手写 X.509 v3 自签证书 DER（RSA-2048 + PKCS12，别名 `lidekey`；密码可留空自动生成 12 位随机）——注意 version 字段必须 `[0] EXPLICIT`（`A0 03 02 01 02`）包装，裸 INTEGER 会被 OpenJDK 解析器误读为 serialNumber 导致 `algid parse error`
+- **v1 / v2 / v3 签名**：统一走 Google 官方 apksig（AGP 同源，`setMinSdkVersion(24)`），非自研/非 BouncyCastle
+
+Lua 打包双开关（`BuildOpts`，均默认开、互相独立）：`compileLua` = 全部工程 `.lua`（含 main.lua）编译为字节码，关 = 源码文本入库；`encryptBytecode` = 对入库的每个 Lua 文件 DES-ECB 加密（MAGIC `LIDE\x01\0\0\0` + 固定 8 字节密钥，编译开加密字节码、编译关加密源码文本），运行端 `luaL_loadfilex` 快路径自动解密（详见 `docs/planned/BUILD_SIGNING_ENCRYPTION_WORK_ORDER.md` §4）。
 
 ---
 
@@ -350,7 +354,7 @@ APK——不设 jniLibs 缓存目录，也无 rebuild 脚本（R5）。
 - APK 容器组装（`ApkBuilder`：宿主 APK + 工程 Lua 注入，ZIP 条目 4 字节对齐）
 - `classes.dex` 注入 / main.lua 编译字节码（`LuaCompiler`）
 - 资源与图标打包、v1 + v2 签名（`ApkSigner` / `V2Signer`）
-- 产物写盘 `<luaExtDir>/apk/`，FileProvider 分享安装（`BuildApkScreen`）
+- 产物写盘 `<luaExtDir>/apk/`，FileProvider 分享安装（`BuildPackagingDialog`）
 
 > **历史决策（2026-07-31）**：设备端独立 APK 打包一度暂不支持；2026-08 已按
 > `PARITY_COMPLETION_WORK_ORDER` 立项落地（打包链的 AXML/签名方案仅做显式拒绝与
@@ -358,10 +362,15 @@ APK——不设 jniLibs 缓存目录，也无 rebuild 脚本（R5）。
 
 ### 阶段五：签名与发布（已完成 2026-08）
 
-- 调试签名：`testkey.pk8` / `testkey.x509.pem`（assets/keys/，仅调试产物）
-- v1（JAR）+ v2（APK Signature Scheme）签名支持
-- APK 安装与分享（FileProvider + ACTION_INSTALL_PACKAGE）
+- 签名档案管理（`SigningManager` + `SigningScreen`）：默认内置 / 自定义导入（.jks/.p12）/ 应用内自生成三类
+- v1 + v2 + v3 签名（Google 官方 apksig）
+- 打包双开关：Lua 全量编译字节码（默认开）+ DES 加密（默认开、独立于编译），运行端自动解密
+- APK 安装与分享（FileProvider + ACTION_INSTALL_PACKAGE）；产物输出方式可选（默认自动安装，pro 兼容；可改仅保存）
 - 多 ABI 构建支持（宿主 arm64 / x64 debug variant）
+- **ABI 架构契约（D-1）**：打包 ABI 集合由宿主实际携带驱动（`ZipUtils.listAbis` 枚举宿主
+  `lib/<abi>/`，无白名单、任意未来新 ABI 天然通用）；新增架构 = 宿主加 flavor `abiFilters`
+  → 打包器自动可用（打包侧零改动）；32 位为非强制选项（NDK 29 无 32 位工具链，启用需 NDK 27 线，
+  属另行决策）
 
 ---
 

@@ -3,6 +3,8 @@ package com.lioisme.lide.editor
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,12 +22,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,8 +37,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.platform.LocalViewConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.selected
@@ -59,14 +60,18 @@ import sh.calvin.reorderable.rememberReorderableLazyListState
  * - 每个已打开文档均有指示器 —— 选中：全宽主题色指示条；未选中：主题色圆点；
  * - 文本使用主题色（选中 = primary，未选中 = onSurfaceVariant）；
  * - 手势契约：单击切换文档；长按拖动排序（拖起 alpha 0.5，原生长按振动）；
- *   关闭菜单为每个标签常驻的 ⋮ 下拉入口（关闭 / 关闭其他 / 关闭全部）；
+ *   长按后未超过系统触摸阈值位移、直接松手 = 调出关闭菜单（关闭 / 关闭其他 / 关闭全部）；
  * - 标签标题仅显示文件名（去路径），过长省略号截断；
  * - 脏标记前缀、超出宽度横向滚动。数据（[EditorTab] 列表）由宿主注入，
  *   本组件不持有任何文件/会话状态；切换/关闭/排序事件一律经回调上报宿主。
  *
- * 交互简化（C-3）：删除「位移观察协程 + 长按松手弹菜单」的逆向手势实现，
- * 关闭菜单改为常驻 DropdownMenu 入口；长按手势仅保留拖拽排序语义，
- * 不再需要区分「长按松手」与「长按拖动」。
+ * 手势实现（reorderable 3.0.0，已反编译二进制校验 API）：
+ * - 排序/长按检测走库原生 `longPressDraggableHandle`（内部为
+ *   detectDragGesturesAfterLongPress）；「长按松手是否弹菜单」用「本手势内是否出现
+ *   超过系统触摸阈值位移」判定：无位移 = 菜单，有位移 = 拖动排序。
+ *   位移由只读观察协程累计（不消费事件），且在任何 UP 事件送达前即已置位，
+ *   与 onDragStopped 回调（由 UP 触发）不存在时序竞态。
+ * - 标签卡不再常驻 ⋮ 菜单按钮（功能重复，用户决策），菜单唯一入口为长按松手。
  */
 /**
  * 打开的标签状态（单一状态类，B-5：合并宿主 `TabState` 双份同构类）。
@@ -156,7 +161,11 @@ private fun EditorTabItem(
     modifier: Modifier = Modifier,
 ) {
     val haptics = LocalHapticFeedback.current
+    val viewConfiguration = LocalViewConfiguration.current
     var menuExpanded by remember { mutableStateOf(false) }
+    // 「本手势是否出现超过系统触摸阈值的位移」：区分「长按松手弹菜单」与「拖动排序」。
+    // 只读观察协程在 MOVE 事件期间置位（早于 UP 事件），onDragStopped 读取时已无竞态。
+    val dragMoved = remember(tab.fileName) { mutableStateOf(false) }
     val interactionSource = remember(tab.fileName) { MutableInteractionSource() }
     // 标签标题：仅显示文件名（去目录路径），过长省略号截断。
     val displayName =
@@ -168,14 +177,34 @@ private fun EditorTabItem(
         modifier =
             modifier
                 .height(36.dp)
+                // 只读位移观察：不消费任何事件，仅累计记录本手势是否有超过触摸阈值的位移
+                // （阈值来自系统 ViewConfiguration.touchSlop，非自定义距离判定）。
+                .pointerInput(tab.fileName) {
+                    awaitEachGesture {
+                        dragMoved.value = false
+                        var accumulated = Offset.Zero
+                        val down = awaitFirstDown(requireUnconsumed = false) ?: return@awaitEachGesture
+                        while (true) {
+                            val event = awaitPointerEvent()
+                            val change = event.changes.firstOrNull { it.id == down.id } ?: continue
+                            if (!change.pressed) break
+                            accumulated += change.position - change.previousPosition
+                            if (!dragMoved.value &&
+                                accumulated.getDistance() >= viewConfiguration.touchSlop
+                            ) {
+                                dragMoved.value = true
+                            }
+                        }
+                    }
+                }
                 // 单击（短按松手）= 切换标签（clickable；selected 语义供无障碍/自动化识别）。
                 .clickable(
                     role = Role.Tab,
                     onClick = onClick,
                 ).semantics { this.selected = selected }
                 // reorderable 3.0.0 原生手势（库内为 detectDragGesturesAfterLongPress）：
-                // 长按 = 拖拽排序启动（onDragStarted，原生长按振动）。
-                // 关闭菜单不再依赖长按松手判定（C-3），由常驻 ⋮ 入口打开。
+                // 长按 = 拖拽排序启动（onDragStarted，原生长按振动）；
+                // 长按后未超过触摸阈值位移直接松手 = onDragStopped → 关闭菜单。
                 .then(
                     with(dragScope) {
                         Modifier.longPressDraggableHandle(
@@ -183,6 +212,9 @@ private fun EditorTabItem(
                             interactionSource = interactionSource,
                             onDragStarted = {
                                 haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+                            },
+                            onDragStopped = {
+                                if (!dragMoved.value) menuExpanded = true
                             },
                         )
                     },
@@ -193,7 +225,7 @@ private fun EditorTabItem(
             modifier =
                 Modifier
                     .fillMaxHeight()
-                    .padding(start = 12.dp)
+                    .padding(horizontal = 12.dp)
                     // 过长标签省略号截断（LazyRow 子项宽度无上限，必须显式封顶）。
                     .widthIn(max = MaxTabWidth),
         ) {
@@ -214,21 +246,6 @@ private fun EditorTabItem(
                     },
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-            )
-        }
-        // 常驻关闭菜单入口（C-3）：⋮ 打开关闭/关闭其他/关闭全部；点击独立于标签切换。
-        IconButton(
-            onClick = { menuExpanded = true },
-            modifier =
-                Modifier
-                    .align(Alignment.CenterEnd)
-                    .size(24.dp),
-        ) {
-            Icon(
-                Icons.Default.MoreVert,
-                contentDescription = stringResource(R.string.menu_close_tab),
-                modifier = Modifier.size(16.dp),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
         // 打开文档指示器：选中 = 全宽主题色指示条；未选中 = 主题色圆点。

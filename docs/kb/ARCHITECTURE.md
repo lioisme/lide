@@ -58,7 +58,7 @@ EditorScreen (rememberLauncherForActivityResult)
 要点：
 - 物化依赖（历史 P0-1 全局仓库方案）已随 WP-009 删除，`RunEngineLauncher` 为纯直启。
 - 引擎内置控制台保留（双通道：引擎页可见 + 返回后宿主可查）。
-- 插件运行传 `{luadir, luapath}`（EXTRA_SCRIPT_ARGS="arg"，对齐 LuaActivity `ARG` 键）。
+- 引擎入口支持可选变长脚本参数（EXTRA_SCRIPT_ARGS="arg"，对齐 LuaActivity `ARG` 键，`RunEngineLauncher.launch` 第三参透传）——pro 对等能力保留，插件调用已于 2026-08-07 随插件功能移除，当前宿主无调用方。
 
 ### 3.2 引擎初始化时序（官方 demo 顺序，勿改）
 
@@ -83,7 +83,7 @@ colorScheme → setEditorLanguage → setText
 ### 3.4 打包器（进行中，见 ROADMAP §1）
 
 ```
-BuildApkScreen
+BuildPackagingDialog（打包 UI 唯一入口，编辑器 ⋮ 菜单触发）
   → LuaCompiler（LuaState loadbuffer + dump → .luac，去 BOM，错误带行号）
   → AXmlManifest（纯字节级 AXML 解析/补丁：包名/label/versionCode/uses-permission 白名单，无 Android 依赖）
   → ApkBuilder + ZipUtils（zip 重打包/过滤/对齐）

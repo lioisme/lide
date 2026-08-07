@@ -17,19 +17,18 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.WrapText
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Android
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.DarkMode
-import androidx.compose.material.icons.filled.Extension
-import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.PhoneAndroid
 import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material.icons.filled.VpnKey
 import androidx.compose.material.icons.filled.Wallpaper
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -76,13 +75,10 @@ private val colorOptions =
 @Composable
 fun SettingsScreen(
     onBack: () -> Unit,
-    onEditorSettingsClick: () -> Unit = {},
+    onEditorClick: () -> Unit = {},
+    onAndroLuaClick: () -> Unit = {},
     onPermissionsClick: () -> Unit = {},
-    onPluginsClick: () -> Unit = {},
-    onManualClick: () -> Unit = {},
-    onExamplesClick: () -> Unit = {},
-    onApiBrowserClick: () -> Unit = {},
-    onHelpClick: () -> Unit = {},
+    onSigningClick: () -> Unit = {},
 ) {
     val context = LocalContext.current
     val activity = context.resolveActivity()
@@ -91,6 +87,7 @@ fun SettingsScreen(
     var showAppearanceSheet by remember { mutableStateOf(false) }
     var showColorSheet by remember { mutableStateOf(false) }
     var showLanguageSheet by remember { mutableStateOf(false) }
+    var showAboutDialog by remember { mutableStateOf(false) }
 
     val currentLanguageTag = LocaleManager.currentLanguageTag
 
@@ -145,33 +142,39 @@ fun SettingsScreen(
             }
             Spacer(Modifier.height(24.dp))
             SettingsSection(stringResource(R.string.editor)) {
-                // D1：21 项设置全集统一收敛到编辑器设置页（EditorSettingsScreen）。
+                // 编辑器设置独立入口页（EditorSettingsScreen，21 项设置）。
                 SettingsItem(
                     icon = Icons.AutoMirrored.Filled.WrapText,
-                    title = stringResource(R.string.editor_settings),
-                    subtitle = stringResource(R.string.editor_settings_subtitle),
-                    onClick = onEditorSettingsClick,
+                    title = stringResource(R.string.editor),
+                    subtitle = stringResource(R.string.editor_subtitle),
+                    onClick = onEditorClick,
+                )
+            }
+            Spacer(Modifier.height(24.dp))
+            SettingsSection(stringResource(R.string.androlua)) {
+                // AndroLua 合并页（2026-08-07 T1）：工具（API 浏览器/示例）+ 打包选项单入口。
+                SettingsItem(
+                    icon = Icons.Default.Android,
+                    title = stringResource(R.string.androlua),
+                    subtitle = stringResource(R.string.androlua_subtitle),
+                    onClick = onAndroLuaClick,
                 )
             }
             Spacer(Modifier.height(24.dp))
             SettingsSection(stringResource(R.string.general)) {
+                // 权限管理为 LIDE 通用运行时能力，非 AndroLua 专属，置于通用分区。
                 SettingsItem(
-                    icon = Icons.Default.GridView,
-                    title = stringResource(R.string.api_browser),
-                    subtitle = stringResource(R.string.api_browser_subtitle),
-                    onClick = onApiBrowserClick,
+                    icon = Icons.Default.Lock,
+                    title = stringResource(R.string.permission_management),
+                    subtitle = stringResource(R.string.perm_subtitle),
+                    onClick = onPermissionsClick,
                 )
+                // 签名管理独立界面（2026-08-07 T3）：开发者自管理签名档案，默认星标与打包页同步。
                 SettingsItem(
-                    icon = Icons.Default.MenuBook,
-                    title = stringResource(R.string.examples),
-                    subtitle = stringResource(R.string.examples_subtitle),
-                    onClick = onExamplesClick,
-                )
-                SettingsItem(
-                    icon = Icons.Default.Info,
-                    title = stringResource(R.string.help),
-                    subtitle = stringResource(R.string.help_subtitle),
-                    onClick = onHelpClick,
+                    icon = Icons.Default.VpnKey,
+                    title = stringResource(R.string.signing_manage),
+                    subtitle = stringResource(R.string.signing_manage_subtitle),
+                    onClick = onSigningClick,
                 )
                 SettingsItem(
                     icon = Icons.Default.Language,
@@ -183,19 +186,7 @@ fun SettingsScreen(
                     icon = Icons.Default.Info,
                     title = stringResource(R.string.about),
                     subtitle = stringResource(R.string.version),
-                    onClick = onManualClick,
-                )
-                SettingsItem(
-                    icon = Icons.Default.Lock,
-                    title = stringResource(R.string.permission_management),
-                    subtitle = stringResource(R.string.perm_subtitle),
-                    onClick = onPermissionsClick,
-                )
-                SettingsItem(
-                    icon = Icons.Default.Extension,
-                    title = stringResource(R.string.plugins),
-                    subtitle = stringResource(R.string.plugins_subtitle),
-                    onClick = onPluginsClick,
+                    onClick = { showAboutDialog = true },
                 )
             }
         }
@@ -240,6 +231,26 @@ fun SettingsScreen(
             onDismiss = { showLanguageSheet = false },
         )
     }
+
+    if (showAboutDialog) {
+        AlertDialog(
+            onDismissRequest = { showAboutDialog = false },
+            icon = { Icon(Icons.Default.Info, null) },
+            title = { Text(stringResource(R.string.about)) },
+            text = {
+                Column {
+                    Text(stringResource(R.string.app_name), style = MaterialTheme.typography.titleMedium)
+                    Spacer(Modifier.height(4.dp))
+                    Text(stringResource(R.string.version), style = MaterialTheme.typography.bodyMedium)
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = { showAboutDialog = false }) {
+                    Text(stringResource(R.string.confirm))
+                }
+            },
+        )
+    }
 }
 
 @Composable
@@ -267,7 +278,7 @@ internal fun SettingsSection(
 internal fun SettingsItem(
     icon: ImageVector,
     title: String,
-    subtitle: String,
+    subtitle: String = "",
     onClick: () -> Unit,
 ) {
     Row(
@@ -282,7 +293,9 @@ internal fun SettingsItem(
         Spacer(Modifier.width(16.dp))
         Column(modifier = Modifier.weight(1f)) {
             Text(title, style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurface)
-            Text(subtitle, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            if (subtitle.isNotEmpty()) {
+                Text(subtitle, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
         }
         Spacer(Modifier.width(8.dp))
         Icon(Icons.Default.ChevronRight, null, tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f), modifier = Modifier.size(20.dp))
@@ -293,7 +306,7 @@ internal fun SettingsItem(
 internal fun SettingsToggleItem(
     icon: ImageVector,
     title: String,
-    subtitle: String,
+    subtitle: String = "",
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
 ) {
@@ -309,7 +322,9 @@ internal fun SettingsToggleItem(
         Spacer(Modifier.width(16.dp))
         Column(modifier = Modifier.weight(1f)) {
             Text(title, style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurface)
-            Text(subtitle, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            if (subtitle.isNotEmpty()) {
+                Text(subtitle, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
         }
         Spacer(Modifier.width(8.dp))
         Switch(

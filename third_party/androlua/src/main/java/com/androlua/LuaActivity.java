@@ -868,6 +868,58 @@ public class LuaActivity extends Activity implements LuaBroadcastReceiver.OnRece
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    /**
+     * 运行时权限结果路由（pro 对等，ENGINE_MIGRATION P-3.6）：
+     * 脚本经 `activity.requestPermissions({"android.permission.CAMERA"}, 1)` 动态申请后，
+     * 系统结果回调本方法，转发 Lua 全局
+     * `onRequestPermissionsResult(requestCode, {permission,...}, {grantResult,...})`。
+     * 与 onActivityResult 同款：无 Lua 全局函数时静默忽略；异常经 sendError 上报。
+     * 数组显式转为 Lua table（pushObjectValue 不拆解数组，直接 pushJavaObject 会让
+     * 脚本无法迭代）。
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (L == null || permissions == null || grantResults == null) {
+            return;
+        }
+        synchronized (L) {
+            try {
+                L.setTop(0);
+                L.pushGlobalTable();
+                L.pushString("onRequestPermissionsResult");
+                L.rawGet(-2);
+                if (L.isFunction(-1)) {
+                    L.getGlobal("debug");
+                    L.getField(-1, "traceback");
+                    L.remove(-2);
+                    L.insert(-2);
+
+                    L.pushInteger(requestCode);
+
+                    L.newTable();
+                    for (int i = 0; i < permissions.length; i++) {
+                        L.pushString(permissions[i]);
+                        L.rawSetI(-2, i + 1);
+                    }
+
+                    L.newTable();
+                    for (int i = 0; i < grantResults.length; i++) {
+                        L.pushInteger(grantResults[i]);
+                        L.rawSetI(-2, i + 1);
+                    }
+
+                    int ok = L.pcall(3, 1, -2 - 3);
+                    if (ok != 0) {
+                        throw new LuaException(errorReason(ok) + ": " + L.toString(-1));
+                    }
+                }
+            } catch (LuaException e) {
+                sendError("onRequestPermissionsResult", e);
+            }
+        }
+    }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (mOnKeyDown != null) {

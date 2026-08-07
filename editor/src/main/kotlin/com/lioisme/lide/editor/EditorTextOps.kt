@@ -8,7 +8,7 @@ import io.github.rosemoe.sora.widget.SelectionMovement
 /**
  * 文本操作集合（任务单 G6）：一次性命令，全部 try/catch(Throwable) 降级。
  *
- * 宿主把本列表并入右上角「更多」分类菜单（[EditorMoreAction]）；
+ * 宿主把本列表并入右上角「更多」多级菜单（[EditorMoreAction]，按分类入子菜单）；
  * [editorProvider] 惰性获取当前编辑器实例（无实例时操作静默忽略）。
  * 行操作基于 sora 原生 `setSelectionRegion` + `deleteText` / `duplicateLine`，
  * 大小写转换与词级移动对齐 squircle 行为。
@@ -93,8 +93,8 @@ private fun toggleCase(editor: CodeEditor) {
         val lineText = content.getLine(left.line)
         var start = left.column
         var end = left.column
-        while (start > 0 && lineText[start - 1].isLetterOrDigit()) start--
-        while (end < lineText.length && lineText[end].isLetterOrDigit()) end++
+        while (start > 0 && lineText[start - 1].isIdentifierChar()) start--
+        while (end < lineText.length && lineText[end].isIdentifierChar()) end++
         left = left.fromThis().apply { column = start }
         right = right.fromThis().apply { column = end }
     }

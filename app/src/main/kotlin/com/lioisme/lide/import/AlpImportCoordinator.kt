@@ -6,7 +6,7 @@ import com.lioisme.lide.androlua.AlpManager
 import java.io.File
 
 /**
- * .alp 导入协调器（架构审计 B-1）：三屏（工程列表 / 示例 / 插件）共用的
+ * .alp 导入协调器（架构审计 B-1）：两屏（工程列表 / 示例）共用的
  * 「临时文件 + 冲突确认状态机 + 执行导入」单一入口。
  *
  * 收敛内容：
@@ -18,8 +18,9 @@ import java.io.File
  * 线程：全部方法供宿主在 IO 协程内调用；状态类为纯值，挂起状态由宿主
  * Compose state 持有（本类不持有任何 Android/Compose 依赖，JVM 可单测）。
  */
-class AlpImportCoordinator(private val context: Context) {
-
+class AlpImportCoordinator(
+    private val context: Context,
+) {
     /** 待确认导入：临时 .alp 文件路径 + 已解析的导入计划（冲突态）。 */
     data class Pending(
         val tempPath: String,

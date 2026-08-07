@@ -12,7 +12,6 @@ import com.lioisme.lide.editor.EditorConfig
  * 加减键只改这一处。
  */
 internal object SettingsRegistry {
-
     internal data class BoolKey(
         val name: String,
         val default: Boolean,

@@ -63,16 +63,14 @@ class EditorLanguage(
         try {
             super.requireAutoComplete(content, position, publisher, extraArguments)
 
-            if (scopeName != LUA_SCOPE) return
+            if (scopeName != LanguageDetector.LUA_SCOPE) return
             val editor = this.editor ?: return
             if (!isAutoCompleteEnabled) return
 
             val line = content.getLine(position.line)
             val prefix =
                 if (position.column <= line.length) {
-                    line.substring(0, position.column).takeLastWhile { c ->
-                        c.isLetterOrDigit() || c == '_'
-                    }
+                    line.substring(0, position.column).takeLastWhile(Char::isIdentifierChar)
                 } else {
                     ""
                 }
@@ -90,6 +88,5 @@ class EditorLanguage(
 
     private companion object {
         const val TAG = "EditorLanguage"
-        const val LUA_SCOPE = "source.lua"
     }
 }

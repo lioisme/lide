@@ -130,9 +130,69 @@ class ApkSignerTest {
     @Test
     fun `apksigner verifies v2 signature`() {
         val signed = ApkSigner.sign(sampleApk(), key, cert)
+        val output = verifyWithApksigner(signed, minSdk = 24)
+        assertTrue(output.contains("Verified using v2 scheme (APK Signature Scheme v2)"))
+    }
+
+    @Test
+    fun `default scheme v1v2v3 verified via v2 and v3`() {
+        val signed = ApkSigner.sign(sampleApk(), key, cert, SigningScheme.V1V2V3)
+        val entries = entriesOf(signed)
+        assertNotNull(entries["META-INF/MANIFEST.MF"]) // v1 三件套存在
+        val output = verifyWithApksigner(signed, minSdk = 24)
+        assertTrue(output.contains("Verified using v2 scheme (APK Signature Scheme v2)"))
+        assertTrue(output.contains("Verified using v3 scheme (APK Signature Scheme v3)"))
+    }
+
+    @Test
+    fun `v1v2 scheme keeps jar trio but skips v3 block`() {
+        val signed = ApkSigner.sign(sampleApk(), key, cert, SigningScheme.V1V2)
+        val entries = entriesOf(signed)
+        assertNotNull(entries["META-INF/MANIFEST.MF"])
+        val output = verifyWithApksigner(signed, minSdk = 24)
+        assertTrue(output.contains("Verified using v2 scheme (APK Signature Scheme v2): true"))
+        assertTrue(output.contains("Verified using v3 scheme (APK Signature Scheme v3): false"))
+    }
+
+    @Test
+    fun `v2 only drops jar trio and v3 block`() {
+        val signed = ApkSigner.sign(sampleApk(), key, cert, SigningScheme.V2)
+        val entries = entriesOf(signed)
+        assertEquals(null, entries["META-INF/MANIFEST.MF"])
+        assertEquals(null, entries["META-INF/CERT.SF"])
+        val output = verifyWithApksigner(signed, minSdk = 24)
+        assertTrue(output.contains("Verified using v2 scheme (APK Signature Scheme v2): true"))
+        assertTrue(output.contains("Verified using v1 scheme (JAR signing): false"))
+        assertTrue(output.contains("Verified using v3 scheme (APK Signature Scheme v3): false"))
+    }
+
+    @Test
+    fun `v3 only signs with v3 block only`() {
+        val signed = ApkSigner.sign(sampleApk(), key, cert, SigningScheme.V3)
+        val entries = entriesOf(signed)
+        assertEquals(null, entries["META-INF/MANIFEST.MF"])
+        // v3 块内 minSdk 恒 ≥28（apksig processV3Configs），用 28 验证。
+        val output = verifyWithApksigner(signed, minSdk = 28)
+        assertTrue(output.contains("Verified using v3 scheme (APK Signature Scheme v3): true"))
+        assertTrue(output.contains("Verified using v1 scheme (JAR signing): false"))
+        assertTrue(output.contains("Verified using v2 scheme (APK Signature Scheme v2): false"))
+    }
+
+    @Test
+    fun `scheme parse falls back to default on garbage`() {
+        assertEquals(SigningScheme.V1V2V3, SigningScheme.parse(null))
+        assertEquals(SigningScheme.V1V2V3, SigningScheme.parse(""))
+        assertEquals(SigningScheme.V1V2V3, SigningScheme.parse("NOPE"))
+        assertEquals(SigningScheme.V2V3, SigningScheme.parse("V2V3"))
+    }
+
+    private fun verifyWithApksigner(
+        apk: ByteArray,
+        minSdk: Int,
+    ): String {
         val tmp = java.io.File.createTempFile("v2test", ".apk")
         try {
-            tmp.writeBytes(signed)
+            tmp.writeBytes(apk)
             val proc =
                 ProcessBuilder(
                     "java",
@@ -141,13 +201,13 @@ class ApkSignerTest {
                     "verify",
                     "--verbose",
                     "--min-sdk-version",
-                    "24",
+                    minSdk.toString(),
                     tmp.absolutePath,
                 ).redirectErrorStream(true).start()
             val output = proc.inputStream.readBytes().toString(Charsets.UTF_8)
             val exit = proc.waitFor()
             assertTrue("apksigner exit=$exit:\n$output", exit == 0)
-            assertTrue(output.contains("Verified using v2 scheme (APK Signature Scheme v2)"))
+            return output
         } finally {
             tmp.delete()
         }

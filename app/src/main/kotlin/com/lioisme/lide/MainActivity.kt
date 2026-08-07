@@ -15,10 +15,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import com.androlua.LuaApplication
 import com.lioisme.lide.androlua.AlpManager
-import com.lioisme.lide.androlua.AlpManager.AlpKind
 import com.lioisme.lide.engine.EngineActivity
 import com.lioisme.lide.engine.RunEngineLauncher
 import com.lioisme.lide.i18n.LocaleManager
+import com.lioisme.lide.project.ProjectManager
 import com.lioisme.lide.ui.navigation.LideNavHost
 import com.lioisme.lide.ui.theme.LideTheme
 import com.lioisme.lide.ui.theme.SettingsManager
@@ -35,7 +35,6 @@ class MainActivity : ComponentActivity() {
     // 追加的条目永远不会被组合消费——state 承载后迟到条目仍会被读取。
     private var pendingImportPaths by mutableStateOf<List<String>>(emptyList())
     private var pendingOpenFiles by mutableStateOf<List<Pair<String, String>>>(emptyList())
-    private var pendingPluginImport by mutableStateOf(false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,13 +61,10 @@ class MainActivity : ComponentActivity() {
                 pendingImportPaths = emptyList()
                 val openFiles = pendingOpenFiles
                 pendingOpenFiles = emptyList()
-                val pluginImport = pendingPluginImport
-                pendingPluginImport = false
                 LideNavHost(
                     navController = navController,
                     pendingImportPaths = imports,
                     pendingOpenFiles = openFiles,
-                    pendingPluginImport = pluginImport,
                 )
             }
         }
@@ -100,13 +96,7 @@ class MainActivity : ComponentActivity() {
                             AlpManager(this@MainActivity).import(path, AlpManager.ImportMode.RENAME)
                         }
                     if (result != null) {
-                        // 隐私（P3-7）：不打印导入目录绝对路径，仅记录类型。
-                        Log.d("MainActivity", "imported .alp (${result.kind})")
-                        if (result.kind == AlpKind.PLUGIN) {
-                            pendingPluginImport = true
-                        } else {
-                            pendingImportPaths = pendingImportPaths + path
-                        }
+                        pendingImportPaths = pendingImportPaths + path
                     }
                 }
             }
@@ -190,47 +180,54 @@ class MainActivity : ComponentActivity() {
             val dest = File(projectDir, file.name)
             file.copyTo(dest, overwrite = true)
             val packageName = "com.lioisme.lide.$baseName"
-            File(projectDir, "init.lua").writeText(
-                """
-                appname = "$baseName"
-                appver = "1.0"
-                packagename = "$packageName"
-                icon = nil
-                pages = {"main"}
-                user_permission = {}
-                """.trimIndent(),
-            )
+            File(projectDir, "init.lua").writeText(ProjectManager.initLuaTemplate(baseName, packageName))
             projectDir.absolutePath to file.name
         } catch (e: Exception) {
             Log.e("MainActivity", "adopt standalone lua failed: ${e.message}")
             null
         }
 
-    private fun resolveFilePath(uri: Uri): String? {
-        return when (uri.scheme) {
+    /**
+     * URI → 可读取的本地文件路径。
+     *
+     * `content://` 一律经 [openInputStream] 落盘到应用缓存（`_data` 列自
+     * API 29 起对 SAF 文档恒为 null / 不可用），随后按扩展名消费；
+     * `file://` 直接取路径；未知 scheme 回落 [Uri.getPath]。
+     */
+    private fun resolveFilePath(uri: Uri): String? =
+        when (uri.scheme) {
             "file" -> {
                 uri.path
             }
 
             "content" -> {
                 try {
-                    val cursor = contentResolver.query(uri, arrayOf("_data"), null, null, null)
-                    cursor?.use {
-                        if (it.moveToFirst()) {
-                            val idx = it.getColumnIndex("_data")
-                            if (idx >= 0) return it.getString(idx)
+                    val displayName =
+                        contentResolver.query(uri, null, null, null, null)?.use { c ->
+                            if (c.moveToFirst()) {
+                                c
+                                    .getColumnIndex("_display_name")
+                                    .takeIf { it >= 0 }
+                                    ?.let { c.getString(it) }
+                            } else {
+                                null
+                            }
                         }
+                    val base = displayName?.substringAfterLast('.')?.lowercase() ?: "bin"
+                    val file = File.createTempFile("incoming_", ".$base", cacheDir)
+                    contentResolver.openInputStream(uri)?.use { input ->
+                        file.outputStream().use { output -> input.copyTo(output) }
                     }
+                    file.absolutePath
                 } catch (_: Exception) {
+                    uri.path
                 }
-                uri.path
             }
 
             else -> {
                 uri.path
             }
         }
-    }
 
     override fun attachBaseContext(base: android.content.Context) {
         super.attachBaseContext(LocaleManager.wrap(base))

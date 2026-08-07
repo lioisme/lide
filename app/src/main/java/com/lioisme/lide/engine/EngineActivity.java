@@ -2,6 +2,7 @@ package com.lioisme.lide.engine;
 
 import com.androlua.LuaActivity;
 import com.lioisme.lide.R;
+import com.lioisme.lide.androlua.engine.EngineContract;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -39,13 +40,13 @@ public class EngineActivity extends LuaActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         Intent intent = getIntent();
-        projectDir = intent.getStringExtra("projectDir");
+        projectDir = intent.getStringExtra(EngineContract.EXTRA_PROJECT_DIR);
         if (projectDir == null) {
             // 打包模式（WP-005）：assets/lua 已由 LuaApplication.extractLuaScripts
             // 解出到 filesDir/lua（getDir("lua", MODE_PRIVATE) 同路径），以其为工程目录。
             projectDir = getDir("lua", MODE_PRIVATE).getAbsolutePath();
         }
-        mainFile = intent.getStringExtra("mainFile");
+        mainFile = intent.getStringExtra(EngineContract.EXTRA_MAIN_FILE);
         if (mainFile == null) mainFile = "main.lua";
         super.onCreate(savedInstanceState);
     }

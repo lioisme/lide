@@ -6,6 +6,11 @@ import io.github.rosemoe.sora.lang.diagnostic.Quickfix
 import io.github.rosemoe.sora.text.Content
 
 /**
+ * Lua 标识符字符判定（字母/数字/下划线），补全前缀与词法扫描共用。
+ */
+internal fun Char.isIdentifierChar(): Boolean = isLetterOrDigit() || this == '_'
+
+/**
  * 纯 Kotlin 词法校验器。
  *
  * 用途：编辑器进程内的行级语法诊断（括号配对、块闭合、字符串/注释完整性）。
@@ -494,7 +499,7 @@ object LuaDiagnostics {
 
                             c.isLetter() || c == '_' -> {
                                 val wordStart = i
-                                while (i < end && (source[i].isLetterOrDigit() || source[i] == '_')) i++
+                                while (i < end && source[i].isIdentifierChar()) i++
                                 val len = i - wordStart
                                 when {
                                     wordIs(source, wordStart, len, "if") -> {

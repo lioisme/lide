@@ -108,11 +108,12 @@
 
 | 项 | 来源 | 状态 |
 |----|------|------|
-| .alp 插件导入、插件运行 `{luadir, luapath}`、.so 库 import、SAF 文件夹安装、删除工程 | WP-008 剩余 | 待真机 |
+| `.so` 库 import、SAF 文件夹安装、删除工程 | WP-008 剩余 | 待真机 |
 | demo/testjson 全新安装可运行、`.so` 库 `libs/` 加载、`{luadir, luapath}` | WP-009 剩余 | 待真机 |
 | ACC-02~05/08：demo/testjson/kleinbottle 运行、连续 10 次无 OOM、APK ≤30MB | PROGRESS 整体验收 | 待设备/构建后 |
 | 打包器：产物安装运行、权限白名单过滤生效 | §1 | 待真机 |
-| 无障碍/截图 API（LuaAccessibilityService）、.lua 拉起、手册渲染 | WP-007 剩余 | 待真机 |
+| 无障碍/截图 API（LuaAccessibilityService）、.lua 拉起 | WP-007 剩余 | 待真机 |
+| 手册渲染（~~luadoc WebView~~ / ~~帮助页~~） | ~~WP-007/P2-11/WP-018~~ | **已取消（2026-08-07）**：Lua 手册与帮助界面按用户要求整体移除（见 `planned/SETTINGS_PERMISSIONS_REWORK_WORK_ORDER.md` 要求 ③④） |
 
 ---
 

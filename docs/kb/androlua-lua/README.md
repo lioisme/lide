@@ -54,3 +54,6 @@ docs/kb/androlua-lua/
 | 2026-08-02 | 真机回归（CPH2415 arm64/Adreno）：GLSL #version 120 被拒 → 改 100（PITFALLS 新条目）；看板娘工程去 pro 化（删 jp.live2d.* 分支 + live2D.dex）；真机环境事实 | PITFALLS.md |
 | 2026-08-02 | 宿主 API 浏览器落地（WP-008）：工程 libs 类自动识别（dex|jar → 类名，.so → 模块名）入「工程库/原生库」分类；KDoc 内 `libs/*.dex` 字样会开嵌套注释的 Kotlin 编译坑（PITFALLS 新条目）；详见 docs/planned/API_BROWSER_AUDIT_REPORT.md §8 | FEATURES.md, PITFALLS.md |
 | 2026-08-02 | WP-008 模拟器验收归档：ACC-1/2/4~7 通过；ACC-3 环境受阻（模拟器 ROM FUSE 沙箱拒绝外部放置的 libs 文件——chown 应用 uid/重启后仍 Permission denied，工程库 (0)；该限制同时影响宿主引擎读工程 libs，属环境既有问题）；冷启动 ≤3.5s 可交互；R8 release 构建通过 | API_BROWSER_AUDIT_REPORT.md §6.1 |
+| 2026-08-07 | DES 字节码加密 loopback 实证：打包端 LuaCrypto(DES/ECB+PKCS7+MAGIC) 与运行端 lide_des.c 字节级一致（交叉黄金向量，LuaCryptoTest 7/7）；模拟器把`LuaCrypto.encrypt`加密 main.lua 推入工程，`adb root` 启动 lide.androlua.LuaActivity(VIEW file) 走原生 luaL_loadfilex→lide_des 解密→ logcat `lua: DES-LOOPBACK-OK`，0 崩溃。方法记入 TECHNIQUES。 | TECHNIQUES.md |
+| 2026-08-07 | 模拟器全量回归复核（x86_64/API34）：引擎链路复核通过——编辑器「运行」hello → `I lua: hello: layout loaded`；打包产物 com.lide.hello（编译+加密默认开）独立安装运行成功（packaged 引擎 APK 入口成立）；无新特性/坑发现，环境事实无变化 | 复核（无变更） |
+| 2026-08-02 | WP-008 模拟器验收归档：ACC-1/2/4~7 通过；ACC-3 环境受阻（模拟器 ROM FUSE 沙箱拒绝外部放置的 libs 文件——chown 应用 uid/重启后仍 Permission denied，工程库 (0)；该限制同时影响宿主引擎读工程 libs，属环境既有问题）；冷启动 ≤3.5s 可交互；R8 release 构建通过 | API_BROWSER_AUDIT_REPORT.md §6.1 |

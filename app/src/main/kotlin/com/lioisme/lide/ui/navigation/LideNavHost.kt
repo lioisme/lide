@@ -1,6 +1,7 @@
 package com.lioisme.lide.ui.navigation
 
 import android.app.Activity
+import android.net.Uri
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -17,41 +18,35 @@ import androidx.navigation.navArgument
 import com.lioisme.lide.engine.RunEngineLauncher
 import com.lioisme.lide.model.Project
 import com.lioisme.lide.project.ProjectManager
+import com.lioisme.lide.ui.screen.AndroLuaSettingsScreen
 import com.lioisme.lide.ui.screen.ApiBrowserScreen
 import com.lioisme.lide.ui.screen.ApiClassDetailScreen
-import com.lioisme.lide.ui.screen.BuildApkScreen
 import com.lioisme.lide.ui.screen.EditorScreen
 import com.lioisme.lide.ui.screen.EditorSettingsScreen
 import com.lioisme.lide.ui.screen.ExamplesScreen
-import com.lioisme.lide.ui.screen.HelpScreen
 import com.lioisme.lide.ui.screen.HostPermissionScreen
-import com.lioisme.lide.ui.screen.LuaManualScreen
-import com.lioisme.lide.ui.screen.PluginScreen
 import com.lioisme.lide.ui.screen.ProjectInfoScreen
 import com.lioisme.lide.ui.screen.ProjectListScreen
 import com.lioisme.lide.ui.screen.ProjectPermissionScreen
 import com.lioisme.lide.ui.screen.SettingsScreen
+import com.lioisme.lide.ui.screen.SigningScreen
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.net.URLDecoder
-import java.net.URLEncoder
 
 object Routes {
     const val PROJECT_LIST = "projects"
     const val EDITOR = "editor/{projectName}/{projectPath}?fileName={fileName}"
     const val SETTINGS = "settings"
     const val EDITOR_SETTINGS = "editor-settings"
+    const val ANDROLUA_SETTINGS = "androlua-settings"
     const val PERMISSIONS = "permissions"
     const val PROJECT_PERMISSIONS = "projectpermissions?projectName={projectName}&projectPath={projectPath}"
     const val PROJECT_INFO = "projectinfo?projectName={projectName}&projectPath={projectPath}"
-    const val BUILD_APK = "buildapk?projectName={projectName}&projectPath={projectPath}"
-    const val PLUGINS = "plugins"
-    const val MANUAL = "manual"
+    const val SIGNING = "signing"
     const val EXAMPLES = "examples"
     const val API_BROWSER = "apibrowser"
     const val API_CLASS_DETAIL = "apibrowser/{className}"
-    const val HELP = "help"
 
     fun editor(project: Project): String = "editor/${enc(project.name)}/${enc(project.path)}?fileName=${enc(project.mainFile)}"
 
@@ -59,13 +54,28 @@ object Routes {
 
     fun projectInfo(project: Project): String = "projectinfo?projectName=${enc(project.name)}&projectPath=${enc(project.path)}"
 
-    fun buildApk(project: Project): String = "buildapk?projectName=${enc(project.name)}&projectPath=${enc(project.path)}"
-
     fun apiClassDetail(className: String): String = "apibrowser/${enc(className)}"
 
-    fun enc(s: String) = URLEncoder.encode(s, "UTF-8")
+    // Uri.encode/decode 与 navigation-compose 的内部解码语义一致（%XX 转义，`+` 保留字面），
+    // 取代 URLEncoder/URLDecoder（后者把空格编为 `+`，nav 解码后 `+` 无法还原，含 `+` 的
+    // 工程名/路径会被破坏）。
+    fun enc(s: String) = Uri.encode(s)
 
-    fun dec(s: String?) = URLDecoder.decode(s ?: "", "UTF-8")
+    fun dec(s: String?) = Uri.decode(s ?: "")
+}
+
+/**
+ * 页面级返回键统一过门控（P4b 去重）：替代每目的地一行
+ * `BackHandler(enabled = true) { navController.popGuarded() }`，
+ * 转场未完成时入队、完成后执行（杜绝「转场中弹栈」失步）。
+ */
+@Composable
+private fun backGuarded(
+    navController: NavHostController,
+    content: @Composable () -> Unit,
+) {
+    BackHandler(enabled = true) { navController.popGuarded() }
+    content()
 }
 
 @Composable
@@ -73,7 +83,6 @@ fun LideNavHost(
     navController: NavHostController,
     pendingImportPaths: List<String> = emptyList(),
     pendingOpenFiles: List<Pair<String, String>> = emptyList(),
-    pendingPluginImport: Boolean = false,
 ) {
     val context = LocalContext.current
     val projectManager = remember { ProjectManager() }
@@ -100,12 +109,6 @@ fun LideNavHost(
                     Project(name = dir.name, path = dir.absolutePath, mainFile = open.second),
                 ),
             )
-        }
-    }
-
-    LaunchedEffect(navController, pendingPluginImport) {
-        if (pendingPluginImport) {
-            navController.navigateWhenReady(Routes.PLUGINS)
         }
     }
 
@@ -169,60 +172,71 @@ fun LideNavHost(
                     backStackEntry.arguments?.getString("projectPath"),
                     backStackEntry.arguments?.getString("fileName") ?: "main.lua",
                 )
-            // 系统返回键过门控：转场未完成时入队，转场完成后执行（杜绝「转场中弹栈」失步）。
-            BackHandler(enabled = true) { navController.popGuarded() }
-            EditorScreen(
-                project = project,
-                projectManager = projectManager,
-                onBack = { navController.popGuarded() },
-                onPermissions = {
-                    navController.navigateGuarded(Routes.projectPermissions(project))
-                },
-                onProjectInfo = {
-                    navController.navigateGuarded(Routes.projectInfo(project))
-                },
-                onBuildApk = {
-                    navController.navigateGuarded(Routes.buildApk(project))
-                },
-                onRun = { fileName ->
-                    engineLauncher.launch(project.path, fileName)
-                },
-                projectInfoVersion = projectInfoVersion,
-            )
+            // 系统返回键统一过门控（见 backGuarded）。
+            backGuarded(navController) {
+                EditorScreen(
+                    project = project,
+                    projectManager = projectManager,
+                    onBack = { navController.popGuarded() },
+                    onPermissions = {
+                        navController.navigateGuarded(Routes.projectPermissions(project))
+                    },
+                    onProjectInfo = {
+                        navController.navigateGuarded(Routes.projectInfo(project))
+                    },
+                    onManageSigning = {
+                        navController.navigateGuarded(Routes.SIGNING)
+                    },
+                    onRun = { fileName ->
+                        engineLauncher.launch(project.path, fileName)
+                    },
+                    projectInfoVersion = projectInfoVersion,
+                )
+            }
         }
         slideComposable(route = Routes.SETTINGS) {
-            BackHandler(enabled = true) { navController.popGuarded() }
-            SettingsScreen(
-                onBack = { navController.popGuarded() },
-                onEditorSettingsClick = { navController.navigateGuarded(Routes.EDITOR_SETTINGS) },
-                onPermissionsClick = { navController.navigateGuarded(Routes.PERMISSIONS) },
-                onPluginsClick = { navController.navigateGuarded(Routes.PLUGINS) },
-                onManualClick = { navController.navigateGuarded(Routes.MANUAL) },
-                onExamplesClick = { navController.navigateGuarded(Routes.EXAMPLES) },
-                onApiBrowserClick = { navController.navigateGuarded(Routes.API_BROWSER) },
-                onHelpClick = { navController.navigateGuarded(Routes.HELP) },
-            )
+            backGuarded(navController) {
+                SettingsScreen(
+                    onBack = { navController.popGuarded() },
+                    onEditorClick = { navController.navigateGuarded(Routes.EDITOR_SETTINGS) },
+                    onAndroLuaClick = { navController.navigateGuarded(Routes.ANDROLUA_SETTINGS) },
+                    onPermissionsClick = { navController.navigateGuarded(Routes.PERMISSIONS) },
+                    onSigningClick = { navController.navigateGuarded(Routes.SIGNING) },
+                )
+            }
+        }
+        slideComposable(route = Routes.SIGNING) {
+            backGuarded(navController) {
+                SigningScreen(
+                    onBack = { navController.popGuarded() },
+                )
+            }
         }
         slideComposable(route = Routes.EDITOR_SETTINGS) {
-            BackHandler(enabled = true) { navController.popGuarded() }
-            EditorSettingsScreen(
-                onBack = { navController.popGuarded() },
-            )
+            backGuarded(navController) {
+                EditorSettingsScreen(
+                    onBack = { navController.popGuarded() },
+                )
+            }
         }
-        slideComposable(route = Routes.HELP) {
-            BackHandler(enabled = true) { navController.popGuarded() }
-            HelpScreen(
-                onBack = { navController.popGuarded() },
-            )
+        slideComposable(route = Routes.ANDROLUA_SETTINGS) {
+            backGuarded(navController) {
+                AndroLuaSettingsScreen(
+                    onBack = { navController.popGuarded() },
+                    onApiBrowserClick = { navController.navigateGuarded(Routes.API_BROWSER) },
+                    onExamplesClick = { navController.navigateGuarded(Routes.EXAMPLES) },
+                )
+            }
         }
         slideComposable(route = Routes.API_BROWSER) {
-            BackHandler(enabled = true) { navController.popGuarded() }
-            ApiBrowserScreen(
-                onBack = { navController.popGuarded() },
-                onClassClick = { className ->
-                    navController.navigateGuarded(Routes.apiClassDetail(className))
-                },
-            )
+            backGuarded(navController) {
+                ApiBrowserScreen(
+                    onBack = { navController.popGuarded() },
+                    onClassClick = { className ->
+                        navController.navigateGuarded(Routes.apiClassDetail(className))
+                    },
+                )
+            }
         }
         slideComposable(
             route = Routes.API_CLASS_DETAIL,
@@ -236,29 +250,26 @@ fun LideNavHost(
                 LaunchedEffect(Unit) { navController.popWhenReady() }
                 return@slideComposable
             }
-            BackHandler(enabled = true) { navController.popGuarded() }
-            ApiClassDetailScreen(
-                className = className,
-                onBack = { navController.popGuarded() },
-            )
-        }
-        slideComposable(route = Routes.MANUAL) {
-            BackHandler(enabled = true) { navController.popGuarded() }
-            LuaManualScreen(
-                onBack = { navController.popGuarded() },
-            )
+            backGuarded(navController) {
+                ApiClassDetailScreen(
+                    className = className,
+                    onBack = { navController.popGuarded() },
+                )
+            }
         }
         slideComposable(route = Routes.EXAMPLES) {
-            BackHandler(enabled = true) { navController.popGuarded() }
-            ExamplesScreen(
-                onBack = { navController.popGuarded() },
-            )
+            backGuarded(navController) {
+                ExamplesScreen(
+                    onBack = { navController.popGuarded() },
+                )
+            }
         }
         slideComposable(route = Routes.PERMISSIONS) {
-            BackHandler(enabled = true) { navController.popGuarded() }
-            HostPermissionScreen(
-                onBack = { navController.popGuarded() },
-            )
+            backGuarded(navController) {
+                HostPermissionScreen(
+                    onBack = { navController.popGuarded() },
+                )
+            }
         }
         slideComposable(
             route = Routes.PROJECT_PERMISSIONS,
@@ -281,28 +292,12 @@ fun LideNavHost(
                 LaunchedEffect(Unit) { navController.popWhenReady() }
                 return@slideComposable
             }
-            BackHandler(enabled = true) { navController.popGuarded() }
-            ProjectPermissionScreen(
-                project = project,
-                onBack = { navController.popGuarded() },
-            )
-        }
-        slideComposable(route = Routes.PLUGINS) {
-            BackHandler(enabled = true) { navController.popGuarded() }
-            PluginScreen(
-                onRun = { plugin ->
-                    // pro 兼容：插件入口收到 {luadir, luapath} 变长参数。
-                    // lide 插件独立于 IDE Lua 上下文运行，luadir/luapath 为插件自身
-                    // 目录与入口路径（自洽上下文，恒非空）。
-                    val mainPath = "${plugin.dir}/${plugin.main}"
-                    engineLauncher.launch(
-                        plugin.dir,
-                        plugin.main,
-                        arrayOf(plugin.dir, mainPath),
-                    )
-                },
-                onBack = { navController.popGuarded() },
-            )
+            backGuarded(navController) {
+                ProjectPermissionScreen(
+                    project = project,
+                    onBack = { navController.popGuarded() },
+                )
+            }
         }
         slideComposable(
             route = Routes.PROJECT_INFO,
@@ -325,44 +320,17 @@ fun LideNavHost(
                 LaunchedEffect(Unit) { navController.popWhenReady() }
                 return@slideComposable
             }
-            BackHandler(enabled = true) { navController.popGuarded() }
-            ProjectInfoScreen(
-                project = project,
-                projectManager = projectManager,
-                onBack = { navController.popGuarded() },
-                onSaved = {
-                    projectInfoVersion++
-                    navController.popGuarded()
-                },
-            )
-        }
-        slideComposable(
-            route = Routes.BUILD_APK,
-            arguments =
-                listOf(
-                    navArgument("projectName") {
-                        type = NavType.StringType
-                        defaultValue = ""
+            backGuarded(navController) {
+                ProjectInfoScreen(
+                    project = project,
+                    projectManager = projectManager,
+                    onBack = { navController.popGuarded() },
+                    onSaved = {
+                        projectInfoVersion++
+                        navController.popGuarded()
                     },
-                    navArgument("projectPath") {
-                        type = NavType.StringType
-                        defaultValue = ""
-                    },
-                ),
-        ) { backStackEntry ->
-            val name = Routes.dec(backStackEntry.arguments?.getString("projectName"))
-            val path = Routes.dec(backStackEntry.arguments?.getString("projectPath"))
-            val project = if (path.isNotBlank()) Project(name = name, path = path, mainFile = "main.lua") else null
-            if (project == null) {
-                LaunchedEffect(Unit) { navController.popWhenReady() }
-                return@slideComposable
+                )
             }
-            BackHandler(enabled = true) { navController.popGuarded() }
-            BuildApkScreen(
-                project = project,
-                projectManager = projectManager,
-                onBack = { navController.popGuarded() },
-            )
         }
     }
 }

@@ -8,7 +8,7 @@ import kotlinx.coroutines.delay
 import java.util.Collections
 import java.util.WeakHashMap
 
-/**
+/*
  * 导航门控：官方契约「仅当当前 destination 的 Lifecycle 处于 RESUMED 时才能触发导航」。
  *
  * 背景（docs/discard/NAVIGATION_FREEZE_FIX_REPORT.md）：

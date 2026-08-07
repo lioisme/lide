@@ -101,6 +101,6 @@ Lua → C（.so）调用为纯 C 路径不经 Java（`require "zip"` = `package.
 | 引擎初始化/运行 | `app/src/main/java/.../engine/EngineActivity.java`（继承 `androlua` 的 `LuaActivity`） |
 | 运行拉起 | `app/src/main/kotlin/.../engine/RunEngineLauncher.kt`、`androlua/.../engine/EngineBridge.kt` |
 | dex/so 加载 | `androlua/src/main/java/com/androlua/LuaDexLoader.java`（W^X 内存加载） |
-| 打包链 | `androlua/.../LuaCompiler.kt`、`AXmlManifest.kt`、`app/.../build/{ApkBuilder,ApkSigner,V2Signer,ZipUtils}.kt`、`BuildApkScreen.kt` |
+| 打包链 | `androlua/.../LuaCompiler.kt`、`AXmlManifest.kt`、`app/.../build/{ApkBuilder,ApkSigner,V2Signer,ZipUtils}.kt`、`BuildPackagingDialog.kt` |
 | 资产提取 | `LuaApplication.extractLuaScripts()`（递归 + MD5 版本化） |
 | 原生模块构建 | `app/src/main/cpp/`（顶层 `Android.mk` + `Application.mk` 为 ndk-build 定义，`live2d/` 独立模块），AGP `externalNativeBuild` 自动构建（NDK 29.0.14206865） |

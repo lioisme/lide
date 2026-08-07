@@ -80,7 +80,6 @@ private const val DIAGNOSTIC_DEBOUNCE_MS = 500L
 private const val TAG = "LuaEditor"
 
 /** Lua scope：词法诊断仅作用于 Lua 文法。未知扩展名文件落 [LanguageDetector.PLAIN_SCOPE]。 */
-internal const val DEFAULT_SCOPE = "source.lua"
 
 /**
  * 编辑器视图池：进程级单实例 [CodeEditor] + 单次事件订阅 + 进程级诊断状态。
@@ -127,6 +126,23 @@ internal object EditorViewPool {
     /** 最近一次已应用的诊断签名（主线程读）。 */
     fun lastSignature(): String = lastDiagSignature
 
+    /**
+     * 装配 EditorLanguage（acquire 首次创建与 applyConfig 重建共用）：
+     * 构造级参数（collectIdentifiers）+ 关键字表 + 语言级配置 + 编辑器引用。
+     */
+    private fun createLanguage(
+        scope: String,
+        config: EditorConfig,
+        collectIdentifiers: Boolean,
+        editor: CodeEditor,
+    ): EditorLanguage =
+        EditorLanguage(scope, collectIdentifiers = collectIdentifiers).apply {
+            setAutoCompleteEnabled(true)
+            setCompleterKeywords(LanguageKeywordRegistry.keywordsFor(scope))
+            configure(config)
+            attachEditor(editor)
+        }
+
     /** 记录已应用签名（主线程写）。 */
     fun updateSignature(signature: String) {
         lastDiagSignature = signature
@@ -160,16 +176,13 @@ internal object EditorViewPool {
         ) {
             // 语言或标识符补全（构造级参数）变化时重建语言（一次全量分析，仅设置变更发生）。
             val newLang =
-                EditorLanguage(resolvedScope, collectIdentifiers = effectiveIdentifiers).apply {
-                    setCompleterKeywords(LanguageKeywordRegistry.keywordsFor(resolvedScope))
-                    configure(config)
-                    attachEditor(editor)
+                createLanguage(resolvedScope, config, effectiveIdentifiers, editor).also {
+                    // setEditorLanguage 会清空 diagnostics：强制诊断重跑并复位签名。
+                    updateSignature("")
+                    diagTick.value++
                 }
             editor.setEditorLanguage(newLang)
             languageIdentifiersEnabled = effectiveIdentifiers
-            // setEditorLanguage 会清空 diagnostics：强制诊断重跑并复位签名。
-            updateSignature("")
-            diagTick.value++
         } else if (lang != null) {
             if (applied == null || applied.useTab != config.useTab) lang.useTab(config.useTab)
             if (applied == null || applied.autoIndent != config.autoIndent) {
@@ -257,13 +270,7 @@ internal object EditorViewPool {
                 colorScheme = TextMateRuntime.colorScheme()
 
                 val resolvedScope = scope ?: LanguageDetector.PLAIN_SCOPE
-                val lang =
-                    EditorLanguage(resolvedScope, collectIdentifiers = config.identifierCompletion).apply {
-                        setAutoCompleteEnabled(true)
-                        setCompleterKeywords(LanguageKeywordRegistry.keywordsFor(resolvedScope))
-                        configure(config)
-                        attachEditor(this@outer)
-                    }
+                val lang = createLanguage(resolvedScope, config, config.identifierCompletion, this@outer)
                 languageIdentifiersEnabled = config.identifierCompletion
                 setEditorLanguage(lang)
 
@@ -443,7 +450,7 @@ fun LuaEditor(
             delay(DIAGNOSTIC_DEBOUNCE_MS)
             val editor = editorRef.get() ?: return@collectLatest
             // 行级词法诊断仅 Lua 文法（LuaDiagnostics 专用解析器）；其他语言跳过。
-            if (currentResolvedScope != DEFAULT_SCOPE) {
+            if (currentResolvedScope != LanguageDetector.LUA_SCOPE) {
                 if (editor.diagnostics != null) {
                     editor.diagnostics = null
                     EditorViewPool.updateSignature("")

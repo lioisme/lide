@@ -29,9 +29,9 @@
 | 历史审计结论 / 旧报告 | 本目录 §3 清单 → 对应文件 |
 | 上游基线 / 社区语料 | `reference/`（只读，gitignore；2026-08-05 自 docs/reference/ 迁出，纯净基线已去重） |
 
-## 3. 丢弃清单（45 篇）
+## 3. 丢弃清单（34 篇，其中 15 篇已物理删除，条目保留作墓碑）
 
-### 3.1 已完成文档（原 docs/completed/ 30 篇 + 新增 1 篇，共 31 篇）
+### 3.1 已完成文档（登记 38 篇；14 篇已物理删除）
 
 > 结论均已沉淀进 `docs/kb/`；对应蒸馏位置见各条目「结论去向」。
 
@@ -52,27 +52,31 @@
 | `EDITOR_DRAWER_AUDIT_REPORT.md` | 2026-08-01 | 抽屉三缺陷修复 + 宽屏 Permanent 适配，Phase 0~6 全部完成 | kb/EDITOR |
 | `EDITOR_PERFORMANCE_AUDIT_REPORT.md` | 2026-07-31 | 定位 4 个 P0 性能灾难链路，根因已修复 | kb/EDITOR（阶段 B/C 并入 V2 报告） |
 | `NAVIGATION_FREEZE_FIX_REPORT.md` | 2026-08-04 | 导航冻结根治（NavigationGate 单一漏斗门控） | kb/ARCHITECTURE + AGENTS.md |
-| `ANDROLUA_RUNTIME_INVENTORY_REPORT.md` | 2026-08-02 | 运行时全量盘点：Java/原生/Lua/构建/耦合面逐字节（MD5）审计 | kb/ENGINE_RUNTIME（盘点基线） |
-| `ANDROLUA_PARITY_DUAL_END_FINAL_VERIFICATION.md` | 2026-08-02 | 运行环境三对齐 + 双端实测终审：除白名单项完全一致 | kb/ENGINE_RUNTIME |
-| `MD3_PROBE_DUAL_END_COMPARISON_REPORT.md` | 2026-08-01 | MD3 探针双端对比：pro 834/865、lide 832/865；lide = 真 MD3 组件 | kb/ENGINE_RUNTIME |
-| `KANBAN_LIVE2D_BUGFIX_LUA_AUDIT_REPORT.md` | 2026-08-02 | 看板娘三问题（延迟崩溃/绘制错乱/规范化）同根因分析与修复 | kb/ENGINE_RUNTIME（Live2D） |
-| `LIVE2D_NATIVE_MIGRATION_COMPLETION_REPORT.md` | 2026-08-02 | Live2D 原生迁移完成：Lua 直调 `liblive2d.so`，12 项双端 PASS | kb/ENGINE_RUNTIME（Live2D） |
+| `ANDROLUA_RUNTIME_INVENTORY_REPORT.md` | 2026-08-02 | 运行时全量盘点：Java/原生/Lua/构建/耦合面逐字节（MD5）审计 | kb/ENGINE_RUNTIME（盘点基线）（已物理删除 2026-08-07） |
+| `ANDROLUA_PARITY_DUAL_END_FINAL_VERIFICATION.md` | 2026-08-02 | 运行环境三对齐 + 双端实测终审：除白名单项完全一致 | kb/ENGINE_RUNTIME（已物理删除 2026-08-07） |
+| `MD3_PROBE_DUAL_END_COMPARISON_REPORT.md` | 2026-08-01 | MD3 探针双端对比：pro 834/865、lide 832/865；lide = 真 MD3 组件 | kb/ENGINE_RUNTIME（已物理删除 2026-08-07） |
+| `KANBAN_LIVE2D_BUGFIX_LUA_AUDIT_REPORT.md` | 2026-08-02 | 看板娘三问题（延迟崩溃/绘制错乱/规范化）同根因分析与修复 | kb/ENGINE_RUNTIME（Live2D）（已物理删除 2026-08-07） |
+| `LIVE2D_NATIVE_MIGRATION_COMPLETION_REPORT.md` | 2026-08-02 | Live2D 原生迁移完成：Lua 直调 `liblive2d.so`，12 项双端 PASS | kb/ENGINE_RUNTIME（Live2D）（已物理删除 2026-08-07） |
 | `API_BROWSER_AUDIT_REPORT.md` | 2026-08-02 | API 浏览器现状审计 + 可行性报告；已实施并模拟器验收 | kb/EDITOR + AGENTS.md API 约定 |
-| `API_BROWSER_FREEZE_AUDIT.md` | 2026-08-03 | API 浏览器界面无响应根因全量审计（material 3.1.4.0 反编译核验） | AGENTS.md 搜索语义红线（修复单见 planned/API_BROWSER_FREEZE_FIX_PLAN.md） |
-| `API_BROWSER_PERFORMANCE_AUDIT_REPORT.md` | 2026-08-03 | API 浏览器性能专项：冷启动/滚动徽章风暴/过滤开销/详情反射语义 | AGENTS.md + kb/EDITOR |
-| `API_BROWSER_REDESIGN_PLAN.md` | 2026-08-03 | API 浏览器界面重构全量审计 + 任务执行单（T0~T6） | AGENTS.md + kb/EDITOR |
-| `HOST_PERFORMANCE_AUDIT_REPORT.md` | 2026-08-01 | 宿主（IDE）性能审计 V2：编辑器热路径/列表/启动 | kb/EDITOR + kb/ROADMAP |
-| `UI_REWORK_AUDIT_REPORT.md` | 2026-08-02 | UI 重构 P0 五项违规清单 + 解决方案，设备验证 PASS | kb/EDITOR |
-| `LIVE2D_NATIVE_MIGRATION_PLAN.md` | 2026-08-01 | Live2D 原生迁移任务方法文档（目标/对照模式/验收） | 已完成（见完成报告） |
-| `REPO_HARDENING_WORK_ORDER.md` | 2026-08-04 | 源码规范/可复现构建工作单（T1~T11 逐项验证） | kb/ARCHITECTURE + 终审报告 |
-| `REPO_HARDENING_FINAL_AUDIT.md` | 2026-08-04 | 仓库硬化终审 T1~T9 全部通过：源码可完全从仓库构建 | kb/ARCHITECTURE + AGENTS.md R5 |
+| `API_BROWSER_FREEZE_AUDIT.md` | 2026-08-03 | API 浏览器界面无响应根因全量审计（material 3.1.4.0 反编译核验） | AGENTS.md 搜索语义红线（修复单见 planned/API_BROWSER_FREEZE_FIX_PLAN.md）（已物理删除 2026-08-07） |
+| `API_BROWSER_PERFORMANCE_AUDIT_REPORT.md` | 2026-08-03 | API 浏览器性能专项：冷启动/滚动徽章风暴/过滤开销/详情反射语义 | AGENTS.md + kb/EDITOR（已物理删除 2026-08-07） |
+| `API_BROWSER_REDESIGN_PLAN.md` | 2026-08-03 | API 浏览器界面重构全量审计 + 任务执行单（T0~T6） | AGENTS.md + kb/EDITOR（已物理删除 2026-08-07） |
+| `HOST_PERFORMANCE_AUDIT_REPORT.md` | 2026-08-01 | 宿主（IDE）性能审计 V2：编辑器热路径/列表/启动 | kb/EDITOR + kb/ROADMAP（已物理删除 2026-08-07） |
+| `UI_REWORK_AUDIT_REPORT.md` | 2026-08-02 | UI 重构 P0 五项违规清单 + 解决方案，设备验证 PASS | kb/EDITOR（已物理删除 2026-08-07） |
+| `LIVE2D_NATIVE_MIGRATION_PLAN.md` | 2026-08-01 | Live2D 原生迁移任务方法文档（目标/对照模式/验收） | 已完成（见完成报告）（已物理删除 2026-08-07） |
+| `REPO_HARDENING_WORK_ORDER.md` | 2026-08-04 | 源码规范/可复现构建工作单（T1~T11 逐项验证） | kb/ARCHITECTURE + 终审报告（已物理删除 2026-08-07） |
+| `REPO_HARDENING_FINAL_AUDIT.md` | 2026-08-04 | 仓库硬化终审 T1~T9 全部通过：源码可完全从仓库构建 | kb/ARCHITECTURE + AGENTS.md R5（已物理删除 2026-08-07） |
 | `SOURCE_AUDIT_REPORT_2026-08-05.md` | 2026-08-05 | 全量源码审计：技术栈正确性 × 屎山清单 × 大厂验收修复计划（P0×2 签名族已决策搁置） | 行动项见 kb/ROADMAP + planned/backlog |
 | `EDITOR_PERFORMANCE_AUDIT_V2_REPORT.md` | 2026-07-31 | 编辑器性能审计 V2：阶段 A 止血 + 阶段 B 标签卡/工程树全部落地；转场建议被 slide 决策取代 | kb/EDITOR §3 + kb/ROADMAP（剩余 R8/阶段 C 入 backlog） |
 | `DOCS_GOVERNANCE_AUDIT_REPORT_2026-08-05.md` | 2026-08-05 | 文档治理审计：全量文档去重分类、统一丢弃区重组（本目录建立依据） | docs/discard/README §1 + kb/README §6/§7 |
-| `REFERENCE_ASSETS_GOVERNANCE_AUDIT_REPORT.md` | 2026-08-05 | 上游基线资产治理：reference 数据湖迁出 docs/ + 纯净基线去重（已执行） | reference/README + kb/README §3 |
+| `REFERENCE_ASSETS_GOVERNANCE_AUDIT_REPORT.md` | 2026-08-05 | 上游基线资产治理：reference 数据湖迁出 docs/ + 纯净基线去重（已执行） | reference/README + kb/README §3（已物理删除 2026-08-07） |
 | `SHADOW_REMOVAL_DEAD_CODE_CLEANUP_WORK_ORDER.md` | 2026-08-07 | Shadow 插件机制拆除 + 死代码/死依赖/死资产全量清除（LIDE-WO-2026-019）：删除 third_party/shadow 与 6 个 loader/plugin/sdk 残留（~503MB）、lide-plugins 资产 12.3MB、assets/samples 139.5KB、patches 空目录；移除 material3-window-size-class 死依赖 + 18 条死字符串；D-19 反转登记 D-18；全部验收门禁通过（构建/单测/APK 无插件资产） | kb/DECISIONS D-19 + kb/README §2 |
+| `EDITOR_ALL_LANGUAGES_SUPPORT_WORK_ORDER.md` | 2026-08-06 | 全语言（39 种 TextMate 文法）支持：资产 81 项迁入 `:editor` / LanguageCatalog+Detector 替换 LuaLanguage / release（R8）grammar 加载失败修复（proguard keep）/ 模拟器+真机多色高亮验证 | kb/EDITOR + AGENTS.md 编辑器约定（遗留：全语言补全交互验收并入 `EDITOR_FEATURE_COMPLETION_WORK_ORDER` §8.3 综合复测） |
+| `PLUGIN_FEATURE_REMOVAL_WORK_ORDER.md` | 2026-08-07 | 插件功能移除 + 编辑器菜单治理（LIDE-WO-2026-020）：删 PluginScreen/PluginManager/示例插件资产/插件路由与字符串，`.alp` 一律按工程导入（删 AlpKind.PLUGIN）；标签卡删 ⋮ 按钮（长按松手弹关闭菜单）；编辑器右上角更多菜单多级化（分类→子菜单）；assembleArm64Debug 绿 + 单测全绿 + 主源 ktlint 通过 + R1 门禁零命中 | kb/DECISIONS D-20 + AGENTS.md（编辑菜单/标签手势约定） |
+| `EDITOR_MULTI_LEVEL_MENU_WORK_ORDER.md` | 2026-08-07 | 编辑器右上角「更多」多级菜单 cascade 化（LIDE-WO-2026-022）：M3 官方 DropdownMenu 无嵌套 API，手写 MoreSubmenuItem（Box 嵌套 DropdownMenu）致二级菜单位置错位且违「禁手搓」；引入成熟第三方 `me.saket.cascade:cascade-compose:2.3.0`（POM 实证 Compose 依赖为 runtime scope，BOM 2025.06.00 → material3 1.4.0 胜出），根菜单 CascadeDropdownMenu + 一级分类 children 级联（自动右箭头/子菜单返回头/屏幕边缘与键盘避让）；删 MoreSubmenuItem；编译/依赖解析/单测/ktlint/assembleArm64Debug 全绿 + R1 门禁零命中 | kb/DECISIONS D-21 |
+| `SIGNING_GENERATE_CUSTOM_FIELDS_WORK_ORDER.md` | 2026-08-08 | 自生成签名证书内容自定义：`CertSubject`（C/ST/L/O/OU/CN/E/street/postalCode 全字段可选 + IA5String email）与 `validYears`（1~1000，默认 100）入 `SigningCrypto.generate`（默认参数向后兼容）；`GenerateDialog` 滚动表单 + 三校验（国家代码两位字母/邮箱含@/有效期整数）；build.* 57 单测全绿 + assembleArm64Debug 绿 | AGENTS.md 签名约定（RSA-2048 零依赖 DER 子集扩充；`SigningCrypto.generate` 签名） |
 
-### 3.2 过时 / 被取代文档（10 篇）
+### 3.2 过时 / 被取代文档（11 篇，1 篇已物理删除）
 
 | 文件 | 原位置 | 归档原因（一句话） |
 |------|--------|-------------------|
@@ -84,14 +88,15 @@
 | `architecture.md` | `kb/project/` | 自标过期（原项目架构描述）；现行架构见 `docs/kb/ARCHITECTURE.md` |
 | `lua-modules.md` | `kb/project/` | 自标过期（原 Lua 模块清单）；现行运行时模块见 `third_party/` 与 `reference/` |
 | `code-map.md` | `kb/project/` | 自标过期（原代码地图）；现行模块拓扑见 `docs/kb/ARCHITECTURE.md` §3 |
-| `PLUGIN_SEPARATION_ARCHITECTURE_REPORT.md` | `planned/` | 双 APK 分家审计（LIDE-AUDIT-2026-014，2026-08-06）**已被 `PLUGIN_PLATFORM_REPORT.md` 演进取代**：方案从「双 APK + 运行端口」升级为「开放 Plugin SDK 插件平台（小政府）」，其隔离缺口证据（11 耦合点）与验收锚点在platform 报告中继续交叉引用 |
+| `PLUGIN_SEPARATION_ARCHITECTURE_REPORT.md` | `planned/` | 双 APK 分家审计（LIDE-AUDIT-2026-014，2026-08-06）**已被 `PLUGIN_PLATFORM_REPORT.md` 演进取代**：方案从「双 APK + 运行端口」升级为「开放 Plugin SDK 插件平台（小政府）」，其隔离缺口证据（11 耦合点）与验收锚点在platform 报告中继续交叉引用（已物理删除 2026-08-07） |
 | `PLUGIN_PLATFORM_REPORT.md` | `planned/` | 插件平台「设计定稿」（LIDE-DESIGN-2026-001）——**2026-08-07 方案整体取消**（D-19 反转 D-18）：Shadow 插件机制拆除，androlua 维持上游基线 library 集成；连同前篇共三篇均为插件化历史，仅作追溯 |
+| `SETTINGS_ORGANIZATION_WORK_ORDER.md` | `planned/` | 设置界面重组（AndroLua 专属设置页 + 四分区）**2026-08-07 被用户新要求取代**：Lua 手册/帮助整体移除、权限管理移出 AndroLua 页（入主设置「通用」分区），AndroLua 页重建为纯工具页（API 浏览器/插件/示例），入口形态最终为「编辑器 / AndroLua」两个独立入口（见 `planned/SETTINGS_PERMISSIONS_REWORK_WORK_ORDER.md`） |
 
 ### 3.3 非文档资产归档（补登）
 
 | 条目 | 原位置 | 归档原因（一句话） |
 |------|--------|-------------------|
-| `material3_searchbar_patch/` | `third_party/patches/` | 无任何构建引用的 AOSP 副本（~127KB 死代码），搜索组件缺陷历史围栏；架构审计 C-2（2026-08-06）迁移归档 |
+| `material3_searchbar_patch/` | `third_party/patches/` | 无任何构建引用的 AOSP 副本（~127KB 死代码），搜索组件缺陷历史围栏；架构审计 C-2（2026-08-06）迁移归档（已物理删除 2026-08-07） |
 
 补充说明：
 
@@ -100,3 +105,4 @@
 - 2026-08-05 建立本目录（合并 `completed/` 30 篇 + `archive/` 8 篇 + 索引），同时完成 10 份损坏文档的恢复（见 `docs/kb/README.md` 底部注记）。
 - 治理审计与重组依据：`docs/discard/DOCS_GOVERNANCE_AUDIT_REPORT_2026-08-05.md`（✅ 已完成，2026-08-05）。
 - 上游基线资产治理（reference 数据湖迁出 docs/ + 纯净基线去重）：`docs/discard/REFERENCE_ASSETS_GOVERNANCE_AUDIT_REPORT.md`（✅ 已完成，2026-08-05）。
+- **2026-08-07 断舍离（物理删除批次）**：15 篇无任何外部引用的报告（结论均已蒸馏进 `docs/kb/`，仅本登记表引用）与 `material3_searchbar_patch/`（129KB 死代码，归档原因见 §3.3）执行 `git rm` 物理删除；git 历史保留原文可恢复（`git show <commit>^:docs/discard/<file>`）。本登记表条目全部保留并标注「（已物理删除 2026-08-07）」，一句话摘要 + 结论去向仍可追溯。同日 `EDITOR_ALL_LANGUAGES_SUPPORT_WORK_ORDER.md` 已完成归档自 `planned/` 移入（§3.1）；`SETTINGS_ORGANIZATION_WORK_ORDER.md` 被设置/权限治理新要求取代，移入 §3.2（见 `planned/SETTINGS_PERMISSIONS_REWORK_WORK_ORDER.md`）。

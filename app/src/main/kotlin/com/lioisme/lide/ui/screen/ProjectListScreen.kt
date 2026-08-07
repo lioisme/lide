@@ -32,7 +32,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.lioisme.lide.R
 import com.lioisme.lide.androlua.AlpManager
-import com.lioisme.lide.androlua.AlpManager.AlpKind
 import com.lioisme.lide.editor.TipIconButton
 import com.lioisme.lide.import.AlpImportCoordinator
 import com.lioisme.lide.model.Project
@@ -98,47 +97,23 @@ fun ProjectListScreen(
     val alpCoordinator = remember(context) { AlpImportCoordinator(context) }
     var importQueue by remember { mutableStateOf<List<android.net.Uri>>(emptyList()) }
     var conflictPending by remember { mutableStateOf<AlpImportCoordinator.Pending?>(null) }
-    var importCounts by remember { mutableStateOf(0 to 0) }
+    var importedProjectCount by remember { mutableStateOf(0) }
 
     fun tallyImport(result: AlpManager.AlpImportResult?) {
-        val (projectCount, pluginCount) = importCounts
-        when (result?.kind) {
-            AlpKind.PROJECT -> {
-                importCounts = projectCount + 1 to pluginCount
-            }
-
-            AlpKind.PLUGIN -> {
-                importCounts = projectCount to pluginCount + 1
-            }
-
-            null -> {}
+        if (result != null) {
+            importedProjectCount++
         }
     }
 
     /** 队列结束汇总：Toast 结果 + 刷新列表 + 清计数。 */
     fun finishImportBatch() {
-        val (projectCount, pluginCount) = importCounts
-        if (projectCount + pluginCount > 0) {
-            val message =
-                when {
-                    pluginCount > 0 && projectCount == 0 -> {
-                        context.getString(R.string.import_plugin_success, pluginCount)
-                    }
-
-                    pluginCount == 0 -> {
-                        context.getString(R.string.import_projects_success, projectCount)
-                    }
-
-                    else -> {
-                        context.getString(R.string.import_mixed_success, projectCount, pluginCount)
-                    }
-                }
-            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        if (importedProjectCount > 0) {
+            Toast.makeText(context, context.getString(R.string.import_projects_success, importedProjectCount), Toast.LENGTH_SHORT).show()
             scope.launch { refresh() }
         } else {
             errorMsg = strImportFailed
         }
-        importCounts = 0 to 0
+        importedProjectCount = 0
     }
 
     /** 队列推进：当前项完成（或失败/取消）后调用，直到队列空后汇总。 */

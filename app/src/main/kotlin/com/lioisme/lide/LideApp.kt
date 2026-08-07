@@ -1,9 +1,14 @@
 package com.lioisme.lide
 
 import com.androlua.LuaApplication
+import com.lioisme.lide.build.SigningManager
 import com.lioisme.lide.editor.TextMateRuntime
 import com.lioisme.lide.i18n.LocaleManager
 import com.lioisme.lide.ui.theme.SettingsManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
 
@@ -12,9 +17,13 @@ class LideApp : LuaApplication() {
         private const val TAG = "LideApp"
     }
 
+    /** 应用级后台任务 scope：资产提取等幂等后台工作，独立于 Activity 生命周期。 */
+    private val appScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+
     override fun onCreate() {
         super.onCreate()
         SettingsManager.init(this)
+        SigningManager.init(this)
         LocaleManager.init(this)
         // 资产提取移出主线程（P3-1 冷启动卫生）：三项均为幂等首启复制（已存在即跳过），
         // 后台完成后由各功能惰性消费，不阻塞 Application.onCreate 的首帧关键路径。
@@ -24,39 +33,16 @@ class LideApp : LuaApplication() {
         TextMateRuntime.preload(applicationContext)
     }
 
-    /** 资产提取（后台线程）：示例插件 / 布局助手模板 / luadoc 离线文档。 */
+    /** 资产提取（后台协程）：布局助手模板（示例工程由 :app:generateExamples 生成）。 */
     private fun bootstrapAssets() {
-        Thread {
-            extractExamplePlugin()
+        appScope.launch {
             extractLayoutTemplates()
-            extractLuadoc()
-        }.apply {
-            name = "LideAppAssets"
-            isDaemon = true
-        }.start()
+        }
     }
 
     override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
         super.onConfigurationChanged(newConfig)
         LocaleManager.init(this)
-    }
-
-    /** 示例插件（G4 收口）：asset 中的 plugin.json 配套 main.lua 提取到 plugin/example/，已存在即跳过。 */
-    private fun extractExamplePlugin() {
-        try {
-            val outDir = File(luaExtDir, "plugin/example")
-            if (outDir.exists()) return
-            outDir.mkdirs()
-            copyAsset("plugin/plugin.json", File(outDir, "plugin.json"))
-            File(outDir, "main.lua").writeText(
-                "-- Example plugin entry\n" +
-                    "local luadir, luapath = ...\n" +
-                    "print(\"Hello from the example plugin!\")\n" +
-                    "print(\"context: \" .. tostring(luadir) .. \" / \" .. tostring(luapath))\n",
-            )
-        } catch (e: Exception) {
-            android.util.Log.w(TAG, "extractExamplePlugin failed", e)
-        }
     }
 
     /** 布局助手模板（pro 的 javaapi 目录 .aly 文件）：提取到 filesDir/layouts/，已存在即跳过。 */
@@ -102,23 +88,8 @@ class LideApp : LuaApplication() {
                 }
             }
         } catch (_: Exception) {
-            // 有意静默：可选资产（如 layouts/luadoc 目录缺失）缺省即跳过，由上层尽力而为
+            // 有意静默：可选资产（如 layouts 目录缺失）缺省即跳过，由上层尽力而为
             // 契约兜底（AGENTS.md 降级约定），调用方无感知，不产生日志噪声。
-        }
-    }
-
-    private fun extractLuadoc() {
-        try {
-            val outDir = File(filesDir, "luadoc")
-            outDir.mkdirs()
-            val names = assets.list("luadoc") ?: return
-            for (name in names) {
-                val outFile = File(outDir, name)
-                if (outFile.exists() && outFile.length() > 0) continue
-                copyAsset("luadoc/$name", outFile)
-            }
-        } catch (e: Exception) {
-            android.util.Log.w(TAG, "extractLuadoc failed", e)
         }
     }
 }

@@ -797,7 +797,7 @@ WP-019（测试骨架，第一批并行铺）
 adb devices
 adb -s emulator-5554 install -r app\build\outputs\apk\x64\debug\app-x64-debug.apk
 adb -s emulator-5554 uninstall com.lioisme.lide
-adb -s emulator-5554 push app\src\main\assets\samples\demo /storage/emulated/0/AndroLua/project/
+adb -s emulator-5554 push scripts\examples-src\demo /storage/emulated/0/AndroLua/project/
 adb -s emulator-5554 pull /storage/emulated/0/AndroLua/project/demo/init.lua .
 adb -s emulator-5554 shell am start -a android.intent.action.VIEW -d "file:///storage/emulated/0/AndroLua/project/demo/main.lua" com.lioisme.lide
 adb -s emulator-5554 shell am start -n com.lioisme.lide/.engine.EngineActivity --es projectDir /storage/emulated/0/AndroLua/project/demo --es mainFile main.lua

@@ -1,6 +1,8 @@
 package com.lioisme.lide.ui.screen
 
 import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
 import com.lioisme.lide.R
 
 /**
@@ -36,4 +38,19 @@ internal object PermissionCatalog {
             Manifest.permission.VIBRATE to R.string.perm_vibrate,
             Manifest.permission.WAKE_LOCK to R.string.perm_wake_lock,
         )
+
+    /**
+     * 宿主 manifest 声明的权限集合（含特殊权限），安装周期内不变。
+     * 唯一事实源（P4b 去重）：EditorScreen 运行前授权门与 PermissionScreen 列表共用，
+     * 查询失败降级为空集（调用方自行判定可授予子集）。
+     */
+    fun hostDeclaredPermissions(context: Context): Set<String> =
+        try {
+            context.packageManager
+                .getPackageInfo(context.packageName, PackageManager.GET_PERMISSIONS)
+                .requestedPermissions
+                ?.toSet() ?: emptySet()
+        } catch (_: Throwable) {
+            emptySet()
+        }
 }

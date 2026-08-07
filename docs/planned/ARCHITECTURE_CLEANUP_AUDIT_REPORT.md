@@ -91,7 +91,7 @@ lide 当前处于「功能已通、架构负债显著」阶段：R1~R5 边界遵
 | **SearchBar 红线状态机**（`ApiBrowserScreen.kt:105-138`、`ApiBrowserComponents.kt:125-187`） | `searchActive` 独立意图 state + `pendingNavigation` 挂起消费 + `LaunchedEffect(searchActive)` 唯一动画驱动 + `snapTo(0f)` 半程防御 + 「`rememberSearchBarState()` 必须无参调用」引用比较契约 + `ApiCollapsedSearchInput` 自绘折叠条绕开长按展开缺陷 | material3 `SearchBar`/`SearchBarState` 动画死循环、协程互斥取消 | 接受官方组件行为边界（简化交互），或整体自绘搜索视图；不再对抗组件动画 |
 | **EditorTabs 手势逆向**（`EditorTabs.kt:155-214`，注释 `:68-73` 自证「已反编译二进制核验 API」） | ~40 行只读指针观察协程（`awaitEachGesture` + `dragMoved`）区分「长按松手=关闭菜单」与「长按拖动=排序」 | reorderable 3.0.0 拖拽库内部时序 | 简化交互契约（短按切换、长按拖动排序、关闭移入 `DropdownMenu` 常驻入口），删除位移观察协程 |
 | **TextMate 单例三件套 + 双预热入口 + 失败也 markReady**（`LuaEditor.kt:84-88,100-324,332-352`、`TextMateInitializer.kt:24-60`、`LideApp.kt:27-34`） | `TextMateColorSchemeCache` + `EditorViewPool` + `EditorInitGate` 分散三处进程级状态；双预热入口（`LideApp.preloadTextMate` 与 `rememberTextMateInitializer` 各起线程）；`LuaEditor.kt:349` `markReady()` 无条件执行，**初始化失败被伪装成就绪** | 初始化耗时数百 ms / 失败降级 | 收敛为单一 `TextMateRuntime` 服务：`ready: StateFlow<Boolean>` + 初始化结果；app 预热仅提前触发，editor 只消费状态；失败显示错误态而非假装就绪 |
-| **material3_searchbar_patch**（`third_party/patches/`，~127KB AOSP 副本） | 无任何构建引用，纯死代码 | 搜索组件缺陷（历史） | `git mv` 至 `docs/discard/` |
+| **material3_searchbar_patch**（`third_party/patches/`，~127KB AOSP 副本） | 无任何构建引用，纯死代码 | 搜索组件缺陷（历史） | **（已完成 2026-08-07）** 物理删除（`git rm`，断舍离批次） |
 
 ### 4.3 重复代码（去重即减数千行）
 
@@ -182,7 +182,7 @@ lide 当前处于「功能已通、架构负债显著」阶段：R1~R5 边界遵
 :androlua（引擎运行时）
  ├─ AlpManager      导入唯一入口（PluginScreen 复用）
  └─ LuaConfigParser 权威解析（AlpNaming 委托）
-third_party/patches/  删除（material3_searchbar_patch → docs/discard）
+third_party/patches/  删除（material3_searchbar_patch → docs/discard；2026-08-07 已物理删除）
 ```
 
 ### 6.3 关键设计决策
@@ -287,9 +287,9 @@ third_party/patches/  删除（material3_searchbar_patch → docs/discard）
    压测基准绑架（150ms 仅为产品手感）。navigation-compose 2.9.x 升级属根因消除路径
    （D-17 方案 B），按审计 §9 风险缓解「迁移分支验证，失败则保留 NavigationGate 并登记
    根因消除条件」——未经真机压测验证前保留门控（本环境无法设备验证）。
-- **C-2（部分完成 2026-08-06）**：`material3_searchbar_patch`（~127KB 死代码，无构建引用）
-   已 `git mv` 至 `docs/discard/`。SearchBar 红线状态机（searchActive/pendingNavigation/
-   动画互斥）为 AGENTS.md 冻结契约，官方组件行为边界未在真机验证前不拆除。
+- **C-2（已完成 2026-08-07）**：`material3_searchbar_patch`（~127KB 死代码，无构建引用）
+    已物理删除（`git rm`，断舍离批次）。SearchBar 红线状态机（searchActive/pendingNavigation/
+    动画互斥）为 AGENTS.md 冻结契约，官方组件行为边界未在真机验证前不拆除。
 - **C-3（已完成 2026-08-06）**：`EditorTabs` 交互简化——删除位移观察协程
    （`awaitEachGesture` + touchSlop 判定，~40 行）；关闭菜单改为每标签常驻 ⋮
    `IconButton` + `DropdownMenu` 入口；长按手势仅保留拖拽排序语义。
@@ -316,9 +316,13 @@ third_party/patches/  删除（material3_searchbar_patch → docs/discard）
     `AlpNaming.resolveKind/resolveName` 改走 `LuaConfigParser` 结构化解析（防带尾注释
     时与 PluginManager 结果不一致）。
   - 治理矩阵同步：`docs/TASKS.md`、`docs/kb/README.md` §2 状态更新为实施中。
-- **D-2（未实施 2026-08-06）**：`third_party/androlua/UPSTREAM.md` 改动登记表、
-  AXmlManifest styled-pool 显式拒绝、`EngineContract` 收敛——遗留（属 :androlua 上游
-  治理，另行排期）。
+- **D-2（已完成 2026-08-07）**：`third_party/androlua/UPSTREAM.md` 改动登记表、
+  AXmlManifest styled-pool 显式拒绝、`EngineContract` 收敛——见
+  [ARCHITECTURE_CLEANUP_BATCH2_REPORT.md](ARCHITECTURE_CLEANUP_BATCH2_REPORT.md) §P5b
+  （AXmlManifest 0x400 抛 AXmlException；EngineContract + EngineActivity 读侧契约化 +
+  EngineContractTest 固化；测试迁移：LuaConfigParserTest 并入 :androlua、
+  AlpNamingTest/ZipUtilTest git mv 归位）。UPSTREAM.md 改动登记表仍留待
+  vendor 基线整理时补记。
 - **D-3（未实施 2026-08-06）**：防御性 catch 清理（~59 处边界收敛）——遗留（改动面广，
   需逐点审计语义，另行排期）。
 - **D-4（已完成 2026-08-06）**：AGENTS.md 契约简化——API 浏览器反射线程契约整节大幅

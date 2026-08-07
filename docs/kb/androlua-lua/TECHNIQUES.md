@@ -117,4 +117,10 @@ Live2D 走 lide 原生引擎（`require "live2d"` → liblive2d.so）时，Lua �
 - **事件→动作映射**：tap 命中 head→`setRandomExpression`、body→`startRandomMotion("tap_body")`；flick→`startRandomMotion("flick")`；maxScaleEvent→`"pinch_out"`、minScaleEvent→`"pinch_in"`。
 - **双指捏合**：scale = `(dist/prev)^0.75`（**指数 0.75** 不是线性）；`touchBegan2` 首帧中心用旧 lastX1/lastX2（原版 bug 复刻）；`calcShift` 同号→0 否则 sign(v1)·min(|a|,|b|)；moveY 负号。
 - 设备验证：`input tap/swipe` 驱动 + logcat 断言（`tapEvent HIT head/body`、`flickEvent`、`maxScaleEvent/minScaleEvent`）+ 截图像素统计（System.Drawing 采样非黑点）三重证据链。
-- 完整实现：`C:\Users\liois\AppData\Local\Temp\opencode\live2dtest\live2dapp.lua`（17KB，公式逐条带 dex 行号注释）；引擎 API 表见 `build-scripts/live2d/src/lua/lua_live2d.cpp`。
+- 完整实现：`C:\Users\liois\AppData\Local\Temp\opencode\live2dtest\live2dapp.lua`（17KB，公式逐条带 dex 行号注释）；引擎 API 表见 `app/src/main/cpp/live2d/src/lua/lua_live2d.cpp`。
+
+## DES 字节码/脚本加密的运行期 decryption loopback（2026-08-07）
+- 夹具：pp/build_resource LuaCrypto.encrypt(脚本文本) 生成带 MAGIC(LIDE+4 bytes) 的 128B 二进制 main.lua 推入 /storage/emulated/0/AndroLua/project/<x>/，init.lua 保持明文（引擎 init 走 LloadFile 也 OK，但因工程 init 非必须可不放）。
+- 启动：db root（普通 shell 无法启动 exported=false 的 com.androlua.LuaActivity，root 可越过） + m start -a android.intent.action.VIEW -d file:///.../main.lua -n com.lioisme.lide/com.androlua.LuaActivity。
+- 断言：logcat lua:* 出现脚本独有 print（I lua : DES-LOOPBACK-OK），AndroidRuntime 0 崩溃行即解密链路 OK。
+- 原理：LuaJ LloadFile→luajava.c:3020 luaL_loadfile→laadelft 快路径 hook（非 MAGIC 原路径零回归）；Java 六处 loadfile 调用点均收敛于此，宿主无 Java 改动。

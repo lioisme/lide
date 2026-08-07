@@ -6,7 +6,7 @@
     <string name="cancel">取消</string>
     <string name="confirm">确定</string>
     <string name="alp_conflict_title">导入冲突</string>
-    <string name="alp_conflict_message">已存在名为 \"%1$s\" 的工程或插件。</string>
+    <string name="alp_conflict_message">已存在名为 \"%1$s\" 的工程。</string>
     <string name="alp_conflict_overwrite">覆盖</string>
     <string name="alp_conflict_rename">改名</string>
     <string name="create">创建</string>
@@ -21,8 +21,6 @@
     <string name="import_success">已从 .alp 导入项目</string>
     <string name="import_failed">导入 .alp 失败</string>
     <string name="import_projects_success">已导入 %1$d 个工程</string>
-    <string name="import_plugin_success">已导入 %1$d 个插件</string>
-    <string name="import_mixed_success">已导入 %1$d 个工程、%2$d 个插件</string>
     <string name="export_alp">导出为 .alp</string>
     <string name="project_rename">重命名</string>
     <string name="project_rename_title">重命名工程</string>
@@ -38,6 +36,11 @@
     <string name="display">显示</string>
     <string name="general">通用</string>
     <string name="editor">编辑器</string>
+    <string name="androlua">AndroLua</string>
+    <string name="editor_subtitle">编辑器选项</string>
+    <string name="androlua_subtitle">API 与打包</string>
+    <string name="tools">工具</string>
+    <string name="packaging">打包</string>
 
     <!-- Settings items -->
     <string name="appearance">外观</string>
@@ -57,8 +60,6 @@
     <string name="tab_size_value">%1$d</string>
 
     <!-- Editor settings screen (D1) -->
-    <string name="editor_settings">编辑器设置</string>
-    <string name="editor_settings_subtitle">字体、编辑、视图与输入选项</string>
     <string name="editor_settings_editing">编辑</string>
     <string name="editor_settings_view">视图</string>
     <string name="editor_settings_input">输入</string>
@@ -81,14 +82,10 @@
     <string name="scalable">双指缩放</string>
     <string name="cursor_animation">光标动画</string>
     <string name="disable_soft_kbd_if_hard">硬键盘优先</string>
-    <string name="help">帮助</string>
-    <string name="help_subtitle">使用指南</string>
-    <string name="help_title">帮助</string>
-    <string name="help_missing">未找到帮助内容。</string>
+    <string name="restore_defaults">恢复默认</string>
+    <string name="restore_defaults_done">已恢复默认设置</string>
     <string name="about">关于</string>
     <string name="version">LIDE v1.0</string>
-    <string name="lua_manual">Lua 手册</string>
-    <string name="lua_manual_missing">未找到离线手册。</string>
     <string name="system_wallpaper">系统壁纸</string>
     <string name="wallpaper_desc">壁纸动态取色</string>
     <string name="pick_accent">选择强调色</string>
@@ -142,12 +139,6 @@
 
     <!-- Build APK (WP-005) -->
     <string name="build_title">构建 APK</string>
-    <string name="build_summary_group">打包配置</string>
-    <string name="build_hint">以下配置读取自工程 init.lua</string>
-    <string name="build_appname">应用名称</string>
-    <string name="build_package">包名</string>
-    <string name="build_version">版本 %1$s（%2$s）</string>
-    <string name="build_permissions">权限（%1$d 项）</string>
     <string name="build_button">构建</string>
     <string name="build_working">构建中…</string>
     <string name="build_success">构建完成</string>
@@ -159,30 +150,20 @@
     <string name="build_stage_compile">编译 Lua</string>
     <string name="build_stage_assemble">打包 APK</string>
     <string name="build_stage_sign">签名 APK</string>
+    <string name="build_need_abi">请至少选择一个 ABI</string>
+    <string name="build_version">版本 %1$s（%2$s）</string>
+    <string name="build_permissions">权限（%1$d 项）</string>
+    <string name="build_dep_native">原生库：%1$d 个（约 %2$s）</string>
+    <string name="build_dep_abis">ABI：%1$s</string>
+    <string name="build_dep_missing">未找到模块：%1$s</string>
+    <string name="build_abi_label">支持的 ABI</string>
+    <string name="build_opts_summary">打包选项：%1$s；%2$s；%3$s</string>
     <string name="run_permission_denied_hint">已拒绝 %1$d 项权限，继续运行</string>
     <string name="run_finished">运行结束</string>
     <string name="run_error_title">运行出错</string>
     <string name="run_jump_to_line">跳到出错行</string>
     <string name="run_insert_import">插入 import \"%1$s\"</string>
     <string name="run_import_suggestion">提示：可尝试 import \"%1$s\"</string>
-
-    <!-- Plugins -->
-    <string name="plugins">插件</string>
-    <string name="plugins_subtitle">管理已安装的插件</string>
-    <string name="plugin_empty_title">暂无已安装的插件</string>
-    <string name="plugin_empty_hint">通过 + 按钮安装 .alp 文件</string>
-    <string name="plugin_installed">已安装插件 \'%1$s\'</string>
-    <string name="plugin_invalid">不是有效的插件包 (.alp)</string>
-    <string name="plugin_run">运行</string>
-    <string name="plugin_uninstall">卸载插件</string>
-    <string name="plugin_install_alp">安装 .alp</string>
-    <string name="plugin_version">v%1$s</string>
-    <string name="plugin_version_author">v%1$s，作者 %2$s</string>
-    <string name="plugin_uninstall_title">卸载插件</string>
-    <string name="plugin_uninstall_message">移除 \"%1$s\"？其文件将被永久删除。</string>
-    <string name="plugin_uninstall_confirm">卸载</string>
-    <string name="plugin_uninstall_done">插件已卸载</string>
-    <string name="plugin_uninstall_failed">插件卸载失败</string>
 
     <!-- Examples -->
     <string name="examples">示例</string>
@@ -191,6 +172,7 @@
     <string name="examples_reimport">重新导入</string>
     <string name="examples_installed">已导入</string>
     <string name="examples_import_success">示例已导入</string>
+    <string name="examples_empty">当前构建未随包内置示例（精简模式），可导入自己的 .alp 工程。</string>
     <string name="example_name_demo">demo</string>
     <string name="example_desc_demo">ListView + dkjson 网络请求示例</string>
     <string name="example_name_demoproject">DemoProject</string>
@@ -338,4 +320,71 @@
     <string name="api_usage_popup">弹出式窗口</string>
     <string name="api_usage_dropdown">下拉菜单控件</string>
     <string name="api_kind_interface">接口</string>
+
+    <!-- 签名管理 -->
+    <string name="signing_manage_subtitle">管理打包签名</string>
+    <string name="signing_manage">签名</string>
+    <string name="signing_import">导入密钥库</string>
+    <string name="signing_generate">生成新签名</string>
+    <string name="signing_generate_subtitle">RSA-2048 自签证书，有效期与证书内容可自定义</string>
+    <string name="signing_generate_action">生成</string>
+    <string name="signing_alias">别名</string>
+    <string name="signing_gen_password">密码（可选）</string>
+    <string name="signing_gen_password_hint">留空自动生成强密码</string>
+    <string name="signing_gen_subject">证书信息</string>
+    <string name="signing_gen_validity">有效期（年）</string>
+    <string name="signing_gen_validity_hint">1~%1$d 年，默认 %2$d 年</string>
+    <string name="signing_gen_c">国家代码（C）</string>
+    <string name="signing_gen_c_hint">两位字母，如 CN、US</string>
+    <string name="signing_gen_st">省份（ST）</string>
+    <string name="signing_gen_l">城市（L）</string>
+    <string name="signing_gen_o">组织名称（O）</string>
+    <string name="signing_gen_ou">组织单位（OU）</string>
+    <string name="signing_gen_cn">姓名（CN）</string>
+    <string name="signing_gen_cn_hint">留空使用档案名称</string>
+    <string name="signing_gen_email">邮箱（E）</string>
+    <string name="signing_gen_street">街道地址</string>
+    <string name="signing_gen_postal">邮政编码</string>
+    <string name="signing_gen_c_invalid">国家代码须为两位字母</string>
+    <string name="signing_gen_validity_invalid">有效期须在 1~%1$d 年之间</string>
+    <string name="signing_gen_email_invalid">邮箱格式不正确</string>
+    <string name="signing_generated">已生成新签名</string>
+    <string name="signing_name">档案名称</string>
+    <string name="signing_store_password">密钥库密码</string>
+    <string name="signing_alias_label">选择密钥别名</string>
+    <string name="signing_import_next">下一步</string>
+    <string name="signing_import_back">上一步</string>
+    <string name="signing_builtin">内置 Android 调试密钥</string>
+    <string name="signing_empty">该密钥库中没有带私钥的别名</string>
+    <string name="signing_no_key">无私钥</string>
+    <string name="signing_imported">签名已导入</string>
+    <string name="signing_read_failed">读取密钥库文件失败</string>
+    <string name="signing_export">导出密钥库</string>
+    <string name="signing_export_dialog_title">导出签名档案</string>
+    <string name="signing_exported">密钥库已导出</string>
+    <string name="signing_export_failed">导出密钥库失败</string>
+    <string name="signing_export_password_hint">导出的文件受上方密钥库密码保护，请妥善保管。</string>
+    <string name="signing_keystore_password">密钥库密码</string>
+    <string name="signing_type_pkcs12">PKCS#12</string>
+    <string name="signing_type_jks">JKS</string>
+    <string name="signing_show_password">显示密码</string>
+    <string name="signing_hide_password">隐藏密码</string>
+    <string name="signing_delete_confirm">删除签名档案「%1$s」？密钥库文件将被永久删除。</string>
+    <string name="delete">删除</string>
+    <string name="build_signature">签名</string>
+    <string name="build_manage_signing">管理</string>
+    <string name="build_signature_value">%1$s</string>
+    <string name="build_signature_scheme">方案：%1$s</string>
+    <string name="build_opt_compile_label">编译 Lua 文件</string>
+
+    <!-- 打包选项（合并入 AndroLua 页） -->
+    <string name="build_opt_auto_install">自动安装</string>
+    <string name="build_opt_native_title">优化打包</string>
+    <string name="build_opt_native_subtitle">仅针对原生库：只携带工程依赖命中的 .so</string>
+    <string name="build_opt_encrypt_title">加密 Lua 文件</string>
+    <string name="build_opt_scheme_title">签名方案</string>
+    <string name="build_opt_scheme_hint">v1 = 传统 JAR 签名；v2 = Android 7+；v3 = 仅 Android 9+</string>
+    <string name="build_opt_abi_title">默认 ABI</string>
+    <string name="build_opt_abi_hint">宿主未携带该 ABI 时置灰不可选（构建时回落为全部宿主 ABI）</string>
+    <string name="build_opt_abi_auto">宿主全部 ABI</string>
 </resources>

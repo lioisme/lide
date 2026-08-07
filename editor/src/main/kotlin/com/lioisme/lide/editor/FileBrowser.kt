@@ -23,8 +23,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType
-import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.lioisme.lide.editor.R
@@ -118,7 +116,6 @@ private fun FileBrowserRow(
     onClick: () -> Unit,
     onLongClick: (() -> Unit)? = null,
 ) {
-    val haptics = LocalHapticFeedback.current
     ListItem(
         headlineContent = {
             Text(
@@ -135,13 +132,13 @@ private fun FileBrowserRow(
                 modifier = Modifier.size(20.dp),
             )
         },
-        // 长按原生振动（与主界面工程列表同源），单击仍为打开/进入；
-        // 宿主注入 onLongClick 时振动 + 回调，否则仅保留振动（纯展示语义）。
+        // 长按振动由 combinedClickable 自动触发（detectTapGestures 内置
+        // HapticFeedbackType.LongPress），与主界面工程列表同源，无需手动调用
+        // （手动调用会产生双重振动）；单击仍为打开/进入。
         modifier =
             Modifier.combinedClickable(
                 onClick = onClick,
                 onLongClick = {
-                    haptics.performHapticFeedback(HapticFeedbackType.LongPress)
                     onLongClick?.invoke()
                 },
             ),

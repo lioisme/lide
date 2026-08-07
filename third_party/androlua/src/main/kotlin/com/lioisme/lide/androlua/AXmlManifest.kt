@@ -9,6 +9,19 @@ class AXmlException(message: String) : Exception(message)
  * [usesPermissions] 为**最终** uses-permission 全集：现有多余条目会被删除、
  * 缺失条目会在 `<application>` 之前补齐；宿主自声明权限（<permission> 元素）
  * 由调用方（ApkBuilder）并入本列表以保证运行时自洽。
+ *
+ * [launcherActivity] 为产物桌面图标入口（全限定类名，如
+ * `com.lioisme.lide.engine.EngineActivity`）：补丁会把现持有 MAIN/LAUNCHER 的
+ * activity 上对应 intent-filter 摘除，并给目标 activity 注入
+ * MAIN/LAUNCHER + `exported=true`（API 31+ 有 intent-filter 必须显式 exported）。
+ * null 表示不干预启动入口；目标 activity 不存在时安全降级（不摘除、不注入）。
+ *
+ * [applicationName] 为产物 application 的 android:name 覆盖（dex 替换模式下
+ * 宿主 IDE 类已剥离，application 必须回落 `com.androlua.LuaApplication`）；
+ * null 表示沿用模板 application。
+ *
+ * [removeActivities] 为产物中整体移除的 activity 全限定类名列表（dex 替换
+ * 模式下 IDE MainActivity 类不存在，残留声明会导致解析期 ClassNotFound）。
  */
 data class ManifestEdit(
     val packageName: String,
@@ -16,6 +29,9 @@ data class ManifestEdit(
     val versionCode: Int,
     val versionName: String,
     val usesPermissions: List<String>,
+    val launcherActivity: String? = null,
+    val applicationName: String? = null,
+    val removeActivities: List<String> = emptyList(),
 )
 
 /**
@@ -46,8 +62,11 @@ object AXmlManifest {
     private const val NO_INDEX = -1L
     private const val TYPE_STRING = 0x03
     private const val TYPE_INT_DEC = 0x10
+    private const val TYPE_INT_BOOLEAN = 0x12
 
     private const val ANDROID_URI = "http://schemas.android.com/apk/res/android"
+    private const val MAIN_ACTION = "android.intent.action.MAIN"
+    private const val LAUNCHER_CATEGORY = "android.intent.category.LAUNCHER"
     private const val DYNAMIC_RECEIVER_SUFFIX = ".DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
 
     private class Pool(val strings: MutableList<String>)
@@ -93,6 +112,31 @@ object AXmlManifest {
         return stringAttr(parseElement(manifest), strings, "package")
     }
 
+    /** 现持有 MAIN action 的 activity 全限定名（launcher 入口）；无则返回 null。 */
+    fun readLauncherActivity(bytes: ByteArray): String? {
+        val parsed = parse(bytes)
+        val strings = readPool(parsed.chunks[parsed.poolChunkIndex]).strings
+        return findMainLauncher(parsed.chunks, strings)?.first
+    }
+
+    /** 指定 activity 的 android:exported 值；无该属性返回 null。 */
+    fun readExported(bytes: ByteArray, activityName: String): Boolean? {
+        val parsed = parse(bytes)
+        val strings = readPool(parsed.chunks[parsed.poolChunkIndex]).strings
+        for (chunk in parsed.chunks) {
+            if (!isElement(chunk, strings, "activity")) continue
+            val el = parseElement(chunk)
+            if (stringAttr(el, strings, "name") != activityName) continue
+            val a = el.attrs.firstOrNull { strings.getOrNull(it.name) == "exported" } ?: return null
+            return when {
+                a.type != TYPE_INT_BOOLEAN -> null
+                a.data != 0L -> true
+                else -> false
+            }
+        }
+        return null
+    }
+
     private fun elementStringAttrs(bytes: ByteArray, element: String, attr: String): List<String> {
         val parsed = parse(bytes)
         val strings = readPool(parsed.chunks[parsed.poolChunkIndex]).strings
@@ -136,6 +180,62 @@ object AXmlManifest {
 
     // ===== 补丁入口 =====
 
+    /**
+     * 定位现持有 MAIN/LAUNCHER 的入口：
+     * 返回（持有 activity 的 android:name，MAIN 所在 intent-filter START 的 chunk 下标）。
+     * action 是 intent-filter 的直接子元素（无中间嵌套），故向上回退找最近的
+     * intent-filter START 即其父元素。无 MAIN 时返回 null。
+     */
+    private fun findMainLauncher(
+        chunks: List<ByteArray>,
+        strings: List<String>,
+    ): Pair<String?, Int>? {
+        var currentActivity: String? = null
+        for ((i, chunk) in chunks.withIndex()) {
+            when (typeOf(chunk)) {
+                CHUNK_START_ELEMENT -> {
+                    val name = strings.getOrNull(u32(chunk, 20).toInt())
+                    if (name == "activity") {
+                        currentActivity = stringAttr(parseElement(chunk), strings, "name")
+                    } else if (name == "action" &&
+                        stringAttr(parseElement(chunk), strings, "name") == MAIN_ACTION
+                    ) {
+                        var j = i - 1
+                        while (j >= 0) {
+                            if (typeOf(chunks[j]) == CHUNK_START_ELEMENT &&
+                                strings.getOrNull(u32(chunks[j], 20).toInt()) == "intent-filter"
+                            ) {
+                                return currentActivity to j
+                            }
+                            j--
+                        }
+                    }
+                }
+
+                CHUNK_END_ELEMENT -> {
+                    if (strings.getOrNull(u32(chunk, 20).toInt()) == "activity") currentActivity = null
+                }
+            }
+        }
+        return null
+    }
+
+    /** 是否存在名为 [className] 的 activity 元素（用于 launcher 注入前的能力预检）。 */
+    private fun hasActivity(
+        chunks: List<ByteArray>,
+        strings: List<String>,
+        className: String,
+    ): Boolean {
+        for (chunk in chunks) {
+            if (isElement(chunk, strings, "activity") &&
+                stringAttr(parseElement(chunk), strings, "name") == className
+            ) {
+                return true
+            }
+        }
+        return false
+    }
+
     /** 按 [edit] 重写 manifest；池内原位替换包名相关字符串并追加新字符串。 */
     fun patch(bytes: ByteArray, edit: ManifestEdit): ByteArray {
         val parsed = parse(bytes)
@@ -166,9 +266,19 @@ object AXmlManifest {
         appendNeed += edit.appLabel
         appendNeed += edit.versionName
         appendNeed += edit.usesPermissions
+        if (edit.applicationName != null) appendNeed += edit.applicationName
         if (origIdx(ANDROID_URI) == null) appendNeed += ANDROID_URI
         if (origIdx("uses-permission") == null) appendNeed += "uses-permission"
         if (origIdx("name") == null) appendNeed += "name"
+        if (edit.launcherActivity != null) {
+            // launcher 注入所需元素名/常量（宿主 manifest 通常已含，set 去重无副作用）。
+            appendNeed += "intent-filter"
+            appendNeed += "action"
+            appendNeed += "category"
+            appendNeed += "exported"
+            appendNeed += MAIN_ACTION
+            appendNeed += LAUNCHER_CATEGORY
+        }
         val appended = LinkedHashMap<String, Int>()
         for (s in appendNeed) {
             if (idx[s] == null && appended[s] == null) appended[s] = strings.size + appended.size
@@ -176,12 +286,50 @@ object AXmlManifest {
         strings += appended.keys
         fun newIdx(s: String): Int = idx[s] ?: appended.getValue(s)
 
-        // 3) 重写元素：manifest 属性 / application label / uses-permission 过滤。
+        // 3) 重写元素：manifest 属性 / application label / uses-permission 过滤 / launcher 重定向。
         val kept = LinkedHashSet<String>()
         var appChunkIndex = -1
         val out = ArrayList<ByteArray>(parsed.chunks.size + 8)
         var pendingDropEnd = false
-        for (chunk in parsed.chunks) {
+
+        // launcher 重定向：目标 activity 存在才动刀；目标即现入口时不摘除不注入。
+        val launcherInfo =
+            if (edit.launcherActivity != null &&
+                hasActivity(parsed.chunks, strings, edit.launcherActivity)
+            ) {
+                findMainLauncher(parsed.chunks, strings)
+            } else {
+                null
+            }
+        val launcherFilterIndex = launcherInfo?.second ?: -1
+        val launcherTargetIsCurrent = launcherInfo?.first == edit.launcherActivity
+        var droppingLauncher = false
+        var dropDepth = 0
+        // removeActivities：整棵 activity 子树（含子元素与 END）跳过，深度计数退出。
+        var droppingActivity = false
+        var dropActivityDepth = 0
+
+        for ((i, chunk) in parsed.chunks.withIndex()) {
+            if (droppingLauncher) {
+                when (typeOf(chunk)) {
+                    CHUNK_START_ELEMENT -> dropDepth++
+                    CHUNK_END_ELEMENT -> if (dropDepth == 0) droppingLauncher = false else dropDepth--
+                }
+                continue
+            }
+            if (droppingActivity) {
+                when (typeOf(chunk)) {
+                    CHUNK_START_ELEMENT -> dropActivityDepth++
+                    CHUNK_END_ELEMENT ->
+                        if (dropActivityDepth == 0) droppingActivity = false else dropActivityDepth--
+                }
+                continue
+            }
+            if (!launcherTargetIsCurrent && i == launcherFilterIndex) {
+                // 摘除旧入口的 MAIN/LAUNCHER intent-filter 子树（含 action/category 子元素）。
+                droppingLauncher = true
+                continue
+            }
             if (pendingDropEnd) {
                 if (typeOf(chunk) == CHUNK_END_ELEMENT) pendingDropEnd = false
                 continue
@@ -200,6 +348,22 @@ object AXmlManifest {
             } else if (isElement(chunk, strings, "application")) {
                 appChunkIndex = out.size
                 out += rebuildApplication(chunk, strings, idx, ::newIdx, edit)
+            } else if (isElement(chunk, strings, "activity")) {
+                val el = parseElement(chunk)
+                val activityName = stringAttr(el, strings, "name")
+                if (activityName != null && edit.removeActivities.contains(activityName)) {
+                    // dex 替换模式：IDE 类已剥离，残留声明会导致解析期 ClassNotFound，整棵移除。
+                    droppingActivity = true
+                    dropActivityDepth = 0
+                } else if (edit.launcherActivity != null && activityName == edit.launcherActivity) {
+                    // 新入口：exported=true + 注入 MAIN/LAUNCHER intent-filter。
+                    out += rebuildLauncherActivity(chunk, strings, ::newIdx)
+                    if (!launcherTargetIsCurrent) {
+                        out += launcherIntentFilterChunks(::newIdx)
+                    }
+                } else {
+                    out += chunk
+                }
             } else {
                 out += chunk
             }
@@ -288,10 +452,19 @@ object AXmlManifest {
         val el = parseElement(chunk)
         val attrs = ArrayList<ByteArray>(el.attrs.size + 1)
         var hasLabel = false
+        var hasName = false
         for (a in el.attrs) {
             if (strings.getOrNull(a.name) == "label") {
                 hasLabel = true
                 val i = newIdx(edit.appLabel)
+                attrs += emitAttr(a.ns, a.name, i, TYPE_STRING, i.toLong())
+            } else if (edit.applicationName != null &&
+                strings.getOrNull(a.name) == "name" &&
+                strings.getOrNull(a.ns) == ANDROID_URI
+            ) {
+                // dex 替换模式：application 回落引擎 Application（IDE 类已剥离）。
+                hasName = true
+                val i = newIdx(edit.applicationName)
                 attrs += emitAttr(a.ns, a.name, i, TYPE_STRING, i.toLong())
             } else {
                 attrs += attrBytes(chunk, el, a)
@@ -301,7 +474,61 @@ object AXmlManifest {
             val i = newIdx(edit.appLabel)
             attrs += emitAttr(newIdx(ANDROID_URI), newIdx("label"), i, TYPE_STRING, i.toLong())
         }
+        if (edit.applicationName != null && !hasName) {
+            val i = newIdx(edit.applicationName)
+            attrs += emitAttr(newIdx(ANDROID_URI), newIdx("name"), i, TYPE_STRING, i.toLong())
+        }
         return emitElement(el.name, attrs, el.line)
+    }
+
+    /**
+     * 重建入口 activity 元素：android:exported 置 true（API 31+ 有 intent-filter
+     * 必须显式 exported；TYPE_INT_BOOLEAN data=0xFFFFFFFF 为 true）。
+     */
+    private fun rebuildLauncherActivity(
+        chunk: ByteArray,
+        strings: List<String>,
+        newIdx: (String) -> Int,
+    ): ByteArray {
+        val el = parseElement(chunk)
+        val attrs = ArrayList<ByteArray>(el.attrs.size + 1)
+        var hasExported = false
+        for (a in el.attrs) {
+            if (!hasExported && strings.getOrNull(a.name) == "exported" &&
+                strings.getOrNull(a.ns) == ANDROID_URI
+            ) {
+                hasExported = true
+                attrs += emitAttr(a.ns, a.name, NO_INDEX.toInt(), TYPE_INT_BOOLEAN, 0xFFFFFFFFL)
+            } else {
+                attrs += attrBytes(chunk, el, a)
+            }
+        }
+        if (!hasExported) {
+            attrs += emitAttr(newIdx(ANDROID_URI), newIdx("exported"), NO_INDEX.toInt(), TYPE_INT_BOOLEAN, 0xFFFFFFFFL)
+        }
+        return emitElement(el.name, attrs, el.line)
+    }
+
+    /**
+     * 生成 MAIN/LAUNCHER intent-filter 元素序列（START/END 成对，
+     * 紧随 activity START 元素之后写入即为该 activity 的子元素）。
+     */
+    private fun launcherIntentFilterChunks(newIdx: (String) -> Int): List<ByteArray> {
+        val uri = newIdx(ANDROID_URI)
+        val name = newIdx("name")
+        val filter = newIdx("intent-filter")
+        val action = newIdx("action")
+        val category = newIdx("category")
+        val mainIdx = newIdx(MAIN_ACTION)
+        val launcherIdx = newIdx(LAUNCHER_CATEGORY)
+        return listOf(
+            emitElement(filter, emptyList(), 1),
+            emitElement(action, listOf(emitAttr(uri, name, mainIdx, TYPE_STRING, mainIdx.toLong())), 1),
+            emitEndElement(action),
+            emitElement(category, listOf(emitAttr(uri, name, launcherIdx, TYPE_STRING, launcherIdx.toLong())), 1),
+            emitEndElement(category),
+            emitEndElement(filter),
+        )
     }
 
     // ===== 字节工具 =====
@@ -407,6 +634,9 @@ object AXmlManifest {
         val count = u32(chunk, 8).toInt()
         val flags = u32(chunk, 16).toInt()
         val stringsStart = u32(chunk, 20).toInt()
+        // styled string pool（0x400，aapt 旧版/style 资源）本解析器不实现：
+        // 静默解析会产生错乱字符串（审计 §4.5），显式拒绝以便快速定位。
+        if (flags and 0x400 != 0) throw AXmlException("styled string pool (0x400) not supported")
         val utf8 = (flags and 0x100) != 0
         val strings = ArrayList<String>(count)
         for (i in 0 until count) {

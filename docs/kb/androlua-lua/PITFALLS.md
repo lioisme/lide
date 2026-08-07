@@ -164,7 +164,7 @@
 
 - 现象：lide 原生引擎模块 `liblive2d.so` 曾被编译进 `jp_live2d_sample_Live2DNative.cpp`（12 个 `Java_jp_live2d_sample_Live2DNative_*` JNI 导出符号），而工程内**不存在对应 Java 类**（`jp.live2d.sample.Live2DNative` 零引用）——纯死代码，且违反「Lua 直接调用原生库，Java 不参与运行时」的架构要求。
 - 根因：实现初期同时保留了两条入口（Lua→C 与 Java→C 桥）；Java 桥的配套类从未落地，残留进 .so。
-- 恢复动作（2026-08-02 已执行）：删除 `build-scripts/live2d/src/jni/`；`Android.mk` 移除该编译项；清理桥专用的 `LAppModel::mOwnDrag` 字段（Lua 路径恒 false，`update()` 内部 L2DTargetPoint 平滑拖拽不受影响）；重建 x86_64 `.so`。
+- 恢复动作（2026-08-02 已执行）：删除 `app/src/main/cpp/live2d/src/jni/`（当时路径 `build-scripts/live2d/src/jni/`，2026-08 已迁移至 `app/src/main/cpp/live2d/`）；`Android.mk` 移除该编译项；清理桥专用的 `LAppModel::mOwnDrag` 字段（Lua 路径恒 false，`update()` 内部 L2DTargetPoint 平滑拖拽不受影响）；重建 x86_64 `.so`。
 - 验证：`llvm-nm -D liblive2d.so` 确认 `Java_*` 零命中、`luaopen_live2d` 保留；APK 内 `.so` 同检；设备回归（`LIVE2D_PATH native`、load ok、FPS 120、tap body/head、flick 全部通过）。
 - 红线：**lide 引擎模块 .so 只允许 Lua→C 入口**（`luaopen_*`）；任何 Java 侧 JNI 绑定（`Java_*` 符号）必须独立成模块或直接禁止，除非有配套 Java 类并走宿主约定。
 
@@ -173,7 +173,7 @@
 - 现象：lide 曾按源码树 `Android.mk2`（lluv/lsqlite3 标记禁用）误判 lfs/lsqlite3 不在 pro 打包内，将其从 jniLibs/third_party/prebuilt/build-scripts 移除；实测设备上 pro 官方 APK（4.4.2）**实际包含** `liblfs.so`、`liblsqlite3.so`（共 17 个 .so），lide 缺库后探针 `lfs`/`lsqlite3` 会变 `[!!]`。
 - 根因：源码树构建配置（`Android.mk2` 的 DISABLED 标记）与官方发布 APK 的实际打包不完全一致；判定库清单以**设备上官方 APK** 为准。
 - 规避：核对原生库清单时先 `adb shell pm path com.androlua` 取 APK 路径 → 解包 `lib/*/` 列全，再对照 lide APK 同名列表（本次 lide 19 = pro 17 + liblive2d + libandroidx.graphics.path）。
-- 验证：探针 `原生库` 组 lfs/lsqlite3 双端 `[OK]`；`git status` 确认已恢复文件（jniLibs/third_party/prebuilt/build-scripts/rebuild_engine.ps1）。
+- 验证：探针 `原生库` 组 lfs/lsqlite3 双端 `[OK]`；`git status` 确认已恢复文件（jniLibs/third_party/prebuilt/build-scripts/rebuild_engine.ps1）。**注**：上述目录为历史形态，2026-08 起按 R5 迁移为 `app/src/main/cpp/` 源码 + AGP `externalNativeBuild`，不再存在 jniLibs 缓存与 rebuild 脚本。
 
 ## 29. `LuaAccessibilityService.onDestroy` 必须调用 `stopScreenshot()`（lide 修复记录）
 
@@ -206,7 +206,7 @@
 - 现象：滑动中触摸模型 → 出现**资源缺失/绘制顺序移位**；叠加模型切换后长滑累积崩溃，且崩溃发生在**离开绘制路径之后**（GLThread 的 `je_free` ← `~BinaryReader`/`~L2DBaseModel`/`~LAppModel`，栈见 tombstone 20/21/23/25）——症状程远离根因。
 - 根因：`LAppView.draw` 复刻的 draw-order 桶需要每绘制单元先算平均、再用全局平均的 min/max 归一化成桶索引。原实现按**每绘制分组各自的平均 min/max** 建桶，而插值阶段的**最终 order** 会跌破全局平均下限 → `bucketIdx` 为**负数** → `mOrderListLastDrawIndex[负数]` 堆越界写。堆腐败当日不崩、数分钟后在无关析构点崩（模拟器 `je_free` 特征），同时污染相邻桶链 → 渲染顺序错乱。
 - 实证：诊断日志 `DRAWDER_OOB order=-19 range=685 min=266 max=951 i=54 interpOrder=247`（插值 order 247 < 全局平均下限 266）；修复后 12 轮 × 20 滑 + 12 次换装零命中、零 tombstone。
-- 规避：桶极值必须取自**全局**（对所有绘制（含 pivot 极值的插值界：插值是凸组合，永不出 pivot 范围）；保留防御性 clamp。相关代码见 `build-scripts/live2d/src/Model/ModelContext.cpp /* 桶 */`。
+- 规避：桶极值必须取自**全局**（对所有绘制（含 pivot 极值的插值界：插值是凸组合，永不出 pivot 范围）；保留防御性 clamp。相关代码见 `app/src/main/cpp/live2d/src/Model/ModelContext.cpp /* 桶 */`。
 - 验证：拖拽+换装组合复现脚本（每轮 15 步 swipe + 换装键 tap），`adb logcat -d -s live2d-diag:*` 零命中。
 
 ## 真机 GLSL #version 120 被 Adreno 拒绝 → 角色不渲染（⚠仅真机，模拟器不可见）

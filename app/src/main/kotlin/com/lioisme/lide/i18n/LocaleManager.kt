@@ -42,7 +42,8 @@ object LocaleManager {
         val locale = Locale.forLanguageTag(tag)
         Locale.setDefault(locale)
         val config = Configuration(base.resources.configuration)
-        config.setLocale(locale)
+        // setLocales 自 API 24 可用（= minSdk），取代 API 33 起弃用的 setLocale。
+        config.setLocales(android.os.LocaleList(locale))
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             return base.createConfigurationContext(config)
         }

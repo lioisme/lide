@@ -2,6 +2,12 @@
 
 > 记录 lide 引擎迁移（LuaJ → AndroLua C Engine）的工作进度。
 
+> ⚠️ **现状修正（2026-08-07）**：本文为 WP 历史台账；其中关于 `build-scripts/jni/`、`scripts/rebuild_engine.*`、
+> `third_party/prebuilt/`、`app/src/main/jniLibs/` 的描述均为历史构建模型。当前模型（AGENTS.md R5 / `docs/kb/ENGINE_RUNTIME.md`）：
+> 引擎源码统一归档于 `app/src/main/cpp/`（顶层 `Android.mk` + `Application.mk`，`live2d/` 独立模块），
+> 由 AGP `externalNativeBuild`（ndk-build，NDK 29.0.14206865）在 `assemble` 时直接从源码构建并打包进 APK，
+> 不设 jniLibs 缓存目录，无 rebuild 脚本。
+
 ---
 
 ## WP-001：NDK 构建（已完成）
@@ -357,6 +363,7 @@ CI 包含四个 Job：
 - 上游基线（已去重归档）的 `assets/luadoc/`（manual.html 457KB、contents.html、glossary.html、logo.gif）→ `app/src/main/assets/luadoc/`。
 - `LideApp` 启动提取至 `filesDir/luadoc/`（存在即跳过）。
 - 新增 `LuaManualScreen`（WebView 离线渲染 + 缺失兜底文案）；Settings "About" 从 TODO 接线到该页；新增 `manual` 路由；新增字符串（values + values-zh）。
+- **（已反转 2026-08-07）**：按用户要求整体移除 Lua 手册——删除 `LuaManualScreen`、`assets/luadoc/`、`LideApp.extractLuadoc`、打包剔除清单项与相关字符串（见 `planned/SETTINGS_PERMISSIONS_REWORK_WORK_ORDER.md` 要求 ③）。
 
 ### P2-12 管理模型终态决策（已收口）
 - **决策：保留全局仓库 + 物化同步为终态**。common/ 仓库 = 安装/管理面（集中安装、版本、卸载），`materializeProjectDependencies`（P0-1）= 运行时桥，把声明依赖物化为 `<project>/libs/` 与 `<project>/lua/`，引擎感知的仍是工程目录（与 pro 运行时模型归一）。lide.json/init.lua 声明即同步入口，两套模型不再割裂。
@@ -640,3 +647,5 @@ CI 包含四个 Job：
 **完成内容**：SettingsScreen.kt:186-197 字号（Slider/步进）+ Tab 宽度设置（实时生效并持久化）；HelpScreen.kt + HelpParser.kt 帮助页（`assets/help.txt` @章节@ 结构化渲染，设置页「帮助」入口）。
 
 **剩余**：真机回归补充。
+
+**（已反转 2026-08-07）**：按用户要求移除帮助功能——删除 `HelpScreen.kt`/`HelpParser.kt`（含单测）/`assets/help.txt`/`HELP` 路由与相关字符串（见 `planned/SETTINGS_PERMISSIONS_REWORK_WORK_ORDER.md` 要求 ④）。

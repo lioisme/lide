@@ -14,7 +14,7 @@ Lua 编译与运行底座（由 AGP `externalNativeBuild` 在 `assemble` 时直�
 |---|---|
 | `app/` | **宿主应用**（`:app`）：Compose IDE、EngineActivity、打包器、设置持久化 |
 | `editor/` | **编辑器模块**（`:editor`）：纯 Kotlin 文本能力（行级诊断/补全/高亮/搜索），不触碰原生引擎 |
-| `scripts/` | **脚本统一目录**：内置示例源（`examples-src/`，构建时生成 `.alp`）、`make-examples.ps1`、双端回归 `adb_regress.ps1`、4 变体打包 `build-apks.bat/.ps1` |
+| `scripts/` | **脚本统一目录**：内置示例源（`examples-src/`，构建时由 `:app:generateExamples` 生成 `.alp`）、双端回归 `adb_regress.ps1`、4 变体打包 `build-apks.bat/.ps1` |
 | `third_party/` | **上游库统一收纳**（只读，后续新增上游库一律入此）：`androlua/`（Gradle 模块 `:androlua`）、`patches/`（material3 SearchBar 实验补丁） |
 | `docs/` | **文档中心**：进度台账（`PROGRESS.md`）、白皮书（`WHITEPAPER.md`）、知识库（`kb/`，唯一事实来源）、进行中/计划中（`in-progress|planned`）、丢弃区（`discard/`，已完成/过时文档唯一出口）、参考基线（`reference/`，gitignore 排除、不提交、只读） |
 | `gradle/` `gradlew*` `settings/build.gradle` | Gradle 工程骨架 + 根级构建脚本 |

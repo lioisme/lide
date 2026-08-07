@@ -11,8 +11,8 @@
 docs/
 ├── kb/            ← 本知识库（索引 + 分主题条目；唯一事实来源）
 ├── in-progress/   ← 进行中文档（2 篇）
-├── planned/       ← 计划中文档（7 篇）
-├── discard/       ← 丢弃区（唯一出口）：已完成/过时文档 45 篇，只追溯不维护
+├── planned/       ← 计划中文档（8 篇）
+├── discard/       ← 丢弃区（唯一出口）：已完成/过时文档 33 篇（15 篇已物理删除，条目保留作墓碑），只追溯不维护
 └── reference/     ← 参考源码资产（gitignored：androlua / sora-editor / Squircle-CE / project / 代码手册社区）
 ```
 
@@ -38,7 +38,7 @@ docs/
 > **计划中** = 研究已毕但实施未排期（或历史草案）；**已丢弃** = 已完成 / 已过时 / 被取代
 > （统一移入 `docs/discard/`，见 [discard/README.md](../discard/README.md) §3 清单，不再参与状态管理）。
 
-### 2.1 已完成（全部移入 discard/，共 31 篇）
+### 2.1 已完成（全部移入 discard/，登记 37 篇，现存 23 篇）
 
 > 2026-08-05 起已完成文档不再驻留 `docs/completed/`，统一 `git mv` 至 `docs/discard/`。
 > 完整清单（含每篇一句话 + 结论蒸馏去向）见 `docs/discard/README.md` §3.1；
@@ -50,13 +50,13 @@ docs/
 |------|------|-----------|------|------|
 | `PARITY_COMPLETION_WORK_ORDER.md` | 2026-08-01 | 19 个 WP 补齐 pro 宿主 IDE 功能（对齐度 ~6 成 → 目标全齐） | **13/19 完成**：WP-001/002/003/004/005/008/013/014/015/016/017/018/019（2026-08-05 补登 005/013/015/016/018）；WP-014 代码落地未真机验收 | 剩余 WP-006/007/009/010/011/012（未开工，详见 ROADMAP.md 与 TASKS.md） |
 | `EDITOR_UI_ALIGNMENT_WORK_ORDER.md` | 基线 c7b35dd | 10 WP 对齐 Squircle-CE 抽屉/Tab/文件树（禁手搓、仅官方组件） | **WP-003~006 已落地**（EditorTabs 拖拽排序 + DropdownMenu 关闭菜单，2026-08-05 复核）；WP-001/002/007/008 ⛔ 被取代（抽屉已删除→`ProjectFileBrowserDialog`）；WP-009/010 未完成 | 内部 WP 编号与 PROGRESS 编号是两套体系 |
-| `EDITOR_ALL_LANGUAGES_SUPPORT_WORK_ORDER.md` | 2026-08-06 | 全语言（39 种 TextMate 文法）支持：资产/目录/关键字表入 `:editor`；修复 Lua 高亮回归 | 已完成（2026-08-06 落地 + 模拟器验证） | 资产 81 个于 `editor/src/main/assets/textmate/`（含 `language-configuration`）；Lua 词法诊断保持 `source.lua` 专属 |
+| `RUNTIME_PACKAGING_5REQ_WORK_ORDER.md` | 2026-08-07 | 打包运行时五需求工作单（运行时解耦/载荷上下限/ABI 架构/输出选配/设置收敛）：审计结论 5 项判定 + 用户决策 D-1~D-3（32 位非必须、ABI 宿主驱动、输出默认自动安装）+ 分阶段计划 P1→P2→P3→P0 | **实施完成**：P1（ABI 架构固化）→ P2（输出选配）→ P3（设置收敛）→ P0（运行时基座，dex 替换路线：宿主内嵌 APK 设计被用户否决，改为单 dex 资产 `assets/runtime/classes.dex` + 打包器 dex 替换模式） | 触发：用户五需求；D-1 明确 NDK 不降级（保持 29.0.14206865），32 位留扩展路径；P0 完成，待设备端冒烟验证后归档 |
 | `androlua-community/`（子库） | 2026-08-02 | 社区帖子训练知识库：2144 篇初筛完成；正负面主题卡第一批 + 训练语料 seed 已产出 | catalog 全量完成；positives 9 卡 / negatives 5 卡 + harmful 专项 1 目录；training seed 11 条 + batch 工具就绪 | 关键事实：语料为 300 字符预览（1740/2144 截断），verdict 均 `static_review`，未实测 |
 | `PROGRESS.md`（docs/） | 实时 | 工作进度台账（WP-001~010 + 工作单尾项 + WP-014 打包器） | 进行中 | 2026-08-05 恢复自 git 历史对象 `7fc57389`（此前整行损坏）；打包器 WP-014 已补登记 |
 | `WHITEPAPER.md`（docs/） | 实时 | 白皮书 v2.0：架构/路线图/原生模块差异声明 §7.1 | 进行中 | 2026-08-05 恢复自 git 历史对象 `36eac8c1`（此前缺 §7.1/§8/附录 A 尾部）；阶段四/五待随打包器更新 |
 | `AGENTS.md`（根） | 实时 | 评审硬门槛：R1~R5 边界、构建验证命令、编辑器约定、/libs 机制约定 | 进行中 | 评审门禁，改动前必读 |
 
-### 2.3 计划中（6 篇）
+### 2.3 计划中（8 篇）
 
 | 文档 | 日期 | 内容一句话 | 状态 | 注意 |
 |------|------|-----------|------|------|
@@ -65,18 +65,28 @@ docs/
 | `backlog.md` | 实时 | 计划中任务 & 技术债清单（TD1~TD7、F6~F8 等） | 计划中 | 新任务登记处 |
 | `XPOSED_MODULE_FEASIBILITY_REPORT.md` | 2026-07-31 | Xposed 模块可行性：技术可行（四支柱为真）但有前提 | 研究已定稿，路线图 M1~M5 全部未启动 | 前置依赖：打包器（WP-014）落地并真机验收 |
 | `ARCHITECTURE_CLEANUP_AUDIT_REPORT.md` | 2026-08-06 | 架构审计：清理补丁式/妥协性/重复性代码（5 类补丁子系统、~59 防御 catch、双源语言目录等）+ 最优解目标架构 + Phase A~D 迁移计划 | 实施中：Phase A（P0×5）与 Phase B（B-1~B-5）全部完成，Phase C 部分完成（C-3/C-4 + C-1/C-2 安全子项），Phase D 文档漂移部分完成 | 三项根因：ApiIndex 负查找（A-1 根治）、语言数据双源（A-2 根治）、navigation/m3 补丁围栏（C-1/C-2 待真机验证后拆除）；完成记录见文档 §7 |
+| `ARCHITECTURE_CLEANUP_BATCH2_REPORT.md` | 2026-08-07 | 第二轮实施批次 P1~P7（签名链路 apksig 化 + V1 验签适配、ZipUtils 收敛、TextMateRuntime 单一服务、scope/边界词常量收敛、宿主真实缺陷、三处去重、androlua 清理、EngineContract/AXml styled-pool 拒绝、测试迁移）+ 全量验证 | **已完成（2026-08-07）**：145 单测 0 失败（68/29/48），assembleArm64Debug 绿，R1 门禁零命中；验收证据见报告 §P6 | 遗留：C-1/C-2 待真机验证、D-3 catch 清理、§4.4 五项（产物模式/指纹/哨兵/测试钥/组合副作用） |
+| `SETTINGS_PERMISSIONS_REWORK_WORK_ORDER.md` | 2026-08-07 | 设置与权限治理：① LIDE 自身动态权限 + 权限页单击仅申请该权限 ② 打包 APK 动态权限（LuaActivity.onRequestPermissionsResult → Lua 全局回调，pro 对等）③ 移除 Lua 手册 ④ 移除帮助 ⑤ 编辑器设置恢复默认 ⑥ 权限管理移出 AndroLua 页（入主设置「通用」分区）⑦⑧ 设置入口拆分：编辑器 / AndroLua 两个独立入口与独立页面（无「设置」后缀；合并方案当日被用户否决） | **已完成（2026-08-07）**：assembleArm64Debug 绿（含二轮拆分后重跑），R1 门禁零命中 | 取代并归档 `SETTINGS_ORGANIZATION_WORK_ORDER.md`（→ discard §3.2）；待模拟器 UI 回归（四分区/编辑器页/AndroLua 页/恢复默认/权限单击）与打包产物动态权限实测后归档 docs/discard |
+| `SETTINGS_SIMPLIFY_WORK_ORDER.md` | 2026-08-07 | 设置界面简约化：① AndroLua 设置与打包选项合并为单入口页（工具 + 打包 + 默认 ABI）② 去除解释性文案 ③ 收敛单功能专题 ④ 自动安装改单一开关（默认启用，pro 兼容）⑤ 签名管理独立界面（主设置「通用」分区入口） | **已完成（2026-08-07）**：删除 `BuildOptionsScreen`/`Routes.BUILD_OPTIONS`；`AndroLuaSettingsScreen` 重写为合并页；`compileArm64DebugKotlin`/`assembleArm64Debug`/build.* 单测/R1 门禁全绿 | 待模拟器 UI 回归（主设置五分区 → 合并页开关/ABI → 签名页 → 打包自动安装）后归档 docs/discard |
 | `GAME_ENGINE_PERFORMANCE_AUDIT_REPORT.md` | 2026-08-01 | 石头/看板娘瓶颈定位，原生化端到端估算 3~15 倍 | 审计完成，优化建议未排期 | 看板娘已原生化（LIVE2D 迁移）；石头未动；诚实声明：估算未 profiler 校准 |
+| `NATIVE_LIB_PACKAGING_AUDIT_REPORT.md` | 2026-08-07 | 原生引擎「全架构构建 + 按需打包」机制审计：pro `bin.lua` checklib 核对（单 ABI + 按需 .so）；lide 缺口（lib 全量携带、Lua 依赖非传递致 require 断裂）；方案 = universal 多 ABI + Kotlin 传递闭包 + ABI×lib 二维过滤 | **实施完成（2026-08-07）**：§7 T1~T5 全部落地（universal flavor、`NativeDependencyAnalyzer`、`ApkBuilder` ABI×lib 过滤 + launcher 重定向、打包 UI、95 单测 + 真实宿主设备端到端闭环）；报告 §7 记实施记录与验收证据 | 触发：用户要求全架构底层库 + 打包组合能力；NDK 29 移除 32 位工具链 → 实际交付双 ABI |
+| `MINIMALISM_AUDIT_REPORT.md` | 2026-08-07 | LIDE 精简治理审计：合规取证（单一 Lua 运行时 / sora 单来源 / 零 jniLibs / 资产单份）+ 3 项可整改（runtime dex 模板 2.6MB 受控冗余、live2d 示例 8.95MB 胖资产、fileTree 死声明等） | **实施完成（2026-08-07）**：`lide.examples`（默认零内置）与 `lide.embedRuntimeDex`（默认开启）双门控 + `verifyMinimalism` 去重门禁入 CI + 死代码清理（fileTree/classes.jar/compileSdk 对齐）+ ExamplesScreen 空态；报告 §4 记实施记录 | 触发：用户要求「尽量精简、无重复 dex/原生库/资源」；用户决策：示例当前全去、后续内置 1-2 个代表性工程 |
+| `PACKAGING_UI_REWORK_WORK_ORDER.md` | 2026-08-08 | 打包 UI 重构：① 签名 v1/v2/v3 + ABI 改经典 Checkbox ② 宿主不含的 ABI 置灰禁用（选项由 `ZipUtils.listAbis` 实测驱动，删硬编码名单）③ 「仅携带依赖的原生库」更名「优化打包」（仅针对原生库）④ 删除构建 APK 整页，仅保留构建打包对话框（`BuildPackagingDialog`，入口 = 编辑器 ⋮ 菜单） | **已完成（2026-08-08）**：`BuildApkScreen.kt` 已删；`AndroLuaSettingsScreen` 复选框化 + 宿主驱动；`BuildPackagingDialog.kt` 新建（迁移 internal 辅助函数，`BuildPackagingTest` 零改动）；AGENTS.md D-1 同步修订 | 待模拟器 UI 回归后归档 `docs/discard`；D-1 冻结修订：默认 ABI 未携带 → 置灰而非回落展示 |
+| `BUILD_SIGNING_ENCRYPTION_WORK_ORDER.md` | 2026-08-07 | 打包构建三大能力工作单：① 签名管理（自有 keystore 档案/别名/指纹/默认）② Lua 编译范围可选 + 字节码 DES-ECB 加密（C 引擎 loader 单点解密，覆盖 main + require）③ 原生库按需携带 + 签名/加密/ABI 全部打包选项持久化通用化 | **T1~T3/T5 已完成（2026-08-07）**：编译/加密独立开关（默认均开）、签名三类（内置/导入/自生成，手写 X.509 零依赖）、build.* 43 单测全绿 + assembleArm64Debug 绿 + 模拟器 DES loopback；T4 文档同步进行中 | 文档位于 `docs/planned/`；加密定位防呆级（产物内密钥可提取）；R1~R5 合规（宿主域 + 引擎 C 源码，editor 零改动） |
+| `PACKAGING_PAYLOAD_CLEANUP_WORK_ORDER.md` | 2026-08-07 | 打包载荷精化：产物仅含 androlua 工程所需内容——宿主条目按「运行期消费面」领域分类（`HostPolicy`，**默认拒绝**替代黑名单剔除），内置 `.alp` 示例 / `javaapi` 类表 / keys / textmate / layouts 一律不进产物（对齐 pro `bin.lua` 宿主 assets 整树剔除语义） | **已完成（2026-08-07）**：`HostPolicy.kt` + `ApkBuilder` 接入（删 `HOST_ASSET_EXCLUDED`）+ UI 载荷摘要（`build_dep_host_only` 双语）+ `ApkBuilderTest` **17/17 绿**（含 examples/javaapi 剔除 + default-deny 兜底断言）+ `assembleArm64Debug` 绿 | 待模拟器产物运行回归后归档 `docs/discard`；dex 级剥离（R8 独立 engine 包）为遗留大项不在本次范围，已注明 KDoc |
+| `EMULATOR_REGRESSION_2026-08-07.md` | 2026-08-07 | 模拟器定向+全量回归测试报告：23 项功能/性能检查全 PASS——设置重组（AndroLua 合并页 + 权限/签名入口）、动态权限授权闭环、编辑器全语言高亮（Lua/Kotlin 像素取证）、更多菜单级联、API 浏览器搜索收起死循环红线回归、示例空态、打包自装 + packaged 产物独立运行（P0 runtime dex 替换）、大文件降级、性能（冷启动 1.1s / 105MB PSS） | **已完成（2026-08-07）**：x86_64 模拟器 / API 34 实测，零 FATAL/ANR，证据清单见报告 §8 | 归档前置：后续如做 arm64 真机矩阵（build-apks.ps1）可更新 §9 |
 
 ### 2.4 未登记的新进展（知识库补录）
 
 > 2026-08-05 治理后 WP-014 已补登记，无遗留未登记进展。新进展请遵循 §5 维护约定及时登记。
 
-### 2.5 已丢弃（docs/discard/，45 篇）
+### 2.5 已丢弃（docs/discard/，登记 50 篇，现存 34 篇；15 篇文档已物理删除 + 1 项死代码资产已删除，条目保留作墓碑）
 
 已完成 / 过时 / 被取代文档统一移入 `docs/discard/`（`git mv` 保留历史），**不参与状态管理、不作为事实来源**：
 
-- **已完成 31 篇**（原 `docs/completed/` 30 篇 + 2026-08-07 新增 `SHADOW_REMOVAL_DEAD_CODE_CLEANUP_WORK_ORDER`）：结论均已蒸馏进本知识库，逐篇一句话 + 蒸馏去向见 `docs/discard/README.md` §3.1。
-- **过时 8 篇**（原 `docs/archive/`）：`WORK_ORDER`（历史总任务书）、`IDE_RUNTIME_SEPARATION_FEASIBILITY_REPORT`（方案未采纳，与 R1~R5 冲突）、`ui-refactor`（Lua UI 时代草稿，代码已删除）、`audit-remediation`（Compose 前整改清单）、`java2kotlin-migration`（已反转：重新 vendor 上游 Java）、`architecture`/`lua-modules`/`code-map`（kb/project 三篇自标过期）。
+- **已完成 38 篇**（登记，其中 14 篇已物理删除；原 `docs/completed/` 30 篇 + 2026-08-07 新增 `SHADOW_REMOVAL_DEAD_CODE_CLEANUP_WORK_ORDER`、`EDITOR_ALL_LANGUAGES_SUPPORT_WORK_ORDER`、`PLUGIN_FEATURE_REMOVAL_WORK_ORDER`、`EDITOR_MULTI_LEVEL_MENU_WORK_ORDER` + 2026-08-08 新增 `SIGNING_GENERATE_CUSTOM_FIELDS_WORK_ORDER`）：结论均已蒸馏进本知识库，逐篇一句话 + 蒸馏去向见 `docs/discard/README.md` §3.1。
+- **过时 11 篇**（原 `docs/archive/` 8 篇 + 插件化历史 2 篇 + `SETTINGS_ORGANIZATION_WORK_ORDER`）：`WORK_ORDER`（历史总任务书）、`IDE_RUNTIME_SEPARATION_FEASIBILITY_REPORT`（方案未采纳，与 R1~R5 冲突）、`ui-refactor`（Lua UI 时代草稿，代码已删除）、`audit-remediation`（Compose 前整改清单）、`java2kotlin-migration`（已反转：重新 vendor 上游 Java）、`architecture`/`lua-modules`/`code-map`（kb/project 三篇自标过期）、`PLUGIN_SEPARATION_ARCHITECTURE_REPORT`（插件化历史，**已物理删除 2026-08-07**）/`PLUGIN_PLATFORM_REPORT`（插件化历史，方案取消）、`SETTINGS_ORGANIZATION_WORK_ORDER`（被设置/权限治理新要求取代，**2026-08-07 移入**）。
+- **2026-08-07 物理删除批次**：15 篇无外部引用的报告（结论均已蒸馏）+ `material3_searchbar_patch/` 死代码执行 `git rm`（git 历史保留原文）；登记表条目保留并标注「（已物理删除 2026-08-07）」，清单见 `docs/discard/README.md` §3。
 - 丢弃原因逐条见 `docs/discard/README.md` §3.2；治理审计依据：`docs/discard/DOCS_GOVERNANCE_AUDIT_REPORT_2026-08-05.md`。
 
 ---

@@ -82,7 +82,7 @@ fun EditorScreen(
     onBack: () -> Unit,
     onPermissions: () -> Unit = {},
     onProjectInfo: () -> Unit = {},
-    onBuildApk: () -> Unit = {},
+    onManageSigning: () -> Unit = {},
     onRun: (fileName: String) -> Unit,
     projectInfoVersion: Int = 0,
 ) {
@@ -108,6 +108,8 @@ fun EditorScreen(
 
     var isFileTreeVisible by remember { mutableStateOf(false) }
     var isSearchVisible by remember { mutableStateOf(false) }
+    // 构建打包对话框（WP-005 整改：整页删除，仅保留对话框）。
+    var showBuildDialog by remember { mutableStateOf(false) }
     // 脏文件待确认队列：单标签关闭时为单元素列表；「关闭其他/全部」时为批量队列，
     // 逐个确认后经 saveAndClose/discardAndClose 出队，取消即放弃剩余批次。
     var closeQueue by remember { mutableStateOf<List<String>>(emptyList()) }
@@ -218,22 +220,10 @@ fun EditorScreen(
             doRun()
         }
 
-    // 宿主 manifest 声明的权限集合：安装周期内不变，只查询一次；
+    // 宿主 manifest 声明的权限集合（P4b 去重：单一事实源 PermissionCatalog.hostDeclaredPermissions）；
     // getPackageInfo 经 produceState + IO 查询（P2#14），避免首帧组合内 binder 调用。
     val hostDeclared by produceState(emptySet<String>()) {
-        value =
-            withContext(Dispatchers.IO) {
-                try {
-                    context.packageManager
-                        .getPackageInfo(
-                            context.packageName,
-                            android.content.pm.PackageManager.GET_PERMISSIONS,
-                        ).requestedPermissions
-                        ?.toSet() ?: emptySet()
-                } catch (_: Throwable) {
-                    emptySet()
-                }
-            }
+        value = withContext(Dispatchers.IO) { PermissionCatalog.hostDeclaredPermissions(context) }
     }
 
     val requestRun: () -> Unit = {
@@ -351,7 +341,7 @@ fun EditorScreen(
                             EditorMoreAction(
                                 category = stringResource(R.string.menu_category_project),
                                 label = stringResource(R.string.build_apk),
-                            ) { onBuildApk() },
+                            ) { showBuildDialog = true },
                         ) +
                             editorTextOpsActions(
                                 editorProvider = { editorRef.get() },
@@ -398,6 +388,16 @@ fun EditorScreen(
                     isSearchVisible = false
                     getSearcher()?.stopSearch()
                 },
+            )
+        }
+
+        // 构建打包对话框：唯一打包入口（需求：仅保留一个构建打包对话框）。
+        if (showBuildDialog) {
+            BuildPackagingDialog(
+                project = project,
+                projectManager = projectManager,
+                onDismiss = { showBuildDialog = false },
+                onManageSigning = onManageSigning,
             )
         }
 

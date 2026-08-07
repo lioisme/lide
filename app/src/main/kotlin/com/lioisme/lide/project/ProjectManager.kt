@@ -30,6 +30,23 @@ class ProjectManager {
          * `ConcurrentHashMap.compute` 对同一目录原子化去重并发加载。
          */
         private val projectCache = ConcurrentHashMap<String, CachedProject>()
+
+        /**
+         * init.lua 模板单一事实源（P4b 去重）：MainActivity 单文件收养与
+         * [createProject] 共用，禁止各写一份。
+         */
+        fun initLuaTemplate(
+            appName: String,
+            packageName: String,
+        ): String =
+            """
+            appname = "$appName"
+            appver = "1.0"
+            packagename = "$packageName"
+            icon = nil
+            pages = {"main"}
+            user_permission = {}
+            """.trimIndent()
     }
 
     fun listProjects(): List<Project> {
@@ -202,16 +219,7 @@ class ProjectManager {
         val packageName = "com.lioisme.lide.$name"
         try {
             File(dir, "main.lua").writeText("-- $name\nprint(\"hello from $name!\")\n")
-            File(dir, "init.lua").writeText(
-                """
-appname = "$name"
-appver = "1.0"
-packagename = "$packageName"
-icon = nil
-pages = {"main"}
-user_permission = {}
-                """.trimIndent(),
-            )
+            File(dir, "init.lua").writeText(initLuaTemplate(name, packageName))
         } catch (e: Exception) {
             Log.e("ProjectManager", "Failed to write project files: ${e.message}")
             dir.deleteRecursively()

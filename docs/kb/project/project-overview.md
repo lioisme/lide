@@ -21,7 +21,7 @@
 lide/
 ├── app/        # :app 宿主应用 —— Compose IDE、EngineActivity、打包器（ApkBuilder/ApkSigner）、设置
 ├── editor/     # :editor 纯编辑器模块 —— 行级词法诊断/补全/高亮/搜索（纯 Kotlin，禁止触碰原生引擎）
-├── scripts/    # 脚本统一目录 —— 打包 build-apks.*、示例源 examples-src/ 与 make-examples.ps1、回归 adb_regress.ps1
+├── scripts/    # 脚本统一目录 —— 打包 build-apks.*、示例源 examples-src/（构建时由 :app:generateExamples 生成 .alp）、回归 adb_regress.ps1
 ├── third_party/    # 上游库统一收纳：androlua（:androlua 模块）、sora-editor、patches
 └── docs/           # 文档中心（kb / discard / in-progress / planned / log / reference）
 ```

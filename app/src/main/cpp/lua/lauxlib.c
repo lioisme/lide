@@ -16,6 +16,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "lide_des.h"
+
 
 /*
 ** This file uses only the official API of Lua.
@@ -725,8 +727,50 @@ LUALIB_API int luaL_loadfilex (lua_State *L, const char *filename,
   }
   else {
     lua_pushfstring(L, "@%s", filename);
-    lf.f = fopen(filename, "r");
-    if (lf.f == NULL) return errfile(L, "open", fnameindex);
+    /* lide：探测加密 bytecode（魔数）→ 整文件解密后按 buffer 加载，
+       未加密文件走原有流式快路径（含 BOM/shebang/二进制重开）。 */
+    {
+      FILE *pf = fopen(filename, "rb");
+      if (pf == NULL) return errfile(L, "open", fnameindex);
+      {
+        unsigned char head[8];
+        size_t hn = fread(head, 1, sizeof(head), pf);
+        if (hn == sizeof(head) && lide_des_magic(head, sizeof(head))) {
+          long sz;
+          uint8_t *plain;
+          size_t plen;
+          if (fseek(pf, 0, SEEK_END) != 0 || (sz = ftell(pf)) <= 0 ||
+              fseek(pf, 0, SEEK_SET) != 0) {
+            fclose(pf);
+            lua_pushfstring(L, "cannot read %s: bad stream", filename);
+            return LUA_ERRFILE;
+          }
+          {
+            uint8_t *raw = (uint8_t *)malloc((size_t)sz);
+            if (raw == NULL) { fclose(pf); return luaL_error(L, "out of memory"); }
+            if (fread(raw, 1, (size_t)sz, pf) != (size_t)sz) {
+              free(raw); fclose(pf);
+              lua_pushfstring(L, "cannot read %s", filename);
+              return LUA_ERRFILE;
+            }
+            fclose(pf);
+            plain = lide_des_decrypt(raw, (size_t)sz, &plen);
+            free(raw);
+          }
+          if (plain == NULL) {
+            lua_pushfstring(L, "cannot decrypt %s: bad encrypted chunk", filename);
+            return LUA_ERRFILE;
+          }
+          status = luaL_loadbufferx(L, (const char *)plain, plen, lua_tostring(L, -1), mode);
+          free(plain);
+          lua_remove(L, fnameindex);
+          return status;
+        }
+      }
+      fclose(pf);
+      lf.f = fopen(filename, "r");
+      if (lf.f == NULL) return errfile(L, "open", fnameindex);
+    }
   }
   if (skipcomment(&lf, &c))  /* read initial portion */
     lf.buff[lf.n++] = '\n';  /* add line to correct line numbers */

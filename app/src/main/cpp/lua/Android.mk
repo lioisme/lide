@@ -5,7 +5,7 @@ LOCAL_MODULE := lua
 LOCAL_CFLAGS := -std=c99 -DLUA_DL_DLOPEN
 LOCAL_LDLIBS := -llog -ldl -lm
 LOCAL_SRC_FILES := \
-	lapi.c lauxlib.c lbaselib.c lbitlib.c lcode.c lcorolib.c \
+	lapi.c lauxlib.c lide_des.c lbaselib.c lbitlib.c lcode.c lcorolib.c \
 	lctype.c ldblib.c ldebug.c ldo.c ldump.c lfunc.c lgc.c \
 	linit.c liolib.c llex.c lmathlib.c lmem.c loadlib.c \
 	lobject.c lopcodes.c loslib.c lparser.c lstate.c lstring.c \

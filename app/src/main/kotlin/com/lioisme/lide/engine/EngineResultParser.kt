@@ -40,7 +40,10 @@ object EngineResultParser {
     }
 
     /** 将错误路径裁剪为工程相对路径；路径不在工程内时返回 basename。 */
-    private fun toProjectRelativePath(raw: String, projectPath: String): String {
+    private fun toProjectRelativePath(
+        raw: String,
+        projectPath: String,
+    ): String {
         val projectPrefix = projectPath.trimEnd('/', '\\')
         if (raw.startsWith(projectPrefix)) {
             val rel = raw.substring(projectPrefix.length).trimStart('/', '\\')

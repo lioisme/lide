@@ -141,8 +141,10 @@ jobs:
         run: |
           yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --install 'ndk;29.0.14206865'
 
-      - name: Build release + verify Lua-visible API surface
-        run: ./gradlew verifyReleaseLuaSurface
+      - name: Build release + verify Lua-visible API surface + minimalism gate
+        # verifyMinimalism（2026-08-07）：release APK 载荷体检——无 jniLibs 预编译回包、
+        # 无重复原生库、默认零内置示例；与 verifyReleaseLuaSurface 共享一次 assembleArm64Release。
+        run: ./gradlew verifyReleaseLuaSurface verifyMinimalism
 
   verify-no-binaries:
     name: Verify No Prebuilt Binaries in Repo

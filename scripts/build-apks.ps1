@@ -1,9 +1,16 @@
 ﻿param(
-    [switch]$Clean
+    [switch]$Clean,
+    # ABI 组合矩阵（默认 = 官方 6 变体：x64/arm64/universal × Debug/Release）。
+    # 支持任意 ABI 组合（含未来新架构）：-Abis "arm64-v8a,x86_64" -Types "Debug,Release"
+    # 或直接用 -Variants 指定完整变体名列表（覆盖 -Abis/-Types）。
+    [string[]]$Abis = @("x64", "arm64", "universal"),
+    [string[]]$Types = @("Debug", "Release"),
+    [string[]]$Variants = @()
 )
 
-# Build 4 APKs (x64/arm64 x Debug/Release) as independent variant tasks.
-# No merged/universal build. Signed with project-local keystore.
+# Build APKs (default 6: x64/arm64/universal x Debug/Release) as independent variant tasks.
+# universal = x86_64 + arm64-v8a fat build（打包器 ABI 自由组合的宿主载体）。
+# Signed with project-local keystore.
 # Env-neutral: writes only inside the project; uses project gradlew;
 # SDK located via local.properties / ANDROID_HOME (read-only).
 
@@ -14,7 +21,18 @@ $App    = Join-Path $Root "app"
 $Gradle = Join-Path $Root "gradlew.bat"
 $ksProps = Join-Path $App "keystore.properties"
 $ksFile  = Join-Path $App "keystore.jks"
-$variants = @("x64Debug", "x64Release", "arm64Debug", "arm64Release")
+
+# 变体矩阵：优先 -Variants 显式列表；否则 Abis × Types 笛卡尔积。
+if ($Variants.Count -gt 0) {
+    $matrix = @($Variants)
+} else {
+    $matrix = @()
+    foreach ($abi in $Abis) {
+        foreach ($type in $Types) {
+            $matrix += "$abi$type"
+        }
+    }
+}
 
 function Read-KsProps {
     param($path)
@@ -87,10 +105,10 @@ if ($Clean) {
 
 Ensure-Keystore
 
-Write-Host "=== Building 4 APKs (independent variants, no merged build) ===" -ForegroundColor Cyan
+Write-Host "=== Building $($matrix.Count) APKs: $($matrix -join ', ') ===" -ForegroundColor Cyan
 Push-Location $Root
 try {
-    foreach ($variant in $variants) {
+    foreach ($variant in $matrix) {
         $task = ":app:assemble${variant}"
         Write-Host ">>> $task" -ForegroundColor Green
         & cmd /c "`"$Gradle`" $task --console=plain"
@@ -105,10 +123,14 @@ $sdk = Resolve-SdkDir
 $apksigner = Resolve-ApkSigner $sdk
 
 $apkDir = Join-Path $App "build\outputs\apk"
-foreach ($variant in $variants) {
+foreach ($variant in $matrix) {
+    # 变体 → 目录：camel 边界拆分（x64Debug → x64/debug）；universal 与 arm 前缀需按已知 flavor 匹配。
     $arch = ""; $type = ""
-    if ($variant -like "x64*") { $arch = "x64" } else { $arch = "arm64" }
-    if ($variant -like "*Debug") { $type = "debug" } else { $type = "release" }
+    foreach ($known in @("x64", "arm64", "universal")) {
+        if ($variant -like "$known*") { $arch = $known; break }
+    }
+    if ($arch -eq "") { throw "Unknown flavor in variant: $variant" }
+    if ($variant -like "*Debug") { $type = "debug" } elseif ($variant -like "*Release") { $type = "release" } else { throw "Unknown build type in variant: $variant" }
     $apk = Join-Path $apkDir "$arch\$type\app-$arch-$type.apk"
     if (-not (Test-Path -LiteralPath $apk)) { throw "APK not found: $apk" }
     $sizeKB = [math]::Round((Get-Item -LiteralPath $apk).Length / 1KB, 0)
@@ -116,4 +138,4 @@ foreach ($variant in $variants) {
     Verify-ApkSigning $apk $apksigner
 }
 Write-Host ""
-Write-Host "=== All 4 APKs built and signed ===" -ForegroundColor Cyan
+Write-Host "=== All $($matrix.Count) APKs built and signed ===" -ForegroundColor Cyan

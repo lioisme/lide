@@ -73,7 +73,7 @@
 ### 4.1 已存在（阶段 B 部分落地）
 
 `:editor`：`EditorTabs.kt`、`SearchBar.kt`（整词搜索）、`EditorToolbar.kt`、`LuaEditor.kt`、`LuaLanguage.kt`、`LuaDiagnostics.kt`（多错误聚合 + quickfix）、`LuaSnippetManager.kt`、`TextMateInitializer.kt`、`EditorConfig.kt`（21 项全量配置）、`EditorTextOps.kt`（selectLine/deleteLine/duplicateLine/toggleCase/词级移动）
-`:app`：`session/EditorSession.kt`（StateFlow 会话 + Content 缓存）、`EditorScreen.kt`、`ui/screen/EditorSettingsScreen.kt`（21 项设置中心，分组通用/编辑/视图/输入）、`ui/screen/SettingsScreen.kt`（编辑器分区入口）、`ui/theme/SettingsManager.kt`（21 键持久化 `lide_editor` 命名空间）
+`:app`：`session/EditorSession.kt`（StateFlow 会话 + Content 缓存）、`EditorScreen.kt`、`ui/screen/EditorSettingsScreen.kt`（编辑器独立设置页：21 项设置分组通用/编辑/视图/输入 + 顶栏恢复默认按钮）、`ui/screen/SettingsScreen.kt`（主设置页四分区：显示/编辑器/AndroLua/通用（权限管理/语言/关于），编辑器与 AndroLua 独立入口）、`ui/screen/AndroLuaSettingsScreen.kt`（AndroLua 工具页：API 浏览器/示例；插件功能 2026-08-07 按用户要求移除）、`ui/theme/SettingsManager.kt`（21 键持久化 `lide_editor` 命名空间 + `resetEditor` 恢复默认）
 
 ### 4.2 剩余差距（按 `EDITOR_UI_ALIGNMENT_WORK_ORDER.md`，内部 WP 编号与 PROGRESS 是两套体系）
 

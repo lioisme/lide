@@ -59,6 +59,17 @@ class ApkBuilderTest {
             put("assets/lua/notused.lua", "-- host not used".toByteArray())
             put("assets/keys/testkey.pk8", "key-bytes".toByteArray())
             put("assets/textmate/lua.tmLanguage.json", "{}".toByteArray())
+            // 宿主 IDE 专属资产（内置示例工程 / API 类表 / 布局预览）：不得进入产物。
+            put("assets/examples/demo.alp", "fake alp payload".toByteArray())
+            put("assets/examples/live2d.alp", "big fake alp payload".toByteArray())
+            put("assets/javaapi/android.lua", "-- class table".toByteArray())
+            put("assets/layouts/javaapi/layout.aly", "aly-bytes".toByteArray())
+            // 原生库（双 ABI）：libluajava 恒保留 / compose 库默认剔除 / 其余按依赖。
+            put("lib/x86_64/libfoo.so", "foo-x86".toByteArray(), stored = true)
+            put("lib/x86_64/libluajava.so", "lj-x86".toByteArray(), stored = true)
+            put("lib/x86_64/libandroidx.graphics.path.so", "gpath-x86".toByteArray(), stored = true)
+            put("lib/arm64-v8a/libfoo.so", "foo-arm".toByteArray(), stored = true)
+            put("lib/arm64-v8a/libmime.so", "mime-arm".toByteArray(), stored = true)
             // 空名零字节条目（对齐/壳产物）：必须被跳过，不能触发重复条目拒绝
             put("", byteArrayOf(), stored = true)
         }
@@ -86,6 +97,9 @@ class ApkBuilderTest {
                 ),
             // 需求②：宿主引擎 Lua 库按需保留，未列出的整包剔除。
             engineLuaLibs = listOf("bin.lua"),
+            requiredNativeLibs = setOf("libfoo.so"),
+            // 测试样本 manifest 的引擎类（与真实宿主同构，delua 变体）。
+            launcherActivity = "com.lioisme.delua.engine.EngineActivity",
         )
 
     private fun entriesOf(apk: ByteArray): Map<String, ByteArray> {
@@ -99,7 +113,7 @@ class ApkBuilderTest {
         return map
     }
 
-    /** 真实 luajava 为 native（仅真机可用）；单测注入等价编译器。 */
+    /** 真实 luajava 中 native（仅真机可用）；单测注入等价编译器。 */
     private fun fakeCompiler(): (String, String) -> ByteArray {
         val header = byteArrayOf(0x1B.toByte(), 0x4C, 0x75, 0x61) // \x1bLua
         return { source, _ ->
@@ -110,7 +124,7 @@ class ApkBuilderTest {
 
     @Test
     fun `build produces installable v1-signed apk`() {
-        val apk = ApkBuilder.build(syntheticHostApk(), input(), key, cert, fakeCompiler())
+        val apk = ApkBuilder.build(syntheticHostApk(), input(), key, cert, compileLua = fakeCompiler())
         val entries = entriesOf(apk)
 
         assertNotNull(entries["AndroidManifest.xml"])
@@ -124,7 +138,7 @@ class ApkBuilderTest {
 
     @Test
     fun `manifest rewritten with project identity and whitelist`() {
-        val apk = ApkBuilder.build(syntheticHostApk(), input(), key, cert, fakeCompiler())
+        val apk = ApkBuilder.build(syntheticHostApk(), input(), key, cert, compileLua = fakeCompiler())
         val manifest = entriesOf(apk)["AndroidManifest.xml"]!!
 
         assertEquals("com.demo.app", AXmlManifest.readPackageName(manifest))
@@ -140,41 +154,105 @@ class ApkBuilderTest {
     }
 
     @Test
-    fun `main lua compiled to bytecode others kept as source`() {
-        val apk = ApkBuilder.build(syntheticHostApk(), input(), key, cert, fakeCompiler())
+    fun `compileLua=true compiles all project lua to bytecode`() {
+        // 隔离加密开关，只验证编译语义（新默认：全部编译）。
+        val input = input().copy(encryptBytecode = false)
+        val apk = ApkBuilder.build(syntheticHostApk(), input, key, cert, compileLua = fakeCompiler())
         val entries = entriesOf(apk)
 
-        val main = entries["assets/lua/main.lua"]!!
-        assertArrayEquals(byteArrayOf(0x1B.toByte(), 0x4C, 0x75, 0x61), main.copyOfRange(0, 4))
-        assertArrayEquals("-- config\nappname='Demo'\n".toByteArray(), entries["assets/lua/init.lua"])
-        assertArrayEquals("-- helper\n".toByteArray(), entries["assets/lua/lib/util.lua"])
+        val luaHeader = byteArrayOf(0x1B.toByte(), 0x4C, 0x75, 0x61)
+        assertArrayEquals(luaHeader, entries["assets/lua/main.lua"]!!.copyOfRange(0, 4))
+        assertArrayEquals(luaHeader, entries["assets/lua/init.lua"]!!.copyOfRange(0, 4))
+        assertArrayEquals(luaHeader, entries["assets/lua/lib/util.lua"]!!.copyOfRange(0, 4))
+        // 宿主引擎库不经编译管线，保持宿主原始字节。
         assertArrayEquals("-- host bin".toByteArray(), entries["assets/lua/bin.lua"])
     }
 
     @Test
+    fun `compileLua=false ships all project lua as plain source`() {
+        val input = input().copy(compileLua = false, encryptBytecode = false)
+        val apk = ApkBuilder.build(syntheticHostApk(), input, key, cert, compileLua = fakeCompiler())
+        val entries = entriesOf(apk)
+
+        assertArrayEquals("print('hello')\n".toByteArray(), entries["assets/lua/main.lua"])
+        assertArrayEquals("-- config\nappname='Demo'\n".toByteArray(), entries["assets/lua/init.lua"])
+        assertArrayEquals("-- helper\n".toByteArray(), entries["assets/lua/lib/util.lua"])
+    }
+
+    @Test
+    fun `encryptBytecode independent of compileLua`() {
+        // 编译开 + 加密开：加密的是字节码。
+        val inputCompiled = input().copy(compileLua = true, encryptBytecode = true)
+        val apkCompiled = ApkBuilder.build(syntheticHostApk(), inputCompiled, key, cert, compileLua = fakeCompiler())
+        val mainEnc = entriesOf(apkCompiled)["assets/lua/main.lua"]!!
+        assertTrue(LuaCrypto.isEncrypted(mainEnc))
+        val luaHeader = byteArrayOf(0x1B.toByte(), 0x4C, 0x75, 0x61)
+        assertArrayEquals(luaHeader, LuaCrypto.decrypt(mainEnc)!!.copyOfRange(0, 4))
+
+        // 编译关 + 加密开：加密的是源码文本（运行端按文本加载，已实证）。
+        val inputRaw = input().copy(compileLua = false, encryptBytecode = true)
+        val apkRaw = ApkBuilder.build(syntheticHostApk(), inputRaw, key, cert, compileLua = fakeCompiler())
+        val rawEntries = entriesOf(apkRaw)
+        assertTrue(LuaCrypto.isEncrypted(rawEntries["assets/lua/main.lua"]!!))
+        assertArrayEquals("print('hello')\n".toByteArray(), LuaCrypto.decrypt(rawEntries["assets/lua/main.lua"]!!)!!)
+        assertArrayEquals("-- helper\n".toByteArray(), LuaCrypto.decrypt(rawEntries["assets/lua/lib/util.lua"]!!)!!)
+    }
+
+    @Test
     fun `host engine lua whitelisted and host-only assets excluded`() {
-        val apk = ApkBuilder.build(syntheticHostApk(), input(), key, cert, fakeCompiler())
+        val apk = ApkBuilder.build(syntheticHostApk(), input(), key, cert, compileLua = fakeCompiler())
         val entries = entriesOf(apk)
 
         // 白名单内引擎库保留；未列入的宿主引擎库剔除
         assertArrayEquals("-- host bin".toByteArray(), entries["assets/lua/bin.lua"])
         assertTrue("assets/lua/notused.lua" !in entries)
-        // 宿主专属资产（签名密钥/语法高亮）不进入产物
+        // 宿主专属资产（签名密钥 语法高亮）不进入产物
         assertTrue("assets/keys/testkey.pk8" !in entries)
         assertTrue("assets/textmate/lua.tmLanguage.json" !in entries)
+    }
+
+    @Test
+    fun `host ide-only assets like builtin examples and api class table excluded`() {
+        val apk = ApkBuilder.build(syntheticHostApk(), input(), key, cert, compileLua = fakeCompiler())
+        val entries = entriesOf(apk)
+
+        // 内置示例工程（含大体积 live2d）不进入产物
+        assertTrue("assets/examples/demo.alp" !in entries)
+        assertTrue("assets/examples/live2d.alp" !in entries)
+        // API 浏览器类表与布局预览模板（IDE 专属）不进入产物
+        assertTrue("assets/javaapi/android.lua" !in entries)
+        assertTrue("assets/layouts/javaapi/layout.aly" !in entries)
+    }
+
+    @Test
+    fun `host policy classifies entries with default-deny for unknown assets`() {
+        // 运行核心面与引擎能力保留
+        assertEquals(HostPolicy.HostEntryDomain.MANIFEST, HostPolicy.classifyHostEntry("AndroidManifest.xml"))
+        assertEquals(HostPolicy.HostEntryDomain.RUNTIME_CORE, HostPolicy.classifyHostEntry("classes.dex"))
+        assertEquals(HostPolicy.HostEntryDomain.RUNTIME_CORE, HostPolicy.classifyHostEntry("resources.arsc"))
+        assertEquals(HostPolicy.HostEntryDomain.RUNTIME_CORE, HostPolicy.classifyHostEntry("res/drawable/icon.png"))
+        assertEquals(HostPolicy.HostEntryDomain.ENGINE_LUA, HostPolicy.classifyHostEntry("assets/lua/import.lua"))
+        assertEquals(HostPolicy.HostEntryDomain.NATIVE_LIB, HostPolicy.classifyHostEntry("lib/arm64-v8a/libluajava.so"))
+        // 任意未登记资产默认拒绝（未来新增 IDE 资产天然不被打入：
+        assertEquals(HostPolicy.HostEntryDomain.HOST_ONLY, HostPolicy.classifyHostEntry("assets/examples/x.alp"))
+        assertEquals(HostPolicy.HostEntryDomain.HOST_ONLY, HostPolicy.classifyHostEntry("assets/javaapi/android.lua"))
+        assertEquals(HostPolicy.HostEntryDomain.HOST_ONLY, HostPolicy.classifyHostEntry("assets/unknown/newdir/x.txt"))
+        assertEquals(HostPolicy.HostEntryDomain.HOST_ONLY, HostPolicy.classifyHostEntry("assets/help.txt"))
     }
 
     @Test
     fun `project files override same-name host engine lib`() {
         val input =
             input().copy(
+                compileLua = false,
+                encryptBytecode = false,
                 engineLuaLibs = listOf("bin.lua"),
                 luaSources =
                     input().luaSources.toMutableMap().apply {
                         this["bin.lua"] = "-- project bin".toByteArray()
                     },
             )
-        val apk = ApkBuilder.build(syntheticHostApk(), input, key, cert, fakeCompiler())
+        val apk = ApkBuilder.build(syntheticHostApk(), input, key, cert, compileLua = fakeCompiler())
         val entries = entriesOf(apk)
 
         assertArrayEquals("-- project bin".toByteArray(), entries["assets/lua/bin.lua"])
@@ -195,7 +273,7 @@ class ApkBuilderTest {
                 badInput,
                 key,
                 cert,
-                { _, _ -> throw IllegalArgumentException("main.lua:3: syntax error") },
+                compileLua = { _, _ -> throw IllegalArgumentException("main.lua:3: syntax error") },
             )
             assertTrue("should have thrown", false)
         } catch (e: ApkBuilder.BuildException) {
@@ -204,8 +282,92 @@ class ApkBuilderTest {
     }
 
     @Test
+    fun `native libs filtered by abi x dependency`() {
+        val apk = ApkBuilder.build(syntheticHostApk(), input(), key, cert, compileLua = fakeCompiler())
+        val entries = entriesOf(apk)
+
+        // 依赖命中的 libfoo.so：双 ABI 全保留
+        assertArrayEquals("foo-x86".toByteArray(), entries["lib/x86_64/libfoo.so"])
+        assertArrayEquals("foo-arm".toByteArray(), entries["lib/arm64-v8a/libfoo.so"])
+        // libluajava 恒保留（bin.lua checklib 同款）
+        assertArrayEquals("lj-x86".toByteArray(), entries["lib/x86_64/libluajava.so"])
+        // compose 图形库默认剔除 + 未命中依赖的库剔除
+        assertTrue("lib/x86_64/libandroidx.graphics.path.so" !in entries)
+        assertTrue("lib/arm64-v8a/libmime.so" !in entries)
+    }
+
+    @Test
+    fun `abi selection keeps only chosen abi`() {
+        val input =
+            input().copy(
+                abiSelection = setOf("x86_64"),
+            )
+        val apk = ApkBuilder.build(syntheticHostApk(), input, key, cert, compileLua = fakeCompiler())
+        val entries = entriesOf(apk)
+
+        assertTrue("lib/x86_64/libfoo.so" in entries)
+        assertTrue("lib/x86_64/libluajava.so" in entries)
+        assertTrue("arm64-v8a 未选中应剔除", entries.keys.none { it.startsWith("lib/arm64-v8a/") })
+    }
+
+    @Test
+    fun `invalid abi selection throws`() {
+        val input =
+            input().copy(
+                abiSelection = setOf("mips64"),
+            )
+        try {
+            ApkBuilder.build(syntheticHostApk(), input, key, cert, compileLua = fakeCompiler())
+            assertTrue("should have thrown", false)
+        } catch (e: ApkBuilder.BuildException) {
+            assertTrue(e.message!!.contains("ABI"))
+        }
+    }
+
+    @Test
+    fun `stripNativeLibs=false keeps all host libs`() {
+        val input =
+            input().copy(
+                requiredNativeLibs = emptySet(),
+                stripNativeLibs = false,
+            )
+        val apk = ApkBuilder.build(syntheticHostApk(), input, key, cert, compileLua = fakeCompiler())
+        val entries = entriesOf(apk)
+
+        assertTrue("lib/x86_64/libandroidx.graphics.path.so" in entries)
+        assertTrue("lib/arm64-v8a/libmime.so" in entries)
+        assertTrue("lib/x86_64/libfoo.so" in entries)
+    }
+
+    @Test
+    fun `launcher redirected to engine activity with exported true`() {
+        val apk = ApkBuilder.build(syntheticHostApk(), input(), key, cert, compileLua = fakeCompiler())
+        val manifest = entriesOf(apk)["AndroidManifest.xml"]!!
+
+        assertEquals("com.lioisme.delua.engine.EngineActivity", AXmlManifest.readLauncherActivity(manifest))
+        // 新入口 exported=true（API 31+ 有 intent-filter 必须显式 exported）
+        assertEquals(true, AXmlManifest.readExported(manifest, "com.lioisme.delua.engine.EngineActivity"))
+        // 旧入口（IDE MainActivity）不再持有 MAIN/LAUNCHER
+        assertTrue(AXmlManifest.readLauncherActivity(manifest) != "com.lioisme.delua.MainActivity")
+        // 旧入口其他 intent-filter（VIEW 等）不受影响
+        assertEquals(true, AXmlManifest.readExported(manifest, "com.lioisme.delua.MainActivity"))
+    }
+
+    @Test
+    fun `launcherActivity=null leaves launcher untouched`() {
+        val input =
+            input().copy(
+                launcherActivity = null,
+            )
+        val apk = ApkBuilder.build(syntheticHostApk(), input, key, cert, compileLua = fakeCompiler())
+        val manifest = entriesOf(apk)["AndroidManifest.xml"]!!
+
+        assertEquals("com.lioisme.delua.MainActivity", AXmlManifest.readLauncherActivity(manifest))
+    }
+
+    @Test
     fun `stored entries are 4-byte aligned in final apk`() {
-        val apk = ApkBuilder.build(syntheticHostApk(), input(), key, cert, fakeCompiler())
+        val apk = ApkBuilder.build(syntheticHostApk(), input(), key, cert, compileLua = fakeCompiler())
         // resources.arsc 是 STORED 条目：R+ 安装校验要求数据区 4 字节对齐。
         val offset = storedDataOffset(apk, "resources.arsc")
         assertTrue("resources.arsc data offset $offset must be 4-aligned", offset % 4 == 0L)
@@ -219,6 +381,78 @@ class ApkBuilderTest {
                 stored
             },
         )
+    }
+
+    // ── P0 运行时基座 dex 替换模式（RUNTIME_DEX_ENTRY）───────────────────────
+
+    /** 宿主 APK 内嵌引擎 dex 资产条目（embedRuntimeDex 产物形态）。 */
+    private fun hostApkWithRuntimeDexAsset(): ByteArray {
+        val manifest = loadResource("manifest_sample.bin")
+        val out = ByteArrayOutputStream()
+        ZipOutputStream(out).use { zos ->
+            fun put(
+                name: String,
+                bytes: ByteArray,
+            ) {
+                zos.putNextEntry(ZipEntry(name))
+                zos.write(bytes)
+                zos.closeEntry()
+            }
+            put("AndroidManifest.xml", manifest)
+            // 宿主全量 dex：多 dex（IDE 类，marker 区分来源）。
+            put("classes.dex", "host-dex-full-ide".toByteArray())
+            put("classes2.dex", "host-dex2-more-ide".toByteArray())
+            put("resources.arsc", "arsc-bytes".toByteArray())
+            put("assets/lua/bin.lua", "-- host bin".toByteArray())
+            put("assets/examples/demo.alp", "fake alp payload".toByteArray())
+            put("lib/arm64-v8a/libluajava.so", "lj-host-arm".toByteArray())
+            put("lib/x86_64/libluajava.so", "lj-host-x86".toByteArray())
+            // 引擎 dex 资产：仅引擎类（R8 剥离 IDE 后的形态）。
+            put(ApkBuilder.RUNTIME_DEX_ENTRY, "engine-dex-only".toByteArray())
+        }
+        return out.toByteArray()
+    }
+
+    @Test
+    fun `embedded runtime dex replaces host dex entries when present`() {
+        val apk = ApkBuilder.build(hostApkWithRuntimeDexAsset(), input(), key, cert, compileLua = fakeCompiler())
+        val entries = entriesOf(apk)
+
+        // dex 替换模式：宿主 classes*.dex 全部替换为引擎 dex（产物唯一 classes.dex）。
+        assertEquals("engine-dex-only", String(entries.getValue("classes.dex")))
+        assertTrue("classes2.dex" !in entries)
+        // 引擎 Lua 库 / 原生库仍来自宿主（模板 = 宿主自身，仅 dex 替换）。
+        assertEquals("-- host bin", String(entries.getValue("assets/lua/bin.lua")))
+        assertEquals("lj-host-arm", String(entries.getValue("lib/arm64-v8a/libluajava.so")))
+        // dex 资产条目本身不得进入产物（HOST_ONLY 剔除，防止模板自嵌套）。
+        assertTrue(ApkBuilder.RUNTIME_DEX_ENTRY !in entries)
+        // dex 资产携带的 IDE 专属资产同样剔除（default-deny 语义延续）。
+        assertTrue("assets/examples/demo.alp" !in entries)
+    }
+
+    @Test
+    fun `runtime dex abi scope stays host-driven`() {
+        // dex 模式模板 = 宿主：ABI 枚举/过滤仍由宿主实际条目驱动（D-1 冻结结论）。
+        val input =
+            input().copy(
+                abiSelection = setOf("x86_64"),
+            )
+        val apk = ApkBuilder.build(hostApkWithRuntimeDexAsset(), input, key, cert, compileLua = fakeCompiler())
+        val entries = entriesOf(apk)
+        assertEquals("engine-dex-only", String(entries.getValue("classes.dex")))
+        assertEquals("lj-host-x86", String(entries.getValue("lib/x86_64/libluajava.so")))
+        assertTrue("lib/arm64-v8a/libluajava.so" !in entries)
+    }
+
+    @Test
+    fun `host fallback when no embedded runtime dex`() {
+        // 宿主无 assets/runtime/classes.dex → 兜底宿主自身（pro 模板语义）。
+        val apk = ApkBuilder.build(syntheticHostApk(), input(), key, cert, compileLua = fakeCompiler())
+        val entries = entriesOf(apk)
+        assertEquals("dex-bytes", String(entries.getValue("classes.dex")))
+        assertEquals("-- host bin", String(entries.getValue("assets/lua/bin.lua")))
+        assertEquals("lj-x86", String(entries.getValue("lib/x86_64/libluajava.so")))
+        assertTrue(ApkBuilder.RUNTIME_DEX_ENTRY !in entries)
     }
 
     /** 经 CEN→LOC 手工解析 STORED 条目的数据区偏移。 */

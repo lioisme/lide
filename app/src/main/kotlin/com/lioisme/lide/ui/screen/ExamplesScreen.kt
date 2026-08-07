@@ -66,11 +66,24 @@ fun ExamplesScreen(onBack: () -> Unit) {
     var pendingImport by remember { mutableStateOf<AlpImportCoordinator.Pending?>(null) }
     val strImportFailed = stringResource(R.string.import_failed)
     val strImportSuccess = stringResource(R.string.examples_import_success)
+    // 精简模式（2026-08-07）：内置 .alp 由 Gradle 属性 lide.examples 控制是否生成
+    // （默认零内置）。按 assets/examples 实际存在的资产过滤展示，空时给出空态提示；
+    // 元数据列表（含名称/描述字符串）保留，供后续恢复 1-2 个代表性示例直接复用。
+    val availableExamples =
+        remember(context) {
+            val present =
+                runCatching { context.assets.list("examples") }
+                    .getOrNull()
+                    ?.filter { it.endsWith(".alp") }
+                    ?.toSet()
+                    .orEmpty()
+            builtinExamples.filter { it.asset in present }
+        }
 
     fun refreshInstalled() {
         val projectDir = File(LuaApplication.getInstance().luaExtDir, "project")
         installed =
-            builtinExamples
+            availableExamples
                 .filter { File(projectDir, it.dir).isDirectory }
                 .map { it.dir }
                 .toSet()
@@ -179,7 +192,17 @@ fun ExamplesScreen(onBack: () -> Unit) {
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
                     )
                 }
-                items(builtinExamples) { example ->
+                if (availableExamples.isEmpty()) {
+                    item {
+                        Text(
+                            stringResource(R.string.examples_empty),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                        )
+                    }
+                }
+                items(availableExamples) { example ->
                     val isInstalled = example.dir in installed
                     Card(
                         modifier =

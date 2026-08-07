@@ -17,7 +17,8 @@
   由 AGP `externalNativeBuild`（ndk-build）在 `assemble` 时直接从源码构建并打包进 APK，
   不设任何 jniLibs 缓存目录，也无 rebuild 脚本（`scripts/rebuild_engine.*` 已废弃删除）。
   NDK 版本固定为 `29.0.14206865`（`app/build.gradle.kts` `ndkVersion`）。
-  例外：`.alp` 作为工程包可直接存在（构建时由 `:app:generateExamples` 从 `scripts/examples-src/` 生成）。
+  例外：`.alp` 作为工程包可直接存在（构建时由 `:app:generateExamples` 从 `scripts/examples-src/` 生成，
+  默认零内置，由 `lide.examples` 属性控制，见「精简治理」）。
 
 验证命令（以下必须全部成立）：
 
@@ -31,6 +32,7 @@ git ls-files '*.jar' | grep -v 'gradle/wrapper/gradle-wrapper.jar'
 
 - Kotlin 编译检查：`.\gradlew.bat :app:compileArm64DebugKotlin --console=plain`
 - 完整构建：`.\gradlew.bat :app:assembleArm64Debug --console=plain`
+- 精简门禁（去重校验）：`.\gradlew.bat :app:verifyMinimalism`（依赖 assembleArm64Release）
 
 ## 编辑器关键约定
 
@@ -92,6 +94,72 @@ git ls-files '*.jar' | grep -v 'gradle/wrapper/gradle-wrapper.jar'
 - `LuaDexLoader` 的 W^X 修复（API≥26 走 `InMemoryDexClassLoader`）为**有意的、记录在案的**
   与 pro 的差异（工作单 §10.1），不得回退为磁盘路径加载。
 - lfs / lsqlite3 原生模块已随引擎源码构建；lluv / tcc 按差异声明不提供（WHITEPAPER §7.1）。
+
+## 打包构建约定（:app，签名 / Lua 编译加密）
+
+- 打包双开关（`BuildOpts.compileLua` / `encryptBytecode`，**默认均开、互相独立、不得互相隐含**）：
+  编译开 = 全部工程 `.lua`（含 main.lua）编译为字节码，关 = 源码文本入库；加密开 = 对入库每个
+  Lua 文件 DES-ECB 加密（编译开加密字节码、编译关加密源码文本），关 = 原文。偏好键
+  `compile_lua` / `encrypt_lua`（`SettingsManager` build 域），旧键 `compile_all` / `encrypt`
+  不得回退读写。
+- 签名档案三类：默认内置（AOSP testkey）、自定义导入（.jks/.p12）、应用内自生成
+  （`SigningCrypto.generate` 零依赖手写 X.509 v3 自签 DER）。自签证书 version 字段必须
+  `[0] EXPLICIT`（`A0 03 02 01 02`）包装——裸 INTEGER 会被 OpenJDK 误读为 serialNumber，
+  平台回环解析报 `algid parse error`。
+- 加密格式唯一事实源：工作单 §4（MAGIC `LIDE\x01\0\0\0` + DES/ECB/NoPadding + PKCS7，
+  密钥 `{0xFF,0xDD,0xBB,0x99,0x77,0x55,0x33,0x11}`）；宿主引擎 Lua 库与 `.aly`/资源不加密。
+- 改动打包/签名/加密链必须跑 `:app:testArm64DebugUnitTest --tests "com.lioisme.lide.build.*"`。
+
+## ABI 架构契约（打包多架构，D-1 冻结结论）
+
+- **打包 ABI 集合由宿主实际携带驱动**（唯一事实源 `ZipUtils.listAbis`，解析宿主 APK
+  `lib/<abi>/` 目录，无白名单、对任意未来新 ABI 名天然通用）：宿主仅含 arm64 → 打包器仅支持
+  打包 arm64 产物；宿主含 4 ABI → 自动支持 4 架构任意组合。**禁止在打包侧按已知架构名
+  硬编码可用性判定**（如「已知 4 架构必然可用」）。
+- `ApkBuilder` 装配侧 `effectiveAbis = 用户选择 ∩ 宿主 ABI`，空交集抛 `BuildException`
+  （禁止静默回落、禁止错误产物）。
+- 新增架构 = 宿主构建期加 flavor `abiFilters`（NDK 支持为前置，32 位需 NDK 27 线，当前
+  固定 29 不含 32 位工具链）→ 宿主携带 → 打包器自动可用，**打包侧与 UI 零改动**。
+- 设置页默认 ABI（`BuildOpts.preferAbi`）选项由宿主实际携带驱动（展示候选 = 宿主 ABI ∪
+  标准架构名）：宿主未携带的架构**置灰禁用**（仅展示不可选，可用性判定只依据 `ZipUtils.listAbis`
+  实测结果）；`preferAbi` 残留为未携带架构时构建侧回落「宿主全部」。构建打包对话框 ABI 多选
+  仅列出宿主实际携带项（未携带不显示）。
+- 打包 UI 唯一入口为构建打包对话框（编辑器 ⋮ 菜单触发；`BuildPackagingDialog`），
+  签名方案 v1/v2/v3 与 ABI 均用经典 Checkbox 控件；「优化打包」（`stripNativeLibs`）
+  为开关控件，仅针对原生库。
+- 打包多架构验证走 `scripts/build-apks.ps1`（矩阵参数化：`-Abis`/`-Types`/`-Variants`，
+  默认 6 变体；产物签名逐包校验）。
+
+## 运行时基座契约（打包 dex 解耦，P0 冻结结论）
+
+- 宿主存在 `runtime` buildType（R8 白名单 keep 引擎 + luaApiSurface，剥离 IDE 类），
+  其产物 `classes.dex` 由 `:app:embedRuntimeDex` 解出为宿主
+  `assets/runtime/classes.dex`（单 dex 资产，非 APK；挂 preBuild，源缺失自动跳过）。
+- **构建顺序**：发布链 = `:app:assembleUniversalRuntime`（生成 runtime 变体）→
+  `:app:embedRuntimeDex`（解出引擎 dex 资产）→ `:app:assemble*`（宿主携带 classes.dex）。
+  宿主缺失该资产时打包器**兜底宿主 APK 自身**（pro 模板语义），不阻断运行期打包。
+- `ApkBuilder` dex 替换模式（`RUNTIME_DEX_ENTRY = assets/runtime/classes.dex`）：宿主
+  classes*.dex 条目全部替换为引擎 dex（产物唯一 classes.dex），manifest 同步回落
+  `com.androlua.LuaApplication` + 移除 IDE MainActivity（`ManifestEdit.applicationName` /
+  `removeActivities`）；ABI 枚举/权限仍以宿主条目为准（模板 = 宿主，D-1 冻结结论）。
+- 新增引擎侧 Lua 反射类：同时登记 `luaApiSurface`（三处同步）+ `src/runtime/runtime-rules.pro`
+  （白名单 keep）——`verifyRuntimeSurface` 门禁捕获遗漏。
+- `ui-tooling-preview` 恒为 `debugImplementation`（IDE tooling，release/runtime 不得携带）。
+- `app/src/main/assets/runtime/classes.dex` 为构建产物，不入库（.gitignore）。
+- P0 全链验证：`.\gradlew.bat :app:verifyRuntimeSurface`（mapping 断言剥离）+ 打包单测。
+
+## 精简治理（去重门禁，2026-08-07，详见 docs/planned/MINIMALISM_AUDIT_REPORT.md）
+
+- **内置示例**：`-Plide.examples=all|名单` 控制生成哪些 `.alp` 进 `assets/examples/`；
+  默认不设置 = 零内置（APK 最瘦）。`scripts/examples-src/` 保留工程模板作为选样池，
+  UI（ExamplesScreen）按 assets 实际存在过滤，空态展示 `examples_empty`。
+- **运行时引擎 dex**：`-Plide.embedRuntimeDex=false` 剔除 `assets/runtime/classes.dex`
+  （受控冗余，默认开启保持 P0 契约；缺失时打包器兜底宿主 dex，见上一节）。
+- **死代码禁令**：`:app` / `:androlua` 禁止把空 `libs/` 目录声明为依赖（`fileTree("libs")`
+  空声明与 `.gitkeep` 已清理）；各模块 compileSdk 保持一致（当前 36）。
+- **去重门禁**：`:app:verifyMinimalism` 校验 release APK 无 jniLibs 预编译回包、白名单外
+  `.so`、同 ABI 重复原生库、默认场景内置示例为 0，已接入 CI（verify-release job）。
+- 改动打包 / 原生 / 示例链路必须重跑：`:app:verifyMinimalism` + `:app:testArm64DebugUnitTest --tests "com.lioisme.lide.build.*"`。
 
 ## 文档治理约定（opencode Agent 必守）
 

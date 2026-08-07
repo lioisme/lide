@@ -23,7 +23,7 @@ object LanguageKeywordRegistry {
 
     private val registry: Map<String, Array<String>> =
         mapOf(
-            "source.lua" to LUA_KEYWORDS,
+            LanguageDetector.LUA_SCOPE to LUA_KEYWORDS,
             "source.java" to javaWords(),
             "source.kotlin" to kotlinWords(),
             "source.js" to javaScriptWords(),

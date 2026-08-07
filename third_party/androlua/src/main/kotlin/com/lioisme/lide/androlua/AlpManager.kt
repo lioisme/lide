@@ -8,17 +8,13 @@ import java.io.File
 
 class AlpManager(private val context: Context) {
 
-    /** .alp 容器类型：与 pro 的 `mode` 字段对齐（"plugin" → 插件，其余 → 工程）。 */
-    enum class AlpKind { PROJECT, PLUGIN }
-
     /** 同名冲突处理策略（WP-015）：覆盖 / 改名（dedupe -1/-2）。 */
     enum class ImportMode { OVERWRITE, RENAME }
 
-    data class AlpImportResult(val dir: String, val kind: AlpKind)
+    data class AlpImportResult(val dir: String)
 
-    /** 导入计划：无副作用地解析类型/目标名/冲突态，供 UI 先弹确认再执行（WP-015）。 */
+    /** 导入计划：无副作用地解析目标名/冲突态，供 UI 先弹确认再执行（WP-015）。 */
     data class ImportPlan(
-        val kind: AlpKind,
         val name: String,
         val targetDir: File,
         val conflict: Boolean,
@@ -50,10 +46,9 @@ class AlpManager(private val context: Context) {
             return null
         }
         val initContent = ZipUtil.readEntryText(file, "init.lua")
-        val kind = AlpNaming.resolveKind(file.name, initContent)
         val name = AlpNaming.resolveName(file.name, initContent)
-        val targetDir = targetDirFor(kind, name)
-        return ImportPlan(kind, name, targetDir, conflict = targetDir.exists())
+        val targetDir = targetDirFor(name)
+        return ImportPlan(name, targetDir, conflict = targetDir.exists())
     }
 
     /**
@@ -80,32 +75,9 @@ class AlpManager(private val context: Context) {
                 else -> plan.targetDir.also { it.deleteRecursively() }
             }
         return if (ZipUtil.unzip(File(alpFile), target)) {
-            AlpImportResult(target.absolutePath, plan.kind)
+            AlpImportResult(target.absolutePath)
         } else {
             target.deleteRecursively()
-            null
-        }
-    }
-
-    fun import(
-        uri: Uri,
-        mode: ImportMode = ImportMode.OVERWRITE,
-    ): AlpImportResult? {
-        return try {
-            context.contentResolver.openInputStream(uri)?.use { inputStream ->
-                val rawName = resolveNameFromUri(uri)
-                val tempFile = File(context.cacheDir, "alp_${System.currentTimeMillis()}_$rawName")
-                tempFile.parentFile?.mkdirs()
-                inputStream.use { it.copyTo(tempFile.outputStream()) }
-                val result = import(tempFile.absolutePath, mode)
-                tempFile.delete()
-                result
-            } ?: run {
-                Log.e("AlpManager", "cannot open input stream for $uri")
-                null
-            }
-        } catch (e: Exception) {
-            Log.e("AlpManager", "import from URI failed: ${e.message}")
             null
         }
     }
@@ -115,21 +87,8 @@ class AlpManager(private val context: Context) {
      * 否则取文件名去扩展名后截断到首个 `.`/`_`。
      * 不做任何删除/覆盖（冲突判定与处置分离，WP-015）。
      */
-    private fun targetDirFor(kind: AlpKind, name: String): File {
+    private fun targetDirFor(name: String): File {
         val luaExtDir = LuaApplication.getInstance().luaExtDir
-        val subDir = if (kind == AlpKind.PLUGIN) "plugin" else "project"
-        return File(luaExtDir, "$subDir/$name")
-    }
-
-    private fun resolveNameFromUri(uri: Uri): String {
-        val cursor = context.contentResolver.query(uri, null, null, null, null)
-        cursor?.use {
-            if (it.moveToFirst()) {
-                val displayName = it.getString(it.getColumnIndexOrThrow("_display_name"))
-                return displayName.removeSuffix(".alp").ifBlank { "imported" }
-            }
-        }
-        val path = uri.path ?: return "imported"
-        return path.substringAfterLast('/').removeSuffix(".alp").ifBlank { "imported" }
+        return File(luaExtDir, "project/$name")
     }
 }

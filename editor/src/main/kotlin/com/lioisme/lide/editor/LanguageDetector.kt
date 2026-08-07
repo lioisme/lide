@@ -13,6 +13,9 @@ object LanguageDetector {
     /** 未识别扩展名的兜底 scope（纯文本，无语义高亮）。 */
     const val PLAIN_SCOPE = "text.plain"
 
+    /** Lua 文法 scope（词法诊断 / 补全 / 关键字表共用的单一常量）。 */
+    const val LUA_SCOPE = "source.lua"
+
     private val associations =
         mapOf(
             "bat" to "source.batchfile",
@@ -109,7 +112,7 @@ object LanguageDetector {
             "lsp" to "source.lisp",
             "cl" to "source.lisp",
             "l" to "source.lisp",
-            "lua" to "source.lua",
+            "lua" to LUA_SCOPE,
             "mak" to "source.makefile",
             "mk" to "source.makefile",
             "md" to "text.html.markdown",

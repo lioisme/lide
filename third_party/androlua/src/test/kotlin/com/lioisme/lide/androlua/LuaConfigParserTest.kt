@@ -1,9 +1,138 @@
 package com.lioisme.lide.androlua
 
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class LuaConfigParserTest {
+
+    // ---- P5b 测试迁移：以下用例从 :app 误置副本（app/src/test/.../project/ 下同包名）
+    // ---- 迁入 :androlua 权威测试（被测类 LuaConfigParser 属 :androlua）。
+
+    @Test
+    fun `top level fields parsed`() {
+        val fields = LuaConfigParser.parse(sample)
+        val names = fields.map { it.name }
+        assertTrue("appname" in names)
+        assertTrue("appver" in names)
+        assertTrue("user_permission" in names)
+        assertTrue("icon" in names)
+    }
+
+    @Test
+    fun `string field unquoted with null fallback`() {
+        assertEquals("demo", LuaConfigParser.stringField(sample, "appname"))
+        assertNull(LuaConfigParser.stringField(sample, "icon"))
+        assertNull(LuaConfigParser.stringField(sample, "missing"))
+    }
+
+    @Test
+    fun `array field parsed`() {
+        assertEquals(
+            listOf("main", "page_calc"),
+            LuaConfigParser.stringArrayField(sample, "pages"),
+        )
+        assertTrue(LuaConfigParser.stringArrayField(sample, "missing").isEmpty())
+    }
+
+    @Test
+    fun `appname inside line comment not matched`() {
+        val content = "-- appname = \"comment\"\nprint(1)\nappname = \"real\"\n"
+        assertEquals("real", LuaConfigParser.stringField(content, "appname"))
+    }
+
+    @Test
+    fun `assignment inside string not matched`() {
+        val content = "local s = \"appname = \\\"fake\\\"\"\nappname = \"ok\"\n"
+        assertEquals("ok", LuaConfigParser.stringField(content, "appname"))
+    }
+
+    @Test
+    fun `fields inside long comment and long string not matched`() {
+        val content =
+            """
+            --[[ appname = "incomment" ]]
+            local t = [[
+                appname = "instring"
+            ]]
+            appname = "real"
+            """.trimIndent()
+        assertEquals("real", LuaConfigParser.stringField(content, "appname"))
+    }
+
+    @Test
+    fun `fields in nested table not matched`() {
+        val content = "layout = { appname = \"inner\" }\nappname = \"outer\"\n"
+        assertEquals("outer", LuaConfigParser.stringField(content, "appname"))
+    }
+
+    @Test
+    fun `multiline array field parsed`() {
+        val content =
+            """
+            user_permission = {
+                "CAMERA",
+                "WRITE_SETTINGS",
+                INSTALL_SHORTCUT,
+            }
+            """.trimIndent()
+        assertEquals(
+            listOf("CAMERA", "WRITE_SETTINGS", "INSTALL_SHORTCUT"),
+            LuaConfigParser.stringArrayField(content, "user_permission"),
+        )
+    }
+
+    @Test
+    fun `setField keeps bytes outside replacement identical`() {
+        val before = sample
+        val after = LuaConfigParser.setField(before, "appver", "\"2.0\"")
+        assertTrue(after.contains("appver = \"2.0\""))
+        assertTrue(after.contains("-- lide project init"))
+        assertTrue(after.contains("-- trailing comment stays"))
+        val strippedAfter = after.replace("appver = \"2.0\"\n", "")
+        val strippedBefore = before.replace("appver = \"1.0\"\n", "")
+        assertEquals(strippedBefore, strippedAfter)
+    }
+
+    @Test
+    fun `setStringArrayField keeps other fields`() {
+        val after = LuaConfigParser.setStringArrayField(sample, "user_permission", listOf("CAMERA"))
+        assertEquals(listOf("CAMERA"), LuaConfigParser.stringArrayField(after, "user_permission"))
+        assertEquals("demo", LuaConfigParser.stringField(after, "appname"))
+    }
+
+    @Test
+    fun `setStringArrayField empty array`() {
+        val after = LuaConfigParser.setStringArrayField(sample, "user_permission", emptyList())
+        assertTrue(LuaConfigParser.stringArrayField(after, "user_permission").isEmpty())
+    }
+
+    @Test
+    fun `bare identifier array items parsed`() {
+        assertEquals(
+            listOf("CAMERA"),
+            LuaConfigParser.stringArrayField("user_permission = { CAMERA }\n", "user_permission"),
+        )
+    }
+
+    @Test
+    fun `scalar with function call not truncated`() {
+        val content = "debugmode = checkVersion(3)\nappname = \"x\"\n"
+        assertEquals("checkVersion(3)", LuaConfigParser.field(content, "debugmode"))
+    }
+
+    private val sample =
+        """
+        -- lide project init
+        appname = "demo"
+        appver = "1.0"
+        packagename = "com.lioisme.lide.demo"
+        icon = nil
+        pages = {"main", "page_calc"}
+        user_permission = { "CAMERA", "RECORD_AUDIO" }
+        -- trailing comment stays
+        """.trimIndent()
 
     @Test
     fun `quote escapes quotes backslashes and newlines`() {

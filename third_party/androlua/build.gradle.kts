@@ -5,7 +5,8 @@ plugins {
 
 android {
     namespace = "com.lioisme.lide.androlua"
-    compileSdk = 35
+    // 与 :app / :editor / sora 模块对齐（精简治理：全局统一 compileSdk，避免 35/36 混编）
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 24
@@ -26,9 +27,9 @@ android {
 }
 
 dependencies {
-    implementation(fileTree("libs") { include("*.jar") })
-    implementation("androidx.lifecycle:lifecycle-common:2.8.7")
+    // androidx.annotation 被上游 vendor Java（FileProvider/LuaActivity/LuaResources/
+    // GlobalActionAutomator）使用；androidx.core / lifecycle-common 无引用（P5 清理），
+    // fileTree("libs") 目录仅含 .gitkeep（死声明，P5 清理）。
     implementation("androidx.annotation:annotation:1.9.1")
-    implementation("androidx.core:core:1.15.0")
     testImplementation("junit:junit:4.13.2")
 }

@@ -32,6 +32,14 @@
 # 反射所需的属性信息
 -keepattributes *Annotation*,InnerClasses,EnclosingMethod,Signature
 
+# ── apksig（工程打包签名）──────────────────────────────────────
+# apksig 的 ASN.1 编码器（Asn1DerEncoder）对模型类做注解驱动反射
+# （@Asn1Field/@Asn1Choice/@Asn1Tagging + getDeclaredFields），R8 混淆/
+# 裁剪会删改模型类字段，反射空转抛 Asn1EncodingException，被
+# V1SchemeSigner 无 cause 包装成 "Failed to encode signature block"——
+# 曾导致 release 宿主（R8 开启）打包必败而 debug 正常（2026-08-07 定位）。
+-keep class com.android.apksig.** { *; }
+
 # ── sora-editor language-textmate（Gson 反射反序列化 model 类）────────────────
 # language-textmate 的 languages.json / language-configuration.json 由 Gson 按字段名反射
 # 反序列化：部分 model 类没有 @SerializedName，字段名混淆会静默丢字段；且 R8 class-merging

@@ -43,7 +43,7 @@
 
 ## 2. Lua 语言基础（5.3 规范参考）
 
-完整规范见官方手册（工程自带 `assets/luadoc/manual.html`）。本节是与 AndroLua 工程写法直接相关的要点。
+完整规范见官方手册（pro 基线自带 `reference/androlua/AndroLua_pro-master/app/src/main/assets/luadoc/manual.html`；lide 已不打包该资产）。本节是与 AndroLua 工程写法直接相关的要点。
 
 ### 2.1 词法约定
 
@@ -927,4 +927,4 @@ function main(arg) ... end            -- 可选入口
 | import 机制 | `resources/lua/import.lua` |
 | 布局系统 | `resources/lua/loadlayout.lua` |
 | 菜单/图片 | `resources/lua/loadmenu.lua`、`loadbitmap.lua` |
-| Lua 规范 | `assets/luadoc/manual.html`（官方 Lua 5.3 手册中文版） |
+| Lua 规范 | pro 基线 `assets/luadoc/manual.html`（官方 Lua 5.3 手册中文版，`reference/androlua/AndroLua_pro-master/`；lide 不打包） |
