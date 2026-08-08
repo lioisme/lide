@@ -28,9 +28,9 @@
 -keep class com.lioisme.lide.ui.** { *; }
 -keep class com.lioisme.lide.util.** { *; }
 
-# ── 引擎 keep 面（原 src/runtime/runtime-rules.pro 并入；维护约定三处同步：
-#    engineSurfaceDescriptors（verifyMinimalism 断言）+ 本段 keep +
-#    ApiCategoryClassifier.androluaAndroidPrefixes（API 浏览器分类））────────
+# ── 引擎 keep 面（原 src/runtime/runtime-rules.pro 并入；维护约定已收敛，
+#    2026-08-09：唯一事实源 = app/engine-surface.txt，本段 keep 覆盖由
+#    EngineSurfaceConsistencyTest 断言（通配/单列命中），不再手写第三份清单）────────
 
 # luajava - libluajava.so 的 JNI 桥接层（LuaState/LuaJavaAPI/LuaObject 等）。
 # native 侧按字面量类名/方法名绑定，R8 引用图不可见，必须 { *; }。
@@ -47,7 +47,7 @@
 -keep class android.content.FileProvider { *; }
 -keep class android.content.FileProvider$* { *; }
 
-# ── Lua 可见 API 面（与 engineSurfaceDescriptors / ApiCategoryClassifier 同步）────────
+# ── Lua 可见 API 面（清单见 app/engine-surface.txt，本段为其 R8 keep 覆盖）────────
 -keep class android.widget.** { *; }
 -keep class android.app.AlertDialogBuilder { *; }
 -keep class android.app.FloatWindow { *; }

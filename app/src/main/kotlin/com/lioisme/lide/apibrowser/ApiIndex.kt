@@ -15,14 +15,16 @@ import java.util.concurrent.ConcurrentHashMap
  * + 宿主 dex 动态枚举（androidx/material 动态补齐）+ 工程 libs/ 下 dex|jar 动态枚举
  * + 原生库模块名扫描（libs/ 下 so，仅模块名级）。
  *
- * 类加载模型（架构审计 P0-1 根治，2026-08-06）：
- * - build 期把枚举出的全部类名保留为 [Snapshot.dexClassNames]（宿主 dex + 工程 libs），
- *   「可加载性」判定对枚举类名 O(1) 查表，不再作为反射负查找的入场费；
+ * 类加载模型（架构审计 P0-1 根治，2026-08-06；契约落地 2026-08-09 D1）：
+ * - 索引构建（进程内首次访问，IO 线程）时把枚举出的全部类名保留为 [Snapshot.dexNames]
+ *   （宿主 dex + 工程 libs）；宿主 dex 枚举按进程缓存（[hostDexNames]），切工程不重扫；
+ * - 「可加载性」判定 = O(1) 查表（[Snapshot.isKnown]：dexNames ∪ 条目名），**只有已知类
+ *   才 [Class.forName]**——不存在则不发生 Class.forName 全 dex 负查找；
  *   反射只发生在真正需要类形态/父宿主遍历等语义之处，且统一走单张合并缓存
- *   （classCache + failedLoadCache 负缓存），同一类名全仓仅一次 [Class.forName]。
+ *   （classCache + failedLoadCache 负缓存），同一类名全进程仅一次 [Class.forName]。
  *   由此删除：两阶段反射预算、warmUpRowInfo、assignUsages 节流、非空包装负缓存、单飞。
  *
- * 线程契约（AGENTS.md）：反射解析接口（rowInfo / isLoadable / classKind / isViewSubclass /
+ * 线程契约（AGENTS.md）：反射解析接口（rowInfo / classKind / isViewSubclass /
  * classify / reflect）禁止在 UI 线程直接调用——负面查找需扫描全 dex；UI 只读惰性缓存结果，
  * 列表行一律经 rowInfoAsync（IO）。dex 枚举判定为纯查表（O(1)）。
  * 全部反射路径 try/catch(Throwable) 降级（AGENTS.md 约定）。
@@ -42,27 +44,31 @@ object ApiIndex {
         val loadable: Boolean,
     )
 
-    /** 引擎内置 C 模块（cpath = nativeLibraryDir/lib*.so + 工程 libs）。 */
-    private val builtinNativeModules =
+    /**
+     * 引擎内置 C 模块（cpath = nativeLibraryDir/lib*.so + 工程 libs）。
+     * 单一事实源 = app/src/main/cpp 下各模块 Android.mk 的 LOCAL_MODULE（2026-08-09 对齐，
+     * 审计 R1 修正）：补入 luajava/lfs/lsqlite3，剔除引擎未构建的 ftp/http/import/mime/smtp
+     * （工程 libs/ 自带的同名模块仍经 buildBase 工程扫描自动登记）。
+     * EngineNativeModulesTest 守护与引擎源码双向一致。
+     */
+    internal val builtinNativeModules =
         listOf(
             "bson",
             "canvas",
             "cjson",
             "crypt",
-            "ftp",
             "gl",
-            "http",
-            "import",
+            "lfs",
+            "lsqlite3",
+            "luajava",
+            "luv",
             "md5",
-            "mime",
             "regex",
             "sensor",
-            "smtp",
             "socket",
             "xml",
             "zip",
             "zlib",
-            "luv",
         )
 
     /** 不可变快照。 */
@@ -86,7 +92,16 @@ object ApiIndex {
          * 「可加载性」O(1) 查表命中的类名可直接判定加载成功，免全 dex 扫描（性能审计 R2）。
          */
         val dexNames: Set<String>,
-    )
+        /**
+         * 全部已知类名全集（静态表 + 宿主 dex + 工程 libs + R 类条目名）。
+         * 「可加载性」O(1) 查表权威集（契约 D1）：不存在于 [isKnown] 的类名直接判定
+         * 不可加载，**绝不发生 [Class.forName] 全 dex 负查找**。
+         */
+        val entryNames: Set<String>,
+    ) {
+        /** O(1) 可加载判定（契约 D1）：只对已知类名发生反射加载。 */
+        fun isKnown(name: String): Boolean = name in dexNames || name in entryNames
+    }
 
     data class ApiClassEntry(
         val name: String,
@@ -119,6 +134,13 @@ object ApiIndex {
 
     /** 已构建过的工程根集合签名（工程增减导致索引失效）。 */
     private var builtProjectRoots: Set<String>? = null
+
+    /**
+     * 宿主 APK dex 类名进程级缓存（契约 D1）：宿主类名不随工程切换变化，
+     * 首次枚举后跨工程复用，切工程不再重扫整包（DexFile.entries 数百 ms 级）。
+     */
+    @Volatile
+    private var hostDexNames: Set<String>? = null
 
     @Volatile
     private var hostClassLoader: ClassLoader? = null
@@ -156,7 +178,16 @@ object ApiIndex {
             }
 
             // 2) 宿主 dex 全量枚举：昵称只入集合；entry 注册仅筛 androidx/material + 非内部类
-            enumerateDexFile(File(context.applicationInfo.sourceDir)) { name ->
+            //    进程级缓存（契约 D1）：宿主 dex 类名与工程无关，首次枚举后跨工程复用，
+            //    切工程不再重扫整包。
+            var hostNames = hostDexNames
+            if (hostNames == null) {
+                val names = HashSet<String>()
+                enumerateDexFile(File(context.applicationInfo.sourceDir)) { names.add(it) }
+                hostDexNames = names
+                hostNames = names
+            }
+            for (name in hostNames) {
                 dexNames.add(name)
                 if ((name.startsWith("androidx.") || name.startsWith("com.google.android.material.")) && '$' !in name) {
                     entries.putIfAbsent(name, ApiClassEntry(name, ApiCategoryClassifier.categorizeBase(name), fromProject = false))
@@ -211,6 +242,7 @@ object ApiIndex {
                     categoryCounts = categories.mapValues { it.value.size },
                     nativeModules = nativeModules.toList().sorted(),
                     dexNames = dexNames,
+                    entryNames = entries.keys.toSet(),
                 )
             snapshot = base
             completePhaseDone = false
@@ -326,10 +358,16 @@ object ApiIndex {
         }
     }
 
-    /** 类解析唯一入口（合并缓存）：成功类缓存 / 负缓存。线程安全。 */
+    /**
+     * 类解析唯一入口（合并缓存）：成功类缓存 / 负缓存。线程安全。
+     * 契约 D1（性能审计 R2 落地）：索引已构建时，未知类名经 [Snapshot.isKnown]
+     * O(1) 判定直接返回 null，**不发生 [Class.forName] 全 dex 负查找**。
+     */
     internal fun loadClassRef(name: String): Class<*>? {
         classCache[name]?.let { return it }
         if (name in failedLoadCache) return null
+        val s = snapshot
+        if (s != null && !s.isKnown(name)) return null
         return try {
             val clazz = Class.forName(name, false, hostClassLoader ?: ApiIndex::class.java.classLoader)
             classCache[name] = clazz

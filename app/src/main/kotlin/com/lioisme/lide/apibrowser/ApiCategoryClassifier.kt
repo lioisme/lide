@@ -12,9 +12,11 @@ package com.lioisme.lide.apibrowser
  *   只允许在 `completeBuild()` 等反射阶段调用。
  */
 object ApiCategoryClassifier {
-    /** pro 自定义控件（伪装在 android.* 下的白名单前缀，反射验证在框架中不存在）。 */
-    private val androluaAndroidPrefixes =
+    /** pro 自定义控件（伪装在 android.* 下的白名单前缀，反射验证在框架中不存在）。
+     *  条目必须登记于 app/engine-surface.txt（EngineSurfaceConsistencyTest 守护，2026-08-09）。 */
+    internal val androluaAndroidPrefixes =
         listOf(
+            "android.app.AlertDialogBuilder",
             "android.app.FloatWindow",
             "android.widget.ArrayExpandableListAdapter",
             "android.widget.ArrayListAdapter",

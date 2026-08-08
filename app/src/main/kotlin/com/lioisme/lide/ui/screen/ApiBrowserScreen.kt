@@ -98,6 +98,7 @@ fun ApiBrowserScreen(
                 categories = emptyMap(),
                 categoryCounts = emptyMap(),
                 dexNames = emptySet(),
+                entryNames = emptySet(),
             )
         }
     }

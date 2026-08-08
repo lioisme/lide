@@ -274,15 +274,16 @@ dependencies {
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1")
 }
 
-// Lua 可见 API 面（P3-4 三处同步 + 2026-08-09 引擎并入单 dex 集修订）：
-// :androlua 以 implementation 并入宿主单一 dex 集，R8 keep 面见本文件「引擎 keep 面」段
-// （原 src/runtime/runtime-rules.pro 已随运行时拆分机制删除）。引擎面类跨 dex 唯一性
-// 由 verifyMinimalism 的 checkEngineDexMerge 断言（APK 级，恰一份）。
+// Lua 可见 API 面（2026-08-09 引擎并入单 dex 集修订 + 2026-08-09 单一事实源收敛）：
+// :androlua 以 implementation 并入宿主单一 dex 集，R8 keep 面见 proguard-rules.pro「引擎 keep 面」段
+// （原 src/runtime/runtime-rules.pro 已随运行时拆分机制删除）。
 //
-// 维护约定（P3-4，三处同步）：新增 pro 自定义控件 / 引擎表面类时，需同时登记于
-//   1. engineSurfaceDescriptors（verifyMinimalism 跨 dex 断言校验对象）
-//   2. 「引擎 keep 面」-keep 规则（R8 实际保留手段）
-//   3. ApiCategoryClassifier.androluaAndroidPrefixes（API 浏览器分类）
+// 维护约定（2026-08-09 收敛，禁止再引入第二份手写清单）：
+// 引擎面类唯一事实源 = app/engine-surface.txt（一行一个点分全限定类名，# 注释）：
+//   1. 本文件读表 → engineSurfaceDescriptors（checkEngineDexMerge 跨 dex 恰一份断言）；
+//   2. proguard-rules.pro keep 覆盖由 EngineSurfaceConsistencyTest 断言（通配/单列命中）；
+//   3. ApiCategoryClassifier.androluaAndroidPrefixes 条目必须在此登记，同测试断言归类 ANDROLUA。
+// 新增 / 删除引擎表面类只改 engine-surface.txt 一处。
 fun scanDexClassNames(dexBytes: ByteArray): List<String> {
     if (dexBytes.size < 0x70 || dexBytes[0] != 'd'.code.toByte() ||
         dexBytes[1] != 'e'.code.toByte() || dexBytes[2] != 'x'.code.toByte() || dexBytes[3] != '\n'.code.toByte()
@@ -345,47 +346,13 @@ fun scanDexClassNames(dexBytes: ByteArray): List<String> {
     return names
 }
 
-/** 引擎侧类描述符（跨 dex 唯一性判定对象）：Lua 可见 API 面 + LuaApplication + FileProvider。 */
 val engineSurfaceDescriptors: Set<String> =
-    buildSet {
-        // Lua 可见 API 面（P3-4 三处同步）：android.widget / android.app 自定义控件、
-        // cglib、luajava、LuaActivity/LuaEnhancer/LuaContext、nirenr 工具类。
-        addAll(
-            listOf(
-                "android.widget.ArrayListAdapter",
-                "android.widget.ArrayPageAdapter",
-                "android.widget.BasePageAdapter",
-                "android.widget.PageAdapter",
-                "android.widget.ArrayExpandableListAdapter",
-                "android.widget.ExListView",
-                "android.widget.FloatButton",
-                "android.widget.ToolBar",
-                "android.widget.PageView",
-                "android.widget.PageLayout",
-                "android.widget.DrawerLayout",
-                "android.widget.CircleImageView",
-                "android.widget.CardView",
-                "android.widget.HorizontalListView",
-                "android.widget.PullingLayout",
-                "android.widget.SlidingLayout",
-                "android.app.AlertDialogBuilder",
-                "android.app.FloatWindow",
-                "com.nirenr.Color",
-                "com.nirenr.ColorFinder",
-                "com.nirenr.ColorPoint",
-                "com.nirenr.screencapture.ScreenShot",
-                "com.android.cglib.proxy.Enhancer",
-                "com.android.cglib.dx.DexMaker",
-                "com.luajava.LuaState",
-                "com.luajava.LuaObject",
-                "com.androlua.LuaActivity",
-                "com.androlua.LuaEnhancer",
-                "com.androlua.LuaContext",
-            ).map { "L${it.replace('.', '/')};" },
-        )
-        add("Lcom/androlua/LuaApplication;")
-        add("Landroid/content/FileProvider;")
-    }
+    file("engine-surface.txt")
+        .readLines()
+        .map { it.trim() }
+        .filter { it.isNotEmpty() && !it.startsWith("#") }
+        .map { "L${it.replace('.', '/')};" }
+        .toSet()
 
 /**
  * 引擎并入单 dex 集断言（2026-08-09 源码组织三需求，替代原跨 dex 拆分断言）：

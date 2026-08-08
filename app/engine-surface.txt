@@ -1,0 +1,55 @@
+# 引擎面类清单（单一事实源，2026-08-09 收敛，勿在别处重复维护）。
+#
+# 消费方（全部由此文件派生 / 受一致性测试守护）：
+#   1. app/build.gradle.kts  engineSurfaceDescriptors（checkEngineDexMerge 跨 dex 恰一份断言）
+#   2. app/proguard-rules.pro 引擎 keep 面（R8 保留手段；通配/单列覆盖由
+#      EngineSurfaceConsistencyTest 断言，新增条目必须被某条 keep 规则命中）
+#   3. ApiCategoryClassifier.androluaAndroidPrefixes（API 浏览器 ANDROLUA 分类；
+#      条目必须在此登记，EngineSurfaceConsistencyTest 断言归类一致）
+#
+# 维护约定：新增 / 删除引擎表面类只改本文件一处；格式 = 一行一个点分全限定类名，
+# 支持 # 注释行。android.content.FileProvider 为特殊登记（manifest 按类名注册，
+# 分类器按前缀归 FRAMEWORK 属预期，测试白名单）。
+#
+# ── android.widget 自定义控件（pro 原版伪装在框架包下，反射验证框架中不存在）──
+android.widget.ArrayListAdapter
+android.widget.ArrayPageAdapter
+android.widget.BasePageAdapter
+android.widget.PageAdapter
+android.widget.ArrayExpandableListAdapter
+android.widget.ExListView
+android.widget.FloatButton
+android.widget.ToolBar
+android.widget.PageView
+android.widget.PageLayout
+android.widget.DrawerLayout
+android.widget.CircleImageView
+android.widget.CardView
+android.widget.HorizontalListView
+android.widget.PullingLayout
+android.widget.SlidingLayout
+android.widget.RippleLayout
+android.widget.RoundRectDrawable
+android.widget.RippleHelper
+android.widget.ViewDragHelper
+# ── android.app 扩展 ──
+android.app.AlertDialogBuilder
+android.app.FloatWindow
+# ── nirenr 工具类 ──
+com.nirenr.Color
+com.nirenr.ColorFinder
+com.nirenr.ColorPoint
+com.nirenr.screencapture.ScreenShot
+# ── cglib（动态代理 / dex 生成）──
+com.android.cglib.proxy.Enhancer
+com.android.cglib.dx.DexMaker
+# ── luajava JNI 桥接 ──
+com.luajava.LuaState
+com.luajava.LuaObject
+# ── androlua 运行时核心 ──
+com.androlua.LuaActivity
+com.androlua.LuaEnhancer
+com.androlua.LuaContext
+com.androlua.LuaApplication
+# ── 特殊登记：引擎自带同名支持类副本 ──
+android.content.FileProvider

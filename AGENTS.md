@@ -66,8 +66,10 @@ git ls-files '*.jar' | grep -v 'gradle/wrapper/gradle-wrapper.jar'
 
 ## API 浏览器反射线程契约（2026-08 简化，架构审计 A-1）
 
-- build 期把枚举出的 dex 类名存为 `Snapshot.dexNames: Set<String>`，「可加载性」判定
-  为 O(1) 查表，**只有存在类才 `Class.forName`**——不存在 `Class.forName` 全 dex 负查找。
+- build 期把枚举出的全部类名存为 `Snapshot.dexNames` + `Snapshot.entryNames`（宿主 dex
+  枚举按进程缓存于 `ApiIndex.hostDexNames`，切工程不重扫）；「可加载性」判定为 O(1) 查表
+  （`Snapshot.isKnown`），**只有已知类才 `Class.forName`**——不存在 `Class.forName` 全 dex
+  负查找（`loadClassRef` 门控落地，2026-08-09 D1）。
 - 反射加载统一经 `ApiIndex.loadClassRef`（合并后的单张 `Class<?>?` 缓存），
   `ApiReflection.reflect` / `ApiUsageClassifier` 一律走该封装，禁止自行
   `Class.forName`（防 static 初始化差异与三套缓存并存）。
