@@ -129,4 +129,4 @@ SECRET_RE = re.compile(r"(password|passwd|pwd|secret|api[_-]?key|token)\s*[:=]\s
 ## 4. 与设备验证 SKILL 的关系
 
 - 本 SKILL（静态审计）输出 positive/negative 标签与片段，供工程侧引用；
-- 工程侧结论（如「lide 可运行」「Pro 兼容」）必须由 `androlua-project-validation` 双端实测后落 `docs/kb/androlua-lua/`，两者不互相污染。
+- 工程侧结论（如「lide 可运行」「Pro 兼容」）必须由 `androlua-project-validation` 双端实测后落 `docs/kb/` 工程知识库，两者不互相污染。

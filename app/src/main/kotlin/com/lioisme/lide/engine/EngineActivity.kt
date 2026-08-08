@@ -15,10 +15,8 @@ import com.androlua.LuaActivity
  *   extra 携带输出文本与错误标记；输出超限截断防止 Binder 事务溢出；
  * - 历史文件协议（engine_result.json / engine_output.txt）不恢复。
  *
- * 归位（2026-08-08 源码组织五需求）：引擎页属于 LIDE 宿主代码，随 app 主源编译进
- * IDE dex（打包产物经 P0-7 直用宿主根 dex，引擎页对产物依然可用）；runtime 变体
- * 的 R8 按 manifest 可达性把它从引擎 dex 剥离（verifyRuntimeSurface 断言），
- * 保证全 APK 中引擎页仅一份。
+ * 归位（2026-08-08 源码组织五需求）：引擎页属于 LIDE 宿主代码，随 app 主源编译；
+ * 2026-08-09 引擎并入单 dex 集后，引擎类与宿主类同 dex 集，全 APK 仅一份（无拆分）。
  */
 class EngineActivity : LuaActivity() {
 

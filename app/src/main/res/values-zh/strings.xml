@@ -188,10 +188,6 @@
     <string name="example_name_testjson">TestJson</string>
     <string name="example_desc_testjson">dkjson 编解码测试</string>
 
-
-    <string name="cannot_read_file">无法读取文件</string>
-    <string name="error_prefix">错误：%1$s</string>
-
     <!-- Permission catalog -->
     <string name="perm_read_external_storage">读取外部存储</string>
     <string name="perm_write_external_storage">写入外部存储</string>
@@ -283,7 +279,6 @@
     <string name="accessibility_service_description">LIDE 无障碍服务：为 Lua 脚本提供自动化能力（点击、滑动、截图）。</string>
     <!-- API 浏览器（WP-008） -->
     <string name="api_browser">API 浏览器</string>
-    <string name="api_browser_subtitle">浏览 Lua 可调用的 Java 类</string>
     <string name="api_search_hint">搜索类名…</string>
     <string name="api_member_filter_hint">过滤成员…</string>
     <string name="api_loading">正在构建索引…</string>
@@ -346,7 +341,6 @@
     <string name="signing_gen_street">街道地址</string>
     <string name="signing_gen_postal">邮政编码</string>
     <string name="signing_gen_c_invalid">国家代码须为两位字母</string>
-    <string name="signing_gen_validity_invalid">有效期须在 1~%1$d 年之间</string>
     <string name="signing_gen_email_invalid">邮箱格式不正确</string>
     <string name="signing_generated">已生成新签名</string>
     <string name="signing_name">档案名称</string>
@@ -374,7 +368,6 @@
     <string name="build_signature">签名</string>
     <string name="build_manage_signing">管理</string>
     <string name="build_signature_value">%1$s</string>
-    <string name="build_signature_scheme">方案：%1$s</string>
     <string name="build_opt_compile_label">编译 Lua 文件</string>
 
     <!-- 打包选项（合并入 AndroLua 页） -->

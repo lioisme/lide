@@ -3,20 +3,20 @@
 # 安装：git config core.hooksPath .githooks
 # 注意：git 钩子由 shell 执行（Windows 下为 Git Bash 的 sh），此处不使用 PowerShell。
 # 门禁策略：
-#   1. R1 红线：editor/src 禁止引用 luajava / androlua / loadLibrary（硬失败）
-#   2. ktlint：仅提示，不在此处全量运行（耗时长；由 :editor:lint 门禁 / CI 兜底）
+#   1. R1 红线：编辑器包（com.lioisme.lide.editor）禁止引用 luajava / androlua / loadLibrary（硬失败）
+#   2. ktlint：仅提示，不在此处全量运行（耗时长；由 :app lint 门禁 / CI 兜底）
 #   3. 编译门禁：提示提交前本地验证，不自动构建
 set -u
 
 cd "$(git rev-parse --show-toplevel)" || exit 1
 
-echo "[pre-commit] R1 红线检查（editor/src 禁止 luajava/androlua/loadLibrary）..."
-if grep -rnE "luajava|androlua|loadLibrary" editor/src; then
-    echo "[pre-commit] !! R1 违规：编辑器模块不得触碰运行时/引擎符号，请移除后重试" >&2
+echo "[pre-commit] R1 红线检查（编辑器包禁止 luajava/androlua/loadLibrary）..."
+if grep -rnE "luajava|androlua|loadLibrary" app/src/main/kotlin/com/lioisme/lide/editor; then
+    echo "[pre-commit] !! R1 违规：编辑器包不得触碰运行时/引擎符号，请移除后重试" >&2
     exit 1
 fi
 
-echo "[pre-commit] ktlint 提示：如涉 Kotlin 改动，请先运行 .\\gradlew.bat :editor:ktlintFormat 后重新提交。"
+echo "[pre-commit] ktlint 提示：如涉 Kotlin 改动，请先运行 .\\gradlew.bat :app:ktlintFormat 后重新提交。"
 echo "[pre-commit] 编译提示：提交前请确认 .\\gradlew.bat :app:compileArm64DebugKotlin 通过。"
 echo "[pre-commit] 通过。"
 exit 0

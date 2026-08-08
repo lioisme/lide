@@ -17,8 +17,6 @@ object LocaleManager {
     var currentLanguageTag: String = TAG_SYSTEM
         private set
 
-    val supportedTags: List<String> = listOf(TAG_SYSTEM, TAG_EN, TAG_ZH)
-
     fun init(context: Context) {
         val prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
         currentLanguageTag = prefs.getString(KEY_LANG, TAG_SYSTEM) ?: TAG_SYSTEM

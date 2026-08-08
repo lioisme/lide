@@ -11,7 +11,7 @@ import java.util.WeakHashMap
 /*
  * 导航门控：官方契约「仅当当前 destination 的 Lifecycle 处于 RESUMED 时才能触发导航」。
  *
- * 背景（docs/discard/NAVIGATION_FREEZE_FIX_REPORT.md）：
+ * 背景（历史审计报告 NAVIGATION_FREEZE_FIX_REPORT，结论蒸馏于此）：
  * NavHost 的 AnimatedContent 转场运行期间，进出栈的 NavBackStackEntry 仅处于 STARTED；
  * 此时修改导航栈会让「被 pop 的页面内容仍留在组合中可见（波纹有效、点击失效）」——
  * navigation-compose 2.8.x 在快速进出压力下会形成不可恢复的栈/转场失步（整页失去事件响应）。

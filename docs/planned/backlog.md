@@ -25,7 +25,7 @@
 | F5 | 考虑新 UI 依赖方向：`main.lua` 中 `AlertDialogBuilder = MaterialAlertDialogBuilder` 的全局替换完整度检查 | 低 | 全局变量、Material3 |
 | F6 | **R8 收缩 + baseline profile**（V2 报告阶段 A 遗留） | 中 | `R8` `baseline profile` `ProGuard` |
 | F7 | **性能优化阶段 C**：诊断 tooltip、原生 SnippetController、增量保存 | 中 | `SnippetController`、增量保存、诊断 tooltip |
-| F8 | **编辑器功能完善至 sora-editor 原生上限**（任务单 `docs/planned/EDITOR_FEATURE_COMPLETION_WORK_ORDER.md`）：P0 设置中心 21 项全集（通用设置页仅留入口）/ P1 原生 SnippetController·诊断 tooltip·多错误聚合·折叠验证·文本操作增强·整词搜索·标识符补全·迷你地图 / P2 R8+baseline profile·降级矩阵扩展·基准脚本 / P3 sora-editor CI 更新管线（每周自动 PR+一致性校验）+R1 grep 入 CI | 高 | `编辑器设置`、`SnippetController`、`诊断 tooltip`、`迷你地图`、`baseline profile`、`update-sora-editor` |
+| F8 | **编辑器功能完善至 sora-editor 原生上限**（历史任务单 EDITOR_FEATURE_COMPLETION_WORK_ORDER，已蒸馏）：P0 设置中心 21 项全集（通用设置页仅留入口）/ P1 原生 SnippetController·诊断 tooltip·多错误聚合·折叠验证·文本操作增强·整词搜索·标识符补全·迷你地图 / P2 R8+baseline profile·降级矩阵扩展·基准脚本 / P3 R1 grep 入 CI | 高 | `编辑器设置`、`SnippetController`、`诊断 tooltip`、`迷你地图`、`baseline profile` |
 
 ## 3. 风险与备忘
 
@@ -38,4 +38,4 @@
 ---
 
 > 新任务登记格式建议：`### [F8] 任务标题` + 优先级 + 关联文件 + 验收标准
-> 关联：[tasks/README.md](../README.md)
+> 关联：根目录 `README.md`（docs 入口为 `docs/README.md`）

@@ -32,10 +32,6 @@ object PermissionResolver {
         return PREFIX + simple
     }
 
-    /** 是否为特殊权限（悬浮窗/系统设置/安装/忽略电池优化/外部存储/使用统计…）。 */
-    fun isSpecial(permission: String): Boolean =
-        SPECIAL_PERMISSIONS.contains(permission.removePrefix(PREFIX))
-
     /**
      * 是否为可运行时请求的权限（非特殊权限/非 manifest 权限）。
      * 特殊权限（SYSTEM_ALERT_WINDOW/WRITE_SETTINGS/MANAGE_EXTERNAL_STORAGE…）
@@ -52,9 +48,6 @@ object PermissionResolver {
     /** 仅保留可运行时请求的权限（过滤掉特殊权限）。 */
     fun runtimeRequestable(declared: List<String>): List<String> =
         declared.filter(::isRuntimeRequestable)
-
-    /** 特殊权限（裸名，不含前缀）。与 [isSpecial]/[isRuntimeRequestable] 共用。 */
-    val specialPermissionNames: Set<String> get() = SPECIAL_PERMISSIONS
 
     private val SPECIAL_PERMISSIONS = setOf(
         "SYSTEM_ALERT_WINDOW",

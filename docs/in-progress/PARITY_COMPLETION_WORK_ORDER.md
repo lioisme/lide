@@ -5,11 +5,11 @@
 | 文档版本 | 1.0 |
 | 创建日期 | 2026-08-01 |
 | 文档代号 | PARITY-COMPLETION |
-| 审计依据 | `docs/discard/FULL_AUDIT_REPORT_2026-08-01.md`（P0/P1/P2 差异清单） |
+| 审计依据 | 全量审计报告（FULL_AUDIT_REPORT_2026-08-01：P0/P1/P2 差异清单；结论蒸馏进 docs/kb/） |
 | 参考实现 | `reference/androlua/AndroLua_pro-master/`（4.4.2，IDE 全 Lua 实现） |
 | 总目标 | **pro 有的管理功能 lide 原则上也要有，但以 Kotlin/Java 原生实现**；引擎运行时层已 100% 对齐，本任务只补宿主 IDE 层 |
 | 硬性约束 | AGENTS.md R1/R2（`:editor` 纯文本级、`luajava\|androlua\|loadLibrary` 零命中）、`:app` 同进程运行口径、`user_permission` 等 init.lua 语义、W^X dex 内存加载 |
-| 文档状态 | 定稿（WP 执行状态按 `PROGRESS.md` 登记） |
+| 文档状态 | 定稿（WP 执行状态按完成登记字段更新） |
 | 完成登记 | **13/19 已完成**（WP-001/002/003/004/005/008/013/014/015/016/017/018/019；2026-08-05 按代码实况补登 WP-005/013/015/016/018，其中 WP-014 代码落地未真机验收）；剩余 WP-006/007/009/010/011/012（未开工） |
 
 ---
@@ -131,7 +131,7 @@ lide 引擎运行时层与 pro **已 100% 对齐且为超集**（`com.luajava`/`
 
 ##### 问题描述
 
-当前工作区（未提交 WIP，`docs/discard/EDITOR_DRAWER_AUDIT_REPORT.md` Phase 0~5 已完成、Phase 6 验证未执行）无法编译：
+当前工作区（未提交 WIP，历史审计 EDITOR_DRAWER_AUDIT_REPORT Phase 0~5 已完成、Phase 6 验证未执行）无法编译：
 
 1. `EditorScreen.kt:179` 引用不存在的 `NavigationDrawerPanel`、`:191` 引用不存在的 `EditorBody`（两组件在全仓与 git 历史中均无定义）；
 2. `EditorScreen.kt:8,76` 使用 `androidx.activity.compose.LocalActivity`，需 activity-compose ≥ 1.10，工程锁定 `1.9.3`（`app/build.gradle.kts:118`）；
@@ -666,7 +666,11 @@ pro `bin.lua`（398 行）：以宿主 APK 为模板重打包——luac 编译�
 
 ### WP-018 字号/Tab 设置 UI + 帮助手册
 
-> **（已完成）2026-08-05**：SettingsScreen.kt:186-197 字号/Tab 设置；HelpScreen.kt + HelpParser.kt 帮助手册（@章节@ 结构化渲染）。验收证据：代码实况核对；待真机回归补充。
+> **（部分完成）2026-08-05 字号/Tab 设置；帮助手册未落地（2026-08-09 审计收口）**：
+> SettingsScreen.kt 字号/Tab 设置已完成；「HelpScreen.kt + HelpParser.kt 帮助手册」**从未实现**（源码不存在），
+> 工作单原登记为已完成属文档漂移。2026-08-09 全量审计：`assets-zh/help.txt`（59 行 @章节@ 帮助文本，
+> 仅中文本、无代码消费、无 gradle sourceSet 配置、默认不进 APK）已删除；帮助页任务仍待实现，重开后
+> 平移 pro `help.lua`（1329 行）为 `assets/help.txt`（en + zh 双份）+ Compose 章节渲染，入口设于设置页。
 
 | 属性 | 值 |
 |---|---|

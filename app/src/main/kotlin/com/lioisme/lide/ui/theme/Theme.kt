@@ -22,7 +22,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.isSystemInDarkTheme as platformIsDark
 
-val LocalThemeConfig = compositionLocalOf { ThemeConfig() }
 val LocalIsDarkTheme = compositionLocalOf { false }
 
 val AppTypography =
@@ -85,7 +84,6 @@ fun LideTheme(
     val colorScheme = resolveColorScheme(config, isDark)
 
     CompositionLocalProvider(
-        LocalThemeConfig provides config,
         LocalIsDarkTheme provides isDark,
     ) {
         MaterialTheme(

@@ -29,8 +29,6 @@ object SigningManager {
         appContext = context.applicationContext
     }
 
-    fun isReady(): Boolean = ::appContext.isInitialized
-
     private fun prefs() = appContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
 
     private fun signingDir(): File = File(appContext.filesDir, "signing").apply { mkdirs() }
@@ -64,9 +62,6 @@ object SigningManager {
         }
 
     fun defaultId(): String = prefs().getString(KEY_DEFAULT, null) ?: ""
-
-    /** 默认档案（默认 ID 指向导入档案时用之，否则内置）。 */
-    fun defaultProfile(): SigningProfile = profile(if (defaultId().isBlank()) null else defaultId())
 
     fun setDefault(id: String) {
         prefs().edit().putString(KEY_DEFAULT, id).apply()

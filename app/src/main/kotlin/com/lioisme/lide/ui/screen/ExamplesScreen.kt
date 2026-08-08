@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.material3.*
@@ -20,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import com.androlua.LuaApplication
 import com.lioisme.lide.R
 import com.lioisme.lide.project.AlpManager
-import com.lioisme.lide.editor.TipIconButton
 import com.lioisme.lide.import.AlpImportCoordinator
 import com.lioisme.lide.ui.theme.LideTopBar
 import kotlinx.coroutines.Dispatchers

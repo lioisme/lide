@@ -51,10 +51,9 @@ jobs:
         uses: android-actions/setup-android@v3
 
       - name: Run JVM unit tests
-        # :androlua tests included (P2#17): AXml manifest patch round-trip against
-        # regenerated aapt2 fixture + Lua compiler/config/permission resolvers.
-        # :editor tests merged into :app since 2026-08-08 (editor module merged).
-        run: ./gradlew :app:testX64DebugUnitTest :androlua:testDebugUnitTest
+        # :app 单模块全量单测（2026-08-08 :editor 模块并单后并入；AXml manifest
+        # round-trip / Lua compiler / config / permission resolvers 均在此）。
+        run: ./gradlew :app:testX64DebugUnitTest
 
   build-arm64:
     name: Build ARM64 APK
@@ -142,10 +141,12 @@ jobs:
         run: |
           yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --install 'ndk;29.0.14206865'
 
-      - name: Build release + verify Lua-visible API surface + minimalism gate
+      - name: Build release + verify minimalism gate
         # verifyMinimalism（2026-08-07）：release APK 载荷体检——无 jniLibs 预编译回包、
-        # 无重复原生库、默认零内置示例；与 verifyReleaseLuaSurface 共享一次 assembleArm64Release。
-        run: ./gradlew verifyReleaseLuaSurface verifyMinimalism
+        # 无重复原生库、默认零内置示例、引擎 dex 根目录单份（旧 runtime 形态回归即失败）。
+        # 2026-08-09 引擎 dex 单份化后 Lua 可见 API 面断言并入 verifyMinimalism，
+        # verifyReleaseLuaSurface 任务已删除（历史引用勿回退）。
+        run: ./gradlew verifyMinimalism
 
   verify-no-binaries:
     name: Verify No Prebuilt Binaries in Repo
@@ -204,3 +205,11 @@ jobs:
       # third-party deps in :androlua build script, vendored builds self-contained).
       - name: Run verifyVendorIsolation gate
         run: ./gradlew :app:verifyVendorIsolation
+
+      # Full-tree diff gate (2026-08-09, user red line: no undisclosed upstream
+      # modification): every vendor Java file must be pristine OR listed in the
+      # ledger (scripts/upstream-pristine.json = machine copy of UPSTREAM.md).
+      # Upstream tree is fetched from GitHub codeload at the pinned ref, never
+      # stored in the repo (R5). Local Windows twin: verify-upstream-pristine.ps1.
+      - name: Verify upstream pristine whitelist (full-tree diff)
+        run: bash scripts/verify-upstream-pristine.sh

@@ -1,15 +1,15 @@
 # lide 编辑器知识库
 
-> 来源：`EDITOR_CRASH_ANALYSIS_REPORT.md`、`EDITOR_DRAWER_AUDIT_REPORT.md`、`EDITOR_PERFORMANCE_AUDIT_REPORT.md`、
-> `EDITOR_PERFORMANCE_AUDIT_V2_REPORT.md`、`EDITOR_UI_ALIGNMENT_WORK_ORDER.md`、`AGENTS.md`。
+> 来源：历史审计报告（`EDITOR_CRASH_ANALYSIS_REPORT.md`、`EDITOR_DRAWER_AUDIT_REPORT.md`、`EDITOR_PERFORMANCE_AUDIT_REPORT.md`、
+> `EDITOR_PERFORMANCE_AUDIT_V2_REPORT.md`，均已删除，结论蒸馏于此）、`EDITOR_UI_ALIGNMENT_WORK_ORDER.md`（进行中）、`AGENTS.md`。
 
 ---
 
 ## 1. 技术底座与铁律
 
-- 编辑器 = `:editor` 模块（纯 Kotlin/Java）+ sora-editor + TextMate Lua 语法；R1 边界零命中（含注释）。
+- 编辑器 = `com.lioisme.lide.editor` 包（2026-08-08 `:editor` 模块并单并入 `:app`；纯 Kotlin）+ sora-editor + TextMate Lua 语法；R1 边界零命中（含注释）。
 - **初始化顺序（官方 demo 顺序，勿改）**：`colorScheme` → `setEditorLanguage` → `setText`。
-- **TextMate 只经 `TextMateInitializer`（进程级一次性）**，不得在 UI 线程调用；已预热到进程启动（`LideApp` + `CountDownLatch`）。
+- **TextMate 只经 `TextMateRuntime`（进程级一次性，`preload` 幂等触发；状态机 Loading/Ready/Failed，失败展示错误态 + 重试）**，不得在 UI 线程调用；已预热到进程启动（`LideApp`）。
 - 编辑器 API（setText / diagnostics 赋值 / subscribeEvent 回调）保持主线程；文本快照可在后台线程取（`Content.toString` 内部 ReadWriteLock）。
 - 自动保存：快照 + 写盘均 `Dispatchers.IO`，`onRelease` 兜底保存（修过 dispose 顺序丢改动）。
 - 大文件（>200 KB）降级矩阵（任务单 §6.3，LuaEditor.applyConfig）：关自动换行 / 括号高亮 / 当前块高亮 / minimap / stickyScroll / 光标动画 / 行号面板，跳过行级诊断与标识符补全，undo 栈降至 200。
@@ -27,10 +27,10 @@
 |----|------|
 | 根因 | `LuaDiagnostics` 从宿主导入 `com.luajava.LuaStateFactory` 进打字热路径（500ms 防抖 → 原生 LuaState 创建/关闭 → GC finalize 双关） |
 | 崩溃向量 | ① `LuaState.close()` 无防重入 + `finalize()` 二次 `_close(0)` → SIGSEGV；② `newLuaState()` 在 try 外；③ GBK 错误消息经 `NewStringUTF` → SIGABRT——均不可被 Java 捕获 |
-| 修复 | `:editor` 独立 Gradle 模块（编译期强制隔离）；纯 Kotlin 校验器重写 `LuaDiagnostics.kt`；AGENTS.md 写入 R1~R4；全部 try/catch(Throwable) 降级 |
+| 修复 | 编辑器独立包 `com.lioisme.lide.editor`（并入 `:app` 后仍保持包级隔离，编译期强隔离由 R1 门禁兜底）；纯 Kotlin 校验器重写 `LuaDiagnostics.kt`；AGENTS.md 写入 R1~R4；全部 try/catch(Throwable) 降级 |
 | 现状 | `ui/editor/` 7 文件对 `com.androlua.*`/`com.luajava.*` 引用 0；全 app `com.luajava` 引用 0 |
 
-### 2.2 抽屉三缺陷（`EDITOR_DRAWER_AUDIT_REPORT.md`）
+### 2.2 抽屉三缺陷（历史审计 `EDITOR_DRAWER_AUDIT_REPORT`，已删）
 
 | 缺陷 | 根因 | 修复 |
 |------|------|------|
@@ -59,7 +59,7 @@
 | 打字 | `editTick` StateFlow 事件驱动（EditorSession.kt:74-75,173），无每键整屏重组 | 稳态无重组已达成 |
 | 打开文件 | `Content` 构造注入 IO 线程，77KB 首帧开耗已移除 UI 线程 | device 基准可用 `scripts/perf-check.ps1 -Scenario open` |
 | 搜索 | 结果事件下沉 SearchBar，过滤在 `Dispatchers.Default`，整词已支持 | — |
-| 冷启动 | release 已开 R8（`verifyReleaseLuaSurface` 门禁防反射面破坏）+ baseline profile（`app/src/main/baseline-prof.txt` + profileinstaller，启动/编辑器首帧/打字路径） | baseline 收益待同机 A/B（`-Scenario cold`） |
+| 冷启动 | release 已开 R8（引擎 dex 单份化后 Lua 可见 API 面断言并入 `verifyMinimalism`）+ baseline profile（`app/src/release/baseline-prof.txt` + profileinstaller，启动/编辑器首帧/打字路径） | baseline 收益待同机 A/B（`-Scenario cold`） |
 | 大文件 | undo 栈 200，minimap/stickyScroll/光标动画/行号面板/标识符补全随 >200KB 强关（§6.3 全矩阵落地） | — |
 | 代码折叠 | **无交互（事实记录）**：vendored 0.24.6 无任何折叠交互代码（`FoldingRegion` 死代码），仅块线渲染；上游 0.25+ 引入 | P3 升级管线后可复核 |
 
@@ -72,10 +72,10 @@
 
 ### 4.1 已存在（阶段 B 部分落地）
 
-`:editor`：`EditorTabs.kt`、`SearchBar.kt`（整词搜索）、`EditorToolbar.kt`、`LuaEditor.kt`、`LuaLanguage.kt`、`LuaDiagnostics.kt`（多错误聚合 + quickfix）、`LuaSnippetManager.kt`、`TextMateInitializer.kt`、`EditorConfig.kt`（21 项全量配置）、`EditorTextOps.kt`（selectLine/deleteLine/duplicateLine/toggleCase/词级移动）
+`com.lioisme.lide.editor`：`EditorTabs.kt`、`SearchBar.kt`（整词搜索）、`EditorToolbar.kt`、`LuaEditor.kt`、`LuaLanguage.kt`、`LuaDiagnostics.kt`（多错误聚合 + quickfix）、`LuaSnippetManager.kt`、`TextMateRuntime.kt`、`EditorConfig.kt`（21 项全量配置）、`EditorTextOps.kt`（selectLine/deleteLine/duplicateLine/toggleCase/词级移动）
 `:app`：`session/EditorSession.kt`（StateFlow 会话 + Content 缓存）、`EditorScreen.kt`、`ui/screen/EditorSettingsScreen.kt`（编辑器独立设置页：21 项设置分组通用/编辑/视图/输入 + 顶栏恢复默认按钮）、`ui/screen/SettingsScreen.kt`（主设置页四分区：显示/编辑器/AndroLua/通用（权限管理/语言/关于），编辑器与 AndroLua 独立入口）、`ui/screen/AndroLuaSettingsScreen.kt`（AndroLua 工具页：API 浏览器/示例；插件功能 2026-08-07 按用户要求移除）、`ui/theme/SettingsManager.kt`（21 键持久化 `lide_editor` 命名空间 + `resetEditor` 恢复默认）
 
-### 4.2 剩余差距（按 `EDITOR_UI_ALIGNMENT_WORK_ORDER.md`，内部 WP 编号与 PROGRESS 是两套体系）
+### 4.2 剩余差距（按 `EDITOR_UI_ALIGNMENT_WORK_ORDER.md`）
 
 | WP | 内容 | 状态 |
 |----|------|------|
@@ -102,8 +102,8 @@
 ```
 编译：  .\gradlew.bat :app:compileArm64DebugKotlin --console=plain
 构建：  .\gradlew.bat :app:assembleX64Debug --console=plain（模拟器可装）
-R1：    rg -n "luajava|androlua|loadLibrary" editor/src   # 零命中（已并入 CI job verify-r1）
-单测：  .\gradlew.bat :editor:testDebugUnitTest（LuaDiagnosticsTest 24 例等）
+R1：    rg -n "luajava|androlua|loadLibrary" app/src/main/kotlin/com/lioisme/lide/editor   # 零命中（已并入 CI job verify-r1）
+单测：  .\gradlew.bat :app:testX64DebugUnitTest（LuaDiagnosticsTest 24 例已并入 :app 等）
 回归：  scripts/adb_regress.ps1（4 工程矩阵）；scripts/perf-check.ps1（性能基准）
 ```
 
@@ -114,4 +114,4 @@ R1：    rg -n "luajava|androlua|loadLibrary" editor/src   # 零命中（已并�
 
 ## 7. sora-editor 版本台账索引
 
-上游收纳与分层台账见 `third_party/sora-editor/README.md`（当前 0.24.6，`VERSION` 文件维护）。升级路径：`scripts/update-sora-editor.ps1`（手动）/ `.github/workflows/update-sora-editor.yml`（每周自动 PR + verify-vendor 一致性校验）。
+上游收纳与分层台账见 `app/vendor/sora-editor/README.md`（当前 0.24.6）。升级路径（2026-08-09 全量审计：`scripts/update-sora-editor.ps1` + `.github/workflows/update-sora-editor.yml` 已删除——third_party 迁址后断链且每周必失败；sora 为源码 vendor，上游改动一致性由 `scripts/verify-upstream-pristine.sh`（verify-vendor job）兜底）。

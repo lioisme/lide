@@ -1,7 +1,8 @@
 lide 是 AndroLua 衍生项目：Kotlin + Jetpack Compose 实现的宿主 IDE（`:app`，位于 `app/`），
-内置 sora 编辑器模块（`:editor`），以 AndroLua C 原生引擎源码（`app/src/main/cpp/`）为
-Lua 编译与运行底座（由 AGP `externalNativeBuild` 在 `assemble` 时直接从源码构建并打包进 APK），
-工程格式兼容 AndroLua `.alp` 规范。
+编辑器代码在 `com.lioisme.lide.editor` 包（2026-08-08 独立 `:editor` 模块已并单），
+内置 sora 编辑器源码模块（`:sora-editor`，vendored 于 `app/vendor/`），以 AndroLua C 原生
+引擎源码（`app/src/main/cpp/`）为 Lua 编译与运行底座（由 AGP `externalNativeBuild` 在
+`assemble` 时直接从源码构建并打包进 APK），工程格式兼容 AndroLua `.alp` 规范。
 
 > 进入任何开发工作前，先读 [AGENTS.md](AGENTS.md)（评审硬门槛与架构边界）与
 > [docs/README.md](docs/README.md)（文档中心入口）。
@@ -12,11 +13,9 @@ Lua 编译与运行底座（由 AGP `externalNativeBuild` 在 `assemble` 时直�
 
 | 目录 | 角色 |
 |---|---|
-| `app/` | **宿主应用**（`:app`）：Compose IDE、EngineActivity、打包器、设置持久化 |
-| `editor/` | **编辑器模块**（`:editor`）：纯 Kotlin 文本能力（行级诊断/补全/高亮/搜索），不触碰原生引擎 |
-| `scripts/` | **脚本统一目录**：内置示例源（`examples-src/`，构建时由 `:app:generateExamples` 生成 `.alp`）、双端回归 `adb_regress.ps1`、4 变体打包 `build-apks.bat/.ps1` |
-| `third_party/` | **上游库统一收纳**（只读，后续新增上游库一律入此）：`androlua/`（Gradle 模块 `:androlua`）、`patches/`（material3 SearchBar 实验补丁） |
-| `docs/` | **文档中心**：进度台账（`PROGRESS.md`）、白皮书（`WHITEPAPER.md`）、知识库（`kb/`，唯一事实来源）、进行中/计划中（`in-progress|planned`）、丢弃区（`discard/`，已完成/过时文档唯一出口）、参考基线（`reference/`，gitignore 排除、不提交、只读） |
+| `app/` | **宿主应用**（`:app`）：Compose IDE、编辑器包（`com.lioisme.lide.editor`）、EngineActivity、打包器、设置持久化；引擎 C 源码（`app/src/main/cpp/`）、上游模块（`app/vendor/`：`:androlua`、`:sora-editor`） |
+| `scripts/` | **脚本统一目录**：内置示例源（`examples-src/`，构建时由 `:app:generateExamples` 生成 `.alp`）、双端回归 `adb_regress.ps1`、打包矩阵 `build-apks.ps1`、上游全树差异门禁 `verify-upstream-pristine.*` |
+| `docs/` | **文档中心**：白皮书（`WHITEPAPER.md`）、知识库（`kb/`，唯一事实来源）、进行中/计划中（`in-progress|planned`）、社区语料库（`kb/androlua-community/`）、参考基线（`reference/`，gitignore 排除、不提交、只读） |
 | `gradle/` `gradlew*` `settings/build.gradle` | Gradle 工程骨架 + 根级构建脚本 |
 
 ## 常用入口
@@ -26,8 +25,8 @@ Lua 编译与运行底座（由 AGP `externalNativeBuild` 在 `assemble` 时直�
 | 评审红线 / 硬规则 | [AGENTS.md](AGENTS.md) |
 | 文档总索引（谁都看，先读它） | [docs/README.md](docs/README.md) |
 | 知识库（是什么/为什么/在哪改） | [docs/kb](docs/kb/README.md) |
-| 任务看板（做到哪了） | [docs/TASKS.md](docs/TASKS.md) |
-| 引擎工程账单（WP 台账） | [docs/PROGRESS.md](docs/PROGRESS.md) |
+| 任务与技术债（做什么） | [docs/planned/backlog.md](docs/planned/backlog.md) |
+| 进行中工作（做到哪） | [docs/in-progress](docs/in-progress/) |
 | 产品架构白皮书 | [docs/WHITEPAPER.md](docs/WHITEPAPER.md) |
 
 ## 常用命令
@@ -35,7 +34,7 @@ Lua 编译与运行底座（由 AGP `externalNativeBuild` 在 `assemble` 时直�
 ```powershell
 .\gradlew.bat :app:compileArm64DebugKotlin   # Kotlin 编译检查
 .\gradlew.bat :app:assembleArm64Debug        # 完整构建（arm64；原生引擎由 AGP 从 app/src/main/cpp/ 自动构建）
-.\scripts\build-apks.ps1                       # 4 个变体 APK（x64/arm64 × Debug/Release）
+.\scripts\build-apks.ps1                       # 6 个变体 APK（x64/arm64/universal × Debug/Release）
 ```
 
 ## 二进制策略
@@ -49,10 +48,12 @@ Lua 编译与运行底座（由 AGP `externalNativeBuild` 在 `assemble` 时直�
 ## 许可证
 
 - 本仓库基于 [GPL-3.0](LICENSE) 发布（含 vendored AndroLua C 引擎与 Java 运行时源码，皆 GPL 派生）。
-- ⚠️ `app/keystore.jks` + `app/keystore.properties` 为**项目本地自签测试密钥**（密码随仓库公开），仅用于本机/CI 构建签名一致；**对外发布必须更换**真实签名密钥，且不得入库。
+- ⚠️ 签名密钥治理（2026-08-09）：`app/keystore.jks` + `app/keystore.properties` **不入库**（gitignored，
+  模板见 `app/keystore.properties.example`，CI 由 secrets 注入）；缺失时 release 回落 debug 签名。
+  **对外发布必须更换**真实签名密钥。
 
 ## 约定
 
-- 上游库与参考基线只读：`third_party/`（`androlua`、`patches`，构建模块）、`reference/`（参考基线 / 验收素材 / 社区语料，不提交）。
-- 新增上游库统一放 `third_party/<库名>/`，并登记到 [settings.gradle.kts](settings.gradle.kts)（模块型库用 `projectDir` 指向）。
-- 新增文档一律落入 `docs/in-progress|planned|discard|kb`（任务文档完成后 `git mv` 至 `discard/` 并在索引登记），禁止在 `docs/` 根直接新增 `.md`。
+- 上游库与参考基线只读：`app/vendor/`（`:androlua`、`:sora-editor`，构建模块）、`reference/`（参考基线 / 验收素材 / 社区语料，不提交）。
+- 新增上游库统一放 `app/vendor/<库名>/`，并登记到 [settings.gradle.kts](settings.gradle.kts)（模块型库用 `projectDir` 指向）。
+- 新增文档一律落入 `docs/in-progress|planned|kb`，禁止在 `docs/` 根直接新增 `.md`（`README.md`、`WHITEPAPER.md` 除外）。

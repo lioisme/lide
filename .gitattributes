@@ -1,5 +1,4 @@
 # 统一行尾：文本 LF 入库；Windows 批处理 CRLF；二进制禁止转换
-# 详见 docs/in-progress/REPO_HARDENING_WORK_ORDER.md T5
 * text=auto
 
 # 文本：强制 LF（含 C/C++ 源、脚本、文档、数据）

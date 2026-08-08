@@ -188,10 +188,6 @@
     <string name="example_name_testjson">TestJson</string>
     <string name="example_desc_testjson">dkjson encode/decode tests</string>
 
-
-    <string name="cannot_read_file">Cannot read file</string>
-    <string name="error_prefix">Error: %1$s</string>
-
     <!-- Permission catalog -->
     <string name="perm_read_external_storage">Read external storage</string>
     <string name="perm_write_external_storage">Write external storage</string>
@@ -283,7 +279,6 @@
     <string name="accessibility_service_description">LIDE 无障碍服务：为 Lua 脚本提供自动化能力（点击、滑动、截图）。</string>
     <!-- API browser (WP-008) -->
     <string name="api_browser">API Browser</string>
-    <string name="api_browser_subtitle">Browse Java classes exposed to Lua</string>
     <string name="api_search_hint">Search class name…</string>
     <string name="api_member_filter_hint">Filter members…</string>
     <string name="api_loading">Building index…</string>
@@ -345,7 +340,6 @@
     <string name="signing_gen_street">Street address</string>
     <string name="signing_gen_postal">Postal code</string>
     <string name="signing_gen_c_invalid">Country code must be two letters</string>
-    <string name="signing_gen_validity_invalid">Validity must be 1–%1$d years</string>
     <string name="signing_gen_email_invalid">Invalid email address</string>
     <string name="signing_generated">New signing key generated</string>
     <string name="signing_name">Profile name</string>
@@ -373,7 +367,6 @@
     <string name="build_signature">Signature</string>
     <string name="build_manage_signing">Manage</string>
     <string name="build_signature_value">%1$s</string>
-    <string name="build_signature_scheme">Scheme: %1$s</string>
     <string name="build_opt_compile_label">Compile Lua files</string>
 
 <!-- AndroLua merged page (packaging) -->

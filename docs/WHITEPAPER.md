@@ -280,7 +280,7 @@ EngineActivity (extends LuaActivity, 独立 Activity 栈)
 - **应用内自生成**：`SigningCrypto.generate` 零依赖手写 X.509 v3 自签证书 DER（RSA-2048 + PKCS12，别名 `lidekey`；密码可留空自动生成 12 位随机）——注意 version 字段必须 `[0] EXPLICIT`（`A0 03 02 01 02`）包装，裸 INTEGER 会被 OpenJDK 解析器误读为 serialNumber 导致 `algid parse error`
 - **v1 / v2 / v3 签名**：统一走 Google 官方 apksig（AGP 同源，`setMinSdkVersion(24)`），非自研/非 BouncyCastle
 
-Lua 打包双开关（`BuildOpts`，均默认开、互相独立）：`compileLua` = 全部工程 `.lua`（含 main.lua）编译为字节码，关 = 源码文本入库；`encryptBytecode` = 对入库的每个 Lua 文件 DES-ECB 加密（MAGIC `LIDE\x01\0\0\0` + 固定 8 字节密钥，编译开加密字节码、编译关加密源码文本），运行端 `luaL_loadfilex` 快路径自动解密（详见 `docs/planned/BUILD_SIGNING_ENCRYPTION_WORK_ORDER.md` §4）。
+Lua 打包双开关（`BuildOpts`，均默认开、互相独立）：`compileLua` = 全部工程 `.lua`（含 main.lua）编译为字节码，关 = 源码文本入库；`encryptBytecode` = 对入库的每个 Lua 文件 DES-ECB 加密（MAGIC `LIDE\x01\0\0\0` + 固定 8 字节密钥，编译开加密字节码、编译关加密源码文本），运行端 `luaL_loadfilex` 快路径自动解密（加密格式唯一事实源：AGENTS.md「打包构建约定」，密钥 `{0xFF,0xDD,0xBB,0x99,0x77,0x55,0x33,0x11}`）。
 
 ---
 
@@ -376,7 +376,7 @@ APK——不设 jniLibs 缓存目录，也无 rebuild 脚本（R5）。
 
 ## 7.1 原生模块差异声明（2026-08-01）
 
-> 对应 `docs/discard/LIBS_SUPPORT_WORK_ORDER.md` LIBS-003 的最终结论。
+> 对应 `/libs` 机制约定的最终结论（AGENTS.md「/libs 机制约定」）。
 
 与 AndroLua_pro（`jni/` 19 个 C 模块源码随 APK 打包）相比，lide 内置原生模块为 **17 个 × 3 ABI**（15 个原有 + lfs + lsqlite3 已补齐）：
 

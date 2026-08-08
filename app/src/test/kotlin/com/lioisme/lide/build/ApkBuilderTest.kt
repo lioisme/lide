@@ -3,6 +3,7 @@ package com.lioisme.lide.build
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.io.ByteArrayOutputStream
@@ -382,9 +383,9 @@ class ApkBuilderTest {
         )
     }
 
-    // ── P0 运行时基座（dex 直用宿主，ENGINE_DEX_MARKER 仅作引擎存在性判定）────────
+    // ── P0 运行时基座（dex 直用宿主，2026-08-09 无条件形态：引擎并入单 dex 集）────────
 
-    /** 宿主 APK 根目录含引擎 dex + 标记资产（injectEngineDex 产物形态）。 */
+    /** 宿主 APK 根目录含多份 dex + 旧标记资产（历史 injectEngineDex 产物形态，作回归输入）。 */
     private fun hostApkWithRuntimeDexAsset(): ByteArray {
         val manifest = loadResource("manifest_sample.bin")
         val out = ByteArrayOutputStream()
@@ -398,12 +399,12 @@ class ApkBuilderTest {
                 zos.closeEntry()
             }
             put("AndroidManifest.xml", manifest)
-            // 宿主根目录全量 dex：多 dex（仅 IDE 类，:androlua 为 compileOnly 不进宿主 dex）。
+            // 宿主根目录全量 dex（引擎类已随 implementation 并入此集合）。
             put("classes.dex", "host-dex-full-ide".toByteArray())
             put("classes2.dex", "host-dex2-more-ide".toByteArray())
             put("classes3.dex", "engine-dex-only".toByteArray())
-            // 引擎 dex 定位标记：内容 = 引擎 dex 根条目名（非 dex 资产，injectEngineDex 写入）。
-            put(ApkBuilder.ENGINE_DEX_MARKER, "classes3.dex".toByteArray())
+            // 旧引擎 dex 定位标记（历史 injectEngineDex 产物形态）：残留即回归信号。
+            put("assets/engine.dex.idx", "classes3.dex".toByteArray())
             put("resources.arsc", "arsc-bytes".toByteArray())
             put("assets/lua/bin.lua", "-- host bin".toByteArray())
             put("assets/examples/demo.alp", "fake alp payload".toByteArray())
@@ -414,9 +415,9 @@ class ApkBuilderTest {
     }
 
     @Test
-    fun `host dex entries kept intact when engine dex present`() {
-        // P0-7：产物直用宿主全量根 dex（IDE 类 + 引擎类原样保留，接受多余内容），
-        // 标记仅作引擎存在性判定（manifest 回落 LuaApplication / 移除 IDE MainActivity）。
+    fun `host dex entries kept intact`() {
+        // 2026-08-09：产物直用宿主全量根 dex（IDE 类 + 引擎类原样保留，接受多余内容）；
+        // 无任何 dex 选取/替换逻辑，旧标记资产即便残留也被 default-deny 剔除。
         val apk = ApkBuilder.build(hostApkWithRuntimeDexAsset(), input(), key, cert, compileLua = fakeCompiler())
         val entries = entriesOf(apk)
 
@@ -427,8 +428,8 @@ class ApkBuilderTest {
         // 引擎 Lua 库 / 原生库仍来自宿主（模板 = 宿主自身）。
         assertEquals("-- host bin", String(entries.getValue("assets/lua/bin.lua")))
         assertEquals("lj-host-arm", String(entries.getValue("lib/arm64-v8a/libluajava.so")))
-        // 定位标记属宿主构建元数据，任何产物一律不带。
-        assertTrue(ApkBuilder.ENGINE_DEX_MARKER !in entries)
+        // 旧引擎 dex 标记属历史构建元数据，产物一律不带。
+        assertTrue("assets/engine.dex.idx" !in entries)
         // 宿主 IDE 专属资产同样剔除（default-deny 语义延续）。
         assertTrue("assets/examples/demo.alp" !in entries)
     }
@@ -450,48 +451,71 @@ class ApkBuilderTest {
     }
 
     @Test
-    fun `engine dex marker with illegal content keeps host form`() {
-        // 标记内容非 classes\d*.dex（防任意路径注入）→ 引擎存在性为假，
-        // manifest 不回落（保持宿主形态），dex 仍全量原样保留。
-        val host =
-            syntheticHostApk().let {
-                ByteArrayOutputStream().apply {
-                    ZipOutputStream(this).use { zos ->
-                        fun put(
-                            name: String,
-                            bytes: ByteArray,
-                        ) {
-                            zos.putNextEntry(ZipEntry(name))
-                            zos.write(bytes)
-                            zos.closeEntry()
-                        }
-                        ZipInputStream(it.inputStream()).use { zis ->
-                            var e = zis.nextEntry
-                            while (e != null) {
-                                put(e.name, zis.readBytes())
-                                e = zis.nextEntry
-                            }
-                        }
-                        put(ApkBuilder.ENGINE_DEX_MARKER, "assets/evil.dex".toByteArray())
-                    }
-                }.toByteArray()
-            }
-        val apk = ApkBuilder.build(host, input(), key, cert, compileLua = fakeCompiler())
-        val entries = entriesOf(apk)
-        assertEquals("dex-bytes", String(entries.getValue("classes.dex")))
-        assertTrue(ApkBuilder.ENGINE_DEX_MARKER !in entries)
+    fun `manifest unconditionally falls back to runtime application`() {
+        // 2026-08-09：引擎类恒随宿主 dex 集进入产物，无「无引擎」形态——
+        // 宿主即便不含任何 dex 标记，manifest 也无条件回落引擎 Application
+        // 并移除 IDE 主入口（类均存在，无解析风险）。
+        val apk =
+            ApkBuilder.build(
+                hostApkWithRuntimeDexAsset(),
+                input().copy(launcherActivity = "com.lioisme.lide.engine.EngineActivity"),
+                key,
+                cert,
+                compileLua = fakeCompiler(),
+            )
+        val manifest = entriesOf(apk)["AndroidManifest.xml"]!!
+
+        assertEquals("com.lioisme.lide.engine.EngineActivity", AXmlManifest.readLauncherActivity(manifest))
+        assertTrue("LuaApplication 必须进入 manifest", "com.androlua.LuaApplication" in readPoolStrings(manifest))
+        assertNull("MainActivity 必须整树移除", AXmlManifest.readExported(manifest, "com.lioisme.lide.MainActivity"))
     }
 
-    @Test
-    fun `host fallback when no embedded runtime dex`() {
-        // 宿主无引擎 dex 标记/条目 → 引擎存在性为假，保持宿主 manifest，
-        // dex 全量原样保留（pro 模板语义，兼容 embedRuntimeDex=false 瘦身构建）。
-        val apk = ApkBuilder.build(syntheticHostApk(), input(), key, cert, compileLua = fakeCompiler())
-        val entries = entriesOf(apk)
-        assertEquals("dex-bytes", String(entries.getValue("classes.dex")))
-        assertEquals("-- host bin", String(entries.getValue("assets/lua/bin.lua")))
-        assertEquals("lj-x86", String(entries.getValue("lib/x86_64/libluajava.so")))
-        assertTrue(ApkBuilder.ENGINE_DEX_MARKER !in entries)
+    /** 解析 AXML 字符串池（UTF-16/UTF-8 双形态），供 manifest 内容断言。 */
+    private fun readPoolStrings(axml: ByteArray): List<String> {
+        val out = mutableListOf<String>()
+        var pos = 8
+        while (pos < axml.size) {
+            val type = readU16(axml, pos)
+            val size = readU32(axml, pos + 4).toInt()
+            if (size <= 0 || pos + size > axml.size) break
+            if (type == 0x0001) {
+                val stringCount = readU32(axml, pos + 8).toInt()
+                val flags = readU32(axml, pos + 16).toInt()
+                val utf8 = flags and 0x100 != 0
+                val stringsStart = pos + readU32(axml, pos + 20).toInt()
+                val offsets = (0 until stringCount).map { readU32(axml, pos + 28 + 4 * it).toInt() }
+                for (o in offsets) {
+                    var p = stringsStart + o
+                    val strLen =
+                        if (utf8) {
+                            val b = axml[p].toInt() and 0xFF
+                            p += if (b and 0x80 != 0) 2 else 1
+                            b and 0x7F
+                        } else {
+                            val l = (axml[p].toInt() and 0xFF) or ((axml[p + 1].toInt() and 0xFF) shl 8)
+                            p += 2
+                            l
+                        }
+                    val bytes =
+                        if (utf8) {
+                            val b = axml[p].toInt() and 0xFF
+                            p += if (b and 0x80 != 0) 2 else 1
+                            axml.copyOfRange(p, p + strLen)
+                        } else {
+                            val arr = ByteArray(strLen * 2)
+                            for (k in 0 until strLen) {
+                                arr[k * 2] = axml[p + k * 2]
+                                arr[k * 2 + 1] = axml[p + k * 2 + 1]
+                            }
+                            arr
+                        }
+                    out += String(bytes, if (utf8) Charsets.UTF_8 else Charsets.UTF_16LE)
+                }
+                break
+            }
+            pos += size
+        }
+        return out
     }
 
     /** 经 CEN→LOC 手工解析 STORED 条目的数据区偏移。 */

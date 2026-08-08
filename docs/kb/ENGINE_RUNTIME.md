@@ -1,8 +1,8 @@
 # lide 引擎与运行时知识库
 
-> 来源：`ANDROLUA_SOURCE_CODE_AUDIT_REPORT.md`、`ENGINE_LEVEL_COMPARISON_REPORT.md`、`NATIVE_LIB_AUDIT.md`、
-> `LIBS_SUPPORT_WORK_ORDER.md`、`EMULATOR_RUNTIME_AUDIT_REPORT.md`、`GAME_ENGINE_PERFORMANCE_AUDIT_REPORT.md`、
-> `docs/log/*.log`、`WHITEPAPER.md §7.1`。
+> 来源：历史审计报告（ANDROLUA_SOURCE_CODE_AUDIT_REPORT / ENGINE_LEVEL_COMPARISON_REPORT / NATIVE_LIB_AUDIT /
+> LIBS_SUPPORT_WORK_ORDER / EMULATOR_RUNTIME_AUDIT_REPORT / GAME_ENGINE_PERFORMANCE_AUDIT_REPORT，
+> 均已删除，结论蒸馏于此）、`WHITEPAPER.md §7.1`。
 
 ---
 
@@ -58,12 +58,12 @@
 
 | 证据 | 结果 | 出处 |
 |------|------|------|
-| Universal Lua Probe（956 项） | lide **878/956** vs pro **879/956**（91% 优秀），唯一差异 socket 已修复 | `docs/log/*.log`、ENGINE_LEVEL_COMPARISON |
-| 探针差异根因 | `extractLuaScripts()` 遇子目录 `socket` 抛 IOException，try-catch 在循环外 → 后续脚本全未落盘；已改为递归遍历 + 单文件 try-catch | ENGINE_LEVEL_COMPARISON |
-| 模拟器实测 | 12 个参考工程 lide vs pro 日志**逐字一致**（含非致命 bug 日志）；残余差异仅 LuaDexLoader +4 行号、宿主包装帧一行 | EMULATOR_RUNTIME_AUDIT |
-| 真机 /libs 矩阵 | V-01~V-10 全 PASS（SDK 36 arm64）：自动加载、额外 dex、自制 .so、LuaSocket、init 隔离、冷启动解包、资产升级覆盖、损坏 dex 降级、classloader 稳定 | LIBS_SUPPORT_WORK_ORDER |
-| Java 桥 | bindClass/newInstance/createProxy/loadLib 12/12 全可用；危险操作（os.execute/io.popen/loadfile/dex）全部可用 | docs/log |
-| 引擎缺陷修复 | ① socket 解包缺陷；② **W^X writable-dex**：Android 8+/14+ 拒绝 app 可写目录加载 dex → `InMemoryDexClassLoader` 内存字节加载（API≥26，不回退）；③ LuaActivity 未注册 → ActivityNotFoundException；④ targetSdk 36 明文 HTTP 默认禁 → `usesCleartextTraffic="true"` | 各审计报告 |
+| Universal Lua Probe（956 项） | lide **878/956** vs pro **879/956**（91% 优秀），唯一差异 socket 已修复 | 历史审计报告（已删） |
+| 探针差异根因 | `extractLuaScripts()` 遇子目录 `socket` 抛 IOException，try-catch 在循环外 → 后续脚本全未落盘；已改为递归遍历 + 单文件 try-catch | 历史审计报告（已删） |
+| 模拟器实测 | 12 个参考工程 lide vs pro 日志**逐字一致**（含非致命 bug 日志）；残余差异仅 LuaDexLoader +4 行号、宿主包装帧一行 | 历史审计报告（已删） |
+| 真机 /libs 矩阵 | V-01~V-10 全 PASS（SDK 36 arm64）：自动加载、额外 dex、自制 .so、LuaSocket、init 隔离、冷启动解包、资产升级覆盖、损坏 dex 降级、classloader 稳定 | 历史审计报告（已删） |
+| Java 桥 | bindClass/newInstance/createProxy/loadLib 12/12 全可用；危险操作（os.execute/io.popen/loadfile/dex）全部可用 | 历史审计（956 项 probe 双端日志基线） |
+| 引擎缺陷修复 | ① socket 解包缺陷；② **W^X writable-dex**：Android 8+/14+ 拒绝 app 可写目录加载 dex → `InMemoryDexClassLoader` 内存字节加载（API≥26，不回退）；③ LuaActivity 未注册 → ActivityNotFoundException；④ targetSdk 36 明文 HTTP 默认禁 → `usesCleartextTraffic="true"` | AGENTS.md / 历史审计报告（已删） |
 
 ---
 
@@ -102,5 +102,6 @@ Lua → C（.so）调用为纯 C 路径不经 Java（`require "zip"` = `package.
 | 运行拉起 | `app/src/main/kotlin/.../engine/RunEngineLauncher.kt`、`androlua/.../engine/EngineBridge.kt` |
 | dex/so 加载 | `androlua/src/main/java/com/androlua/LuaDexLoader.java`（W^X 内存加载） |
 | 打包链 | `androlua/.../LuaCompiler.kt`、`AXmlManifest.kt`、`app/.../build/{ApkBuilder,ApkSigner,V2Signer,ZipUtils}.kt`、`BuildPackagingDialog.kt` |
+| 打包 dex 直用宿主（P0-7 冻结） | 产物直接复用宿主根目录**全量 classes*.dex**（IDE 类 + 引擎类原样保留，接受多余内容）；无 dex 替换模式、无 `ENGINE_DEX_MARKER` 标记资产；打包器以根 dex 存在 `Lcom/androlua/LuaApplication;` 作引擎存在性判定，命中时 manifest 回落 `com.androlua.LuaApplication` + 移除 IDE MainActivity（`ManifestEdit.applicationName`/`removeActivities`），未命中保持宿主 manifest；ABI/权限以宿主条目为准 |
 | 资产提取 | `LuaApplication.extractLuaScripts()`（递归 + MD5 版本化） |
 | 原生模块构建 | `app/src/main/cpp/`（顶层 `Android.mk` + `Application.mk` 为 ndk-build 定义，`live2d/` 独立模块），AGP `externalNativeBuild` 自动构建（NDK 29.0.14206865） |

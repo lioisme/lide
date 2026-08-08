@@ -4,9 +4,8 @@
 > 全部 **2144 篇**社区帖子做三轴判定（质地 kind / 质量 verdict / 可移植性 portability），
 > 抽取出**正面方法与思路**、**负面反例**，并输出 **LLM 微调训练语料**。
 >
-> 与 `androlua-lua/`（工程侧实测知识库）的区别：本库默认 **`static_review`（静态文本评审）**，
-> 不做设备断言；涉及 lide/Pro 兼容结论，一律需 `androlua-project-validation` 双端实测升级后
-> 才能写入工程知识库。
+> 本库是**独立静态评审库**（默认 `static_review`，不做设备断言）；涉及 lide/Pro 兼容结论，
+> 一律需 `androlua-project-validation` 双端实测（流程见该 skill，结论随轮次沉淀）。
 
 ---
 
@@ -55,7 +54,7 @@ androlua-community/
 1. 跑一次全量扫描：`python tools/analyze.py`（输出 catalog/ 四件套，可重复执行）。
 2. 新增/修订主题卡：卡片头部 YAML 必须含 `reviewed`（人工复核人/日期）与 `confidence`；
    从 `catalog/` 取数时保留 `manual_id` 可回溯。
-3. **判定升级**：`static_review` → `device_tested` 必须附双端验证记录（见 androlua-lua 库）。
+3. **判定升级**：`static_review` → `device_tested` 必须附双端验证记录（`androlua-project-validation` skill 流程）。
 4. 变更登记：本文档 §5 追加一行。
 5. 原始语料**只读**：不修改、不再移动（2026-08 随 reference 整体迁出 docs/） `reference/代码手册社区/` 下文件。
 

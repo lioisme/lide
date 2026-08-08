@@ -220,8 +220,8 @@ class AXmlManifestTest {
     }
 
     @Test
-    fun `patch rewrites application name and removes activities in dex mode`() {
-        // 引擎 dex 存在时补丁面：application 回落引擎 Application + IDE 主入口整树移除。
+    fun `patch rewrites application name and removes activities unconditionally`() {
+        // 2026-08-09：引擎并入单 dex 集后补丁无条件回落引擎 Application + IDE 主入口整树移除。
         val edit = ManifestEdit(
             packageName = "com.demo.app",
             appLabel = "Demo",

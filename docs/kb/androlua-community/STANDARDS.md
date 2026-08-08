@@ -103,7 +103,7 @@ evidence:
 reference: 人工复核人/日期
 ```
 
-## 7. 与 androlua-lua 子库关系
+## 7. 与工程实测的关系
 
-- 本库输出**负面/正面标签与片段**供工程侧引用；
-- 工程侧（`docs/kb/androlua-lua/`）只记录 **已实测**的结论；两者不互相污染：本库默认 `static_review`。
+- 本库输出**负面/正面标签与片段**，供双端实测（`androlua-project-validation` skill）引用；
+- 本库默认 `static_review`，不互相污染：设备行为结论须以双端实测为准。

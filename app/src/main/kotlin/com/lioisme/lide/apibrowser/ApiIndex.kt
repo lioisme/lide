@@ -274,15 +274,6 @@ object ApiIndex {
             )
     }
 
-    /** 使索引失效（工程 libs 变化后由宿主显式调用）。 */
-    fun invalidate() {
-        synchronized(buildLock) {
-            snapshot = null
-            builtProjectRoots = null
-            completePhaseDone = false
-        }
-    }
-
     /** 解析 assets/javaapi/android.lua 类表（return { "name", ... }）。 */
     private fun parseClassTable(context: Context): List<String> {
         val result = ArrayList<String>()
@@ -349,15 +340,6 @@ object ApiIndex {
         }
     }
 
-    /** 可加载判定：dex 枚举命中 / boot 框架前缀 → 即可用（零反射）；其余合并缓存。 */
-    fun isLoadable(name: String): Boolean {
-        snapshot?.dexNames?.let { if (name in it) return true }
-        if (isBootFramework(name)) return true
-        return loadClassRef(name) != null
-    }
-
-    private fun isBootFramework(name: String): Boolean = name.startsWith("android.") || name.startsWith("java.") || name.startsWith("javax.")
-
     /**
      * 列表行反射信息（类形态 + 可加载性）。缓存路径 O(1) 查表，未命中合并缓存解析
      * （每类名至多一次全 dex 扫描 → 负缓存）。线程契约见类头。
@@ -387,9 +369,6 @@ object ApiIndex {
         classCache[name]?.let { return rowInfo(name) }
         return withContext(Dispatchers.IO) { rowInfo(name) }
     }
-
-    /** 类形态信息（接口/签名），不可加载返回 null。线程契约同 [rowInfo]。 */
-    fun classKind(name: String): ClassKind? = rowInfo(name).kind
 
     /** 是否为 View 子类（反射验证，带合并缓存）。 */
     fun isViewSubclass(name: String): Boolean {

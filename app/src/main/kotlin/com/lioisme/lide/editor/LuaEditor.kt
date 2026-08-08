@@ -39,7 +39,6 @@ import io.github.rosemoe.sora.widget.minimap.MinimapConfig
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.withContext
 import java.util.concurrent.atomic.AtomicReference

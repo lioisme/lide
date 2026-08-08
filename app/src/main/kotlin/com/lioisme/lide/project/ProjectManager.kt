@@ -145,18 +145,6 @@ class ProjectManager {
             emptyList()
         }
 
-    /** 读取 init.lua 单个字符串字段（缺省/读失败 → null）。 */
-    fun initField(
-        project: Project,
-        name: String,
-    ): String? = readInitContent(project)?.let { LuaConfigParser.stringField(it, name) }
-
-    /** 读取 init.lua 字符串数组字段（如 user_permission）。 */
-    fun initArrayField(
-        project: Project,
-        name: String,
-    ): List<String> = readInitContent(project)?.let { LuaConfigParser.stringArrayField(it, name) } ?: emptyList()
-
     /**
      * 字段级写入 init.lua（B-1 域服务：UI 不再自摸文件）。
      * 原子读改写；返回是否成功。

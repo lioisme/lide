@@ -35,7 +35,7 @@ local function main( ... )
    Java 版 ArrayAdapter；理解它即可移植任意列表页。
 3. **依赖声明先行**：ViewPager2/RecyclerView 依赖 androidx 库，宿主不自带时必须先 `loadDex`
    或 /libs 注入（id 2868 注释明示"需要下载 dex 放 libs"）——这正好命中 lide 的
-   `/libs 机制`，移植时按 LIBS_SUPPORT_WORK_ORDER 处理。
+   `/libs 机制`，移植时按 AGENTS.md「/libs 机制约定」处理。
 
 ## 4. 工程落地建议
 

@@ -23,12 +23,13 @@ pluginManagement {
 rootProject.name = "lide"
 include(":app")
 include(":androlua")
-// androlua 属上游库，源码收纳在 third_party/ 统一管理（后续新增上游库均入此处）
-project(":androlua").projectDir = file("third_party/androlua")
-// sora-editor（LGPL-2.1）0.24.6 源码收纳（editor + language-textmate），见 third_party/sora-editor/README.md
+// androlua 属上游库（AndroLua Pro v4.4.2，允许非逻辑适配），源码收纳在 app/vendor/ 统一管理。
+// 用户红线（2026-08-09 源码组织三需求）：所有源代码一律位于 app/ 目录。
+project(":androlua").projectDir = file("app/vendor/androlua")
+// sora-editor（LGPL-2.1）0.24.6 源码收纳（editor + language-textmate），见 app/vendor/sora-editor/README.md
 include(":sora-editor")
 include(":sora-editor:editor")
 include(":sora-editor:language-textmate")
-project(":sora-editor").projectDir = file("third_party/sora-editor")
-project(":sora-editor:editor").projectDir = file("third_party/sora-editor/editor")
-project(":sora-editor:language-textmate").projectDir = file("third_party/sora-editor/language-textmate")
+project(":sora-editor").projectDir = file("app/vendor/sora-editor")
+project(":sora-editor:editor").projectDir = file("app/vendor/sora-editor/editor")
+project(":sora-editor:language-textmate").projectDir = file("app/vendor/sora-editor/language-textmate")

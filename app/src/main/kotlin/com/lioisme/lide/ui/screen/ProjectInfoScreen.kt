@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -17,14 +16,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.lioisme.lide.R
 import com.lioisme.lide.project.LuaConfigParser
-import com.lioisme.lide.editor.TipIconButton
 import com.lioisme.lide.model.Project
 import com.lioisme.lide.project.ProjectManager
 import com.lioisme.lide.ui.theme.LideTopBar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.File
 
 /** 工程属性页字段元信息（字段名 → 标签资源）。顺序与 pro projectinfo 页面一致。 */
 private data class InfoField(

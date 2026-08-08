@@ -1,6 +1,5 @@
 package com.lioisme.lide.build
 
-import com.luajava.LuaState
 import com.luajava.LuaStateFactory
 
 /** Lua 编译失败：携带可定位的行号（解析失败时行号为 null）。 */

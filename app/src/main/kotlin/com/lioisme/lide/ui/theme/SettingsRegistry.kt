@@ -1,6 +1,5 @@
 package com.lioisme.lide.ui.theme
 
-import android.content.Context
 import android.content.SharedPreferences
 import com.lioisme.lide.editor.EditorConfig
 

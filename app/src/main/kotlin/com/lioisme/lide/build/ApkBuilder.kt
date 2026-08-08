@@ -28,12 +28,11 @@ import java.util.zip.ZipOutputStream
  * - manifest：改包名 / label / 版本；uses-permission 白名单 = 工程声明 ∩ 宿主 +
  *   宿主自声明权限（自引用权限名随包名原位替换）；桌面图标入口重定向到引擎页
  *   （[DEFAULT_LAUNCHER_ACTIVITY]，点开直接运行工程）。
- * - P0 运行时基座（dex 直用宿主，2026-08-08 P0-7 修订）：不再为打包单独提供 dex——
- *   产物直接复用宿主根目录全量 classes*.dex（IDE 类 + 引擎类原样保留，接受多余
- *   内容）；`assets/engine.dex.idx` 标记仅作引擎存在性判定，命中时 manifest 回落
- *   `com.androlua.LuaApplication` 并移除 IDE MainActivity（引擎类随宿主 dex 全量
- *   进入产物，回落后类均存在、无解析风险）；未命中时保持宿主 manifest（pro 模板
- *   语义，兼容 embedRuntimeDex=false 的瘦身构建）。
+ * - P0 运行时基座（dex 直用宿主，2026-08-09 源码组织三需求修订）：:androlua 以
+ *   implementation 并入宿主单一 dex 集，不再有任何 dex 拆分/注入/标记。产物直接
+ *   复用宿主根目录全量 classes*.dex（IDE 类 + 引擎类原样保留，接受多余内容）；
+ *   manifest 无条件回落 `com.androlua.LuaApplication` 并移除 IDE MainActivity
+ *   （引擎类恒随宿主 dex 进入产物，类均存在、无解析风险）。
  * - v1 + v2 签名（[ApkSigner]），输出可直接 adb install 的 APK 字节。
  */
 object ApkBuilder {
@@ -118,22 +117,13 @@ object ApkBuilder {
     }
 
     /**
-     * 引擎 dex 定位标记资产：宿主 APK `assets/engine.dex.idx`（非 dex，内容为引擎 dex
-     * 在宿主 APK 根目录的条目名，如 `classes31.dex`，由构建期 injectEngineDex 写入）。
-     * 契约（引擎 dex 单份化，2026-08-08）：宿主根目录 classes*.dex 仅含 IDE 代码
-     * （:androlua 为 compileOnly，引擎类不进宿主 dex），引擎 dex 唯一一份在根目录。
-     * **P0-7 修订（2026-08-08）**：打包器不再据此选取 dex（产物直用宿主全量根 dex，
-     * 不再做引擎单 dex 替换），标记仅作**引擎存在性判定**——命中合法条目时 manifest
-     * 回落 `com.androlua.LuaApplication` 并移除 IDE MainActivity；未命中保持宿主
-     * manifest（pro 模板语义，兼容 embedRuntimeDex=false 瘦身构建）。标记为宿主构建
-     * 元数据，任何产物一律不带。旧 `assets/runtime/classes.dex` 内嵌形态已废弃。
+     * 产物 Application（恒回落）：LuaApplication.extractLuaScripts 解包 assets/lua。
+     * 2026-08-09 源码组织三需求：引擎类经 implementation 恒并入宿主 dex 集，
+     * 不存在「无引擎」形态，不再需要 ENGINE_DEX_MARKER 存在性判定。
      */
-    const val ENGINE_DEX_MARKER = "assets/engine.dex.idx"
-
-    /** 引擎 dex 存在时产物 Application：LuaApplication.extractLuaScripts 解包 assets/lua。 */
     const val RUNTIME_APPLICATION = "com.androlua.LuaApplication"
 
-    /** 引擎 dex 存在时整体移除的 IDE 主入口（宿主 applicationId = com.lioisme.lide）。 */
+    /** 产物整体移除的 IDE 主入口（宿主 applicationId = com.lioisme.lide）。 */
     const val RUNTIME_REMOVED_ACTIVITY = "com.lioisme.lide.MainActivity"
 
     fun build(
@@ -147,16 +137,6 @@ object ApkBuilder {
     ): ByteArray {
         onStage(BuildStage.READ_HOST)
         val hostEntries = readZip(hostApk)
-        // 引擎存在性判定（P0-7：不再据此选取 dex，产物直用宿主全量根 dex）：
-        // 标记内容须匹配 classes\d*\.dex（防任意路径注入）且根目录存在该条目。
-        val enginePresent =
-            hostEntries.firstOrNull { it.first == ENGINE_DEX_MARKER }
-                ?.third
-                ?.toString(Charsets.UTF_8)
-                ?.trim()
-                ?.takeIf { it.matches(Regex("classes\\d*\\.dex")) }
-                ?.let { name -> hostEntries.any { it.first == name } }
-                ?: false
         val templateEntries = hostEntries
         val manifestEntry =
             templateEntries.firstOrNull { it.first == "AndroidManifest.xml" }
@@ -207,10 +187,10 @@ object ApkBuilder {
                         usesPermissions = whitelist,
                         // 产物图标入口重定向到引擎页（点开直接运行工程，而非宿主 IDE）。
                         launcherActivity = input.launcherActivity,
-                        // 引擎 dex 随宿主全量 dex 进入产物：回落引擎 Application 并移除
-                        // IDE MainActivity（双桌面图标与 IDE 入口残留），类均存在无解析风险。
-                        applicationName = if (enginePresent) RUNTIME_APPLICATION else null,
-                        removeActivities = if (enginePresent) listOf(RUNTIME_REMOVED_ACTIVITY) else emptyList(),
+                        // 引擎类恒随宿主全量 dex 进入产物：无条件回落引擎 Application 并
+                        // 移除 IDE MainActivity（双桌面图标与 IDE 入口残留），类均存在无解析风险。
+                        applicationName = RUNTIME_APPLICATION,
+                        removeActivities = listOf(RUNTIME_REMOVED_ACTIVITY),
                     ),
                 )
             } catch (e: Exception) {
@@ -258,11 +238,8 @@ object ApkBuilder {
                     ZipUtils.writeEntry(zos, name, method, patchedManifest)
                     continue
                 }
-                // dex 直用宿主（P0-7）：宿主 classes*.dex 一律原样保留（RUNTIME_CORE）；
-                // 定位标记（assets/engine.dex.idx）为宿主构建元数据，任何产物一律不带。
-                if (name == ENGINE_DEX_MARKER) {
-                    continue
-                }
+                // dex 直用宿主（2026-08-09）：宿主 classes*.dex 一律原样保留（RUNTIME_CORE），
+                // 引擎类经 implementation 并入其中；旧 assets/engine.dex.idx 标记形态已删除。
                 // 宿主条目按领域分类（HostPolicy 唯一事实源，default-deny）：
                 // 工程同名文件由工程注入覆盖（不占 seen，避免吞掉工程条目）。
                 when (HostPolicy.classifyHostEntry(name)) {

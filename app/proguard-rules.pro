@@ -1,14 +1,12 @@
 # 注：LuaJ（org.luaj.*）已于引擎迁移时移除（Lua 5.3 AndroLua C fork 取代），
 # 仓库无此包，无对应 keep 规则（2026-08-06 P3-5 清理）。
 
-# ── 引擎 dex 单份化（2026-08-08，D-1 冻结结论落地）────────────────────
-# 宿主不再打包任何引擎类（com.luajava.** / com.androlua.** /
-# com.lioisme.lide.androlua.** / android.widget 扩展控件 / com.nirenr.** /
-# com.android.cglib.** 等）：引擎类经 :app:injectEngineDex 注入为宿主 APK
-# 根目录 classes2.dex（单一 classloader 加载），R8 保留面由
-# src/runtime/runtime-rules.pro 维护。此处刻意不再保留引擎 keep 规则——
-# 若误 keep，引擎类会随宿主 release dex 再度打包（双份引擎代码回归，
-# verifyReleaseLuaSurface 反向断言会捕获）。
+# ── 引擎并入单 dex 集（2026-08-09 源码组织三需求）────────────────
+# :androlua 以 implementation 并入宿主单一 dex 集（根目录 classes*.dex，无任何
+# 拆分/注入/标记），R8 keep 面合并至此（原 src/runtime/runtime-rules.pro 已随
+# runtime buildType / engineDexExtract / injectEngineDex 一并删除）。Lua 脚本与
+# 插件 dex 按类名反射引用引擎类，必须整体 keep；不存在跨 dex 双 R8 命名冲突，
+# 原 -repackageclasses 'lide_runtime_' 不再需要。
 #
 # 宿主 keep 面：Lua 脚本 / 插件 dex 可能按类名反射引用宿主类。
 # 逐包枚举（com.lioisme.lide.** 会误匹配 androlua 引擎子树，禁止使用）。
@@ -29,6 +27,32 @@
 -keep class com.lioisme.lide.session.** { *; }
 -keep class com.lioisme.lide.ui.** { *; }
 -keep class com.lioisme.lide.util.** { *; }
+
+# ── 引擎 keep 面（原 src/runtime/runtime-rules.pro 并入；维护约定三处同步：
+#    engineSurfaceDescriptors（verifyMinimalism 断言）+ 本段 keep +
+#    ApiCategoryClassifier.androluaAndroidPrefixes（API 浏览器分类））────────
+
+# luajava - libluajava.so 的 JNI 桥接层（LuaState/LuaJavaAPI/LuaObject 等）。
+# native 侧按字面量类名/方法名绑定，R8 引用图不可见，必须 { *; }。
+-keep class com.luajava.** { *; }
+
+# androlua - 运行时反射 / 动态 dex 按类名引用（LuaActivity/LuaApplication 等）。
+-keep class com.androlua.** { *; }
+
+# android.content.FileProvider - 引擎自带同名支持类副本（pro 原版收录，
+# 由 manifest 按类名注册、ActivityThread.installProvider 运行时反射加载）。
+# attachInfo 以编译期调用点构造 SimplePathStrategy(String)，R8 视内部类无直接
+# 引用而混淆/收缩构造 → NoSuchMethodError（2026-08-08 模拟器实测崩溃）。
+# 内部类须单列（`{ *; }` 不递归内部类），含构造器/接口保留。
+-keep class android.content.FileProvider { *; }
+-keep class android.content.FileProvider$* { *; }
+
+# ── Lua 可见 API 面（与 engineSurfaceDescriptors / ApiCategoryClassifier 同步）────────
+-keep class android.widget.** { *; }
+-keep class android.app.AlertDialogBuilder { *; }
+-keep class android.app.FloatWindow { *; }
+-keep class com.nirenr.** { *; }
+-keep class com.android.cglib.** { *; }
 
 # 反射所需的属性信息
 -keepattributes *Annotation*,InnerClasses,EnclosingMethod,Signature

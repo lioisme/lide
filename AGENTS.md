@@ -6,8 +6,9 @@
 ## 架构边界（R1–R5，模块边界 → 包边界语义）
 
 - **R1** 编辑器代码（包 `com.lioisme.lide.editor`）禁止出现 `com.androlua`、`com.luajava`、
-  `System.loadLibrary`、jniLibs；`app/build.gradle.kts` 对 `:androlua` 仅为 `compileOnly` +
-  `testImplementation` + `runtimeImplementation`（引擎类不进宿主 IDE dex）。
+  `System.loadLibrary`、jniLibs；`app/build.gradle.kts` 对 `:androlua` 为 `implementation` +
+  `testImplementation`（2026-08-09 引擎 dex 单份化：引擎类并入宿主根 `classes*.dex` 恰一份，
+  见「运行时基座契约」）。
   编辑器的一切 Lint / 诊断 / 补全 / 高亮逻辑必须是纯 Kotlin/Java，禁止触碰 `libluajava.so`。
 - **R2** Lua 编译与运行能力属于宿主（`EngineBridge` → `EngineActivity`，同进程运行）。
   编辑器只做文本级能力（行级词法诊断、补全、高亮、搜索），不做运行时语义。
@@ -28,7 +29,7 @@
 
 ```
 rg -n "luajava|androlua|loadLibrary" app/src/main/kotlin/com/lioisme/lide/editor
-rg -n "com\.lioisme" third_party/androlua/src third_party/sora-editor/src
+rg -n "com\.lioisme" app/vendor/androlua/src app/vendor/sora-editor/src
 git ls-files '*.so' '*.dex' '*.zip'
 git ls-files '*.jar' | grep -v 'gradle/wrapper/gradle-wrapper.jar'
 ```
@@ -39,8 +40,15 @@ git ls-files '*.jar' | grep -v 'gradle/wrapper/gradle-wrapper.jar'
 - 完整构建：`.\gradlew.bat :app:assembleArm64Debug --console=plain`
 - 精简门禁（去重校验）：`.\gradlew.bat :app:verifyMinimalism`（依赖 assembleArm64Release）
 - 跨 dex 断言（debug 直出）：`.\gradlew.bat :app:verifyMinimalismDebug`
-- 引擎面/剥离断言：`.\gradlew.bat :app:verifyRuntimeSurface` + `.\gradlew.bat :app:verifyReleaseLuaSurface`
+- 引擎并入单 dex 集断言（引擎面类跨根 dex 恰一份 + 旧形态回归）随
+  `:app:verifyMinimalism`（checkEngineDexMerge）与 `:app:verifyMinimalismDebug` 执行，
+  `verifyRuntimeSurface` / `verifyReleaseLuaSurface` 任务已随 2026-08-09 引擎 dex 单份化删除
+  （历史引用一律不得回退，CI 亦已移除）
 - 上游隔离：`.\gradlew.bat :app:verifyVendorIsolation`
+- 上游全树差异门禁（禁止未登记改动）：`.\scripts\verify-upstream-pristine.ps1`（Windows，
+  缺省自动下载上游 tarball；CI 用 `scripts/verify-upstream-pristine.sh`，verify-vendor job 挂接）
+  ——白名单机器副本 `scripts/upstream-pristine.json` 必须与
+  `app/vendor/androlua/UPSTREAM.md` 台账一致（24 modified + 42 deleted，本地独有 = 0）
 
 ## 编辑器关键约定
 
@@ -72,7 +80,7 @@ git ls-files '*.jar' | grep -v 'gradle/wrapper/gradle-wrapper.jar'
 - 不可用 API（loadable == false）用 Compose 原生 `TextDecoration.LineThrough` 中划线
   表示；禁止往文本内容里插入 `-`/`~~` 等「伪中划线」技巧。
 
-## API 浏览器搜索语义红线（冻结审计结论，详见 docs/planned/API_BROWSER_FREEZE_FIX_PLAN.md）
+## API 浏览器搜索语义红线（冻结审计结论）
 
 - 搜索展开意图必须用独立 state（`searchActive`），InputField 的 `expanded`/`onExpandedChange`
   只读写该意图；**禁止绑定 `searchBarState.currentValue` 动画派生值**（progress∈(0,1) 时
@@ -91,7 +99,7 @@ git ls-files '*.jar' | grep -v 'gradle/wrapper/gradle-wrapper.jar'
   禁止在 UI 线程同步 O(n) 过滤；行级反射信息缓存（`rowInfoCache`）必须是**非空包装**，
   禁止用返回 null 的 `getOrPut`（CHM 拒绝 null，负缓存永久失效 → 全 dex 扫描 → ART 全局锁）。
 
-## /libs 机制约定（工程 /libs 支持，详见 docs/discard/LIBS_SUPPORT_WORK_ORDER.md）
+## /libs 机制约定（工程 /libs 支持）
 
 - 工程 `<project>/libs/` 三层模型（pro 原生机制，勿改动）：`*.dex|jar|apk|zip` 由
   `LuaDexLoader.loadLibs()` 启动时自动扫描加载（`import "xxx:com.foo"` 可用）；`lib<name>.so`
@@ -138,45 +146,37 @@ git ls-files '*.jar' | grep -v 'gradle/wrapper/gradle-wrapper.jar'
 - 打包多架构验证走 `scripts/build-apks.ps1`（矩阵参数化：`-Abis`/`-Types`/`-Variants`，
   默认 6 变体；产物签名逐包校验）。
 
-## 运行时基座契约（打包 dex 直用宿主，P0 冻结结论，2026-08-08 引擎 dex 单份化 + P0-7 打包简化修订）
+## 运行时基座契约（打包 dex 直用宿主，2026-08-09 引擎 dex 单份化收口，P0-7 冻结结论）
 
 - **用户红线（2026-08-08）**：所有 dex 必须位于 LIDE 本体安装包 APK 根目录，禁止
   其他任何目录，禁止任何重复副本（引擎类在宿主安装包中唯一一份）。
-- `:app` 对 `:androlua` 的依赖形态：`compileOnly` + `testImplementation` +
-  `runtimeImplementation`（引擎类不进宿主 classes*.dex，宿主根 dex 仅 IDE 代码）。
-- 宿主存在 `runtime` buildType（R8 白名单 keep 引擎 + luaApiSurface，剥离 IDE 类），
-  其产物 `classes.dex` 由 `:app:engineDexExtract` 解出为 `build/engine/engine.dex`，
-  再由 `injectEngineDex<Variant>`（androidComponents 挂 debug/release）追加进各宿主
-  变体 dex 合并产物（mergeLibDex 尾组 "zz"，package 任务按序编号为根目录
-  `classesN.dex`），并把条目名写入非 dex 标记资产 `assets/engine.dex.idx`
-  （`ApkBuilder.ENGINE_DEX_MARKER`）。
-- **构建顺序**：发布链 = `:app:assembleUniversalRuntime`（生成 runtime 变体）→
-  `:app:assemble*`（engineDexExtract 解出 → injectEngineDex 注入根 dex，宿主携带）。
-  源缺失时自动跳过（不构成 preBuild 环）；宿主无引擎 dex（如 `embedRuntimeDex=false`）
-  时打包器按无引擎形态装配，不阻断运行期打包。
+- `:app` 对 `:androlua` 的依赖形态：`implementation` + `testImplementation`——引擎类
+  （androlua/luajava/cglib/vendor Java 全量）直接并入宿主根 `classes*.dex` 恰一份，
+  无 runtime buildType、无 `engineDexExtract`/`injectEngineDex`、无
+  `assembleUniversalRuntime` 发布链（2026-08-09 全部删除，历史引用一律不得回退）。
 - **打包 dex 直用宿主（P0-7，2026-08-08）**：不再为打包单独提供 dex、无 dex 替换模式——
   产物直接复用宿主根目录**全量 classes*.dex**（IDE 类 + 引擎类原样保留，接受工程用不上
-  的多余内容）；`ENGINE_DEX_MARKER` 仅作**引擎存在性判定**（内容须匹配
-  `classes\d*\.dex` 防路径注入且根目录存在该条目），命中时 manifest 回落
-  `com.androlua.LuaApplication` + 移除 IDE MainActivity（`ManifestEdit.applicationName` /
-  `removeActivities`），未命中保持宿主 manifest；标记自身任何产物一律不带；ABI 枚举/
-  权限仍以宿主条目为准（模板 = 宿主，D-1 冻结结论）。
-- 新增引擎侧 Lua 反射类：同时登记 `luaApiSurface`（三处同步）+ `src/runtime/runtime-rules.pro`
-  （白名单 keep）——`verifyRuntimeSurface` 门禁捕获遗漏。
-- `ui-tooling-preview` 恒为 `debugImplementation`（IDE tooling，release/runtime 不得携带）。
-- **IDE 依赖三形态（2026-08-09 引擎 dex 纯净化）**：`ideDeps` 列表（compose ui/graphics/material3/
-  icons-extended/activity-compose/navigation-compose/core-ktx/lifecycle-runtime-ktx/material/
+  的多余内容）；无 `ENGINE_DEX_MARKER` 标记资产（旧 `assets/engine.dex.idx` 出现即
+  `verifyMinimalism` 失败）；打包器以「根 dex 存在 `Lcom/androlua/LuaApplication;`」作
+  **引擎存在性判定**，命中时 manifest 回落 `com.androlua.LuaApplication` + 移除 IDE
+  MainActivity（`ManifestEdit.applicationName` / `removeActivities`），未命中保持宿主
+  manifest；ABI 枚举/权限仍以宿主条目为准（模板 = 宿主，D-1 冻结结论）。
+- 新增引擎侧 Lua 反射类：登记 `engineSurfaceDescriptors`（`app/build.gradle.kts`，与
+  `src/runtime` 时代 `luaApiSurface` 同源演进；R8 keep 面见 proguard-rules.pro「引擎
+  keep 面」段）——`checkEngineDexMerge`（verifyMinimalism 内）断言引擎面类跨根 dex
+  恰一份且全部存在，遗漏即失败。
+- **IDE 依赖形态（2026-08-09 单 dex 集）**：`ideDeps` 列表（compose ui/graphics/material3/
+  icons-extended/activity-compose/navigation-compose/core-ktx/lifecycle-runtime-ktx/
   reorderable/cascade/profileinstaller/apksig + sora-editor project 依赖双模块）一律
-  `compileOnly + debugImplementation + releaseImplementation` 三形态，runtime 变体零 IDE 运行时；
-  compose-bom 同三形态；`constraints { implementation("org.jetbrains:annotations:23.0.0") }`
-  防 consistent resolution 冲突（runtime 变体 compose 为 compileOnly 时 annotations 回退）；
-  新增 IDE 依赖/构建配置时维持该形态，保证引擎 dex（runtime 变体）不携带任何
-  androidx.compose/activity/navigation/appcompat/material/sora 类（`verifyRuntimeSurface`
-  ideDepPrefixes + `checkDexDuplication` ideTreeInEngine 双断言）。
-- 引擎 dex 与标记为构建产物（`app/build/` 下），不入库。
-- P0 全链验证：`.\gradlew.bat :app:verifyRuntimeSurface`（mapping 断言剥离）+
-  `:app:verifyMinimalism`（引擎 dex 根目录单份 + 无旧 assets/runtime 形态断言）+
-  打包单测（ApkBuilderTest 全量根 dex 保留 / 标记非法不回 / 无引擎兜底用例）。
+  `implementation`（随 :androlua 同集合并，无引擎/IDE 双 dex 拆分）；
+  `constraints { implementation("org.jetbrains:annotations:23.0.0") }` 防 consistent
+  resolution 冲突；新增 IDE 依赖时维持该形态（无 debugImplementation /
+  releaseImplementation / compileOnly 拆分；`ui-tooling-preview` 已随 2026-08-09
+  全量审计删除——无 @Preview 使用）。
+- 引擎 dex 与全部构建产物在 `app/build/` 下，不入库。
+- P0 全链验证：`.\gradlew.bat :app:verifyMinimalism`（release：载荷体检 + 引擎面类
+  跨根 dex 恰一份 + 无旧 assets/runtime 形态）+ `:app:verifyMinimalismDebug`（debug
+  直出同断言）+ 打包单测（ApkBuilderTest 全量根 dex 保留 / 无引擎兜底用例）。
 
 ## 引擎/IDE dex 断言语义（2026-08-09，源码组织五需求审计收口）
 
@@ -184,39 +184,43 @@ git ls-files '*.jar' | grep -v 'gradle/wrapper/gradle-wrapper.jar'
   **type_ids 索引**（`string_ids` 之外的另一张表），须 `type_ids[class_idx].descriptor_idx`
   → `string_ids[descriptor_idx]` 取描述符（偏移常量 `typeIdsSize/typeIdsOff = 0x40/0x44`）。
   任何「class_idx 直读 string_ids」的实现都是错的（历史曾致跨 dex 断言全部错位）。
-- `checkDexDuplication`（verifyMinimalism 内）四类断言：①引擎面类全集（luaApiSurface +
-  引擎类前缀）跨根 dex 恰一处 ②引擎 dex 无 `Lcom/lioisme/` ③IDE dex（引擎 dex 之外）无
-  `Lcom/androlua/`、`Lcom/luajava/`、`Lcom/nirenr/`、`Lcom/android/cglib/`、`Landroid/widget/`
-  引擎类前缀 ④引擎 dex 无 `androidx.compose.`/`androidx.appcompat.`/`androidx.activity.`/
-  `androidx.navigation.`/`material.`/`io.github.rosemoe.`/`me.saket.cascade.` 等 IDE 树。
-- `verifyRuntimeSurface` 另含：`lidePrefixes`（`Lcom/lioisme/lide/engine|ui|build|project`）
-  引擎 dex 剥离断言 + `luaApiSurface` 全量保留断言。
-- 上游隔离门禁：`.\gradlew.bat :app:verifyVendorIsolation`（third_party 两目录零
+- `checkEngineDexMerge`（verifyMinimalism 内，引擎并入单 dex 集后的唯一 dex 断言）：
+  ①旧形态回归失败——`assets/engine.dex.idx` 标记 / `assets/runtime/` 内嵌 dex 出现即失败
+  ②引擎面类全集（`engineSurfaceDescriptors`）跨根 dex 恰一处且全部存在（R8 keep 遗漏或
+  :androlua 未并入即失败）③`Lcom/androlua/LuaActivity;` + `Lcom/androlua/LuaApplication;`
+  根 dex 存在（引擎核心不缺）。2026-08-08 时代的 `checkDexDuplication` 四类断言（引擎 dex
+  无 LIDE 类 / IDE dex 无引擎前缀 / 引擎 dex 无 IDE 树等）随双 dex 拆分机制一并删除——
+  单 dex 集下不存在「引擎 dex vs IDE dex」之分，历史引用一律不得回退。
+- 上游隔离门禁：`.\gradlew.bat :app:verifyVendorIsolation`（app/vendor 两目录零
   `com/lioisme/**` + UPSTREAM.md 台账字面量 + :androlua 构建脚本零外部依赖 + sora 构建脚本
-  无外部 URL；CI verify-vendor job）；`third_party/androlua/UPSTREAM.md` 为改动台账唯一事实源。
+  无外部 URL；CI verify-vendor job）；`app/vendor/androlua/UPSTREAM.md` 为改动台账唯一事实源
+  （全树 diff 白名单 = `scripts/upstream-pristine.json`，见「构建与验证」）。
 
-## 精简治理（去重门禁，2026-08-07，详见 docs/planned/MINIMALISM_AUDIT_REPORT.md）
+## 精简治理（去重门禁，2026-08-07）
 
 - **内置示例**：`-Plide.examples=all|名单` 控制生成哪些 `.alp` 进 `assets/examples/`；
   默认不设置 = 零内置（APK 最瘦）。`scripts/examples-src/` 保留工程模板作为选样池，
   UI（ExamplesScreen）按 assets 实际存在过滤，空态展示 `examples_empty`。
-- **运行时引擎 dex**：`-Plide.embedRuntimeDex=false` 剔除根目录引擎 dex（默认 true
-  保持 P0 契约；剔除后打包器按无引擎形态装配，见上一节）；旧
-  `assets/runtime/classes.dex` 内嵌形态已废弃，`verifyMinimalism` 发现即失败。
+- **引擎 dex 并入单 dex 集（2026-08-09）**：引擎类经 `implementation` 并入宿主根
+  `classes*.dex` 恰一份，**无剔除开关**（`-Plide.embedRuntimeDex` 与
+  `assets/runtime/classes.dex` 内嵌形态均已废弃，`verifyMinimalism` 发现即失败）；
+  打包器按根 dex 引擎存在性判定装配（见「运行时基座契约」）。
 - **死代码禁令**：`:app` / `:androlua` 禁止把空 `libs/` 目录声明为依赖（`fileTree("libs")`
   空声明与 `.gitkeep` 已清理）；各模块 compileSdk 保持一致（当前 36）。
 - **去重门禁**：`:app:verifyMinimalism` 校验 release APK 无 jniLibs 预编译回包、白名单外
   `.so`、同 ABI 重复原生库、默认场景内置示例为 0，已接入 CI（verify-release job）。
 - 改动打包 / 原生 / 示例链路必须重跑：`:app:verifyMinimalism` + `:app:testArm64DebugUnitTest --tests "com.lioisme.lide.build.*"`。
 
-## 文档治理约定（opencode Agent 必守）
+## 文档治理约定（opencode Agent 必守，2026-08-09 断舍离收口）
 
-- **事实来源唯一**：当前事实一律以 `docs/kb/` 为准；当前工作以 `docs/in-progress/`、
-  `docs/planned/` 为准。**禁止把 `docs/discard/` 当作日常任务输入或事实来源**
-  （仅追溯历史结论时按需查阅）。
-- **任务文档生命周期**：新任务文档登记于 `docs/planned/`（或 `docs/in-progress/`）并登记
-  `docs/kb/README.md` §2 矩阵；**每完成一项任务，必须在任务文档对应条目标记「（已完成）」
+- **文档全集（无 discard 区）**：`docs/README.md`（入口）、`docs/WHITEPAPER.md`（白皮书）、
+  `docs/kb/`（知识库，唯一事实来源：README / ARCHITECTURE / ENGINE_RUNTIME / EDITOR +
+  androlua-community 语料库）、`docs/planned/backlog.md`（任务与技术债登记处）、
+  `docs/in-progress/`（进行中工作单）。历史工作单/报告已全部删除，结论蒸馏在知识库中。
+- **事实来源唯一**：当前事实一律以 `docs/kb/` 与 `docs/WHITEPAPER.md` 为准；当前工作以
+  `docs/in-progress/`、`docs/planned/backlog.md` 为准。
+- **任务文档生命周期**：新任务登记于 `docs/planned/backlog.md`；进行中的工作单放
+  `docs/in-progress/`；**每完成一项任务，必须在工作单对应条目标记「（已完成）」
   并备注工作内容 + 日期 + 验收证据**（构建命令 / 设备验证 / 测试结果）。
-- **完成后归档**：整份任务文档全部完成后 `git mv` 到 `docs/discard/`（唯一丢弃出口，
-  不再使用 `completed/`、`archive/`），并同步更新 `docs/kb/README.md` §2、
-  `docs/TASKS.md`、`docs/discard/README.md` §3 清单。
+- **完成后删除**：整份工作单全部完成后，把结论蒸馏进 `docs/kb/` 对应文档，
+  然后删除该工作单（不再有 discard 归档区；git 历史保留原文）。

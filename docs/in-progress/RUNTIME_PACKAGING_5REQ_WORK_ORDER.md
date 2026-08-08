@@ -5,10 +5,10 @@
 | 文档版本 | 1.0 |
 | 创建日期 | 2026-08-07 |
 | 文档代号 | RUNTIME-PACKAGING-5REQ |
-| 审计依据 | `docs/planned/NATIVE_LIB_PACKAGING_AUDIT_REPORT.md`（机制审计，T1~T5 已完成）、`docs/planned/PACKAGING_PAYLOAD_CLEANUP_WORK_ORDER.md`（载荷精化，已完成）、`docs/planned/BUILD_SIGNING_ENCRYPTION_WORK_ORDER.md`（打包三大能力，T1~T3/T5 已完成）、上游 AndroLua Pro v4.4.2（`reference/` 恢复配方见 `reference/README.md`） |
+| 审计依据 | 打包机制审计报告（NATIVE_LIB_PACKAGING_AUDIT_REPORT：机制审计 T1~T5 已完成；PACKAGING_PAYLOAD_CLEANUP_WORK_ORDER：载荷精化已完成；BUILD_SIGNING_ENCRYPTION_WORK_ORDER：打包三大能力 T1~T3/T5 已完成；均已蒸馏进 AGENTS.md 打包约定 / docs/kb/ENGINE_RUNTIME.md）、上游 AndroLua Pro v4.4.2（`reference/` 恢复配方见 `reference/README.md`） |
 | 总目标 | 五需求全量交付：① androlua 运行环境与 LIDE 完全解耦隔离；② 打包载荷上限＝整个 androlua 运行环境、下限＝按需原生库/依赖；③ 支持多架构（arm64/x64/arm32/未来新架构）打包，前置条件是宿主含目标架构；④ 每次打包可选配产物输出方式；⑤ 打包高级选项全部通用化进设置页 |
-| 硬性约束 | AGENTS.md R1~R5（`:editor` 纯文本级、仓库零二进制原生产物入库）、`luaApiSurface` 三处同步约定（app/build.gradle.kts / proguard-rules.pro / ApiCategoryClassifier）、打包/签名/加密链改动必跑 `com.lioisme.lide.build.*` 单测 |
-| 文档状态 | 进行中（P0 已完成 + 2026-08-08 引擎 dex 单份化修订完成，待全链验证与设备端冒烟） |
+| 硬性约束 | AGENTS.md R1~R5（编辑器包纯文本级、仓库零二进制原生产物入库）、`engineSurfaceDescriptors` 登记（app/build.gradle.kts / proguard-rules.pro）、打包/签名/加密链改动必跑 `com.lioisme.lide.build.*` 单测 |
+| 文档状态 | 已完成（P0 全链收口：2026-08-09 引擎 dex 单份化后五需求全部交付；全链验证见 AGENTS.md 验证命令与 `:app:verifyMinimalism`） |
 | 完成登记 | 见 §8 完成记录 |
 
 ---
@@ -111,14 +111,14 @@
 | 项 | 说明 |
 |---|------|
 | 32 位架构 | 非必须（D-1）；架构契约已留扩展路径；如需启用 → NDK 27 降级（27.3.13750724）为前置，属另行决策 |
-| 产物 dex 剥离 | P0 运行时基座为 R8 剥离路线；`luaApiSurface` 三处同步为硬约束，遗漏会被 `verifyReleaseLuaSurface` 门禁捕获 |
+| 产物 dex 剥离 | P0-7 后为「打包 dex 直用宿主」：产物复用宿主根目录全量 classes*.dex（接受多余内容），无 dex 替换/剥离；`luaApiSurface` 已随 2026-08-09 单份化演进为 `engineSurfaceDescriptors`（app/build.gradle.kts），遗漏被 `checkEngineDexMerge`（verifyMinimalism 内）捕获 |
 | 模板切源 | dex 替换模式：引擎 dex 资产缺失时兜底宿主 APK（pro 语义），避免构建顺序破坏运行期打包 |
 | NDK/AGP | 保持 29.0.14206865 不动；P0 不改 C 源码，零原生构建风险 |
 | pro 一致性 | `bin.lua` 保持原样只读资产；lide 以 Kotlin 实现为准 |
 
 ## 7. 参考文件
 
-- 上游：`reference/README.md`（pro 恢复配方）、`bin.lua` checklib 语义（`docs/planned/NATIVE_LIB_PACKAGING_AUDIT_REPORT.md` §2）
+  - 上游：`reference/README.md`（pro 恢复配方）、`bin.lua` checklib 语义（打包机制审计报告 §2，结论见 AGENTS.md ABI 架构契约）
 - lide：`app/build.gradle.kts`（flavor/ABI/签名）、`app/src/main/kotlin/com/lioisme/lide/build/{ApkBuilder,BuildOpts,HostPolicy,ZipUtils,NativeDependencyAnalyzer}.kt`、`app/src/main/kotlin/com/lioisme/lide/ui/screen/{BuildApkScreen,BuildOptionsScreen}.kt`、`app/src/main/kotlin/com/lioisme/lide/ui/theme/SettingsManager.kt`、`scripts/build-apks.ps1`
 - 知识库：`docs/kb/README.md` §2、`docs/kb/ENGINE_RUNTIME.md`、`docs/WHITEPAPER.md` §7.1、`AGENTS.md`（打包构建约定 / 文档治理约定）
 
@@ -139,7 +139,7 @@
 | P0 | P0-6 **引擎 dex 单份化（2026-08-08 用户红线修订，废弃 P0-3/P0-4 资产形态）** | 用户红线：所有 dex 必须位于宿主 APK **根目录**、禁止其他目录、禁止任何重复副本。落地：`:app` 对 `:androlua` 依赖改 `compileOnly` + `testImplementation` + `runtimeImplementation`（引擎类不进宿主 classes*.dex）；`embedRuntimeDex`（assets/runtime 形态）替换为 `engineDexExtract`（解出 `build/engine/engine.dex`）+ `injectEngineDex<Variant>`（androidComponents 挂 debug/release，注入 `mergeLibDex<Variant>/zz/classes.dex` 并按 ext→lib→project 编号为根目录 `classesN.dex`，同时写非 dex 标记 `assets/engine.dex.idx`）；`ApkBuilder.ENGINE_DEX_MARKER`（内容须匹配 `classes\d*\.dex` 防路径注入）替代 `RUNTIME_DEX_ENTRY`；`verifyMinimalism` 增契约断言（默认开启根目录必有标记+引擎条目、旧 assets/runtime 形态出现即失败）；EngineActivity 动画去模块资源依赖（`EXTRA_ANIM_IN/OUT`，宿主 `R.anim` 经 EngineBridge 注入）；.gitignore 删除 assets/runtime 条目 | 2026-08-08 |
 | P0 | P0-7 **打包 dex 直用宿主（2026-08-08 修订，废弃 P0-4 dex 替换模式）** | 用户要求：移除「专门给打包构建 APK 时提供 dex」的设计——可接受产物有多余内容，不接受本体多份引擎类、不接受魔改宿主构建流程。落地：`ApkBuilder` 删 dex 替换模式（`ENGINE_DEX_MARKER` 不再选 dex），产物直接复用宿主根目录**全量 classes*.dex**（IDE 类 + 引擎类原样保留）；标记仅作引擎存在性判定（manifest 回落 `LuaApplication` + 移除 IDE MainActivity 门禁，未命中保持宿主 manifest）；宿主构建流程（runtime buildType / engineDexExtract / injectEngineDex / verifyMinimalism）零改动；`ApkBuilderTest` 4 用例改写为全量保留语义。详见 `PACKAGING_DEX_SIMPLIFY_WORK_ORDER` | 2026-08-08 |
 
-> **后续 UI 迁移（2026-08-07，设置简约化 `docs/planned/SETTINGS_SIMPLIFY_WORK_ORDER.md` T1~T4）**：
+> **后续 UI 迁移（2026-08-07，设置简约化工作单 T1~T4）**：
 > 设置页「打包选项」独立页 `BuildOptionsScreen` 已删除，其全部打包选项（自动安装开关替代「产物输出」单选、
 > 原生库 / 编译 / 加密开关、默认 ABI 5 项）迁入 AndroLua 合并页 `AndroLuaSettingsScreen`（「打包」分区）；
 > 签名默认选择迁入独立 `SigningScreen`（主设置「通用」分区入口）。P1-1/P2-3/P3-2 中所指「设置页」即该合并页。

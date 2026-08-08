@@ -1,7 +1,7 @@
 -- live2dapp.lua — 看板娘（Live2D v2）lide 原生引擎封装（多模型版）
 --
 -- 仅支持 lide 原生库（liblive2d.so），不携带 pro（jp.live2d.* dex）兼容。
--- 语义对齐 live2d 官方 v2 引擎（迁移计划 docs/planned/LIVE2D_NATIVE_MIGRATION_PLAN.md）：
+-- 语义对齐 live2d 官方 v2 引擎（历史迁移实证 LIVE2D_NATIVE_MIGRATION_PLAN，结论已蒸馏）：
 --   LAppView / L2DViewMatrix / L2DModelMatrix / L2DMatrix44 / TouchManager /
 --   L2DTargetPoint / LAppLive2DManager（4 模型轮换 + 双模型分支 + tap/flick/pinch）
 --
