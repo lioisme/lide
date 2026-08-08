@@ -2,8 +2,6 @@ package com.lioisme.lide.project
 
 import android.util.Log
 import com.androlua.LuaApplication
-import com.lioisme.lide.androlua.LuaConfigParser
-import com.lioisme.lide.androlua.PermissionResolver
 import com.lioisme.lide.model.Project
 import java.io.File
 import java.util.concurrent.ConcurrentHashMap

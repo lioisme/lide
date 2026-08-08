@@ -1,8 +1,5 @@
 package com.lioisme.lide.build
 
-import com.lioisme.lide.androlua.AXmlManifest
-import com.lioisme.lide.androlua.LuaCompiler
-import com.lioisme.lide.androlua.ManifestEdit
 import java.io.ByteArrayOutputStream
 import java.security.PrivateKey
 import java.security.cert.X509Certificate
@@ -31,10 +28,12 @@ import java.util.zip.ZipOutputStream
  * - manifest：改包名 / label / 版本；uses-permission 白名单 = 工程声明 ∩ 宿主 +
  *   宿主自声明权限（自引用权限名随包名原位替换）；桌面图标入口重定向到引擎页
  *   （[DEFAULT_LAUNCHER_ACTIVITY]，点开直接运行工程）。
- * - P0 运行时基座（dex 替换模式）：宿主内嵌 `assets/runtime/classes.dex`（引擎 dex，
- *   无 IDE 类）时，宿主 classes*.dex 全部替换为该 dex，manifest 同步回落
- *   `com.androlua.LuaApplication` 并移除 IDE MainActivity——产物 dex 仅引擎；
- *   资产缺失时兜底宿主自身（pro 模板语义）。
+ * - P0 运行时基座（dex 直用宿主，2026-08-08 P0-7 修订）：不再为打包单独提供 dex——
+ *   产物直接复用宿主根目录全量 classes*.dex（IDE 类 + 引擎类原样保留，接受多余
+ *   内容）；`assets/engine.dex.idx` 标记仅作引擎存在性判定，命中时 manifest 回落
+ *   `com.androlua.LuaApplication` 并移除 IDE MainActivity（引擎类随宿主 dex 全量
+ *   进入产物，回落后类均存在、无解析风险）；未命中时保持宿主 manifest（pro 模板
+ *   语义，兼容 embedRuntimeDex=false 的瘦身构建）。
  * - v1 + v2 签名（[ApkSigner]），输出可直接 adb install 的 APK 字节。
  */
 object ApkBuilder {
@@ -119,18 +118,22 @@ object ApkBuilder {
     }
 
     /**
-     * 宿主内嵌运行时引擎 dex 资产条目：宿主 APK `assets/runtime/classes.dex`（单 dex，
-     * universalRuntime 变体产物解出，无宿主 IDE 类）。存在时装配采用 **dex 替换模式**：
-     * 宿主 classes*.dex 条目全部替换为该引擎 dex（新条目名恒为 `classes.dex`），
-     * manifest 同步回落 `com.androlua.LuaApplication` 并移除 IDE MainActivity；
-     * 缺失时兜底宿主 APK 自身（pro 模板语义，防构建顺序破坏运行期打包）。
+     * 引擎 dex 定位标记资产：宿主 APK `assets/engine.dex.idx`（非 dex，内容为引擎 dex
+     * 在宿主 APK 根目录的条目名，如 `classes31.dex`，由构建期 injectEngineDex 写入）。
+     * 契约（引擎 dex 单份化，2026-08-08）：宿主根目录 classes*.dex 仅含 IDE 代码
+     * （:androlua 为 compileOnly，引擎类不进宿主 dex），引擎 dex 唯一一份在根目录。
+     * **P0-7 修订（2026-08-08）**：打包器不再据此选取 dex（产物直用宿主全量根 dex，
+     * 不再做引擎单 dex 替换），标记仅作**引擎存在性判定**——命中合法条目时 manifest
+     * 回落 `com.androlua.LuaApplication` 并移除 IDE MainActivity；未命中保持宿主
+     * manifest（pro 模板语义，兼容 embedRuntimeDex=false 瘦身构建）。标记为宿主构建
+     * 元数据，任何产物一律不带。旧 `assets/runtime/classes.dex` 内嵌形态已废弃。
      */
-    const val RUNTIME_DEX_ENTRY = "assets/runtime/classes.dex"
+    const val ENGINE_DEX_MARKER = "assets/engine.dex.idx"
 
-    /** dex 替换模式下产物 Application：LuaApplication.extractLuaScripts 解包 assets/lua。 */
+    /** 引擎 dex 存在时产物 Application：LuaApplication.extractLuaScripts 解包 assets/lua。 */
     const val RUNTIME_APPLICATION = "com.androlua.LuaApplication"
 
-    /** dex 替换模式下整体移除的 IDE 主入口（宿主 applicationId = com.lioisme.lide）。 */
+    /** 引擎 dex 存在时整体移除的 IDE 主入口（宿主 applicationId = com.lioisme.lide）。 */
     const val RUNTIME_REMOVED_ACTIVITY = "com.lioisme.lide.MainActivity"
 
     fun build(
@@ -144,8 +147,16 @@ object ApkBuilder {
     ): ByteArray {
         onStage(BuildStage.READ_HOST)
         val hostEntries = readZip(hostApk)
-        // 运行时基座（dex 替换模式）：宿主内嵌引擎 dex 存在 → 产物 dex = 引擎 dex。
-        val runtimeEntry = hostEntries.firstOrNull { it.first == RUNTIME_DEX_ENTRY }
+        // 引擎存在性判定（P0-7：不再据此选取 dex，产物直用宿主全量根 dex）：
+        // 标记内容须匹配 classes\d*\.dex（防任意路径注入）且根目录存在该条目。
+        val enginePresent =
+            hostEntries.firstOrNull { it.first == ENGINE_DEX_MARKER }
+                ?.third
+                ?.toString(Charsets.UTF_8)
+                ?.trim()
+                ?.takeIf { it.matches(Regex("classes\\d*\\.dex")) }
+                ?.let { name -> hostEntries.any { it.first == name } }
+                ?: false
         val templateEntries = hostEntries
         val manifestEntry =
             templateEntries.firstOrNull { it.first == "AndroidManifest.xml" }
@@ -196,10 +207,10 @@ object ApkBuilder {
                         usesPermissions = whitelist,
                         // 产物图标入口重定向到引擎页（点开直接运行工程，而非宿主 IDE）。
                         launcherActivity = input.launcherActivity,
-                        // dex 替换模式：IDE 类已剥离，application 需回落引擎 Application，
-                        // MainActivity 残留声明会导致解析期 ClassNotFound，一并移除。
-                        applicationName = if (runtimeEntry != null) RUNTIME_APPLICATION else null,
-                        removeActivities = if (runtimeEntry != null) listOf(RUNTIME_REMOVED_ACTIVITY) else emptyList(),
+                        // 引擎 dex 随宿主全量 dex 进入产物：回落引擎 Application 并移除
+                        // IDE MainActivity（双桌面图标与 IDE 入口残留），类均存在无解析风险。
+                        applicationName = if (enginePresent) RUNTIME_APPLICATION else null,
+                        removeActivities = if (enginePresent) listOf(RUNTIME_REMOVED_ACTIVITY) else emptyList(),
                     ),
                 )
             } catch (e: Exception) {
@@ -247,8 +258,9 @@ object ApkBuilder {
                     ZipUtils.writeEntry(zos, name, method, patchedManifest)
                     continue
                 }
-                // dex 替换模式：宿主 classes*.dex 全部剔除，改由引擎 dex 提供（循环末尾注入）。
-                if (runtimeEntry != null && name.matches(Regex("classes\\d*\\.dex"))) {
+                // dex 直用宿主（P0-7）：宿主 classes*.dex 一律原样保留（RUNTIME_CORE）；
+                // 定位标记（assets/engine.dex.idx）为宿主构建元数据，任何产物一律不带。
+                if (name == ENGINE_DEX_MARKER) {
                     continue
                 }
                 // 宿主条目按领域分类（HostPolicy 唯一事实源，default-deny）：
@@ -297,10 +309,6 @@ object ApkBuilder {
             val mainEntryName = "assets/lua/${input.mainFile}"
             if (mainEntryName !in seen) {
                 ZipUtils.writeEntry(zos, mainEntryName, ZipEntry.DEFLATED, mainData)
-            }
-            // dex 替换模式：注入引擎 dex（产物唯一 classes.dex，无 IDE 类）。
-            if (runtimeEntry != null && "classes.dex" !in seen) {
-                ZipUtils.writeEntry(zos, "classes.dex", runtimeEntry.second, runtimeEntry.third)
             }
         }
         onStage(BuildStage.SIGN)

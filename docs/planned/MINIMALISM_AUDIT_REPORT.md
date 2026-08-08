@@ -38,11 +38,30 @@
 
 ## 2. 发现的问题
 
-### P1　引擎 dex 模板冗余（`assets/runtime/classes.dex`）
+### P1　引擎 dex 冗余（`assets/runtime/classes.dex`，**2026-08-08 已根治**）
 `embedRuntimeDex` 将 universal runtime 变体 `classes.dex`（剥离 IDE 后的引擎面，
 **2.6 MB**）写入 `src/main/assets/`，**恒随每个常规 APK 打包**；而同一引擎类同时也
 存在于宿主自身 `classes*.dex`。属 P0 打包契约（dex 替换模板）下的**受控冗余**，
 但直接与「精简」字面冲突。
+**根治（2026-08-08，用户红线修订）**：不再有任何冗余副本——宿主对 `:androlua` 改
+`compileOnly`（引擎类不进宿主 classes*.dex），引擎 dex 由 `engineDexExtract` +
+`injectEngineDex<Variant>` 作为**根目录唯一** `classesN.dex` 注入宿主 APK
+（`assets/engine.dex.idx` 标记契约），旧 `assets/runtime` 形态出现即被
+`verifyMinimalism` 拒绝（见 P0-6 / AGENTS.md 运行时基座契约）。
+
+**补充修复（2026-08-08，P0-6 全链验证缺陷）**：release 的 `minify<vn>WithR8` 任务
+**执行**时输出快照在任务完成时刻定格（R8 声明输出仅 classes.dex）——引擎 dex 仅由
+独立 `injectEngineDex<Variant>` 任务事后写入目录时不在快照内，package 漏包，
+`verifyMinimalism`「标记指向但根目录无该条目」失败。已重构 `app/build.gradle.kts`：
+注入实体拆为 `writeEngineDex()`（仅写 dex，幂等）与 `injectBody()`（dex + 双处标记），
+release 侧经 `tasks.configureEach`（onVariants 回调期 minify 任务未注册，禁止
+`tasks.named` 提前解析）把 `writeEngineDex` 挂到 minify doLast——任务完成时快照即含
+引擎 dex；inject 任务保留幂等落位兜底（minify up-to-date 时补写）。
+**验收证据（2026-08-08）**：`:app:assembleUniversalRuntime` → `:app:verifyMinimalism`
+BUILD SUCCESSFUL；`app-arm64-release.apk` 根目录 = `classes.dex`(5.4MB, IDE) +
+`classes2.dex`(2,608,288B, 引擎，与 `engineDexExtract` 一致) +
+`assets/engine.dex.idx`="classes2.dex"，引擎类单份；debug 变体
+`injectEngineDexUniversalDebug` 同样成功（`classes17.dex` + 标记）。
 
 ### P2　内置示例胖资产（`assets/examples/live2d.alp`）
 `generateExamples` 默认把 `scripts/examples-src/` 全部工程生成 `.alp` 打包（7 个，
@@ -76,6 +95,19 @@
   `true`）；`embedRuntimeDex` 任务挂 `inputs.property("embedRuntimeEnabled")`，
   `false` 时**删除旧资产并跳过生成**（幂等），打包器缺失资产时兜底宿主 dex（P0 契约）。
 - 验收：`-Plide.embedRuntimeDex=false assembleArm64Debug` 产包无该资产；默认构建保持现状。
+- **2026-08-08 修订**：`embedRuntimeDex`/`assets/runtime` 形态废弃（引擎 dex 单份化，
+  见 §4 T1'）；门控属性名 `lide.embedRuntimeDex` 保留，语义改为「剔除根目录引擎 dex」。
+
+### T1' 引擎 dex 单份化（2026-08-08，用户红线：dex 一律宿主 APK 根目录、禁他处、禁多份）
+- `:app` 对 `:androlua` 依赖改 `compileOnly` + `testImplementation` +
+  `runtimeImplementation`（宿主 classes*.dex 不含引擎类）。
+- `embedRuntimeDex` → `engineDexExtract`（解出 `build/engine/engine.dex`）+ 
+  `injectEngineDex<Variant>`（androidComponents 挂 debug/release：注入
+  `mergeLibDex<Variant>/zz/classes.dex`，package 任务编号为根目录 `classesN.dex`；
+  写非 dex 标记 `assets/engine.dex.idx`）。
+- `ApkBuilder.ENGINE_DEX_MARKER` 契约（内容须匹配 `classes\d*\.dex` 防路径注入）替代
+  `RUNTIME_DEX_ENTRY`；`verifyMinimalism` 断言：默认开启根目录必有标记+引擎条目、
+  旧 `assets/runtime/classes.dex` 出现即失败。
 
 ### T2 示例生成门控（已完成）
 - `app/build.gradle.kts`：`generateExamples` 读 `lide.examples`（默认 `none`=

@@ -60,7 +60,7 @@ jobs:
         if: steps.version.outputs.latest != steps.version.outputs.current
         continue-on-error: true
         run: |
-          ./gradlew :editor:testDebugUnitTest :app:compileArm64DebugKotlin :app:assembleArm64Debug --console=plain
+          ./gradlew :app:testArm64DebugUnitTest :app:compileArm64DebugKotlin :app:assembleArm64Debug --console=plain
           echo "gates_rc=$?" >> "$GITHUB_ENV"
 
       - name: Open pull request

@@ -1,33 +1,34 @@
 # 注：LuaJ（org.luaj.*）已于引擎迁移时移除（Lua 5.3 AndroLua C fork 取代），
 # 仓库无此包，无对应 keep 规则（2026-08-06 P3-5 清理）。
 
-# luajava - libluajava.so 的 JNI 桥接层（LuaState/LuaJavaAPI/LuaObject 等 16 类）。
-# native 侧经 FindClass/GetStaticMethodID 按字面量类名与方法名绑定，R8 的 Java 引用图
-# 看不到这些 JNI 字符串引用，若不 keep 会被整类删除或改名（曾导致引擎启动空白，见审计）。
-# 必须 { *; }：native 可能调用任意成员；不得混淆类名与成员名。
--keep class com.luajava.** { *; }
+# ── 引擎 dex 单份化（2026-08-08，D-1 冻结结论落地）────────────────────
+# 宿主不再打包任何引擎类（com.luajava.** / com.androlua.** /
+# com.lioisme.lide.androlua.** / android.widget 扩展控件 / com.nirenr.** /
+# com.android.cglib.** 等）：引擎类经 :app:injectEngineDex 注入为宿主 APK
+# 根目录 classes2.dex（单一 classloader 加载），R8 保留面由
+# src/runtime/runtime-rules.pro 维护。此处刻意不再保留引擎 keep 规则——
+# 若误 keep，引擎类会随宿主 release dex 再度打包（双份引擎代码回归，
+# verifyReleaseLuaSurface 反向断言会捕获）。
+#
+# 宿主 keep 面：Lua 脚本 / 插件 dex 可能按类名反射引用宿主类。
+# 逐包枚举（com.lioisme.lide.** 会误匹配 androlua 引擎子树，禁止使用）。
 
-# androlua - 运行时反射 / 动态 dex 按类名引用（LuaActivity、LuaApplication 等）
--keep class com.androlua.** { *; }
--keep class com.lioisme.lide.androlua.** { *; }
+# 宿主根类（manifest 入口）
+-keep class com.lioisme.lide.LideApp { *; }
+-keep class com.lioisme.lide.MainActivity { *; }
 
-# 宿主应用类 - Lua 脚本 / 插件 dex 可能按类名反射引用
--keep class com.lioisme.lide.** { *; }
-
-# ── Lua 可见 API 面（按类名引用，R8 引用图不可见）────────────────────
-# androlua 框架把扩展类放在 android.* / com.nirenr.* 命名空间，Lua 脚本经
-# luajava 以字符串类名 bindClass/import（如 loadlayout.lua 的
-# bindClass("android.widget.ArrayListAdapter")、bin.lua 的 AlertDialogBuilder）。
-# 未 keep 的类会被 R8 整类删除，工程运行到布局即报错（历史事故，见审计记录）。
-# android.widget.** 仅匹配打进 APK 的自定义控件，框架类在设备侧不受影响。
--keep class android.widget.** { *; }
--keep class android.app.AlertDialogBuilder { *; }
--keep class android.app.FloatWindow { *; }
--keep class com.nirenr.** { *; }
-
-# com.android.cglib（DexMaker）供 LuaEnhancer 在运行时生成并加载 dex：
-# 生成字节码与 luajava 均按类名/方法名绑定，防混淆防裁剪。
--keep class com.android.cglib.** { *; }
+# 宿主功能包（IDE / 编辑器 / 打包 / 工程 / API 浏览器 / UI）
+-keep class com.lioisme.lide.apibrowser.** { *; }
+-keep class com.lioisme.lide.build.** { *; }
+-keep class com.lioisme.lide.editor.** { *; }
+-keep class com.lioisme.lide.engine.** { *; }
+-keep class com.lioisme.lide.i18n.** { *; }
+-keep class com.lioisme.lide.import.** { *; }
+-keep class com.lioisme.lide.model.** { *; }
+-keep class com.lioisme.lide.project.** { *; }
+-keep class com.lioisme.lide.session.** { *; }
+-keep class com.lioisme.lide.ui.** { *; }
+-keep class com.lioisme.lide.util.** { *; }
 
 # 反射所需的属性信息
 -keepattributes *Annotation*,InnerClasses,EnclosingMethod,Signature

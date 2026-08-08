@@ -11,7 +11,7 @@
 docs/
 ├── kb/            ← 本知识库（索引 + 分主题条目；唯一事实来源）
 ├── in-progress/   ← 进行中文档（2 篇）
-├── planned/       ← 计划中文档（8 篇）
+├── planned/       ← 计划中文档（9 篇）
 ├── discard/       ← 丢弃区（唯一出口）：已完成/过时文档 33 篇（15 篇已物理删除，条目保留作墓碑），只追溯不维护
 └── reference/     ← 参考源码资产（gitignored：androlua / sora-editor / Squircle-CE / project / 代码手册社区）
 ```
@@ -50,13 +50,14 @@ docs/
 |------|------|-----------|------|------|
 | `PARITY_COMPLETION_WORK_ORDER.md` | 2026-08-01 | 19 个 WP 补齐 pro 宿主 IDE 功能（对齐度 ~6 成 → 目标全齐） | **13/19 完成**：WP-001/002/003/004/005/008/013/014/015/016/017/018/019（2026-08-05 补登 005/013/015/016/018）；WP-014 代码落地未真机验收 | 剩余 WP-006/007/009/010/011/012（未开工，详见 ROADMAP.md 与 TASKS.md） |
 | `EDITOR_UI_ALIGNMENT_WORK_ORDER.md` | 基线 c7b35dd | 10 WP 对齐 Squircle-CE 抽屉/Tab/文件树（禁手搓、仅官方组件） | **WP-003~006 已落地**（EditorTabs 拖拽排序 + DropdownMenu 关闭菜单，2026-08-05 复核）；WP-001/002/007/008 ⛔ 被取代（抽屉已删除→`ProjectFileBrowserDialog`）；WP-009/010 未完成 | 内部 WP 编号与 PROGRESS 编号是两套体系 |
-| `RUNTIME_PACKAGING_5REQ_WORK_ORDER.md` | 2026-08-07 | 打包运行时五需求工作单（运行时解耦/载荷上下限/ABI 架构/输出选配/设置收敛）：审计结论 5 项判定 + 用户决策 D-1~D-3（32 位非必须、ABI 宿主驱动、输出默认自动安装）+ 分阶段计划 P1→P2→P3→P0 | **实施完成**：P1（ABI 架构固化）→ P2（输出选配）→ P3（设置收敛）→ P0（运行时基座，dex 替换路线：宿主内嵌 APK 设计被用户否决，改为单 dex 资产 `assets/runtime/classes.dex` + 打包器 dex 替换模式） | 触发：用户五需求；D-1 明确 NDK 不降级（保持 29.0.14206865），32 位留扩展路径；P0 完成，待设备端冒烟验证后归档 |
+| `RUNTIME_PACKAGING_5REQ_WORK_ORDER.md` | 2026-08-07 | 打包运行时五需求工作单（运行时解耦/载荷上下限/ABI 架构/输出选配/设置收敛）：审计结论 5 项判定 + 用户决策 D-1~D-3（32 位非必须、ABI 宿主驱动、输出默认自动安装）+ 分阶段计划 P1→P2→P3→P0 | **实施完成**：P1（ABI 架构固化）→ P2（输出选配）→ P3（设置收敛）→ P0（运行时基座；宿主内嵌 APK 设计被用户否决 → 单 dex 资产 + 打包器 dex 替换模式 → **2026-08-08 引擎 dex 单份化修订（P0-6）**：用户红线「dex 一律宿主 APK 根目录、禁他处、禁多份」，`embedRuntimeDex`/`assets/runtime` 形态废弃，改 `engineDexExtract` + `injectEngineDex<Variant>` 根目录注入 + `assets/engine.dex.idx` 标记契约，`:androlua` 依赖改 compileOnly/testImplementation/runtimeImplementation；**P0-7 修订（2026-08-08）**：移除打包器 dex 替换模式，产物直用宿主全量根 dex，见 `PACKAGING_DEX_SIMPLIFY_WORK_ORDER`） | 触发：用户五需求；D-1 明确 NDK 不降级（保持 29.0.14206865），32 位留扩展路径；P0-6/7 待全链验证与设备端冒烟后归档 |
+| `PACKAGING_DEX_SIMPLIFY_WORK_ORDER.md` | 2026-08-08 | 打包 dex 直用宿主（P0-7 修订）：移除「专门给打包提供 dex」的设计（`ApkBuilder` dex 替换模式）——产物直接复用宿主根目录全量 `classes*.dex`（IDE 类 + 引擎类，接受多余内容）；`assets/engine.dex.idx` 标记仅作引擎存在性判定（manifest 回落 `LuaApplication` + 移除 IDE MainActivity 门禁），不再作 dex 选取依据；宿主构建流程（runtime buildType / engineDexExtract / injectEngineDex / verifyMinimalism）零改动 | 🚧 进行中（T1~T4，2026-08-08 立项）：T1 改 `ApkBuilder`、T2 改 `ApkBuilderTest`、T3 契约同步（AGENTS.md / gradle 注释）、T4 全链验证 + 归档 | 用户红线：可接受产物多余内容、不接受本体多份引擎类、不接受魔改宿主构建流程 |
 | `androlua-community/`（子库） | 2026-08-02 | 社区帖子训练知识库：2144 篇初筛完成；正负面主题卡第一批 + 训练语料 seed 已产出 | catalog 全量完成；positives 9 卡 / negatives 5 卡 + harmful 专项 1 目录；training seed 11 条 + batch 工具就绪 | 关键事实：语料为 300 字符预览（1740/2144 截断），verdict 均 `static_review`，未实测 |
 | `PROGRESS.md`（docs/） | 实时 | 工作进度台账（WP-001~010 + 工作单尾项 + WP-014 打包器） | 进行中 | 2026-08-05 恢复自 git 历史对象 `7fc57389`（此前整行损坏）；打包器 WP-014 已补登记 |
 | `WHITEPAPER.md`（docs/） | 实时 | 白皮书 v2.0：架构/路线图/原生模块差异声明 §7.1 | 进行中 | 2026-08-05 恢复自 git 历史对象 `36eac8c1`（此前缺 §7.1/§8/附录 A 尾部）；阶段四/五待随打包器更新 |
 | `AGENTS.md`（根） | 实时 | 评审硬门槛：R1~R5 边界、构建验证命令、编辑器约定、/libs 机制约定 | 进行中 | 评审门禁，改动前必读 |
 
-### 2.3 计划中（8 篇）
+### 2.3 计划中（9 篇）
 
 | 文档 | 日期 | 内容一句话 | 状态 | 注意 |
 |------|------|-----------|------|------|
@@ -70,21 +71,23 @@ docs/
 | `SETTINGS_SIMPLIFY_WORK_ORDER.md` | 2026-08-07 | 设置界面简约化：① AndroLua 设置与打包选项合并为单入口页（工具 + 打包 + 默认 ABI）② 去除解释性文案 ③ 收敛单功能专题 ④ 自动安装改单一开关（默认启用，pro 兼容）⑤ 签名管理独立界面（主设置「通用」分区入口） | **已完成（2026-08-07）**：删除 `BuildOptionsScreen`/`Routes.BUILD_OPTIONS`；`AndroLuaSettingsScreen` 重写为合并页；`compileArm64DebugKotlin`/`assembleArm64Debug`/build.* 单测/R1 门禁全绿 | 待模拟器 UI 回归（主设置五分区 → 合并页开关/ABI → 签名页 → 打包自动安装）后归档 docs/discard |
 | `GAME_ENGINE_PERFORMANCE_AUDIT_REPORT.md` | 2026-08-01 | 石头/看板娘瓶颈定位，原生化端到端估算 3~15 倍 | 审计完成，优化建议未排期 | 看板娘已原生化（LIVE2D 迁移）；石头未动；诚实声明：估算未 profiler 校准 |
 | `NATIVE_LIB_PACKAGING_AUDIT_REPORT.md` | 2026-08-07 | 原生引擎「全架构构建 + 按需打包」机制审计：pro `bin.lua` checklib 核对（单 ABI + 按需 .so）；lide 缺口（lib 全量携带、Lua 依赖非传递致 require 断裂）；方案 = universal 多 ABI + Kotlin 传递闭包 + ABI×lib 二维过滤 | **实施完成（2026-08-07）**：§7 T1~T5 全部落地（universal flavor、`NativeDependencyAnalyzer`、`ApkBuilder` ABI×lib 过滤 + launcher 重定向、打包 UI、95 单测 + 真实宿主设备端到端闭环）；报告 §7 记实施记录与验收证据 | 触发：用户要求全架构底层库 + 打包组合能力；NDK 29 移除 32 位工具链 → 实际交付双 ABI |
-| `MINIMALISM_AUDIT_REPORT.md` | 2026-08-07 | LIDE 精简治理审计：合规取证（单一 Lua 运行时 / sora 单来源 / 零 jniLibs / 资产单份）+ 3 项可整改（runtime dex 模板 2.6MB 受控冗余、live2d 示例 8.95MB 胖资产、fileTree 死声明等） | **实施完成（2026-08-07）**：`lide.examples`（默认零内置）与 `lide.embedRuntimeDex`（默认开启）双门控 + `verifyMinimalism` 去重门禁入 CI + 死代码清理（fileTree/classes.jar/compileSdk 对齐）+ ExamplesScreen 空态；报告 §4 记实施记录 | 触发：用户要求「尽量精简、无重复 dex/原生库/资源」；用户决策：示例当前全去、后续内置 1-2 个代表性工程 |
+| `MINIMALISM_AUDIT_REPORT.md` | 2026-08-07 | LIDE 精简治理审计：合规取证（单一 Lua 运行时 / sora 单来源 / 零 jniLibs / 资产单份）+ 3 项可整改（runtime dex 模板 2.6MB 受控冗余、live2d 示例 8.95MB 胖资产、fileTree 死声明等） | **实施完成（2026-08-07）**：`lide.examples`（默认零内置）与 `lide.embedRuntimeDex`（默认开启）双门控 + `verifyMinimalism` 去重门禁入 CI + 死代码清理（fileTree/classes.jar/compileSdk 对齐）+ ExamplesScreen 空态；报告 §4 记实施记录。**2026-08-08 修订（P1 根治）**：引擎 dex 单份化——`:androlua` 改 compileOnly，引擎 dex 根目录单份注入（`assets/engine.dex.idx` 标记契约），旧 assets/runtime 形态禁止 | 触发：用户要求「尽量精简、无重复 dex/原生库/资源」；用户决策：示例当前全去、后续内置 1-2 个代表性工程 |
 | `PACKAGING_UI_REWORK_WORK_ORDER.md` | 2026-08-08 | 打包 UI 重构：① 签名 v1/v2/v3 + ABI 改经典 Checkbox ② 宿主不含的 ABI 置灰禁用（选项由 `ZipUtils.listAbis` 实测驱动，删硬编码名单）③ 「仅携带依赖的原生库」更名「优化打包」（仅针对原生库）④ 删除构建 APK 整页，仅保留构建打包对话框（`BuildPackagingDialog`，入口 = 编辑器 ⋮ 菜单） | **已完成（2026-08-08）**：`BuildApkScreen.kt` 已删；`AndroLuaSettingsScreen` 复选框化 + 宿主驱动；`BuildPackagingDialog.kt` 新建（迁移 internal 辅助函数，`BuildPackagingTest` 零改动）；AGENTS.md D-1 同步修订 | 待模拟器 UI 回归后归档 `docs/discard`；D-1 冻结修订：默认 ABI 未携带 → 置灰而非回落展示 |
 | `BUILD_SIGNING_ENCRYPTION_WORK_ORDER.md` | 2026-08-07 | 打包构建三大能力工作单：① 签名管理（自有 keystore 档案/别名/指纹/默认）② Lua 编译范围可选 + 字节码 DES-ECB 加密（C 引擎 loader 单点解密，覆盖 main + require）③ 原生库按需携带 + 签名/加密/ABI 全部打包选项持久化通用化 | **T1~T3/T5 已完成（2026-08-07）**：编译/加密独立开关（默认均开）、签名三类（内置/导入/自生成，手写 X.509 零依赖）、build.* 43 单测全绿 + assembleArm64Debug 绿 + 模拟器 DES loopback；T4 文档同步进行中 | 文档位于 `docs/planned/`；加密定位防呆级（产物内密钥可提取）；R1~R5 合规（宿主域 + 引擎 C 源码，editor 零改动） |
 | `PACKAGING_PAYLOAD_CLEANUP_WORK_ORDER.md` | 2026-08-07 | 打包载荷精化：产物仅含 androlua 工程所需内容——宿主条目按「运行期消费面」领域分类（`HostPolicy`，**默认拒绝**替代黑名单剔除），内置 `.alp` 示例 / `javaapi` 类表 / keys / textmate / layouts 一律不进产物（对齐 pro `bin.lua` 宿主 assets 整树剔除语义） | **已完成（2026-08-07）**：`HostPolicy.kt` + `ApkBuilder` 接入（删 `HOST_ASSET_EXCLUDED`）+ UI 载荷摘要（`build_dep_host_only` 双语）+ `ApkBuilderTest` **17/17 绿**（含 examples/javaapi 剔除 + default-deny 兜底断言）+ `assembleArm64Debug` 绿 | 待模拟器产物运行回归后归档 `docs/discard`；dex 级剥离（R8 独立 engine 包）为遗留大项不在本次范围，已注明 KDoc |
 | `EMULATOR_REGRESSION_2026-08-07.md` | 2026-08-07 | 模拟器定向+全量回归测试报告：23 项功能/性能检查全 PASS——设置重组（AndroLua 合并页 + 权限/签名入口）、动态权限授权闭环、编辑器全语言高亮（Lua/Kotlin 像素取证）、更多菜单级联、API 浏览器搜索收起死循环红线回归、示例空态、打包自装 + packaged 产物独立运行（P0 runtime dex 替换）、大文件降级、性能（冷启动 1.1s / 105MB PSS） | **已完成（2026-08-07）**：x86_64 模拟器 / API 34 实测，零 FATAL/ANR，证据清单见报告 §8 | 归档前置：后续如做 arm64 真机矩阵（build-apks.ps1）可更新 §9 |
+| `JAVA_LIBRARIES_AUDIT_REPORT.md` | 2026-08-08 | Java 库全量审计：androlua 内嵌 9 组 330 文件 vs 上游 pro 4.4.2 逐文件 diff（运行时面 100% 完整，差异全为有 免责刻意删减 + lide 增强）；落后度判定：内嵌库受字节码/脚本类名契约/上游废弃三重约束**冻结**，无升级路径；非 androlua 14 项宿主依赖 6 项当前 / 2 项轻微落后 / 5 项 androidx 主干落后 1 年（BOM 2025.06→2026.06 等） | 研究已定稿（纯审计，零代码改动） | 升级建议批次 A/B 待用户决策执行；批次 C（AGP 9）不推荐 |
+| `SOURCE_ORGANIZATION_5REQ_AUDIT_REPORT.md` | 2026-08-08 | 源码组织五需求全量审计：① 集中 /app（❌：WIP 把 EngineActivity 迁入 :androlua 方向错 + editor 未并单 + anim 双份）② 上游隔离（❌：LIDE 代码驻上游目录 + UPSTREAM.md 台账缺失）③ 与 pro 一致（⚠️ 缺失侧成立、增量侧 4 类未闭环）④ 全 Kotlin（⚠️ 2 处 Java）⑤ 同在库无 dex 重复（✅ 机制成立待加固）+ Phase 0~4 整改方案 | **已完成（2026-08-09）**：Phase 0~4 全部闭环——引擎页 Kotlin 化归位 `app/.../engine/`、editor 并单进 app、UPSTREAM.md 台账 + verifyVendorIsolation（CI verify-vendor）、verifyRuntimeSurface 包级断言、checkDexDuplication 四类跨 dex 断言（scanDexClassNames type_ids 二次间接修复）、IDE 依赖三形态（引擎 dex 5945→775 类）、6 变体打包回归 + 模拟器回归（4 工程矩阵 + 运行按钮全链路）全绿 | 已归档 `docs/discard/`；关键约定已蒸馏进 AGENTS.md（scanDex 解析语义、IDE 依赖三形态、verify 门禁命令） |
 
 ### 2.4 未登记的新进展（知识库补录）
 
 > 2026-08-05 治理后 WP-014 已补登记，无遗留未登记进展。新进展请遵循 §5 维护约定及时登记。
 
-### 2.5 已丢弃（docs/discard/，登记 50 篇，现存 34 篇；15 篇文档已物理删除 + 1 项死代码资产已删除，条目保留作墓碑）
+### 2.5 已丢弃（docs/discard/，登记 51 篇，现存 35 篇；15 篇文档已物理删除 + 1 项死代码资产已删除，条目保留作墓碑）
 
 已完成 / 过时 / 被取代文档统一移入 `docs/discard/`（`git mv` 保留历史），**不参与状态管理、不作为事实来源**：
 
-- **已完成 38 篇**（登记，其中 14 篇已物理删除；原 `docs/completed/` 30 篇 + 2026-08-07 新增 `SHADOW_REMOVAL_DEAD_CODE_CLEANUP_WORK_ORDER`、`EDITOR_ALL_LANGUAGES_SUPPORT_WORK_ORDER`、`PLUGIN_FEATURE_REMOVAL_WORK_ORDER`、`EDITOR_MULTI_LEVEL_MENU_WORK_ORDER` + 2026-08-08 新增 `SIGNING_GENERATE_CUSTOM_FIELDS_WORK_ORDER`）：结论均已蒸馏进本知识库，逐篇一句话 + 蒸馏去向见 `docs/discard/README.md` §3.1。
+- **已完成 39 篇**（登记，其中 14 篇已物理删除；原 `docs/completed/` 30 篇 + 2026-08-07 新增 `SHADOW_REMOVAL_DEAD_CODE_CLEANUP_WORK_ORDER`、`EDITOR_ALL_LANGUAGES_SUPPORT_WORK_ORDER`、`PLUGIN_FEATURE_REMOVAL_WORK_ORDER`、`EDITOR_MULTI_LEVEL_MENU_WORK_ORDER` + 2026-08-08 新增 `SIGNING_GENERATE_CUSTOM_FIELDS_WORK_ORDER` + 2026-08-09 新增 `SOURCE_ORGANIZATION_5REQ_AUDIT_REPORT`）：结论均已蒸馏进本知识库，逐篇一句话 + 蒸馏去向见 `docs/discard/README.md` §3.1。
 - **过时 11 篇**（原 `docs/archive/` 8 篇 + 插件化历史 2 篇 + `SETTINGS_ORGANIZATION_WORK_ORDER`）：`WORK_ORDER`（历史总任务书）、`IDE_RUNTIME_SEPARATION_FEASIBILITY_REPORT`（方案未采纳，与 R1~R5 冲突）、`ui-refactor`（Lua UI 时代草稿，代码已删除）、`audit-remediation`（Compose 前整改清单）、`java2kotlin-migration`（已反转：重新 vendor 上游 Java）、`architecture`/`lua-modules`/`code-map`（kb/project 三篇自标过期）、`PLUGIN_SEPARATION_ARCHITECTURE_REPORT`（插件化历史，**已物理删除 2026-08-07**）/`PLUGIN_PLATFORM_REPORT`（插件化历史，方案取消）、`SETTINGS_ORGANIZATION_WORK_ORDER`（被设置/权限治理新要求取代，**2026-08-07 移入**）。
 - **2026-08-07 物理删除批次**：15 篇无外部引用的报告（结论均已蒸馏）+ `material3_searchbar_patch/` 死代码执行 `git rm`（git 历史保留原文）；登记表条目保留并标注「（已物理删除 2026-08-07）」，清单见 `docs/discard/README.md` §3。
 - 丢弃原因逐条见 `docs/discard/README.md` §3.2；治理审计依据：`docs/discard/DOCS_GOVERNANCE_AUDIT_REPORT_2026-08-05.md`。

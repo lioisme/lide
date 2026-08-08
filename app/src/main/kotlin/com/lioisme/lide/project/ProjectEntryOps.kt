@@ -1,6 +1,6 @@
 package com.lioisme.lide.project
 
-import com.lioisme.lide.androlua.AlpNaming
+import com.lioisme.lide.project.AlpNaming
 import java.io.File
 
 /**

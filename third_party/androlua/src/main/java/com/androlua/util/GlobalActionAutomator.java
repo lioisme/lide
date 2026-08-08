@@ -7,11 +7,9 @@ import android.graphics.Path;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
-import androidx.annotation.RequiresApi;
 import android.util.Log;
 import android.view.ViewConfiguration;
 
-@RequiresApi(api = Build.VERSION_CODES.N)
 public class GlobalActionAutomator {
 
     private AccessibilityService mService;

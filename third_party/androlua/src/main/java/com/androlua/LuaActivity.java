@@ -30,7 +30,6 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.StrictMode;
 import android.provider.MediaStore;
-import androidx.annotation.NonNull;
 import android.text.style.ClickableSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -716,7 +715,7 @@ public class LuaActivity extends Activity implements LuaBroadcastReceiver.OnRece
         startActivity(Intent.createChooser(share, file.getName()));
     }
 
-    private String getType(@NonNull File file) {
+    private String getType(File file) {
         int lastDot = file.getName().lastIndexOf(46);
         if (lastDot >= 0) {
             String extension = file.getName().substring(lastDot + 1);
@@ -878,7 +877,7 @@ public class LuaActivity extends Activity implements LuaBroadcastReceiver.OnRece
      * 脚本无法迭代）。
      */
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (L == null || permissions == null || grantResults == null) {
             return;

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- runtime 变体主题覆盖（2026-08-08 引擎 dex 纯净化的配套）：
+     宿主 IDE 变体的 Theme.Lide 以 Material3 为 parent（material3 依赖仅 IDE 变体携带）；
+     runtime 变体零 IDE 依赖树，此处覆盖为 Android 原生 NoActionBar，
+     使 runtime manifest 的 theme 引用可链接。 -->
+<resources>
+    <style name="Theme.Lide" parent="@android:style/Theme.Material.NoActionBar" />
+</resources>

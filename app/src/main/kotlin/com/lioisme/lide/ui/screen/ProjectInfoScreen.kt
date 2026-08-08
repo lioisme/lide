@@ -16,7 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.lioisme.lide.R
-import com.lioisme.lide.androlua.LuaConfigParser
+import com.lioisme.lide.project.LuaConfigParser
 import com.lioisme.lide.editor.TipIconButton
 import com.lioisme.lide.model.Project
 import com.lioisme.lide.project.ProjectManager
@@ -125,7 +125,7 @@ fun ProjectInfoScreen(
                             updated,
                             "user_permission",
                             s.permissions.map {
-                                com.lioisme.lide.androlua.PermissionResolver
+                                com.lioisme.lide.project.PermissionResolver
                                     .normalize(it)
                             },
                         )

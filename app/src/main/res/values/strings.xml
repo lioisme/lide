@@ -386,4 +386,39 @@
     <string name="build_opt_abi_title">Default ABI</string>
     <string name="build_opt_abi_hint">ABIs not shipped by the host are disabled (falls back to all host ABIs at build time)</string>
     <string name="build_opt_abi_auto">All host ABIs</string>
+
+    <!-- Editor（并入自原 :editor 模块，2026-08-08 源码组织五需求 Phase 1） -->
+    <!-- Editor search -->
+    <string name="search_hint">Find…</string>
+    <string name="replace_hint">Replace…</string>
+    <string name="replace">Replace</string>
+    <string name="replace_all">Replace All</string>
+    <string name="case_sensitive">Case sensitive</string>
+    <string name="regex">Regex</string>
+    <string name="whole_word">Whole word</string>
+    <!-- Editor text operations -->
+    <string name="text_op_select_line">Select Line</string>
+    <string name="text_op_delete_line">Delete Line</string>
+    <string name="text_op_duplicate_line">Duplicate Line</string>
+    <string name="text_op_toggle_case">Toggle Case</string>
+    <string name="text_op_word_prev">Word Left</string>
+    <string name="text_op_word_next">Word Right</string>
+    <!-- Editor tabs -->
+    <string name="dirty_marker">• </string>
+    <string name="menu_close_tab">Close</string>
+    <string name="menu_close_others">Close Others</string>
+    <string name="menu_close_all">Close All</string>
+    <!-- File tree -->
+    <string name="file_tree_empty">No files</string>
+    <!-- Content descriptions -->
+    <string name="cd_undo">Undo</string>
+    <string name="cd_redo">Redo</string>
+    <string name="cd_run">Run</string>
+    <string name="cd_more">More actions</string>
+    <string name="cd_search_next">Next match</string>
+    <string name="cd_search_prev">Previous match</string>
+    <string name="cd_search_close">Close search</string>
+    <!-- TextMate runtime -->
+    <string name="textmate_init_failed">Editor engine initialization failed</string>
+    <string name="retry">Retry</string>
 </resources>

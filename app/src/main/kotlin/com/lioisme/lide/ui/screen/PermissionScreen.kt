@@ -227,7 +227,7 @@ fun ProjectPermissionScreen(
                     projectManager
                         .loadUserPermissions(project)
                         .map {
-                            com.lioisme.lide.androlua.PermissionResolver
+                            com.lioisme.lide.project.PermissionResolver
                                 .normalize(it)
                         }.toSet()
                 val known = PermissionCatalog.ALL.map { it.first }.toSet()
@@ -252,7 +252,7 @@ fun ProjectPermissionScreen(
                                 .filter { (perm, _) -> perm in s.selected }
                                 .map { (perm, _) -> perm }
                         file.writeText(
-                            com.lioisme.lide.androlua.LuaConfigParser.setStringArrayField(
+                            com.lioisme.lide.project.LuaConfigParser.setStringArrayField(
                                 file.readText(),
                                 "user_permission",
                                 checked,

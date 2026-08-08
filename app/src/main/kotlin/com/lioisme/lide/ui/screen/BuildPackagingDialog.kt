@@ -37,7 +37,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import com.lioisme.lide.R
-import com.lioisme.lide.androlua.LuaConfigParser
+import com.lioisme.lide.project.LuaConfigParser
 import com.lioisme.lide.build.AfterBuild
 import com.lioisme.lide.build.ApkBuilder
 import com.lioisme.lide.build.DependencyAnalysis

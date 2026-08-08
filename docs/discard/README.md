@@ -29,9 +29,9 @@
 | 历史审计结论 / 旧报告 | 本目录 §3 清单 → 对应文件 |
 | 上游基线 / 社区语料 | `reference/`（只读，gitignore；2026-08-05 自 docs/reference/ 迁出，纯净基线已去重） |
 
-## 3. 丢弃清单（34 篇，其中 15 篇已物理删除，条目保留作墓碑）
+## 3. 丢弃清单（35 篇，其中 15 篇已物理删除，条目保留作墓碑）
 
-### 3.1 已完成文档（登记 38 篇；14 篇已物理删除）
+### 3.1 已完成文档（登记 39 篇；14 篇已物理删除）
 
 > 结论均已沉淀进 `docs/kb/`；对应蒸馏位置见各条目「结论去向」。
 
@@ -75,6 +75,7 @@
 | `PLUGIN_FEATURE_REMOVAL_WORK_ORDER.md` | 2026-08-07 | 插件功能移除 + 编辑器菜单治理（LIDE-WO-2026-020）：删 PluginScreen/PluginManager/示例插件资产/插件路由与字符串，`.alp` 一律按工程导入（删 AlpKind.PLUGIN）；标签卡删 ⋮ 按钮（长按松手弹关闭菜单）；编辑器右上角更多菜单多级化（分类→子菜单）；assembleArm64Debug 绿 + 单测全绿 + 主源 ktlint 通过 + R1 门禁零命中 | kb/DECISIONS D-20 + AGENTS.md（编辑菜单/标签手势约定） |
 | `EDITOR_MULTI_LEVEL_MENU_WORK_ORDER.md` | 2026-08-07 | 编辑器右上角「更多」多级菜单 cascade 化（LIDE-WO-2026-022）：M3 官方 DropdownMenu 无嵌套 API，手写 MoreSubmenuItem（Box 嵌套 DropdownMenu）致二级菜单位置错位且违「禁手搓」；引入成熟第三方 `me.saket.cascade:cascade-compose:2.3.0`（POM 实证 Compose 依赖为 runtime scope，BOM 2025.06.00 → material3 1.4.0 胜出），根菜单 CascadeDropdownMenu + 一级分类 children 级联（自动右箭头/子菜单返回头/屏幕边缘与键盘避让）；删 MoreSubmenuItem；编译/依赖解析/单测/ktlint/assembleArm64Debug 全绿 + R1 门禁零命中 | kb/DECISIONS D-21 |
 | `SIGNING_GENERATE_CUSTOM_FIELDS_WORK_ORDER.md` | 2026-08-08 | 自生成签名证书内容自定义：`CertSubject`（C/ST/L/O/OU/CN/E/street/postalCode 全字段可选 + IA5String email）与 `validYears`（1~1000，默认 100）入 `SigningCrypto.generate`（默认参数向后兼容）；`GenerateDialog` 滚动表单 + 三校验（国家代码两位字母/邮箱含@/有效期整数）；build.* 57 单测全绿 + assembleArm64Debug 绿 | AGENTS.md 签名约定（RSA-2048 零依赖 DER 子集扩充；`SigningCrypto.generate` 签名） |
+| `SOURCE_ORGANIZATION_5REQ_AUDIT_REPORT.md` | 2026-08-08 | 源码组织五需求审计 + 整改（Phase 0~4 全部完成 2026-08-09）：引擎页 Kotlin 化归位 `app/.../engine/`、editor 并单进 app、UPSTREAM.md 台账 + verifyVendorIsolation 门禁（CI verify-vendor）、verifyRuntimeSurface 包级断言、checkDexDuplication 四类跨 dex 断言（scanDexClassNames **type_ids 二次间接修复**）、引擎 dex 纯净化（IDE 依赖三形态 + runtime themes.xml + constraints，runtime dex 5945→775 类，模拟器 NoSuchMethodError 根因）、6 变体打包回归 + 模拟器 4 工程矩阵 + 运行按钮全链路 | AGENTS.md（scanDex 解析语义 / IDE 依赖三形态约定 / verify 门禁命令）+ kb/README §2 |
 
 ### 3.2 过时 / 被取代文档（11 篇，1 篇已物理删除）
 

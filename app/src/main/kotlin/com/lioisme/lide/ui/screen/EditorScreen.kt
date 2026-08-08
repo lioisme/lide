@@ -32,15 +32,15 @@ import androidx.compose.ui.input.key.type
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.lioisme.lide.R
-import com.lioisme.lide.androlua.PermissionResolver
+import com.lioisme.lide.engine.EngineActivity
 import com.lioisme.lide.editor.EditorMoreAction
 import com.lioisme.lide.editor.EditorToolbar
 import com.lioisme.lide.editor.FileNode
 import com.lioisme.lide.editor.editorTextOpsActions
-import com.lioisme.lide.engine.EngineActivity
 import com.lioisme.lide.engine.EngineResultParser
 import com.lioisme.lide.engine.RunEngineLauncher
 import com.lioisme.lide.model.Project
+import com.lioisme.lide.project.PermissionResolver
 import com.lioisme.lide.project.ProjectManager
 import com.lioisme.lide.session.EditorSession
 import com.lioisme.lide.ui.theme.LocalIsDarkTheme

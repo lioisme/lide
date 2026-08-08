@@ -23,6 +23,13 @@ function Adb([string]$argsLine) {
     return $out
 }
 
+# 二进制输出直接落盘（screencap）：Start-Process RedirectStandardOutput 原样写文件，
+# 不走文本管道（`Adb "exec-out screencap -p > file"` 会把重定向原样传给 adb，不落盘）。
+function AdbCapture([string]$argsLine, [string]$file) {
+    $p = Start-Process adb -ArgumentList "-s $Device $argsLine" -NoNewWindow -Wait -PassThru -RedirectStandardOutput $file -RedirectStandardError (Join-Path $env:TEMP "adb_err.txt")
+    if ($p.ExitCode -ne 0) { throw "adb $argsLine failed (exit $($p.ExitCode))" }
+}
+
 $results = @()
 
 Write-Host "== 0/6 设备检查 =="
@@ -45,8 +52,18 @@ Adb "shell appops set com.lioisme.lide MANAGE_EXTERNAL_STORAGE allow" | Out-Null
 $results += [pscustomobject]@{ Case = "INSTALL"; Result = "PASS"; Note = "install -r" }
 
 Write-Host "== 3/6 推送 4 个基准工程 =="
-foreach ($proj in @("demo", "DemoProject", "kleinbottle", "testjson")) {
-    Adb "push $root\app\src\main\assets\samples\$proj $projRoot" | Out-Null
+# 示例源：精简治理后 assets/samples 已移除，工程模板统一存于 scripts/examples-src/
+# （generateExamples 选样池，AGENTS.md「精简治理」）；testjson 目录名为 TestJson。
+$projSrc = @{
+    demo         = "demo"
+    DemoProject  = "DemoProject"
+    kleinbottle  = "kleinbottle"
+    testjson     = "TestJson"
+}
+foreach ($proj in $projSrc.Keys) {
+    # 显式目标名（工程名规范小写/驼峰）：源目录 TestJson → 目标 testjson，
+    # 否则 adb push 会保留源目录名，与运行 URI 与 INIT 检查错位。
+    Adb "push $root\scripts\examples-src\$($projSrc[$proj]) $projRoot$proj" | Out-Null
 }
 $results += [pscustomobject]@{ Case = "PUSH"; Result = "PASS"; Note = "4 工程推送" }
 
@@ -65,7 +82,9 @@ foreach ($m in $matrix) {
     Start-Sleep -Seconds 8
     $pidLine = Adb "shell pidof com.lioisme.lide"
     $alive = $pidLine -match '\d+'
-    $resumed = (Adb "shell dumpsys activity activities") -match "topResumedActivity=ActivityRecord\{[^}]* com\.lioisme\.lide/\.engine\.EngineActivity"
+    # 前台 Activity 实测为 com.lioisme.lide/.androlua.engine.EngineActivity
+    # （带 .androlua 中缀路径），正则须宽松匹配任意中缀。
+    $resumed = (Adb "shell dumpsys activity activities") -match "topResumedActivity=ActivityRecord\{[^}]* com\.lioisme\.lide/.*\.engine\.EngineActivity"
     if ($m.Expect -eq "UI") {
         # 纯 UI 脚本（demo）：无 print 输出，以「引擎页前台 + 进程存活」为成功判据。
         $matched = $resumed
@@ -73,7 +92,7 @@ foreach ($m in $matrix) {
         $log = Adb "logcat -d"
         $matched = $log -match $m.Expect
     }
-    Adb "exec-out screencap -p > $verifyDir\$name.png" | Out-Null
+    AdbCapture "exec-out screencap -p" (Join-Path $verifyDir "$name.png")
     if ($alive) { Adb "shell am force-stop com.lioisme.lide" | Out-Null }
     $pass = $alive -and $matched
     $results += [pscustomobject]@{ Case = $name; Result = $(if ($pass) { "PASS" } else { "FAIL" }); Note = "alive=$alive resumed=$resumed expect=$($m.Expect)" }

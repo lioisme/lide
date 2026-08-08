@@ -31,7 +31,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.lioisme.lide.R
-import com.lioisme.lide.androlua.AlpManager
+import com.lioisme.lide.project.AlpManager
 import com.lioisme.lide.editor.TipIconButton
 import com.lioisme.lide.import.AlpImportCoordinator
 import com.lioisme.lide.model.Project

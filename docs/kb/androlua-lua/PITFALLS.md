@@ -241,3 +241,10 @@
 
 - 事实：`dex|jar` → 类名级全量识别（入「工程库」分类）；`lib*.so` → 仅模块名级（入「原生库」分类）；函数级不可静态获取（C 模块函数表只存在于 Lua 运行时内存，枚举需执行不可信代码——已否决，见 `docs/planned/API_BROWSER_AUDIT_REPORT.md` §4）。
 - 判定：浏览器「工程库/原生库」分类计数随 `<project>/libs/` 内容变化；`.so` 只展示 `require "模块名"` 与说明文案，不承诺函数列表。
+## 36. 引擎 dex 与宿主 dex 双 R8 混淆短名冲突（lide release 特有）⚠仅lide
+
+- 现象：release 构建安装后启动即崩 `NoSuchMethodError: No static method f(String,String) in class Lb0/c`，栈顶 `com.androlua.LuaApplication.onCreate`（引擎类经 `com.lioisme.lide.LideApp` 继承链调用）；同类还可能出现 `FileProvider` 的 `NoSuchMethodError: <init>(String)`。
+- 根因：引擎 dex（runtime 变体 R8 产物）与宿主 IDE dex（release 变体 R8 产物）两个**独立 R8** 混入同一 classloader。各自生成同名短混淆类——实测引擎侧 `b0.c` = compose `ExternalSyntheticOutline0`（R8 优化提取的合成辅助类），宿主侧 `b0.c` = `GridSlotCache`，宿主 dex 先加载，引擎 keep 类字节码交叉引用被遮蔽 → 方法缺失。`android.content.FileProvider`（引擎自带框架同名副本）同理：未被 runtime 白名单 keep 时内部类构造被收缩。
+- 规避（已实施 2026-08-08）：runtime 变体 R8 **改用 `proguard-android.txt`（关优化）** —— 不生成 outline 合成类；同时 runtime-rules.pro 加 `-repackageclasses 'lide_runtime_'` 把引擎侧被混淆类隔离进专用命名空间（keep 类名不动，零重叠）；FileProvider 及其内部类补 keep。宿主 release 保持 optimize 不变。
+- 判定：构建链必须分命令 `:app:assembleUniversalRuntime` → `:app:assembleX64Release`（单命令多目标时 `engineDexExtract` 与 runtime R8 并行，读到旧 dex —— 现由 inject 新鲜度防呆抛错拦截）。
+- 验证：`adb install` release APK 后 `am start` 任一工程，`logcat -d -b crash` 无 FATAL，`pidof com.lioisme.lide` 存活，`luaObject: finalize` 有输出。

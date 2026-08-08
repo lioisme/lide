@@ -2,7 +2,7 @@ package com.lioisme.lide.import
 
 import android.content.Context
 import android.net.Uri
-import com.lioisme.lide.androlua.AlpManager
+import com.lioisme.lide.project.AlpManager
 import java.io.File
 
 /**

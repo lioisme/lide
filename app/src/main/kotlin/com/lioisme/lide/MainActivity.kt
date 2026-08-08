@@ -14,10 +14,10 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import com.androlua.LuaApplication
-import com.lioisme.lide.androlua.AlpManager
 import com.lioisme.lide.engine.EngineActivity
 import com.lioisme.lide.engine.RunEngineLauncher
 import com.lioisme.lide.i18n.LocaleManager
+import com.lioisme.lide.project.AlpManager
 import com.lioisme.lide.project.ProjectManager
 import com.lioisme.lide.ui.navigation.LideNavHost
 import com.lioisme.lide.ui.theme.LideTheme

@@ -1,4 +1,4 @@
-﻿#Requires -Version 5.1
+#Requires -Version 5.1
 <#
 .SYNOPSIS
   sora-editor 上游更新脚本（P3 §1）。零魔改、零耦合：整体替换两模块 src/main，
@@ -13,7 +13,7 @@
     5. 整体替换 editor/src/main 与 language-textmate/src/main
     6. 恢复白名单文件
     7. 同步依赖版本（上游 toml -> 两模块 build.gradle.kts）
-    8. 写 VERSION；默认跑本地门禁（:app:compileArm64DebugKotlin + :editor:testDebugUnitTest）
+    8. 写 VERSION；默认跑本地门禁（:app:compileArm64DebugKotlin + :app:testArm64DebugUnitTest）
 .EXAMPLE
   .\scripts\update-sora-editor.ps1 -Tag 0.25.0
   .\scripts\update-sora-editor.ps1              # 自动取最新 release
@@ -135,10 +135,10 @@ Write-Host "VERSION：$current -> $Tag"
 
 # ---- 门禁 ----
 if (-not $SkipBuild) {
-    Write-Host '运行门禁：:app:compileArm64DebugKotlin + :editor:testDebugUnitTest ...'
+    Write-Host '运行门禁：:app:compileArm64DebugKotlin + :app:testArm64DebugUnitTest ...'
     & (Join-Path $root 'gradlew.bat') :app:compileArm64DebugKotlin --console=plain
     if ($LASTEXITCODE -ne 0) { Write-Host 'FAIL: 编译失败' -ForegroundColor Red; exit 1 }
-    & (Join-Path $root 'gradlew.bat') :editor:testDebugUnitTest --console=plain
+    & (Join-Path $root 'gradlew.bat') :app:testArm64DebugUnitTest --console=plain
     if ($LASTEXITCODE -ne 0) { Write-Host 'FAIL: 单测失败' -ForegroundColor Red; exit 1 }
     Write-Host 'OK: 门禁通过' -ForegroundColor Green
 }

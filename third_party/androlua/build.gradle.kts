@@ -1,6 +1,5 @@
 plugins {
     id("com.android.library")
-    id("org.jetbrains.kotlin.android")
 }
 
 android {
@@ -16,20 +15,10 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-
-    kotlinOptions {
-        jvmTarget = "17"
-    }
-
-    testOptions {
-        unitTests.isReturnDefaultValues = true
-    }
 }
 
 dependencies {
-    // androidx.annotation 被上游 vendor Java（FileProvider/LuaActivity/LuaResources/
-    // GlobalActionAutomator）使用；androidx.core / lifecycle-common 无引用（P5 清理），
-    // fileTree("libs") 目录仅含 .gitkeep（死声明，P5 清理）。
-    implementation("androidx.annotation:annotation:1.9.1")
-    testImplementation("junit:junit:4.13.2")
+    // 零第三方依赖：引擎 dex 侧（androlua/luajava/cglib/nirenr/engine 契约）纯 Java + Android SDK。
+    // androidx.annotation 曾用于 vendor Java（FileProvider/LuaActivity/LuaResources/
+    // GlobalActionAutomator），2026-08-08 引擎 dex 单份化时全部剥离（纯 Java 常量等价）。
 }

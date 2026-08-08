@@ -387,4 +387,39 @@
     <string name="build_opt_abi_title">默认 ABI</string>
     <string name="build_opt_abi_hint">宿主未携带该 ABI 时置灰不可选（构建时回落为全部宿主 ABI）</string>
     <string name="build_opt_abi_auto">宿主全部 ABI</string>
+
+    <!-- 编辑器（并入自原 :editor 模块，2026-08-08 源码组织五需求 Phase 1） -->
+    <!-- Editor search -->
+    <string name="search_hint">查找…</string>
+    <string name="replace_hint">替换…</string>
+    <string name="replace">替换</string>
+    <string name="replace_all">全部替换</string>
+    <string name="case_sensitive">区分大小写</string>
+    <string name="regex">正则表达式</string>
+    <string name="whole_word">整词匹配</string>
+    <!-- Editor text operations -->
+    <string name="text_op_select_line">选择整行</string>
+    <string name="text_op_delete_line">删除整行</string>
+    <string name="text_op_duplicate_line">复制整行</string>
+    <string name="text_op_toggle_case">大小写转换</string>
+    <string name="text_op_word_prev">左移一个词</string>
+    <string name="text_op_word_next">右移一个词</string>
+    <!-- Editor tabs -->
+    <string name="dirty_marker">• </string>
+    <string name="menu_close_tab">关闭</string>
+    <string name="menu_close_others">关闭其他</string>
+    <string name="menu_close_all">关闭全部</string>
+    <!-- File tree -->
+    <string name="file_tree_empty">暂无文件</string>
+    <!-- Content descriptions -->
+    <string name="cd_undo">撤销</string>
+    <string name="cd_redo">重做</string>
+    <string name="cd_run">运行</string>
+    <string name="cd_more">更多操作</string>
+    <string name="cd_search_next">下一个匹配</string>
+    <string name="cd_search_prev">上一个匹配</string>
+    <string name="cd_search_close">关闭搜索</string>
+    <!-- TextMate runtime -->
+    <string name="textmate_init_failed">编辑器引擎初始化失败</string>
+    <string name="retry">重试</string>
 </resources>

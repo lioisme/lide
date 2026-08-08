@@ -1,6 +1,5 @@
 package com.lioisme.lide.build
 
-import com.lioisme.lide.androlua.AXmlManifest
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
@@ -30,9 +29,9 @@ class ApkBuilderTest {
 
     private fun loadResource(name: String): ByteArray = checkNotNull(checkNotNull(javaClass.classLoader).getResourceAsStream(name)).readBytes()
 
-    /** 以真实宿主 manifest 为蓝本的合成宿主 APK。 */
+    /** 以真实宿主 manifest 的 delua 变体（测试样本）为蓝本的合成宿主 APK。 */
     private fun syntheticHostApk(): ByteArray {
-        val manifest = loadResource("manifest_sample.bin")
+        val manifest = loadResource("manifest_sample_delua.bin")
         val out = ByteArrayOutputStream()
         ZipOutputStream(out).use { zos ->
             fun put(
@@ -383,9 +382,9 @@ class ApkBuilderTest {
         )
     }
 
-    // ── P0 运行时基座 dex 替换模式（RUNTIME_DEX_ENTRY）───────────────────────
+    // ── P0 运行时基座（dex 直用宿主，ENGINE_DEX_MARKER 仅作引擎存在性判定）────────
 
-    /** 宿主 APK 内嵌引擎 dex 资产条目（embedRuntimeDex 产物形态）。 */
+    /** 宿主 APK 根目录含引擎 dex + 标记资产（injectEngineDex 产物形态）。 */
     private fun hostApkWithRuntimeDexAsset(): ByteArray {
         val manifest = loadResource("manifest_sample.bin")
         val out = ByteArrayOutputStream()
@@ -399,60 +398,100 @@ class ApkBuilderTest {
                 zos.closeEntry()
             }
             put("AndroidManifest.xml", manifest)
-            // 宿主全量 dex：多 dex（IDE 类，marker 区分来源）。
+            // 宿主根目录全量 dex：多 dex（仅 IDE 类，:androlua 为 compileOnly 不进宿主 dex）。
             put("classes.dex", "host-dex-full-ide".toByteArray())
             put("classes2.dex", "host-dex2-more-ide".toByteArray())
+            put("classes3.dex", "engine-dex-only".toByteArray())
+            // 引擎 dex 定位标记：内容 = 引擎 dex 根条目名（非 dex 资产，injectEngineDex 写入）。
+            put(ApkBuilder.ENGINE_DEX_MARKER, "classes3.dex".toByteArray())
             put("resources.arsc", "arsc-bytes".toByteArray())
             put("assets/lua/bin.lua", "-- host bin".toByteArray())
             put("assets/examples/demo.alp", "fake alp payload".toByteArray())
             put("lib/arm64-v8a/libluajava.so", "lj-host-arm".toByteArray())
             put("lib/x86_64/libluajava.so", "lj-host-x86".toByteArray())
-            // 引擎 dex 资产：仅引擎类（R8 剥离 IDE 后的形态）。
-            put(ApkBuilder.RUNTIME_DEX_ENTRY, "engine-dex-only".toByteArray())
         }
         return out.toByteArray()
     }
 
     @Test
-    fun `embedded runtime dex replaces host dex entries when present`() {
+    fun `host dex entries kept intact when engine dex present`() {
+        // P0-7：产物直用宿主全量根 dex（IDE 类 + 引擎类原样保留，接受多余内容），
+        // 标记仅作引擎存在性判定（manifest 回落 LuaApplication / 移除 IDE MainActivity）。
         val apk = ApkBuilder.build(hostApkWithRuntimeDexAsset(), input(), key, cert, compileLua = fakeCompiler())
         val entries = entriesOf(apk)
 
-        // dex 替换模式：宿主 classes*.dex 全部替换为引擎 dex（产物唯一 classes.dex）。
-        assertEquals("engine-dex-only", String(entries.getValue("classes.dex")))
-        assertTrue("classes2.dex" !in entries)
-        // 引擎 Lua 库 / 原生库仍来自宿主（模板 = 宿主自身，仅 dex 替换）。
+        // 宿主 classes*.dex 全部原样保留（多 dex 无需重编号，ART 按序自动加载）。
+        assertEquals("host-dex-full-ide", String(entries.getValue("classes.dex")))
+        assertEquals("host-dex2-more-ide", String(entries.getValue("classes2.dex")))
+        assertEquals("engine-dex-only", String(entries.getValue("classes3.dex")))
+        // 引擎 Lua 库 / 原生库仍来自宿主（模板 = 宿主自身）。
         assertEquals("-- host bin", String(entries.getValue("assets/lua/bin.lua")))
         assertEquals("lj-host-arm", String(entries.getValue("lib/arm64-v8a/libluajava.so")))
-        // dex 资产条目本身不得进入产物（HOST_ONLY 剔除，防止模板自嵌套）。
-        assertTrue(ApkBuilder.RUNTIME_DEX_ENTRY !in entries)
-        // dex 资产携带的 IDE 专属资产同样剔除（default-deny 语义延续）。
+        // 定位标记属宿主构建元数据，任何产物一律不带。
+        assertTrue(ApkBuilder.ENGINE_DEX_MARKER !in entries)
+        // 宿主 IDE 专属资产同样剔除（default-deny 语义延续）。
         assertTrue("assets/examples/demo.alp" !in entries)
     }
 
     @Test
-    fun `runtime dex abi scope stays host-driven`() {
-        // dex 模式模板 = 宿主：ABI 枚举/过滤仍由宿主实际条目驱动（D-1 冻结结论）。
+    fun `dex entries kept and abi scope stays host-driven`() {
+        // 模板 = 宿主：ABI 枚举/过滤仍由宿主实际条目驱动（D-1 冻结结论），dex 全量保留。
         val input =
             input().copy(
                 abiSelection = setOf("x86_64"),
             )
         val apk = ApkBuilder.build(hostApkWithRuntimeDexAsset(), input, key, cert, compileLua = fakeCompiler())
         val entries = entriesOf(apk)
-        assertEquals("engine-dex-only", String(entries.getValue("classes.dex")))
+        assertEquals("host-dex-full-ide", String(entries.getValue("classes.dex")))
+        assertEquals("host-dex2-more-ide", String(entries.getValue("classes2.dex")))
+        assertEquals("engine-dex-only", String(entries.getValue("classes3.dex")))
         assertEquals("lj-host-x86", String(entries.getValue("lib/x86_64/libluajava.so")))
         assertTrue("lib/arm64-v8a/libluajava.so" !in entries)
     }
 
     @Test
+    fun `engine dex marker with illegal content keeps host form`() {
+        // 标记内容非 classes\d*.dex（防任意路径注入）→ 引擎存在性为假，
+        // manifest 不回落（保持宿主形态），dex 仍全量原样保留。
+        val host =
+            syntheticHostApk().let {
+                ByteArrayOutputStream().apply {
+                    ZipOutputStream(this).use { zos ->
+                        fun put(
+                            name: String,
+                            bytes: ByteArray,
+                        ) {
+                            zos.putNextEntry(ZipEntry(name))
+                            zos.write(bytes)
+                            zos.closeEntry()
+                        }
+                        ZipInputStream(it.inputStream()).use { zis ->
+                            var e = zis.nextEntry
+                            while (e != null) {
+                                put(e.name, zis.readBytes())
+                                e = zis.nextEntry
+                            }
+                        }
+                        put(ApkBuilder.ENGINE_DEX_MARKER, "assets/evil.dex".toByteArray())
+                    }
+                }.toByteArray()
+            }
+        val apk = ApkBuilder.build(host, input(), key, cert, compileLua = fakeCompiler())
+        val entries = entriesOf(apk)
+        assertEquals("dex-bytes", String(entries.getValue("classes.dex")))
+        assertTrue(ApkBuilder.ENGINE_DEX_MARKER !in entries)
+    }
+
+    @Test
     fun `host fallback when no embedded runtime dex`() {
-        // 宿主无 assets/runtime/classes.dex → 兜底宿主自身（pro 模板语义）。
+        // 宿主无引擎 dex 标记/条目 → 引擎存在性为假，保持宿主 manifest，
+        // dex 全量原样保留（pro 模板语义，兼容 embedRuntimeDex=false 瘦身构建）。
         val apk = ApkBuilder.build(syntheticHostApk(), input(), key, cert, compileLua = fakeCompiler())
         val entries = entriesOf(apk)
         assertEquals("dex-bytes", String(entries.getValue("classes.dex")))
         assertEquals("-- host bin", String(entries.getValue("assets/lua/bin.lua")))
         assertEquals("lj-x86", String(entries.getValue("lib/x86_64/libluajava.so")))
-        assertTrue(ApkBuilder.RUNTIME_DEX_ENTRY !in entries)
+        assertTrue(ApkBuilder.ENGINE_DEX_MARKER !in entries)
     }
 
     /** 经 CEN→LOC 手工解析 STORED 条目的数据区偏移。 */

@@ -8,7 +8,7 @@
 | 审计依据 | `docs/planned/NATIVE_LIB_PACKAGING_AUDIT_REPORT.md`（机制审计，T1~T5 已完成）、`docs/planned/PACKAGING_PAYLOAD_CLEANUP_WORK_ORDER.md`（载荷精化，已完成）、`docs/planned/BUILD_SIGNING_ENCRYPTION_WORK_ORDER.md`（打包三大能力，T1~T3/T5 已完成）、上游 AndroLua Pro v4.4.2（`reference/` 恢复配方见 `reference/README.md`） |
 | 总目标 | 五需求全量交付：① androlua 运行环境与 LIDE 完全解耦隔离；② 打包载荷上限＝整个 androlua 运行环境、下限＝按需原生库/依赖；③ 支持多架构（arm64/x64/arm32/未来新架构）打包，前置条件是宿主含目标架构；④ 每次打包可选配产物输出方式；⑤ 打包高级选项全部通用化进设置页 |
 | 硬性约束 | AGENTS.md R1~R5（`:editor` 纯文本级、仓库零二进制原生产物入库）、`luaApiSurface` 三处同步约定（app/build.gradle.kts / proguard-rules.pro / ApiCategoryClassifier）、打包/签名/加密链改动必跑 `com.lioisme.lide.build.*` 单测 |
-| 文档状态 | 进行中（P0 已完成，待设备端冒烟验证） |
+| 文档状态 | 进行中（P0 已完成 + 2026-08-08 引擎 dex 单份化修订完成，待全链验证与设备端冒烟） |
 | 完成登记 | 见 §8 完成记录 |
 
 ---
@@ -85,7 +85,7 @@
 |---|------|---------|------|
 | P0-1 | 新增 `runtime` buildType + `app/src/runtime/` sourceSet 骨架（manifest/Application 主类对齐） | `app/build.gradle.kts`、`app/src/runtime/` | `assembleUniversalRuntime` 产出仅引擎 + 宿主核心（无 IDE UI）的 APK |
 | P0-2 | `runtime-rules.pro`：白名单 keep `luaApiSurface` + 引擎类，R8 剥离 IDE 类 | `app/src/runtime/runtime-rules.pro`（或按 buildType 注入） | release 变体 mapping 校验：IDE 类被剥离、`luaApiSurface` 全保留 |
-| P0-3 | `embedRuntimeDex` Gradle 任务（仿 `generateExamples`）：解出 runtime 变体产物 `classes.dex` 为 `assets/runtime/classes.dex`（单 dex 资产，非 APK） | `app/build.gradle.kts` | 宿主 APK 含 `assets/runtime/classes.dex`；`preBuild` 依赖链；源缺失自动跳过 |
+| P0-3 | ~~`embedRuntimeDex` 任务~~（**已废弃**，见 P0-6）→ `engineDexExtract`：解出 runtime 变体产物 `classes.dex` 为 `build/engine/engine.dex`（构建产物，非资产） | `app/build.gradle.kts` | 见 P0-6 |
 | P0-4 | `ApkBuilder` dex 替换模式：宿主 `classes*.dex` 全替换为引擎 dex + manifest 回落 `LuaApplication`/移除 IDE MainActivity（`ManifestEdit.applicationName`/`removeActivities`）；宿主无该资产兜底宿主 APK | `ApkBuilder.kt`、`AXmlManifest.kt` | 打包单测：dex 替换正确、宿主/兜底双路径 |
 | P0-5 | 产物 dex 载荷验证：dex 替换模式产物仅唯一 `classes.dex`（引擎，无 IDE 类）且可运行 | 打包单测 + 实测产物 | 产物仅 `classes.dex`，不含 IDE 专属类（如 `ui/screen/` 包） |
 
@@ -136,6 +136,8 @@
 | P0 | P0-3 base.apk 嵌入（**已否决**，改用 dex 资产） | `embedRuntimeBase` 任务（复制过滤 assets/runtime/ 防嵌套膨胀，挂 preBuild）；宿主 APK 实测含 `assets/runtime/base.apk`（classes.dex 与 universalRuntime 一致，无 IDE 类）。**用户否决内嵌 APK 设计**，整套废弃：宿主只携带单 dex 资产 `assets/runtime/classes.dex` | 2026-08-07 |
 | P0 | P0-4 dex 替换模式（替代模板切源） | `embedRuntimeDex`（解出 classes.dex）+ `ApkBuilder.RUNTIME_DEX_ENTRY`（宿主 classes*.dex 全替换为引擎 dex，manifest 经 `ManifestEdit.applicationName`/`removeActivities` 回落 LuaApplication + 移除 MainActivity）；模板 = 宿主，ABI/权限仍以宿主为准 | 2026-08-07 |
 | P0 | P0-5 产物 dex 载荷验证 | `ApkBuilderTest` 3 用例改造为 dex 替换模式（引擎 dex 替换宿主 classes*.dex/ABI 仍宿主驱动/无资产兜底宿主）；AXmlManifest 增 `applicationName` 覆盖 + `removeActivities` 整树移除；`ui-tooling-preview` 改 `debugImplementation` | 2026-08-07 |
+| P0 | P0-6 **引擎 dex 单份化（2026-08-08 用户红线修订，废弃 P0-3/P0-4 资产形态）** | 用户红线：所有 dex 必须位于宿主 APK **根目录**、禁止其他目录、禁止任何重复副本。落地：`:app` 对 `:androlua` 依赖改 `compileOnly` + `testImplementation` + `runtimeImplementation`（引擎类不进宿主 classes*.dex）；`embedRuntimeDex`（assets/runtime 形态）替换为 `engineDexExtract`（解出 `build/engine/engine.dex`）+ `injectEngineDex<Variant>`（androidComponents 挂 debug/release，注入 `mergeLibDex<Variant>/zz/classes.dex` 并按 ext→lib→project 编号为根目录 `classesN.dex`，同时写非 dex 标记 `assets/engine.dex.idx`）；`ApkBuilder.ENGINE_DEX_MARKER`（内容须匹配 `classes\d*\.dex` 防路径注入）替代 `RUNTIME_DEX_ENTRY`；`verifyMinimalism` 增契约断言（默认开启根目录必有标记+引擎条目、旧 assets/runtime 形态出现即失败）；EngineActivity 动画去模块资源依赖（`EXTRA_ANIM_IN/OUT`，宿主 `R.anim` 经 EngineBridge 注入）；.gitignore 删除 assets/runtime 条目 | 2026-08-08 |
+| P0 | P0-7 **打包 dex 直用宿主（2026-08-08 修订，废弃 P0-4 dex 替换模式）** | 用户要求：移除「专门给打包构建 APK 时提供 dex」的设计——可接受产物有多余内容，不接受本体多份引擎类、不接受魔改宿主构建流程。落地：`ApkBuilder` 删 dex 替换模式（`ENGINE_DEX_MARKER` 不再选 dex），产物直接复用宿主根目录**全量 classes*.dex**（IDE 类 + 引擎类原样保留）；标记仅作引擎存在性判定（manifest 回落 `LuaApplication` + 移除 IDE MainActivity 门禁，未命中保持宿主 manifest）；宿主构建流程（runtime buildType / engineDexExtract / injectEngineDex / verifyMinimalism）零改动；`ApkBuilderTest` 4 用例改写为全量保留语义。详见 `PACKAGING_DEX_SIMPLIFY_WORK_ORDER` | 2026-08-08 |
 
 > **后续 UI 迁移（2026-08-07，设置简约化 `docs/planned/SETTINGS_SIMPLIFY_WORK_ORDER.md` T1~T4）**：
 > 设置页「打包选项」独立页 `BuildOptionsScreen` 已删除，其全部打包选项（自动安装开关替代「产物输出」单选、

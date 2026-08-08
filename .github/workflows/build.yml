@@ -28,9 +28,9 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Run lint
-        # :app lint 已依赖自身 ktlintCheck；:editor 的 ktlint 门禁此前从不进 CI
-        # （:editor:lint 未被调用，门禁休眠——2026-08-05 修复并显式纳入本 job）。
-        run: ./gradlew lintArm64Debug :editor:ktlintCheck
+        # :app lint 已依赖自身 ktlintCheck；2026-08-08 源码组织审计 :editor 模块并单，
+        # ktlint 门禁随 :app 单模块全量覆盖（含 com.lioisme.lide.editor 包）。
+        run: ./gradlew lintArm64Debug :app:ktlintCheck
 
   unit-test:
     name: Unit Tests
@@ -53,7 +53,8 @@ jobs:
       - name: Run JVM unit tests
         # :androlua tests included (P2#17): AXml manifest patch round-trip against
         # regenerated aapt2 fixture + Lua compiler/config/permission resolvers.
-        run: ./gradlew :app:testX64DebugUnitTest :editor:testDebugUnitTest :androlua:testDebugUnitTest
+        # :editor tests merged into :app since 2026-08-08 (editor module merged).
+        run: ./gradlew :app:testX64DebugUnitTest :androlua:testDebugUnitTest
 
   build-arm64:
     name: Build ARM64 APK
@@ -164,18 +165,42 @@ jobs:
           echo "OK: no binary .so/.dex/.zip/.jar tracked (wrapper jar exempt)"
 
   verify-r1:
-    name: Verify R1 Boundary (editor/src clean)
+    name: Verify R1 Boundary (editor package clean)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      # R1 red line: :editor module must stay pure JVM (no luajava/androlua/
-      # System.loadLibrary). Editor-process Lint/diagnostics/completion are
-      # pure Kotlin/Java; Lua runtime lives in :app host only.
+      # R1 red line (2026-08-08 :editor module merged into :app): the
+      # com.lioisme.lide.editor package must stay pure JVM (no luajava/androlua/
+      # System.loadLibrary). Editor Lint/diagnostics/completion are pure
+      # Kotlin/Java; Lua runtime lives in the host engine dex only.
       - name: R1 grep gate (P3)
         run: |
-          if grep -rnE 'luajava|androlua|loadLibrary' editor/src; then
-            echo "FAIL: R1 boundary violated in editor/src (luajava|androlua|loadLibrary)"
+          if grep -rnE 'luajava|androlua|loadLibrary' app/src/main/kotlin/com/lioisme/lide/editor; then
+            echo "FAIL: R1 boundary violated in editor package (luajava|androlua|loadLibrary)"
             exit 1
           fi
-          echo "OK: no luajava|androlua|loadLibrary in editor/src"
+          echo "OK: no luajava|androlua|loadLibrary in editor package"
+
+  verify-vendor:
+    name: Verify Vendor Isolation (R-2/R-3)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      # R-2/R-3 red line (源码组织审计 Phase 2, 2026-08-08): upstream dirs
+      # (androlua / sora-editor) must contain zero com/lioisme/** code and the
+      # UPSTREAM.md change ledger must stay consistent with actual sources
+      # (W^X InMemoryDexClassLoader fix, androidx.annotation stripped, zero
+      # third-party deps in :androlua build script, vendored builds self-contained).
+      - name: Run verifyVendorIsolation gate
+        run: ./gradlew :app:verifyVendorIsolation
