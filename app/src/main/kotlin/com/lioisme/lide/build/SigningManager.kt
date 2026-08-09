@@ -1,6 +1,7 @@
 package com.lioisme.lide.build
 
 import android.content.Context
+import android.util.Log
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
@@ -18,9 +19,11 @@ import java.security.spec.PKCS8EncodedKeySpec
  */
 object SigningManager {
     const val BUILTIN_ID = "builtin-testkey"
+    private const val TAG = "SigningManager"
     private const val PREF_NAME = "lide_signing"
     private const val KEY_PROFILES = "profiles"
     private const val KEY_DEFAULT = "default"
+    private const val KEY_CORRUPT_BACKUP = "profiles.corrupt"
     private const val FILE_PREFIX = "keystore_"
 
     private lateinit var appContext: Context
@@ -123,7 +126,7 @@ object SigningManager {
         subject: CertSubject? = null,
         validYears: Int = SigningCrypto.DEFAULT_VALID_YEARS,
     ): SigningProfile {
-        val pwd = password?.takeIf { it.length >= 6 } ?: randomPassword()
+        val pwd = password?.takeIf { it.length >= 6 } ?: SigningCrypto.randomPassword()
         val gen = SigningCrypto.generate(name, alias, pwd.toCharArray(), subject ?: CertSubject(commonName = name), validYears)
         return import(
             name = name,
@@ -178,12 +181,6 @@ object SigningManager {
             .replace("-", "")
             .take(16)
 
-    private fun randomPassword(): String {
-        val alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-        val random = java.security.SecureRandom()
-        return buildString { repeat(12) { append(alphabet[random.nextInt(alphabet.length)]) } }
-    }
-
     private fun upsert(profile: SigningProfile) {
         val list = readImported().toMutableList()
         list.removeAll { it.id == profile.id }
@@ -200,7 +197,11 @@ object SigningManager {
                     add(arr.getJSONObject(i).fromJson())
                 }
             }
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            // 数据保全（Q4）：损坏原文先备份，随后 write() 覆盖损坏值时用户档案不静默丢失；
+            // 备份键供人工/未来恢复路径使用（原始内容逐字节保留）。
+            Log.e(TAG, "lide_signing profiles parse failed, original backed up to $KEY_CORRUPT_BACKUP", e)
+            prefs().edit().putString(KEY_CORRUPT_BACKUP, raw).apply()
             emptyList()
         }
     }

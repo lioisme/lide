@@ -1,4 +1,4 @@
-package com.lioisme.lide.ui.navigation
+﻿package com.lioisme.lide.ui.navigation
 
 import android.app.Activity
 import android.net.Uri
@@ -15,7 +15,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.navArgument
+import com.androlua.LuaApplication
 import com.lioisme.lide.engine.RunEngineLauncher
+import com.lioisme.lide.model.PendingOpenFile
 import com.lioisme.lide.model.Project
 import com.lioisme.lide.project.ProjectManager
 import com.lioisme.lide.ui.screen.AndroLuaSettingsScreen
@@ -82,7 +84,7 @@ private fun backGuarded(
 fun LideNavHost(
     navController: NavHostController,
     pendingImportPaths: List<String> = emptyList(),
-    pendingOpenFiles: List<Pair<String, String>> = emptyList(),
+    pendingOpenFiles: List<PendingOpenFile> = emptyList(),
 ) {
     val context = LocalContext.current
     val projectManager = remember { ProjectManager() }
@@ -96,17 +98,20 @@ fun LideNavHost(
     // 提升后返回时先渲染缓存，再由页面触发式后台刷新。
     var projects by remember { mutableStateOf(listOf<Project>()) }
     val refreshProjects: suspend () -> Unit = {
-        projects = withContext(Dispatchers.IO) { projectManager.listProjects() }
+        projects =
+            withContext(Dispatchers.IO) {
+                projectManager.listProjects(LuaApplication.getInstance().luaExtDir)
+            }
     }
 
     LaunchedEffect(navController, pendingOpenFiles) {
         val open = pendingOpenFiles.firstOrNull()
         if (open != null) {
-            val dir = File(open.first)
+            val dir = File(open.projectDir)
             // 启动期一次性系统导航：等待栈顶就绪（RESUMED）后执行，防止被门控误丢。
             navController.navigateWhenReady(
                 Routes.editor(
-                    Project(name = dir.name, path = dir.absolutePath, mainFile = open.second),
+                    Project(name = dir.name, path = dir.absolutePath, mainFile = open.fileName),
                 ),
             )
         }
@@ -154,7 +159,7 @@ fun LideNavHost(
                     navArgument("projectPath") { type = NavType.StringType },
                     navArgument("fileName") {
                         type = NavType.StringType
-                        defaultValue = "main.lua"
+                        defaultValue = Project.DEFAULT_MAIN_FILE
                     },
                 ),
             // 编辑器与其余页面一致使用经典 slide 转场（产品规范，禁止渐变）。
@@ -170,7 +175,7 @@ fun LideNavHost(
                 rememberProject(
                     backStackEntry.arguments?.getString("projectName"),
                     backStackEntry.arguments?.getString("projectPath"),
-                    backStackEntry.arguments?.getString("fileName") ?: "main.lua",
+                    backStackEntry.arguments?.getString("fileName") ?: Project.DEFAULT_MAIN_FILE,
                 )
             // 系统返回键统一过门控（见 backGuarded）。
             backGuarded(navController) {
@@ -287,7 +292,7 @@ fun LideNavHost(
         ) { backStackEntry ->
             val name = Routes.dec(backStackEntry.arguments?.getString("projectName"))
             val path = Routes.dec(backStackEntry.arguments?.getString("projectPath"))
-            val project = if (path.isNotBlank()) Project(name = name, path = path, mainFile = "main.lua") else null
+            val project = if (path.isNotBlank()) Project(name = name, path = path, mainFile = Project.DEFAULT_MAIN_FILE) else null
             if (project == null) {
                 LaunchedEffect(Unit) { navController.popWhenReady() }
                 return@slideComposable
@@ -315,7 +320,7 @@ fun LideNavHost(
         ) { backStackEntry ->
             val name = Routes.dec(backStackEntry.arguments?.getString("projectName"))
             val path = Routes.dec(backStackEntry.arguments?.getString("projectPath"))
-            val project = if (path.isNotBlank()) Project(name = name, path = path, mainFile = "main.lua") else null
+            val project = if (path.isNotBlank()) Project(name = name, path = path, mainFile = Project.DEFAULT_MAIN_FILE) else null
             if (project == null) {
                 LaunchedEffect(Unit) { navController.popWhenReady() }
                 return@slideComposable
@@ -339,7 +344,7 @@ fun LideNavHost(
 private fun rememberProject(
     name: String?,
     path: String?,
-    fileName: String = "main.lua",
+    fileName: String = Project.DEFAULT_MAIN_FILE,
 ): Project {
     val n = Routes.dec(name)
     val p = Routes.dec(path)

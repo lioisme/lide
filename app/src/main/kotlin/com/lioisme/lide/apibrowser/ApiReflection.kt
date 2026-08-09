@@ -2,6 +2,7 @@ package com.lioisme.lide.apibrowser
 
 import java.lang.reflect.Method
 import java.util.LinkedHashSet
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * 类详情反射：对齐 pro 原版 javaapi/main.lua 的分组与推导语义，
@@ -9,6 +10,11 @@ import java.util.LinkedHashSet
  * getter 显示 "(public)Name" 的缺陷，返回真实类型）。
  *
  * 事件推导规则与 pro 一致：setOnXxxListener → onXxx。
+ *
+ * Q12（审计 P1-9）：按类名缓存 [reflect] 结果——[Detail] 为不可变数据，
+ * 多行详情页复用同一对象；失败（含负缓存）经非空包装 [CacheEntry] 持有
+ * （ConcurrentHashMap 拒绝 null，裸 null 存不进即负缓存永久失效 → 反复全量反射）。
+ * 全部路径 try/catch 降级，缓存一致性由 computeIfAbsent 原子化。
  */
 object ApiReflection {
     data class Detail(
@@ -21,17 +27,26 @@ object ApiReflection {
         val methods: List<String>,
     )
 
+    /** 非空缓存包装（CHM 拒绝 null）：[detail] 为 null 表示反射失败（负缓存）。 */
+    private data class CacheEntry(val detail: Detail?)
+
+    private val detailCache = ConcurrentHashMap<String, CacheEntry>()
+
     private val eventPattern = Regex("setOn(\\w+)Listener")
     private val getterPattern = Regex("get(\\w+)")
     private val setterPattern = Regex("set(\\w+)")
 
     /**
-     * 反射失败（类不存在 / 初始化异常）返回 null，调用方降级。
+     * 反射失败（类不存在 / 初始化异常）返回 null，调用方降级；失败亦入负缓存，
+     * 同进程内重复访问不重试全量反射。
      * 与 [ApiIndex] 行级缓存共享合并缓存（架构审计 P0-1）：类解析统一走
      * [ApiIndex.loadClassRef]，同一类名全进程一次反射；初始化语义一致（initialize=false）。
      * 必须在 IO 线程调用（AGENTS.md 线程契约）。
      */
-    fun reflect(className: String): Detail? {
+    fun reflect(className: String): Detail? =
+        detailCache.computeIfAbsent(className) { name -> CacheEntry(reflectUncached(name)) }.detail
+
+    private fun reflectUncached(className: String): Detail? {
         return try {
             val clazz = ApiIndex.loadClassRef(className) ?: return null
             val methods = clazz.methods.toList()

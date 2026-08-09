@@ -1,5 +1,6 @@
 package com.lioisme.lide.build
 
+import com.lioisme.lide.model.Project
 import com.luajava.LuaStateFactory
 
 /** Lua 编译失败：携带可定位的行号（解析失败时行号为 null）。 */
@@ -20,7 +21,7 @@ object LuaCompiler {
     private val UTF8_BOM = "\uFEFF"
 
     /** 编译 Lua 源码为字节码；[chunkName] 仅用于错误信息定位。 */
-    fun compile(source: String, chunkName: String = "main.lua"): ByteArray {
+    fun compile(source: String, chunkName: String = Project.DEFAULT_MAIN_FILE): ByteArray {
         // 去除 UTF-8 BOM（Windows 记事本等写出的 .lua 常带），否则 BOM 会被词法器并入
         // 首个标识符（"\uFEFFprint" ≠ "print"），运行时按 nil 全局调用报错。
         val cleaned = if (source.startsWith(UTF8_BOM)) source.removePrefix(UTF8_BOM) else source

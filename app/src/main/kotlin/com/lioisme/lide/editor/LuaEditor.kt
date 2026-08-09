@@ -96,8 +96,15 @@ internal object EditorViewPool {
     /** 编辑事件节流信号：每键 +1，不触发重组；宿主经 collectLatest 防抖消费。 */
     val diagTick = MutableStateFlow(0)
 
-    private val syntaxChecker = LuaDiagnostics.Incremental()
+    /** 当前诊断消息渲染器（Q15）：UI 组合期注入资源版；引用变化时重建校验器（语言/组合重建场景）。 */
+    @Volatile
+    private var diagProvider: DiagnosticMessageProvider = LuaDiagnostics.DEFAULT_PROVIDER
+
+    @Volatile
+    private var syntaxChecker: LuaDiagnostics.Incremental = LuaDiagnostics.Incremental()
+
     private var lastDiagSignature = ""
+    /** 编辑器实例（Q13 单例收敛）：私有 + 主线程独占，禁止跨线程引用或逃逸。 */
     private var editor: CodeEditor? = null
 
     /** 语言装配期是否已开启标识符补全（主线程读 / 写，决定是否重建语言）。 */
@@ -122,7 +129,16 @@ internal object EditorViewPool {
     fun syntaxCheck(
         source: String,
         quickfixSource: Content? = null,
-    ): List<DiagnosticRegion> = syntaxChecker.check(source, quickfixSource)
+        messageProvider: DiagnosticMessageProvider = LuaDiagnostics.DEFAULT_PROVIDER,
+    ): List<DiagnosticRegion> {
+        // Q15：资源 provider 引用变化（组合重建/语言切换）时重建校验器（含其增量状态），
+        // 首查全量扫描；同一组合内引用稳定（LuaEditor 组合期 remember 构造）。
+        if (messageProvider !== diagProvider) {
+            diagProvider = messageProvider
+            syntaxChecker = LuaDiagnostics.Incremental(messageProvider)
+        }
+        return syntaxChecker.check(source, quickfixSource)
+    }
 
     /** 最近一次已应用的诊断签名（主线程读）。 */
     fun lastSignature(): String = lastDiagSignature
@@ -354,6 +370,7 @@ fun LuaEditor(
     onContentModified: () -> Unit,
     onUndoRedoStateChanged: (canUndo: Boolean, canRedo: Boolean) -> Unit,
     onRelease: () -> Unit,
+    onEditorBound: () -> Unit = {},
     editorRef: AtomicReference<CodeEditor?>,
     modifier: Modifier = Modifier,
 ) {
@@ -362,6 +379,7 @@ fun LuaEditor(
     val currentOnContentModified by rememberUpdatedState(onContentModified)
     val currentOnUndoRedoStateChanged by rememberUpdatedState(onUndoRedoStateChanged)
     val currentOnRelease by rememberUpdatedState(onRelease)
+    val currentOnEditorBound by rememberUpdatedState(onEditorBound)
     val currentConfig by rememberUpdatedState(config)
     // 文件 → 语言 scope 由 :editor 解析（文本级能力，宿主只传文件名）。
     // 传入值可能是完整路径，先取 basename 再按扩展名/精确名映射。
@@ -372,6 +390,31 @@ fun LuaEditor(
     // 诊断收集器（LaunchedEffect(Unit) 长驻）不得捕获首帧 scope：
     // remember(fileName) 值变更后，经 rememberUpdatedState 读取最新值（防 P0-4 stale closure）。
     val currentResolvedScope by rememberUpdatedState(resolvedScope)
+
+    // Q15：诊断消息本地化渲染器（组合期 remember 稳定引用——同一组合内引用不变，
+    // EditorViewPool 据引用比较复用校验器与增量状态；资源模板带 %1$s 参数占位）。
+    val diagMessageProvider =
+        remember {
+            object : DiagnosticMessageProvider {
+                override fun message(key: String, vararg args: Any): String {
+                    val resId =
+                        when (key) {
+                            MSG_UNCLOSED_LONG_COMMENT -> R.string.diag_unclosed_long_comment
+                            MSG_UNCLOSED_LONG_STRING -> R.string.diag_unclosed_long_string
+                            MSG_UNCLOSED_QUOTED_STRING -> R.string.diag_unclosed_quoted_string
+                            MSG_UNMATCHED_CLOSE -> R.string.diag_unmatched_close
+                            MSG_UNCLOSED_TOKEN -> R.string.diag_unclosed_token
+                            MSG_EXCESS_TOKEN -> R.string.diag_excess_token
+                            MSG_AT_LINE -> R.string.diag_at_line
+                            MSG_FIX_DELETE_TOKEN -> R.string.fix_delete_token
+                            MSG_FIX_APPEND_LINE_END -> R.string.fix_append_line_end
+                            MSG_FIX_APPEND_FILE_END -> R.string.fix_append_file_end
+                            else -> return key
+                        }
+                    return appContext.getString(resId, *args)
+                }
+            }
+        }
 
     // rememberUpdatedState：事件回调 / factory / update 块中读取「最新」值而不触发重组。
     val currentContent = rememberUpdatedState(content)
@@ -423,6 +466,8 @@ fun LuaEditor(
             // 同一实例只发布一次，避免组合期间的状态写竞争。
             if (editorRef.get() !== editor) {
                 editorRef.set(editor)
+                // 宿主侧跳行/定位的绑定门控（一次完成，幂等）。
+                currentOnEditorBound()
             }
             val contentValue = currentContent.value
             val isLargeFile = contentValue.length > LARGE_FILE_THRESHOLD
@@ -469,7 +514,7 @@ fun LuaEditor(
                 withContext(Dispatchers.Default) {
                     val source = editor.text.toString()
                     if (source.length > LARGE_FILE_THRESHOLD) return@withContext emptyList<DiagnosticRegion>() to ""
-                    val result = EditorViewPool.syntaxCheck(source, editor.text)
+                    val result = EditorViewPool.syntaxCheck(source, editor.text, diagMessageProvider)
                     result to diagnosticSignature(result)
                 }
             if (signature == EditorViewPool.lastSignature()) return@collectLatest

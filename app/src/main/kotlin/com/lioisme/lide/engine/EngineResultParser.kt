@@ -13,6 +13,18 @@ object EngineResultParser {
         val line: Int,
     )
 
+    // 预编译（Q5）：三个正则均在回调/解析热路径，每次调用重建 Regex 不可接受；
+    // ERROR_PREFIX 与 EngineActivity 共用（单一事实源，EngineActivity 不再持本地副本）。
+    /** 匹配 `...:NN:`（NN ≥ 1）的错误定位首行。 */
+    private val ERROR_LOCATION = Regex("([^\\s:]+):(\\d+):")
+
+    /** 提取 `nil global 'X'` / `attempt to index a nil value (global 'X')` 的全局名。 */
+    private val NIL_GLOBAL = Regex("\\(global '([^']+)'\\)")
+
+    /** 引擎侧错误前缀标记（EngineActivity.sendMsg 与文本兜底共用）。 */
+    internal val ERROR_PREFIX =
+        Regex("^(Runtime error|Syntax error|error error|Out of memory|GC error|Yield error|Unknown error \\d+): ", RegexOption.MULTILINE)
+
     /**
      * 从输出文本提取错误位置。Lua 5.3 的错误消息首行定位格式为 `路径:行号:`
      * （报错点），取第一次出现即真正出错位置；traceback 栈帧中的行号为调用点，
@@ -27,15 +39,13 @@ object EngineResultParser {
         projectPath: String? = null,
     ): ErrorLocation? {
         if (output.isNullOrEmpty()) return null
-        // 匹配 `...:NN:`（NN ≥ 1）。
-        val regex = Regex("([^\\s:]+):(\\d+):")
-        val match = regex.find(output) ?: return null
+        val match = ERROR_LOCATION.find(output) ?: return null
         val line = match.groupValues[2].toIntOrNull() ?: return null
         if (line < 1) return null
         val raw = match.groupValues[1]
         val file =
             projectPath?.let { toProjectRelativePath(raw, it) }
-                ?: raw.substringAfterLast('/').substringAfterLast('\\')
+                ?: basename(raw)
         return ErrorLocation(file, line)
     }
 
@@ -49,21 +59,22 @@ object EngineResultParser {
             val rel = raw.substring(projectPrefix.length).trimStart('/', '\\')
             if (rel.isNotEmpty()) return rel
         }
-        return raw.substringAfterLast('/').substringAfterLast('\\')
+        return basename(raw)
     }
+
+    /** 取路径尾部文件名（兼容 `/` 与 `\` 分隔）。 */
+    private fun basename(raw: String): String = raw.substringAfterLast('/').substringAfterLast('\\')
 
     /** 提取 `nil global 'X'` / `attempt to index a nil value (global 'X')` 的全局名。 */
     fun findNilGlobal(output: String?): String? {
         if (output.isNullOrEmpty()) return null
-        val regex = Regex("\\(global '([^']+)'\\)")
-        val match = regex.find(output) ?: return null
+        val match = NIL_GLOBAL.find(output) ?: return null
         return match.groupValues[1]
     }
 
     /** 错误标记来自引擎侧（[com.lioisme.lide.engine.EngineActivity]），此处仅按文本兜底。 */
     fun isErrorOutput(output: String?): Boolean {
         if (output.isNullOrEmpty()) return false
-        val prefix = Regex("^(Runtime error|Syntax error|error error|Out of memory|GC error|Yield error|Unknown error \\d+): ", RegexOption.MULTILINE)
-        return prefix.containsMatchIn(output)
+        return ERROR_PREFIX.containsMatchIn(output)
     }
 }

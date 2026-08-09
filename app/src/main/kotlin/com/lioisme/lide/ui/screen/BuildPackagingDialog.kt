@@ -175,7 +175,7 @@ fun BuildPackagingDialog(
                     analysis = analysis,
                     nativeLibEntries = nativeLibEntries,
                     hostOnlyDropped = hostOnly,
-                    signingName = signingProfile.displayName,
+                    signingName = signingProfile.name,
                 )
             }
         if (draft == null) {
@@ -498,7 +498,11 @@ private fun onOffText(
     on: Boolean,
     titleRes: Int,
     context: android.content.Context,
-): String = "${context.getString(titleRes)}：${context.getString(if (on) R.string.setting_on else R.string.setting_off)}"
+): String = context.getString(
+    R.string.setting_value_title,
+    context.getString(titleRes),
+    context.getString(if (on) R.string.setting_on else R.string.setting_off),
+)
 
 /** 装配 + 签名 + 写盘（IO 线程）。失败返回可读信息（编译错误带行号）。 */
 private fun doBuild(

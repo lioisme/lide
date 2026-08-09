@@ -30,6 +30,7 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.androlua.LuaApplication
 import com.lioisme.lide.R
 import com.lioisme.lide.project.AlpManager
 import com.lioisme.lide.editor.TipIconButton
@@ -352,7 +353,13 @@ fun ProjectListScreen(
                             showCreateDialog = false
                             newName = ""
                             scope.launch {
-                                val created = withContext(Dispatchers.IO) { projectManager.createProject(name) }
+                                val created =
+                                    withContext(Dispatchers.IO) {
+                                        projectManager.createProject(
+                                            name,
+                                            LuaApplication.getInstance().luaExtDir,
+                                        )
+                                    }
                                 if (created != null) {
                                     scope.launch { refresh() }
                                 } else {

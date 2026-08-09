@@ -116,6 +116,8 @@ internal fun ProjectFileBrowserDialog(
     suspend fun loadEntries(dir: File): List<FileNode> =
         withContext(Dispatchers.IO) {
             // 全量展示：目录 + 所有文件（非文档文件在点击时提示，不在列表层过滤）。
+            // listFiles() null = 目录不可读（IO 失败/无权限），与「空目录」语义区分：均为空列表，
+            // 但不可读情形不静默回写（后续删除/改名操作仍会走失败路径并提示）。
             dir
                 .listFiles()
                 ?.filter { it.isDirectory || it.isFile }
@@ -623,6 +625,7 @@ internal fun EditorBody(
     isDarkTheme: Boolean,
     editorConfig: EditorConfig,
     editorRef: AtomicReference<CodeEditor?>,
+    onEditorBound: () -> Unit,
     storagePermissionMissing: Boolean,
     isSearchVisible: Boolean,
     onTabClose: (String) -> Unit,
@@ -675,6 +678,7 @@ internal fun EditorBody(
                         session.flushSelectedDirtyAsync()
                     },
                     editorRef = editorRef,
+                    onEditorBound = onEditorBound,
                     modifier = Modifier.fillMaxSize(),
                 )
             } else {

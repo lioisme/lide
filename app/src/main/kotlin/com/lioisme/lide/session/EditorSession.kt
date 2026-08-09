@@ -64,21 +64,34 @@ class EditorSession(
     private val _editTick = MutableStateFlow(0L)
     val editTick: StateFlow<Long> = _editTick.asStateFlow()
 
-    /** 启动：读文件列表、打开主文件并预载 Content。 */
-    suspend fun initialize() =
-        withContext(ioDispatcher) {
-            val files = projectManager.listProjectFiles(project)
-            if (files.isEmpty()) return@withContext
-            val main = project.mainFile.takeIf { it in files } ?: files.first()
-            val content = loadContent(main)
-            _tabs.value = listOf(EditorTab(main, dirty = false))
-            _selection.value = Selection(main, content)
-        }
+    /**
+     * 启动：读文件列表、打开主文件并预载 Content。
+     *
+     * 线程契约（Q6 修复）：文件读取在 IO 线程完成；状态写（[_tabs] / [_selection]）
+     * 全部发生在主线程，与类文档「标签/选中/脏标记变更只发生在主线程」一致——
+     * 消除初始化期间 IO 线程写 StateFlow 与主线程点击的交错窗口。
+     *
+     * 幂等（Q8）：会话随 ViewModel 跨配置变更存活，重组后宿主仍会调用本方法；
+     * 已初始化则直接返回，绝不重复写状态（防旋转后 tab 列表被重置）。
+     */
+    suspend fun initialize() {
+        if (initialized) return
+        initialized = true
+        val files = withContext(ioDispatcher) { projectManager.listProjectFiles(project) }
+        if (files.isEmpty()) return
+        val main = project.mainFile.takeIf { it in files } ?: files.first()
+        val content = withContext(ioDispatcher) { loadContent(main) }
+        _tabs.value = listOf(EditorTab(main, dirty = false))
+        _selection.value = Selection(main, content)
+    }
+
+    private var initialized = false
 
     private var released = false
 
     /**
-     * 屏幕销毁时调用（DisposableEffect onDispose）：兜底保存全部脏标签，
+     * 会话出栈时调用（Q8：经 [EditorSessionViewModel.onCleared] 委托，替代早期
+     * DisposableEffect onDispose 路径）：兜底保存全部脏标签，
      * 随后取消会话作用域并清空 [Content] 缓存，防止会话与缓存跨页面滞留。
      *
      * 保存与取消在同一协程内串行，保证不丢盘；与 LuaEditor onRelease 的
@@ -150,6 +163,34 @@ class EditorSession(
         content: Content,
     ) {
         _selection.value = Selection(fileName, content)
+    }
+
+    /**
+     * 文本修改门面（Q7）：宿主对选中标签的文本写入统一经本入口（sora Content API，
+     * 行列 0 基）。内部同步触发脏标记与自动保存节流信号——宿主禁止绕过本门面直接改
+     * `selection.value.content`（会绕过脏标记/自动保存/undo 语义）。仅主线程调用。
+     */
+    fun insertText(
+        line: Int,
+        column: Int,
+        text: String,
+    ) {
+        val selected = _selection.value.content ?: return
+        selected.insert(line, column, text)
+        onContentModified()
+    }
+
+    /** 文本替换门面（语义见 [insertText]）；[start]/[end] 为 (line, column) 二元组。 */
+    fun replaceText(
+        startLine: Int,
+        startColumn: Int,
+        endLine: Int,
+        endColumn: Int,
+        text: String,
+    ) {
+        val selected = _selection.value.content ?: return
+        selected.replace(startLine, startColumn, endLine, endColumn, text)
+        onContentModified()
     }
 
     /**
@@ -319,7 +360,7 @@ class EditorSession(
         synchronized(cacheLock) {
             contents[fileName]?.let { return it }
         }
-        val text = projectManager.getProjectScript(project, fileName)
+        val text = projectManager.getProjectScript(project, fileName) ?: ""
         val content = Content(text)
         synchronized(cacheLock) {
             contents[fileName] = content

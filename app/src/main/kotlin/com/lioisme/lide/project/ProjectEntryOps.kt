@@ -1,14 +1,18 @@
 package com.lioisme.lide.project
 
+import android.util.Log
+import com.lioisme.lide.model.Project
 import com.lioisme.lide.project.AlpNaming
 import java.io.File
 
 /**
  * 工程内文件树操作的纯逻辑（WP-005）：名称校验 / 去重 / 锚点保护 / 越界防护。
- * 全部为无副作用纯函数（仅文件系统判定），与 [ProjectManager] 的宿主耦合（Context、
- * luaExtDir）分离，可单测。目录参数一律为绝对路径。
+ * 无 Android 框架依赖（仅 File API），与 [ProjectManager] 的宿主耦合（Context、
+ * luaExtDir）分离，可单测；文件系统副作用集中在宿主调用点。目录参数一律为绝对路径。
  */
 object ProjectEntryOps {
+    private const val TAG = "ProjectEntryOps"
+
     private const val INVALID_NAME_CHARS = "\\/:*?\"<>|"
 
     /** 条目名校验：非空、非 `.`/`..`、无路径分隔/非法字符、无控制字符。 */
@@ -26,7 +30,8 @@ object ProjectEntryOps {
     ): String = AlpNaming.dedupeName(base) { File(dir, it).exists() }
 
     /** 工程锚点保护：main.lua / init.lua 禁止重命名与删除。 */
-    fun isProjectAnchor(name: String): Boolean = name == "main.lua" || name == "init.lua"
+    fun isProjectAnchor(name: String): Boolean =
+        name == Project.DEFAULT_MAIN_FILE || name == "init.lua"
 
     /** [path] 是否位于 [rootDir] 内（归一化路径前缀判定，防越界操作）。 */
     fun isInsideRoot(
@@ -36,6 +41,7 @@ object ProjectEntryOps {
         try {
             File(path).toPath().startsWith(rootDir.toPath())
         } catch (_: Throwable) {
+            // 非法路径（含 NUL 等）→ 判定为越界（静默，属校验路径而非异常路径）。
             false
         }
 
@@ -60,7 +66,8 @@ object ProjectEntryOps {
             val f = File(dirPath, name)
             f.parentFile?.mkdirs()
             f.createNewFile()
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            Log.w(TAG, "createFile failed: $dirPath/$name", e)
             false
         }
     }
@@ -75,7 +82,8 @@ object ProjectEntryOps {
         val name = targetName(File(dirPath), requestedName) ?: return false
         return try {
             File(dirPath, name).mkdirs()
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            Log.w(TAG, "createDirectory failed: $dirPath/$name", e)
             false
         }
     }
@@ -98,7 +106,8 @@ object ProjectEntryOps {
         if (old == target) return name
         return try {
             if (old.renameTo(target)) name else null
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            Log.w(TAG, "renameEntry failed: $oldPath -> $name", e)
             null
         }
     }
@@ -118,7 +127,8 @@ object ProjectEntryOps {
         }
         return try {
             if (target.isDirectory) target.deleteRecursively() else target.delete()
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            Log.w(TAG, "deleteEntry failed: $path", e)
             false
         }
     }

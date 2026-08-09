@@ -252,6 +252,9 @@ dependencies {
             "androidx.navigation:navigation-compose:2.8.5",
             "androidx.core:core-ktx:1.15.0",
             "androidx.lifecycle:lifecycle-runtime-ktx:2.8.7",
+            // 编辑器会话 ViewModel（Q8，2026-08-09）：旋转/配置变更保留打开标签与会话状态；
+            // 与 lifecycle-runtime-ktx 同版本线（2.8.7）。
+            "androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7",
             // 编辑器（并入自原 :editor 模块，2026-08-08 源码组织五需求 Phase 1）：
             // Tab 拖拽排序（WP-003，Squircle 同款固定版本；POM 实证与 Compose 1.7.3 二进制兼容）。
             "sh.calvin.reorderable:reorderable:3.0.0",

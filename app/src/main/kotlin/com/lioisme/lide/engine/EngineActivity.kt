@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import com.androlua.LuaActivity
+import com.lioisme.lide.model.Project
 
 /**
  * 引擎页：纯 LuaActivity 子类（全屏内置控制台）。
@@ -30,15 +31,12 @@ class EngineActivity : LuaActivity() {
         /** extra 截断上限：Binder 事务 ~1MB，取 200KB 留足余量（ACC-4）。 */
         private const val OUTPUT_LIMIT = 200 * 1024
 
-        /** 预编译：sendMsg 每行输出都会判定，Regex.matches 每次重编译不可接受。 */
-        private val errorPattern =
-            Regex(
-                "^(Runtime error|Syntax error|error error|Out of memory|GC error|Yield error|Unknown error \\d+): ",
-            )
+        /** 预编译（Q5）：复用 [EngineResultParser.ERROR_PREFIX] 单一事实源，不再本地持有副本。 */
+        private val errorPattern = EngineResultParser.ERROR_PREFIX
     }
 
     private var projectDir: String? = null
-    private var mainFile: String = "main.lua"
+    private var mainFile: String = Project.DEFAULT_MAIN_FILE
     private val outputBuffer = StringBuilder()
     private var scriptError = false
 
@@ -50,7 +48,7 @@ class EngineActivity : LuaActivity() {
             // 解出到 filesDir/lua（getDir("lua", MODE_PRIVATE) 同路径），以其为工程目录。
             projectDir = getDir("lua", MODE_PRIVATE).absolutePath
         }
-        mainFile = intent.getStringExtra(EngineContract.EXTRA_MAIN_FILE) ?: "main.lua"
+        mainFile = intent.getStringExtra(EngineContract.EXTRA_MAIN_FILE) ?: Project.DEFAULT_MAIN_FILE
         super.onCreate(savedInstanceState)
     }
 

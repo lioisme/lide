@@ -13,6 +13,18 @@ import java.util.zip.ZipOutputStream
  * 此处不再自维护；[writeEntry] 仅保留 STORED 必需的 size/crc 填充。
  */
 object ZipUtils {
+    // ZIP 中央目录/EOCD 布局常量（Q16 L4：魔法偏移提常量，格式见 APPNOTE）。
+    private const val EOCD_MIN_SIZE = 22
+    private const val EOCD_CD_SIZE_OFFSET = 12
+    private const val EOCD_CD_OFFSET_OFFSET = 16
+    private const val CEN_HEADER_SIZE = 46
+    private const val CEN_COMPRESSED_SIZE_OFFSET = 24
+    private const val CEN_NAME_LEN_OFFSET = 28
+    private const val CEN_EXTRA_LEN_OFFSET = 30
+    private const val CEN_COMMENT_LEN_OFFSET = 32
+    private const val EOCD_SIGNATURE = 0x06054B50L
+    private const val CEN_SIGNATURE = 0x02014B50L
+
     /** 宿主 APK 原生库条目（ABI × 库名 × 未压缩大小）。 */
     data class NativeLibEntry(
         val abi: String,
@@ -20,19 +32,26 @@ object ZipUtils {
         val size: Long,
     )
 
+    /** ZIP 条目（名称 × 压缩方法 × 原始数据）。 */
+    data class ZipEntryData(
+        val name: String,
+        val method: Int,
+        val data: ByteArray,
+    )
+
     /** 从字节数组读取全部条目（名称 → 压缩方法 → 原始数据）。 */
     fun readEntries(
         bytes: ByteArray,
         skipBlankNames: Boolean = false,
-    ): List<Triple<String, Int, ByteArray>> {
-        val out = ArrayList<Triple<String, Int, ByteArray>>()
+    ): List<ZipEntryData> {
+        val out = ArrayList<ZipEntryData>()
         ZipInputStream(bytes.inputStream()).use { zis ->
             while (true) {
                 val entry = zis.nextEntry ?: break
                 // 空名条目（zip 对齐/壳工具产物，STORED 零字节）无负载，跳过；
                 // 否则重写时 name="" 会触发 Android 13+/JDK 18+ 的重复条目拒绝。
                 if (skipBlankNames && entry.name.isBlank()) continue
-                out += Triple(entry.name, entry.method, zis.readBytes())
+                out += ZipEntryData(entry.name, entry.method, zis.readBytes())
             }
         }
         return out
@@ -45,36 +64,28 @@ object ZipUtils {
      */
     fun listEntryNames(bytes: ByteArray): List<Pair<String, Long>> {
         val out = ArrayList<Pair<String, Long>>()
-        var eocd = bytes.size - 22
+        var eocd = bytes.size - EOCD_MIN_SIZE
         while (
             eocd >= 0 &&
-            !(
-                bytes[eocd] == 0x50.toByte() && bytes[eocd + 1] == 0x4B.toByte() &&
-                    bytes[eocd + 2] == 0x05.toByte() && bytes[eocd + 3] == 0x06.toByte()
-            )
+            u32(bytes, eocd.toLong()) != EOCD_SIGNATURE
         ) {
             eocd--
         }
         if (eocd < 0) return out
-        val cdOffset = u32(bytes, eocd.toLong() + 16)
-        val cdSize = u32(bytes, eocd.toLong() + 12)
+        val cdOffset = u32(bytes, eocd.toLong() + EOCD_CD_OFFSET_OFFSET)
+        val cdSize = u32(bytes, eocd.toLong() + EOCD_CD_SIZE_OFFSET)
         var pos = cdOffset
-        while (pos + 46 <= cdOffset + cdSize) {
-            if (
-                !(
-                    bytes[pos.toInt()] == 0x50.toByte() && bytes[pos.toInt() + 1] == 0x4B.toByte() &&
-                        bytes[pos.toInt() + 2] == 0x01.toByte() && bytes[pos.toInt() + 3] == 0x02.toByte()
-                )
-            ) {
+        while (pos + CEN_HEADER_SIZE <= cdOffset + cdSize) {
+            if (u32(bytes, pos) != CEN_SIGNATURE) {
                 break
             }
-            val nameLen = u16(bytes, pos + 28)
-            val extraLen = u16(bytes, pos + 30)
-            val commentLen = u16(bytes, pos + 32)
-            val size = u32(bytes, pos + 24)
-            val name = String(bytes, pos.toInt() + 46, nameLen, Charsets.UTF_8)
+            val nameLen = u16(bytes, pos + CEN_NAME_LEN_OFFSET)
+            val extraLen = u16(bytes, pos + CEN_EXTRA_LEN_OFFSET)
+            val commentLen = u16(bytes, pos + CEN_COMMENT_LEN_OFFSET)
+            val size = u32(bytes, pos + CEN_COMPRESSED_SIZE_OFFSET)
+            val name = String(bytes, pos.toInt() + CEN_HEADER_SIZE, nameLen, Charsets.UTF_8)
             if (name.isNotEmpty()) out += name to size
-            pos += 46L + nameLen + extraLen + commentLen
+            pos += CEN_HEADER_SIZE.toLong() + nameLen + extraLen + commentLen
         }
         return out
     }

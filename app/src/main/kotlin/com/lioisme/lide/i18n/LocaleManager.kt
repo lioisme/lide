@@ -3,6 +3,7 @@ package com.lioisme.lide.i18n
 import android.content.Context
 import android.content.res.Configuration
 import android.os.Build
+import android.os.LocaleList
 import java.util.Locale
 
 object LocaleManager {
@@ -14,6 +15,11 @@ object LocaleManager {
     const val TAG_EN = "en"
     const val TAG_ZH = "zh"
 
+    /**
+     * 当前语言标签（Q13）：跨线程读（Application.init 写 / wrap 各线程读），
+     * @Volatile 保证可见性——非同步单例字段的读线程不得见到过期值。
+     */
+    @Volatile
     var currentLanguageTag: String = TAG_SYSTEM
         private set
 
@@ -41,7 +47,7 @@ object LocaleManager {
         Locale.setDefault(locale)
         val config = Configuration(base.resources.configuration)
         // setLocales 自 API 24 可用（= minSdk），取代 API 33 起弃用的 setLocale。
-        config.setLocales(android.os.LocaleList(locale))
+        config.setLocales(LocaleList(locale))
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             return base.createConfigurationContext(config)
         }

@@ -65,6 +65,9 @@ import com.lioisme.lide.build.SigningProfile
 import com.lioisme.lide.ui.theme.LideTopBar
 import com.lioisme.lide.ui.theme.SettingsManager
 
+/** 指纹展示截断长度（Q16 L14 魔数收口）：SHA-256 十六进制 64 字符，界面行内展示截断 + 省略号。 */
+private const val FINGERPRINT_DISPLAY_CHARS = 31
+
 /**
  * 签名管理页：仅签名档案列表（RadioButton 单选默认，导入档案可导出 / 删除）。
  * 生成 / 导入功能收于顶栏溢出菜单；全部走官方 material3 组件。
@@ -287,7 +290,7 @@ private fun SigningRow(
                     if (profile.isBuiltin) {
                         stringResource(R.string.signing_builtin)
                     } else {
-                        "SHA-256 ${profile.certFingerprint.take(31)}…"
+                        "SHA-256 ${profile.certFingerprint.take(FINGERPRINT_DISPLAY_CHARS)}…"
                     },
                     style = MaterialTheme.typography.bodySmall,
                     fontFamily = if (profile.isBuiltin) FontFamily.Default else FontFamily.Monospace,
@@ -612,7 +615,12 @@ private fun ImportDialog(
                                 Column(Modifier.weight(1f)) {
                                     Text(alias.alias, style = MaterialTheme.typography.bodyLarge)
                                     Text(
-                                        "SHA-256 ${alias.certFingerprint.take(31)}…  ·  ${alias.algorithm}",
+                                        // Q14：指纹行整句进资源（signing_cert_detail）。
+                                        stringResource(
+                                            R.string.signing_cert_detail,
+                                            alias.certFingerprint.take(FINGERPRINT_DISPLAY_CHARS),
+                                            alias.algorithm,
+                                        ),
                                         style = MaterialTheme.typography.bodySmall,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     )
@@ -717,7 +725,13 @@ private fun ExportDialog(
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(profile.name, style = MaterialTheme.typography.titleMedium)
                 Text(
-                    "${stringResource(R.string.signing_alias)}  ·  ${storeTypeLabel(profile)}  ·  ${profile.algorithm}",
+                    // Q14：档案元信息行整句进资源（signing_meta_line）。
+                    stringResource(
+                        R.string.signing_meta_line,
+                        stringResource(R.string.signing_alias),
+                        storeTypeLabel(profile),
+                        profile.algorithm,
+                    ),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )

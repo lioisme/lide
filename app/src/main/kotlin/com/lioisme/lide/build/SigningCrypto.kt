@@ -53,7 +53,7 @@ object SigningCrypto {
     /**
      * 从文件头猜测密钥库类型：
      * - JKS 魔数 `0xFE 0xED 0xFE 0xED`；
-     * - 其余（含 PKCS#12 = ASN.1 DER SEQUENCE）回落为 [DEFAULT_STORE_TYPE]。
+     * - 其余（含 PKCS#12 = ASN.1 DER SEQUENCE）回落为 [PKCS12_STORE_TYPE]。
      */
     fun detectStoreType(bytes: ByteArray): String {
         if (bytes.size >= 4 &&
@@ -144,7 +144,8 @@ object SigningCrypto {
         return GeneratedKey(storeBytes = out.toByteArray(), cert = cert, fingerprint = fingerprintSha256(cert))
     }
 
-    private fun randomPassword(): String {
+    /** 随机密码生成（Q5 去重：SigningManager 共用本实现，禁止再复制副本）。 */
+    internal fun randomPassword(): String {
         val alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
         val random = SecureRandom()
         return buildString { repeat(12) { append(alphabet[random.nextInt(alphabet.length)]) } }
@@ -360,12 +361,13 @@ object SigningCrypto {
     private fun oidBytes(oid: String): ByteArray {
         val arcs = oid.split('.').map { it.toLong() }
         val out = ByteArrayOutputStream()
-        writeBase128(out, arcs[0] * 40 + arcs[1])
-        for (i in 2 until arcs.size) writeBase128(out, arcs[i])
+        // 首弧 = 前两段合并值（X.690 8.19.4），其后每段独立编码。
+        writeOidComponent(out, arcs[0] * 40 + arcs[1])
+        for (i in 2 until arcs.size) writeOidComponent(out, arcs[i])
         return der(TAG_OID, out.toByteArray())
     }
 
-    private fun writeBase128(
+    private fun writeOidComponent(
         out: ByteArrayOutputStream,
         v: Long,
     ) {

@@ -280,7 +280,12 @@ EngineActivity (extends LuaActivity, 独立 Activity 栈)
 - **应用内自生成**：`SigningCrypto.generate` 零依赖手写 X.509 v3 自签证书 DER（RSA-2048 + PKCS12，别名 `lidekey`；密码可留空自动生成 12 位随机）——注意 version 字段必须 `[0] EXPLICIT`（`A0 03 02 01 02`）包装，裸 INTEGER 会被 OpenJDK 解析器误读为 serialNumber 导致 `algid parse error`
 - **v1 / v2 / v3 签名**：统一走 Google 官方 apksig（AGP 同源，`setMinSdkVersion(24)`），非自研/非 BouncyCastle
 
-Lua 打包双开关（`BuildOpts`，均默认开、互相独立）：`compileLua` = 全部工程 `.lua`（含 main.lua）编译为字节码，关 = 源码文本入库；`encryptBytecode` = 对入库的每个 Lua 文件 DES-ECB 加密（MAGIC `LIDE\x01\0\0\0` + 固定 8 字节密钥，编译开加密字节码、编译关加密源码文本），运行端 `luaL_loadfilex` 快路径自动解密（加密格式唯一事实源：AGENTS.md「打包构建约定」，密钥 `{0xFF,0xDD,0xBB,0x99,0x77,0x55,0x33,0x11}`）。
+Lua 打包双开关（`BuildOpts`，均默认开、互相独立）：`compileLua` = 全部工程 `.lua`/`.aly`（含 main.lua）编译为字节码（`.aly` 先包装 `local layout=…\nreturn layout` 再编译并**改名 `.lua`** 入库，pro 同款），关 = 源码文本入库；`encryptBytecode` = 仅对入库的 `.lua`/`.aly` DES-ECB 加密（MAGIC `LIDE\x01\0\0\0` + 固定 8 字节密钥，编译开加密字节码、编译关加密源码文本；其余工程文件——图片/字体/数据——一律原样入库），运行端 `luaL_loadfilex` 快路径自动解密（加密格式唯一事实源：AGENTS.md「打包构建约定」，密钥 `{0xFF,0xDD,0xBB,0x99,0x77,0x55,0x33,0x11}`）。打包图标（2026-08-09 P9 用户红线反转）：**LIDE 宿主自身拥有图标**——manifest 声明
+`android:icon="@drawable/icon"`（`res/drawable/icon.png`，512×512，矢量设计渲染 PNG，宿主桌面图标
+= 打包模板默认图标，同一资源）。产物沿用模板自带 icon 属性（原样保留、不重复注入）；
+模板无 icon 属性时才经 `ArscLookup`（解析宿主 arsc 定位 drawable/icon 资源 ID）兜底注入
+`android:icon`（TYPE_REFERENCE），工程根 `icon.png` 覆盖产物 `res/drawable/icon.png` 条目数据
+即桌面图标生效（无工程图标显示宿主图标），工程 `icon.png` 同时按普通文件入 `assets/lua/`（双份语义同 pro）。
 
 ---
 
@@ -364,7 +369,8 @@ APK——不设 jniLibs 缓存目录，也无 rebuild 脚本（R5）。
 
 - 签名档案管理（`SigningManager` + `SigningScreen`）：默认内置 / 自定义导入（.jks/.p12）/ 应用内自生成三类
 - v1 + v2 + v3 签名（Google 官方 apksig）
-- 打包双开关：Lua 全量编译字节码（默认开）+ DES 加密（默认开、独立于编译），运行端自动解密
+- 打包双开关：Lua 全量编译字节码（`.lua` + `.aly` 改名 `.lua`，默认开）+ DES 加密（默认开、独立于编译，仅限 `.lua`/`.aly`），运行端自动解密
+- 打包图标（2026-08-09 P9 用户红线反转）：**LIDE 宿主自带图标**（manifest 声明 `android:icon="@drawable/icon"`，`res/drawable/icon.png` 512×512 矢量渲染 PNG，宿主桌面图标 = 产物默认图标）；产物沿用模板自带 icon 属性，模板无 icon 时经 `ArscLookup` 兜底注入引用，工程 `icon.png` 覆盖产物 `res/drawable/icon.png`（无则宿主图标）
 - APK 安装与分享（FileProvider + ACTION_INSTALL_PACKAGE）；产物输出方式可选（默认自动安装，pro 兼容；可改仅保存）
 - 多 ABI 构建支持（宿主 arm64 / x64 debug variant）
 - **ABI 架构契约（D-1）**：打包 ABI 集合由宿主实际携带驱动（`ZipUtils.listAbis` 枚举宿主

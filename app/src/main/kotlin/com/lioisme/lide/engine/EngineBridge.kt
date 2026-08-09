@@ -3,12 +3,13 @@ package com.lioisme.lide.engine
 import android.content.Context
 import android.content.Intent
 import com.lioisme.lide.R
+import com.lioisme.lide.model.Project
 
 class EngineBridge(private val context: Context) {
 
     fun createEngineIntent(
         projectDir: String,
-        mainFile: String = "main.lua",
+        mainFile: String = Project.DEFAULT_MAIN_FILE,
         args: Array<Any?>? = null
     ): Intent {
         return Intent().apply {

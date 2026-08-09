@@ -48,12 +48,26 @@ object LuaDiagnostics {
      * 线程模型：事件回调（主线程）调用 [onEdit] / [onNewText]，检查协程（后台线程）调用
      * [check]；全部方法同步，检查点一致性受锁保护。
      */
-    class Incremental {
-        /** 单行解析状态：模式 + 括号/块栈。 */
-        private data class Frame(
+    class Incremental(
+        /** 消息渲染器（Q15）：默认中文模板；宿主 UI 注入资源本地化实现（LuaEditor 组合期 remember 构造）。 */
+        private val messageProvider: DiagnosticMessageProvider = LuaDiagnostics.DEFAULT_PROVIDER,
+    ) {
+        /** 栈帧（Q11）：类型化区分括号/块，括号帧直接存字符，免 `"bracket:$c"` 拼接字符串分配。 */
+        private sealed interface Frame {
+            val line: Int
+        }
+
+        /** 括号帧（`(`/`[`/`{`）。 */
+        private data class BracketFrame(
+            val ch: Char,
+            override val line: Int,
+        ) : Frame
+
+        /** 块帧（if/for/while/do/function/repeat/ifthen）。 */
+        private data class BlockFrame(
             var kind: String,
-            val line: Int,
-        )
+            override val line: Int,
+        ) : Frame
 
         private sealed interface Mode {
             /** 普通代码。 */
@@ -78,10 +92,16 @@ object LuaDiagnostics {
             ) : Mode
         }
 
-        /** 行内收集到的一个错误（[line] 为 1-based 行号）；[fix] 为可选的 quickfix 描述。 */
+        /**
+         * 行内收集到的一个错误（[line] 为 1-based 行号）；[fix] 为可选的 quickfix 描述。
+         *
+         * Q15：错误只携带「消息键 + 参数」（[key]/[args]），文案本地化统一由
+         * [DiagnosticMessageProvider] 在渲染层完成（诊断器零资源依赖，可单测）。
+         */
         private data class ScanError(
             val line: Int,
-            val message: String,
+            val key: String,
+            val args: List<String> = emptyList(),
             val fix: FixSpec? = null,
         )
 
@@ -137,11 +157,22 @@ object LuaDiagnostics {
         private var checkpoints: MutableList<Checkpoint> = ArrayList()
 
         /**
+         * Q11 行起始偏移索引：`lineStarts[i]` = 行 i 的起始偏移（行数 = size）。
+         * 增量维护：编辑只影响 `startLine` 及之后的行，前缀 0..startLine 直接复用，
+         * 从 startLine 行起始重扫至末尾（全量重扫场景 keep=0 全重建）。
+         */
+        private var lineStarts: MutableList<Int> = ArrayList()
+
+        /** 上次检查的文本长度：用于发现「未登记编辑的文本变更」（onEdit 未触发时全量重建索引）。 */
+        private var lastCheckedLength = -1
+
+        /**
          * 新文本（文件切换 / setText）：清空全部增量状态。
          */
         @Synchronized
         fun onNewText() {
             checkpoints = ArrayList()
+            lineStarts = ArrayList()
             minEditedLine = Int.MAX_VALUE
             maxEditedLine = Int.MAX_VALUE
             prevFirstErrorLine = -1
@@ -188,11 +219,21 @@ object LuaDiagnostics {
             quickfixSource: Content? = null,
         ): List<DiagnosticRegion> {
             val n = source.length
-            val lineCount = countLines(source, n)
             val minEdited = minEditedLine
             val maxEdited = maxEditedLine
             minEditedLine = Int.MAX_VALUE
             maxEditedLine = Int.MAX_VALUE
+            // 行索引增量维护（Q11）：
+            // - 已登记编辑：sora 事件保证 startLine 之前的行不变，从编辑起始行重扫至末尾；
+            // - 未登记编辑（文本被外部替换但未调 onEdit/onNewText）且长度变化：全量重建；
+            // - 无编辑且长度不变（轮询/防抖重查）：完整复用，O(1) 拿到行数。
+            val lineCount =
+                if (minEdited == Int.MAX_VALUE && n == lastCheckedLength) {
+                    lineStarts.size
+                } else {
+                    buildLineStarts(source, n, if (minEdited == Int.MAX_VALUE) 0 else minEdited)
+                }
+            lastCheckedLength = n
             if (lineCount == 0) {
                 checkpoints = ArrayList()
                 prevFirstErrorLine = -1
@@ -232,7 +273,7 @@ object LuaDiagnostics {
                     // 收敛：后续内容与检查点一致（行号逐值相同 ⇒ 行号未漂移），提前结束。
                     truncate(li + 1)
                     prevFirstErrorLine = if (errors.isEmpty()) -1 else errors.minOf { it.line }
-                    return buildRegions(source, errors, quickfixSource)
+                    return buildRegions(source, errors, quickfixSource, lineStarts, n)
                 }
 
                 val committed = Checkpoint(nextLineStart, result.mode, stack.toList())
@@ -248,40 +289,41 @@ object LuaDiagnostics {
             // 模式（跨行字符串/注释）附「文件末尾补闭合符」fix，块/括号附「行尾补 end/闭合符」fix。
             val modeError: ScanError? =
                 when (mode) {
-                    is Mode.LongComment -> ScanError(mode.startLine, "未闭合的长注释", FixSpec.AppendAtFileEnd(closeOfLong(mode.level)))
-                    is Mode.LongString -> ScanError(mode.startLine, "未闭合的长字符串", FixSpec.AppendAtFileEnd(closeOfLong(mode.level)))
-                    is Mode.QuotedString -> ScanError(mode.startLine, "未闭合的字符串", FixSpec.AppendAtFileEnd(mode.quote.toString()))
+                    is Mode.LongComment -> ScanError(mode.startLine, MSG_UNCLOSED_LONG_COMMENT, fix = FixSpec.AppendAtFileEnd(closeOfLong(mode.level)))
+                    is Mode.LongString -> ScanError(mode.startLine, MSG_UNCLOSED_LONG_STRING, fix = FixSpec.AppendAtFileEnd(closeOfLong(mode.level)))
+                    is Mode.QuotedString -> ScanError(mode.startLine, MSG_UNCLOSED_QUOTED_STRING, fix = FixSpec.AppendAtFileEnd(mode.quote.toString()))
                     else -> null
                 }
             if (modeError != null) errors.add(modeError)
             for (frame in stack) {
                 val fix =
-                    if (frame.kind.startsWith("bracket:")) {
-                        FixSpec.AppendText(closeOf(frame.kind.removePrefix("bracket:")))
-                    } else {
-                        FixSpec.AppendText("end")
+                    when (frame) {
+                        is BracketFrame -> FixSpec.AppendText(closeOf(frame.ch))
+                        is BlockFrame -> FixSpec.AppendText("end")
                     }
-                errors.add(ScanError(frame.line, unclosedMessage(frame.kind), fix))
+                errors.add(ScanError(frame.line, MSG_UNCLOSED_TOKEN, unclosedArgs(frame), fix))
             }
             prevFirstErrorLine = if (errors.isEmpty()) -1 else errors.minOf { it.line }
-            return buildRegions(source, errors, quickfixSource)
+            return buildRegions(source, errors, quickfixSource, lineStarts, n)
         }
 
         private fun buildRegions(
             source: String,
             errors: List<ScanError>,
             quickfixSource: Content? = null,
+            lineStarts: List<Int>,
+            sourceLength: Int,
         ): List<DiagnosticRegion> {
             if (errors.isEmpty()) return emptyList()
             // 按区域起始排序 + (起始, 结束, 文案) 去重：多错误聚合的稳定输出面。
             val mapped =
                 errors.map { error ->
-                    val region = errorAt(source, error.line, error.message)
+                    val region = errorAt(lineStarts, sourceLength, error, messageProvider)
                     val fix = error.fix
                     if (quickfixSource != null && fix != null) {
                         region.detail =
                             region.detail?.copy(
-                                quickfixes = listOf(buildQuickfix(quickfixSource, region, fix)),
+                                quickfixes = listOf(buildQuickfix(quickfixSource, region, fix, messageProvider)),
                             )
                     }
                     region
@@ -297,16 +339,24 @@ object LuaDiagnostics {
          * 执行全部 try/catch(Throwable) 降级；[FixSpec.DeleteToken] 先校验预期文本
          * 再删除，避免行内编辑后的错位删除。
          */
-        private fun buildQuickfix(
+        /** 未闭合栈帧的展示参数（[MSG_UNCLOSED_TOKEN] 的 %1$s）。 */
+    private fun unclosedArgs(frame: Frame): List<String> =
+        when (frame) {
+            is BracketFrame -> listOf(frame.ch.toString())
+            is BlockFrame -> listOf(frame.kind)
+        }
+
+    private fun buildQuickfix(
             content: Content,
             region: DiagnosticRegion,
             spec: FixSpec,
+            messageProvider: DiagnosticMessageProvider,
         ): Quickfix {
             val title =
                 when (spec) {
-                    is FixSpec.DeleteToken -> "删除多余的 '${spec.expected}'"
-                    is FixSpec.AppendText -> "在行尾补上 '${spec.text}'"
-                    is FixSpec.AppendAtFileEnd -> "在文件末尾补上 '${spec.text}'"
+                    is FixSpec.DeleteToken -> messageProvider.message(MSG_FIX_DELETE_TOKEN, spec.expected)
+                    is FixSpec.AppendText -> messageProvider.message(MSG_FIX_APPEND_LINE_END, spec.text)
+                    is FixSpec.AppendAtFileEnd -> messageProvider.message(MSG_FIX_APPEND_FILE_END, spec.text)
                 }
             return Quickfix(
                 title,
@@ -370,12 +420,15 @@ object LuaDiagnostics {
             var i = start
             var mode = initialMode
             val errors = ArrayList<ScanError>(0)
+            // Q11：长模式闭合序列缓存（模式内逐字符迭代复用，免每字符拼接字符串分配）。
+            var pendingClose: String? = null
             while (i < end) {
                 when (mode) {
                     is Mode.LongComment -> {
-                        val close = LONG_CLOSE_PREFIX + "=".repeat(mode.level) + "]"
+                        val close = pendingClose ?: closeOfLong(mode.level).also { pendingClose = it }
                         if (source.startsWith(close, i)) {
                             mode = Mode.Normal
+                            pendingClose = null
                             i += close.length
                         } else {
                             i++
@@ -383,9 +436,10 @@ object LuaDiagnostics {
                     }
 
                     is Mode.LongString -> {
-                        val close = LONG_CLOSE_PREFIX + "=".repeat(mode.level) + "]"
+                        val close = pendingClose ?: closeOfLong(mode.level).also { pendingClose = it }
                         if (source.startsWith(close, i)) {
                             mode = Mode.Normal
+                            pendingClose = null
                             i += close.length
                         } else {
                             i++
@@ -393,6 +447,7 @@ object LuaDiagnostics {
                     }
 
                     is Mode.QuotedString -> {
+                        pendingClose = null
                         when (source[i]) {
                             '\\' -> {
                                 i += 2
@@ -410,6 +465,7 @@ object LuaDiagnostics {
                     }
 
                     Mode.Normal -> {
+                        pendingClose = null
                         val c = source[i]
                         when {
                             c == '-' && i + 1 < end && source[i + 1] == '-' -> {
@@ -417,7 +473,7 @@ object LuaDiagnostics {
                                 val level = longBracketLevel(source, i, end)
                                 if (level >= 0) {
                                     // `--[=[`：同行长注释；跨行则进入 LongComment 模式。
-                                    val close = LONG_CLOSE_PREFIX + "=".repeat(level) + "]"
+                                    val close = closeOfLong(level)
                                     val found = indexOfWithin(source, close, i, end)
                                     if (found >= 0) {
                                         i = found + close.length
@@ -463,7 +519,7 @@ object LuaDiagnostics {
                                 val level = longBracketLevel(source, i, end)
                                 if (level >= 0) {
                                     i += level + 2
-                                    val close = LONG_CLOSE_PREFIX + "=".repeat(level) + "]"
+                                    val close = closeOfLong(level)
                                     val found = indexOfWithin(source, close, i, end)
                                     if (found >= 0) {
                                         i = found + close.length
@@ -472,13 +528,13 @@ object LuaDiagnostics {
                                         i = end
                                     }
                                 } else {
-                                    stack.addLast(Frame("bracket:[", lineNo))
+                                    stack.addLast(BracketFrame('[', lineNo))
                                     i++
                                 }
                             }
 
                             c == '(' || c == '{' -> {
-                                stack.addLast(Frame("bracket:$c", lineNo))
+                                stack.addLast(BracketFrame(c, lineNo))
                                 i++
                             }
 
@@ -489,10 +545,19 @@ object LuaDiagnostics {
                                         ']' -> '['
                                         else -> '{'
                                     }
-                                if (stack.isNotEmpty() && stack.last().kind == "bracket:$want") {
+                                val top = stack.lastOrNull()
+                                if (top is BracketFrame && top.ch == want) {
                                     stack.removeLast()
                                 } else {
-                                    errors.add(ScanError(lineNo, "不匹配的 '$c'", FixSpec.DeleteToken(i - start, i - start + 1, c.toString())))
+                                    val s = c.toString()
+                                    errors.add(
+                                        ScanError(
+                                            lineNo,
+                                            MSG_UNMATCHED_CLOSE,
+                                            listOf(s),
+                                            FixSpec.DeleteToken(i - start, i - start + 1, s),
+                                        ),
+                                    )
                                 }
                                 i++
                             }
@@ -503,37 +568,37 @@ object LuaDiagnostics {
                                 val len = i - wordStart
                                 when {
                                     wordIs(source, wordStart, len, "if") -> {
-                                        stack.addLast(Frame("if", lineNo))
+                                        stack.addLast(BlockFrame("if", lineNo))
                                     }
 
                                     wordIs(source, wordStart, len, "for") -> {
-                                        stack.addLast(Frame("for", lineNo))
+                                        stack.addLast(BlockFrame("for", lineNo))
                                     }
 
                                     wordIs(source, wordStart, len, "while") -> {
-                                        stack.addLast(Frame("while", lineNo))
+                                        stack.addLast(BlockFrame("while", lineNo))
                                     }
 
                                     wordIs(source, wordStart, len, "do") -> {
                                         // `for ... do` / `while ... do` 的 do 与 for/while 共享同一个 end，
                                         // 不重复压栈（`while x do ... end` 只有一个 end）；独立的 do 块压栈。
                                         val top = stack.lastOrNull()
-                                        if (top?.kind != "for" && top?.kind != "while") {
-                                            stack.addLast(Frame("do", lineNo))
+                                        if (top !is BlockFrame || (top.kind != "for" && top.kind != "while")) {
+                                            stack.addLast(BlockFrame("do", lineNo))
                                         }
                                     }
 
                                     wordIs(source, wordStart, len, "function") -> {
-                                        stack.addLast(Frame("function", lineNo))
+                                        stack.addLast(BlockFrame("function", lineNo))
                                     }
 
                                     wordIs(source, wordStart, len, "repeat") -> {
-                                        stack.addLast(Frame("repeat", lineNo))
+                                        stack.addLast(BlockFrame("repeat", lineNo))
                                     }
 
                                     wordIs(source, wordStart, len, "then") -> {
                                         val top = stack.lastOrNull()
-                                        if (top?.kind == "if") top.kind = "ifthen"
+                                        if (top is BlockFrame && top.kind == "if") top.kind = "ifthen"
                                     }
 
                                     wordIs(source, wordStart, len, "end") -> {
@@ -553,7 +618,7 @@ object LuaDiagnostics {
                                             lineNo,
                                             stack,
                                             errors,
-                                            setOf("repeat"),
+                                            REPEAT_KINDS,
                                             "until",
                                             wordStart - start,
                                             i - start,
@@ -591,19 +656,28 @@ object LuaDiagnostics {
             while (true) {
                 val top = stack.lastOrNull()
                 when {
-                    top != null && top.kind in expected -> {
+                    top is BlockFrame && top.kind in expected -> {
                         stack.removeLast()
                         break
                     }
 
-                    top != null && top.kind.startsWith("bracket:") -> {
-                        val ch = top.kind.removePrefix("bracket:")
-                        errors.add(ScanError(top.line, "未闭合的 '$ch'", FixSpec.AppendText(closeOf(ch))))
+                    top is BracketFrame -> {
+                        val s = top.ch.toString()
+                        errors.add(
+                            ScanError(top.line, MSG_UNCLOSED_TOKEN, listOf(s), FixSpec.AppendText(closeOf(top.ch))),
+                        )
                         stack.removeLast()
                     }
 
                     else -> {
-                        errors.add(ScanError(lineNo, "多余的 '$excessToken'", FixSpec.DeleteToken(tokenRelStart, tokenRelEnd, excessToken)))
+                        errors.add(
+                            ScanError(
+                                lineNo,
+                                MSG_EXCESS_TOKEN,
+                                listOf(excessToken),
+                                FixSpec.DeleteToken(tokenRelStart, tokenRelEnd, excessToken),
+                            ),
+                        )
                         break
                     }
                 }
@@ -645,69 +719,121 @@ object LuaDiagnostics {
             }
             return -1
         }
-    }
 
-    private fun countLines(
-        s: String,
-        n: Int,
-    ): Int {
-        var count = 1
-        for (i in 0 until n) if (s[i] == '\n') count++
-        return count
-    }
-
-    private fun unclosedMessage(kind: String): String {
-        if (kind.startsWith("bracket:")) {
-            return "未闭合的 '${kind.removePrefix("bracket:")}'"
+        /**
+         * 行起始索引增量构建（Q11）：
+         * - 编辑不影响 [editedStartLine] 之前的行（sora 事件语义），其行起始偏移直接复用；
+         * - 从 editedStartLine 行起始重扫至文本末尾（该行及之后内容可能已变），O(剩余文本)；
+         * - 无编辑且长度不变的复用场景由调用方直接取 [lineStarts].size，不经本方法。
+         * 返回行数（= lineStarts.size）。
+         */
+        private fun buildLineStarts(
+            s: String,
+            n: Int,
+            editedStartLine: Int,
+        ): Int {
+            val cached = lineStarts
+            val keep = editedStartLine.coerceAtMost(cached.size)
+            while (cached.size > keep + 1) cached.removeAt(cached.size - 1)
+            // 保证 cached 含行 keep 起始（keep 之前的行未变，其起始仍有效；keep 行起始也不变）。
+            if (cached.isEmpty()) cached.add(0)
+            if (cached.size <= keep) {
+                val from = cached.last()
+                val nl = s.indexOf('\n', from)
+                if (nl >= 0) cached.add(nl + 1)
+            }
+            val scanFrom = cached.getOrNull(keep) ?: return cached.size
+            var scan = scanFrom
+            while (scan < n) {
+                val nl = s.indexOf('\n', scan)
+                if (nl < 0) break
+                cached.add(nl + 1)
+                scan = nl + 1
+            }
+            return cached.size
         }
-        return when (kind) {
-            "if", "ifthen" -> "未闭合的 'if'"
-            "for" -> "未闭合的 'for'"
-            "while" -> "未闭合的 'while'"
-            "do" -> "未闭合的 'do'"
-            "function" -> "未闭合的 'function'"
-            "repeat" -> "未闭合的 'repeat'"
-            else -> "未闭合的 '$kind'"
+
+        /**
+         * 错误区域定位（Q11 优化）：经 [lineStarts] O(1) 查表（原实现每错误从头
+         * indexOf 扫行号 = O(E×L)）；文案 = 消息键渲染 + 「第 N 行」附注（[MSG_AT_LINE]）。
+         */
+        private fun errorAt(
+            lineStarts: List<Int>,
+            sourceLength: Int,
+            error: ScanError,
+            messageProvider: DiagnosticMessageProvider,
+        ): DiagnosticRegion {
+            val line = error.line.coerceAtLeast(1)
+            val start = lineStarts.getOrNull(line - 1) ?: 0
+            // 行尾 = 下一行起始 - 1（原实现取首个 '\n' 位置）；末行回落文本末尾。
+            val end = lineStarts.getOrNull(line)?.minus(1) ?: sourceLength
+            val message = messageProvider.message(error.key, *error.args.toTypedArray())
+            return DiagnosticRegion(
+                start,
+                end,
+                DiagnosticRegion.SEVERITY_ERROR,
+                0L,
+                DiagnosticDetail(briefMessage = messageProvider.message(MSG_AT_LINE, message, line)),
+            )
         }
     }
 
     /** 左括号的对应右括号；未知输入原样返回。 */
-    private fun closeOf(open: String): String =
+    private fun closeOf(open: Char): String =
         when (open) {
-            "(" -> ")"
-            "[" -> "]"
-            "{" -> "}"
-            else -> open
+            '(' -> ")"
+            '[' -> "]"
+            '{' -> "}"
+            else -> open.toString()
         }
 
     /** 长括号关闭序列：`]` + `=`×[level] + `]`。 */
     private fun closeOfLong(level: Int): String = LONG_CLOSE_PREFIX + "=".repeat(level) + "]"
 
-    private fun errorAt(
-        source: String,
-        lineNumber: Int,
-        message: String,
-    ): DiagnosticRegion {
-        val line = if (lineNumber < 1) 1 else lineNumber
-        var start = 0
-        var cur = 1
-        while (cur < line) {
-            val nl = source.indexOf('\n', start)
-            if (nl < 0) break
-            start = nl + 1
-            cur++
-        }
-        var end = source.indexOf('\n', start)
-        if (end < 0) end = source.length
-        return DiagnosticRegion(
-            start,
-            end,
-            DiagnosticRegion.SEVERITY_ERROR,
-            0L,
-            DiagnosticDetail(briefMessage = "$message（第 $line 行）"),
-        )
-    }
-
     private const val LONG_CLOSE_PREFIX = "]"
     private val BLOCK_KINDS = setOf("if", "ifthen", "for", "while", "do", "function")
+    private val REPEAT_KINDS = setOf("repeat")
+
+    /**
+     * 默认消息渲染器（中文模板，与历史文案一致）：Incremental 缺省注入，
+     * 保证测试与纯文本诊断路径无需构造 provider；宿主 UI 经资源驱动覆盖。
+     */
+    val DEFAULT_PROVIDER =
+        object : DiagnosticMessageProvider {
+            override fun message(key: String, vararg args: Any): String =
+                when (key) {
+                    MSG_UNCLOSED_LONG_COMMENT -> "未闭合的长注释"
+                    MSG_UNCLOSED_LONG_STRING -> "未闭合的长字符串"
+                    MSG_UNCLOSED_QUOTED_STRING -> "未闭合的字符串"
+                    MSG_UNMATCHED_CLOSE -> "不匹配的 '${args[0]}'"
+                    MSG_UNCLOSED_TOKEN -> "未闭合的 '${args[0]}'"
+                    MSG_EXCESS_TOKEN -> "多余的 '${args[0]}'"
+                    MSG_AT_LINE -> "${args[0]}（第 ${args[1]} 行）"
+                    MSG_FIX_DELETE_TOKEN -> "删除多余的 '${args[0]}'"
+                    MSG_FIX_APPEND_LINE_END -> "在行尾补上 '${args[0]}'"
+                    MSG_FIX_APPEND_FILE_END -> "在文件末尾补上 '${args[0]}'"
+                    else -> key
+                }
+        }
 }
+
+/**
+ * 诊断消息渲染器（Q15）：诊断器只产出「消息键 + 参数」，文案本地化在渲染层。
+ * 默认实现为中文模板（与历史诊断文案一致，测试依赖）；宿主 UI 注入资源驱动实现。
+ */
+fun interface DiagnosticMessageProvider {
+    /** [key] 为 [LuaDiagnostics] 的消息键常量；[args] 为按序参数（%1$s/%1$d 等）。 */
+    fun message(key: String, vararg args: Any): String
+}
+
+/** 诊断消息键（Q15）：文案唯一事实源为 strings.xml `diag_*` / `fix_*`，此处键与资源名对应。 */
+const val MSG_UNCLOSED_LONG_COMMENT = "unclosed_long_comment"
+const val MSG_UNCLOSED_LONG_STRING = "unclosed_long_string"
+const val MSG_UNCLOSED_QUOTED_STRING = "unclosed_quoted_string"
+const val MSG_UNMATCHED_CLOSE = "unmatched_close"
+const val MSG_UNCLOSED_TOKEN = "unclosed_token"
+const val MSG_EXCESS_TOKEN = "excess_token"
+const val MSG_AT_LINE = "at_line"
+const val MSG_FIX_DELETE_TOKEN = "fix_delete_token"
+const val MSG_FIX_APPEND_LINE_END = "fix_append_line_end"
+const val MSG_FIX_APPEND_FILE_END = "fix_append_file_end"

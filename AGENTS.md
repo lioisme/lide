@@ -58,6 +58,11 @@ git ls-files '*.jar' | grep -v 'gradle/wrapper/gradle-wrapper.jar'
 - 文本快照可在后台线程取（`Content.toString` 内部持有 `ReadWriteLock`），
   但编辑器 API 调用（`setText` / `diagnostics` 赋值 / `subscribeEvent` 回调）保持主线程。
 - 自动保存：快照与写盘均在 `Dispatchers.IO`；离开编辑器时经 `onRelease` 兜底保存。
+- 编辑器会话（`EditorSession`）经 `EditorSessionViewModel` 持有（2026-08-09 Q8）：会话随
+  导航回退栈条目存活，旋转/配置变更不重建（tab 列表/撤销历史/选中文件保留）；出栈时
+  `onCleared` 委托 `session.release()`（兜底保存 + 清 Content 缓存）。`initialize()` 幂等
+  （`initialized` 标志），重组后重复调用不得重置状态；文本写入一律走会话门面
+  `insertText` / `replaceText`（统一脏标记 + 自动保存节流），禁止直接改 `selection.content`。
 - 大文件（> 200 KB）：关闭括号高亮 / 当前块 / 自动换行，并跳过行级诊断。
 - 补全、诊断、事件回调必须 `try/catch(Throwable)` 降级，不得让异常逃逸进 sora 主循环。
 - 文件 → 语言 scope 唯一事实源为 `LanguageDetector`（未识别扩展名显式回落
@@ -116,16 +121,28 @@ git ls-files '*.jar' | grep -v 'gradle/wrapper/gradle-wrapper.jar'
 ## 打包构建约定（:app，签名 / Lua 编译加密）
 
 - 打包双开关（`BuildOpts.compileLua` / `encryptBytecode`，**默认均开、互相独立、不得互相隐含**）：
-  编译开 = 全部工程 `.lua`（含 main.lua）编译为字节码，关 = 源码文本入库；加密开 = 对入库每个
-  Lua 文件 DES-ECB 加密（编译开加密字节码、编译关加密源码文本），关 = 原文。偏好键
+  编译开 = 全部工程 `.lua`/`.aly`（含 main.lua）编译为字节码——`.aly` 先包装
+  `local layout=…\nreturn layout` 再编译并**改名 `.lua`** 入库（pro `gsub("aly$","lua")`
+  同款，运行端 alyloader 凭 `LIDE` 魔数走 `loadfile`）；关 = 源码文本入库（双关时 `.aly`
+  保留原名裸表文本）。加密开 = **仅对入库 `.lua`/`.aly`** DES-ECB 加密（编译开加密字节码、
+  编译关加密源码文本），其余工程文件（图片/字体/数据）一律原样入库，关 = 原文。偏好键
   `compile_lua` / `encrypt_lua`（`SettingsManager` build 域），旧键 `compile_all` / `encrypt`
   不得回退读写。
+- **打包图标（2026-08-09 P9 用户红线反转：LIDE 宿主自带图标）**：宿主 manifest **声明
+  `android:icon="@drawable/icon"`**（`res/drawable/icon.png`，512×512，矢量设计渲染 PNG，
+  宿主桌面图标 = 打包模板默认图标，同一资源）。产物图标机制不变：`ArscLookup`（解析宿主
+  arsc 的 drawable/icon 资源 ID，纯字节级、不写死 ID）经 `AXmlManifest.applicationIconId`
+  注入 `android:icon`（TYPE_REFERENCE）**仅对模板无 icon 属性时兜底**；模板自带 icon
+  属性时原样保留、不重复注入（AXmlManifestTest 双路径用例）。工程根 `icon.png` 覆盖产物
+  `res/drawable/icon.png` 条目数据即桌面图标生效（无工程图标显示宿主自带图标，pro bin.lua
+  同款双份语义：`assets/lua/icon.png` 同时注入）。arsc 缺失/解析失败安全降级不注入。
 - 签名档案三类：默认内置（AOSP testkey）、自定义导入（.jks/.p12）、应用内自生成
   （`SigningCrypto.generate` 零依赖手写 X.509 v3 自签 DER）。自签证书 version 字段必须
   `[0] EXPLICIT`（`A0 03 02 01 02`）包装——裸 INTEGER 会被 OpenJDK 误读为 serialNumber，
   平台回环解析报 `algid parse error`。
 - 加密格式唯一事实源：工作单 §4（MAGIC `LIDE\x01\0\0\0` + DES/ECB/NoPadding + PKCS7，
-  密钥 `{0xFF,0xDD,0xBB,0x99,0x77,0x55,0x33,0x11}`）；宿主引擎 Lua 库与 `.aly`/资源不加密。
+  密钥 `{0xFF,0xDD,0xBB,0x99,0x77,0x55,0x33,0x11}`）；宿主引擎 Lua 库与宿主资源不加密
+  （工程 `.aly` 属工程文件，按打包双开关参与编译/加密，见上）。
 - 改动打包/签名/加密链必须跑 `:app:testArm64DebugUnitTest --tests "com.lioisme.lide.build.*"`。
 
 ## ABI 架构契约（打包多架构，D-1 冻结结论）
@@ -169,6 +186,7 @@ git ls-files '*.jar' | grep -v 'gradle/wrapper/gradle-wrapper.jar'
   恰一份且全部存在，遗漏即失败。
 - **IDE 依赖形态（2026-08-09 单 dex 集）**：`ideDeps` 列表（compose ui/graphics/material3/
   icons-extended/activity-compose/navigation-compose/core-ktx/lifecycle-runtime-ktx/
+  lifecycle-viewmodel-compose + lifecycle-viewmodel-ktx（2.8.7，Q8 会话 ViewModel）/
   reorderable/cascade/profileinstaller/apksig + sora-editor project 依赖双模块）一律
   `implementation`（随 :androlua 同集合并，无引擎/IDE 双 dex 拆分）；
   `constraints { implementation("org.jetbrains:annotations:23.0.0") }` 防 consistent

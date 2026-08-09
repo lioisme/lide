@@ -2,6 +2,7 @@ package com.lioisme.lide.import
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import com.lioisme.lide.project.AlpManager
 import java.io.File
 
@@ -11,7 +12,7 @@ import java.io.File
  *
  * 收敛内容：
  * - 内容 URI → 缓存临时 .alp 文件（`alp_${ts}_$raw` 命名，用完即删）；
- * - 无副作用导入计划（planImport）与冲突挂起状态（[pendingConflict]，取代
+ * - 无副作用导入计划（planImport）与冲突挂起状态（[Pending]，取代
  *   此前 `ConflictPending` / `PendingImport` 双份同构状态类）；
  * - 按模式执行导入与临时文件清理。
  *
@@ -21,6 +22,10 @@ import java.io.File
 class AlpImportCoordinator(
     private val context: Context,
 ) {
+    private companion object {
+        const val TAG = "AlpImportCoordinator"
+    }
+
     /** 待确认导入：临时 .alp 文件路径 + 已解析的导入计划（冲突态）。 */
     data class Pending(
         val tempPath: String,
@@ -43,7 +48,8 @@ class AlpImportCoordinator(
                 input.copyTo(f.outputStream())
                 f.absolutePath
             }
-        } catch (_: Throwable) {
+        } catch (t: Throwable) {
+            Log.e(TAG, "copyUriToTemp failed: uri=$uri", t)
             null
         }
 
@@ -59,7 +65,8 @@ class AlpImportCoordinator(
             val result = AlpManager(context).import(tempPath, mode)
             File(tempPath).delete()
             result
-        } catch (_: Throwable) {
+        } catch (t: Throwable) {
+            Log.e(TAG, "import failed: temp=$tempPath mode=$mode", t)
             File(tempPath).delete()
             null
         }

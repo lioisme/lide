@@ -115,3 +115,20 @@ R1：    rg -n "luajava|androlua|loadLibrary" app/src/main/kotlin/com/lioisme/li
 ## 7. sora-editor 版本台账索引
 
 上游收纳与分层台账见 `app/vendor/sora-editor/README.md`（当前 0.24.6）。升级路径（2026-08-09 全量审计：`scripts/update-sora-editor.ps1` + `.github/workflows/update-sora-editor.yml` 已删除——third_party 迁址后断链且每周必失败；sora 为源码 vendor，上游改动一致性由 `scripts/verify-upstream-pristine.sh`（verify-vendor job）兜底）。
+
+---
+
+## 8. 词法诊断热路径与 i18n（2026-08-09 CODE_QUALITY Q11/Q15 蒸馏）
+
+`LuaDiagnostics.Incremental`（`editor/LuaDiagnostics.kt`）性能与文案模型（改动此文件必读）：
+
+- **增量行索引**：`buildLineStarts` 只重扫变更段（`unclosedArgs` 定界），`errorAt` O(1) 查表；
+  行尾位置 = 下一行起始 **-1**（曾错 1 字符导致 quickfix 插入偏移）。
+- **零分配 token**：括号 token 用 sealed `Frame`（`BracketFrame`/`BlockFrame`），消灭每次扫描
+  `"bracket:$c"` 字符串分配；`pendingClose` 缓存长注释/长串闭合序列；`REPEAT_KINDS` 收口重复键。
+- **文案模型（Q15）**：`MSG_*` 包级常量（消息键）+ `DiagnosticMessageProvider` 函数式接口
+  （`fun interface`，默认中文模板）；`LuaEditor.diagMessageProvider = remember { object : ... }`
+  资源本地化——**Kotlin SAM 转换不支持 vararg，必须对象表达式**；remember 引用稳定，
+  `EditorViewPool.syntaxCheck` 以 provider 引用比较决定是否重建检查器。
+- `MSG_*` 是包级 const（非 `LuaDiagnostics` 成员），同包直接用无前缀名。
+- 新增文案一律双语文案库（values + values-zh），验收脚本比对两文件键集合必须全同步。

@@ -17,6 +17,8 @@ import com.androlua.LuaApplication
 import com.lioisme.lide.engine.EngineActivity
 import com.lioisme.lide.engine.RunEngineLauncher
 import com.lioisme.lide.i18n.LocaleManager
+import com.lioisme.lide.model.PendingOpenFile
+import com.lioisme.lide.model.Project
 import com.lioisme.lide.project.AlpManager
 import com.lioisme.lide.project.ProjectManager
 import com.lioisme.lide.ui.navigation.LideNavHost
@@ -34,7 +36,7 @@ class MainActivity : ComponentActivity() {
     // 附带修复：onNewIntent 在 setContent 之后到达时，旧实现（plain MutableSet/List）
     // 追加的条目永远不会被组合消费——state 承载后迟到条目仍会被读取。
     private var pendingImportPaths by mutableStateOf<List<String>>(emptyList())
-    private var pendingOpenFiles by mutableStateOf<List<Pair<String, String>>>(emptyList())
+    private var pendingOpenFiles by mutableStateOf<List<PendingOpenFile>>(emptyList())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -116,12 +118,12 @@ class MainActivity : ComponentActivity() {
         val relPath = uri.path?.trimStart('/') ?: return
         val target = File(LuaApplication.getInstance().luaExtDir, relPath)
         if (target.isDirectory) {
-            val main = File(target, "main.lua")
+            val main = File(target, Project.DEFAULT_MAIN_FILE)
             if (main.isFile) {
-                RunEngineLauncher(this).launch(target.absolutePath, "main.lua")
+                RunEngineLauncher(this).launch(target.absolutePath, Project.DEFAULT_MAIN_FILE)
             }
         } else if (target.isFile && target.name.endsWith(".lua", ignoreCase = true)) {
-            if (target.name.equals("main.lua", ignoreCase = true)) {
+            if (target.name.equals(Project.DEFAULT_MAIN_FILE, ignoreCase = true)) {
                 target.parentFile?.let {
                     RunEngineLauncher(this).launch(it.absolutePath, target.name)
                 }
@@ -145,7 +147,7 @@ class MainActivity : ComponentActivity() {
                     val projectDir = findProjectDir(file)
                     if (projectDir != null) {
                         val relative = file.absolutePath.substring(projectDir.absolutePath.length + 1)
-                        projectDir.absolutePath to relative
+                        PendingOpenFile(projectDir.absolutePath, relative)
                     } else {
                         adoptStandaloneFile(file)
                     }
@@ -165,7 +167,7 @@ class MainActivity : ComponentActivity() {
         return null
     }
 
-    private fun adoptStandaloneFile(file: File): Pair<String, String>? =
+    private fun adoptStandaloneFile(file: File): PendingOpenFile? =
         try {
             val baseName = file.nameWithoutExtension
             val projectBase = File(LuaApplication.getInstance().luaExtDir, "project")
@@ -181,7 +183,7 @@ class MainActivity : ComponentActivity() {
             file.copyTo(dest, overwrite = true)
             val packageName = "com.lioisme.lide.$baseName"
             File(projectDir, "init.lua").writeText(ProjectManager.initLuaTemplate(baseName, packageName))
-            projectDir.absolutePath to file.name
+            PendingOpenFile(projectDir.absolutePath, file.name)
         } catch (e: Exception) {
             Log.e("MainActivity", "adopt standalone lua failed: ${e.message}")
             null

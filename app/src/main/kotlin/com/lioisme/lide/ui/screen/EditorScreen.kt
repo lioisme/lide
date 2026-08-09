@@ -13,7 +13,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -21,6 +20,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.key.Key
@@ -31,6 +31,7 @@ import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lioisme.lide.R
 import com.lioisme.lide.engine.EngineActivity
 import com.lioisme.lide.editor.EditorMoreAction
@@ -43,17 +44,24 @@ import com.lioisme.lide.model.Project
 import com.lioisme.lide.project.PermissionResolver
 import com.lioisme.lide.project.ProjectManager
 import com.lioisme.lide.session.EditorSession
+import com.lioisme.lide.session.EditorSessionViewModel
+import com.lioisme.lide.session.EditorSessionViewModelFactory
 import com.lioisme.lide.ui.theme.LocalIsDarkTheme
 import com.lioisme.lide.ui.theme.SettingsManager
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
 import java.io.File
 import java.util.concurrent.atomic.AtomicReference
 
 private const val AUTO_SAVE_DELAY_MS = 500L
+
+/** 跳行等待编辑器绑定的超时上限（编辑器错误态/初始化失败时降级跳过定位）。 */
+private const val EDITOR_BIND_TIMEOUT_MS = 5_000L
 
 /** WP-002 引擎运行结果（宿主展示用）。 */
 private data class RunResult(
@@ -91,19 +99,31 @@ fun EditorScreen(
     val isDarkTheme = LocalIsDarkTheme.current
     val appEditorConfig by SettingsManager.editorConfig.collectAsState()
 
-    val session = remember(project) { EditorSession(project, projectManager) }
-    // 页面销毁时释放会话：兜底保存脏标签后取消会话作用域并清空 Content 缓存。
-    DisposableEffect(project) {
-        onDispose { session.release() }
-    }
+    // 会话经 ViewModel 持有（Q8）：旋转/配置变更不销毁，打开标签/撤销历史/选中文件
+    // 完整保留；返回栈条目出栈时 onCleared 委托会话兜底保存（脏标签落盘 + 缓存清空）。
+    val sessionViewModel: EditorSessionViewModel =
+        viewModel(factory = EditorSessionViewModelFactory(project, projectManager))
+    val session = sessionViewModel.session
     val tabs by session.tabs.collectAsState()
     val selection by session.selection.collectAsState()
     val selectedFile = selection.file
     val content = selection.content
 
+    // 进程级重建恢复（Q8）：打开的标签名单 + 选中文件（Bundle 可序列化）；
+    // 配置变更路径由 ViewModel 保证会话存活，本恢复仅兜底进程重建（旋转时两者均为幂等空操作）。
+    var savedTabNames by rememberSaveable(project.path) { mutableStateOf(arrayListOf<String>()) }
+    var savedSelectedFile by rememberSaveable(project.path) { mutableStateOf("") }
+    LaunchedEffect(tabs, selection) {
+        savedTabNames = tabs.map { it.fileName }.toCollection(arrayListOf())
+        savedSelectedFile = selection.file ?: ""
+    }
+
     // 编辑器实例引用：普通原子容器（非 Compose state）——写入只发生在 AndroidView update
     // 阶段与 onDispose，组合期内无读取，无需快照跟踪（P3-5，脱离重组系统）。
     val editorRef = remember { AtomicReference<io.github.rosemoe.sora.widget.CodeEditor?>(null) }
+    // 编辑器绑定门控（Q1，替代 60Hz 忙轮询）：LuaEditor update 阶段绑定后完成；
+    // 跳行等待经 withTimeoutOrNull 挂起，编辑器错误态/未绑定超时后降级跳过。
+    val editorReady = remember { CompletableDeferred<Unit>() }
     val snackbarHostState = remember { SnackbarHostState() }
 
     var isFileTreeVisible by remember { mutableStateOf(false) }
@@ -128,7 +148,7 @@ fun EditorScreen(
 
     // WP-003 运行前权限门：工程 init.lua 声明而尚未授予的运行时权限，
     // 经系统对话框一次性请求；回调里无论授予与否都继续运行（pro 行为：
-    // 拒绝仅 Toast 提示，不阻断脚本执行）。
+    // 拒绝不阻断脚本执行；2026-08-09 起静默继续，不再提示）。
 
     // WP-002 运行诊断闭环状态：引擎返回结果（成功 Snackbar / 失败对话框）。
     var runResult by remember { mutableStateOf<RunResult?>(null) }
@@ -166,11 +186,11 @@ fun EditorScreen(
     }
 
     // 跳行：等待编辑器绑定到目标文件后定位（sora setSelection 0 基行号，自动滚动）。
+    // 门控等待替代忙轮询：编辑器绑定信号（CompletableDeferred）完成即继续，
+    // 超时（编辑器错误态/初始化失败）降级跳过定位，不阻塞不空转。
     LaunchedEffect(pendingGotoLine) {
         val line = pendingGotoLine ?: return@LaunchedEffect
-        while (editorRef.get() == null) {
-            delay(16)
-        }
+        withTimeoutOrNull(EDITOR_BIND_TIMEOUT_MS) { editorReady.await() }
         val editor = editorRef.get()
         if (editor != null) {
             val last = (editor.text.lineCount - 1).coerceAtLeast(0)
@@ -198,25 +218,17 @@ fun EditorScreen(
         runResult = null
         scope.launch {
             session.openTab(target)
-            val content = session.selection.value.content ?: return@launch
-            content.insert(0, 0, "import \"$globalName\"\n")
-            session.onContentModified()
+            // 经会话文本门面写入（Q7）：脏标记与自动保存节流由门面统一触发。
+            session.insertText(0, 0, "import \"$globalName\"\n")
         }
     }
 
     val runPermissionLauncher =
         rememberLauncherForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions(),
-        ) { granted: Map<String, Boolean> ->
-            val denied = granted.filterValues { !it }.keys
-            if (denied.isNotEmpty()) {
-                android.widget.Toast
-                    .makeText(
-                        context,
-                        context.getString(R.string.run_permission_denied_hint, denied.size),
-                        android.widget.Toast.LENGTH_SHORT,
-                    ).show()
-            }
+        ) { _: Map<String, Boolean> ->
+            // 无论授予与否都静默继续运行（pro 行为：拒绝不阻断脚本执行；2026-08-09
+            // 需求：不再弹「已拒绝 x 项权限」Toast，保持无打扰运行）。
             doRun()
         }
 
@@ -256,6 +268,16 @@ fun EditorScreen(
 
     LaunchedEffect(Unit) {
         session.initialize()
+        // 进程重建恢复：重新打开上次的标签并恢复选中（内容自磁盘重载，脏标记随自动保存语义重置）。
+        val restored = savedTabNames.filter { it.isNotBlank() }
+        if (restored.isNotEmpty()) {
+            val current = session.tabs.value.map { it.fileName }
+            restored.filterNot { it in current }.forEach { session.openTab(it) }
+            val target = savedSelectedFile.takeIf { it in restored }
+            if (target != null && target != session.selection.value.file) {
+                session.select(target)
+            }
+        }
     }
 
     // 自动保存：500ms 防抖。editTick 为 StateFlow，收集过程不触发重组。
@@ -363,6 +385,10 @@ fun EditorScreen(
                 isDarkTheme = isDarkTheme,
                 editorConfig = appEditorConfig,
                 editorRef = editorRef,
+                onEditorBound = {
+                    // 绑定信号幂等完成（主线程 update 阶段触发；已完成则跳过，防重复 complete 抛异常）。
+                    if (!editorReady.isCompleted) editorReady.complete(Unit)
+                },
                 storagePermissionMissing = extPermissionMissing.value,
                 isSearchVisible = isSearchVisible,
                 onTabClose = { file ->

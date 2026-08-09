@@ -65,6 +65,8 @@
     <string name="editor_settings_input">Input</string>
     <string name="setting_on">On</string>
     <string name="setting_off">Off</string>
+    <!-- Q14 模板化：设置项标题：值（全角冒号整句） -->
+    <string name="setting_value_title">%1$s：%2$s</string>
     <string name="use_tab">Use Tabs</string>
     <string name="auto_indent">Auto Indent</string>
     <string name="auto_close_brackets">Auto Close Brackets</string>
@@ -110,7 +112,6 @@
     <string name="perm_host_hint">Permissions of the LIDE host app itself. They apply to the IDE and to scripts running inside the host.</string>
     <string name="perm_package_only">Written into packaged APK only</string>
     <string name="project_permissions">Project Permissions</string>
-    <string name="run_permission_denied_hint">%1$d permission(s) denied - running anyway</string>
     <string name="run_finished">Run finished</string>
     <string name="run_error_title">Run error</string>
     <string name="run_jump_to_line">Jump to error line</string>
@@ -286,6 +287,10 @@
     <string name="api_detail_failed">Failed to reflect this class</string>
     <string name="api_retry">Retry</string>
     <string name="api_copied">Copied to clipboard</string>
+    <!-- Q14 模板化：拼接文案整句进资源（名称 · 已复制） -->
+    <string name="api_copied_format">%1$s · %2$s</string>
+    <!-- Q14 模板化：分类计数括号 -->
+    <string name="api_category_count">(%1$d)</string>
     <string name="api_group_constructors">Constructors</string>
     <string name="api_group_events">Public Events</string>
     <string name="api_group_getters">Public Getters</string>
@@ -351,6 +356,10 @@
     <string name="signing_empty">No private-key aliases found in this keystore</string>
     <string name="signing_no_key">No private key</string>
     <string name="signing_imported">Signature imported</string>
+    <!-- Q14 模板化：证书指纹行（SHA-256 指纹… · 算法） -->
+    <string name="signing_cert_detail">SHA-256 %1$s… · %2$s</string>
+    <!-- Q14 模板化：档案元信息行（别名 · 仓库类型 · 算法） -->
+    <string name="signing_meta_line">%1$s · %2$s · %3$s</string>
     <string name="signing_read_failed">Failed to read keystore file</string>
     <string name="signing_export">Export keystore</string>
     <string name="signing_export_dialog_title">Export signing profile</string>
@@ -411,7 +420,20 @@
     <string name="cd_search_next">Next match</string>
     <string name="cd_search_prev">Previous match</string>
     <string name="cd_search_close">Close search</string>
+    <!-- Q14 模板化：匹配计数 current/total -->
+    <string name="cd_search_match_count">%1$d/%2$d</string>
     <!-- TextMate runtime -->
     <string name="textmate_init_failed">Editor engine initialization failed</string>
     <string name="retry">Retry</string>
+    <!-- Lexical diagnostics (Q15: rendered via DiagnosticMessageProvider) -->
+    <string name="diag_unclosed_long_comment">Unclosed long comment</string>
+    <string name="diag_unclosed_long_string">Unclosed long string</string>
+    <string name="diag_unclosed_quoted_string">Unclosed string</string>
+    <string name="diag_unmatched_close">Mismatched \'%1$s\'</string>
+    <string name="diag_unclosed_token">Unclosed \'%1$s\'</string>
+    <string name="diag_excess_token">Unexpected \'%1$s\'</string>
+    <string name="diag_at_line">%1$s (line %2$d)</string>
+    <string name="fix_delete_token">Remove unexpected \'%1$s\'</string>
+    <string name="fix_append_line_end">Append \'%1$s\' at line end</string>
+    <string name="fix_append_file_end">Append \'%1$s\' at end of file</string>
 </resources>

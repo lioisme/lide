@@ -67,9 +67,11 @@ enum class SigningScheme(
  *
  * - [stripNativeLibs]：优化打包（默认开，仅针对原生库——只携带依赖命中的 .so，
  *   不影响 Lua 库）。
- * - [compileLua]：全部工程 .lua（含 main.lua）编译为字节码（默认开）；关 = 全部以源码文本入库。
- * - [encryptBytecode]：Lua 文件 DES 加密（默认开）；独立于编译——编译开加密字节码、
- *   编译关加密源码文本（运行端解密后按文本加载）。
+ * - [compileLua]：全部工程 .lua 编译为字节码、.aly 包装后编译并改名 .lua 入库
+ *   （默认开，pro 同款）；关 = 全部以源码文本入库。
+ * - [encryptBytecode]：仅 .lua/.aly 文件 DES 加密（默认开，pro 口径）；独立于编译——
+ *   编译开加密字节码、编译关加密源码文本（运行端解密后按文本加载）；其余工程文件
+ *   （图片/字体/数据）恒原样入库。
  * - [signingProfileId]：默认签名档案（空 = 内置调试钥）。
  * - [signingScheme]：签名方案组合（默认 v1+v2+v3 全兼容，与旧行为一致）。
  * - [preferAbi]：默认 ABI（空 = 宿主全部；设置页仅宿主携带的 ABI 可选）。

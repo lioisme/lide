@@ -55,6 +55,9 @@ class ApkBuilderTest {
             put("AndroidManifest.xml", manifest, stored = true)
             put("classes.dex", "dex-bytes".toByteArray())
             put("resources.arsc", "arsc-bytes".toByteArray(), stored = true)
+            // 宿主默认桌面图标（2026-08-09 P9：宿主自身无图标，本条目为打包模板默认图标；
+            // 产物经 ArscLookup 注入 android:icon 引用它，工程 icon.png 覆盖即替换本条目数据）。
+            put("res/drawable/icon.png", "host-icon-png".toByteArray(), stored = true)
             put("assets/lua/bin.lua", "-- host bin".toByteArray())
             put("assets/lua/notused.lua", "-- host not used".toByteArray())
             put("assets/keys/testkey.pk8", "key-bytes".toByteArray())
@@ -468,6 +471,119 @@ class ApkBuilderTest {
         assertEquals("com.lioisme.lide.engine.EngineActivity", AXmlManifest.readLauncherActivity(manifest))
         assertTrue("LuaApplication 必须进入 manifest", "com.androlua.LuaApplication" in readPoolStrings(manifest))
         assertNull("MainActivity 必须整树移除", AXmlManifest.readExported(manifest, "com.lioisme.lide.MainActivity"))
+    }
+
+    // ── 2026-08-09 pro 打包对齐：加密范围 / .aly 编译 / 桌面图标 ──────────────
+
+    @Test
+    fun `only lua and aly files are encrypted`() {
+        // 需求②核心回归：图片/数据等非 Lua 文件不得加密（历史缺陷：全量加密致图片损坏）。
+        val iconBytes = byteArrayOf(0x89.toByte(), 0x50, 0x4E, 0x47, 1, 2, 3, 4)
+        val input =
+            input().copy(
+                luaSources =
+                    input().luaSources.toMutableMap().apply {
+                        this["icon.png"] = iconBytes
+                        this["res/theme.txt"] = "plain data".toByteArray()
+                    },
+            )
+        val apk = ApkBuilder.build(syntheticHostApk(), input, key, cert, compileLua = fakeCompiler())
+        val entries = entriesOf(apk)
+
+        assertArrayEquals(iconBytes, entries["assets/lua/icon.png"])
+        assertArrayEquals("plain data".toByteArray(), entries["assets/lua/res/theme.txt"])
+        // Lua 文件仍按开关加密
+        assertTrue(LuaCrypto.isEncrypted(entries["assets/lua/main.lua"]!!))
+    }
+
+    @Test
+    fun `aly compiled to bytecode and renamed to lua`() {
+        val layout = "{TextView;layout_width='fill';}".toByteArray()
+        val input =
+            input().copy(
+                compileLua = true,
+                encryptBytecode = false,
+                luaSources = input().luaSources.toMutableMap().apply { this["layout.aly"] = layout },
+            )
+        val apk = ApkBuilder.build(syntheticHostApk(), input, key, cert, compileLua = fakeCompiler())
+        val entries = entriesOf(apk)
+
+        val luaHeader = byteArrayOf(0x1B.toByte(), 0x4C, 0x75, 0x61)
+        assertArrayEquals(luaHeader, entries["assets/lua/layout.lua"]!!.copyOfRange(0, 4))
+        assertTrue("assets/lua/layout.aly" !in entries)
+    }
+
+    @Test
+    fun `aly stays raw when both switches off`() {
+        val layout = "{TextView;layout_width='fill';}".toByteArray()
+        val input =
+            input().copy(
+                compileLua = false,
+                encryptBytecode = false,
+                luaSources = input().luaSources.toMutableMap().apply { this["layout.aly"] = layout },
+            )
+        val apk = ApkBuilder.build(syntheticHostApk(), input, key, cert, compileLua = fakeCompiler())
+        val entries = entriesOf(apk)
+
+        assertArrayEquals(layout, entries["assets/lua/layout.aly"])
+    }
+
+    @Test
+    fun `aly encrypted as wrapped chunk text when compile off encrypt on`() {
+        // C 端 luaL_loadfilex 解密后直接 loadbufferx（无 "return " 前缀能力），
+        // 加密文本必须是可独立加载的包装 chunk，裸表文本会语法错误。
+        val layout = "{TextView;}"
+        val input =
+            input().copy(
+                compileLua = false,
+                encryptBytecode = true,
+                luaSources = input().luaSources.toMutableMap().apply { this["layout.aly"] = layout.toByteArray() },
+            )
+        val apk = ApkBuilder.build(syntheticHostApk(), input, key, cert, compileLua = fakeCompiler())
+        val enc = entriesOf(apk)["assets/lua/layout.aly"]!!
+
+        assertTrue(LuaCrypto.isEncrypted(enc))
+        assertEquals("local layout=$layout\nreturn layout", String(LuaCrypto.decrypt(enc)!!, Charsets.UTF_8))
+    }
+
+    @Test
+    fun `aly compiled then encrypted renamed to lua with LIDE magic`() {
+        val input =
+            input().copy(
+                compileLua = true,
+                encryptBytecode = true,
+                luaSources = input().luaSources.toMutableMap().apply { this["layout.aly"] = "{TextView;}".toByteArray() },
+            )
+        val apk = ApkBuilder.build(syntheticHostApk(), input, key, cert, compileLua = fakeCompiler())
+        val entries = entriesOf(apk)
+
+        val enc = entries["assets/lua/layout.lua"]!!
+        assertTrue(LuaCrypto.isEncrypted(enc))
+        assertTrue("assets/lua/layout.aly" !in entries)
+    }
+
+    @Test
+    fun `project icon overrides host icon entry with dual semantics`() {
+        val projectIcon = byteArrayOf(0x89.toByte(), 0x50, 0x4E, 0x47, 9, 9, 9, 9)
+        val input =
+            input().copy(
+                luaSources = input().luaSources.toMutableMap().apply { this["icon.png"] = projectIcon },
+            )
+        val apk = ApkBuilder.build(syntheticHostApk(), input, key, cert, compileLua = fakeCompiler())
+        val entries = entriesOf(apk)
+
+        // 桌面图标条目被工程图标替换（pro bin.lua 同款；arsc TYPE_STRING 引用该路径）
+        assertArrayEquals(projectIcon, entries["res/drawable/icon.png"])
+        // 双份语义：assets/lua/icon.png 同样注入（引擎页运行时图标）
+        assertArrayEquals(projectIcon, entries["assets/lua/icon.png"])
+    }
+
+    @Test
+    fun `host default icon kept when project has none`() {
+        val apk = ApkBuilder.build(syntheticHostApk(), input(), key, cert, compileLua = fakeCompiler())
+        val entries = entriesOf(apk)
+
+        assertArrayEquals("host-icon-png".toByteArray(), entries["res/drawable/icon.png"])
     }
 
     /** 解析 AXML 字符串池（UTF-16/UTF-8 双形态），供 manifest 内容断言。 */

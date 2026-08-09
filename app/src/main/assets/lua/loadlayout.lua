@@ -47,7 +47,13 @@ local function alyloader(path)
   local f=io.open(path)
   local s=f:read("*a")
   f:close()
-  if string.sub(s,1,4)=="\27Lua" then
+  -- LIDE 加密形态（魔数 "LIDE\x01\0\0\0"，工作单 §4）：必须经 loadfile 由 C 端
+  -- luaL_loadfilex 魔数探测解密加载（2026-08-09 .aly 打包对齐：编译开为加密字节码、
+  -- 编译关为加密的包装文本，均是可独立加载的 chunk）；不得走下方文本分支——该分支
+  -- 绕开解密会直接语法报错。
+  if string.sub(s,1,4)=="LIDE" then
+    return assert(loadfile(path)),path
+  elseif string.sub(s,1,4)=="\27Lua" then
     return assert(loadfile(path)),path
   else
     --return assert(loadstring("return "..s, path:match("[^/]+/[^/]+$"),"bt")),path

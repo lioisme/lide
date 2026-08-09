@@ -248,7 +248,8 @@ private fun FilterMenuItem(
         trailingIcon = {
             if (count != null) {
                 Text(
-                    text = "($count)",
+                    // Q14：计数括号整句进资源（Q14，格式 %1$d）。
+                    text = stringResource(R.string.api_category_count, count),
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )

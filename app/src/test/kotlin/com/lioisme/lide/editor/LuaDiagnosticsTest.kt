@@ -202,4 +202,37 @@ class LuaDiagnosticsTest {
         assertTrue(regions.isNotEmpty())
         assertTrue(regions.all { it.detail.quickfixes.isNullOrEmpty() })
     }
+
+    @Test
+    fun `增量行索引在多次追加编辑后行号定位仍正确`() {
+        val inc = LuaDiagnostics.Incremental()
+        assertTrue(inc.check("a()\nb()").isEmpty())
+        // 尾部追加两行并登记编辑（行 1..2）：行索引应从编辑行增量重扫。
+        inc.onEdit(1, 2)
+        val src = "a()\nb()\nlocal x = ("
+        val region = inc.check(src).first()
+        assertEquals("a()\nb()\n".length, region.startIndex)
+        // 无编辑重查（轮询场景）：行索引复用路径不得破坏行号定位。
+        assertEquals("a()\nb()\n".length, inc.check(src).first().startIndex)
+    }
+
+    @Test
+    fun `自定义消息渲染器覆盖诊断文案`() {
+        val provider =
+            object : DiagnosticMessageProvider {
+                override fun message(key: String, vararg args: Any): String =
+                    when (key) {
+                        MSG_UNMATCHED_CLOSE -> "bad close: ${args[0]}"
+                        MSG_AT_LINE -> "${args[0]}@${args[1]}"
+                        else -> key
+                    }
+            }
+        val regions = LuaDiagnostics.Incremental(provider).check("local x = }")
+        assertTrue(regions.any { it.detail.briefMessage == "bad close: }@1" })
+        // 默认渲染器仍为中文模板（历史文案契约）。
+        assertTrue(
+            LuaDiagnostics.checkSyntax("local x = }")
+                .any { it.detail.briefMessage.contains("不匹配的 '}'") },
+        )
+    }
 }

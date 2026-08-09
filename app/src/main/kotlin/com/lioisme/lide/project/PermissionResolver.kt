@@ -27,7 +27,7 @@ object PermissionResolver {
     fun normalize(permission: String): String {
         val name = permission.trim()
         if (name.isEmpty()) return name
-        if (name.startsWith("android.permission.") || name.startsWith("com.")) return name
+        if (name.startsWith(PREFIX) || name.startsWith("com.")) return name
         val simple = name.substringAfterLast('.')
         return PREFIX + simple
     }

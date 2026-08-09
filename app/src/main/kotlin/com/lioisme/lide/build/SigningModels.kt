@@ -13,7 +13,7 @@ data class SigningMaterial(
 }
 
 /**
- * 签名档案（持久化元数据）。内置调试档案（[SigningManager.BUILTIN_TESTKEY_ID]）
+ * 签名档案（持久化元数据）。内置调试档案（[SigningManager.BUILTIN_ID]）
  * 指向 assets/keys 材料；导入档案指向复制到 filesDir/signing/ 的密钥库文件。
  */
 data class SigningProfile(
@@ -30,7 +30,4 @@ data class SigningProfile(
     /** 证书 SHA-256 指纹（冒号分隔的大写十六进制）。 */
     val certFingerprint: String,
     val isBuiltin: Boolean,
-) {
-    val displayName: String
-        get() = name
-}
+)

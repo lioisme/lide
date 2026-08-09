@@ -273,6 +273,111 @@ class AXmlManifestTest {
         assertTrue("EngineActivity 声明保留", "com.lioisme.lide.engine.EngineActivity" in activityNames)
     }
 
+    @Test
+    fun `patch injects application icon reference when template has none`() {
+        // 2026-08-09 P9：宿主自身无图标（manifest 无 android:icon），打包器注入
+        // TYPE_REFERENCE 资源引用（引用产物 arsc 中存在的 drawable/icon 条目）。
+        // 样本 manifest_sample.bin 的 application 无 icon 属性（宿主 icon 移除前基线）。
+        val edit = ManifestEdit(
+            packageName = "com.demo.app",
+            appLabel = "Demo",
+            versionCode = 2,
+            versionName = "2.0",
+            usesPermissions = listOf("android.permission.INTERNET"),
+            applicationIconId = 0x7f05000c,
+        )
+        val patched = AXmlManifest.patch(sample(), edit)
+        val strings = readUtf16Strings(patched)
+
+        var found = false
+        var pos = 8
+        while (pos < patched.size) {
+            val type = u16(patched, pos)
+            val size = u32(patched, pos + 4).toInt()
+            if (type == 0x0102) {
+                val nameIdx = u32(patched, pos + 20).toInt()
+                if (strings.getOrNull(nameIdx) == "application") {
+                    val attrStart = u16(patched, pos + 24)
+                    val attrSize = u16(patched, pos + 26)
+                    val attrCount = u16(patched, pos + 28)
+                    val base = pos + 16 + attrStart
+                    for (a in 0 until attrCount) {
+                        val p = base + a * attrSize
+                        val nsStr = u32(patched, p).toInt().let { if (it >= 0) strings.getOrNull(it) else null }
+                        val attrName = strings.getOrNull(u32(patched, p + 4).toInt())
+                        val dataType = patched[p + 15].toInt() and 0xFF
+                        val data = u32(patched, p + 16).toInt()
+                        if (nsStr == "http://schemas.android.com/apk/res/android" && attrName == "icon") {
+                            found = true
+                            assertEquals("android:icon 必须是资源引用", 0x01, dataType)
+                            assertEquals(0x7f05000c, data)
+                        }
+                    }
+                }
+            }
+            assertTrue("chunk size $size at $pos", size > 0 && pos + size <= patched.size)
+            pos += size
+        }
+        assertTrue("application 必须注入 android:icon", found)
+        assertTrue("字符串池必须含 icon 属性名", strings.contains("icon"))
+    }
+
+    @Test
+    fun `patch keeps template icon when template declares one`() {
+        // 未来宿主自带 android:icon 时：attrBytes 原样保留且不重复注入。
+        // 以 patch 两次的产物为模板（前一次注入的 icon 属性成为模板已有属性）。
+        val first = AXmlManifest.patch(
+            sample(),
+            ManifestEdit(
+                packageName = "com.demo.app",
+                appLabel = "Demo",
+                versionCode = 2,
+                versionName = "2.0",
+                usesPermissions = listOf("android.permission.INTERNET"),
+                applicationIconId = 0x7f05000c,
+            ),
+        )
+        val second = AXmlManifest.patch(
+            first,
+            ManifestEdit(
+                packageName = "com.demo.app",
+                appLabel = "Demo",
+                versionCode = 2,
+                versionName = "2.0",
+                usesPermissions = listOf("android.permission.INTERNET"),
+                applicationIconId = 0x7f05000c,
+            ),
+        )
+        val strings = readUtf16Strings(second)
+
+        var iconCount = 0
+        var pos = 8
+        while (pos < second.size) {
+            val type = u16(second, pos)
+            val size = u32(second, pos + 4).toInt()
+            if (type == 0x0102) {
+                val nameIdx = u32(second, pos + 20).toInt()
+                if (strings.getOrNull(nameIdx) == "application") {
+                    val attrStart = u16(second, pos + 24)
+                    val attrSize = u16(second, pos + 26)
+                    val attrCount = u16(second, pos + 28)
+                    val base = pos + 16 + attrStart
+                    for (a in 0 until attrCount) {
+                        val p = base + a * attrSize
+                        val nsStr = u32(second, p).toInt().let { if (it >= 0) strings.getOrNull(it) else null }
+                        val attrName = strings.getOrNull(u32(second, p + 4).toInt())
+                        if (nsStr == "http://schemas.android.com/apk/res/android" && attrName == "icon") {
+                            iconCount++
+                        }
+                    }
+                }
+            }
+            assertTrue("chunk size $size at $pos", size > 0 && pos + size <= second.size)
+            pos += size
+        }
+        assertEquals("模板已有 icon 属性时不得重复注入", 1, iconCount)
+    }
+
     // ===== UTF-8 字符串池专项（aapt ENCODE_LENGTH 变长前缀） =====
 
     @Test

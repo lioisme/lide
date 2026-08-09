@@ -1,5 +1,6 @@
 package com.lioisme.lide.build
 
+import com.lioisme.lide.model.Project
 import java.io.ByteArrayOutputStream
 import java.security.PrivateKey
 import java.security.cert.X509Certificate
@@ -12,8 +13,9 @@ import java.util.zip.ZipOutputStream
  * - 复制宿主条目（排除签名与宿主引擎 Lua 库），注入 `assets/lua/<相对路径>`：
  *   工程目录全部文件（res、libs、.aly、图片等）原样打入（引擎打包模式
  *   以 filesDir/lua 为工程目录，运行时经 luaLpath/libs 目录读取）；
- *   main.lua 编译为字节码，其余 .lua/.aly 保持文本（LloadFile 与 loadlayout
- *   alyloader 均支持文本）。
+ *   编译开时全部 .lua 编译为字节码、.aly 包装后编译并改名 .lua 入库
+ *   （pro bin.lua `gsub("aly$","lua")` 同款）；编译/加密范围仅限 .lua/.aly，
+ *   其余文件（图片/字体/数据）恒原样入库（2026-08-09 pro 对齐）。
  * - 宿主条目按 [HostPolicy] 领域分类（默认拒绝）：仅保留运行核心面
  *   （dex/res/arsc）、白名单命中的引擎 Lua 库与 ABI×依赖命中的原生库；
  *   其余宿主 IDE 专属内容（示例工程、API 类表、签名密钥、语法高亮、
@@ -28,12 +30,21 @@ import java.util.zip.ZipOutputStream
  * - manifest：改包名 / label / 版本；uses-permission 白名单 = 工程声明 ∩ 宿主 +
  *   宿主自声明权限（自引用权限名随包名原位替换）；桌面图标入口重定向到引擎页
  *   （[DEFAULT_LAUNCHER_ACTIVITY]，点开直接运行工程）。
+ * - 桌面图标（2026-08-09 P9 反转：LIDE 宿主自带图标）：宿主 manifest 声明
+ *   android:icon="@drawable/icon"（res/drawable/icon.png，512×512 矢量渲染 PNG，
+ *   宿主桌面图标 = 打包模板默认图标）。产物直接沿用模板的 icon 属性（原样保留、
+ *   不重复注入）；模板无 icon 属性时才经 [ArscLookup] 解析宿主 arsc 的 drawable/icon
+ *   资源 ID 兜底注入（TYPE_REFERENCE）。工程提供 icon.png 时覆盖产物
+ *   res/drawable/icon.png 条目数据（arsc 以 TYPE_STRING 引用 res/ 文件路径，
+ *   无需重写资源表），无工程图标时显示宿主图标，并保留 assets/lua/icon.png
+ *   双份语义（引擎页运行时图标）。
  * - P0 运行时基座（dex 直用宿主，2026-08-09 源码组织三需求修订）：:androlua 以
  *   implementation 并入宿主单一 dex 集，不再有任何 dex 拆分/注入/标记。产物直接
  *   复用宿主根目录全量 classes*.dex（IDE 类 + 引擎类原样保留，接受多余内容）；
  *   manifest 无条件回落 `com.androlua.LuaApplication` 并移除 IDE MainActivity
  *   （引擎类恒随宿主 dex 进入产物，类均存在、无解析风险）。
- * - v1 + v2 签名（[ApkSigner]），输出可直接 adb install 的 APK 字节。
+ * - 按 [ProjectInput.signingScheme] 签名（v1/v2/v3 可选组合，[ApkSigner]），
+ *   输出可直接 adb install 的 APK 字节。
  */
 object ApkBuilder {
     /** 构建阶段（供 UI 进度提示；顺序即执行顺序）。 */
@@ -44,7 +55,7 @@ object ApkBuilder {
         /** 收集工程 Lua 源码与配置。 */
         COLLECT_LUA,
 
-        /** 编译 main.lua 为字节码。 */
+        /** 编译 Lua 文件（.lua 全部 + .aly 包装后）为字节码。 */
         COMPILE_LUA,
 
         /** 装配 APK（manifest 补丁 + 条目重写 + 注入工程 Lua）。 */
@@ -71,13 +82,13 @@ object ApkBuilder {
         val abiSelection: Set<String>? = null,
         /** true = 按需携带原生库（默认）；false = 全量携带宿主各 ABI 原生库（pro 行为）。 */
         val stripNativeLibs: Boolean = true,
-        /** true = 全部工程 .lua（含 [mainFile]）编译为字节码；false = 全部以源码文本入库。 */
+        /** true = 全部工程 .lua 编译为字节码、.aly 包装后编译并改名 .lua 入库；false = 全部以源码文本入库。 */
         val compileLua: Boolean = true,
-        /** Lua 文件加密（DES，见 [LuaCrypto]）；独立于编译：编译开加密字节码、编译关加密源码文本。 */
+        /** 编译/加密范围：仅 .lua/.aly 文件（[isLuaFile] 单一事实源），其余工程文件恒原样入库。 */
         val encryptBytecode: Boolean = true,
         /** 产物桌面图标入口（全限定类名）；默认引擎页，null 表示不干预。 */
         val launcherActivity: String? = DEFAULT_LAUNCHER_ACTIVITY,
-        val mainFile: String = "main.lua",
+        val mainFile: String = Project.DEFAULT_MAIN_FILE,
     )
 
     class BuildException(
@@ -90,6 +101,10 @@ object ApkBuilder {
      * 产物 manifest 的 MAIN/LAUNCHER 会重定向至此（AXmlManifest.launcherActivity）。
      */
     const val DEFAULT_LAUNCHER_ACTIVITY = "com.lioisme.lide.engine.EngineActivity"
+
+    /** 编译/加密范围判定（Q16 L8 收口）：仅 .lua/.aly（ignoreCase），其余工程文件恒原样入库。 */
+    private fun isLuaFile(relPath: String): Boolean =
+        relPath.endsWith(".lua", ignoreCase = true) || relPath.endsWith(".aly", ignoreCase = true)
 
     /** 原生库恒保留项：引擎核心（bin.lua checklib 同款强制包含）。 */
     const val ALWAYS_KEEP_NATIVE_LIB = "libluajava.so"
@@ -139,12 +154,12 @@ object ApkBuilder {
         val hostEntries = readZip(hostApk)
         val templateEntries = hostEntries
         val manifestEntry =
-            templateEntries.firstOrNull { it.first == "AndroidManifest.xml" }
+            templateEntries.firstOrNull { it.name == "AndroidManifest.xml" }
                 ?: throw BuildException("模板 APK 缺少 AndroidManifest.xml")
-        val manifestBytes = manifestEntry.third
+        val manifestBytes = manifestEntry.data
 
         // 模板原生库 ABI 枚举（lib/<abi>/...）：产物 ABI = 选择 ∩ 模板（保持原始顺序）。
-        val hostAbis = ZipUtils.listAbis(templateEntries.map { it.first to 0L })
+        val hostAbis = ZipUtils.listAbis(templateEntries.map { it.name to 0L })
         val effectiveAbis =
             if (input.abiSelection == null) {
                 hostAbis
@@ -191,6 +206,16 @@ object ApkBuilder {
                         // 移除 IDE MainActivity（双桌面图标与 IDE 入口残留），类均存在无解析风险。
                         applicationName = RUNTIME_APPLICATION,
                         removeActivities = listOf(RUNTIME_REMOVED_ACTIVITY),
+                        // 打包图标（2026-08-09 P9 反转：宿主自带 icon）：模板已声明
+                        // android:icon="@drawable/icon"（宿主桌面图标 = 产物默认图标），
+                        // AXmlManifest 对模板已有 icon 属性原样保留、不重复注入；
+                        // applicationIconId 仅对模板无 icon 属性时兜底注入（TYPE_REFERENCE）。
+                        // arsc 缺失/解析失败返回 null 即不注入（安全降级）。工程 icon.png
+                        // 覆盖条目数据后 Launcher 即显示工程图标，无工程图标时显示宿主图标。
+                        applicationIconId =
+                            ArscLookup.drawableIconId(
+                                templateEntries.firstOrNull { it.name == "resources.arsc" }?.data,
+                            ),
                     ),
                 )
             } catch (e: Exception) {
@@ -203,26 +228,76 @@ object ApkBuilder {
                 ?: throw BuildException("工程缺少 ${input.mainFile}")
         onStage(BuildStage.COMPILE_LUA)
 
+        // 工程桌面图标（可选）：工程根目录 icon.png（pro 同款约定），
+        // 装配时覆盖宿主默认图标条目；未提供则用宿主图标。
+        val projectIcon =
+            input.luaSources.entries.firstOrNull { it.key.equals("icon.png", ignoreCase = true) }?.value
+        // 图标条目名：经宿主 arsc 的 Res_value(TYPE_STRING) 引用解析真实路径
+        // （资源混淆构建 = res/9T.png 等短名，字面量会落空；P11 实证 debug =
+        // "res/drawable/icon.png"）；解析失败回落字面量（兼容 / 防御）。
+        val iconEntryPath =
+            ArscLookup.drawableIconPath(
+                templateEntries.firstOrNull { it.name == "resources.arsc" }?.data,
+            ) ?: "res/drawable/icon.png"
+
         // 编译与加密相互独立：compileLua=false 时全部文件（含 main.lua）以源码文本入库；
         // encryptBytecode 对入库内容（字节码或源码文本）统一 DES 加密（运行端 C 解密）。
+        // 2026-08-09 pro 对齐：编译/加密范围仅限 .lua/.aly（[isLuaFile] 单一事实源）；
+        // 其余工程文件（图片/字体/数据）一律原样入库——全量加密曾致图片资源损坏。
+        // 返回（入库相对路径, 编码后内容）：.aly 编译时改名 .lua 入库（pro bin.lua
+        // `gsub("aly$","lua")` 同款），改名后自然落入 .lua 加密范围。
         fun encodeRel(
             relPath: String,
             raw: ByteArray,
-        ): ByteArray {
+        ): Pair<String, ByteArray> {
+            val isLuaSource = isLuaFile(relPath)
+            val isAly = relPath.endsWith(".aly", ignoreCase = true)
             val content =
-                if (input.compileLua && relPath.endsWith(".lua", ignoreCase = true)) {
+                if (input.compileLua && isLuaSource) {
                     try {
                         compileLua(String(raw, Charsets.UTF_8), relPath)
                     } catch (e: Exception) {
                         throw BuildException(e.message ?: "$relPath 编译失败", e)
                     }
+                } else if (isAly) {
+                    // .aly 包装策略（pro console.build_aly 同款；2026-08-09 打包双开关对齐）：
+                    // - 编译开：包装为返回 layout 表的 chunk 后编译字节码；
+                    // - 编译关 + 加密开：包装文本入库——C 端 luaL_loadfilex 解密后直接
+                    //   loadbufferx（无 "return " 前缀能力），裸表文本会语法错误；
+                    // - 编译关 + 加密关：裸表文本原样入库（alyloader 文本分支按 "return "
+                    //   前缀加载）。
+                    val wrapped = "local layout=${String(raw, Charsets.UTF_8)}\nreturn layout"
+                    if (input.compileLua) {
+                        try {
+                            compileLua(wrapped, relPath)
+                        } catch (e: Exception) {
+                            throw BuildException(e.message ?: "$relPath 编译失败", e)
+                        }
+                    } else if (input.encryptBytecode) {
+                        wrapped.toByteArray(Charsets.UTF_8)
+                    } else {
+                        raw
+                    }
                 } else {
                     raw
                 }
-            return if (input.encryptBytecode) LuaCrypto.encrypt(content) else content
+            val encoded =
+                if (input.encryptBytecode && (isLuaSource || isAly)) {
+                    LuaCrypto.encrypt(content)
+                } else {
+                    content
+                }
+            val outRel =
+                if (input.compileLua && isAly) {
+                    // 移除 ".aly"/".ALY"（4 字符）后缀并改名为 .lua（pro gsub("aly$","lua") 同款）。
+                    "${relPath.dropLast(4)}.lua"
+                } else {
+                    relPath
+                }
+            return outRel to encoded
         }
 
-        val mainData = encodeRel(input.mainFile, mainSource)
+        val (mainOutRel, mainData) = encodeRel(input.mainFile, mainSource)
 
         onStage(BuildStage.ASSEMBLE)
         val out = ByteArrayOutputStream()
@@ -272,18 +347,27 @@ object ApkBuilder {
                     else -> {
                     }
                 }
+                // 工程 icon.png 覆盖宿主默认桌面图标（pro bin.lua 同款：工程 icon.png →
+                // 产物图标）。aapt2 36 的 arsc 对 PNG 以 TYPE_STRING 引用 res/ 文件路径
+                // （不内嵌），替换 zip 条目数据即可生效、资源表零改动；目标条目名
+                // 经 [iconEntryPath] 解析（混淆宿主为短路径），字面量仅作回退。
+                // assets/lua/icon.png 由工程文件注入循环另行写入（引擎页运行时图标，
+                // 双份语义同 pro）。
+                val outData =
+                    if (name == iconEntryPath && projectIcon != null) projectIcon else data
                 if (!seen.add(name)) continue
-                ZipUtils.writeEntry(zos, name, method, data)
+                ZipUtils.writeEntry(zos, name, method, outData)
             }
-            // 注入工程文件（依 compileLua/encryptBytecode 编码：编译或原样、可加密）。
+            // 注入工程文件（依 compileLua/encryptBytecode 编码：编译或原样、可加密；
+            // .aly 编译产物改名 .lua，同名冲突按 seen 先写者胜）。
             for ((relPath, source) in input.luaSources) {
                 if (relPath == input.mainFile) continue
-                val entryName = "assets/lua/${relPath.replace('\\', '/')}"
+                val (outRel, data) = encodeRel(relPath, source)
+                val entryName = "assets/lua/${outRel.replace('\\', '/')}"
                 if (entryName in seen) continue
-                val data = encodeRel(relPath, source)
                 ZipUtils.writeEntry(zos, entryName, ZipEntry.DEFLATED, data)
             }
-            val mainEntryName = "assets/lua/${input.mainFile}"
+            val mainEntryName = "assets/lua/${mainOutRel.replace('\\', '/')}"
             if (mainEntryName !in seen) {
                 ZipUtils.writeEntry(zos, mainEntryName, ZipEntry.DEFLATED, mainData)
             }
@@ -297,5 +381,5 @@ object ApkBuilder {
         return list.filter { seen.add(it) }
     }
 
-    private fun readZip(apk: ByteArray): List<Triple<String, Int, ByteArray>> = ZipUtils.readEntries(apk, skipBlankNames = true)
+    private fun readZip(apk: ByteArray): List<ZipUtils.ZipEntryData> = ZipUtils.readEntries(apk, skipBlankNames = true)
 }

@@ -21,7 +21,11 @@ import io.github.rosemoe.sora.event.PublishSearchResultEvent
 import io.github.rosemoe.sora.widget.CodeEditor
 import io.github.rosemoe.sora.widget.EditorSearcher
 import io.github.rosemoe.sora.widget.subscribeAlways
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 private const val SEARCH_DEBOUNCE_MS = 150L
 
@@ -48,6 +52,11 @@ fun SearchBar(
     var currentMatch by remember { mutableStateOf(0) }
 
     val editor = editorProvider()
+
+    // 搜索执行作用域：快照/匹配派发到 Default 线程（Q2，消除大文件主线程 O(n) 拷贝）。
+    // 结果回发经 sora `postInLifecycle` 回到主线程，计数更新仍发生在主线程。
+    val searchScope = rememberCoroutineScope()
+    var searchJob by remember { mutableStateOf<Job?>(null) }
 
     DisposableEffect(editor) {
         if (editor == null) {
@@ -77,6 +86,10 @@ fun SearchBar(
     fun performSearch() {
         val searcher = editorProvider()?.getSearcher() ?: return
         if (query.isBlank()) {
+            searchJob?.cancel()
+            searchJob = null
+            // stopSearch 在主线程调用：sora 会立即 dispatchEvent（订阅回调在主线程执行，
+            // 更新 Compose 计数状态），移出主线程会破坏快照状态写线程约束。
             if (searcher.hasQuery()) {
                 searcher.stopSearch()
             }
@@ -91,17 +104,26 @@ fun SearchBar(
                 else -> EditorSearcher.SearchOptions.TYPE_NORMAL
             }
         val options = EditorSearcher.SearchOptions(searchType, !isCaseSensitive)
-        try {
-            searcher.search(query, options)
-        } catch (_: Exception) {
-            matchCount = 0
-            currentMatch = 0
-        }
+        // 搜索提交（含 content.toStringBuilder 全文本快照 + 匹配线程启动）移出主线程；
+        // 新查询取消旧协程（sora 侧 executeMatch 亦会打断旧匹配线程，双保险）。
+        searchJob?.cancel()
+        searchJob =
+            searchScope.launch(Dispatchers.Default) {
+                try {
+                    searcher.search(query, options)
+                } catch (_: Exception) {
+                    // 非法正则/搜索失败：计数归零需回到主线程写 Compose 状态。
+                    withContext(Dispatchers.Main.immediate) {
+                        matchCount = 0
+                        currentMatch = 0
+                    }
+                }
+            }
     }
 
     // 防抖：连续键入只触发一次搜索。sora `EditorSearcher.search` 的全文快照
-    // （content.toStringBuilder）发生在调用线程（主线程），大文件下每键 O(n) 拷贝
-    // 必须抑制；防抖由 LaunchedEffect 重启语义天然提供取消。
+    // （content.toStringBuilder）已随 Q2 移入 Default 线程（大文件每键 O(n) 拷贝
+    // 不再阻塞主线程）；防抖由 LaunchedEffect 重启语义天然提供取消。
     LaunchedEffect(query, isCaseSensitive, isRegex, isWholeWord) {
         delay(SEARCH_DEBOUNCE_MS)
         performSearch()
@@ -152,7 +174,8 @@ fun SearchBar(
 
                 if (query.isNotEmpty()) {
                     Text(
-                        "$currentMatch/$matchCount",
+                        // Q14：匹配计数整句进资源（%1$d/%2$d）。
+                        stringResource(R.string.cd_search_match_count, currentMatch, matchCount),
                         style = MaterialTheme.typography.labelSmall,
                         color =
                             if (matchCount > 0) {

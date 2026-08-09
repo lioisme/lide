@@ -22,6 +22,12 @@ class AXmlException(message: String) : Exception(message)
  *
  * [removeActivities] 为产物中整体移除的 activity 全限定类名列表（引擎 dex 存在时
  * IDE MainActivity 残留声明会构成双桌面入口，需整体摘除）。
+ *
+ * [applicationIconId] 为产物注入的 application android:icon 资源 ID（**仅对模板无
+ * icon 属性时兜底**，引用产物 arsc 中存在的 drawable/icon；Launcher 解析 TYPE_REFERENCE
+ * 后读取 res/drawable/icon.png 文件条目——工程 icon.png 覆盖该条目即桌面图标生效。
+ * 宿主自带图标后模板已声明 android:icon，属性原样保留、不重复注入）；
+ * null 表示不干预（模板自声明 icon 属性原样保留，缺失则不注入）。
  */
 data class ManifestEdit(
     val packageName: String,
@@ -32,6 +38,7 @@ data class ManifestEdit(
     val launcherActivity: String? = null,
     val applicationName: String? = null,
     val removeActivities: List<String> = emptyList(),
+    val applicationIconId: Int? = null,
 )
 
 /**
@@ -60,6 +67,7 @@ object AXmlManifest {
     private const val CHUNK_END_ELEMENT = 0x0103
 
     private const val NO_INDEX = -1L
+    private const val TYPE_REFERENCE = 0x01
     private const val TYPE_STRING = 0x03
     private const val TYPE_INT_DEC = 0x10
     private const val TYPE_INT_BOOLEAN = 0x12
@@ -270,6 +278,7 @@ object AXmlManifest {
         if (origIdx(ANDROID_URI) == null) appendNeed += ANDROID_URI
         if (origIdx("uses-permission") == null) appendNeed += "uses-permission"
         if (origIdx("name") == null) appendNeed += "name"
+        if (edit.applicationIconId != null && origIdx("icon") == null) appendNeed += "icon"
         if (edit.launcherActivity != null) {
             // launcher 注入所需元素名/常量（宿主 manifest 通常已含，set 去重无副作用）。
             appendNeed += "intent-filter"
@@ -453,6 +462,7 @@ object AXmlManifest {
         val attrs = ArrayList<ByteArray>(el.attrs.size + 1)
         var hasLabel = false
         var hasName = false
+        var hasIcon = false
         for (a in el.attrs) {
             if (strings.getOrNull(a.name) == "label") {
                 hasLabel = true
@@ -467,6 +477,11 @@ object AXmlManifest {
                 val i = newIdx(edit.applicationName)
                 attrs += emitAttr(a.ns, a.name, i, TYPE_STRING, i.toLong())
             } else {
+                // 模板自声明的 android:icon 原样保留不重复注入（宿主 2026-08-09 起
+                // 自带 @drawable/icon，即产物默认图标；工程 icon.png 覆盖条目数据生效）。
+                if (strings.getOrNull(a.name) == "icon" && strings.getOrNull(a.ns) == ANDROID_URI) {
+                    hasIcon = true
+                }
                 attrs += attrBytes(chunk, el, a)
             }
         }
@@ -477,6 +492,17 @@ object AXmlManifest {
         if (edit.applicationName != null && !hasName) {
             val i = newIdx(edit.applicationName)
             attrs += emitAttr(newIdx(ANDROID_URI), newIdx("name"), i, TYPE_STRING, i.toLong())
+        }
+        // 打包图标兜底：仅模板无 icon 属性时注入 android:icon 资源引用（TYPE_REFERENCE），
+        // Launcher 经产物 arsc 定位 res/drawable/icon.png 条目——工程 icon.png 覆盖即生效。
+        if (edit.applicationIconId != null && !hasIcon) {
+            attrs += emitAttr(
+                newIdx(ANDROID_URI),
+                newIdx("icon"),
+                NO_INDEX.toInt(),
+                TYPE_REFERENCE,
+                edit.applicationIconId.toLong(),
+            )
         }
         return emitElement(el.name, attrs, el.line)
     }

@@ -14,7 +14,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.*
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExpandedFullScreenSearchBar
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SearchBar
+import androidx.compose.material3.SearchBarValue
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberSearchBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -30,6 +42,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.androlua.LuaApplication
 import com.lioisme.lide.R
 import com.lioisme.lide.apibrowser.ApiCategory
 import com.lioisme.lide.apibrowser.ApiIndex
@@ -40,6 +53,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+
+/** 单一日志 TAG（Q13 收口：历史字面量 Log.w("ApiBrowserScreen", ...) 统一为常量）。 */
+private const val TAG = "ApiBrowserScreen"
 
 /**
  * API 浏览器：AppBar 内嵌官方 SearchBar（SearchBarState 驱动）+ 全屏搜索视图
@@ -76,11 +92,14 @@ fun ApiBrowserScreen(
             base =
                 withContext(Dispatchers.IO) {
                     val projectManager = ProjectManager()
-                    val roots = projectManager.listProjects().map { File(it.path) }
+                    val roots =
+                        projectManager
+                            .listProjects(LuaApplication.getInstance().luaExtDir)
+                            .map { File(it.path) }
                     ApiIndex.buildBase(context, roots)
                 }
         } catch (t: Throwable) {
-            android.util.Log.w("ApiBrowserScreen", "buildBase failed", t)
+            android.util.Log.w(TAG, "buildBase failed", t)
         }
         if (base != null) {
             snapshot = base
@@ -88,7 +107,7 @@ fun ApiBrowserScreen(
                 withContext(Dispatchers.IO) { ApiIndex.completeBuild() }
                 snapshot = ApiIndex.cached() ?: base
             } catch (t: Throwable) {
-                android.util.Log.w("ApiBrowserScreen", "completeBuild failed", t)
+                android.util.Log.w(TAG, "completeBuild failed", t)
             }
         } else {
             snapshot = ApiIndex.cached() ?: ApiIndex.Snapshot(
@@ -237,7 +256,9 @@ fun ApiBrowserScreen(
                                 onLongClick = {
                                     copyToClipboard(context, entry.name)
                                     scope.launch {
-                                        snackbarHostState.showSnackbar("${entry.name} · $strCopied")
+                                        snackbarHostState.showSnackbar(
+                                            context.getString(R.string.api_copied_format, entry.name, strCopied),
+                                        )
                                     }
                                 },
                             )
@@ -331,7 +352,9 @@ fun ApiBrowserScreen(
                                 onLongClick = {
                                     copyToClipboard(context, entry.name)
                                     scope.launch {
-                                        snackbarHostState.showSnackbar("${entry.name} · $strCopied")
+                                        snackbarHostState.showSnackbar(
+                                            context.getString(R.string.api_copied_format, entry.name, strCopied),
+                                        )
                                     }
                                 },
                             )

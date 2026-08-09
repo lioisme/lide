@@ -114,3 +114,30 @@ Kotlin 编译检查：  .\gradlew.bat :app:compileArm64DebugKotlin --console=pla
 上游隔离：        .\gradlew.bat :app:verifyVendorIsolation
 R1 门禁：         rg -n "luajava|androlua|loadLibrary" app/src/main/kotlin/com/lioisme/lide/editor
 ```
+
+---
+
+## 6. 代码质量收口约定（2026-08-09 CODE_QUALITY Q12–Q16 蒸馏）
+
+新增/改动以下面时必读（硬约定，违反视为规范缺陷）：
+
+- **反射缓存契约**：`ApiIndex.loadClassRef`（单张 `Class<?>?` 合并缓存，负缓存非空包装）与
+  `ApiReflection.detailCache`（`ConcurrentHashMap` + `computeIfAbsent`，`CacheEntry` 非空包装）为
+  唯一反射路径；**禁止自行 `Class.forName`、禁止返回 null 的 `getOrPut`**（CHM 拒绝 null，
+  负缓存永久失效 → 全 dex 扫描 → ART 全局锁）。JVM 单测注意：mockable android.jar 含
+  `android.widget.*` stub，负缓存用例必须用动态唯一类名（如 `...Nonexistent${System.nanoTime()}`）。
+- **单例/日志约定**：单例可变状态字段加 `@Volatile`（如 `LocaleManager.currentLanguageTag`）；
+  Log TAG 一律 companion 常量（`private const val TAG`，Q13 全量收口）；`Log.d` 调试路径加
+  `Log.isLoggable(TAG, Log.DEBUG)` 守卫；**Log 消息统一英文**（内部日志，Q16 L12 全量统一）。
+- **文案资源模板**：UI 显示文案禁止手工拼接（`"$a · $b"` / `"$c/$d"` 等）——整句进 strings.xml
+  模板（`%1$s`/`%1$d`），values + values-zh 同步（380 键校验脚本）；Q14 落地 6 组模板
+  （api_copied_format / api_category_count / setting_value_title / signing_cert_detail /
+  signing_meta_line / cd_search_match_count）。
+- **具名类型替代 Tuple**：跨模块传值禁止无语义元组（Q16 L1/L14 收口：
+  `ZipUtils.ZipEntryData` 替代 `Triple<String,Int,ByteArray>`；`model.PendingOpenFile`
+  替代 `Pair<String,String>`）。
+- **字节偏移常量**：手写二进制解析（ZIP/arsc/dex）魔法偏移提命名常量（Q16 L4：
+  `ZipUtils` EOCD/CEN 全部偏移与签名）。**谓词单一事实源**：扩展名判定等重复出现的
+  内联条件提私有谓词（Q16 L8：`ApkBuilder.isLuaFile`）。
+- 延迟项登记 backlog：`ZipUtils` CEN 游标访问（整包 readBytes 优化，P1-11）待打包链
+  提交后端到端验证。

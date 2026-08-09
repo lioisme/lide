@@ -1,5 +1,6 @@
 package com.lioisme.lide.project
 
+import android.util.Log
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -11,6 +12,8 @@ import java.util.zip.ZipInputStream
 import java.util.zip.ZipOutputStream
 
 object ZipUtil {
+    /** 单一日志 TAG（Q13 收口：历史全限定名 Log.e("ZipUtil", ...) 统一为常量）。 */
+    private const val TAG = "ZipUtil"
 
     /**
      * 解压条目名安全化：拒绝绝对路径与含 `..` 段的条目（Zip Slip 防护），
@@ -41,7 +44,7 @@ object ZipUtil {
             }
             true
         } catch (e: Exception) {
-            android.util.Log.e("ZipUtil", "zipToStream failed: ${e.message}")
+            Log.e(TAG, "zipToStream failed: ${e.message}")
             false
         }
     }
@@ -51,7 +54,7 @@ object ZipUtil {
             destDir.mkdirs()
             FileInputStream(zipFile).use { unzipFromStream(it, destDir) }
         } catch (e: Exception) {
-            android.util.Log.e("ZipUtil", "unzip failed: ${e.message}")
+            Log.e(TAG, "unzip failed: ${e.message}")
             false
         }
     }
@@ -94,7 +97,7 @@ object ZipUtil {
             } catch (ex: Exception) {
                 "snapshot failed: ${ex.message}"
             }
-            android.util.Log.e("ZipUtil", "unzipFromStream failed: ${e.message}; $snapshot", e)
+            Log.e(TAG, "unzipFromStream failed: ${e.message}; $snapshot", e)
             false
         }
     }
@@ -109,7 +112,7 @@ object ZipUtil {
                 zip.getInputStream(entry).use { it.readBytes().toString(Charsets.UTF_8) }
             }
         } catch (e: Exception) {
-            android.util.Log.e("ZipUtil", "readEntryText failed: ${e.message}")
+            Log.e(TAG, "readEntryText failed: ${e.message}")
             null
         }
     }
