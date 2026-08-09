@@ -42,6 +42,14 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+/** 批量导入 .alp 的单批上限（串行队列逐个处理，防单批无线排队）。 */
+private const val IMPORT_BATCH_LIMIT = 50
+
+/** 导入队列条目：缓存临时 .alp 文件路径（系统选择器产物，导入完成后删除）。 */
+private data class ImportSource(
+    val path: String,
+)
+
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun ProjectListScreen(
@@ -96,7 +104,7 @@ fun ProjectListScreen(
 
     // WP-015 批量导入队列 + 同名冲突挂起：逐个处理，遇冲突暂停等确认（覆盖/改名/取消）。
     val alpCoordinator = remember(context) { AlpImportCoordinator(context) }
-    var importQueue by remember { mutableStateOf<List<android.net.Uri>>(emptyList()) }
+    var importQueue by remember { mutableStateOf<List<ImportSource>>(emptyList()) }
     var conflictPending by remember { mutableStateOf<AlpImportCoordinator.Pending?>(null) }
     var importedProjectCount by remember { mutableStateOf(0) }
 
@@ -126,24 +134,20 @@ fun ProjectListScreen(
             }
         importQueue = importQueue.drop(1)
         scope.launch {
-            val tempPath = withContext(Dispatchers.IO) { alpCoordinator.copyUriToTemp(next) }
-            if (tempPath == null) {
-                advanceImportQueue()
-                return@launch
-            }
-            val plan = withContext(Dispatchers.IO) { alpCoordinator.plan(tempPath) }
+            val sourcePath = next.path
+            val plan = withContext(Dispatchers.IO) { alpCoordinator.plan(sourcePath) }
             if (plan == null) {
-                withContext(Dispatchers.IO) { alpCoordinator.discard(tempPath) }
+                withContext(Dispatchers.IO) { alpCoordinator.discard(sourcePath) }
                 advanceImportQueue()
                 return@launch
             }
             if (plan.conflict) {
-                conflictPending = AlpImportCoordinator.Pending(tempPath, plan)
+                conflictPending = AlpImportCoordinator.Pending(sourcePath, plan)
                 return@launch
             }
             val result =
                 withContext(Dispatchers.IO) {
-                    alpCoordinator.import(tempPath, AlpManager.ImportMode.OVERWRITE)
+                    alpCoordinator.import(sourcePath, AlpManager.ImportMode.OVERWRITE)
                 }
             tallyImport(result)
             advanceImportQueue()
@@ -157,7 +161,7 @@ fun ProjectListScreen(
         scope.launch {
             val result =
                 withContext(Dispatchers.IO) {
-                    alpCoordinator.import(pending.tempPath, mode)
+                    alpCoordinator.import(pending.tempPath, mode, deleteAfter = pending.isTemp)
                 }
             tallyImport(result)
             advanceImportQueue()
@@ -192,12 +196,22 @@ fun ProjectListScreen(
             }
         }
 
+    // 批量导入 .alp：一律走系统文件选择器（SAF 多选，MIME 限 zip/octet-stream），
+    // 选中即复制为缓存临时文件进入队列（导入/放弃后删除）。
     val importLauncher =
         rememberLauncherForActivityResult(
-            contract = ActivityResultContracts.OpenMultipleDocuments(),
+            ActivityResultContracts.OpenMultipleDocuments(),
         ) { uris ->
             if (uris.isEmpty()) return@rememberLauncherForActivityResult
-            importQueue = uris
+            val sources =
+                uris
+                    .mapNotNull { alpCoordinator.copyUriToTemp(it) }
+                    .take(IMPORT_BATCH_LIMIT)
+            if (sources.isEmpty()) {
+                errorMsg = strImportFailed
+                return@rememberLauncherForActivityResult
+            }
+            importQueue = sources.map { ImportSource(it) }
             advanceImportQueue()
         }
 

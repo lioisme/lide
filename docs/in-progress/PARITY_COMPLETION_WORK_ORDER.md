@@ -143,7 +143,7 @@ lide 引擎运行时层与 pro **已 100% 对齐且为超集**（`com.luajava`/`
 
 | 方案 | 做法 |
 |---|---|
-| ① 补齐组件（推荐） | 按 `EDITOR_DRAWER_AUDIT_REPORT.md` Phase 2/5 设计，将 `EditorScreen.kt` 的抽屉与主体抽取为 `EditorScreen.kt` 内私有 `NavigationDrawerPanel`（Modal 窄屏 / Permanent 宽屏分支，官方 `ModalNavigationDrawer`/`PermanentNavigationDrawer`）与 `EditorBody`（标签行 + LuaEditor + 搜索面板 + 存储权限横幅）两个 composable，保持 `DrawerContent`/`StoragePermissionBanner` 现结构 |
+| ① 补齐组件（推荐） | 按 `EDITOR_DRAWER_AUDIT_REPORT.md` Phase 2/5 设计，将 `EditorScreen.kt` 的抽屉与主体抽取为 `EditorScreen.kt` 内私有 `NavigationDrawerPanel`（Modal 窄屏 / Permanent 宽屏分支，官方 `ModalNavigationDrawer`/`PermanentNavigationDrawer`）与 `EditorBody`（标签行 + LuaEditor + 存储权限横幅，搜索面板槽位已随 2026-08-09 搜索移除而删除，见 docs/kb/EDITOR.md §4.5）两个 composable，保持 `DrawerContent`/`StoragePermissionBanner` 现结构 |
 | ② API 替换 | `LocalActivity.current` → `LocalContext.current as Activity`（1 处类型声明，`calculateWindowSizeClass(activity)` 需 activity 参数），不动依赖 |
 | ③ 升级依赖 | activity-compose → 1.10.x，同时复核 compose-bom 兼容性（升级面较大，不推荐单独为本任务做） |
 
@@ -267,6 +267,8 @@ lide 无工程属性编辑。pro `projectinfo/main.lua`（145 行 + layout.aly 1
 ### WP-005 编辑器文件操作 + 工程重命名
 
 > **（已完成）2026-08-05**：EditorComponents.kt:112 文件树操作菜单（新建/重命名/删除）+ `renameProjectEntry`（:168）；ProjectManager.kt:231,248 工程重命名（重名 -1/-2 防护）。验收证据：代码实况核对；待真机回归补充。
+>
+> **（2026-08-09 后注）**：条目内「编辑器文件树操作菜单 / 文件重命名」部分随用户红线反转整体作废——编辑器文件树对话框/操作菜单已删除（`ProjectFileBrowserDialog`、`picker_open_file`、「打开文件」菜单项），编辑器不再提供文件管理（见 docs/kb/EDITOR.md §4.4）；工程重命名（`ProjectManager.renameProject`，工程列表长按入口 ProjectListScreen.kt:559）不受影响、仍存在。
 
 | 属性 | 值 |
 |---|---|

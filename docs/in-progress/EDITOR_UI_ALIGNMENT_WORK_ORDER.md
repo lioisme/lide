@@ -10,6 +10,7 @@
 | Baseline | lide HEAD `c7b35dd` · Squircle-CE `reference/squircle-ce-master` |
 | Est. Effort | 4–5 engineering days (M1–M5) |
 | **2026-08-05 复核** | WP-003~006 ✅ 已落地（EditorTabs.kt:104/203/223/273-291）；WP-001/002/007/008 ⛔ 被取代（抽屉已整体删除，文件树改 `ProjectFileBrowserDialog`，EditorComponents.kt:95）；WP-009/010 待办 |
+| **2026-08-09 后注** | 文件树/抽屉/打开文件与工作单正文相关条目整体作废（用户红线反转：`ProjectFileBrowserDialog` 与「打开文件」菜单项已删，编辑器仅自动打开 main.lua，见 docs/kb/EDITOR.md §4.4）——WP-009/010 不再有「待办」意义，本工作单待办面全部关闭 |
 
 ---
 

@@ -30,6 +30,8 @@ class AlpImportCoordinator(
     data class Pending(
         val tempPath: String,
         val plan: AlpManager.ImportPlan,
+        // 源文件是否为导入临时副本（是则导入/放弃后删除；工程项目文件源不可删）。
+        val isTemp: Boolean = true,
     )
 
     /**
@@ -56,18 +58,19 @@ class AlpImportCoordinator(
     /** 无副作用解析导入计划；文件无效/不存在返回 null（临时文件由调用方清理）。 */
     fun plan(tempPath: String): AlpManager.ImportPlan? = AlpManager(context).planImport(tempPath)
 
-    /** 按模式执行导入；结束后清理临时文件并返回结果（失败返回 null）。 */
+    /** 按模式执行导入；[deleteAfter] 为真时清理源文件（临时副本）并返回结果（失败返回 null）。 */
     fun import(
         tempPath: String,
         mode: AlpManager.ImportMode,
+        deleteAfter: Boolean = true,
     ): AlpManager.AlpImportResult? =
         try {
             val result = AlpManager(context).import(tempPath, mode)
-            File(tempPath).delete()
+            if (deleteAfter) File(tempPath).delete()
             result
         } catch (t: Throwable) {
             Log.e(TAG, "import failed: temp=$tempPath mode=$mode", t)
-            File(tempPath).delete()
+            if (deleteAfter) File(tempPath).delete()
             null
         }
 

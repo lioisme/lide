@@ -72,28 +72,42 @@
 
 ### 4.1 已存在（阶段 B 部分落地）
 
-`com.lioisme.lide.editor`：`EditorTabs.kt`、`SearchBar.kt`（整词搜索）、`EditorToolbar.kt`、`LuaEditor.kt`、`LuaLanguage.kt`、`LuaDiagnostics.kt`（多错误聚合 + quickfix）、`LuaSnippetManager.kt`、`TextMateRuntime.kt`、`EditorConfig.kt`（21 项全量配置）、`EditorTextOps.kt`（selectLine/deleteLine/duplicateLine/toggleCase/词级移动）
+`com.lioisme.lide.editor`：`EditorTabs.kt`、`EditorToolbar.kt`、`LuaEditor.kt`、`LuaLanguage.kt`、`LuaDiagnostics.kt`（多错误聚合 + quickfix）、`LuaSnippetManager.kt`、`TextMateRuntime.kt`、`EditorConfig.kt`（21 项全量配置）、`EditorTextOps.kt`（selectLine/deleteLine/duplicateLine/toggleCase/词级移动）——`SearchBar.kt`（整词搜索/替换面板）已随 2026-08-09 第二次用户红线移除（见 §4.4 后注）
 `:app`：`session/EditorSession.kt`（StateFlow 会话 + Content 缓存）、`EditorScreen.kt`、`ui/screen/EditorSettingsScreen.kt`（编辑器独立设置页：21 项设置分组通用/编辑/视图/输入 + 顶栏恢复默认按钮）、`ui/screen/SettingsScreen.kt`（主设置页四分区：显示/编辑器/AndroLua/通用（权限管理/语言/关于），编辑器与 AndroLua 独立入口）、`ui/screen/AndroLuaSettingsScreen.kt`（AndroLua 工具页：API 浏览器/示例；插件功能 2026-08-07 按用户要求移除）、`ui/theme/SettingsManager.kt`（21 键持久化 `lide_editor` 命名空间 + `resetEditor` 恢复默认）
 
 ### 4.2 剩余差距（按 `EDITOR_UI_ALIGNMENT_WORK_ORDER.md`）
 
 | WP | 内容 | 状态 |
 |----|------|------|
-| WP-001/002 | 抽屉返回键契约 / 关闭竞态 | ⛔ 被取代（2026-08-05：抽屉已整体删除，改 `ProjectFileBrowserDialog`） |
+| WP-001/002 | 抽屉返回键契约 / 关闭竞态 | ⛔ 被取代（2026-08-05：抽屉已整体删除，改 `ProjectFileBrowserDialog`；2026-08-09 该对话框随「删除文件树」用户红线一并删除） |
 | WP-003 | Tab 拖拽排序（`sh.calvin.reorderable:reorderable:3.0.0`，POM 实证兼容） | ✅ 已落地（2026-08-05 复核，EditorTabs） |
 | WP-004 | Tab 样式对齐 Squircle（扁平 + 3dp 底部指示条） | ✅ 已落地（2026-08-05 复核，EditorTabs） |
 | WP-005 | 点击当前 Tab 弹关闭菜单（DropdownMenu） | ✅ 已落地（2026-08-05 复核，EditorTabs） |
 | WP-006 | 新 Tab 自动滚动 | ✅ 已落地（2026-08-05 复核，EditorTabs） |
 | WP-007 | 抽屉手势对齐（gesturesEnabled） | ⛔ 被取代（2026-08-05：抽屉已删除） |
 | WP-008 | 汉堡键语义（宽屏隐藏） | ⛔ 被取代（2026-08-05：汉堡键随抽屉移除，EditorComponents.kt:112） |
-| WP-009 | 文件树横向滚动（最小宽 248dp） | 未完成 |
+| WP-009 | 文件树横向滚动（最小宽 248dp） | ⛔ 已废止（2026-08-09 用户红线：文件树整体删除，`:editor` 的 `FileBrowser.kt`/`FileNode` 一并移除） |
 | WP-010 | 版本目录（version catalog，P2 可选） | 未完成 |
 
 ### 4.3 功能缺失（任务单已完成项移出；剩余为 P2 以外事项）
 
 - ✅ 已落地（2026-08-06，任务单 EDITOR_FEATURE_COMPLETION_WORK_ORDER G1~G9/G1x）：设置中心 21 项、原生 SnippetController、诊断多错误聚合 + quickfix、整词搜索、文本操作、标识符补全（默认关）、迷你地图、行为开关。
+  - ⛔ 后注（2026-08-09）：其中「整词搜索」（搜索/替换面板 `SearchBar.kt` + Ctrl+F + ⋮ 菜单「搜索」项）已按用户红线移除，见 §4.4。
 - ⛔ 折叠交互：vendored 0.24.6 无此能力（上游 0.25+），保持「仅渲染不交互」；待 P3 升级管线后复核。
 - 未做：Inlay hints（上游编辑器无此能力）、未启用 Snippet 时的手写占位符剥离（P3 示例）。
+
+### 4.4 文件选择现状（2026-08-09 用户红线反转后）
+
+- **编辑器不再提供任何「打开其他文件」入口**（文件树对话框 `ProjectFileBrowserDialog` 与「打开文件」菜单项一并删除，`:editor` 的 `FileBrowser.kt`/`FileNode` 移除）；编辑器默认自动打开 main.lua（`EditorSession.initialize`），标签关闭/切换仅作用于已打开标签。
+- **宿主文件选择一律走系统 SAF**：工程列表 `.alp` 批量导入（`OpenMultipleDocuments` + `AlpImportCoordinator.copyUriToTemp` 缓存临时文件）与签名档案导入（`OpenDocument` + contentResolver 直读）均直连系统选择器，无宿主内建浏览 UI、无全局引擎开关（原 `FilePickerEngine` 偏好与设置页「文件打开方式」条目已删）。
+- 会话模型不变：标签/脏标记/自动保存仍以工程相对路径为唯一键（`session/EditorSession.kt`），文件选择不进入编辑器会话。
+
+### 4.5 编辑器搜索现状（2026-08-09 第二次用户红线，整体移除）
+
+- **编辑器搜索/替换功能整体移除**（2026-08-09 用户指令「移除编辑器界面的搜索功能及相关的代码」）：`:editor` 包 `SearchBar.kt`（查询/替换/匹配计数/大小写/正则/整词面板）删除；宿主 `EditorScreen` 的 Ctrl+F 快捷键、⋮ 更多菜单「文件 → 搜索」项、`EditorBody` 搜索面板槽位一并移除；`EditorComponents.kt` 恢复「标签行 + 编辑器 + 权限横幅」结构。
+- 文案清理：`search_hint`/`replace_hint`/`replace`/`replace_all`/`case_sensitive`/`regex`/`whole_word`/`cd_search`/`cd_search_next`/`cd_search_prev`/`cd_search_close`/`cd_search_match_count`/`menu_category_file`（en/zh 全删）。
+- 保留项：API 浏览器搜索（`ApiBrowserScreen` 官方 `SearchBar`/`SearchBarState` + `api_*` 文案）不受影响；编辑器的跳行定位（运行错误 → 滚动行）不依赖搜索。
+- 验收证据：`:app:compileArm64DebugKotlin` + `:app:testArm64DebugUnitTest` + `:app:verifyMinimalismDebug`（引擎面 35 类唯一、29 根 dex）全部 BUILD SUCCESSFUL（2026-08-09）；`app/src/main/kotlin` 对 `SearchBar|getSearcher|isSearchVisible|cd_search|search_hint|PublishSearchResultEvent|EditorSearcher` 零命中（仅 API 浏览器官方 SearchBar 保留）。
 
 ---
 

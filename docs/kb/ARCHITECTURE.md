@@ -132,7 +132,8 @@ R1 门禁：         rg -n "luajava|androlua|loadLibrary" app/src/main/kotlin/co
 - **文案资源模板**：UI 显示文案禁止手工拼接（`"$a · $b"` / `"$c/$d"` 等）——整句进 strings.xml
   模板（`%1$s`/`%1$d`），values + values-zh 同步（380 键校验脚本）；Q14 落地 6 组模板
   （api_copied_format / api_category_count / setting_value_title / signing_cert_detail /
-  signing_meta_line / cd_search_match_count）。
+  signing_meta_line / cd_search_match_count）。注：`cd_search_match_count` 模板已随
+  2026-08-09 编辑器搜索功能移除而删除（见 docs/kb/EDITOR.md §4.5），本行保留为 Q14 历史记录。
 - **具名类型替代 Tuple**：跨模块传值禁止无语义元组（Q16 L1/L14 收口：
   `ZipUtils.ZipEntryData` 替代 `Triple<String,Int,ByteArray>`；`model.PendingOpenFile`
   替代 `Pair<String,String>`）。

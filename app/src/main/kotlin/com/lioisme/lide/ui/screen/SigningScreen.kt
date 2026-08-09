@@ -87,18 +87,21 @@ fun SigningScreen(
     var exportTarget by remember { mutableStateOf<SigningProfile?>(null) }
     var deleteTarget by remember { mutableStateOf<SigningProfile?>(null) }
 
+    // 签名档案导入：系统文件选择器（SAF 单文件），直接经 contentResolver 读字节
+    // 后置入导入状态（无落盘副本，不存在临时文件清理）。
     val importLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
-            if (uri != null) {
-                val bytes =
-                    runCatching {
-                        context.contentResolver.openInputStream(uri)?.use { it.readBytes() }
-                    }.getOrNull()
-                if (bytes != null && bytes.isNotEmpty()) {
-                    importSource = bytes
-                } else {
-                    Toast.makeText(context, R.string.signing_read_failed, Toast.LENGTH_SHORT).show()
-                }
+        rememberLauncherForActivityResult(
+            ActivityResultContracts.OpenDocument(),
+        ) { uri ->
+            if (uri == null) return@rememberLauncherForActivityResult
+            val bytes =
+                runCatching {
+                    context.contentResolver.openInputStream(uri)?.use { it.readBytes() }
+                }.getOrNull()
+            if (bytes != null && bytes.isNotEmpty()) {
+                importSource = bytes
+            } else {
+                Toast.makeText(context, R.string.signing_read_failed, Toast.LENGTH_SHORT).show()
             }
         }
     val exportLauncher =
@@ -152,7 +155,7 @@ fun SigningScreen(
                                 text = { Text(stringResource(R.string.signing_import)) },
                                 onClick = {
                                     menuOpen = false
-                                    importLauncher.launch(arrayOf("*/*"))
+                                    importLauncher.launch(arrayOf("application/octet-stream"))
                                 },
                             )
                         }

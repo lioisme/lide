@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <!-- Common -->
@@ -91,7 +91,7 @@
     <string name="system_wallpaper">系统壁纸</string>
     <string name="wallpaper_desc">壁纸动态取色</string>
     <string name="pick_accent">选择强调色</string>
-    <string name="lang_en">English</string>
+<string name="lang_en">English</string>
     <string name="lang_zh">中文</string>
 
     <!-- Permissions -->
@@ -245,38 +245,16 @@
     <string name="editor_no_file">未打开文件</string>
     <string name="close_file_title">未保存的修改</string>
     <string name="close_file_message">关闭前保存 %1$s 的修改？</string>
-    <string name="save">保存</string>
+<string name="save">保存</string>
     <string name="discard">放弃</string>
-    <string name="file_not_supported_open">不支持打开该文件</string>
-
-    <!-- WP-005 File operations -->
-    <string name="filetree_new">新建</string>
-    <string name="filetree_new_file">新建 Lua 文件</string>
-    <string name="filetree_new_dir">新建目录</string>
-    <string name="filetree_rename">重命名</string>
-    <string name="filetree_delete">删除</string>
-    <string name="filetree_delete_title">删除条目</string>
-    <string name="filetree_delete_message">删除 \"%1$s\"？</string>
-    <string name="filetree_delete_dir_message">删除目录 \"%1$s\" 及其全部内容？</string>
-    <string name="filetree_current_dir_hint">长按条目可进行文件操作</string>
-    <string name="filetree_new_file_hint">将创建于 %1$s</string>
-    <string name="filetree_new_dir_hint">将创建于 %1$s</string>
-    <string name="filetree_new_file_placeholder">例如 script.lua</string>
-    <string name="filetree_new_dir_placeholder">例如 assets</string>
-    <string name="filetree_rename_hint">重命名 \"%1$s\"。重名将自动追加 -1/-2 后缀。</string>
-    <string name="filetree_op_failed">操作失败</string>
-    <string name="filetree_anchor_protected">main.lua 与 init.lua 是工程必需文件，不可修改</string>
 
     <!-- Content descriptions -->
     <string name="cd_new_project">新建项目</string>
     <string name="cd_settings">设置</string>
     <string name="cd_more_options">更多选项</string>
     <string name="cd_back">返回</string>
-    <string name="menu_category_file">文件</string>
     <string name="menu_category_project">工程</string>
     <string name="menu_category_text">文本</string>
-    <string name="cd_open_file_tree">打开文件树</string>
-    <string name="cd_search">搜索</string>
     <string name="accessibility_service_description">LIDE 无障碍服务：为 Lua 脚本提供自动化能力（点击、滑动、截图）。</string>
     <!-- API 浏览器（WP-008） -->
     <string name="api_browser">API 浏览器</string>
@@ -391,14 +369,6 @@
     <string name="build_opt_abi_auto">宿主全部 ABI</string>
 
     <!-- 编辑器（并入自原 :editor 模块，2026-08-08 源码组织五需求 Phase 1） -->
-    <!-- Editor search -->
-    <string name="search_hint">查找…</string>
-    <string name="replace_hint">替换…</string>
-    <string name="replace">替换</string>
-    <string name="replace_all">全部替换</string>
-    <string name="case_sensitive">区分大小写</string>
-    <string name="regex">正则表达式</string>
-    <string name="whole_word">整词匹配</string>
     <!-- Editor text operations -->
     <string name="text_op_select_line">选择整行</string>
     <string name="text_op_delete_line">删除整行</string>
@@ -411,18 +381,11 @@
     <string name="menu_close_tab">关闭</string>
     <string name="menu_close_others">关闭其他</string>
     <string name="menu_close_all">关闭全部</string>
-    <!-- File tree -->
-    <string name="file_tree_empty">暂无文件</string>
     <!-- Content descriptions -->
     <string name="cd_undo">撤销</string>
     <string name="cd_redo">重做</string>
     <string name="cd_run">运行</string>
     <string name="cd_more">更多操作</string>
-    <string name="cd_search_next">下一个匹配</string>
-    <string name="cd_search_prev">上一个匹配</string>
-    <string name="cd_search_close">关闭搜索</string>
-    <!-- Q14 模板化：匹配计数 current/total -->
-    <string name="cd_search_match_count">%1$d/%2$d</string>
     <!-- TextMate runtime -->
     <string name="textmate_init_failed">编辑器引擎初始化失败</string>
     <string name="retry">重试</string>

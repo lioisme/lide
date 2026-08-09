@@ -5,7 +5,6 @@ import android.net.Uri
 import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -23,12 +22,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.key.Key
-import androidx.compose.ui.input.key.KeyEventType
-import androidx.compose.ui.input.key.isCtrlPressed
-import androidx.compose.ui.input.key.key
-import androidx.compose.ui.input.key.onPreviewKeyEvent
-import androidx.compose.ui.input.key.type
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -36,7 +29,6 @@ import com.lioisme.lide.R
 import com.lioisme.lide.engine.EngineActivity
 import com.lioisme.lide.editor.EditorMoreAction
 import com.lioisme.lide.editor.EditorToolbar
-import com.lioisme.lide.editor.FileNode
 import com.lioisme.lide.editor.editorTextOpsActions
 import com.lioisme.lide.engine.EngineResultParser
 import com.lioisme.lide.engine.RunEngineLauncher
@@ -55,7 +47,6 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
-import java.io.File
 import java.util.concurrent.atomic.AtomicReference
 
 private const val AUTO_SAVE_DELAY_MS = 500L
@@ -75,11 +66,11 @@ private data class RunResult(
  * 重组模型（对齐 Squircle `EditorViewModel`）：
  * - 每键编辑只触发会话内部 [EditorSession.editTick]（StateFlow，不重组）；
  *   脏标记 / undo 能力仅在值实际变化时经 [EditorSession.tabs] 发射——稳态打字零重组；
- * - 搜索面板自持全部状态，打字与搜索结果只重组 SearchBar 子树；
  * - 文件切换走 [Content] 缓存复用，零读盘、零 O(n) 重建（除首次打开）。
  *
- * 布局：Scaffold（工具栏常驻顶栏）→ 标签行 + 编辑器；工程文件树经顶栏文件夹键打开对话框展示。
- * 组件拆分（P3-2）：编辑器主体/文件树/横幅见 [EditorBody]（EditorComponents.kt），
+ * 布局：Scaffold（工具栏常驻顶栏）→ 标签行 + 编辑器；默认打开 main.lua，
+ * 不再提供文件树/打开文件入口（2026-08-09 用户红线，文件选择一律走系统选择器）。
+ * 组件拆分（P3-2）：编辑器主体/横幅见 [EditorBody]（EditorComponents.kt），
  * 关闭确认/运行错误对话框见 EditorDialogs.kt，本文件只留会话编排与状态接线。
  */
 @OptIn(ExperimentalMaterial3Api::class)
@@ -126,9 +117,6 @@ fun EditorScreen(
     val editorReady = remember { CompletableDeferred<Unit>() }
     val snackbarHostState = remember { SnackbarHostState() }
 
-    var isFileTreeVisible by remember { mutableStateOf(false) }
-    var isSearchVisible by remember { mutableStateOf(false) }
-    // 构建打包对话框（WP-005 整改：整页删除，仅保留对话框）。
     var showBuildDialog by remember { mutableStateOf(false) }
     // 脏文件待确认队列：单标签关闭时为单元素列表；「关闭其他/全部」时为批量队列，
     // 逐个确认后经 saveAndClose/discardAndClose 出队，取消即放弃剩余批次。
@@ -295,36 +283,9 @@ fun EditorScreen(
         snackbarHostState.showSnackbar(msg)
     }
 
-    fun getSearcher(): io.github.rosemoe.sora.widget.EditorSearcher? = editorRef.get()?.getSearcher()
-
-    fun openFileFromTree(node: FileNode) {
-        if (node.isDirectory) return
-        val prefix = project.path + File.separator
-        val relative = if (node.path.startsWith(prefix)) node.path.removePrefix(prefix) else node.name
-        // 文件打开后关闭对话框（对话框与打开保持原异步语义）。
-        isFileTreeVisible = false
-        scope.launch { session.openTab(relative) }
-    }
-
     val selectedTab = tabs.firstOrNull { it.fileName == selectedFile }
 
-    Box(
-        modifier =
-            Modifier
-                .fillMaxSize()
-                .onPreviewKeyEvent { event ->
-                    if (event.type == KeyEventType.KeyDown && event.isCtrlPressed && event.key == Key.F) {
-                        isSearchVisible = !isSearchVisible
-                        if (!isSearchVisible) {
-                            getSearcher()?.stopSearch()
-                        }
-                        true
-                    } else {
-                        false
-                    }
-                },
-    ) {
-        Scaffold(
+    Scaffold(
             topBar = {
                 EditorToolbar(
                     // 标题显示工程名，不显示当前打开文件的路径（文件身份由标签行承载）。
@@ -340,18 +301,11 @@ fun EditorScreen(
                     onRun = {
                         requestRun()
                     },
-                    // 文件树 / 搜索与工程级操作统一收进右上角更多（⋮）分类菜单：
+                    // 文件操作入口已收拢（2026-08-09 用户红线：编辑器仅自动打开 main.lua，
+                    // 不再打开其他文件），工程级操作留在更多（⋮）分类菜单：
                     // Appbar 常驻按钮（含返回）恒为 5 个 —— 返回 / 运行 / 撤销 / 重做 / 更多。
                     moreActions =
                         listOf(
-                            EditorMoreAction(
-                                category = stringResource(R.string.menu_category_file),
-                                label = stringResource(R.string.cd_open_file_tree),
-                            ) { isFileTreeVisible = true },
-                            EditorMoreAction(
-                                category = stringResource(R.string.menu_category_file),
-                                label = stringResource(R.string.cd_search),
-                            ) { isSearchVisible = true },
                             EditorMoreAction(
                                 category = stringResource(R.string.menu_category_project),
                                 label = stringResource(R.string.project_info),
@@ -390,7 +344,6 @@ fun EditorScreen(
                     if (!editorReady.isCompleted) editorReady.complete(Unit)
                 },
                 storagePermissionMissing = extPermissionMissing.value,
-                isSearchVisible = isSearchVisible,
                 onTabClose = { file ->
                     if (session.requestClose(file)) closeQueue = listOf(file)
                 },
@@ -410,10 +363,6 @@ fun EditorScreen(
                         },
                     )
                 },
-                onSearchClose = {
-                    isSearchVisible = false
-                    getSearcher()?.stopSearch()
-                },
             )
         }
 
@@ -427,18 +376,7 @@ fun EditorScreen(
             )
         }
 
-        // 工程文件目录对话框（文件系统风格）：顶栏文件夹键打开，选中文件即打开并关闭。
-        // WP-005：文件操作后经会话回调同步标签（重命名跟随 / 删除即关，脏内容不丢）。
-        if (isFileTreeVisible) {
-            ProjectFileBrowserDialog(
-                project = project,
-                onFileOpen = { openFileFromTree(it) },
-                onFileRenamed = { oldName, newName -> session.renameTab(oldName, newName) },
-                onFileDeleted = { fileName -> session.removeTab(fileName) },
-                onDismiss = { isFileTreeVisible = false },
-            )
-        }
-
+        // 脏文件待确认队列：单标签关闭时为单元素列表；「关闭其他/全部」时为批量队列，
         val pendingFile = closeQueue.firstOrNull()
         if (pendingFile != null) {
             EditorCloseConfirmDialog(
@@ -467,4 +405,3 @@ fun EditorScreen(
             )
         }
     }
-}
