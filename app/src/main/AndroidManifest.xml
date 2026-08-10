@@ -66,8 +66,27 @@
     <uses-permission android:name="android.permission.ANSWER_PHONE_CALLS" />
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
 
+    <!-- 静默安装（SILENT_INSTALL，2026-08-09）：Dhizuku API 为签名/特权级权限，
+         仅声明使 Dhizuku 桥可绑定；未安装/未授权不影响宿主任何功能。
+         Shizuku 无需系统权限（走其自身 binder 授权体系）。 -->
+    <uses-permission android:name="com.rosan.dhizuku.permission.API" />
+
+    <!-- 静默安装后端检测（SILENT_INSTALL）：Android 11+ 包可见性限制下，
+         显式声明使 getPackageInfo 可查 Shizuku/SUI/Dhizuku 安装状态（不使用 QUERY_ALL_PACKAGES）。 -->
+    <queries>
+        <package android:name="moe.shizuku.privileged.api" />
+        <package android:name="com.sui" />
+        <package android:name="com.rosan.dhizuku" />
+        <provider android:authorities="com.rosan.dhizuku.server.provider" />
+    </queries>
+
     <!-- 2026-08-09 离开：宿主自身拥有图标（矢量设计渲染 PNG res/drawable/icon.png，512x512）。
          android:icon 只声明一次，打包器对模板自带 icon 属性原样保留，无需再注入。 -->
+
+    <!-- Dhizuku-API 库 minSdk 26 > 宿主 24：overrideLibrary 强制合并（SILENT_INSTALL）。
+         运行时已按 SDK_INT < 26 门控（DhizukuServiceManager），<26 设备恒 UNAVAILABLE，不触碰库 API。 -->
+    <uses-sdk tools:overrideLibrary="com.rosan.dhizuku.api" />
+
     <application
         android:name=".LideApp"
         android:allowBackup="true"
@@ -118,6 +137,21 @@
                 <data android:scheme="file" />
                 <data android:host="*" />
                 <data android:pathPattern=".*\\.lua" />
+            </intent-filter>
+            <!-- 系统「用 LIDE 打开 APK」→ 安装方式选择（T16，2026-08-10） -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="content" />
+                <data android:host="*" />
+                <data android:mimeType="application/vnd.android.package-archive" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="file" />
+                <data android:host="*" />
+                <data android:mimeType="application/vnd.android.package-archive" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -193,6 +227,17 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/androlua_filepaths" />
         </provider>
+
+        <!-- Shizuku 静默安装桥（SILENT_INSTALL，2026-08-09）：authorities 以宿主包名前缀
+             书写，打包器 AXmlManifest.renameAuthorities 会自动改写为产物包名，无需新逻辑；
+             INTERACT_ACROSS_USERS_FULL 为签名权限，普通安装不授予，provider 对外不可用。 -->
+        <provider
+            android:name="rikka.shizuku.ShizukuProvider"
+            android:authorities="com.lioisme.lide.shizuku"
+            android:multiprocess="false"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="android.permission.INTERACT_ACROSS_USERS_FULL" />
 
     </application>
 </manifest>

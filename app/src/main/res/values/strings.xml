@@ -98,6 +98,7 @@
     <string name="permission_management">Permissions</string>
     <string name="perm_subtitle">Manage app permissions</string>
     <string name="perm_special_section">Special Access</string>
+    <string name="perm_privilege_section">Advanced Permissions</string>
     <string name="perm_regular_section">Regular Permissions</string>
     <string name="perm_note">Some permissions require going to System Settings to enable. Tap \"Request\" to open Settings.</string>
     <string name="perm_granted">Granted</string>
@@ -362,10 +363,25 @@
     <string name="build_opt_native_subtitle">Native libs only: keep only required .so files</string>
     <string name="build_opt_encrypt_title">Encrypt Lua files</string>
     <string name="build_opt_scheme_title">Signature scheme</string>
-    <string name="build_opt_scheme_hint">v1 = legacy JAR signatures; v2 = Android 7+; v3 = Android 9+ only</string>
     <string name="build_opt_abi_title">Default ABI</string>
-    <string name="build_opt_abi_hint">ABIs not shipped by the host are disabled (falls back to all host ABIs at build time)</string>
     <string name="build_opt_abi_auto">All host ABIs</string>
+
+    <!-- Silent install backends (SILENT_INSTALL) -->
+    <string name="install_method_title">Install method</string>
+    <string name="install_method_default">System installer</string>
+    <string name="install_method_shizuku">Shizuku</string>
+    <string name="install_method_dhizuku">Dhizuku</string>
+    <string name="install_method_root">Root</string>
+    <string name="install_backend_status_ready">Ready</string>
+    <string name="install_backend_status_permission_needed">Permission needed</string>
+    <string name="install_backend_status_not_running">Service not running</string>
+    <string name="install_backend_status_unavailable">Unavailable</string>
+    <string name="install_backend_grant">Grant</string>
+    <string name="install_dialog_method">Install method (this build)</string>
+    <string name="install_apk_title">Install APK</string>
+    <string name="install_confirm">Install</string>
+    <string name="install_success">Installed</string>
+    <string name="install_failed">Install failed</string>
 
     <!-- Editor（并入自原 :editor 模块，2026-08-08 源码组织五需求 Phase 1） -->
     <!-- Editor text operations -->

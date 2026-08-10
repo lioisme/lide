@@ -5,6 +5,7 @@ import com.lioisme.lide.build.AfterBuild
 import com.lioisme.lide.build.BuildOpts
 import com.lioisme.lide.build.SigningScheme
 import com.lioisme.lide.editor.EditorConfig
+import com.lioisme.lide.install.InstallerBackend
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -25,6 +26,7 @@ object SettingsManager {
     private const val BUILD_SIGNING_SCHEME = "signing_scheme"
     private const val BUILD_ABI = "abi"
     private const val BUILD_AFTER_BUILD = "after_build"
+    private const val BUILD_INSTALL_BACKEND = "install_backend"
     private const val BUILD_OUTPUT_DIR = "output_dir"
     private const val BUILD_OUTPUT_NAMING = "output_naming"
 
@@ -107,6 +109,7 @@ object SettingsManager {
                 signingScheme = SigningScheme.parse(prefs.getString(BUILD_SIGNING_SCHEME, "")),
                 preferAbi = prefs.getString(BUILD_ABI, "") ?: "",
                 afterBuild = AfterBuild.parse(prefs.getString(BUILD_AFTER_BUILD, "")),
+                installBackend = InstallerBackend.parse(prefs.getString(BUILD_INSTALL_BACKEND, "")),
                 outputDir = prefs.getString(BUILD_OUTPUT_DIR, "") ?: "",
                 outputNaming = prefs.getString(BUILD_OUTPUT_NAMING, "") ?: "",
             )
@@ -127,6 +130,7 @@ object SettingsManager {
             .putString(BUILD_SIGNING_SCHEME, opts.signingScheme.name)
             .putString(BUILD_ABI, opts.preferAbi)
             .putString(BUILD_AFTER_BUILD, opts.afterBuild.name)
+            .putString(BUILD_INSTALL_BACKEND, opts.installBackend.name)
             .putString(BUILD_OUTPUT_DIR, opts.outputDir)
             .putString(BUILD_OUTPUT_NAMING, opts.outputNaming)
             .apply()

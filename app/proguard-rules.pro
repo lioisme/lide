@@ -78,3 +78,20 @@
 # （org.joni.ast.QuantifierNode <clinit> NPE / NoClassDefFoundError），整体 keep。
 -keep class org.joni.** { *; }
 -keep class org.jcodings.** { *; }
+
+# ── 静默安装（SILENT_INSTALL，2026-08-09）──────────────────────────────
+# 宿主安装通道整包 keep：Shizuku/Dhizuku 经 bindUserService 按类名反射实例化
+# UserService 实现（ShizukuInstallerServiceImpl / DhizukuInstallerServiceImpl），
+# R8 收缩/混淆即 NoSuchMethodError（AIDL Stub 方法签名须原样保留）。
+-keep class com.lioisme.lide.install.** { *; }
+
+# rikka.shizuku API/provider：ShizukuProvider 按 manifest 类名加载（manifest 引用类
+# R8 自动保留），API 侧经隐藏 API 桥（dev.rikka.hidden stub，compileOnly）反射调用，
+# 整包 keep 防 R8 裁剪隐藏 API 调用点差异。
+-keep class rikka.shizuku.** { *; }
+-dontwarn dev.rikka.hidden.**
+-dontwarn rikka.shizuku.**
+
+# Dhizuku API（io.github.iamr0s）：Binder 代理按接口反射绑定，整包 keep 防混淆。
+-keep class com.rosan.dhizuku.api.** { *; }
+-dontwarn com.rosan.dhizuku.**

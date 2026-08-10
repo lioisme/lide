@@ -27,6 +27,7 @@
 | F7 | **性能优化阶段 C**：诊断 tooltip、原生 SnippetController、增量保存 | 中 | `SnippetController`、增量保存、诊断 tooltip |
 | F8 | **编辑器功能完善至 sora-editor 原生上限**（历史任务单 EDITOR_FEATURE_COMPLETION_WORK_ORDER，已蒸馏）：P0 设置中心 21 项全集（通用设置页仅留入口）/ P1 原生 SnippetController·诊断 tooltip·多级聚合·折叠验证·文本操作增强·整词搜索·标识符补全·迷你地图 / P2 R8+baseline profile·降级矩阵扩展·基准脚本 / P3 R1 grep 入 CI。**后注（2026-08-09）**：其中「整词搜索」（搜索/替换面板）已按用户红线整体移除（见 docs/kb/EDITOR.md §4.5），其余保持已落地 | 高 | `编辑器设置`、`SnippetController`、`诊断 tooltip`、`迷你地图`、`baseline profile` |
 | F9 | **文件选择器（✅ 完结，2026-08-09 用户红线反转→整体废弃）**：阶段一/二内建全盘选择器 + 双引擎开关曾落地（见工作单 FILE_PICKER_WORK_ORDER.md，已归档删除）。**反转**：内建选择器（`ui/picker` 包/Routes.PICKER/PickerBridge/双引擎偏好）与编辑器文件树对话框全部删除，文件选择一律走系统 SAF（.alp 批量导入 `OpenMultipleDocuments` + copyUriToTemp；签名导入 `OpenDocument` 直读）；编辑器不再打开其他文件、仅自动打开 main.lua。结论蒸馏见 docs/kb/EDITOR.md §4.4 | 已废弃 | `FILE_PICKER`、文件选择器、SAF |
+| F10 | **静默安装能力（Root / Shizuku / Dhizuku）**：① 宿主支持申请 Root（libsu）、Shizuku（含 SUI）、Dhizuku 三类**权限**（权限管理页「高级权限」区呈现授权，D-7：权限与功能分离，不与安装功能混称）；② 打包产物安装可选用静默安装（免逐次确认），不可用/失败自动回落系统安装器（**安装为功能**：设置页「安装方式」组 + 构建对话框「本次安装方式」）；③ **通用 APK 安装（2026-08-10 T16）**：系统「用 LIDE 打开 APK」→ 安装方式选择对话框（普通/三通道，静默失败回落系统安装器）。持久化 `BuildOpts.installBackend`。见工作单 docs/in-progress/SILENT_INSTALL_WORK_ORDER.md | 高 | `SILENT_INSTALL`、静默安装、`Shizuku`、`Dhizuku`、Root、libsu |
 
 ## 2b. 技术栈审计重构（2026-08-09 全量审计，工作单 docs/in-progress/TECH_DEBT_REFACTOR_WORK_ORDER.md）
 

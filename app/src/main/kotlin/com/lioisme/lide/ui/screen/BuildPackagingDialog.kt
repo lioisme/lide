@@ -25,6 +25,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,6 +48,10 @@ import com.lioisme.lide.build.SigningManager
 import com.lioisme.lide.build.SigningScheme
 import com.lioisme.lide.build.ZipUtils
 import com.lioisme.lide.model.Project
+import com.lioisme.lide.install.BackendStatus
+import com.lioisme.lide.install.InstallerBackend
+import com.lioisme.lide.install.InstallerCoordinator
+import com.lioisme.lide.install.InstallerServices
 import com.lioisme.lide.project.ProjectManager
 import com.lioisme.lide.ui.theme.SettingsManager
 import kotlinx.coroutines.Dispatchers
@@ -120,6 +125,9 @@ fun BuildPackagingDialog(
     var result by remember { mutableStateOf<BuildResult?>(null) }
     // 签名方案本次构建局部状态（初始值 = 设置页持久化默认）。
     var signingScheme by remember { mutableStateOf(SettingsManager.buildOpts.value.signingScheme) }
+    // 安装方式本次构建局部状态（初始值 = 设置页持久化默认；D-4：对话框可覆盖本次安装方式，
+    // 不回写持久化；静默仅当后端 READY，否则回落系统安装器）。
+    var installMethod by remember { mutableStateOf(SettingsManager.buildOpts.value.installBackend) }
     // 构建阶段回调经 Channel 桥回主线程：doBuild 在 IO 线程内回调 onStage，
     // 若直接写 buildStage 属 IO 线程写 Compose state，违反主线程约定。
     val stageChannel = remember { Channel<ApkBuilder.BuildStage>(Channel.BUFFERED) }
@@ -211,7 +219,10 @@ fun BuildPackagingDialog(
                     Toast.makeText(context, strBuildSuccess, Toast.LENGTH_SHORT).show()
                     // 产物输出方式（设置页持久化）：默认自动安装（pro 兼容）；SAVE = 仅写盘。
                     if (SettingsManager.buildOpts.value.afterBuild == AfterBuild.INSTALL) {
-                        installApk(context, res.apkFile)
+                        val silent =
+                            installMethod != InstallerBackend.DEFAULT &&
+                                InstallerCoordinator.installSilently(res.apkFile, installMethod)
+                        if (!silent) installApkViaSystem(context, res.apkFile)
                     }
                 }
 
@@ -416,6 +427,53 @@ fun BuildPackagingDialog(
                     )
                 }
 
+                // 安装方式（本次构建，D-4）：默认跟随设置页持久化；仅后端 已就绪（READY）
+                // 可选（未获对应权限/未运行/不可用一律置灰），静默仅当后端 READY，其余回落系统安装器。
+                Text(
+                    stringResource(R.string.install_dialog_method),
+                    style = MaterialTheme.typography.labelLarge,
+                )
+                val backendStatuses =
+                    listOf(
+                        Triple(InstallerBackend.DEFAULT, stringResource(R.string.install_method_default), null),
+                        Triple(InstallerBackend.SHIZUKU, stringResource(R.string.install_method_shizuku), InstallerServices.shizuku.status.collectAsState().value),
+                        Triple(InstallerBackend.DHIZUKU, stringResource(R.string.install_method_dhizuku), InstallerServices.dhizuku.status.collectAsState().value),
+                        Triple(InstallerBackend.ROOT, stringResource(R.string.install_method_root), InstallerServices.root.status.collectAsState().value),
+                    )
+                backendStatuses.forEach { (backend, label, status) ->
+                    val available = backend == InstallerBackend.DEFAULT || status == BackendStatus.READY
+                    Row(
+                        Modifier
+                            .fillMaxWidth()
+                            .clickable(enabled = available) { installMethod = backend }
+                            .padding(vertical = 2.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Checkbox(checked = installMethod == backend, onCheckedChange = { installMethod = backend }, enabled = available)
+                        Spacer(Modifier.width(8.dp))
+                        Text(
+                            label,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color =
+                                if (available) {
+                                    MaterialTheme.colorScheme.onSurface
+                                } else {
+                                    MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                                },
+                        )
+                        if (backend != InstallerBackend.DEFAULT && status != null && status != BackendStatus.READY) {
+                            Spacer(Modifier.weight(1f))
+                            Text(
+                                installBackendStatusLabel(status),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        }
+                    }
+                }
+
+                HorizontalDivider()
+
                 // 构建选项摘要（唯一入口在设置页，此处只读展示）。
                 Text(
                     stringResource(
@@ -608,30 +666,6 @@ private fun stageLabelRes(stage: ApkBuilder.BuildStage?): Int =
         ApkBuilder.BuildStage.ASSEMBLE -> R.string.build_stage_assemble
         ApkBuilder.BuildStage.SIGN -> R.string.build_stage_sign
     }
-
-/**
- * 自动安装：ACTION_INSTALL_PACKAGE 直连系统安装器（InstallStart）。
- * 不用 ACTION_VIEW——宿主自身的 .alp/.lua 导入过滤会匹配任何 content:// 文件，
- * 会弹出"打开方式"选择器而非直接安装。
- * 未授予"安装未知来源应用"时系统会先弹授权页，授予后直达安装确认。
- */
-private fun installApk(
-    context: android.content.Context,
-    apkFile: File,
-) {
-    try {
-        val uri: Uri = FileProvider.getUriForFile(context, context.packageName, apkFile)
-        val intent =
-            Intent(Intent.ACTION_INSTALL_PACKAGE).apply {
-                setDataAndType(uri, "application/vnd.android.package-archive")
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            }
-        context.startActivity(intent)
-    } catch (e: Exception) {
-        Toast.makeText(context, e.message ?: context.getString(R.string.build_install_failed), Toast.LENGTH_LONG).show()
-    }
-}
 
 /**
  * 收集工程目录全部文件（注入 assets/lua/<相对路径>，打包后即工程目录）：

@@ -7,6 +7,9 @@ dependencyResolutionManagement {
         maven { url = uri("https://maven.aliyun.com/repository/google") }
         google()
         mavenCentral()
+        // libsu（com.github.topjohnwu.libsu）仅在 JitPack 发布（SILENT_INSTALL root 通道，
+        // 2026-08-09；版本对齐 komi-store gradle/libs.versions.toml 6.0.0）。
+        maven { url = uri("https://jitpack.io") }
     }
 }
 

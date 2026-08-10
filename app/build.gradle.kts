@@ -113,6 +113,8 @@ android {
     buildFeatures {
         compose = true
         buildConfig = true
+        // 静默安装（SILENT_INSTALL）：Shizuku/Dhizuku 远程服务经 AIDL 接口桥接。
+        aidl = true
     }
 
     // 原生引擎：源码统一位于 src/main/cpp/（AGP 官方 ndk 源码目录）。
@@ -271,6 +273,17 @@ dependencies {
     // sora-editor（0.24.6 vendored 源码）：编辑器核心 + TextMate 高亮，并入宿主单 dex 集。
     implementation(project(":sora-editor:editor"))
     implementation(project(":sora-editor:language-textmate"))
+
+    // 静默安装（SILENT_INSTALL，2026-08-09）：Root（libsu）/ Shizuku（含 SUI）/ Dhizuku 三通道。
+    // 版本对齐 komi-store gradle/libs.versions.toml（shizuku 13.1.5 / dhizuku 2.5.4 /
+    // libsu 6.0.0 / hidden-api-stub 4.4.0）。全部 implementation 并入宿主单 dex 集
+    // （无 runtime 拆分，维持引擎 dex 单份化契约，checkEngineDexMerge 不受影响）。
+    implementation("dev.rikka.shizuku:api:13.1.5")
+    implementation("dev.rikka.shizuku:provider:13.1.5")
+    // Shizuku 隐藏 API 签名桩：仅编译期可见，不打入产物（compileOnly）。
+    compileOnly("dev.rikka.hidden:stub:4.4.0")
+    implementation("io.github.iamr0s:Dhizuku-API:2.5.4")
+    implementation("com.github.topjohnwu.libsu:core:6.0.0")
 
     testImplementation(project(":androlua"))
     testImplementation("junit:junit:4.13.2")

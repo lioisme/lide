@@ -4,6 +4,7 @@ import com.androlua.LuaApplication
 import com.lioisme.lide.build.SigningManager
 import com.lioisme.lide.editor.TextMateRuntime
 import com.lioisme.lide.i18n.LocaleManager
+import com.lioisme.lide.install.InstallerServices
 import com.lioisme.lide.ui.theme.SettingsManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -25,6 +26,9 @@ class LideApp : LuaApplication() {
         SettingsManager.init(this)
         SigningManager.init(this)
         LocaleManager.init(this)
+        // 静默安装三后端（Root/Shizuku/Dhizuku）注册监听并后台刷新状态；
+        // 幂等：重复调用不重置（SILENT_INSTALL，2026-08-09）。
+        InstallerServices.init(this)
         // 资产提取移出主线程（P3-1 冷启动卫生）：三项均为幂等首启复制（已存在即跳过），
         // 后台完成后由各功能惰性消费，不阻塞 Application.onCreate 的首帧关键路径。
         bootstrapAssets()

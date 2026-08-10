@@ -30,6 +30,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.lioisme.lide.R
+import com.lioisme.lide.install.InstallerServices
 import com.lioisme.lide.ui.theme.LideTopBar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -152,6 +153,41 @@ fun HostPermissionScreen(
                         onRequest = {
                             launchSettingsIntent(special.settingsIntent(context))
                         },
+                    )
+                }
+
+                item {
+                    Spacer(Modifier.height(16.dp))
+                    Text(
+                        stringResource(R.string.perm_privilege_section),
+                        style = MaterialTheme.typography.titleSmall,
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.SemiBold,
+                        modifier = Modifier.padding(start = 4.dp, bottom = 8.dp),
+                    )
+                }
+                // 高级权限（T15，2026-08-10 重构）：Card + 图标风格与其余行一致；
+                // 仅标题 + 短状态词 + 「授权」按钮，无描述/指引长文本。权限与功能分离
+                //（D-7）：安装功能（通道选择）在设置页「安装方式」与安装/构建对话框。
+                item {
+                    InstallBackendStatusRow(
+                        label = stringResource(R.string.install_method_shizuku),
+                        status = InstallerServices.shizuku.status.collectAsState().value,
+                        onGrant = { InstallerServices.shizuku.requestPermission() },
+                    )
+                }
+                item {
+                    InstallBackendStatusRow(
+                        label = stringResource(R.string.install_method_dhizuku),
+                        status = InstallerServices.dhizuku.status.collectAsState().value,
+                        onGrant = { InstallerServices.dhizuku.requestPermission() },
+                    )
+                }
+                item {
+                    InstallBackendStatusRow(
+                        label = stringResource(R.string.install_method_root),
+                        status = InstallerServices.root.status.collectAsState().value,
+                        onGrant = { InstallerServices.root.requestPermission() },
                     )
                 }
 

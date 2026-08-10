@@ -1,5 +1,7 @@
 package com.lioisme.lide.build
 
+import com.lioisme.lide.install.InstallerBackend
+
 /** 打包成功后的产物处理方式。 */
 enum class AfterBuild {
     /** 自动调起系统安装器（AndroLua Pro 兼容，默认）。 */
@@ -76,6 +78,8 @@ enum class SigningScheme(
  * - [signingScheme]：签名方案组合（默认 v1+v2+v3 全兼容，与旧行为一致）。
  * - [preferAbi]：默认 ABI（空 = 宿主全部；设置页仅宿主携带的 ABI 可选）。
  * - [afterBuild]：产物输出方式（默认自动安装，pro 兼容）。
+ * - [installBackend]：静默安装后端（默认系统安装器；仅显式选择且后端 READY 时静默，
+ *   失败自动回落系统安装器，见 SILENT_INSTALL 工作单 D-2/D-3）。
  * - [outputDir]：产物输出目录（空 = 默认 `<luaExtDir>/apk/`；非空 = 绝对路径，不可写时回落默认）。
  * - [outputNaming]：产物文件名模板（空 = 默认 `<包名>-<版本>.apk`；支持 `{package}` / `{version}`
  *   占位符；结果经 sanitize，非法时回落默认）。
@@ -88,6 +92,7 @@ data class BuildOpts(
     val signingScheme: SigningScheme = SigningScheme.V1V2V3,
     val preferAbi: String = "",
     val afterBuild: AfterBuild = AfterBuild.INSTALL,
+    val installBackend: InstallerBackend = InstallerBackend.DEFAULT,
     val outputDir: String = "",
     val outputNaming: String = "",
 )

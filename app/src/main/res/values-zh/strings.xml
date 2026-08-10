@@ -98,6 +98,7 @@
     <string name="permission_management">权限管理</string>
     <string name="perm_subtitle">管理应用权限</string>
     <string name="perm_special_section">特殊权限</string>
+    <string name="perm_privilege_section">高级权限</string>
     <string name="perm_regular_section">常规权限</string>
     <string name="perm_note">部分权限需在系统设置中开启。点击请求打开设置页。</string>
     <string name="perm_granted">已授权</string>
@@ -362,11 +363,26 @@
     <string name="build_opt_native_title">优化打包</string>
     <string name="build_opt_native_subtitle">仅针对原生库：只携带工程依赖命中的 .so</string>
     <string name="build_opt_encrypt_title">加密 Lua 文件</string>
-    <string name="build_opt_scheme_title">签名方案</string>
-    <string name="build_opt_scheme_hint">v1 = 传统 JAR 签名；v2 = Android 7+；v3 = 仅 Android 9+</string>
+<string name="build_opt_scheme_title">签名方案</string>
     <string name="build_opt_abi_title">默认 ABI</string>
-    <string name="build_opt_abi_hint">宿主未携带该 ABI 时置灰不可选（构建时回落为全部宿主 ABI）</string>
     <string name="build_opt_abi_auto">宿主全部 ABI</string>
+
+    <!-- 静默安装后端（SILENT_INSTALL） -->
+    <string name="install_method_title">安装方式</string>
+    <string name="install_method_default">系统安装器</string>
+    <string name="install_method_shizuku">Shizuku</string>
+    <string name="install_method_dhizuku">Dhizuku</string>
+    <string name="install_method_root">Root</string>
+    <string name="install_backend_status_ready">可用</string>
+    <string name="install_backend_status_permission_needed">需要授权</string>
+    <string name="install_backend_status_not_running">服务未运行</string>
+    <string name="install_backend_status_unavailable">不可用</string>
+    <string name="install_backend_grant">授权</string>
+    <string name="install_dialog_method">安装方式（本次构建）</string>
+    <string name="install_apk_title">安装安装包</string>
+    <string name="install_confirm">安装</string>
+    <string name="install_success">安装完成</string>
+    <string name="install_failed">安装失败</string>
 
     <!-- 编辑器（并入自原 :editor 模块，2026-08-08 源码组织五需求 Phase 1） -->
     <!-- Editor text operations -->

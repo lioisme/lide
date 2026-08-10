@@ -22,6 +22,7 @@ import com.lioisme.lide.model.Project
 import com.lioisme.lide.project.AlpManager
 import com.lioisme.lide.project.ProjectManager
 import com.lioisme.lide.ui.navigation.LideNavHost
+import com.lioisme.lide.ui.screen.InstallMethodDialog
 import com.lioisme.lide.ui.theme.LideTheme
 import com.lioisme.lide.ui.theme.SettingsManager
 import kotlinx.coroutines.Dispatchers
@@ -37,6 +38,8 @@ class MainActivity : ComponentActivity() {
     // 追加的条目永远不会被组合消费——state 承载后迟到条目仍会被读取。
     private var pendingImportPaths by mutableStateOf<List<String>>(emptyList())
     private var pendingOpenFiles by mutableStateOf<List<PendingOpenFile>>(emptyList())
+    // 系统「用 LIDE 打开 APK」→ 安装方式选择（T16，2026-08-10）。
+    private var pendingApkFile by mutableStateOf<File?>(null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,6 +71,15 @@ class MainActivity : ComponentActivity() {
                     pendingImportPaths = imports,
                     pendingOpenFiles = openFiles,
                 )
+                // 系统「用 LIDE 打开 APK」（T16）：一次性消费，展示安装方式选择对话框
+                //（普通系统安装器 / Shizuku / Dhizuku / Root）。
+                val apk = pendingApkFile
+                if (apk != null) {
+                    InstallMethodDialog(
+                        apkFile = apk,
+                        onDismiss = { pendingApkFile = null },
+                    )
+                }
             }
         }
     }
@@ -105,6 +117,13 @@ class MainActivity : ComponentActivity() {
 
             path.endsWith(".lua", ignoreCase = true) -> {
                 openOrAdoptLuaFile(path)
+            }
+
+            // APK 安装（2026-08-10 T16）：系统「打开方式」将 APK 交给 LIDE 时展示
+            // 安装方式选择（普通系统安装器 / Shizuku / Dhizuku / Root 静默安装）。
+            path.endsWith(".apk", ignoreCase = true) -> {
+                Log.d("act", "handleLaunchIntent() — apk install: $path")
+                pendingApkFile = File(path)
             }
         }
     }

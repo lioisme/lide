@@ -8,18 +8,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Android
 import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.VpnKey
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -33,6 +35,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -41,6 +44,9 @@ import com.lioisme.lide.build.AfterBuild
 import com.lioisme.lide.build.BuildOpts
 import com.lioisme.lide.build.SigningScheme
 import com.lioisme.lide.build.ZipUtils
+import com.lioisme.lide.install.BackendStatus
+import com.lioisme.lide.install.InstallerBackend
+import com.lioisme.lide.install.InstallerServices
 import com.lioisme.lide.ui.theme.LideTopBar
 import com.lioisme.lide.ui.theme.SettingsManager
 import kotlinx.coroutines.Dispatchers
@@ -51,8 +57,9 @@ import java.io.File
  * AndroLua 合并页（2026-08-07 设置简约化 T1）：
  * AndroLua 工具（API 浏览器 / 示例）+ 打包选项（自动安装 / 优化打包 / 编译 / 加密 / 默认 ABI）。
  * 打包选项持久化唯一事实源 = [SettingsManager]（`lide_build` 域，经 [SettingsManager.updateBuild] 写回）。
- * 签名方案 / 默认 ABI 采用经典 Checkbox 选择（2026-08-08 打包 UI 重构）：
- * ABI 候选由宿主实际携带驱动（[ZipUtils.listAbis]），宿主未携带的架构置灰禁用。
+ * 行样式与主设置 / 编辑器设置页统一（图标 + 标题 + 副标题 + 尾部控件）：
+ * 签名方案 / 默认 ABI 用 Checkbox 尾部控件，安装方式用 RadioButton 单选；
+ * 后端未获得对应权限（非 READY）时不可选（2026-08-10 统一收口）。
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -129,7 +136,6 @@ fun AndroLuaSettingsScreen(
                         persist { it.copy(afterBuild = if (checked) AfterBuild.INSTALL else AfterBuild.SAVE) }
                     },
                 )
-                HorizontalDivider(Modifier.padding(horizontal = 16.dp, vertical = 4.dp))
                 SettingsToggleItem(
                     icon = Icons.Default.Build,
                     title = stringResource(R.string.build_opt_native_title),
@@ -137,7 +143,6 @@ fun AndroLuaSettingsScreen(
                     checked = opts.stripNativeLibs,
                     onCheckedChange = { checked -> persist { it.copy(stripNativeLibs = checked) } },
                 )
-                HorizontalDivider(Modifier.padding(horizontal = 16.dp, vertical = 4.dp))
                 SettingsToggleItem(
                     icon = Icons.Default.Check,
                     title = stringResource(R.string.build_opt_compile_label),
@@ -145,7 +150,6 @@ fun AndroLuaSettingsScreen(
                     checked = opts.compileLua,
                     onCheckedChange = { checked -> persist { it.copy(compileLua = checked) } },
                 )
-                HorizontalDivider(Modifier.padding(horizontal = 16.dp, vertical = 4.dp))
                 SettingsToggleItem(
                     icon = Icons.Default.Lock,
                     title = stringResource(R.string.build_opt_encrypt_title),
@@ -156,14 +160,49 @@ fun AndroLuaSettingsScreen(
             }
 
             Spacer(Modifier.height(24.dp))
-            SettingsSection(stringResource(R.string.build_opt_scheme_title)) {
-                Text(
-                    stringResource(R.string.build_opt_scheme_hint),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+            SettingsSection(stringResource(R.string.install_method_title)) {
+                // 安装方式单选：默认 = 系统安装器（pro 兼容）；
+                // 后端未获得对应权限（非 READY）时不可选，仅展示状态 + 「授权」动作。
+                InstallBackendRadioRow(
+                    label = stringResource(R.string.install_method_default),
+                    status = BackendStatus.READY,
+                    selected = opts.installBackend == InstallerBackend.DEFAULT,
+                    enabled = true,
+                    onSelect = { persist { it.copy(installBackend = InstallerBackend.DEFAULT) } },
+                    onGrant = null,
                 )
-                // 签名方案 = v1/v2/v3 独立开关（经典 Checkbox 多选组合）；
+                val shizukuStatus = InstallerServices.shizuku.status.collectAsState().value
+                InstallBackendRadioRow(
+                    label = stringResource(R.string.install_method_shizuku),
+                    status = shizukuStatus,
+                    selected = opts.installBackend == InstallerBackend.SHIZUKU,
+                    enabled = shizukuStatus == BackendStatus.READY,
+                    onSelect = { persist { it.copy(installBackend = InstallerBackend.SHIZUKU) } },
+                    onGrant = { InstallerServices.shizuku.requestPermission() },
+                )
+                val dhizukuStatus = InstallerServices.dhizuku.status.collectAsState().value
+                InstallBackendRadioRow(
+                    label = stringResource(R.string.install_method_dhizuku),
+                    status = dhizukuStatus,
+                    selected = opts.installBackend == InstallerBackend.DHIZUKU,
+                    enabled = dhizukuStatus == BackendStatus.READY,
+                    onSelect = { persist { it.copy(installBackend = InstallerBackend.DHIZUKU) } },
+                    onGrant = { InstallerServices.dhizuku.requestPermission() },
+                )
+                val rootStatus = InstallerServices.root.status.collectAsState().value
+                InstallBackendRadioRow(
+                    label = stringResource(R.string.install_method_root),
+                    status = rootStatus,
+                    selected = opts.installBackend == InstallerBackend.ROOT,
+                    enabled = rootStatus == BackendStatus.READY,
+                    onSelect = { persist { it.copy(installBackend = InstallerBackend.ROOT) } },
+                    onGrant = { InstallerServices.root.requestPermission() },
+                )
+            }
+
+            Spacer(Modifier.height(24.dp))
+            SettingsSection(stringResource(R.string.build_opt_scheme_title)) {
+                // 签名方案 = v1/v2/v3 独立开关；
                 // 最后一个勾选项禁用取消（全关 = 无签名产物，非法，不回写）。
                 val scheme = opts.signingScheme
                 val flags =
@@ -173,8 +212,9 @@ fun AndroLuaSettingsScreen(
                         Triple("v3", scheme.v3, { f: Boolean -> SigningScheme.fromFlags(scheme.v1, scheme.v2, f) }),
                     )
                 flags.forEach { (name, selected, build) ->
-                    CheckboxRow(
-                        label = name,
+                    CheckboxSettingRow(
+                        icon = Icons.Default.VpnKey,
+                        title = name,
                         checked = selected,
                         enabled = build(!selected) != null,
                         onCheckedChange = { checked ->
@@ -186,13 +226,7 @@ fun AndroLuaSettingsScreen(
 
             Spacer(Modifier.height(24.dp))
             SettingsSection(stringResource(R.string.build_opt_abi_title)) {
-                Text(
-                    stringResource(R.string.build_opt_abi_hint),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
-                )
-                // 默认 ABI 单选（auto = 宿主全部），经典 Checkbox 呈现：
+                // 默认 ABI 单选（auto = 宿主全部）：
                 // 候选 = 宿主实际携带（唯一事实源 ZipUtils.listAbis）+ 标准架构名，
                 // 宿主未携带的架构置灰禁用（仅展示不可选，不作可用性判定）。
                 val abiOptions =
@@ -200,8 +234,9 @@ fun AndroLuaSettingsScreen(
                         (STANDARD_ABIS + hostAbis).distinct().map { it to it }
                 abiOptions.forEach { (value, label) ->
                     val available = value.isEmpty() || value in hostAbis
-                    CheckboxRow(
-                        label = label,
+                    CheckboxSettingRow(
+                        icon = Icons.Default.Android,
+                        title = label,
                         checked = opts.preferAbi == value,
                         enabled = available,
                         onCheckedChange = { checked ->
@@ -220,12 +255,14 @@ fun AndroLuaSettingsScreen(
 private val STANDARD_ABIS = listOf("arm64-v8a", "x86_64", "armeabi-v7a", "x86")
 
 /**
- * 经典复选框行（2026-08-08 打包 UI 重构）：Checkbox + 标签文字。
+ * 复选框设置行（2026-08-10 统一）：与设置页其余行（SettingsToggleItem）同款
+ * 布局（图标 + 标题 + 尾部控件），尾部为 Checkbox。
  * [enabled] = false 时整体置灰禁用（宿主未携带的 ABI / 最后一个签名开关）。
  */
 @Composable
-private fun CheckboxRow(
-    label: String,
+private fun CheckboxSettingRow(
+    icon: ImageVector,
+    title: String,
     checked: Boolean,
     enabled: Boolean,
     onCheckedChange: (Boolean) -> Unit,
@@ -235,24 +272,27 @@ private fun CheckboxRow(
             Modifier
                 .fillMaxWidth()
                 .clickable(enabled = enabled) { onCheckedChange(!checked) }
-                .padding(horizontal = 16.dp, vertical = 2.dp),
+                .padding(horizontal = 16.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Checkbox(
-            checked = checked,
-            onCheckedChange = { onCheckedChange(it) },
-            enabled = enabled,
-        )
-        Spacer(Modifier.width(8.dp))
+        Icon(icon, null, tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(24.dp))
+        Spacer(Modifier.width(16.dp))
         Text(
-            text = label,
-            style = MaterialTheme.typography.bodyMedium,
+            text = title,
+            style = MaterialTheme.typography.bodyLarge,
             color =
                 if (enabled) {
                     MaterialTheme.colorScheme.onSurface
                 } else {
                     MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
                 },
+            modifier = Modifier.weight(1f),
+        )
+        Spacer(Modifier.width(8.dp))
+        Checkbox(
+            checked = checked,
+            onCheckedChange = onCheckedChange,
+            enabled = enabled,
         )
     }
 }
