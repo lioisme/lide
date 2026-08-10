@@ -319,7 +319,8 @@ internal fun ClassRow(
 }
 
 /**
- * 类型徽标：优先「接口」（反射判定），其次「用途分类」（build 期预计算，UI 零反射）；
+ * 类型徽标：优先「注解类」（反射 isAnnotation，JVM 层注解也为接口，须先于接口判定），
+ * 其次「接口」（反射判定），再次「用途分类」（build 期预计算，UI 零反射）；
  * 未命中用途的条目不显示徽标（原「类」兜底徽标信息量为零）。
  * 徽标颜色统一为单一色系（secondaryContainer），仅以文案区分类型（用户决策：颜色一致）。
  */
@@ -331,6 +332,7 @@ private fun TypeBadge(
     val isInterface = info?.kind?.isInterface == true
     val label =
         when {
+            entry.usage == ApiUsage.ANNOTATION -> usageLabel(entry.usage)
             isInterface -> stringResource(R.string.api_kind_interface)
             entry.usage != null -> usageLabel(entry.usage)
             else -> return
@@ -354,7 +356,10 @@ private fun TypeBadge(
 private fun usageLabel(usage: ApiUsage): String =
     stringResource(
         when (usage) {
+            ApiUsage.ANNOTATION -> R.string.api_usage_annotation
+            ApiUsage.INTERFACE -> R.string.api_usage_interface
             ApiUsage.ADAPTER -> R.string.api_usage_adapter
+            ApiUsage.LIST -> R.string.api_usage_list
             ApiUsage.CONTAINER -> R.string.api_usage_container
             ApiUsage.INPUT -> R.string.api_usage_input
             ApiUsage.UTILITY -> R.string.api_usage_utility
@@ -363,6 +368,9 @@ private fun usageLabel(usage: ApiUsage): String =
             ApiUsage.VIEW -> R.string.api_usage_view
             ApiUsage.POPUP -> R.string.api_usage_popup
             ApiUsage.DROPDOWN -> R.string.api_usage_dropdown
+            ApiUsage.DRAWING -> R.string.api_usage_drawing
+            ApiUsage.COMPAT -> R.string.api_usage_compat
+            ApiUsage.PROVIDER -> R.string.api_usage_provider
         },
     )
 

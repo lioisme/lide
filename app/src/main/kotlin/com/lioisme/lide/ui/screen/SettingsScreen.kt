@@ -306,20 +306,38 @@ internal fun SettingsToggleItem(
     title: String,
     subtitle: String = "",
     checked: Boolean,
+    enabled: Boolean = true,
     onCheckedChange: (Boolean) -> Unit,
 ) {
+    // T4（2026-08-10）：互斥置灰（wordWrap↔stickyScroll）——禁用时整体淡化且不可点击。
+    val titleColor =
+        if (enabled) {
+            MaterialTheme.colorScheme.onSurface
+        } else {
+            MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+        }
     Row(
         modifier =
             Modifier
                 .fillMaxWidth()
-                .clickable(onClick = { onCheckedChange(!checked) })
+                .clickable(enabled = enabled, onClick = { onCheckedChange(!checked) })
                 .padding(horizontal = 16.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Icon(icon, null, tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(24.dp))
+        Icon(
+            icon,
+            null,
+            tint =
+                if (enabled) {
+                    MaterialTheme.colorScheme.onSurfaceVariant
+                } else {
+                    MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                },
+            modifier = Modifier.size(24.dp),
+        )
         Spacer(Modifier.width(16.dp))
         Column(modifier = Modifier.weight(1f)) {
-            Text(title, style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurface)
+            Text(title, style = MaterialTheme.typography.bodyLarge, color = titleColor)
             if (subtitle.isNotEmpty()) {
                 Text(subtitle, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
@@ -328,11 +346,15 @@ internal fun SettingsToggleItem(
         Switch(
             checked = checked,
             onCheckedChange = onCheckedChange,
+            enabled = enabled,
         )
     }
 }
 
-/** WP-018 数值步进行：范围钳制 + 首尾禁用（大字号/小字号边界防误操作）。 */
+/**
+ * WP-018 数值步进行：范围钳制 + 首尾禁用（大字号/小字号边界防误操作）。
+ * T5（2026-08-10）：[step] 步进（undo 栈容量 100 步进）、[enabled] 互斥置灰。
+ */
 @Composable
 internal fun SettingsStepperItem(
     icon: ImageVector,
@@ -340,8 +362,16 @@ internal fun SettingsStepperItem(
     valueText: String,
     value: Int,
     range: IntRange,
+    step: Int = 1,
+    enabled: Boolean = true,
     onValueChange: (Int) -> Unit,
 ) {
+    val titleColor =
+        if (enabled) {
+            MaterialTheme.colorScheme.onSurface
+        } else {
+            MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+        }
     Row(
         modifier =
             Modifier
@@ -349,23 +379,33 @@ internal fun SettingsStepperItem(
                 .padding(horizontal = 16.dp, vertical = 6.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Icon(icon, null, tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(24.dp))
+        Icon(
+            icon,
+            null,
+            tint =
+                if (enabled) {
+                    MaterialTheme.colorScheme.onSurfaceVariant
+                } else {
+                    MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                },
+            modifier = Modifier.size(24.dp),
+        )
         Spacer(Modifier.width(16.dp))
         Column(modifier = Modifier.weight(1f)) {
-            Text(title, style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurface)
+            Text(title, style = MaterialTheme.typography.bodyLarge, color = titleColor)
             Text(valueText, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
         Spacer(Modifier.width(8.dp))
         FilledTonalIconButton(
-            onClick = { onValueChange((value - 1).coerceIn(range)) },
-            enabled = value > range.first,
+            onClick = { onValueChange((value - step).coerceIn(range)) },
+            enabled = enabled && value > range.first,
         ) {
             Icon(Icons.Default.Remove, contentDescription = null, modifier = Modifier.size(18.dp))
         }
         Spacer(Modifier.width(4.dp))
         FilledTonalIconButton(
-            onClick = { onValueChange((value + 1).coerceIn(range)) },
-            enabled = value < range.last,
+            onClick = { onValueChange((value + step).coerceIn(range)) },
+            enabled = enabled && value < range.last,
         ) {
             Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(18.dp))
         }

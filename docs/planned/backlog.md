@@ -55,6 +55,37 @@
 | C4 | Q14–Q16 阶段四：规范收敛（文案资源化 / 诊断 i18n / P2 清理 14 项） | 中 | ⏸ 进行中 | `Q14` `Q15` `Q16` |
 | C5 | Q17 终验：全量单测 + compile + verifyMinimalismDebug | 高 | ⏳ 待执行 | `Q17` |
 
+## 2d. 编辑器全量审计整改（2026-08-10，已完工：工作单已删，结论蒸馏进 docs/kb/EDITOR.md §9）
+
+| # | 任务 | 优先级 | 状态 | 关键词 |
+|---|---|---|---|---|
+| A1 | T1 增量诊断收敛丢弃编辑点后「行局部错误」（不匹配右括号/多余 end）——收敛条件补 `lastErrorMaxLine` 门 | 高 | ✅ 已完成 2026-08-10 | `LuaDiagnostics` `收敛` `错误消失` |
+| A2 | T2 同字节长度文件切换后诊断永不出现——`onNewText` 未复位 `lastCheckedLength` | 高 | ✅ 已完成 2026-08-10 | `LuaDiagnostics` `同长切换` |
+| A3 | T3 自动保存只落盘当前选中标签——防抖改 `flushAllDirty`（脏标签全量） | 高 | ✅ 已完成 2026-08-10 | `EditorSession` `自动保存` `进程被杀丢数据` |
+| A4 | T4 跳行/插 import 与池化编辑器内容切换竞态——按 Content 身份绑定后定位 | 中 | ✅ 已完成 2026-08-10 | `EditorScreen` `跳行竞态` |
+| A5 | T5 EditorViewPool 存活期强引用最后 Content+undo 栈——onDispose 剥离文本 | 中 | ✅ 已完成 2026-08-10 | `LuaEditor` `视图池` `内存` |
+| A6 | T6 AGENTS.md R2 / EditorToolbar 注释「搜索」措辞与用户红线矛盾同步 | 低 | ✅ 已完成 2026-08-10 | `文档漂移` |
+| A7 | T7 saveProjectScript 原子写（tmp+rename 兜底，含 writeInitFields） | 低 | ✅ 已完成 2026-08-10 | `ProjectManager` `原子写` |
+
+## 2e. 编辑器菜单/撤销重做/设置上限整改（2026-08-10，工作单 docs/in-progress/EDITOR_MENU_UNDO_SETTINGS_WORK_ORDER.md）
+
+| # | 任务 | 优先级 | 状态 | 关键词 |
+|---|---|---|---|---|
+| M1 | T2 撤销/重做状态同步（SET_NEW_TEXT/attach 重算 + 点击显式重算 + readOnly 门控） | 高 | ✅ 已完成（2026-08-10） | `undo` `redo` `状态同步` |
+| M2 | T3 Appbar 菜单重组 文件/编辑/工程 三分类 + 编辑器设置/AndroLua 设置直达 + 剪贴板四件套 + EditorSession.reload | 高 | ✅ 已完成（2026-08-10） | `菜单` `文件/编辑/工程` |
+| M3 | T4 设置互斥（wordWrap↔stickyScroll）+ T5 上限扩展（字体族/行高/undo 栈容量/粘性行数） | 中 | ✅ 已完成（2026-08-10） | `编辑器设置` `sora 上限` |
+
+## 2f. 全量审计整改二（2026-08-10，工作单 READONLY_SDK_THEME_WORK_ORDER 已完工删除，结论见 docs/kb/EDITOR.md §10）
+
+| # | 任务 | 优先级 | 状态 | 关键词 |
+|---|---|---|---|---|
+| R1 | 只读绕过修复：insertImport（运行错误对话框）与 toggleCase（文本操作）直写 Content 绕过 sora 门禁 | 高 | ✅ 已完成（2026-08-10，工作单收口） | `readOnly` `insertImport` `toggleCase` |
+| R2 | 只读切换 IME 同步（restartInput / hideSoftInput），修复切回可写键盘假死 | 高 | ✅ 已完成（2026-08-10，工作单收口） | `readOnly` `InputConnection` |
+| R3 | 只读 UX：编辑/保存菜单禁用 + 编辑器只读横幅提示 | 中 | ✅ 已完成（2026-08-10，工作单收口） | `readOnly` `菜单禁用` `横幅` |
+| R4 | 线号分割线宽度 / 固定行号（pinLineNumber）两项 sora 上限能力接线 | 中 | ✅ 已完成（2026-08-10，工作单收口） | `setDividerWidth` `setPinLineNumber` |
+| R5 | 打包 API 级别下移：AXmlManifest uses-sdk 解析/写回 + ManifestEdit + 构建对话框 minSdk 选项 + 测试 | 中 | ✅ 已完成（2026-08-10，工作单收口） | `uses-sdk` `minSdkVersion` `打包` |
+| R6 | WP-014 工程 theme 运行时消费（逐工程深色，编辑器文本区跟随） | 中 | ✅ 已完成（2026-08-10，工作单收口） | `WP-014` `theme` `深色` |
+
 ## 3. 风险与备忘
 
 | 项 | 说明 |

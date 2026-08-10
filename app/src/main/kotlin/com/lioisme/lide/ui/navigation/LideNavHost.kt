@@ -192,6 +192,14 @@ fun LideNavHost(
                     onManageSigning = {
                         navController.navigateGuarded(Routes.SIGNING)
                     },
+                    // T3（2026-08-10）：菜单直达入口——编辑 → 编辑器设置；工程 → AndroLua 设置。
+                    // 会话经 EditorSessionViewModel 跨导航存活（Q8），返回后自动恢复。
+                    onEditorSettings = {
+                        navController.navigateGuarded(Routes.EDITOR_SETTINGS)
+                    },
+                    onAndroLuaSettings = {
+                        navController.navigateGuarded(Routes.ANDROLUA_SETTINGS)
+                    },
                     onRun = { fileName ->
                         engineLauncher.launch(project.path, fileName)
                     },

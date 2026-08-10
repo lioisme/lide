@@ -81,9 +81,33 @@
     <string name="minimap">Minimap</string>
     <string name="sticky_scroll">Sticky Scroll</string>
     <string name="ln_panel">Line Panel</string>
+    <!-- UI1 全量审计（2026-08-10）：线号分割线 / 固定行号（sora 上限能力接线） -->
+    <string name="line_number_divider">Line Number Divider</string>
+    <string name="line_number_divider_value">Width: %1$d px</string>
+    <string name="pin_line_number">Pin Line Numbers</string>
+    <string name="pin_line_number_hint">Keep row numbers fixed while horizontally scrolling</string>
+    <!-- UI1 全量审计（2026-08-10）：只读视觉提示 -->
+    <string name="editor_read_only_banner">Read only — editing disabled</string>
+    <!-- UI1 全量审计（2026-08-10）：打包最低系统版本下移 -->
+    <string name="build_sdk_label">Minimum Android Version</string>
+    <string name="build_sdk_keep_host">Keep host (%1$d)</string>
+    <string name="build_sdk_need_v1">Devices below Android 7 require v1 signature. Enable it first.</string>
     <string name="scalable">Pinch Zoom</string>
     <string name="cursor_animation">Cursor Animation</string>
     <string name="disable_soft_kbd_if_hard">Hardware Keyboard First</string>
+    <!-- Editor settings sora-ceiling extensions (T5, 2026-08-10) -->
+    <string name="font_family">Font Family</string>
+    <string name="font_family_default">System Default</string>
+    <string name="font_family_monospace">Monospace</string>
+    <string name="font_family_sans">Sans Serif</string>
+    <string name="font_family_serif">Serif</string>
+    <string name="line_spacing">Line Spacing</string>
+    <string name="line_spacing_value">%1$s\u00d7</string>
+    <string name="undo_stack_size">Undo Stack Size</string>
+    <string name="undo_stack_size_value">%1$d</string>
+    <string name="sticky_scroll_max_lines">Sticky Scroll Lines</string>
+    <string name="sticky_scroll_max_lines_value">%1$d</string>
+    <string name="sticky_scroll_word_wrap_hint">Unavailable while word wrap is on</string>
     <string name="restore_defaults">Restore defaults</string>
     <string name="restore_defaults_done">Settings restored to defaults</string>
     <string name="about">About</string>
@@ -256,6 +280,18 @@
     <string name="cd_back">Back</string>
     <string name="menu_category_project">Project</string>
     <string name="menu_category_text">Text</string>
+    <!-- Editor Appbar menus (T3, 2026-08-10): 文件/编辑/工程 industry-convention categories -->
+    <string name="menu_category_file">File</string>
+    <string name="menu_category_edit">Edit</string>
+    <string name="menu_save">Save</string>
+    <string name="menu_save_all">Save All</string>
+    <string name="menu_reload">Reload</string>
+    <string name="menu_cut">Cut</string>
+    <string name="menu_copy">Copy</string>
+    <string name="menu_paste">Paste</string>
+    <string name="menu_select_all">Select All</string>
+    <string name="menu_editor_settings">Editor Settings</string>
+    <string name="menu_androlua_settings">AndroLua Settings</string>
     <string name="accessibility_service_description">LIDE 无障碍服务：为 Lua 脚本提供自动化能力（点击、滑动、截图）。</string>
     <!-- API browser (WP-008) -->
     <string name="api_browser">API Browser</string>
@@ -286,9 +322,12 @@
     <string name="api_category_java">Java Standard Library</string>
     <string name="api_category_project">Project Libraries</string>
     <string name="api_category_other">Other</string>
-    <string name="api_filter">Filter by category</string>
+    <string name="api_filter">Filter</string>
     <string name="api_clear_search">Clear search</string>
+    <string name="api_usage_interface">Interface</string>
+    <string name="api_usage_annotation">Annotation</string>
     <string name="api_usage_adapter">Adapters</string>
+    <string name="api_usage_list">List Widgets</string>
     <string name="api_usage_container">Container Widgets</string>
     <string name="api_usage_input">Input Widgets</string>
     <string name="api_usage_dropdown">Dropdowns</string>
@@ -297,6 +336,9 @@
     <string name="api_usage_state">State</string>
     <string name="api_usage_view">Views</string>
     <string name="api_usage_popup">Popups</string>
+    <string name="api_usage_drawing">Drawing Widgets</string>
+    <string name="api_usage_compat">Compat Utilities</string>
+    <string name="api_usage_provider">File Providers</string>
     <string name="api_kind_interface">Interface</string>
 
     <!-- Signing management -->
@@ -304,7 +346,7 @@
     <string name="signing_manage">Signing Keys</string>
     <string name="signing_import">Import keystore</string>
     <string name="signing_generate">Generate new signing key</string>
-    <string name="signing_generate_subtitle">RSA-2048 self-signed certificate with customizable details and validity</string>
+    <string name="signing_generate_subtitle">RSA-2048 self-signed certificate</string>
     <string name="signing_generate_action">Generate</string>
     <string name="signing_alias">Alias</string>
     <string name="signing_gen_password">Password (optional)</string>
@@ -360,7 +402,6 @@
 <!-- AndroLua merged page (packaging) -->
     <string name="build_opt_auto_install">Install automatically</string>
     <string name="build_opt_native_title">Optimized packaging</string>
-    <string name="build_opt_native_subtitle">Native libs only: keep only required .so files</string>
     <string name="build_opt_encrypt_title">Encrypt Lua files</string>
     <string name="build_opt_scheme_title">Signature scheme</string>
     <string name="build_opt_abi_title">Default ABI</string>

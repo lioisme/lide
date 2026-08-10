@@ -34,6 +34,7 @@ import com.lioisme.lide.engine.EngineResultParser
 import com.lioisme.lide.engine.RunEngineLauncher
 import com.lioisme.lide.model.Project
 import com.lioisme.lide.project.PermissionResolver
+import com.lioisme.lide.project.LuaConfigParser
 import com.lioisme.lide.project.ProjectManager
 import com.lioisme.lide.session.EditorSession
 import com.lioisme.lide.session.EditorSessionViewModel
@@ -53,6 +54,22 @@ private const val AUTO_SAVE_DELAY_MS = 500L
 
 /** 跳行等待编辑器绑定的超时上限（编辑器错误态/初始化失败时降级跳过定位）。 */
 private const val EDITOR_BIND_TIMEOUT_MS = 5_000L
+
+// 跳行定位的轮询步进：仅跳行文件刚切换的瞬态发生（常驻无此路径）。
+private const val GOTO_BIND_POLL_MS = 8L
+
+/**
+ * 跳行目标（T4，2026-08-10）：携带目标 [Content] 身份 + 0 基行号。
+ *
+ * `jumpToError` 先 openTab（挂起）再置标记；独立效应可能在 LuaEditor 的
+ * `LaunchedEffect(content)` setText 生效前对**旧**文档执行 setSelection，
+ * 随后文本替换导致定位丢失或错位。消费侧必须以 `editor.text === content`
+ * 身份绑定为前置（见 [EditorScreen] 的 pendingJump 消费效应）。
+ */
+private data class PendingJump(
+    val content: io.github.rosemoe.sora.text.Content,
+    val line: Int,
+)
 
 /** WP-002 引擎运行结果（宿主展示用）。 */
 private data class RunResult(
@@ -82,12 +99,31 @@ fun EditorScreen(
     onPermissions: () -> Unit = {},
     onProjectInfo: () -> Unit = {},
     onManageSigning: () -> Unit = {},
+    // T3（2026-08-10）：菜单直达入口——编辑 → 编辑器设置；工程 → AndroLua 设置。
+    onEditorSettings: () -> Unit = {},
+    onAndroLuaSettings: () -> Unit = {},
     onRun: (fileName: String) -> Unit,
     projectInfoVersion: Int = 0,
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val isDarkTheme = LocalIsDarkTheme.current
+
+    // WP-014 工程深色（T7，2026-08-10）：init.lua 可选 theme 字段（dark/light）——
+    // 后台解析为编辑器文本区深色覆盖值；随 projectInfoVersion 失效重读，
+    // 未知值/读失败回落宿主主题（null = 不干预）。
+    val projectDarkOverride by produceState<Boolean?>(null, projectInfoVersion) {
+        value =
+            runCatching {
+                val init = projectManager.readInitContent(project) ?: return@runCatching null
+                when (LuaConfigParser.stringField(init, "theme")) {
+                    "dark" -> true
+                    "light" -> false
+                    else -> null
+                }
+            }.getOrNull()
+    }
+    val effectiveDarkTheme = projectDarkOverride ?: isDarkTheme
     val appEditorConfig by SettingsManager.editorConfig.collectAsState()
 
     // 会话经 ViewModel 持有（Q8）：旋转/配置变更不销毁，打开标签/撤销历史/选中文件
@@ -141,8 +177,8 @@ fun EditorScreen(
     // WP-002 运行诊断闭环状态：引擎返回结果（成功 Snackbar / 失败对话框）。
     var runResult by remember { mutableStateOf<RunResult?>(null) }
     var snackbarMsg by remember { mutableStateOf<String?>(null) }
-    // 跳行/插入 import 的待执行标记：编辑器绑定目标文件后消费。
-    var pendingGotoLine by remember { mutableStateOf<Int?>(null) }
+    // 跳行目标（T4）：编辑器绑定到目标 Content 身份后消费（防对旧文档 setSelection）。
+    var pendingJump by remember { mutableStateOf<PendingJump?>(null) }
 
     val engineResultLauncher =
         rememberLauncherForActivityResult(
@@ -173,19 +209,31 @@ fun EditorScreen(
         }
     }
 
-    // 跳行：等待编辑器绑定到目标文件后定位（sora setSelection 0 基行号，自动滚动）。
-    // 门控等待替代忙轮询：编辑器绑定信号（CompletableDeferred）完成即继续，
-    // 超时（编辑器错误态/初始化失败）降级跳过定位，不阻塞不空转。
-    LaunchedEffect(pendingGotoLine) {
-        val line = pendingGotoLine ?: return@LaunchedEffect
-        withTimeoutOrNull(EDITOR_BIND_TIMEOUT_MS) { editorReady.await() }
-        val editor = editorRef.get()
-        if (editor != null) {
-            val last = (editor.text.lineCount - 1).coerceAtLeast(0)
-            editor.setSelection(line.coerceIn(0, last), 0)
-            editor.requestFocus()
+    // 跳行：等编辑器**绑定到目标 Content**后定位（sora setSelection 0 基行号，自动滚动）。
+    // T4（2026-08-10）：openTab 完成至 LuaEditor setText 生效之间存在窗口——
+    // 先对旧文档 setSelection 会被随后的文本替换覆盖（定位丢失/错位）。
+    // 以 editor.text === 目标 Content 身份为前置；身份比较免误判（同文件再次跳行零等待）。
+    // 仅跳行文件切换的瞬态轮询（8ms 步进，非 60Hz 常驻）；编辑器错误态/初始化失败
+    // 超时降级跳过定位，不阻塞不空转。
+    LaunchedEffect(pendingJump) {
+        val jump = pendingJump ?: return@LaunchedEffect
+        val bound =
+            withTimeoutOrNull(EDITOR_BIND_TIMEOUT_MS) {
+                editorReady.await()
+                while (editorRef.get()?.text !== jump.content) {
+                    delay(GOTO_BIND_POLL_MS)
+                }
+                true
+            } ?: false
+        if (bound) {
+            val editor = editorRef.get()
+            if (editor != null) {
+                val last = (editor.text.lineCount - 1).coerceAtLeast(0)
+                editor.setSelection(jump.line.coerceIn(0, last), 0)
+                editor.requestFocus()
+            }
         }
-        pendingGotoLine = null
+        pendingJump = null
     }
 
     fun jumpToError() {
@@ -197,11 +245,15 @@ fun EditorScreen(
         runResult = null
         scope.launch {
             session.openTab(loc.file)
-            pendingGotoLine = loc.line - 1
+            // 携带目标 Content 身份：openTab 完成即选中该内容，后续仅等编辑器绑定。
+            val content = session.selection.value.content ?: return@launch
+            pendingJump = PendingJump(content, loc.line - 1)
         }
     }
 
     fun insertImport(globalName: String) {
+        // 只读守卫（审计 R1）：insertText 直写会绕过 sora isEditable 门禁，只读下拒绝写入。
+        if (appEditorConfig.readOnly) return
         val target = runResult?.location?.file ?: project.mainFile
         runResult = null
         scope.launch {
@@ -269,10 +321,12 @@ fun EditorScreen(
     }
 
     // 自动保存：500ms 防抖。editTick 为 StateFlow，收集过程不触发重组。
+    // T3（2026-08-10）：全量脏标签落盘（非仅当前选中）——防抖窗口内切走标签后
+    // 进程被杀不再丢失该标签修改（flushAllDirty 只写实际脏文件，成本同现状）。
     LaunchedEffect(Unit) {
         session.editTick.collectLatest {
             delay(AUTO_SAVE_DELAY_MS)
-            if (!extPermissionMissing.value) session.flushSelectedDirty()
+            if (!extPermissionMissing.value) session.flushAllDirty()
         }
     }
 
@@ -285,44 +339,139 @@ fun EditorScreen(
 
     val selectedTab = tabs.firstOrNull { it.fileName == selectedFile }
 
+    // T2（2026-08-10）：undo/redo 统一入口——只读门控 + 执行后显式重算并提交会话
+    // （对齐 Squircle EditorViewModel：点击处理内 content.undo() 后立即读 canUndo/canRedo）。
+    // 只读门控双保险：editable 按钮层（enabled 表达式）+ 本入口守卫。
+    val editable = !appEditorConfig.readOnly
+    fun runUndoRedo(op: (io.github.rosemoe.sora.widget.CodeEditor) -> Unit) {
+        if (!editable) return
+        val editor = editorRef.get() ?: return
+        try {
+            op(editor)
+            session.onUndoRedoChanged(editor.canUndo(), editor.canRedo())
+        } catch (_: Throwable) {
+            // 降级：单次命令失败静默放弃，不逃逸进 UI 线程。
+        }
+    }
+
     Scaffold(
             topBar = {
                 EditorToolbar(
                     // 标题显示工程名，不显示当前打开文件的路径（文件身份由标签行承载）。
                     title = project.name,
-                    canUndo = selectedTab?.canUndo == true,
-                    canRedo = selectedTab?.canRedo == true,
+                    canUndo = selectedTab?.canUndo == true && editable,
+                    canRedo = selectedTab?.canRedo == true && editable,
                     onBack = {
                         session.flushSelectedDirtyAsync()
                         onBack()
                     },
-                    onUndo = { editorRef.get()?.undo() },
-                    onRedo = { editorRef.get()?.redo() },
+                    onUndo = { runUndoRedo { it.undo() } },
+                    onRedo = { runUndoRedo { it.redo() } },
                     onRun = {
                         requestRun()
                     },
                     // 文件操作入口已收拢（2026-08-09 用户红线：编辑器仅自动打开 main.lua，
                     // 不再打开其他文件），工程级操作留在更多（⋮）分类菜单：
                     // Appbar 常驻按钮（含返回）恒为 5 个 —— 返回 / 运行 / 撤销 / 重做 / 更多。
+                    // T3（2026-08-10）：⋮ 菜单重组为 文件 / 编辑 / 工程 三分类（行业惯例）：
+                    // 文件 = 保存/全部保存/重新加载/关闭类；编辑 = 剪贴板 + 行操作 + 编辑器设置；
+                    // 工程 = 信息/权限/打包 + AndroLua 设置（cascade 一级分类，见 EditorToolbar）。
                     moreActions =
-                        listOf(
-                            EditorMoreAction(
-                                category = stringResource(R.string.menu_category_project),
-                                label = stringResource(R.string.project_info),
-                            ) { onProjectInfo() },
-                            EditorMoreAction(
-                                category = stringResource(R.string.menu_category_project),
-                                label = stringResource(R.string.project_permissions),
-                            ) { onPermissions() },
-                            EditorMoreAction(
-                                category = stringResource(R.string.menu_category_project),
-                                label = stringResource(R.string.build_apk),
-                            ) { showBuildDialog = true },
-                        ) +
-                            editorTextOpsActions(
-                                editorProvider = { editorRef.get() },
-                                category = stringResource(R.string.menu_category_text),
-                            ),
+                        buildList {
+                            addAll(
+                                listOf(
+                                    EditorMoreAction(
+                                        category = stringResource(R.string.menu_category_file),
+                                        label = stringResource(R.string.menu_save),
+                                        // 只读下保存无意义（文本不可改），置灰（审计 R3）。
+                                        enabled = editable,
+                                    ) {
+                                        session.flushSelectedDirtyAsync()
+                                    },
+                                    EditorMoreAction(
+                                        category = stringResource(R.string.menu_category_file),
+                                        label = stringResource(R.string.menu_save_all),
+                                        enabled = editable,
+                                    ) {
+                                        scope.launch { session.flushAllDirty() }
+                                    },
+                                    EditorMoreAction(
+                                        category = stringResource(R.string.menu_category_file),
+                                        label = stringResource(R.string.menu_reload),
+                                    ) {
+                                        selectedFile?.let { session.reload(it) }
+                                    },
+                                    EditorMoreAction(
+                                        category = stringResource(R.string.menu_category_file),
+                                        label = stringResource(R.string.menu_close_tab),
+                                    ) {
+                                        val file = selectedFile ?: return@EditorMoreAction
+                                        if (session.requestClose(file)) closeQueue = listOf(file)
+                                    },
+                                    EditorMoreAction(
+                                        category = stringResource(R.string.menu_category_file),
+                                        label = stringResource(R.string.menu_close_others),
+                                    ) {
+                                        val file = selectedFile ?: return@EditorMoreAction
+                                        val dirty = session.closeOthers(file)
+                                        if (dirty.isNotEmpty()) closeQueue = dirty
+                                    },
+                                    EditorMoreAction(
+                                        category = stringResource(R.string.menu_category_file),
+                                        label = stringResource(R.string.menu_close_all),
+                                    ) {
+                                        val dirty = session.closeAll()
+                                        if (dirty.isNotEmpty()) closeQueue = dirty
+                                    },
+                                ),
+                            )
+                            // 编辑分类：剪贴板四件套 + 行/词操作（EditorTextOps），
+                            // 末尾接「编辑器设置」直达入口。
+                            addAll(
+                                editorTextOpsActions(
+                                    editorProvider = { editorRef.get() },
+                                    category = stringResource(R.string.menu_category_edit),
+                                    enabled = editable,
+                                ),
+                            )
+                            add(
+                                EditorMoreAction(
+                                    category = stringResource(R.string.menu_category_edit),
+                                    label = stringResource(R.string.menu_editor_settings),
+                                ) {
+                                    onEditorSettings()
+                                },
+                            )
+                            // 工程分类：信息 / 权限 / 打包 + AndroLua 设置直达入口。
+                            addAll(
+                                listOf(
+                                    EditorMoreAction(
+                                        category = stringResource(R.string.menu_category_project),
+                                        label = stringResource(R.string.project_info),
+                                    ) {
+                                        onProjectInfo()
+                                    },
+                                    EditorMoreAction(
+                                        category = stringResource(R.string.menu_category_project),
+                                        label = stringResource(R.string.project_permissions),
+                                    ) {
+                                        onPermissions()
+                                    },
+                                    EditorMoreAction(
+                                        category = stringResource(R.string.menu_category_project),
+                                        label = stringResource(R.string.build_apk),
+                                    ) {
+                                        showBuildDialog = true
+                                    },
+                                    EditorMoreAction(
+                                        category = stringResource(R.string.menu_category_project),
+                                        label = stringResource(R.string.menu_androlua_settings),
+                                    ) {
+                                        onAndroLuaSettings()
+                                    },
+                                ),
+                            )
+                        },
                 )
             },
             snackbarHost = {
@@ -336,7 +485,7 @@ fun EditorScreen(
                 tabs = tabs,
                 selectedFile = selectedFile,
                 content = content,
-                isDarkTheme = isDarkTheme,
+                isDarkTheme = effectiveDarkTheme,
                 editorConfig = appEditorConfig,
                 editorRef = editorRef,
                 onEditorBound = {
@@ -402,6 +551,7 @@ fun EditorScreen(
                 onJumpToLine = { jumpToError() },
                 onInsertImport = { insertImport(it) },
                 onDismiss = { runResult = null },
+                editable = editable,
             )
         }
     }

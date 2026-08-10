@@ -13,13 +13,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Android
 import androidx.compose.material.icons.filled.Build
-import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Code
 import androidx.compose.material.icons.filled.GridView
+import androidx.compose.material.icons.filled.InstallMobile
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.VpnKey
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -128,7 +127,7 @@ fun AndroLuaSettingsScreen(
             Spacer(Modifier.height(24.dp))
             SettingsSection(stringResource(R.string.packaging)) {
                 SettingsToggleItem(
-                    icon = Icons.Default.Check,
+                    icon = Icons.Default.InstallMobile,
                     title = stringResource(R.string.build_opt_auto_install),
                     subtitle = onOff(opts.afterBuild == AfterBuild.INSTALL),
                     checked = opts.afterBuild == AfterBuild.INSTALL,
@@ -139,12 +138,11 @@ fun AndroLuaSettingsScreen(
                 SettingsToggleItem(
                     icon = Icons.Default.Build,
                     title = stringResource(R.string.build_opt_native_title),
-                    subtitle = stringResource(R.string.build_opt_native_subtitle),
                     checked = opts.stripNativeLibs,
                     onCheckedChange = { checked -> persist { it.copy(stripNativeLibs = checked) } },
                 )
                 SettingsToggleItem(
-                    icon = Icons.Default.Check,
+                    icon = Icons.Default.Code,
                     title = stringResource(R.string.build_opt_compile_label),
                     subtitle = onOff(opts.compileLua),
                     checked = opts.compileLua,
@@ -213,7 +211,7 @@ fun AndroLuaSettingsScreen(
                     )
                 flags.forEach { (name, selected, build) ->
                     CheckboxSettingRow(
-                        icon = Icons.Default.VpnKey,
+                        icon = null,
                         title = name,
                         checked = selected,
                         enabled = build(!selected) != null,
@@ -235,7 +233,7 @@ fun AndroLuaSettingsScreen(
                 abiOptions.forEach { (value, label) ->
                     val available = value.isEmpty() || value in hostAbis
                     CheckboxSettingRow(
-                        icon = Icons.Default.Android,
+                        icon = null,
                         title = label,
                         checked = opts.preferAbi == value,
                         enabled = available,
@@ -257,11 +255,12 @@ private val STANDARD_ABIS = listOf("arm64-v8a", "x86_64", "armeabi-v7a", "x86")
 /**
  * 复选框设置行（2026-08-10 统一）：与设置页其余行（SettingsToggleItem）同款
  * 布局（图标 + 标题 + 尾部控件），尾部为 Checkbox。
+ * [icon] 为 null 时省略图标（选项类行：签名方案 / 默认 ABI，避免同图标重复）。
  * [enabled] = false 时整体置灰禁用（宿主未携带的 ABI / 最后一个签名开关）。
  */
 @Composable
 private fun CheckboxSettingRow(
-    icon: ImageVector,
+    icon: ImageVector?,
     title: String,
     checked: Boolean,
     enabled: Boolean,
@@ -275,8 +274,10 @@ private fun CheckboxSettingRow(
                 .padding(horizontal = 16.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Icon(icon, null, tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(24.dp))
-        Spacer(Modifier.width(16.dp))
+        if (icon != null) {
+            Icon(icon, null, tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(24.dp))
+            Spacer(Modifier.width(16.dp))
+        }
         Text(
             text = title,
             style = MaterialTheme.typography.bodyLarge,

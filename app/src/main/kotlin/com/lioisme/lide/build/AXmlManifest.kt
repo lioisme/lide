@@ -39,6 +39,12 @@ data class ManifestEdit(
     val applicationName: String? = null,
     val removeActivities: List<String> = emptyList(),
     val applicationIconId: Int? = null,
+    /**
+     * 产物最低系统版本覆盖（UI1，2026-08-10）：null = 不干预（保持模板声明）。
+     * 非空时一致化写回 uses-sdk 元素与 manifest 元素属性两形态（取一的形态，
+     * 另一侧不新增重复声明，防双写冲突）。
+     */
+    val minSdkVersion: Int? = null,
 )
 
 /**
@@ -118,6 +124,32 @@ object AXmlManifest {
         val strings = readPool(parsed.chunks[parsed.poolChunkIndex]).strings
         val manifest = parsed.chunks.firstOrNull { isElement(it, strings, "manifest") } ?: return null
         return stringAttr(parseElement(manifest), strings, "package")
+    }
+
+    /**
+     * 读取 uses-sdk 声明（UI1，2026-08-10）：优先 uses-sdk 元素属性；元素缺失时
+     * 回落 manifest 元素属性（AGP/aapt2 折叠形态）。返回 (minSdkVersion, targetSdkVersion)，
+     * 缺失位为 null。带 android 命名空间校验，防同名异义。
+     */
+    fun readUsesSdk(bytes: ByteArray): Pair<Int?, Int?> {
+        val parsed = parse(bytes)
+        val strings = readPool(parsed.chunks[parsed.poolChunkIndex]).strings
+        var min: Int? = null
+        var target: Int? = null
+        for (chunk in parsed.chunks) {
+            if (!isElement(chunk, strings, "uses-sdk")) continue
+            val el = parseElement(chunk)
+            min = androidIntAttr(el, strings, "minSdkVersion") ?: min
+            target = androidIntAttr(el, strings, "targetSdkVersion") ?: target
+        }
+        if (min != null || target != null) return min to target
+        val manifest = parsed.chunks.firstOrNull { isElement(it, strings, "manifest") }
+        if (manifest != null) {
+            val el = parseElement(manifest)
+            min = androidIntAttr(el, strings, "minSdkVersion") ?: min
+            target = androidIntAttr(el, strings, "targetSdkVersion") ?: target
+        }
+        return min to target
     }
 
     /** 现持有 MAIN action 的 activity 全限定名（launcher 入口）；无则返回 null。 */
@@ -279,6 +311,9 @@ object AXmlManifest {
         if (origIdx("uses-permission") == null) appendNeed += "uses-permission"
         if (origIdx("name") == null) appendNeed += "name"
         if (edit.applicationIconId != null && origIdx("icon") == null) appendNeed += "icon"
+        if (edit.minSdkVersion != null && origIdx("minSdkVersion") == null) {
+            appendNeed += "minSdkVersion"
+        }
         if (edit.launcherActivity != null) {
             // launcher 注入所需元素名/常量（宿主 manifest 通常已含，set 去重无副作用）。
             appendNeed += "intent-filter"
@@ -312,6 +347,9 @@ object AXmlManifest {
             }
         val launcherFilterIndex = launcherInfo?.second ?: -1
         val launcherTargetIsCurrent = launcherInfo?.first == edit.launcherActivity
+        // UI1（2026-08-10）：uses-sdk 元素是否存在（决定 minSdkVersion 覆盖写回形态：
+        // 元素缺失时落到 manifest 元素属性，避免双写冲突）。
+        val hasUsesSdkElement = parsed.chunks.any { isElement(it, strings, "uses-sdk") }
         var droppingLauncher = false
         var dropDepth = 0
         // removeActivities：整棵 activity 子树（含子元素与 END）跳过，深度计数退出。
@@ -352,8 +390,11 @@ object AXmlManifest {
                 } else {
                     pendingDropEnd = true
                 }
+            } else if (isElement(chunk, strings, "uses-sdk")) {
+                // UI1（2026-08-10）：minSdkVersion 覆盖（无覆盖时原样保留）。
+                out += rebuildUsesSdk(chunk, strings, ::newIdx, edit)
             } else if (isElement(chunk, strings, "manifest")) {
-                out += rebuildManifest(chunk, strings, idx, ::newIdx, edit)
+                out += rebuildManifest(chunk, strings, idx, ::newIdx, edit, hasUsesSdkElement)
             } else if (isElement(chunk, strings, "application")) {
                 appChunkIndex = out.size
                 out += rebuildApplication(chunk, strings, idx, ::newIdx, edit)
@@ -421,12 +462,16 @@ object AXmlManifest {
         idx: Map<String, Int>,
         newIdx: (String) -> Int,
         edit: ManifestEdit,
+        /** manifest 已有 uses-sdk 元素时不在根元素重复声明 minSdkVersion（防双写冲突）。 */
+        hasUsesSdkElement: Boolean,
     ): ByteArray {
         val el = parseElement(chunk)
         val attrs = ArrayList<ByteArray>(el.attrs.size + 1)
         var hasPackage = false
+        var hasMinSdk = false
         for (a in el.attrs) {
-            attrs += when (strings.getOrNull(a.name)) {
+            val attrName = strings.getOrNull(a.name)
+            attrs += when (attrName) {
                 "versionCode" -> emitAttr(a.ns, a.name, NO_INDEX.toInt(), TYPE_INT_DEC, edit.versionCode.toLong())
                 "versionName" -> {
                     val i = newIdx(edit.versionName)
@@ -441,12 +486,61 @@ object AXmlManifest {
                         emitAttr(a.ns, a.name, i, TYPE_STRING, i.toLong())
                     }
                 }
+                "minSdkVersion" -> {
+                    // 折叠形态（属性在 manifest 根）：有覆盖则重写，无覆盖原样保留。
+                    hasMinSdk = true
+                    if (edit.minSdkVersion != null && strings.getOrNull(a.ns) == ANDROID_URI) {
+                        emitAttr(a.ns, a.name, NO_INDEX.toInt(), TYPE_INT_DEC, edit.minSdkVersion.toLong())
+                    } else {
+                        attrBytes(chunk, el, a)
+                    }
+                }
                 else -> attrBytes(chunk, el, a)
             }
         }
         if (!hasPackage && edit.packageName.isNotBlank()) {
             val i = newIdx(edit.packageName)
             attrs += emitAttr(NO_INDEX.toInt(), newIdx("package"), i, TYPE_STRING, i.toLong())
+        }
+        // UI1：无 uses-sdk 元素且根元素未声明 minSdkVersion 时兜底追加（折叠形态写回）。
+        if (edit.minSdkVersion != null && !hasMinSdk && !hasUsesSdkElement) {
+            attrs += emitAttr(
+                newIdx(ANDROID_URI),
+                newIdx("minSdkVersion"),
+                NO_INDEX.toInt(),
+                TYPE_INT_DEC,
+                edit.minSdkVersion.toLong(),
+            )
+        }
+        return emitElement(el.name, attrs, el.line)
+    }
+
+    /**
+     * 重建 uses-sdk 元素（UI1，2026-08-10）：minSdkVersion 有覆盖则重写，
+     * 无覆盖原样保留；其余属性（targetSdkVersion 等）不动。
+     */
+    private fun rebuildUsesSdk(
+        chunk: ByteArray,
+        strings: List<String>,
+        newIdx: (String) -> Int,
+        edit: ManifestEdit,
+    ): ByteArray {
+        if (edit.minSdkVersion == null) return chunk
+        val el = parseElement(chunk)
+        val attrs = ArrayList<ByteArray>(el.attrs.size + 1)
+        var hasMinSdk = false
+        for (a in el.attrs) {
+            if (strings.getOrNull(a.name) == "minSdkVersion" &&
+                strings.getOrNull(a.ns) == ANDROID_URI
+            ) {
+                hasMinSdk = true
+                attrs += emitAttr(a.ns, a.name, NO_INDEX.toInt(), TYPE_INT_DEC, edit.minSdkVersion.toLong())
+            } else {
+                attrs += attrBytes(chunk, el, a)
+            }
+        }
+        if (!hasMinSdk) {
+            attrs += emitAttr(newIdx(ANDROID_URI), newIdx("minSdkVersion"), NO_INDEX.toInt(), TYPE_INT_DEC, edit.minSdkVersion.toLong())
         }
         return emitElement(el.name, attrs, el.line)
     }
@@ -605,6 +699,20 @@ object AXmlManifest {
         val a = el.attrs.firstOrNull { strings.getOrNull(it.name) == attrName } ?: return null
         if (a.type != TYPE_STRING || a.data !in 0 until strings.size.toLong()) return null
         return strings[a.data.toInt()]
+    }
+
+    /** android 命名空间下的整数属性（TYPE_INT_DEC）；缺失/类型不符返回 null。 */
+    private fun androidIntAttr(
+        el: ElementRef,
+        strings: List<String>,
+        attrName: String,
+    ): Int? {
+        val a =
+            el.attrs.firstOrNull {
+                strings.getOrNull(it.name) == attrName && strings.getOrNull(it.ns) == ANDROID_URI
+            } ?: return null
+        if (a.type != TYPE_INT_DEC) return null
+        return a.data.toInt()
     }
 
     private fun emitElement(nameIdx: Int, attrs: List<ByteArray>, line: Int): ByteArray {

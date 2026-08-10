@@ -25,6 +25,13 @@ internal object SettingsRegistry {
         val with: (EditorConfig, Int) -> EditorConfig,
     )
 
+    internal data class FloatKey(
+        val name: String,
+        val default: Float,
+        val get: (EditorConfig) -> Float,
+        val with: (EditorConfig, Float) -> EditorConfig,
+    )
+
     /** 与 [EditorConfig] 字段一一对应；顺序无关（按表驱动读写）。 */
     val boolKeys: List<BoolKey> =
         listOf(
@@ -43,6 +50,7 @@ internal object SettingsRegistry {
             BoolKey("minimap", false, { it.minimap }, { c, v -> c.copy(minimap = v) }),
             BoolKey("sticky_scroll", false, { it.stickyScroll }, { c, v -> c.copy(stickyScroll = v) }),
             BoolKey("ln_panel", false, { it.lnPanel }, { c, v -> c.copy(lnPanel = v) }),
+            BoolKey("pin_line_number", false, { it.pinLineNumber }, { c, v -> c.copy(pinLineNumber = v) }),
             BoolKey("show_whitespace", false, { it.showWhitespace }, { c, v -> c.copy(showWhitespace = v) }),
             BoolKey("scalable", true, { it.scalable }, { c, v -> c.copy(scalable = v) }),
             BoolKey("cursor_animation", false, { it.cursorAnimation }, { c, v -> c.copy(cursorAnimation = v) }),
@@ -53,6 +61,17 @@ internal object SettingsRegistry {
         listOf(
             IntKey("font_size", 14, { it.fontSize }, { c, v -> c.copy(fontSize = v) }),
             IntKey("tab_size", 4, { it.tabSize }, { c, v -> c.copy(tabSize = v) }),
+            // T5（2026-08-10）：sora 上限扩展
+            IntKey("font_family", EditorConfig.FONT_FAMILY_DEFAULT, { it.fontFamily }, { c, v -> c.copy(fontFamily = v) }),
+            IntKey("undo_stack_size", 500, { it.undoStackSize }, { c, v -> c.copy(undoStackSize = v) }),
+            IntKey("sticky_scroll_max_lines", 3, { it.stickyScrollMaxLines }, { c, v -> c.copy(stickyScrollMaxLines = v) }),
+            // UI1（2026-08-10）：行号分割线宽度（px，0 = 不显示）。
+            IntKey("line_number_divider_width", 0, { it.lineNumberDividerWidth }, { c, v -> c.copy(lineNumberDividerWidth = v) }),
+        )
+
+    val floatKeys: List<FloatKey> =
+        listOf(
+            FloatKey("line_spacing_multiplier", 1.0f, { it.lineSpacingMultiplier }, { c, v -> c.copy(lineSpacingMultiplier = v) }),
         )
 
     /** 从 [prefs] 加载 [EditorConfig]（缺失键回落默认值）。 */
@@ -64,6 +83,10 @@ internal object SettingsRegistry {
         }
         for (key in intKeys) {
             val v = prefs.getInt(key.name, key.default)
+            config = key.with(config, v)
+        }
+        for (key in floatKeys) {
+            val v = prefs.getFloat(key.name, key.default)
             config = key.with(config, v)
         }
         return config
@@ -79,6 +102,9 @@ internal object SettingsRegistry {
         }
         for (key in intKeys) {
             editor.putInt(key.name, key.get(config))
+        }
+        for (key in floatKeys) {
+            editor.putFloat(key.name, key.get(config))
         }
     }
 }

@@ -71,6 +71,8 @@ internal fun EditorRunErrorDialog(
     onJumpToLine: () -> Unit,
     onInsertImport: (String) -> Unit,
     onDismiss: () -> Unit,
+    /** 编辑能力（只读等态下插入 import 置灰，防直写绕过，审计 R1）。 */
+    editable: Boolean = true,
 ) {
     val nilGlobal = EngineResultParser.findNilGlobal(output)
     AlertDialog(
@@ -111,6 +113,7 @@ internal fun EditorRunErrorDialog(
                 if (nilGlobal != null) {
                     TextButton(
                         onClick = { onInsertImport(nilGlobal) },
+                        enabled = editable,
                         modifier = Modifier.pressAndHoldHapticFeedback(),
                     ) {
                         Text(stringResource(R.string.run_insert_import, nilGlobal))

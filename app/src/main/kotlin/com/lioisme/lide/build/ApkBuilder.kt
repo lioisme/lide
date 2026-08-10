@@ -89,6 +89,8 @@ object ApkBuilder {
         /** 产物桌面图标入口（全限定类名）；默认引擎页，null 表示不干预。 */
         val launcherActivity: String? = DEFAULT_LAUNCHER_ACTIVITY,
         val mainFile: String = Project.DEFAULT_MAIN_FILE,
+        /** 产物最低系统版本（UI1，2026-08-10）：null = 保持宿主（不写回 uses-sdk）。 */
+        val minSdkVersion: Int? = null,
     )
 
     class BuildException(
@@ -216,6 +218,8 @@ object ApkBuilder {
                             ArscLookup.drawableIconId(
                                 templateEntries.firstOrNull { it.name == "resources.arsc" }?.data,
                             ),
+                        // UI1（2026-08-10）：产物最低系统版本覆盖（null = 保持模板）。
+                        minSdkVersion = input.minSdkVersion,
                     ),
                 )
             } catch (e: Exception) {

@@ -165,7 +165,7 @@ class ProjectManager {
     ): Boolean =
         try {
             val content = readInitContent(project) ?: return false
-            File(project.path, "init.lua").writeText(transform(content))
+            atomicWrite(File(project.path, "init.lua"), transform(content))
             true
         } catch (e: Exception) {
             Log.w(TAG, "writeInitFields failed: ${project.name}", e)
@@ -186,6 +186,34 @@ class ProjectManager {
         }
     }
 
+    /**
+     * 原子写盘（T7，2026-08-10）：同目录 tmp + renameTo 原子替换。
+     *
+     * `writeText` 直写中途中断会截断工程文件；tmp 与目标同目录、renameTo 在同一
+     * 文件系统内为原子替换，目标文件要么保持旧内容要么是新内容，无中间截断态。
+     * tmp 写入失败删除残留并兜底直写；renameTo 失败同样兜底直写（尽力而为，
+     * 不改变调用方「false + 日志」的失败语义）。
+     */
+    private fun atomicWrite(
+        file: File,
+        content: String,
+    ) {
+        val tmp = File(file.parentFile, file.name + ".tmp")
+        try {
+            tmp.writeText(content)
+            if (!tmp.renameTo(file)) {
+                // renameTo 平台差异（Windows 目标已存在时失败；Android POSIX rename 原子替换）。
+                Log.w(TAG, "atomic rename failed, fallback direct write: ${file.name}")
+                tmp.delete()
+                file.writeText(content)
+            }
+        } catch (e: Exception) {
+            tmp.delete()
+            Log.w(TAG, "atomic write failed, fallback direct write: ${file.name}", e)
+            file.writeText(content)
+        }
+    }
+
     fun saveProjectScript(
         project: Project,
         fileName: String,
@@ -194,7 +222,7 @@ class ProjectManager {
         try {
             val file = File(project.path, fileName)
             file.parentFile?.mkdirs()
-            file.writeText(content)
+            atomicWrite(file, content)
             true
         } catch (e: Exception) {
             Log.e(TAG, "save failed: ${e.message}")

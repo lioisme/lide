@@ -3,8 +3,10 @@ package com.lioisme.lide.session
 import com.lioisme.lide.model.Project
 import com.lioisme.lide.project.ProjectManager
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -130,5 +132,89 @@ class EditorSessionTest {
             // f01 的迟到重载已丢弃且未滞留缓存：再次选中仍走重载路径（先置空）。
             session.select("f01.lua")
             assertNull(session.selection.value.content)
+        }
+
+    @Test
+    fun `flushAllDirty 落盘全部脏标签而非仅当前选中`() =
+        runTest(dispatcher.scheduler) {
+            // T3 回归（2026-08-10）：自动保存防抖只落盘选中标签时，
+            // 「编辑 A → 切到 B → 进程被杀」路径会丢 A 的修改；
+            // flushAllDirty 必须把 A/B 全部落盘。
+            writeFiles(2)
+            session.initialize()
+            session.openTab("f02.lua")
+
+            // 等价于「编辑 A(main.lua) 后切到 B(f02)」：A 先置脏，再切换并编辑 B。
+            session.select("main.lua")
+            session.onContentModified()
+            session.select("f02.lua")
+            session.insertText(0, 0, "-- edited f02\n")
+            advanceUntilIdle()
+
+            assertEquals(
+                "两个标签都应处于脏状态",
+                2,
+                session.tabs.value.count { it.dirty },
+            )
+
+            session.flushAllDirty()
+            advanceUntilIdle()
+
+            assertEquals("落盘后全部脏标记清除", 0, session.tabs.value.count { it.dirty })
+            assertEquals("-- edited f02\n-- f02.lua", File(root, "f02.lua").readText())
+        }
+
+    @Test
+    fun `reload 先落盘脏内容再重读磁盘`() =
+        runTest(dispatcher.scheduler) {
+            // T3 回归（2026-08-10）：重新加载必须 (1) 脏内容先落盘防数据丢失，
+            // (2) 丢缓存重载（undo 栈随 Content 释放，撤销历史重置）。
+            writeFiles(1)
+            session.initialize()
+            session.insertText(0, 0, "-- in-memory\n")
+
+            // 磁盘在编辑后发生变化（模拟外部修改）：脏内容先落盘，重载读回落盘结果。
+            session.reload("main.lua")
+            advanceUntilIdle()
+            assertEquals(
+                "-- in-memory\n-- main.lua",
+                session.selection.value.content?.toString(),
+            )
+
+            // 非脏标签重载：直接丢缓存读磁盘（外部修改可见）。
+            File(root, "main.lua").writeText("-- changed on disk")
+            session.reload("main.lua")
+            advanceUntilIdle()
+            assertEquals("-- changed on disk", session.selection.value.content?.toString())
+        }
+
+    @Test
+    fun `onUndoRedoChanged 值未变化时抑制发射`() =
+        runTest(dispatcher.scheduler) {
+            // T2 回归（2026-08-10）：undo/redo 能力仅在值实际变化时发射
+            // （needsUpdate 判定），重复上报不触发重组。
+            writeFiles(1)
+            session.initialize()
+            var changes = 0
+            val job =
+                launch(dispatcher) {
+                    session.tabs.collect { tabs ->
+                        val tab = tabs.firstOrNull { it.fileName == "main.lua" } ?: return@collect
+                        if (tab.canUndo || tab.canRedo) changes++
+                    }
+                }
+            // 先让 collector 完成订阅（收到初始 canUndo=false 不计数），
+            // 再逐次提交并 runCurrent() 冲刷，保证 StateFlow 每次发射确定性送达
+            // （同步连续 set 会与订阅竞态，晚订阅者只能收到最新值）。
+            runCurrent()
+            session.onUndoRedoChanged(true, false)
+            runCurrent()
+            session.onUndoRedoChanged(true, false)
+            runCurrent()
+            session.onUndoRedoChanged(false, true)
+            runCurrent()
+            job.cancel()
+
+            assertEquals("两次真实变化发射，重复值被抑制", 2, changes)
         }
 }

@@ -11,7 +11,7 @@
   见「运行时基座契约」）。
   编辑器的一切 Lint / 诊断 / 补全 / 高亮逻辑必须是纯 Kotlin/Java，禁止触碰 `libluajava.so`。
 - **R2** Lua 编译与运行能力属于宿主（`EngineBridge` → `EngineActivity`，同进程运行）。
-  编辑器只做文本级能力（行级词法诊断、补全、高亮、搜索），不做运行时语义。
+  编辑器只做文本级能力（行级词法诊断、补全、高亮），不做运行时语义。
 - **R3** 新增编辑器功能默认放 `com.lioisme.lide.editor` 包；宿主专属逻辑（文件、权限、运行时、设置持久化）
   放 `com.lioisme.lide` 其他包（engine / build / project / ui 等）。
 - **R4** `com.lioisme.lide.editor` 包不得读取宿主业务状态或类型（engine / build / project / ui 包）；

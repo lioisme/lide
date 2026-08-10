@@ -209,7 +209,22 @@ class EditorSession(
             }
     }
 
-    /** undo/redo 能力变化：仅在值变化时发射（needsUpdate 判定）。 */
+    /**
+     * 重新加载标签内容（「文件 → 重新加载」，T3，2026-08-10）：
+     * 先把脏内容落盘（防静默丢修改），再丢弃缓存中的 [Content]（undo 栈随内容释放、
+     * 撤销历史重置），走缓存未命中重载路径重新读盘。已关闭标签忽略。
+     * 仅主线程调用；状态写遵循会话线程契约（scope 为主线程调度器）。
+     */
+    fun reload(fileName: String) {
+        if (_tabs.value.none { it.fileName == fileName }) return
+        scope.launch {
+            flushDirty(fileName)
+            synchronized(cacheLock) { contents.remove(fileName) }
+            select(fileName)
+        }
+    }
+
+    /** 撤销/重做能力变化：仅在值变化时发射（needsUpdate 判定）。 */
     fun onUndoRedoChanged(
         canUndo: Boolean,
         canRedo: Boolean,
@@ -310,6 +325,17 @@ class EditorSession(
     /** 自动保存 / 运行前落盘：刷新当前选中标签的脏内容。 */
     suspend fun flushSelectedDirty() {
         flushDirty(_selection.value.file ?: return)
+    }
+
+    /**
+     * 自动保存防抖落盘：刷新**全部**脏标签（T3，2026-08-10）。
+     *
+     * 历史实现只落盘「当前选中」标签：编辑标签 A → 500ms 防抖内切到 B → 进程被系统杀死
+     * （无 onCleared 兜底）时，A 的修改永久丢失。防抖消费侧无「编辑对象」记录，
+     * 全量遍历是唯一不漏的语义；成本仅限实际脏标签（[flushDirty] 内部按 dirty 过滤）。
+     */
+    suspend fun flushAllDirty() {
+        _tabs.value.filter { it.dirty }.forEach { flushDirty(it.fileName) }
     }
 
     fun flushDirtyAsync(fileName: String?) {

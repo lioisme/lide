@@ -49,6 +49,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
@@ -259,10 +260,7 @@ private fun SigningRow(
     onDelete: () -> Unit,
 ) {
     Card(
-        modifier =
-            Modifier
-                .fillMaxWidth()
-                .clickable(onClick = onSelect),
+        modifier = Modifier.fillMaxWidth(),
         colors =
             CardDefaults.cardColors(
                 containerColor =
@@ -273,48 +271,55 @@ private fun SigningRow(
                     },
             ),
     ) {
-        Row(
-            Modifier.padding(start = 12.dp, end = 4.dp, top = 4.dp, bottom = 4.dp),
-            verticalAlignment = Alignment.CenterVertically,
+        Box(
+            Modifier
+                .fillMaxWidth()
+                .clip(CardDefaults.shape)
+                .clickable(onClick = onSelect),
         ) {
-            Icon(
-                Icons.Default.Key,
-                null,
-                modifier = Modifier.padding(horizontal = 8.dp),
-                tint = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-            Column(
-                Modifier
-                    .weight(1f)
-                    .padding(vertical = 8.dp),
+            Row(
+                Modifier.padding(start = 12.dp, end = 4.dp, top = 4.dp, bottom = 4.dp),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text(profile.name, style = MaterialTheme.typography.titleSmall)
-                Text(
-                    if (profile.isBuiltin) {
-                        stringResource(R.string.signing_builtin)
-                    } else {
-                        "SHA-256 ${profile.certFingerprint.take(FINGERPRINT_DISPLAY_CHARS)}…"
-                    },
-                    style = MaterialTheme.typography.bodySmall,
-                    fontFamily = if (profile.isBuiltin) FontFamily.Default else FontFamily.Monospace,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                Icon(
+                    Icons.Default.Key,
+                    null,
+                    modifier = Modifier.padding(horizontal = 8.dp),
+                    tint = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
                 )
-            }
-            RadioButton(selected = selected, onClick = onSelect)
-            if (!profile.isBuiltin) {
-                IconButton(onClick = onExport) {
-                    Icon(
-                        Icons.Default.FileDownload,
-                        stringResource(R.string.signing_export),
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                Column(
+                    Modifier
+                        .weight(1f)
+                        .padding(vertical = 8.dp),
+                ) {
+                    Text(profile.name, style = MaterialTheme.typography.titleSmall)
+                    Text(
+                        if (profile.isBuiltin) {
+                            stringResource(R.string.signing_builtin)
+                        } else {
+                            "SHA-256 ${profile.certFingerprint.take(FINGERPRINT_DISPLAY_CHARS)}…"
+                        },
+                        style = MaterialTheme.typography.bodySmall,
+                        fontFamily = if (profile.isBuiltin) FontFamily.Default else FontFamily.Monospace,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
-                IconButton(onClick = onDelete) {
-                    Icon(
-                        Icons.Default.DeleteOutline,
-                        stringResource(R.string.delete),
-                        tint = MaterialTheme.colorScheme.error,
-                    )
+                RadioButton(selected = selected, onClick = onSelect)
+                if (!profile.isBuiltin) {
+                    IconButton(onClick = onExport) {
+                        Icon(
+                            Icons.Default.FileDownload,
+                            stringResource(R.string.signing_export),
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                    IconButton(onClick = onDelete) {
+                        Icon(
+                            Icons.Default.DeleteOutline,
+                            stringResource(R.string.delete),
+                            tint = MaterialTheme.colorScheme.error,
+                        )
+                    }
                 }
             }
         }

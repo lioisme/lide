@@ -119,6 +119,20 @@ class ProjectManagerTest {
     }
 
     @Test
+    fun `save is atomic via tmp rename and leaves no residue`() {
+        // T7（2026-08-10）：原子写路径——tmp 与目标同目录 renameTo 替换；
+        // 成功路径不得遗留 .tmp 残留，覆盖写为完整替换。
+        val p = manager.createProject("atomic", luaExtDir.absolutePath)!!
+        manager.saveProjectScript(p, "main.lua", "print(1)")
+        assertEquals("print(1)", File(p.path, "main.lua").readText())
+        assertFalse("首次保存不得遗留 tmp", File(p.path, "main.lua.tmp").exists())
+
+        manager.saveProjectScript(p, "main.lua", "print(2)")
+        assertEquals("覆盖保存为完整替换", "print(2)", File(p.path, "main.lua").readText())
+        assertFalse("覆盖保存不得遗留 tmp", File(p.path, "main.lua.tmp").exists())
+    }
+
+    @Test
     fun `rename project updates dir and cache`() {
         val p = manager.createProject("oldName", luaExtDir.absolutePath)!!
         val renamed = manager.renameProject(p, "newName")

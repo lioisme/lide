@@ -146,3 +146,69 @@ R1：    rg -n "luajava|androlua|loadLibrary" app/src/main/kotlin/com/lioisme/li
   `EditorViewPool.syntaxCheck` 以 provider 引用比较决定是否重建检查器。
 - `MSG_*` 是包级 const（非 `LuaDiagnostics` 成员），同包直接用无前缀名。
 - 新增文案一律双语文案库（values + values-zh），验收脚本比对两文件键集合必须全同步。
+
+---
+
+## 9. 编辑会话审计整改结论（2026-08-10，EDITOR_AUDIT_REMEDIATION_WORK_ORDER 完工蒸馏）
+
+增量诊断、自动保存、跳行与池化生命周期四类缺陷已全部修复并回归（改动域必读）：
+
+- **增量诊断收敛门（T1）**：`LuaDiagnostics.Incremental` 收敛条件必须含
+  `lastErrorMaxLine <= maxEdited`——只按编辑行收敛会丢弃 `[收敛行, EOF]` 尾部的
+  「行局部错误」（不匹配右括号 / 多余 `end`·`until`，不改变解析栈）；尾部存在旧错误时
+  禁止提前收敛，须扫描至 EOF 重新收集；`onNewText` / 空结果 / 异常降级三路径复位。
+- **同长度切换诊断缺失（T2）**：`onNewText()` 必须复位 `lastCheckedLength = -1`；
+  否则新文本与旧文本字节长度相同时索引复用门命中（`minEdited==MAX && n==lastCheckedLength`）
+  → lineStarts 已清空 → 提前返回空 → 诊断永久缺失。增量状态复位字段
+  （`lastCheckedLength` / `lastErrorMaxLine`）缺一即出故障，改 `onNewText` 必查两个字段，
+  回归用例「同字节长度文本切换后诊断不缺失」（19 字节等长双文本）。
+- **自动保存全量落盘（T3）**：自动保存防抖消费 `EditorSession.flushAllDirty()`
+  （遍历脏标签逐个落盘）而非仅 `flushSelectedDirty()`——防抖窗口内编辑 A 后切到 B、
+  进程被杀（无 onCleared 兜底）时 A 不再丢修改；成本只增于实际脏文件。
+- **跳行时序竞态（T4）**：跳行目标必须携带 Content 身份（`PendingJump(content, line)`，
+  openTab 完成即捕获），消费效应以 `editor.text === content` 身份绑定为前置轮询等待
+  （8ms 步进 / 5s 超时，仅文件切换瞬态，非常驻；同文件再跳行零等待）——openTab 完成至
+  LuaEditor `setText` 生效之间存在窗口，对旧文档 `setSelection` 会被随后文本替换覆盖
+  （定位丢失/错位），身份比较免误判。
+- **池化编辑器引用滞留（T5）**：`LuaEditor` `DisposableEffect.onDispose` 必须
+  `editor.setText(null)` 剥离进程级池化实例（`EditorViewPool`）对最后 Content + undo 栈
+  （≤2500 快照）的强引用——会话 `release()` 清缓存后仍滞留至下次 setText 即跨工程泄漏；
+  sora `setText(@Nullable CharSequence)` 空参合法（内部转 `new Content("")`），
+  视图/主题/语言复用不受影响。
+- **工程脚本原子写（T7）**：`ProjectManager.atomicWrite`——同目录 `.tmp` + `renameTo`
+  原子替换，目标文件无中间截断态；rename 失败（Windows 开发机目标已存在时返回 false）
+  与写入异常两路径均清理 tmp 并兜底直写；`saveProjectScript` 与 `writeInitFields`
+  （同风险路径）统一走该入口。回归用例断言内容完整 + 无 `.tmp` 残留。
+
+## 10. 只读 / SDK 下移 / 工程深色结论（2026-08-10，READONLY_SDK_THEME_WORK_ORDER 完工蒸馏）
+
+全量审计整改二（R1–R6）完工，改动域必读：
+
+- **只读绕过三处（R1）**：sora `setEditable(false)` 只挡编辑器主路径——
+  ① `EditorScreen.insertImport` 直写 Content（运行错误对话框「插入 import」）
+  ② `EditorTextOps.toggleCase` 直写 Content（方向/大小写）③ IME 软键盘注入（只读时键盘仍可输入）。
+  ①/② 入口函数前置守卫（`config.readOnly` / `editor.isEditable`），③ 见 R2。
+- **只读 IME 同步（R2）**：sora `setEditable` 不重建 InputConnection——进入只读必须
+  `editor.hideSoftInput()` 收键盘，切回可写必须 `editor.restartInput()` 重建连接，否则
+  「切回可写但打字无效/键盘不弹」假死。此接线在 `LuaEditor.applyConfig` 的 isEditable 差异块内。
+- **只读 UX（R3）**：`EditorMoreAction` 增 `enabled`（构造参数序 = category/label/enabled/onClick，
+  尾随 lambda 为 onClick——改参数序时全库尾随 lambda 调用点无需动）；写操作（剪切/粘贴/删除行/
+  复制行/大小写）与 保存/全部保存 菜单置灰，复制/全选/选行保持可用；`EditorComponents.ReadOnlyBanner`
+  （secondaryContainer + Lock 图标）置 StoragePermissionBanner 上方。
+- **线号分割线 / 固定行号（R4）**：sora 原生 `setDividerWidth(float)`（0=不绘制）与
+  `setPinLineNumber(boolean)`（**读端必须用 `isLineNumberPinned()`**——sora 有同名私有字段
+  `pinLineNumber`，Kotlin 属性合成失败「field is private」）；设置键 `line_number_divider_width`
+  （0..6 px）与 `pin_line_number`。
+- **minSdk 下移（R5）**：`AXmlManifest.readUsesSdk(bytes)` 返回 (min, target)——优先
+  `uses-sdk` 元素属性、缺失回落 manifest 根属性（AGP/aapt2 折叠形态），全部带 android 命名空间
+  校验；`ManifestEdit.minSdkVersion`（null=不干预）经 `rebuildUsesSdk`（重写或追加，TYPE_INT_DEC）
+  写回，**manifest 根折叠形态必须改写根元素属性、不重复注入**（`hasUsesSdkElement` 预计算 +
+  appendNeed 门控防双写）；UI 经 `ZipUtils.readEntryData(hostApk, "AndroidManifest.xml")` +
+  `readUsesSdk().first` 读宿主 minSdk（解析失败降级 0），候选 = 保持宿主 + 23/21/19（过滤 ≤ 宿主），
+  minSdk<24 且未勾 v1 时构建拦截 Toast（`build_sdk_need_v1`）。单测覆盖元素/折叠双形态读写回环。
+- **工程深色（R6，WP-014）**：`ThemeRegistry#setTheme`（darcula/quietlight）已支持切换，
+  消费端缺接线——`EditorScreen` 现以 `produceState<Boolean?>(null, projectInfoVersion)` 后台读
+  init.lua `theme` 字段（`projectManager.readInitContent` + `LuaConfigParser.stringField`，
+  runCatching 降级 null），`effectiveDarkTheme = 覆盖值 ?: LocalIsDarkTheme` 传入
+  `EditorBody.isDarkTheme`（LuaEditor 现有 `LaunchedEffect(isDarkTheme)` 生效）；仅编辑器文本区
+  跟随，宿主 M3 主题不受影响，未知值回落宿主。

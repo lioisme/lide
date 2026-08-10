@@ -2,6 +2,7 @@ package com.lioisme.lide.build
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -410,6 +411,181 @@ class AXmlManifestTest {
         // 输出池固定为 UTF-16（flags=0），不再含 UTF-8 标志。
         assertEquals(0L, u32(patched, 8 + 16))
         assertEquals("Demo", readFirstLabel(patched))
+    }
+
+    // ===== UI1（2026-08-10）：uses-sdk 读取与写回 =====
+
+    @Test
+    fun `readUsesSdk reads host sample uses-sdk element`() {
+        val (min, target) = AXmlManifest.readUsesSdk(sample())
+        assertEquals(24, min)
+        assertNotNull(target)
+        assertTrue(target!! > min!!)
+    }
+
+    @Test
+    fun `patch rewrites uses-sdk element minSdkVersion`() {
+        val axml = buildSdkAxml(elementForm = true)
+        val edit = ManifestEdit(
+            packageName = "com.demo.app",
+            appLabel = "Demo",
+            versionCode = 1,
+            versionName = "1.0",
+            usesPermissions = listOf("android.permission.INTERNET"),
+            minSdkVersion = 21,
+        )
+        val patched = AXmlManifest.patch(axml, edit)
+        val (min, target) = AXmlManifest.readUsesSdk(patched)
+        assertEquals(21, min)
+        assertEquals(36, target)
+    }
+
+    @Test
+    fun `patch writes minSdkVersion onto manifest root when sdk folded as attrs`() {
+        val axml = buildSdkAxml(elementForm = false)
+        val edit = ManifestEdit(
+            packageName = "com.demo.app",
+            appLabel = "Demo",
+            versionCode = 1,
+            versionName = "1.0",
+            usesPermissions = listOf("android.permission.INTERNET"),
+            minSdkVersion = 19,
+        )
+        val patched = AXmlManifest.patch(axml, edit)
+        val (min, _) = AXmlManifest.readUsesSdk(patched)
+        assertEquals(19, min)
+    }
+
+    @Test
+    fun `patch keeps sdk untouched when minSdkVersion null`() {
+        val axml = buildSdkAxml(elementForm = true)
+        val edit = ManifestEdit(
+            packageName = "com.demo.app",
+            appLabel = "Demo",
+            versionCode = 1,
+            versionName = "1.0",
+            usesPermissions = listOf("android.permission.INTERNET"),
+        )
+        val patched = AXmlManifest.patch(axml, edit)
+        val (min, target) = AXmlManifest.readUsesSdk(patched)
+        assertEquals(24, min)
+        assertEquals(36, target)
+    }
+
+    /** 构建含 android:minSdkVersion/targetSdkVersion 的最小 AXML。
+     *  [elementForm]：true = uses-sdk 元素形态；false = 属性折叠在 manifest 根元素。 */
+    private fun buildSdkAxml(elementForm: Boolean): ByteArray {
+        val strings =
+            listOf(
+                "http://schemas.android.com/apk/res/android",
+                "manifest",
+                "uses-sdk",
+                "package",
+                "minSdkVersion",
+                "targetSdkVersion",
+                "com.demo.app",
+            )
+        val stringsStart = 28 + 4 * strings.size
+        var dataSize = 0
+        val offsets = IntArray(strings.size)
+        for (i in strings.indices) {
+            offsets[i] = dataSize
+            dataSize += encodeUtf8Entry(strings[i]).size
+        }
+        val pool = ByteArray(28 + 4 * strings.size + dataSize)
+        putU16(pool, 0, 0x0001)
+        putU16(pool, 2, 28)
+        putU32(pool, 4, pool.size.toLong())
+        putU32(pool, 8, strings.size.toLong())
+        putU32(pool, 12, 0)
+        putU32(pool, 16, 0x100)
+        putU32(pool, 20, stringsStart.toLong())
+        putU32(pool, 24, 0)
+        for (i in strings.indices) putU32(pool, 28 + 4 * i, offsets[i].toLong())
+        for (i in strings.indices) {
+            encodeUtf8Entry(strings[i]).copyInto(pool, stringsStart + offsets[i])
+        }
+
+        // manifest 根元素：package 属性 + （折叠形态时）SDK 属性。
+        val manifestAttrs = mutableListOf<ByteArray>()
+        manifestAttrs += intAttr(0, 3, 0x03, 6L) // package = "com.demo.app"
+        if (!elementForm) {
+            manifestAttrs += intAttr(0, 4, 0x10, 24L) // minSdkVersion
+            manifestAttrs += intAttr(0, 5, 0x10, 36L) // targetSdkVersion
+        }
+        val manifest = elementChunk(1, manifestAttrs)
+
+        val end = ByteArray(24)
+        putU16(end, 0, 0x0103)
+        putU16(end, 2, 16)
+        putU32(end, 4, end.size.toLong())
+        putU32(end, 8, 1)
+        putU32(end, 12, 0xFFFFFFFFL)
+        putU32(end, 16, 0xFFFFFFFFL)
+        putU32(end, 20, 1)
+
+        val chunks = ArrayList<ByteArray>()
+        chunks += manifest
+        if (elementForm) {
+            chunks += elementChunk(2, listOf(intAttr(0, 4, 0x10, 24L), intAttr(0, 5, 0x10, 36L)))
+            val endSdk = ByteArray(24)
+            putU16(endSdk, 0, 0x0103)
+            putU16(endSdk, 2, 16)
+            putU32(endSdk, 4, endSdk.size.toLong())
+            putU32(endSdk, 8, 1)
+            putU32(endSdk, 12, 0xFFFFFFFFL)
+            putU32(endSdk, 16, 0xFFFFFFFFL)
+            putU32(endSdk, 20, 2)
+            chunks += endSdk
+        }
+        chunks += end
+
+        val total = 8 + pool.size + chunks.sumOf { it.size }
+        val out = ByteArray(total)
+        putU16(out, 0, 0x0003)
+        putU16(out, 2, 8)
+        putU32(out, 4, total.toLong())
+        pool.copyInto(out, 8)
+        var p = 8 + pool.size
+        for (c in chunks) {
+            c.copyInto(out, p)
+            p += c.size
+        }
+        return out
+    }
+
+    /** 20 字节属性记录（ns/name/raw + Res_value）。 */
+    private fun intAttr(ns: Int, name: Int, type: Int, data: Long): ByteArray {
+        val a = ByteArray(20)
+        putU32(a, 0, ns.toLong())
+        putU32(a, 4, name.toLong())
+        putU32(a, 8, 0xFFFFFFFFL)
+        putU16(a, 12, 8)
+        a[14] = 0
+        a[15] = type.toByte()
+        putU32(a, 16, data)
+        return a
+    }
+
+    /** 起始元素（nameIdx 为字符串池索引；attrSize=20 与 AXmlManifest 一致）。 */
+    private fun elementChunk(nameIdx: Int, attrs: List<ByteArray>): ByteArray {
+        val out = ByteArray(36 + 20 * attrs.size)
+        putU16(out, 0, 0x0102)
+        putU16(out, 2, 16)
+        putU32(out, 4, out.size.toLong())
+        putU32(out, 8, 1)
+        putU32(out, 12, 0xFFFFFFFFL)
+        putU32(out, 16, 0)
+        putU32(out, 20, nameIdx.toLong())
+        putU16(out, 24, 20)
+        putU16(out, 26, 20)
+        putU16(out, 28, attrs.size)
+        var p = 36
+        for (a in attrs) {
+            a.copyInto(out, p)
+            p += 20
+        }
+        return out
     }
 
     private fun readFirstLabel(patched: ByteArray): String {

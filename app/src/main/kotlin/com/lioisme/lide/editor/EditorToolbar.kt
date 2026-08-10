@@ -29,6 +29,8 @@ import me.saket.cascade.CascadeDropdownMenu
 data class EditorMoreAction(
     val category: String?,
     val label: String,
+    /** 是否可点击（只读等态下置灰；置灰项不触发 [onClick]）。 */
+    val enabled: Boolean = true,
     val onClick: () -> Unit,
 )
 
@@ -36,7 +38,7 @@ data class EditorMoreAction(
  * 编辑器顶栏。
  *
  * 布局约束（产品规范）：含返回键在内最多 5 个按钮 —— 返回 / 运行 / 撤销 /
- * 重做 / 更多；文件树、搜索等其余功能一律收进「更多」多级菜单
+ * 重做 / 更多；文件树等其余功能一律收进「更多」多级菜单
  * （一级 = 分类，二级 = 具体功能，禁止平铺）。
  * 标题显示工程名（[title]，由宿主注入），不显示当前文件路径；
  * 文件身份信息由标签行（[EditorTabs]）承载。
@@ -56,7 +58,7 @@ fun EditorToolbar(
     onUndo: () -> Unit,
     onRedo: () -> Unit,
     onRun: () -> Unit,
-    // 右上角更多（⋮）多级菜单项：文件树 / 搜索 / 工程信息 / 工程权限 / 打包 APK 等。
+    // 右上角更多（⋮）多级菜单项：文件树 / 工程信息 / 工程权限 / 打包 APK 等。
     moreActions: List<EditorMoreAction> = emptyList(),
     modifier: Modifier = Modifier,
 ) {
@@ -137,6 +139,7 @@ fun EditorToolbar(
                                 actions.forEach { action ->
                                     DropdownMenuItem(
                                         text = { Text(action.label) },
+                                        enabled = action.enabled,
                                         onClick = {
                                             menuExpanded = false
                                             action.onClick()

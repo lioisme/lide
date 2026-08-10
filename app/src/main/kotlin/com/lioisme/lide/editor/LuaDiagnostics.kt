@@ -43,6 +43,8 @@ object LuaDiagnostics {
      * - 收敛条件要求逐值一致，插入/删除行导致的行号漂移必然破坏一致性，不会误收敛；
      * - 错误行以确定性恢复态提交检查点（恢复规则纯函数，重扫必得同态），不破坏收敛；
      * - 上一轮报告过错误且错误行早于本次扫描起点时强制全量重扫，前缀错误不会凭空消失；
+     * - 上次结果错误行晚于本次编辑终点（[lastErrorMaxLine] 收敛门）时禁止提前收敛，
+     *   尾部行局部错误（不匹配右括号 / 多余 end·until）不会因栈值一致而被整批丢弃；
      * - 任何内部异常都降级为全量重扫，增量状态不会毒化后续检查。
      *
      * 线程模型：事件回调（主线程）调用 [onEdit] / [onNewText]，检查协程（后台线程）调用
@@ -154,6 +156,15 @@ object LuaDiagnostics {
         @Volatile
         private var prevFirstErrorLine = -1
 
+        /**
+         * 上次结果错误的最大行号（1-based；无错误 = -1）（T1 收敛门）。
+         * 收敛条件依赖它：编辑点之后仍存在旧错误时禁止提前收敛（行局部错误——不匹配右括号 /
+         * 多余 end·until——不改变解析栈，收敛会发生在编辑点行并把 `[收敛行, EOF]` 的旧错误
+         * 整批丢弃），强制扫描至 EOF 重新收集后再收敛。
+         */
+        @Volatile
+        private var lastErrorMaxLine = -1
+
         private var checkpoints: MutableList<Checkpoint> = ArrayList()
 
         /**
@@ -168,6 +179,9 @@ object LuaDiagnostics {
 
         /**
          * 新文本（文件切换 / setText）：清空全部增量状态。
+         * T2（2026-08-10）：[lastCheckedLength] 必须一并复位——否则新文本与旧文本字节长度
+         * 相同时，[checkInternal] 的索引复用门命中（lineStarts 已清空 → 行数 0 → 提前返回空），
+         * 诊断永久缺失直至下一次长度变化的编辑。
          */
         @Synchronized
         fun onNewText() {
@@ -176,6 +190,8 @@ object LuaDiagnostics {
             minEditedLine = Int.MAX_VALUE
             maxEditedLine = Int.MAX_VALUE
             prevFirstErrorLine = -1
+            lastErrorMaxLine = -1
+            lastCheckedLength = -1
         }
 
         /**
@@ -207,6 +223,7 @@ object LuaDiagnostics {
                 // 降级：清空增量状态后全量重扫，保证诊断永不因状态损坏而缺失。
                 checkpoints = ArrayList()
                 prevFirstErrorLine = -1
+                lastErrorMaxLine = -1
                 try {
                     checkInternal(source, quickfixSource)
                 } catch (_: Throwable) {
@@ -237,10 +254,12 @@ object LuaDiagnostics {
             if (lineCount == 0) {
                 checkpoints = ArrayList()
                 prevFirstErrorLine = -1
+                lastErrorMaxLine = -1
                 return emptyList()
             }
             if (checkpoints.isEmpty()) {
                 prevFirstErrorLine = -1
+                lastErrorMaxLine = -1
             }
 
             // 上一次检查报告的错误若在本轮扫描起点之前，强制全量重扫以维持该错误的可见性。
@@ -267,12 +286,15 @@ object LuaDiagnostics {
                 }
 
                 val checkpoint = checkpoints.getOrNull(li)
-                if (li >= maxEdited && checkpoint != null &&
+                if (li >= maxEdited && lastErrorMaxLine <= maxEdited && checkpoint != null &&
                     checkpoint.mode == result.mode && checkpoint.stack == stack
                 ) {
                     // 收敛：后续内容与检查点一致（行号逐值相同 ⇒ 行号未漂移），提前结束。
+                    // T1 门：上次结果在编辑点之后仍有错误时禁止提前收敛——该区间旧错误未被本轮
+                    // 重扫，提前返回会把它们整批丢弃（行局部错误不改变解析栈，栈值一致无法辨识）。
                     truncate(li + 1)
                     prevFirstErrorLine = if (errors.isEmpty()) -1 else errors.minOf { it.line }
+                    lastErrorMaxLine = if (errors.isEmpty()) -1 else errors.maxOf { it.line }
                     return buildRegions(source, errors, quickfixSource, lineStarts, n)
                 }
 
@@ -304,6 +326,7 @@ object LuaDiagnostics {
                 errors.add(ScanError(frame.line, MSG_UNCLOSED_TOKEN, unclosedArgs(frame), fix))
             }
             prevFirstErrorLine = if (errors.isEmpty()) -1 else errors.minOf { it.line }
+            lastErrorMaxLine = if (errors.isEmpty()) -1 else errors.maxOf { it.line }
             return buildRegions(source, errors, quickfixSource, lineStarts, n)
         }
 

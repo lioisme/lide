@@ -76,7 +76,6 @@ import java.util.concurrent.atomic.AtomicReference
  */
 private const val LARGE_FILE_THRESHOLD = 200 * 1024
 private const val LARGE_FILE_UNDO_STACK = 200
-private const val DEFAULT_UNDO_STACK = 2500
 private const val DIAGNOSTIC_DEBOUNCE_MS = 500L
 private const val TAG = "LuaEditor"
 
@@ -110,19 +109,44 @@ internal object EditorViewPool {
     /** 语言装配期是否已开启标识符补全（主线程读 / 写，决定是否重建语言）。 */
     private var languageIdentifiersEnabled = false
 
-    /** 最近一次已应用的语言级配置快照（symbolPairs 无 getter，diff 用快照比对）。 */
+/** 最近一次已应用的语言级配置快照（symbolPairs 无 getter，diff 用快照比对）。 */
     private var lastAppliedConfig: EditorConfig? = null
+
+    /**
+     * 已上报的 undo/redo 能力（主线程独占：attachCallbacks / 事件回调均为主线程）。
+     * 与 Squircle `EditorViewModel` 的三时机同步对齐：内容变更回调 / undo·redo 点击 /
+     * 文档加载（SET_NEW_TEXT）与首次 attach，值未变化不回调（needsUpdate 语义）。
+     */
+    private var lastCanUndo = false
+    private var lastCanRedo = false
 
     private val contentModifiedRef = AtomicReference<() -> Unit>({})
     private val undoRedoRef = AtomicReference<(Boolean, Boolean) -> Unit>({ _, _ -> })
 
-    /** 注入本次组合的回调（进入编辑器时调用一次）。 */
+    /** 注入本次组合的回调（进入编辑器时调用一次，主线程）。 */
     fun attachCallbacks(
+        editor: CodeEditor,
         onContentModified: () -> Unit,
         onUndoRedoStateChanged: (Boolean, Boolean) -> Unit,
     ) {
         contentModifiedRef.set(onContentModified)
         undoRedoRef.set(onUndoRedoStateChanged)
+        // 立即推送当前 canUndo/canRedo：池化实例复用（setText(null) 出池再入池）时
+        // 不依赖下一次编辑事件才纠正按钮灰态（T2，2026-08-10）。
+        syncUndoRedoState(editor)
+    }
+
+    /**
+     * 重算并上报 undo/redo 能力（主线程）。值未变化不回调——稳态打字期间
+     * 零额外发射（与 [EditorSession.onUndoRedoChanged] 的 needsUpdate 判定同语义）。
+     */
+    private fun syncUndoRedoState(editor: CodeEditor) {
+        val canU = editor.canUndo()
+        val canR = editor.canRedo()
+        if (canU == lastCanUndo && canR == lastCanRedo) return
+        lastCanUndo = canU
+        lastCanRedo = canR
+        undoRedoRef.get().invoke(canU, canR)
     }
 
     /** 后台线程增量校验入口（诊断防抖协程调用，内部同步线程安全）。 */
@@ -246,11 +270,27 @@ internal object EditorViewPool {
         if (editor.isDisplayLnPanel != (config.lnPanel && !isLargeFile)) {
             editor.isDisplayLnPanel = config.lnPanel && !isLargeFile
         }
-        if (editor.isScalable != config.scalable) {
+if (editor.isScalable != config.scalable) {
             editor.isScalable = config.scalable
+        }
+        // UI1（2026-08-10）：行号分割线宽度 / 固定行号（sora 原生上限能力接线，
+        // 守卫式 diff；0 宽 = 不绘制分割线，与 sora 默认一致）。
+        if (editor.dividerWidth != config.lineNumberDividerWidth.toFloat()) {
+            editor.setDividerWidth(config.lineNumberDividerWidth.toFloat())
+        }
+        if (editor.isLineNumberPinned() != config.pinLineNumber) {
+            editor.setPinLineNumber(config.pinLineNumber)
         }
         if (editor.isEditable != !config.readOnly) {
             editor.isEditable = !config.readOnly
+            // 只读切换 IME 同步（审计 R2）：sora setEditable 不重建 InputConnection——
+            // 进入只读主动收起键盘；切回可写 restartInput 重建连接，键盘即时可输入
+            // （缺此步骤会「切回可写但打字无效/键盘不弹」的假死现场）。
+            if (config.readOnly) {
+                editor.hideSoftInput()
+            } else {
+                editor.restartInput()
+            }
         }
         if (editor.isDisableSoftKbdIfHardKbdAvailable != config.disableSoftKbdIfHardKbd) {
             editor.setDisableSoftKbdIfHardKbdAvailable(config.disableSoftKbdIfHardKbd)
@@ -259,7 +299,7 @@ internal object EditorViewPool {
         if (editor.nonPrintablePaintingFlags != expectedFlags) {
             editor.nonPrintablePaintingFlags = expectedFlags
         }
-        val expectedTextSizePx =
+val expectedTextSizePx =
             TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_SP,
                 config.fontSize.toFloat(),
@@ -267,6 +307,19 @@ internal object EditorViewPool {
             )
         if (editor.textSizePx != expectedTextSizePx) {
             editor.setTextSize(config.fontSize.toFloat())
+        }
+
+        // === T5（2026-08-10）sora 上限扩展：守卫式 diff，值不变不赋值 ===
+        val expectedTypeface = fontFamilyTypeface(config.fontFamily)
+        if (editor.typefaceText != expectedTypeface || editor.typefaceLineNumber != expectedTypeface) {
+            editor.setTypefaceText(expectedTypeface)
+            editor.setTypefaceLineNumber(expectedTypeface)
+        }
+        if (editor.lineSpacingMultiplier != config.lineSpacingMultiplier) {
+            editor.setLineSpacingMultiplier(config.lineSpacingMultiplier)
+        }
+        if (editor.props.stickyScrollMaxLines != config.stickyScrollMaxLines) {
+            editor.props.stickyScrollMaxLines = config.stickyScrollMaxLines
         }
         lastAppliedConfig = config
     }
@@ -296,17 +349,21 @@ internal object EditorViewPool {
                 tabWidth = config.tabSize
                 setBlockLineWidth(3f)
 
-                isUndoEnabled = true
+isUndoEnabled = true
 
                 applyNonPrintableFlags(config)
 
                 setTextSize(config.fontSize.toFloat())
 
-                // 迷你地图字符块模式（任务单 G8：0.24.6 原生，默认关由 applyConfig 控制）。
+                // T5（2026-08-10）sora 上限扩展：acquire 初值与 applyConfig diff 对齐。
+                setTypefaceText(fontFamilyTypeface(config.fontFamily))
+                setTypefaceLineNumber(fontFamilyTypeface(config.fontFamily))
+                setLineSpacing(0f, config.lineSpacingMultiplier)
+                props.stickyScrollMaxLines = config.stickyScrollMaxLines
+
+// 迷你地图字符块模式（任务单 G8：0.24.6 原生，默认关由 applyConfig 控制）。
                 props.minimapConfig = MinimapConfig(minimapDrawTextAsBlocks = true)
 
-                var lastCanUndo = false
-                var lastCanRedo = false
                 subscribeEvent(ContentChangeEvent::class.java) { event, _ ->
                     try {
                         when (event.action) {
@@ -325,13 +382,9 @@ internal object EditorViewPool {
                                 if (text.length <= LARGE_FILE_THRESHOLD) diagTick.value++
                             }
                         }
-                        val canU = canUndo()
-                        val canR = canRedo()
-                        if (canU != lastCanUndo || canR != lastCanRedo) {
-                            lastCanUndo = canU
-                            lastCanRedo = canR
-                            undoRedoRef.get().invoke(canU, canR)
-                        }
+                        // T2（2026-08-10）：所有内容变更路径（含文件切换的 SET_NEW_TEXT）
+                        // 统一重算 undo/redo 能力——修复「切标签后按钮灰态残留上一文件」。
+                        syncUndoRedoState(this)
                     } catch (t: Throwable) {
                         Log.w(TAG, "content change callback failed", t)
                     }
@@ -452,9 +505,9 @@ fun LuaEditor(
     }
 
     AndroidView(
-        factory = { ctx ->
+factory = { ctx ->
             val editor = EditorViewPool.acquire(ctx, config, resolvedScope)
-            EditorViewPool.attachCallbacks(currentOnContentModified, currentOnUndoRedoStateChanged)
+            EditorViewPool.attachCallbacks(editor, currentOnContentModified, currentOnUndoRedoStateChanged)
             // 池化视图可能残留上次文件内容：进入即按当前 Content 同步，避免闪旧文本。
             if (editor.text !== currentContent.value) {
                 editor.setText(currentContent.value)
@@ -476,11 +529,16 @@ fun LuaEditor(
         modifier = modifier,
     )
 
-    // 文件切换：Content 复用路径（跳过 O(n) 重建）；同一实例不重复设置。
-    // 每份 Content 的 undo 栈深度按文件大小降级，避免大文件内存膨胀。
-    LaunchedEffect(content) {
+// 文件切换：Content 复用路径（跳过 O(n) 重建）；同一实例不重复设置。
+    // 每份 Content 的 undo 栈深度按文件大小降级（T5：容量可设置，大文件取 min(容量, 200)），
+    // 避免大文件内存膨胀；复用路径 undo 历史随 Content 保留。
+    LaunchedEffect(content, currentConfig) {
         content.undoManager.setMaxUndoStackSize(
-            if (content.length > LARGE_FILE_THRESHOLD) LARGE_FILE_UNDO_STACK else DEFAULT_UNDO_STACK,
+            if (content.length > LARGE_FILE_THRESHOLD) {
+                minOf(currentConfig.undoStackSize, LARGE_FILE_UNDO_STACK)
+            } else {
+                currentConfig.undoStackSize
+            },
         )
         val editor = editorRef.get() ?: return@LaunchedEffect
         if (editor.text !== content) {
@@ -534,11 +592,15 @@ fun LuaEditor(
         }
     }
 
-    DisposableEffect(Unit) {
+DisposableEffect(Unit) {
         onDispose {
             // 兜底保存：宿主持有 Content 引用（会话缓存），无需在此做主线程 O(n) 快照，
             // 由宿主在 IO 线程自行读取并落盘。
             currentOnRelease()
+            // T5（2026-08-10）：剥离进程级池化实例对最后 Content 的强引用（含 undo 栈）——
+            // 会话 release 清缓存后 editor.text 仍滞留最后文件至下次 setText，跨工程泄漏。
+            // 入池每次进入本就按需 setText，此处置空仅释放引用，不破坏视图/主题/语言复用。
+            editorRef.get()?.setText(null)
             editorRef.set(null)
         }
     }
@@ -570,3 +632,12 @@ private fun nonPrintableFlags(config: EditorConfig): Int =
 private fun CodeEditor.applyNonPrintableFlags(config: EditorConfig) {
     setNonPrintablePaintingFlags(nonPrintableFlags(config))
 }
+
+/** T5：字体族 id → Android [android.graphics.Typeface]（代码文本与行号同族）。 */
+private fun fontFamilyTypeface(fontFamily: Int): android.graphics.Typeface =
+    when (fontFamily) {
+        EditorConfig.FONT_FAMILY_MONOSPACE -> android.graphics.Typeface.MONOSPACE
+        EditorConfig.FONT_FAMILY_SANS -> android.graphics.Typeface.SANS_SERIF
+        EditorConfig.FONT_FAMILY_SERIF -> android.graphics.Typeface.SERIF
+        else -> android.graphics.Typeface.DEFAULT
+    }

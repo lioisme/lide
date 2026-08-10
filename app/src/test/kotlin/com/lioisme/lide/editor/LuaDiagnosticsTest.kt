@@ -217,6 +217,63 @@ class LuaDiagnosticsTest {
     }
 
     @Test
+    fun `编辑点之后的尾部行局部错误不因收敛而消失`() {
+        // T1 回归（2026-08-10）：行局部错误（不匹配右括号）不改变解析栈，
+        // 若收敛门只看检查点一致，编辑点行即提前返回，尾部旧错误被整批丢弃。
+        val inc = LuaDiagnostics.Incremental()
+        val src = "local function f()\nprint(1)\n})"
+        val first = inc.check(src)
+        assertTrue("首扫应报告尾部错误", first.any { it.detail.briefMessage.contains("不匹配的 '}'") })
+
+        // 在错误行之前做不改变解析状态的编辑（行注释追加；栈/模式均不变）。
+        inc.onEdit(0, 0)
+        val second = inc.check("local function f() -- c\nprint(1)\n})")
+        assertTrue("编辑后尾部错误必须仍可见", second.any { it.detail.briefMessage.contains("不匹配的 '}'") })
+
+        // 修复尾部错误后（再编辑一次）：收敛门不得误报。
+        inc.onEdit(2, 2)
+        val fixed = inc.check("local function f() -- c\nprint(1)\nend")
+        assertTrue("收敛门不得在错误修复后产生残留误报", fixed.isEmpty())
+    }
+
+    @Test
+    fun `多错误中编辑点前后的错误均保持可见`() {
+        // T1 增强：错误同时存在于编辑点之前（未闭合块，报于起始行）与编辑点之后（行局部），
+        // 两者都必须随增量编辑保持可见。
+        val inc = LuaDiagnostics.Incremental()
+        val src = "local function f()\nprint(1)\n})"
+        val first = inc.check(src)
+        assertTrue(
+            "双错误首扫可见",
+            first.any { it.detail.briefMessage.contains("未闭合的 'function'") } &&
+                first.any { it.detail.briefMessage.contains("不匹配的 '}'") },
+        )
+        // 编辑中间行（注释），两处错误均不得消失。
+        inc.onEdit(1, 1)
+        val second = inc.check("local function f()\nprint(1) -- c\n})")
+        assertTrue(
+            "双错误编辑后均可见",
+            second.any { it.detail.briefMessage.contains("未闭合的 'function'") } &&
+                second.any { it.detail.briefMessage.contains("不匹配的 '}'") },
+        )
+    }
+
+    @Test
+    fun `同字节长度文本切换后诊断不缺失`() {
+        // T2 回归（2026-08-10）：onNewText 必须复位 lastCheckedLength，
+        // 否则与旧文本字节长度相同的新文本命中索引复用门（lineStarts 已清空）
+        // → 行数 0 提前返回空诊断，签名相等被去重，错误永不显示。
+        val inc = LuaDiagnostics.Incremental()
+        val a = "print(1)\nlocal x = ("
+        val b = "print(2)\nlocal y = )"
+        assertEquals("两文本字节长度必须相同", a.length, b.length)
+        assertTrue(inc.check(a).any { it.detail.briefMessage.contains("未闭合的 '('") })
+        inc.onNewText()
+        val second = inc.check(b)
+        assertTrue("同长度切换后诊断不得缺失", second.any { it.detail.briefMessage.contains("不匹配的 ')'") })
+    }
+
+    @Test
     fun `自定义消息渲染器覆盖诊断文案`() {
         val provider =
             object : DiagnosticMessageProvider {

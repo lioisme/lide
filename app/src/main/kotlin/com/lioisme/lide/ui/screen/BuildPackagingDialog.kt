@@ -41,6 +41,7 @@ import com.lioisme.lide.R
 import com.lioisme.lide.project.LuaConfigParser
 import com.lioisme.lide.build.AfterBuild
 import com.lioisme.lide.build.ApkBuilder
+import com.lioisme.lide.build.AXmlManifest
 import com.lioisme.lide.build.DependencyAnalysis
 import com.lioisme.lide.build.HostPolicy
 import com.lioisme.lide.build.NativeDependencyAnalyzer
@@ -72,8 +73,12 @@ private data class PackagingDraft(
     val permissionCount: Int,
     /** 宿主 APK 实际携带的 ABI（lib/<abi>/ 目录）。 */
     val abis: List<String>,
-    /** 用户勾选的 ABI 子集（默认 preferAbi ∩ 宿主，否则全选）。 */
+    /** 用户勾选的 ABI 子集（默认 preferAbi 或宿主，否则全选）。 */
     val abiSelection: Set<String>,
+    /** 宿主最低系统版本（uses-sdk 解析；缺失为 0）。 */
+    val hostMinSdk: Int,
+    /** 本次构建的最低系统版本（0 = 保持宿主；决策记录：本次局部选择不回写）。 */
+    val minSdkVersion: Int,
     /** 依赖分析预览（构建时重算，此处仅用于展示）。 */
     val analysis: DependencyAnalysis,
     /** 宿主原生库条目清单（摘要体积估算）。 */
@@ -157,6 +162,16 @@ fun BuildPackagingDialog(
                 val hostEntries = ZipUtils.listEntryNames(hostApk)
                 val abis = ZipUtils.listAbis(hostEntries)
                 val nativeLibEntries = ZipUtils.listNativeLibEntries(hostEntries)
+                // UI1（2026-08-10）：宿主最低系统版本（uses-sdk 解析，缺失降级 0 = 未知）。
+                val hostMinSdk =
+                    try {
+                        ZipUtils
+                            .readEntryData(hostApk, "AndroidManifest.xml")
+                            ?.let { AXmlManifest.readUsesSdk(it).first }
+                            ?: 0
+                    } catch (_: Exception) {
+                        0
+                    }
                 val hostLuaSources = hostLuaSourceMap(context)
                 val hostNativeLibs = nativeLibEntries.mapTo(HashSet()) { it.base }
                 val analysis = analyzeDependencies(projectFiles, usingFiles, hostLuaSources, hostNativeLibs)
@@ -180,6 +195,8 @@ fun BuildPackagingDialog(
                     permissionCount = LuaConfigParser.stringArrayField(content, "user_permission").size,
                     abis = abis,
                     abiSelection = abiInitial,
+                    hostMinSdk = hostMinSdk,
+                    minSdkVersion = 0,
                     analysis = analysis,
                     nativeLibEntries = nativeLibEntries,
                     hostOnlyDropped = hostOnly,
@@ -199,6 +216,16 @@ fun BuildPackagingDialog(
         }
         if (s.abis.isNotEmpty() && s.abiSelection.isEmpty()) {
             Toast.makeText(context, strNeedAbi, Toast.LENGTH_SHORT).show()
+            return
+        }
+        // UI1：minSdk < 24 时旧设备仅能校验 v1（v2 需 API 24+），未勾 v1 阻止构建。
+        val effectiveMinSdk = if (s.minSdkVersion == 0) s.hostMinSdk else s.minSdkVersion
+        if (effectiveMinSdk in 1..23 && !signingScheme.v1) {
+            Toast.makeText(
+                context,
+                context.getString(R.string.build_sdk_need_v1),
+                Toast.LENGTH_LONG,
+            ).show()
             return
         }
         building = true
@@ -357,6 +384,41 @@ fun BuildPackagingDialog(
                         Spacer(Modifier.width(8.dp))
                         Text(abi, style = MaterialTheme.typography.bodyMedium)
                     }
+                }
+
+                // 最低系统版本（UI1，2026-08-10）：本次构建局部选择（决策记录：不回写持久化）。
+                // 候选 = 保持宿主 + 低于宿主的 23/21/19（只展示实际可达的下移档位）。
+                Text(
+                    stringResource(R.string.build_sdk_label),
+                    style = MaterialTheme.typography.labelLarge,
+                )
+                val sdkCandidates = listOf(0) + listOf(23, 21, 19).filter { it < s.hostMinSdk }
+                sdkCandidates.forEach { target ->
+                    val label =
+                        if (target == 0) {
+                            stringResource(R.string.build_sdk_keep_host, s.hostMinSdk)
+                        } else {
+                            "Android ${target}"
+                        }
+                    val selected = s.minSdkVersion == target
+                    Row(
+                        Modifier
+                            .fillMaxWidth()
+                            .clickable { draft = s.copy(minSdkVersion = target) }
+                            .padding(vertical = 2.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Checkbox(checked = selected, onCheckedChange = { draft = s.copy(minSdkVersion = target) })
+                        Spacer(Modifier.width(8.dp))
+                        Text(label, style = MaterialTheme.typography.bodyMedium)
+                    }
+                }
+                if (s.minSdkVersion != 0 && s.minSdkVersion < 24 && !signingScheme.v1) {
+                    Text(
+                        stringResource(R.string.build_sdk_need_v1),
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodySmall,
+                    )
                 }
 
                 // 签名方案：v1/v2/v3 经典 Checkbox（局部选择；全关 = 无签名产物，禁用取消）。
@@ -607,6 +669,7 @@ private fun doBuild(
                 stripNativeLibs = opts.stripNativeLibs,
                 compileLua = opts.compileLua,
                 encryptBytecode = opts.encryptBytecode,
+                minSdkVersion = s.minSdkVersion.takeIf { it > 0 },
             )
         val apkBytes =
             ApkBuilder.build(hostApk, input, key, cert, signingScheme = signingScheme, onStage = onStage)

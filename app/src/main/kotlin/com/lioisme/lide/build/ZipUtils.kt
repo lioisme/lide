@@ -57,6 +57,19 @@ object ZipUtils {
         return out
     }
 
+    /** 按条目名读取单个条目原始数据；不存在返回 null（UI1，2026-08-10 新增）。 */
+    fun readEntryData(
+        bytes: ByteArray,
+        name: String,
+    ): ByteArray? {
+        ZipInputStream(bytes.inputStream()).use { zis ->
+            while (true) {
+                val entry = zis.nextEntry ?: return null
+                if (entry.name == name) return zis.readBytes()
+            }
+        }
+    }
+
     /**
      * 仅枚举条目名与未压缩大小（CEN 直读，不解压数据）。
      * UI 摘要/ABI 枚举用：完整解压整个宿主 APK 只为列名属浪费。
