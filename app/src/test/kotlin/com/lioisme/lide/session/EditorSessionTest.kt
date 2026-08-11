@@ -77,7 +77,7 @@ class EditorSessionTest {
             assertEquals("main.lua", session.selection.value.file)
             val content = session.selection.value.content
             assertNotNull(content)
-            assertEquals("-- main.lua", content?.toString())
+            assertEquals("-- main.lua", content?.snapshot())
             assertEquals(listOf("main.lua"), session.tabs.value.map { it.fileName })
         }
 
@@ -93,7 +93,7 @@ class EditorSessionTest {
 
             advanceUntilIdle()
             val reloaded = session.selection.value.content
-            assertEquals("-- f01.lua", reloaded?.toString())
+            assertEquals("-- f01.lua", reloaded?.snapshot())
 
             // f13 最近打开 → 缓存命中：同步切换，无需推进。
             session.select("f13.lua")
@@ -178,14 +178,14 @@ class EditorSessionTest {
             advanceUntilIdle()
             assertEquals(
                 "-- in-memory\n-- main.lua",
-                session.selection.value.content?.toString(),
+                session.selection.value.content?.snapshot(),
             )
 
             // 非脏标签重载：直接丢缓存读磁盘（外部修改可见）。
             File(root, "main.lua").writeText("-- changed on disk")
             session.reload("main.lua")
             advanceUntilIdle()
-            assertEquals("-- changed on disk", session.selection.value.content?.toString())
+            assertEquals("-- changed on disk", session.selection.value.content?.snapshot())
         }
 
     @Test

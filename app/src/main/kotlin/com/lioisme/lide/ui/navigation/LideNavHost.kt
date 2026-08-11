@@ -15,8 +15,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.navArgument
-import com.androlua.LuaApplication
 import com.lioisme.lide.engine.RunEngineLauncher
+import com.lioisme.lide.engine.RuntimePaths
 import com.lioisme.lide.model.PendingOpenFile
 import com.lioisme.lide.model.Project
 import com.lioisme.lide.project.ProjectManager
@@ -100,7 +100,7 @@ fun LideNavHost(
     val refreshProjects: suspend () -> Unit = {
         projects =
             withContext(Dispatchers.IO) {
-                projectManager.listProjects(LuaApplication.getInstance().luaExtDir)
+                projectManager.listProjects(RuntimePaths.luaExtDir())
             }
     }
 
@@ -188,9 +188,6 @@ fun LideNavHost(
                     },
                     onProjectInfo = {
                         navController.navigateGuarded(Routes.projectInfo(project))
-                    },
-                    onManageSigning = {
-                        navController.navigateGuarded(Routes.SIGNING)
                     },
                     // T3（2026-08-10）：菜单直达入口——编辑 → 编辑器设置；工程 → AndroLua 设置。
                     // 会话经 EditorSessionViewModel 跨导航存活（Q8），返回后自动恢复。

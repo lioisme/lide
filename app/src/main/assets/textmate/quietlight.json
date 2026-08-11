@@ -70,6 +70,7 @@
     "list.highlightForeground": "#9769dc",
     "selection.background": "#C9D0D9",
     "editor.background": "#F5F5F5",
+    "editor.lineNumber.divider": "#E0E0E0",
     "editorWhitespace.foreground": "#AAAAAA",
     "editor.lineHighlightBackground": "#E4F6D4",
     "editorLineNumber.activeForeground": "#9769dc",

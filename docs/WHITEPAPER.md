@@ -359,7 +359,7 @@ APK——不设 jniLibs 缓存目录，也无 rebuild 脚本（R5）。
 - APK 容器组装（`ApkBuilder`：宿主 APK + 工程 Lua 注入，ZIP 条目 4 字节对齐）
 - `classes.dex` 注入 / main.lua 编译字节码（`LuaCompiler`）
 - 资源与图标打包、v1 + v2 签名（`ApkSigner` / `V2Signer`）
-- 产物写盘 `<luaExtDir>/apk/`，FileProvider 分享安装（`BuildPackagingDialog`）
+- 产物写盘 `<luaExtDir>/apk/`，FileProvider 分享安装（`BuildApkDialog`，P5 起打开即构建）
 
 > **历史决策（2026-07-31）**：设备端独立 APK 打包一度暂不支持；2026-08 已按
 > `PARITY_COMPLETION_WORK_ORDER` 立项落地（打包链的 AXML/签名方案仅做显式拒绝与

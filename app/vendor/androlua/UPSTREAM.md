@@ -64,6 +64,10 @@
 - **资源引用替换**：`R.drawable.icon` → `android.R.drawable.sym_def_app_icon`
   （`android/widget/FloatButton.java`、`android/widget/ToolBar.java`、`com/androlua/LuaWebView.java`）——
   上游 res 未 vendor（R5 精简），原引用无法编译，属强制构建适配，非逻辑。
+- **命名空间注入（2026-08-11 解耦审计 A-1 补登）**：`build.gradle.kts` `namespace =
+  "com.lioisme.lide.androlua"`——AGP 要求模块唯一命名空间；本模块无 res（R5 精简）→
+  不生成 R 类、运行类名保持上游 `com.androlua.*` 不变，纯构建期元数据、零逻辑影响。
+  `verifyVendorIsolation` 断言该形态（漂移即失败），沿用后禁止改为其他值。
 - **理由**：引擎类并入宿主单一 dex 集（2026-08-09 源码组织三需求：打包产物不需要专门的 dex 拆分，
   引擎类经 `implementation` 随宿主全量 dex 直用）；不 vendor 上游 res（精简治理）
 - **日期**：2026-08-08（剥离）→ 2026-08-09（annotation 还原 + 并入单 dex 集 + 台账补登）

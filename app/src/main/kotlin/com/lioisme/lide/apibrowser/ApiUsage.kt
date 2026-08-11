@@ -46,7 +46,8 @@ enum class ApiUsage {
  * androidx.recyclerview 为可选依赖：缺失时经合并缓存回落 null，相应规则自动跳过。
  */
 object ApiUsageClassifier {
-    /** 明显非 UI 前缀：静态规则直接归工具类，免反射（java/javax 等加载器层不参与）。 */
+    /** 明显非 UI 前缀：静态规则直接归工具类，免反射（java/javax 等加载器层不参与）。
+     * 引擎 JNI 桥接前缀消费单一事实源 [EnginePackagePrefixes.JNI_BRIDGE_PACKAGES]（D-1 收口）。 */
     private val utilityPrefixes =
         listOf(
             "java.",
@@ -54,10 +55,8 @@ object ApiUsageClassifier {
             "org.",
             "jdk.",
             "sun.",
-            "com.luajava.",
-            "com.android.cglib.",
             "dalvik.",
-        )
+        ) + EnginePackagePrefixes.JNI_BRIDGE_PACKAGES
 
     /** androidx RecyclerView（可选依赖，进程内只解析一次；缺失回落 null）。 */
     private val recyclerView: Class<*>? by lazy { ApiIndex.loadClassRef("androidx.recyclerview.widget.RecyclerView") }

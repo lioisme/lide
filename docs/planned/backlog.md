@@ -86,6 +86,31 @@
 | R5 | 打包 API 级别下移：AXmlManifest uses-sdk 解析/写回 + ManifestEdit + 构建对话框 minSdk 选项 + 测试 | 中 | ✅ 已完成（2026-08-10，工作单收口） | `uses-sdk` `minSdkVersion` `打包` |
 | R6 | WP-014 工程 theme 运行时消费（逐工程深色，编辑器文本区跟随） | 中 | ✅ 已完成（2026-08-10，工作单收口） | `WP-014` `theme` `深色` |
 
+## 2g. 编辑器对标 Squircle CE 整改（2026-08-11，工作单 docs/in-progress/EDITOR_SQUIRCLE_ALIGNMENT_WORK_ORDER.md）
+
+| # | 任务 | 优先级 | 状态 | 关键词 |
+|---|---|---|---|---|
+| S1 | 真只读重构：删 ReadOnlyBanner / 菜单置灰去只读 / 删冗余 hideSoftInput / ⋮ 菜单加「只读」直达切换 | 高 | 🔄 进行中 | `readOnly` `只读` `Squircle` |
+| S2 | 去池化：删除 EditorViewPool，回归 remember+release 朴素生命周期 | 高 | 待执行 | `EditorViewPool` `去池化` |
+| S3 | 行号分界线：主题 JSON 加 divider 色键 + LideTextMateColorScheme + 固定 1dp 分割线 | 高 | 待执行 | `LINE_DIVIDER` `分割线` |
+| S4 | 设置瘦身：删 7 项（粘性行数/lnPanel/pin/分割线宽度/光标动画/行高/undo 栈）21→14 | 中 | 待执行 | `编辑器设置` `瘦身` |
+| S5 | 功能补缺：sora 原生 EditorSearcher 查找/替换面板 + 跳行对话框 | 中 | 待执行 | `EditorSearcher` `查找替换` `跳行` |
+
+## 2h. 工程属性四项整改（2026-08-11，全部完成，结论已蒸馏进 docs/kb/EDITOR.md 与 ARCHITECTURE.md）
+
+| # | 任务 | 优先级 | 状态 | 关键词 |
+|---|---|---|---|---|
+| P1 | 工程信息改名「工程属性」+ 分组重排（基本/系统/高级/权限四 Card） | 高 | ✅ 已完成（2026-08-11，工作单 P1；`project_properties` 键 + 四分区 + 引用点同步） | `工程属性` `ProjectInfoScreen` |
+| P2 | 主题下拉：反射 android.R.style `Theme_*` 全量 + 常见主题映射别名（pro 同款） | 高 | ✅ 已完成（2026-08-11，工作单 P2；ThemeCatalog + 16 别名 + EditorScreen WP-014 走 resolveDark） | `主题下拉` `ThemeCatalog` `android.R.style` |
+| P3 | 目标 SDK（appsdk）+ 最低 SDK（minsdk）工程属性持久化，打包透传写回 manifest（AXmlManifest targetSdkVersion 双形态） | 高 | ✅ 已完成（2026-08-11，工作单 P3；ManifestEdit.targetSdkVersion 双形态写回 + ApkBuilder 透传 + 三单测） | `目标SDK` `最低SDK` `uses-sdk` `appsdk` |
+| P4 | 权限清单全面化（宿主 manifest 51 项全覆盖）+ 搜索 + 常用权限别名（仅工程两处） | 高 | ✅ 已完成（2026-08-11，工作单 P4；PermissionPickerList 共享组件 + PermissionCatalog aliases + normalize 硬化） | `权限` `PermissionCatalog` `搜索` `别名` |
+| P5 | 构建 APK 去配置对话框：⋮ 菜单直接构建（进度+结果对话框），配置以设置页持久化 + 工程属性为准 | 高 | ✅ 已完成（2026-08-11，工作单 P5；BuildApkDialog 打开即构建，ABI/签名/安装方式等移设置页持久化消费） | `直接构建` `BuildPackagingDialog` `BuildApkDialog` |
+| P6 | 源码位置索引落地：docs/SOURCE_LOCATION.md + docs/README + AGENTS.md 挂接（禁止云端拉取） | 高 | 🔄 进行中 | `SOURCE_LOCATION` `禁云拉取` |
+| S6 | 编辑器闪退修复（P2.1 构造期泄漏 this：createLanguage attachEditor(editor) 读未赋值属性 NPE） | 高 | ✅ 已完成（2026-08-11，工作单 T7；修复=attachTo 参数化；x64 模拟器暴力测试零崩溃） | `闪退` `attachEditor` `构造期` |
+| S7 | 只读失效深层 bug：sora `isEditable()` 动态 getter（`editable && !layoutBusy && !isFormatting()`），AndroidView update 阶段 layoutBusy=true → diff 读 getter 得假 false 跳过 setter | 高 | ✅ 已完成（2026-08-11：`lastEditable` 快照 diff + EditorInstance 构造块直接 `setEditable(!initialConfig.readOnly)`；x64 模拟器双向验证：只读开=拒输入、关=可输入，实时切换生效；唯一受此 bug 影响项，其余 getter 均为纯字段） | `readOnly` `isEditable` `layoutBusy` |
+| S8 | 菜单瘦身（用户拍板）：文件分类仅「文件树」占位按钮（点击 Toast「文件树即将推出」）+ 编辑分类仅「编辑器设置」；工程分类 4 项保留；删 EditorTextOps.kt 与 14 个字符串 | 中 | ✅ 已完成（2026-08-11：`:app:assembleX64Debug` 安装验证——三分类正确、文件树子菜单单项、Toast 实拍确认） | `菜单瘦身` `文件树` `EditorTextOps` |
+| S9 | 编辑器字体对齐 Squircle CE 组合：`FONT_FAMILY_DEFAULT`/`MONOSPACE` 同映射 `Typeface.MONOSPACE`（Squircle `TypefaceProvider.DEFAULT` 同款），设置页字体选项 4→3（删系统默认） | 中 | ✅ 已完成（2026-08-11：设置页「字体=等宽」确认 + 编辑器截图等宽渲染/高亮正常） | `字体` `MONOSPACE` `Squircle` |
+
 ## 3. 风险与备忘
 
 | 项 | 说明 |

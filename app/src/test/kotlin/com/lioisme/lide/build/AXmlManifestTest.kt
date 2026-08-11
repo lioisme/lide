@@ -472,6 +472,57 @@ class AXmlManifestTest {
         assertEquals(36, target)
     }
 
+    @Test
+    fun `patch rewrites uses-sdk element targetSdkVersion`() {
+        val axml = buildSdkAxml(elementForm = true)
+        val edit = ManifestEdit(
+            packageName = "com.demo.app",
+            appLabel = "Demo",
+            versionCode = 1,
+            versionName = "1.0",
+            usesPermissions = listOf("android.permission.INTERNET"),
+            targetSdkVersion = 30,
+        )
+        val patched = AXmlManifest.patch(axml, edit)
+        val (min, target) = AXmlManifest.readUsesSdk(patched)
+        assertEquals(24, min)
+        assertEquals(30, target)
+    }
+
+    @Test
+    fun `patch writes targetSdkVersion onto manifest root when sdk folded as attrs`() {
+        val axml = buildSdkAxml(elementForm = false)
+        val edit = ManifestEdit(
+            packageName = "com.demo.app",
+            appLabel = "Demo",
+            versionCode = 1,
+            versionName = "1.0",
+            usesPermissions = listOf("android.permission.INTERNET"),
+            targetSdkVersion = 28,
+        )
+        val patched = AXmlManifest.patch(axml, edit)
+        val (_, target) = AXmlManifest.readUsesSdk(patched)
+        assertEquals(28, target)
+    }
+
+    @Test
+    fun `patch rewrites both sdk versions simultaneously`() {
+        val axml = buildSdkAxml(elementForm = true)
+        val edit = ManifestEdit(
+            packageName = "com.demo.app",
+            appLabel = "Demo",
+            versionCode = 1,
+            versionName = "1.0",
+            usesPermissions = listOf("android.permission.INTERNET"),
+            minSdkVersion = 21,
+            targetSdkVersion = 30,
+        )
+        val patched = AXmlManifest.patch(axml, edit)
+        val (min, target) = AXmlManifest.readUsesSdk(patched)
+        assertEquals(21, min)
+        assertEquals(30, target)
+    }
+
     /** 构建含 android:minSdkVersion/targetSdkVersion 的最小 AXML。
      *  [elementForm]：true = uses-sdk 元素形态；false = 属性折叠在 manifest 根元素。 */
     private fun buildSdkAxml(elementForm: Boolean): ByteArray {

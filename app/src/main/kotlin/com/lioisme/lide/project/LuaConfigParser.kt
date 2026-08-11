@@ -192,6 +192,20 @@ object LuaConfigParser {
     }
 
     /**
+     * 移除字段（P1，2026-08-11：「跟随宿主」语义 = 字段不存在，运行时/打包回落默认）。
+     * 整行删除（字段值之后到行尾的内容——含行注释等尾随文本——一并删除）；
+     * 字段不存在时原样返回。仅删除字段所在行，不触碰其他内容。
+     */
+    fun removeField(content: String, name: String): String {
+        val fields = parse(content)
+        val existing = fields.firstOrNull { it.name == name } ?: return content
+        // 字段值结束可能早于行尾（值后跟行注释/逗号等），删除到行尾换行处。
+        val nl = content.indexOf('\n', existing.endOffset)
+        val end = if (nl < 0) content.length else nl + 1
+        return content.substring(0, existing.startOffset) + content.substring(end)
+    }
+
+    /**
      * Lua `%q` 等价转义（带引号字符串）。仅转义双引号/反斜杠/换行/回车/制表符与
      * 控制字符（\0-\x1F、\x7F，Lua 5.3 `\u{XX}` 形式），其余字节原样（UTF-8 安全）。
      */

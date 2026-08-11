@@ -101,7 +101,7 @@ Lua → C（.so）调用为纯 C 路径不经 Java（`require "zip"` = `package.
 | 引擎初始化/运行 | `app/src/main/java/.../engine/EngineActivity.java`（继承 `androlua` 的 `LuaActivity`） |
 | 运行拉起 | `app/src/main/kotlin/.../engine/RunEngineLauncher.kt`、`androlua/.../engine/EngineBridge.kt` |
 | dex/so 加载 | `androlua/src/main/java/com/androlua/LuaDexLoader.java`（W^X 内存加载） |
-| 打包链 | `androlua/.../LuaCompiler.kt`、`AXmlManifest.kt`、`app/.../build/{ApkBuilder,ApkSigner,V2Signer,ZipUtils}.kt`、`BuildPackagingDialog.kt` |
+| 打包链 | `androlua/.../LuaCompiler.kt`、`AXmlManifest.kt`、`app/.../build/{ApkBuilder,ApkSigner,V2Signer,ZipUtils}.kt`、`BuildApkDialog.kt` |
 | 打包 dex 直用宿主（P0-7 冻结） | 产物直接复用宿主根目录**全量 classes*.dex**（IDE 类 + 引擎类原样保留，接受多余内容）；无 dex 替换模式、无 `ENGINE_DEX_MARKER` 标记资产；打包器以根 dex 存在 `Lcom/androlua/LuaApplication;` 作引擎存在性判定，命中时 manifest 回落 `com.androlua.LuaApplication` + 移除 IDE MainActivity（`ManifestEdit.applicationName`/`removeActivities`），未命中保持宿主 manifest；ABI/权限以宿主条目为准 |
 | 资产提取 | `LuaApplication.extractLuaScripts()`（递归 + MD5 版本化） |
 | 原生模块构建 | `app/src/main/cpp/`（顶层 `Android.mk` + `Application.mk` 为 ndk-build 定义，`live2d/` 独立模块），AGP `externalNativeBuild` 自动构建（NDK 29.0.14206865） |

@@ -42,12 +42,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.androlua.LuaApplication
 import com.lioisme.lide.R
 import com.lioisme.lide.apibrowser.ApiCategory
 import com.lioisme.lide.apibrowser.ApiIndex
 import com.lioisme.lide.apibrowser.ApiIndex.ApiClassEntry
 import com.lioisme.lide.apibrowser.ApiIndex.Snapshot
+import com.lioisme.lide.engine.RuntimePaths
 import com.lioisme.lide.project.ProjectManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -94,7 +94,7 @@ fun ApiBrowserScreen(
                     val projectManager = ProjectManager()
                     val roots =
                         projectManager
-                            .listProjects(LuaApplication.getInstance().luaExtDir)
+                            .listProjects(RuntimePaths.luaExtDir())
                             .map { File(it.path) }
                     ApiIndex.buildBase(context, roots)
                 }

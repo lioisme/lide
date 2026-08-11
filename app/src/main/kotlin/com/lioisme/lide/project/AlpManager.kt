@@ -3,7 +3,7 @@ package com.lioisme.lide.project
 import android.content.Context
 import android.net.Uri
 import android.util.Log
-import com.androlua.LuaApplication
+import com.lioisme.lide.engine.RuntimePaths
 import java.io.File
 
 class AlpManager(private val context: Context) {
@@ -92,7 +92,6 @@ class AlpManager(private val context: Context) {
      * 不做任何删除/覆盖（冲突判定与处置分离，WP-015）。
      */
     private fun targetDirFor(name: String): File {
-        val luaExtDir = LuaApplication.getInstance().luaExtDir
-        return File(luaExtDir, "project/$name")
+        return File(RuntimePaths.projectsDir(), name)
     }
 }

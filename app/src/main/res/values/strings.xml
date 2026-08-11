@@ -80,33 +80,17 @@
     <string name="highlight_current_block">Highlight Current Block</string>
     <string name="minimap">Minimap</string>
     <string name="sticky_scroll">Sticky Scroll</string>
-    <string name="ln_panel">Line Panel</string>
-    <!-- UI1 全量审计（2026-08-10）：线号分割线 / 固定行号（sora 上限能力接线） -->
-    <string name="line_number_divider">Line Number Divider</string>
-    <string name="line_number_divider_value">Width: %1$d px</string>
-    <string name="pin_line_number">Pin Line Numbers</string>
-    <string name="pin_line_number_hint">Keep row numbers fixed while horizontally scrolling</string>
-    <!-- UI1 全量审计（2026-08-10）：只读视觉提示 -->
-    <string name="editor_read_only_banner">Read only — editing disabled</string>
     <!-- UI1 全量审计（2026-08-10）：打包最低系统版本下移 -->
-    <string name="build_sdk_label">Minimum Android Version</string>
-    <string name="build_sdk_keep_host">Keep host (%1$d)</string>
     <string name="build_sdk_need_v1">Devices below Android 7 require v1 signature. Enable it first.</string>
     <string name="scalable">Pinch Zoom</string>
-    <string name="cursor_animation">Cursor Animation</string>
     <string name="disable_soft_kbd_if_hard">Hardware Keyboard First</string>
     <!-- Editor settings sora-ceiling extensions (T5, 2026-08-10) -->
+    <!-- 2026-08-11：默认字体族 = Squircle CE 组合（TypefaceProvider.DEFAULT = MONOSPACE），
+         设置面板仅保留等宽/无衬线/衬线三项（「系统默认」选项随 DEFAULT 语义收敛删除） -->
     <string name="font_family">Font Family</string>
-    <string name="font_family_default">System Default</string>
     <string name="font_family_monospace">Monospace</string>
     <string name="font_family_sans">Sans Serif</string>
     <string name="font_family_serif">Serif</string>
-    <string name="line_spacing">Line Spacing</string>
-    <string name="line_spacing_value">%1$s\u00d7</string>
-    <string name="undo_stack_size">Undo Stack Size</string>
-    <string name="undo_stack_size_value">%1$d</string>
-    <string name="sticky_scroll_max_lines">Sticky Scroll Lines</string>
-    <string name="sticky_scroll_max_lines_value">%1$d</string>
     <string name="sticky_scroll_word_wrap_hint">Unavailable while word wrap is on</string>
     <string name="restore_defaults">Restore defaults</string>
     <string name="restore_defaults_done">Settings restored to defaults</string>
@@ -143,21 +127,30 @@
     <string name="run_insert_import">Insert import \"%1$s\"</string>
     <string name="run_import_suggestion">Tip: try import \"%1$s\"</string>
 
-    <!-- Project info (WP-004) -->
-    <string name="info_title">Project Info</string>
-    <string name="info_basic_group">Basic</string>
+    <!-- Project properties (WP-004 / P1-P4, 2026-08-11) -->
+    <string name="project_properties">Project Properties</string>
+    <string name="info_section_basic">Basic</string>
+    <string name="info_section_system">System</string>
+    <string name="info_section_advanced">Advanced</string>
+    <string name="info_section_permissions">Permissions</string>
     <string name="info_appname">App name</string>
     <string name="info_appver">App version</string>
     <string name="info_appcode">Version code</string>
-    <string name="info_appsdk">Target SDK</string>
-    <string name="info_path_pattern">Screen orientation</string>
     <string name="info_packagename">Package name</string>
-    <string name="info_theme">Theme</string>
-    <string name="info_app_key">App key</string>
-    <string name="info_app_channel">Channel</string>
     <string name="info_developer">Developer</string>
     <string name="info_description">Description</string>
     <string name="info_debugmode">Debug mode</string>
+    <string name="info_path_pattern">Screen orientation</string>
+    <string name="info_app_key">App key</string>
+    <string name="info_app_channel">Channel</string>
+    <string name="info_min_sdk">Min SDK</string>
+    <string name="info_target_sdk">Target SDK</string>
+    <string name="info_sdk_keep_host">Host default (%1$d)</string>
+    <string name="info_sdk_custom">Custom (%1$s)</string>
+    <string name="info_sdk_invalid">Target SDK cannot be lower than min SDK</string>
+    <string name="info_theme">Theme</string>
+    <string name="info_theme_keep_host">Follow host</string>
+    <string name="info_theme_custom">Custom (%1$s)</string>
     <string name="info_permissions_btn">User permissions (%1$d)</string>
     <string name="info_permissions_title">Select user permissions</string>
     <string name="info_permissions_confirm">Done</string>
@@ -165,18 +158,33 @@
     <string name="info_save_success">Saved</string>
     <string name="info_save_failed">Save failed</string>
     <string name="info_load_failed">No init.lua found</string>
-    <string name="project_info">Project Info</string>
-    <string name="project_info_menu">Project Info</string>
     <string name="build_apk">Build APK</string>
 
-    <!-- Build APK (WP-005) -->
+    <!-- Common theme aliases (P2, 2026-08-11, ThemeCatalog) -->
+    <string name="theme_alias_classic">Classic</string>
+    <string name="theme_alias_black">Pure black</string>
+    <string name="theme_alias_classic_light">Classic light</string>
+    <string name="theme_alias_device_dark">Device default dark</string>
+    <string name="theme_alias_device_light">Device default light</string>
+    <string name="theme_alias_device_daynight">Follow system</string>
+    <string name="theme_alias_device_dark_no_title">Device default dark (no action bar)</string>
+    <string name="theme_alias_device_light_no_title">Device default light (no action bar)</string>
+    <string name="theme_alias_material_dark">Material dark</string>
+    <string name="theme_alias_material_light">Material light</string>
+    <string name="theme_alias_material_dark_no_title">Material dark (no action bar)</string>
+    <string name="theme_alias_material_light_no_title">Material light (no action bar)</string>
+    <string name="theme_alias_holo_dark">Holo dark</string>
+    <string name="theme_alias_holo_light">Holo light</string>
+    <string name="theme_alias_holo_dark_no_title">Holo dark (no action bar)</string>
+    <string name="theme_alias_holo_light_no_title">Holo light (no action bar)</string>
+
+    <!-- Build APK (WP-005; P5 2026-08-11 去配置对话框：ABI/签名方案/安装方式等移至设置页，仅保留阶段/结果文案) -->
     <string name="build_title">Build APK</string>
-    <string name="build_version">Version %1$s (%2$s)</string>
-    <string name="build_permissions">Permissions (%1$d)</string>
-    <string name="build_button">Build</string>
-    <string name="build_working">Building…</string>
     <string name="build_success">Build complete</string>
     <string name="build_fail">Build failed: %1$s</string>
+    <string name="build_success_title">Build complete</string>
+    <string name="build_failure_title">Build failed</string>
+    <string name="build_output_path">Output path</string>
     <string name="build_share">Share APK</string>
     <string name="build_need_package">Set packagename in init.lua first</string>
     <string name="build_stage_read_host">Reading host APK</string>
@@ -184,12 +192,6 @@
     <string name="build_stage_compile">Compiling Lua</string>
     <string name="build_stage_assemble">Packaging APK</string>
     <string name="build_stage_sign">Signing APK</string>
-    <string name="build_need_abi">Select at least one ABI</string>
-    <string name="build_dep_native">Native libraries: %1$d (~%2$s)</string>
-    <string name="build_dep_abis">ABIs: %1$s</string>
-    <string name="build_dep_missing">Modules not found: %1$s</string>
-    <string name="build_abi_label">Supported ABIs</string>
-    <string name="build_opts_summary">Packaging: %1$s; %2$s; %3$s</string>
 
     <!-- Examples -->
     <string name="examples">Examples</string>
@@ -240,6 +242,34 @@
     <string name="perm_foreground_service">Foreground service</string>
     <string name="perm_vibrate">Vibrate</string>
     <string name="perm_wake_lock">Wake lock</string>
+    <string name="perm_change_network_state">Change network state</string>
+    <string name="perm_change_wifi_state">Change WiFi state</string>
+    <string name="perm_modify_audio_settings">Modify audio settings</string>
+    <string name="perm_access_media_location">Access media location</string>
+    <string name="perm_answer_phone_calls">Answer phone calls</string>
+    <string name="perm_read_call_log">Read call log</string>
+    <string name="perm_write_call_log">Write call log</string>
+    <string name="perm_write_sms">Write SMS</string>
+    <string name="perm_receive_mms">Receive MMS</string>
+    <string name="perm_use_fingerprint">Use fingerprint</string>
+    <string name="perm_flashlight">Flashlight</string>
+    <string name="perm_set_wallpaper">Set wallpaper</string>
+    <string name="perm_get_package_size">Get package size</string>
+    <string name="perm_clear_app_cache">Clear app cache</string>
+    <string name="perm_kill_background_processes">Kill background processes</string>
+    <string name="perm_download_without_notification">Download without notification</string>
+    <string name="perm_read_logs">Read logs</string>
+    <string name="perm_read_frame_buffer">Read frame buffer</string>
+    <string name="perm_battery_stats">Battery stats</string>
+    <string name="perm_install_shortcut">Install shortcuts</string>
+    <string name="perm_dhizuku_api">Dhizuku API</string>
+
+    <!-- Permission picker (P4, 2026-08-11) -->
+    <string name="perm_other_section">Other</string>
+    <string name="permission_search_hint">Search permissions</string>
+    <string name="permission_search_clear">Clear</string>
+    <string name="permission_selected_count">Selected %1$d of %2$d</string>
+    <string name="permission_no_result">No matching permissions</string>
 
     <!-- Special permissions -->
     <string name="perm_special_overlay">Display over other apps</string>
@@ -279,17 +309,13 @@
     <string name="cd_more_options">More options</string>
     <string name="cd_back">Back</string>
     <string name="menu_category_project">Project</string>
-    <string name="menu_category_text">Text</string>
     <!-- Editor Appbar menus (T3, 2026-08-10): 文件/编辑/工程 industry-convention categories -->
+    <!-- 2026-08-11 用户红线（菜单瘦身）：文件分类仅保留文件树（占位按钮），
+         编辑分类仅保留编辑器设置；保存/剪贴板/行操作/只读切换等菜单项全部删除 -->
     <string name="menu_category_file">File</string>
     <string name="menu_category_edit">Edit</string>
-    <string name="menu_save">Save</string>
-    <string name="menu_save_all">Save All</string>
-    <string name="menu_reload">Reload</string>
-    <string name="menu_cut">Cut</string>
-    <string name="menu_copy">Copy</string>
-    <string name="menu_paste">Paste</string>
-    <string name="menu_select_all">Select All</string>
+    <string name="menu_file_tree">File Tree</string>
+    <string name="file_tree_coming_soon">File tree coming soon</string>
     <string name="menu_editor_settings">Editor Settings</string>
     <string name="menu_androlua_settings">AndroLua Settings</string>
     <string name="accessibility_service_description">LIDE 无障碍服务：为 Lua 脚本提供自动化能力（点击、滑动、截图）。</string>
@@ -394,9 +420,6 @@
     <string name="signing_hide_password">Hide password</string>
     <string name="signing_delete_confirm">Delete signing profile "%1$s"? The keystore file will be permanently removed.</string>
     <string name="delete">Delete</string>
-    <string name="build_signature">Signature</string>
-    <string name="build_manage_signing">Manage</string>
-    <string name="build_signature_value">%1$s</string>
     <string name="build_opt_compile_label">Compile Lua files</string>
 
 <!-- AndroLua merged page (packaging) -->
@@ -425,13 +448,6 @@
     <string name="install_failed">Install failed</string>
 
     <!-- Editor（并入自原 :editor 模块，2026-08-08 源码组织五需求 Phase 1） -->
-    <!-- Editor text operations -->
-    <string name="text_op_select_line">Select Line</string>
-    <string name="text_op_delete_line">Delete Line</string>
-    <string name="text_op_duplicate_line">Duplicate Line</string>
-    <string name="text_op_toggle_case">Toggle Case</string>
-    <string name="text_op_word_prev">Word Left</string>
-    <string name="text_op_word_next">Word Right</string>
     <!-- Editor tabs -->
     <string name="dirty_marker">• </string>
     <string name="menu_close_tab">Close</string>

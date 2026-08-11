@@ -1,9 +1,9 @@
 package com.lioisme.lide.session
 
+import com.lioisme.lide.editor.EditorContent
 import com.lioisme.lide.editor.EditorTab
 import com.lioisme.lide.model.Project
 import com.lioisme.lide.project.ProjectManager
-import io.github.rosemoe.sora.text.Content
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -15,24 +15,24 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
 
-/** 打开的标签 [Content] 缓存上限：超出后按 LRU 逐出「未选中且非脏」标签并释放其 undo 栈。 */
+/** 打开的标签 [EditorContent] 缓存上限：超出后按 LRU 逐出「未选中且非脏」标签并释放其 undo 栈。 */
 private const val CONTENT_CACHE_CAP = 12
 
 /**
  * 编辑器会话（宿主侧，:app）。
  *
- * 职责：标签列表、选中文件、每文件 [Content] 缓存、脏标记、undo/redo 能力、
+ * 职责：标签列表、选中文件、每文件 [EditorContent] 缓存、脏标记、undo/redo 能力、
  * 自动保存节流信号。对齐 Squircle `EditorViewModel` 的 needsUpdate 模式：
  *
  * - 每键编辑事件只更新脏标记 / undo 能力，且仅在值**实际变化**时 emit——
  *   稳态打字期间 Compose 零重组（首个字符置脏后不再发射）；
- * - 编辑内容实体（[Content]）留在此处缓存，切换标签零读盘、零 O(n) 重建
+ * - 编辑内容实体（[EditorContent]）留在此处缓存，切换标签零读盘、零 O(n) 重建
  *   （编辑器侧 `setText(Content)` 复用路径）；
  * - 高频信号（[editTick]）与低频状态（[tabs] / [selection]）
  *   分离，编辑节奏不触发任何页面重组。
  *
  * 线程模型：标签/选中/脏标记变更只发生在主线程（sora 事件回调与 UI 点击均在主线程）；
- * [Content] 缓存的读写经 [cacheLock] 同步（IO 线程构造/快照与主线程删除并发）。
+ * [EditorContent] 缓存的读写经 [cacheLock] 同步（IO 线程构造/快照与主线程删除并发）。
  * 会话持有独立作用域，屏幕销毁后的兜底保存（onRelease / onBack）不受组合作用域取消影响。
  */
 class EditorSession(
@@ -45,14 +45,14 @@ class EditorSession(
 ) {
     data class Selection(
         val file: String? = null,
-        val content: Content? = null,
+        val content: EditorContent? = null,
     )
 
     private val scope = CoroutineScope(SupervisorJob() + mainDispatcher)
     private val cacheLock = Any()
 
     // 访问序 LRU：最近使用的排尾部，逐出时从头扫描。
-    private val contents = LinkedHashMap<String, Content>(16, 0.75f, true)
+    private val contents = LinkedHashMap<String, EditorContent>(16, 0.75f, true)
 
     private val _tabs = MutableStateFlow<List<EditorTab>>(emptyList())
     val tabs: StateFlow<List<EditorTab>> = _tabs.asStateFlow()
@@ -160,7 +160,7 @@ class EditorSession(
 
     private fun select(
         fileName: String,
-        content: Content,
+        content: EditorContent,
     ) {
         _selection.value = Selection(fileName, content)
     }
@@ -176,7 +176,7 @@ class EditorSession(
         text: String,
     ) {
         val selected = _selection.value.content ?: return
-        selected.insert(line, column, text)
+        selected.raw.insert(line, column, text)
         onContentModified()
     }
 
@@ -189,7 +189,7 @@ class EditorSession(
         text: String,
     ) {
         val selected = _selection.value.content ?: return
-        selected.replace(startLine, startColumn, endLine, endColumn, text)
+        selected.raw.replace(startLine, startColumn, endLine, endColumn, text)
         onContentModified()
     }
 
@@ -350,7 +350,7 @@ class EditorSession(
         val content = synchronized(cacheLock) { contents[fileName] } ?: return
         val saved =
             withContext(ioDispatcher) {
-                projectManager.saveProjectScript(project, fileName, content.toString())
+                projectManager.saveProjectScript(project, fileName, content.snapshot())
             }
         if (saved) {
             val current = _tabs.value
@@ -382,12 +382,12 @@ class EditorSession(
         }
     }
 
-    private fun loadContent(fileName: String): Content {
+    private fun loadContent(fileName: String): EditorContent {
         synchronized(cacheLock) {
             contents[fileName]?.let { return it }
         }
         val text = projectManager.getProjectScript(project, fileName) ?: ""
-        val content = Content(text)
+        val content = EditorContent.of(text)
         synchronized(cacheLock) {
             contents[fileName] = content
             trimCache()

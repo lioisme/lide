@@ -7,18 +7,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -30,14 +24,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.lioisme.lide.R
 import com.lioisme.lide.editor.EditorConfig
+import com.lioisme.lide.editor.EditorContent
+import com.lioisme.lide.editor.EditorController
 import com.lioisme.lide.editor.EditorTab
 import com.lioisme.lide.editor.EditorTabs
 import com.lioisme.lide.editor.LuaEditor
 import com.lioisme.lide.editor.pressAndHoldHapticFeedback
 import com.lioisme.lide.session.EditorSession
-import io.github.rosemoe.sora.text.Content
-import io.github.rosemoe.sora.widget.CodeEditor
-import java.util.concurrent.atomic.AtomicReference
 
 /** 宿主存储权限门：Android 11+ 需要「所有文件访问」授权。 */
 internal fun hasStoragePermission(context: Context): Boolean {
@@ -76,37 +69,7 @@ internal fun StoragePermissionBanner(
     }
 }
 
-/** 只读横幅（审计 R3）：编辑区顶部通告，锁图标 + 文案，无操作。 */
-@Composable
-private fun ReadOnlyBanner(
-    modifier: Modifier = Modifier,
-) {
-    Surface(
-        color = MaterialTheme.colorScheme.secondaryContainer,
-        modifier = modifier,
-    ) {
-        Row(
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Icon(
-                Icons.Default.Lock,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSecondaryContainer,
-                modifier = Modifier.size(16.dp),
-            )
-            Spacer(Modifier.width(8.dp))
-            Text(
-                stringResource(R.string.editor_read_only_banner),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSecondaryContainer,
-            )
-        }
-    }
-}
-
-/**
- * 编辑器主体（标签行 + 编辑器 + 权限横幅）。与文件目录对话框解耦：
+/** 编辑器主体（标签行 + 编辑器 + 权限横幅）。与文件目录对话框解耦：
  * 状态全部经参数注入，仅依赖会话回调上报宿主。
  */
 @Composable
@@ -115,10 +78,10 @@ internal fun EditorBody(
     contentPadding: PaddingValues,
     tabs: List<EditorTab>,
     selectedFile: String?,
-    content: Content?,
+    content: EditorContent?,
     isDarkTheme: Boolean,
     editorConfig: EditorConfig,
-    editorRef: AtomicReference<CodeEditor?>,
+    controller: EditorController,
     onEditorBound: () -> Unit,
     storagePermissionMissing: Boolean,
     onTabClose: (String) -> Unit,
@@ -169,7 +132,7 @@ internal fun EditorBody(
                         // 兜底保存：编辑内容由会话缓存持有，宿主经会话异步落盘。
                         session.flushSelectedDirtyAsync()
                     },
-                    editorRef = editorRef,
+                    controller = controller,
                     onEditorBound = onEditorBound,
                     modifier = Modifier.fillMaxSize(),
                 )
@@ -186,16 +149,11 @@ internal fun EditorBody(
                 }
             }
 
-            Column(Modifier.align(Alignment.TopCenter)) {
-                if (editorConfig.readOnly) {
-                    ReadOnlyBanner(modifier = Modifier.fillMaxWidth())
-                }
-                if (storagePermissionMissing) {
-                    StoragePermissionBanner(
-                        onGrant = onGrantStorage,
-                        modifier = Modifier.fillMaxWidth(),
-                    )
-                }
+            if (storagePermissionMissing) {
+                StoragePermissionBanner(
+                    onGrant = onGrantStorage,
+                    modifier = Modifier.align(Alignment.TopCenter).fillMaxWidth(),
+                )
             }
         }
     }

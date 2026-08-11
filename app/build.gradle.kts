@@ -638,6 +638,11 @@ tasks.register("verifyVendorIsolation") {
         check(Regex("dependencies\\s*\\{").containsMatchIn(androluaBuild)) {
             "vendor 隔离失败：:androlua 构建脚本应有 dependencies 块（零第三方依赖，台账 3.2）"
         }
+        // 命名空间注入（台账 3.2 登记，2026-08-11 解耦审计 A-1）：AGP 模块唯一命名空间，
+        // 运行类名保持上游 com.androlua.* 不变（模块无 res、无 R 类），纯构建期元数据。
+        check("namespace = \"com.lioisme.lide.androlua\"" in androluaBuild) {
+            "vendor 隔离失败：:androlua 命名空间注入形态漂移（台账 3.2 登记为 com.lioisme.lide.androlua）"
+        }
 
         // sora vendored 构建自足（白名单恢复机制登记于 verify-upstream-pristine，此处防外部 URL 回退）
         for (p in listOf(
@@ -651,5 +656,37 @@ tasks.register("verifyVendorIsolation") {
             }
         }
         println("vendor 隔离校验通过：上游目录零 com/lioisme/**，UPSTREAM.md 台账与源码一致（含 W^X 白名单与 annotation 还原断言）")
+    }
+}
+
+// sora 门面隔离门禁（解耦审计 B 级收口，2026-08-11）：
+// sora（io.github.rosemoe.*）只允许出现在 editor 包（LuaEditor/EditorLanguage/EditorDiagnostics
+// 等文本级能力）与 vendor 源码；session/ui/project/engine 等宿主层一律经
+// EditorContent / EditorController 门面（B-1~B-3 收口后无例外）——禁止直接 import 或 FQN
+// 引用 sora 类型，违反即失败（防新代码扩散：换编辑器引擎时宿主层零改写）。
+tasks.register("verifySoraIsolation") {
+    group = "verification"
+    description = "校验 sora 门面隔离（B 级）：editor 包外零 io.github.rosemoe 引用（含 FQN 形态）"
+    doLast {
+        val hostRoot = rootProject.file("app/src/main/kotlin/com/lioisme/lide")
+        check(hostRoot.isDirectory) { "sora 隔离失败：宿主源码根缺失 $hostRoot" }
+        val offenders = mutableListOf<String>()
+        hostRoot
+            .walkTopDown()
+            .filter { it.isFile && it.extension == "kt" }
+            .filter { f ->
+                val rel = f.relativeTo(hostRoot).invariantSeparatorsPath
+                !rel.startsWith("editor") && !rel.startsWith("editor/")
+            }
+            .forEach { f ->
+                if ("io.github.rosemoe" in f.readText()) {
+                    offenders += f.relativeTo(rootProject.rootDir).invariantSeparatorsPath
+                }
+            }
+        check(offenders.isEmpty()) {
+            "sora 隔离失败：editor 包外存在 io.github.rosemoe 引用（宿主层必须经 EditorContent/EditorController 门面）：\n" +
+                offenders.joinToString("\n") { "  - $it" }
+        }
+        println("sora 隔离校验通过：editor 包外零 io.github.rosemoe 引用（import 与 FQN 形态全覆盖）")
     }
 }

@@ -166,10 +166,12 @@ R1：    rg -n "luajava|androlua|loadLibrary" app/src/main/kotlin/com/lioisme/li
   （遍历脏标签逐个落盘）而非仅 `flushSelectedDirty()`——防抖窗口内编辑 A 后切到 B、
   进程被杀（无 onCleared 兜底）时 A 不再丢修改；成本只增于实际脏文件。
 - **跳行时序竞态（T4）**：跳行目标必须携带 Content 身份（`PendingJump(content, line)`，
-  openTab 完成即捕获），消费效应以 `editor.text === content` 身份绑定为前置轮询等待
-  （8ms 步进 / 5s 超时，仅文件切换瞬态，非常驻；同文件再跳行零等待）——openTab 完成至
-  LuaEditor `setText` 生效之间存在窗口，对旧文档 `setSelection` 会被随后文本替换覆盖
-  （定位丢失/错位），身份比较免误判。
+  openTab 完成即捕获），消费效应以身份绑定为前置轮询等待（8ms 步进 / 5s 超时，
+  仅文件切换瞬态，非常驻；同文件再跳行零等待）——openTab 完成至 LuaEditor `setText`
+  生效之间存在窗口，对旧文档 `setSelection` 会被随后文本替换覆盖（定位丢失/错位），
+  身份比较免误判。2026-08-11 门面收口后身份判定改经
+  `EditorController.isShowing(content)`（内部 `editor.text === content.raw`，语义不变），
+  定位执行也经 `setSelection`（内部夹取 + requestFocus）。
 - **池化编辑器引用滞留（T5）**：`LuaEditor` `DisposableEffect.onDispose` 必须
   `editor.setText(null)` 剥离进程级池化实例（`EditorViewPool`）对最后 Content + undo 栈
   （≤2500 快照）的强引用——会话 `release()` 清缓存后仍滞留至下次 setText 即跨工程泄漏；
@@ -203,12 +205,50 @@ R1：    rg -n "luajava|androlua|loadLibrary" app/src/main/kotlin/com/lioisme/li
   `uses-sdk` 元素属性、缺失回落 manifest 根属性（AGP/aapt2 折叠形态），全部带 android 命名空间
   校验；`ManifestEdit.minSdkVersion`（null=不干预）经 `rebuildUsesSdk`（重写或追加，TYPE_INT_DEC）
   写回，**manifest 根折叠形态必须改写根元素属性、不重复注入**（`hasUsesSdkElement` 预计算 +
-  appendNeed 门控防双写）；UI 经 `ZipUtils.readEntryData(hostApk, "AndroidManifest.xml")` +
-  `readUsesSdk().first` 读宿主 minSdk（解析失败降级 0），候选 = 保持宿主 + 23/21/19（过滤 ≤ 宿主），
-  minSdk<24 且未勾 v1 时构建拦截 Toast（`build_sdk_need_v1`）。单测覆盖元素/折叠双形态读写回环。
-- **工程深色（R6，WP-014）**：`ThemeRegistry#setTheme`（darcula/quietlight）已支持切换，
-  消费端缺接线——`EditorScreen` 现以 `produceState<Boolean?>(null, projectInfoVersion)` 后台读
-  init.lua `theme` 字段（`projectManager.readInitContent` + `LuaConfigParser.stringField`，
-  runCatching 降级 null），`effectiveDarkTheme = 覆盖值 ?: LocalIsDarkTheme` 传入
-  `EditorBody.isDarkTheme`（LuaEditor 现有 `LaunchedEffect(isDarkTheme)` 生效）；仅编辑器文本区
-  跟随，宿主 M3 主题不受影响，未知值回落宿主。
+  appendNeed 门控防双写）；2026-08-11 P3 起目标 SDK 由工程 init.lua `appsdk`（回落 `targetSdk`）
+  驱动（`ManifestEdit.targetSdkVersion`，缺失 = 宿主），minSdk 由 `minsdk`（回落 `minSdk`）驱动，
+  UI 经 `ZipUtils.readEntryData(hostApk, "AndroidManifest.xml")` + `readUsesSdk().first` 读宿主
+  minSdk（解析失败降级 0）；**构建对话框局部 minSdk/ABI 选择已随 P5 退役**，minSdk<24 且未勾 v1
+  时构建以失败结果展示（`build_sdk_need_v1`）。单测覆盖元素/折叠双形态读写回环。
+- **工程深色（R6，WP-014；P2 2026-08-11）**：`ThemeRegistry#setTheme`（darcula/quietlight）已支持切换，
+  消费端——`EditorScreen` 以 `produceState<Boolean?>(null, projectInfoVersion)` 后台读
+  init.lua `theme` 字段后走 **`ThemeCatalog.resolveDark`**（兼容 legacy dark/light 与 `Theme_*` 名：
+  别名表优先 + 名启发式 DayNight→null/含 Light→浅色/含 Black·Dark·Night→深色），runCatching 降级
+  null，`effectiveDarkTheme = 覆盖值 ?: LocalIsDarkTheme` 传入 `EditorBody.isDarkTheme`
+  （LuaEditor 现有 `LaunchedEffect(isDarkTheme)` 生效）；仅编辑器文本区跟随，宿主 M3 主题不受影响，
+  未知值回落宿主。
+- **工程属性页（P1-P4，2026-08-11）**：入口文案统一 `project_properties`（⋮ 菜单 / 长按底单 /
+  页标题）；四分区 = 基本信息（appname/packagename/appver/appcode/developer/description）+
+  系统（目标 SDK/最低 SDK/主题下拉）+ 高级（方向/渠道/密钥/调试）+ 权限；「跟随宿主」= init.lua
+  字段缺失（保存用 `LuaConfigParser.removeField` 删整行含行注释）；SDK 键与 pro 对齐
+  （目标=`appsdk`、最低=`minsdk`，读回落 targetSdk/minSdk），裸整数写回；主题写回 `quoteLuaString`，
+  下拉含保持宿主/常见别名（`ThemeCatalog.COMMON_ALIASES` 16 项）/反射全量 `Theme_*`（lazy 进程级缓存 +
+  反射失败降级精选表）/legacy dark·light 自定义条目；权限弹窗与工程权限页共用
+  `SearchablePermissionPicker.PermissionPickerList`（搜索 = 名称+中文名+别名，分组 REGULAR/SPECIAL/其他，
+  未知权限透传），清单 = `PermissionCatalog.ENTRIES`（51 宿主声明 + 6 特殊 + aliases），
+  `PermissionResolver.normalize` 含 `.` 即全限定名原样返回；读写一律经 `ProjectManager`
+  `readInitContent`/`writeInitFields`/`loadUserPermissions`（B-1，UI 不自摸文件）。
+
+## 11. sora 门面契约（2026-08-11 解耦审计 B 级收口，DECOUPLING_AUDIT_REPORT T2 完工蒸馏）
+
+sora 类型（`io.github.rosemoe.*`）只允许出现在 `editor` 包（文本级能力）与 vendor 源码；
+宿主层（session / ui / project / engine）一律经两个门面访问，禁止 import 或 FQN 引用：
+
+- **`editor/EditorContent.kt`**（不透明文本句柄）：`of(text)` 工厂（宿主 IO 线程构造）、
+  `snapshot()`（后台线程安全，内部 ReadWriteLock）、`isSameAs()`（引用身份判定，setText
+  复用 / 跳行绑定前置）；`raw` 仅 `internal`（模块内供 session 门面实现）。
+  改造路径：`EditorSession.Selection.content` / LRU 缓存 / `insertText`/`replaceText` /
+  `flushDirty` 全量换用；`toString()` → `snapshot()`。
+- **`editor/EditorController.kt`**（编辑器命令门面）：`bind`/`unbind`（LuaEditor
+  AndroidView update / onDispose 期，主线程）、`isBound`/`isShowing`/`lineCount`、
+  `setSelection(line, column)`（内部夹取 + requestFocus）、`undo`/`redo`/`canUndo`/`canRedo`
+  （undo/redo 只读守卫由调用方前置拦截）；全部命令 try/catch(Throwable) 降级，异常不逃逸。
+  改造路径：替代历史 `AtomicReference<CodeEditor?>` 发布（B-1 移除点）——
+  `EditorScreen` 跳行消费（`isShowing` 轮询 + `setSelection`）与 `runUndoRedo`
+  （`canUndo/canRedo` 重算上报）均经门面。
+
+门禁守护：`:app:verifySoraIsolation`（walk `app/src/main/kotlin/com/lioisme/lide`，
+editor 目录外扫描 `io.github.rosemoe` 字面量，import 与 FQN 双形态，违例即失败；
+CI verify-sora-isolation job 挂接；负向拦截实证 = session 包植入 sora import 临时文件
+→ FAILURE，移除 → SUCCESS）。关联：宿主路径与引擎前缀单一事实源见
+`kb/ARCHITECTURE.md` §3.5。

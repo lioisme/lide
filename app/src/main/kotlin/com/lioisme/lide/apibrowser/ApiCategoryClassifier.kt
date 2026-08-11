@@ -40,13 +40,8 @@ object ApiCategoryClassifier {
             "android.widget.ViewDragHelper",
         )
 
-    private val androluaPackagePrefixes =
-        listOf(
-            "com.androlua.",
-            "com.luajava.",
-            "com.nirenr.",
-            "com.android.cglib.",
-        )
+    // 引擎包前缀单一事实源（D-1 收口）：新增引擎包只改 EnginePackagePrefixes。
+    private val androluaPackagePrefixes = EnginePackagePrefixes.ANDROLUA_PACKAGES
 
     /** 常用控件候选包：View 子类反射验证通过才归入（ArrayAdapter 等非 View 自动归框架）。 */
     private val widgetPackages =

@@ -5,6 +5,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Redo
 import androidx.compose.material.icons.automirrored.filled.Undo
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.*
@@ -29,8 +30,10 @@ import me.saket.cascade.CascadeDropdownMenu
 data class EditorMoreAction(
     val category: String?,
     val label: String,
-    /** 是否可点击（只读等态下置灰；置灰项不触发 [onClick]）。 */
+    /** 是否可点击（置灰项不触发 [onClick]）。 */
     val enabled: Boolean = true,
+    /** 勾选态（如「只读」等开关项显示 MD3 check 图标）；null = 不显示。 */
+    val checked: Boolean? = null,
     val onClick: () -> Unit,
 )
 
@@ -140,6 +143,16 @@ fun EditorToolbar(
                                     DropdownMenuItem(
                                         text = { Text(action.label) },
                                         enabled = action.enabled,
+                                        trailingIcon =
+                                            action.checked?.let { checked ->
+                                                {
+                                                    Icon(
+                                                        Icons.Default.Check,
+                                                        contentDescription = null,
+                                                        tint = MaterialTheme.colorScheme.primary,
+                                                    )
+                                                }
+                                            },
                                         onClick = {
                                             menuExpanded = false
                                             action.onClick()

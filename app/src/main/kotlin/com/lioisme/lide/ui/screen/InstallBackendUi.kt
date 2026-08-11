@@ -195,7 +195,7 @@ fun InstallBackendRadioRow(
  * 不用 ACTION_VIEW——宿主自身的 .alp/.lua 导入过滤会匹配任何 content:// 文件，
  * 会弹出"打开方式"选择器而非直接安装。
  * 未授予"安装未知来源应用"时系统会先弹授权页，授予后直达安装确认。
- * （T16 从 BuildPackagingDialog 提升为共享件：打包自动安装与通用 APK 安装对话框共用。）
+ * （T16 从 BuildApkDialog 提升为共享件：打包自动安装与通用 APK 安装对话框共用。）
  */
 internal fun installApkViaSystem(
     context: android.content.Context,

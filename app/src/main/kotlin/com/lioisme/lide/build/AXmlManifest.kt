@@ -45,6 +45,11 @@ data class ManifestEdit(
      * 另一侧不新增重复声明，防双写冲突）。
      */
     val minSdkVersion: Int? = null,
+    /**
+     * 产物目标系统版本覆盖（P3，2026-08-11，pro `appsdk` 语义）：null = 不干预。
+     * 写回形态与 [minSdkVersion] 完全一致（uses-sdk 元素 / manifest 根属性双形态）。
+     */
+    val targetSdkVersion: Int? = null,
 )
 
 /**
@@ -314,6 +319,9 @@ object AXmlManifest {
         if (edit.minSdkVersion != null && origIdx("minSdkVersion") == null) {
             appendNeed += "minSdkVersion"
         }
+        if (edit.targetSdkVersion != null && origIdx("targetSdkVersion") == null) {
+            appendNeed += "targetSdkVersion"
+        }
         if (edit.launcherActivity != null) {
             // launcher 注入所需元素名/常量（宿主 manifest 通常已含，set 去重无副作用）。
             appendNeed += "intent-filter"
@@ -466,9 +474,10 @@ object AXmlManifest {
         hasUsesSdkElement: Boolean,
     ): ByteArray {
         val el = parseElement(chunk)
-        val attrs = ArrayList<ByteArray>(el.attrs.size + 1)
+        val attrs = ArrayList<ByteArray>(el.attrs.size + 2)
         var hasPackage = false
         var hasMinSdk = false
+        var hasTargetSdk = false
         for (a in el.attrs) {
             val attrName = strings.getOrNull(a.name)
             attrs += when (attrName) {
@@ -495,6 +504,15 @@ object AXmlManifest {
                         attrBytes(chunk, el, a)
                     }
                 }
+                "targetSdkVersion" -> {
+                    // P3（2026-08-11）：与 minSdkVersion 同形态写回（pro appsdk 语义）。
+                    hasTargetSdk = true
+                    if (edit.targetSdkVersion != null && strings.getOrNull(a.ns) == ANDROID_URI) {
+                        emitAttr(a.ns, a.name, NO_INDEX.toInt(), TYPE_INT_DEC, edit.targetSdkVersion.toLong())
+                    } else {
+                        attrBytes(chunk, el, a)
+                    }
+                }
                 else -> attrBytes(chunk, el, a)
             }
         }
@@ -502,7 +520,7 @@ object AXmlManifest {
             val i = newIdx(edit.packageName)
             attrs += emitAttr(NO_INDEX.toInt(), newIdx("package"), i, TYPE_STRING, i.toLong())
         }
-        // UI1：无 uses-sdk 元素且根元素未声明 minSdkVersion 时兜底追加（折叠形态写回）。
+        // UI1/P3：无 uses-sdk 元素且根元素未声明对应版本属性时兜底追加（折叠形态写回）。
         if (edit.minSdkVersion != null && !hasMinSdk && !hasUsesSdkElement) {
             attrs += emitAttr(
                 newIdx(ANDROID_URI),
@@ -512,12 +530,21 @@ object AXmlManifest {
                 edit.minSdkVersion.toLong(),
             )
         }
+        if (edit.targetSdkVersion != null && !hasTargetSdk && !hasUsesSdkElement) {
+            attrs += emitAttr(
+                newIdx(ANDROID_URI),
+                newIdx("targetSdkVersion"),
+                NO_INDEX.toInt(),
+                TYPE_INT_DEC,
+                edit.targetSdkVersion.toLong(),
+            )
+        }
         return emitElement(el.name, attrs, el.line)
     }
 
     /**
-     * 重建 uses-sdk 元素（UI1，2026-08-10）：minSdkVersion 有覆盖则重写，
-     * 无覆盖原样保留；其余属性（targetSdkVersion 等）不动。
+     * 重建 uses-sdk 元素（UI1 2026-08-10 minSdk / P3 2026-08-11 targetSdk）：
+     * 有覆盖则重写，无覆盖原样保留；其余属性（平台等）不动。
      */
     private fun rebuildUsesSdk(
         chunk: ByteArray,
@@ -525,22 +552,33 @@ object AXmlManifest {
         newIdx: (String) -> Int,
         edit: ManifestEdit,
     ): ByteArray {
-        if (edit.minSdkVersion == null) return chunk
+        if (edit.minSdkVersion == null && edit.targetSdkVersion == null) return chunk
         val el = parseElement(chunk)
-        val attrs = ArrayList<ByteArray>(el.attrs.size + 1)
+        val attrs = ArrayList<ByteArray>(el.attrs.size + 2)
         var hasMinSdk = false
+        var hasTargetSdk = false
         for (a in el.attrs) {
-            if (strings.getOrNull(a.name) == "minSdkVersion" &&
-                strings.getOrNull(a.ns) == ANDROID_URI
-            ) {
-                hasMinSdk = true
-                attrs += emitAttr(a.ns, a.name, NO_INDEX.toInt(), TYPE_INT_DEC, edit.minSdkVersion.toLong())
-            } else {
-                attrs += attrBytes(chunk, el, a)
+            val name = strings.getOrNull(a.name)
+            val inAndroidNs = strings.getOrNull(a.ns) == ANDROID_URI
+            when {
+                name == "minSdkVersion" && inAndroidNs && edit.minSdkVersion != null -> {
+                    hasMinSdk = true
+                    attrs += emitAttr(a.ns, a.name, NO_INDEX.toInt(), TYPE_INT_DEC, edit.minSdkVersion.toLong())
+                }
+
+                name == "targetSdkVersion" && inAndroidNs && edit.targetSdkVersion != null -> {
+                    hasTargetSdk = true
+                    attrs += emitAttr(a.ns, a.name, NO_INDEX.toInt(), TYPE_INT_DEC, edit.targetSdkVersion.toLong())
+                }
+
+                else -> attrs += attrBytes(chunk, el, a)
             }
         }
-        if (!hasMinSdk) {
+        if (!hasMinSdk && edit.minSdkVersion != null) {
             attrs += emitAttr(newIdx(ANDROID_URI), newIdx("minSdkVersion"), NO_INDEX.toInt(), TYPE_INT_DEC, edit.minSdkVersion.toLong())
+        }
+        if (!hasTargetSdk && edit.targetSdkVersion != null) {
+            attrs += emitAttr(newIdx(ANDROID_URI), newIdx("targetSdkVersion"), NO_INDEX.toInt(), TYPE_INT_DEC, edit.targetSdkVersion.toLong())
         }
         return emitElement(el.name, attrs, el.line)
     }

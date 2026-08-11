@@ -11,6 +11,7 @@
 ```
 docs/
 ├── README.md           ← 本文件：入口 + 检索索引
+├── SOURCE_LOCATION.md  # 本地源码位置索引（reference/vendor/本方实现地图；禁止云端拉取）
 ├── WHITEPAPER.md       # 产品与架构白皮书（架构 / 路线 / 原生模块差异 §7.1）
 ├── kb/                 # 知识库（是什么 / 为什么 / 在哪改）— 唯一事实来源
 │   ├── README.md       #   知识库总索引 + 阅读导航
@@ -36,6 +37,7 @@ docs/
 | 进行中工作 | [in-progress/](in-progress/) |
 | 社区代码语料 | [kb/androlua-community/](kb/androlua-community/README.md) |
 | 参考基线/上游源码 | `reference/`（只读，gitignore 排除）+ `app/vendor/`（上游构建模块，只读） |
+| **本地源码位置索引（禁止云端拉取）** | [SOURCE_LOCATION.md](SOURCE_LOCATION.md) —— 全部上游/参考源码本地位置，先查本地再动手 |
 
 ## 文档维护约定
 

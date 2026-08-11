@@ -16,8 +16,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.androlua.LuaApplication
 import com.lioisme.lide.R
+import com.lioisme.lide.engine.RuntimePaths
 import com.lioisme.lide.project.AlpManager
 import com.lioisme.lide.import.AlpImportCoordinator
 import com.lioisme.lide.ui.theme.LideTopBar
@@ -79,7 +79,7 @@ fun ExamplesScreen(onBack: () -> Unit) {
         }
 
     fun refreshInstalled() {
-        val projectDir = File(LuaApplication.getInstance().luaExtDir, "project")
+        val projectDir = RuntimePaths.projectsDir()
         installed =
             availableExamples
                 .filter { File(projectDir, it.dir).isDirectory }

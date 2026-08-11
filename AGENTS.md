@@ -45,6 +45,8 @@ git ls-files '*.jar' | grep -v 'gradle/wrapper/gradle-wrapper.jar'
   `verifyRuntimeSurface` / `verifyReleaseLuaSurface` 任务已随 2026-08-09 引擎 dex 单份化删除
   （历史引用一律不得回退，CI 亦已移除）
 - 上游隔离：`.\gradlew.bat :app:verifyVendorIsolation`
+- sora 门面隔离（editor 包外零 `io.github.rosemoe` 引用，含 FQN 形态）：
+  `.\gradlew.bat :app:verifySoraIsolation`（CI verify-sora-isolation job 挂接）
 - 上游全树差异门禁（禁止未登记改动）：`.\scripts\verify-upstream-pristine.ps1`（Windows，
   缺省自动下载上游 tarball；CI 用 `scripts/verify-upstream-pristine.sh`，verify-vendor job 挂接）
   ——白名单机器副本 `scripts/upstream-pristine.json` 必须与
@@ -68,6 +70,22 @@ git ls-files '*.jar' | grep -v 'gradle/wrapper/gradle-wrapper.jar'
 - 文件 → 语言 scope 唯一事实源为 `LanguageDetector`（未识别扩展名显式回落
   `text.plain`，绝不回退为 Lua）；宿主「可打开性」判定经 `LanguageDetector.isKnownFile`
   消费同一表，不另维护扩展名白名单。
+- **sora 门面契约（2026-08-11 解耦审计 B 级收口）**：sora 类型（`io.github.rosemoe.*`）只允许
+  出现在 `editor` 包（文本级能力）与 vendor 源码；宿主层（session / ui / project / engine 等）
+  一律经 `EditorContent`（不透明文本句柄：`of` 构造 / `snapshot` 后台快照 / `isSameAs` 身份
+  判定）与 `EditorController`（命令门面：`bind`/`unbind`/`isShowing`/`setSelection`/`undo`/
+  `redo`/`canUndo`/`canRedo`，主线程 + try/catch 降级）访问——禁止 import 或 FQN 引用 sora
+  类型，`:app:verifySoraIsolation` 门禁守护（CI verify-sora-isolation job）。
+
+## 宿主路径与引擎前缀约定（2026-08-11 解耦审计 C/D 级收口）
+
+- 引擎外部存储根（`luaExtDir`）唯一宿主入口为 `engine/RuntimePaths`（`luaExtDir()` /
+  `projectsDir()` / `defaultApkDir()`），一律走 public getter `getLuaExtDir()`；
+  UI / project / 根 Activity 禁止直接触碰 `com.androlua.LuaApplication`（含 Kotlin 对 Java
+  protected 字段的越权直读）；唯一豁免 = `LideApp`（继承点）与 `RuntimePaths` 本体。
+- API 浏览器引擎归属判定消费 `apibrowser/EnginePackagePrefixes` 单一事实源
+  （`ANDROLUA_PACKAGES` 全量引擎包 / `JNI_BRIDGE_PACKAGES` 桥接子集），分类器禁止自建引擎
+  前缀表；新增引擎包只改该文件。
 
 ## API 浏览器反射线程契约（2026-08 简化，架构审计 A-1）
 
@@ -157,11 +175,12 @@ git ls-files '*.jar' | grep -v 'gradle/wrapper/gradle-wrapper.jar'
   固定 29 不含 32 位工具链）→ 宿主携带 → 打包器自动可用，**打包侧与 UI 零改动**。
 - 设置页默认 ABI（`BuildOpts.preferAbi`）选项由宿主实际携带驱动（展示候选 = 宿主 ABI ∪
   标准架构名）：宿主未携带的架构**置灰禁用**（仅展示不可选，可用性判定只依据 `ZipUtils.listAbis`
-  实测结果）；`preferAbi` 残留为未携带架构时构建侧回落「宿主全部」。构建打包对话框 ABI 多选
+  实测结果）；`preferAbi` 残留为未携带架构时构建侧回落「宿主全部」。设置页 ABI 下拉
   仅列出宿主实际携带项（未携带不显示）。
-- 打包 UI 唯一入口为构建打包对话框（编辑器 ⋮ 菜单触发；`BuildPackagingDialog`），
-  签名方案 v1/v2/v3 与 ABI 均用经典 Checkbox 控件；「优化打包」（`stripNativeLibs`）
-  为开关控件，仅针对原生库。
+- 打包 UI 唯一入口为构建打包对话框（编辑器 ⋮ 菜单「构建 APK」触发；`BuildApkDialog`，
+  2026-08-11 P5 起**打开即构建**，无构建中可配置项）；签名方案 v1/v2/v3、默认 ABI、
+  安装方式、「优化打包」（`stripNativeLibs`）等一律在 AndroLua 设置页持久化（`BuildOpts`），
+  构建时对话框直接消费，产物装配仍以宿主实际携带 + `ZipUtils.listAbis` 实测为准。
 - 打包多架构验证走 `scripts/build-apks.ps1`（矩阵参数化：`-Abis`/`-Types`/`-Variants`，
   默认 6 变体；产物签名逐包校验）。
 
@@ -232,6 +251,12 @@ git ls-files '*.jar' | grep -v 'gradle/wrapper/gradle-wrapper.jar'
 - 改动打包 / 原生 / 示例链路必须重跑：`:app:verifyMinimalism` + `:app:testArm64DebugUnitTest --tests "com.lioisme.lide.build.*"`。
 
 ## 文档治理约定（opencode Agent 必守，2026-08-09 断舍离收口）
+
+- **源码位置索引（禁止云端拉取）**：所有上游/参考源码（AndroLua Pro 4.4.2、sora-editor、
+  Squircle CE、参考工程、社区语料）都在本仓库工作副本内，位置统一记录于
+  `docs/SOURCE_LOCATION.md`（含 reference/、app/vendor/、本方实现地图三区）。
+  改动相关功能必须先查该索引读本地文件，**禁止从 GitHub 等云端拉取替代**；
+  reference/ 内 URL 仅溯源备注，不作为获取途径。
 
 - **文档全集（无 discard 区）**：`docs/README.md`（入口）、`docs/WHITEPAPER.md`（白皮书）、
   `docs/kb/`（知识库，唯一事实来源：README / ARCHITECTURE / ENGINE_RUNTIME / EDITOR +

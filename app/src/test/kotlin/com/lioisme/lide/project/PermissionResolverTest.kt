@@ -74,4 +74,24 @@ class PermissionResolverTest {
             PermissionResolver.runtimeRequestable(listOf("com.example.CUSTOM")),
         )
     }
+
+    @Test
+    fun `normalize prefixes bare names`() {
+        assertEquals("android.permission.CAMERA", PermissionResolver.normalize("CAMERA"))
+        assertEquals("android.permission.RECORD_AUDIO", PermissionResolver.normalize(" RECORD_AUDIO "))
+    }
+
+    @Test
+    fun `normalize keeps fully qualified names untouched`() {
+        assertEquals(
+            "com.android.launcher.permission.INSTALL_SHORTCUT",
+            PermissionResolver.normalize("com.android.launcher.permission.INSTALL_SHORTCUT"),
+        )
+        assertEquals(
+            "android.permission.CAMERA",
+            PermissionResolver.normalize("android.permission.CAMERA"),
+        )
+        assertEquals("org.chromium.FOO", PermissionResolver.normalize("org.chromium.FOO"))
+        assertEquals("", PermissionResolver.normalize(""))
+    }
 }

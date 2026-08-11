@@ -13,9 +13,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
-import com.androlua.LuaApplication
 import com.lioisme.lide.engine.EngineActivity
 import com.lioisme.lide.engine.RunEngineLauncher
+import com.lioisme.lide.engine.RuntimePaths
 import com.lioisme.lide.i18n.LocaleManager
 import com.lioisme.lide.model.PendingOpenFile
 import com.lioisme.lide.model.Project
@@ -135,7 +135,7 @@ class MainActivity : ComponentActivity() {
      */
     private fun handleAndroluaScheme(uri: Uri) {
         val relPath = uri.path?.trimStart('/') ?: return
-        val target = File(LuaApplication.getInstance().luaExtDir, relPath)
+        val target = File(RuntimePaths.luaExtDir(), relPath)
         if (target.isDirectory) {
             val main = File(target, Project.DEFAULT_MAIN_FILE)
             if (main.isFile) {
@@ -189,7 +189,7 @@ class MainActivity : ComponentActivity() {
     private fun adoptStandaloneFile(file: File): PendingOpenFile? =
         try {
             val baseName = file.nameWithoutExtension
-            val projectBase = File(LuaApplication.getInstance().luaExtDir, "project")
+            val projectBase = RuntimePaths.projectsDir()
             projectBase.mkdirs()
             var projectDir = File(projectBase, baseName)
             var counter = 2

@@ -91,6 +91,8 @@ object ApkBuilder {
         val mainFile: String = Project.DEFAULT_MAIN_FILE,
         /** 产物最低系统版本（UI1，2026-08-10）：null = 保持宿主（不写回 uses-sdk）。 */
         val minSdkVersion: Int? = null,
+        /** 产物目标系统版本（P3，2026-08-11，pro `appsdk` 语义）：null = 保持宿主。 */
+        val targetSdkVersion: Int? = null,
     )
 
     class BuildException(
@@ -220,6 +222,8 @@ object ApkBuilder {
                             ),
                         // UI1（2026-08-10）：产物最低系统版本覆盖（null = 保持模板）。
                         minSdkVersion = input.minSdkVersion,
+                        // P3（2026-08-11）：产物目标系统版本覆盖（pro appsdk 语义，null = 保持模板）。
+                        targetSdkVersion = input.targetSdkVersion,
                     ),
                 )
             } catch (e: Exception) {

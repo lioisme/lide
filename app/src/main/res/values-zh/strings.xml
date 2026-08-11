@@ -79,34 +79,18 @@
     <string name="highlight_bracket_pair">高亮括号配对</string>
     <string name="highlight_current_block">高亮当前块</string>
 <string name="minimap">迷你地图</string>
-    <string name="sticky_scroll">粘性滚动</string>
-    <string name="ln_panel">行面板</string>
-    <!-- UI1 全量审计（2026-08-10）：线号分割线 / 固定行号（sora 上限能力接线） -->
-    <string name="line_number_divider">行号分割线</string>
-    <string name="line_number_divider_value">宽度：%1$d px</string>
-    <string name="pin_line_number">固定行号</string>
-    <string name="pin_line_number_hint">水平滚动时行号列保持固定</string>
-    <!-- UI1 全量审计（2026-08-10）：只读视觉提示 -->
-    <string name="editor_read_only_banner">只读模式 — 编辑已禁用</string>
+<string name="sticky_scroll">粘性滚动</string>
     <!-- UI1 全量审计（2026-08-10）：打包最低系统版本下移 -->
-    <string name="build_sdk_label">最低系统版本</string>
-    <string name="build_sdk_keep_host">保持宿主（%1$d）</string>
     <string name="build_sdk_need_v1">Android 7 以下设备仅支持 v1 签名，请先勾选 v1。</string>
 <string name="scalable">双指缩放</string>
-    <string name="cursor_animation">光标动画</string>
     <string name="disable_soft_kbd_if_hard">硬键盘优先</string>
     <!-- 编辑器设置 sora 上限扩展（T5，2026-08-10） -->
+    <!-- 2026-08-11：默认字体族 = Squircle CE 组合（TypefaceProvider.DEFAULT = MONOSPACE），
+         设置面板仅保留等宽/无衬线/衬线三项（「系统默认」选项随 DEFAULT 语义收敛删除） -->
     <string name="font_family">字体</string>
-    <string name="font_family_default">系统默认</string>
     <string name="font_family_monospace">等宽</string>
     <string name="font_family_sans">无衬线</string>
     <string name="font_family_serif">衬线</string>
-    <string name="line_spacing">行高</string>
-    <string name="line_spacing_value">%1$s 倍</string>
-    <string name="undo_stack_size">撤销栈容量</string>
-    <string name="undo_stack_size_value">%1$d</string>
-    <string name="sticky_scroll_max_lines">粘性滚动行数</string>
-    <string name="sticky_scroll_max_lines_value">%1$d</string>
     <string name="sticky_scroll_word_wrap_hint">自动换行开启时不可用</string>
     <string name="restore_defaults">恢复默认</string>
     <string name="restore_defaults_done">已恢复默认设置</string>
@@ -137,19 +121,45 @@
     <string name="perm_host_hint">LIDE 宿主应用自身的权限。它们适用于 IDE 及宿主内运行的脚本。</string>
     <string name="perm_package_only">仅写入打包 APK</string>
     <string name="project_permissions">工程权限</string>
-    <string name="project_info">工程信息</string>
     <string name="build_apk">构建 APK</string>
 
     <!-- Project info (WP-004) -->
-    <string name="info_title">工程信息</string>
-    <string name="info_basic_group">基础</string>
+    <string name="project_properties">工程属性</string>
+    <string name="info_section_basic">基本信息</string>
+    <string name="info_section_system">系统</string>
+    <string name="info_section_advanced">高级</string>
+    <string name="info_section_permissions">权限</string>
     <string name="info_appname">应用名称</string>
     <string name="info_appver">应用版本</string>
     <string name="info_appcode">版本号</string>
-    <string name="info_appsdk">目标 SDK</string>
+    <string name="info_min_sdk">最低 SDK</string>
+    <string name="info_target_sdk">目标 SDK</string>
+    <string name="info_sdk_keep_host">保持宿主（%1$d）</string>
+    <string name="info_sdk_custom">自定义（%1$s）</string>
+    <string name="info_sdk_invalid">目标 SDK 不能低于最低 SDK</string>
     <string name="info_path_pattern">屏幕方向</string>
     <string name="info_packagename">包名</string>
     <string name="info_theme">主题</string>
+    <string name="info_theme_keep_host">跟随宿主</string>
+    <string name="info_theme_custom">自定义（%1$s）</string>
+
+    <!-- 常见主题别名（P2，2026-08-11，ThemeCatalog） -->
+    <string name="theme_alias_classic">经典</string>
+    <string name="theme_alias_black">纯黑</string>
+    <string name="theme_alias_classic_light">经典浅色</string>
+    <string name="theme_alias_device_dark">默认深色</string>
+    <string name="theme_alias_device_light">默认浅色</string>
+    <string name="theme_alias_device_daynight">跟随系统</string>
+    <string name="theme_alias_device_dark_no_title">默认深色（无标题栏）</string>
+    <string name="theme_alias_device_light_no_title">默认浅色（无标题栏）</string>
+    <string name="theme_alias_material_dark">Material 深色</string>
+    <string name="theme_alias_material_light">Material 浅色</string>
+    <string name="theme_alias_material_dark_no_title">Material 深色（无标题栏）</string>
+    <string name="theme_alias_material_light_no_title">Material 浅色（无标题栏）</string>
+    <string name="theme_alias_holo_dark">Holo 深色</string>
+    <string name="theme_alias_holo_light">Holo 浅色</string>
+    <string name="theme_alias_holo_dark_no_title">Holo 深色（无标题栏）</string>
+    <string name="theme_alias_holo_light_no_title">Holo 浅色（无标题栏）</string>
     <string name="info_app_key">应用密钥</string>
     <string name="info_app_channel">渠道</string>
     <string name="info_developer">开发者</string>
@@ -162,14 +172,14 @@
     <string name="info_save_success">已保存</string>
     <string name="info_save_failed">保存失败</string>
     <string name="info_load_failed">未找到 init.lua</string>
-    <string name="project_info_menu">工程信息</string>
 
-    <!-- Build APK (WP-005) -->
+    <!-- Build APK (WP-005; P5 2026-08-11 去配置对话框：ABI/签名方案/安装方式等移至设置页，仅保留阶段/结果文案) -->
     <string name="build_title">构建 APK</string>
-    <string name="build_button">构建</string>
-    <string name="build_working">构建中…</string>
     <string name="build_success">构建完成</string>
     <string name="build_fail">构建失败：%1$s</string>
+    <string name="build_success_title">构建完成</string>
+    <string name="build_failure_title">构建失败</string>
+    <string name="build_output_path">产物路径</string>
     <string name="build_share">分享 APK</string>
     <string name="build_need_package">请先在 init.lua 中填写 packagename</string>
     <string name="build_stage_read_host">读取宿主 APK</string>
@@ -177,14 +187,6 @@
     <string name="build_stage_compile">编译 Lua</string>
     <string name="build_stage_assemble">打包 APK</string>
     <string name="build_stage_sign">签名 APK</string>
-    <string name="build_need_abi">请至少选择一个 ABI</string>
-    <string name="build_version">版本 %1$s（%2$s）</string>
-    <string name="build_permissions">权限（%1$d 项）</string>
-    <string name="build_dep_native">原生库：%1$d 个（约 %2$s）</string>
-    <string name="build_dep_abis">ABI：%1$s</string>
-    <string name="build_dep_missing">未找到模块：%1$s</string>
-    <string name="build_abi_label">支持的 ABI</string>
-    <string name="build_opts_summary">打包选项：%1$s；%2$s；%3$s</string>
     <string name="run_finished">运行结束</string>
     <string name="run_error_title">运行出错</string>
     <string name="run_jump_to_line">跳到出错行</string>
@@ -240,6 +242,34 @@
     <string name="perm_foreground_service">前台服务</string>
     <string name="perm_vibrate">振动</string>
     <string name="perm_wake_lock">唤醒锁</string>
+    <string name="perm_change_network_state">更改网络状态</string>
+    <string name="perm_change_wifi_state">更改 WiFi 状态</string>
+    <string name="perm_modify_audio_settings">修改音频设置</string>
+    <string name="perm_access_media_location">访问媒体文件位置</string>
+    <string name="perm_answer_phone_calls">接听电话</string>
+    <string name="perm_read_call_log">读取通话记录</string>
+    <string name="perm_write_call_log">写入通话记录</string>
+    <string name="perm_write_sms">写入短信</string>
+    <string name="perm_receive_mms">接收彩信</string>
+    <string name="perm_use_fingerprint">使用指纹</string>
+    <string name="perm_flashlight">闪光灯</string>
+    <string name="perm_set_wallpaper">设置壁纸</string>
+    <string name="perm_get_package_size">获取应用大小</string>
+    <string name="perm_clear_app_cache">清除应用缓存</string>
+    <string name="perm_kill_background_processes">结束后台进程</string>
+    <string name="perm_download_without_notification">静默下载</string>
+    <string name="perm_read_logs">读取日志</string>
+    <string name="perm_read_frame_buffer">读取帧缓冲</string>
+    <string name="perm_battery_stats">电池统计</string>
+    <string name="perm_install_shortcut">安装快捷方式</string>
+    <string name="perm_dhizuku_api">Dhizuku API</string>
+
+    <!-- 权限选择器（P4，2026-08-11） -->
+    <string name="perm_other_section">其他</string>
+    <string name="permission_search_hint">搜索权限</string>
+    <string name="permission_search_clear">清除</string>
+    <string name="permission_selected_count">已选 %1$d / %2$d</string>
+    <string name="permission_no_result">未找到匹配的权限</string>
 
     <!-- Special permissions -->
     <string name="perm_special_overlay">悬浮窗</string>
@@ -279,17 +309,13 @@
     <string name="cd_more_options">更多选项</string>
     <string name="cd_back">返回</string>
     <string name="menu_category_project">工程</string>
-    <string name="menu_category_text">文本</string>
     <!-- 编辑器 Appbar 菜单（T3，2026-08-10）：文件/编辑/工程行业惯例分类 -->
+    <!-- 2026-08-11 用户红线（菜单瘦身）：文件分类仅保留文件树（占位按钮），
+         编辑分类仅保留编辑器设置；保存/剪贴板/行操作/只读切换等菜单项全部删除 -->
     <string name="menu_category_file">文件</string>
     <string name="menu_category_edit">编辑</string>
-    <string name="menu_save">保存</string>
-    <string name="menu_save_all">全部保存</string>
-    <string name="menu_reload">重新加载</string>
-    <string name="menu_cut">剪切</string>
-    <string name="menu_copy">复制</string>
-    <string name="menu_paste">粘贴</string>
-    <string name="menu_select_all">全选</string>
+    <string name="menu_file_tree">文件树</string>
+    <string name="file_tree_coming_soon">文件树即将推出</string>
     <string name="menu_editor_settings">编辑器设置</string>
     <string name="menu_androlua_settings">AndroLua 设置</string>
     <string name="accessibility_service_description">LIDE 无障碍服务：为 Lua 脚本提供自动化能力（点击、滑动、截图）。</string>
@@ -395,9 +421,6 @@
     <string name="signing_hide_password">隐藏密码</string>
     <string name="signing_delete_confirm">删除签名档案「%1$s」？密钥库文件将被永久删除。</string>
     <string name="delete">删除</string>
-    <string name="build_signature">签名</string>
-    <string name="build_manage_signing">管理</string>
-    <string name="build_signature_value">%1$s</string>
     <string name="build_opt_compile_label">编译 Lua 文件</string>
 
     <!-- 打包选项（合并入 AndroLua 页） -->
@@ -426,13 +449,6 @@
     <string name="install_failed">安装失败</string>
 
     <!-- 编辑器（并入自原 :editor 模块，2026-08-08 源码组织五需求 Phase 1） -->
-    <!-- Editor text operations -->
-    <string name="text_op_select_line">选择整行</string>
-    <string name="text_op_delete_line">删除整行</string>
-    <string name="text_op_duplicate_line">复制整行</string>
-    <string name="text_op_toggle_case">大小写转换</string>
-    <string name="text_op_word_prev">左移一个词</string>
-    <string name="text_op_word_next">右移一个词</string>
     <!-- Editor tabs -->
     <string name="dirty_marker">• </string>
     <string name="menu_close_tab">关闭</string>

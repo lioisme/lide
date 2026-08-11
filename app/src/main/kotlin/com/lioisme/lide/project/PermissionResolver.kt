@@ -23,13 +23,16 @@ object PermissionResolver {
         return LuaConfigParser.stringArrayField(initContent, "user_permission")
     }
 
-    /** 归一化为全名：`CAMERA` → `android.permission.CAMERA`；已带前缀/非标准名原样返回。 */
+    /**
+     * 归一化为全名：`CAMERA` → `android.permission.CAMERA`；
+     * 已带 `.`（全限定名，含 `android.permission.` / `com.*` / `com.android.launcher.permission.*`
+     * 等任意前缀）原样返回（P4，2026-08-11：防 `com.android.launcher.permission.*` 等被误加前缀）。
+     */
     fun normalize(permission: String): String {
         val name = permission.trim()
         if (name.isEmpty()) return name
-        if (name.startsWith(PREFIX) || name.startsWith("com.")) return name
-        val simple = name.substringAfterLast('.')
-        return PREFIX + simple
+        if (name.contains('.')) return name
+        return PREFIX + name
     }
 
     /**

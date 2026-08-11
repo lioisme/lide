@@ -267,4 +267,40 @@ class LuaConfigParserTest {
         assertEquals("[[hello]]", LuaConfigParser.field(content, "appdesc"))
         assertEquals("com.demo", LuaConfigParser.stringField(content, "packagename"))
     }
+
+    // ---- P1（2026-08-11）：removeField（「跟随宿主」语义 = 字段不存在）----
+
+    @Test
+    fun `removeField removes whole line`() {
+        val content = "appname = \"demo\"\nappsdk = 23\ntheme = \"Theme_Light\"\n"
+        val out = LuaConfigParser.removeField(content, "appsdk")
+        assertEquals("appname = \"demo\"\ntheme = \"Theme_Light\"\n", out)
+        assertNull(LuaConfigParser.field(out, "appsdk"))
+    }
+
+    @Test
+    fun `removeField removes last field without trailing newline`() {
+        val content = "appname = \"demo\"\ntheme = \"Theme_Black\""
+        val out = LuaConfigParser.removeField(content, "theme")
+        assertEquals("appname = \"demo\"\n", out)
+    }
+
+    @Test
+    fun `removeField keeps bytes outside target line identical`() {
+        val content = "-- keep me\nappname = \"demo\"\nappsdk = 23 -- sdk note\nuser_permission = { }\n"
+        val out = LuaConfigParser.removeField(content, "appsdk")
+        assertEquals("-- keep me\nappname = \"demo\"\nuser_permission = { }\n", out)
+    }
+
+    @Test
+    fun `removeField missing field returns content unchanged`() {
+        val content = "appname = \"demo\"\n"
+        assertEquals(content, LuaConfigParser.removeField(content, "appsdk"))
+    }
+
+    @Test
+    fun `removeField does not match inside comments or tables`() {
+        val content = "-- appsdk = 99\nlayout = { appsdk = 21 }\nappname = \"x\"\n"
+        assertEquals(content, LuaConfigParser.removeField(content, "appsdk"))
+    }
 }

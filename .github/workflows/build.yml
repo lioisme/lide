@@ -213,3 +213,24 @@ jobs:
       # stored in the repo (R5). Local Windows twin: verify-upstream-pristine.ps1.
       - name: Verify upstream pristine whitelist (full-tree diff)
         run: bash scripts/verify-upstream-pristine.sh
+
+  verify-sora-isolation:
+    name: Verify Sora Isolation (B-1~B-3 gate)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      # sora facade red line (解耦审计 B 级收口, 2026-08-11): sora types
+      # (io.github.rosemoe.*) may appear ONLY in the editor package; host layers
+      # (session/ui/project/engine/...) must go through EditorContent/EditorController.
+      - name: Run verifySoraIsolation gate
+        run: ./gradlew :app:verifySoraIsolation

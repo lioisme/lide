@@ -44,7 +44,7 @@ import java.io.File
  * 通用安装方式选择对话框（2026-08-10 T16）：
  * 系统「用 LIDE 打开 APK」→ 展示安装方式选择（默认 = 设置页持久化）→
  * 所选后端 READY 时静默安装，否则回落系统安装器。
- * 与构建对话框（BuildPackagingDialog）共用同一安装后端状态口径（InstallBackendUi）。
+ * 与构建对话框（BuildApkDialog）共用同一安装后端状态口径（InstallBackendUi）。
  */
 @Composable
 fun InstallMethodDialog(

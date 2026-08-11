@@ -30,10 +30,10 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.androlua.LuaApplication
 import com.lioisme.lide.R
 import com.lioisme.lide.project.AlpManager
 import com.lioisme.lide.editor.TipIconButton
+import com.lioisme.lide.engine.RuntimePaths
 import com.lioisme.lide.import.AlpImportCoordinator
 import com.lioisme.lide.model.Project
 import com.lioisme.lide.project.ProjectManager
@@ -371,7 +371,7 @@ fun ProjectListScreen(
                                     withContext(Dispatchers.IO) {
                                         projectManager.createProject(
                                             name,
-                                            LuaApplication.getInstance().luaExtDir,
+                                            RuntimePaths.luaExtDir(),
                                         )
                                     }
                                 if (created != null) {
@@ -427,10 +427,10 @@ fun ProjectListScreen(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     // P2#19：图标 contentDescription 与相邻行文本一致（无障碍朗读）。
-                    Icon(Icons.Default.Info, stringResource(R.string.project_info_menu), tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(24.dp))
+                    Icon(Icons.Default.Info, stringResource(R.string.project_properties), tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(24.dp))
                     Spacer(Modifier.width(16.dp))
                     Text(
-                        stringResource(R.string.project_info_menu),
+                        stringResource(R.string.project_properties),
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.weight(1f),

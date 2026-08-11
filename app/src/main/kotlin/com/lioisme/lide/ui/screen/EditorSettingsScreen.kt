@@ -16,7 +16,6 @@ import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.automirrored.filled.WrapText
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Error
@@ -25,7 +24,6 @@ import androidx.compose.material.icons.filled.FormatSize
 import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.material.icons.filled.Refresh
@@ -47,14 +45,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.lioisme.lide.R
 import com.lioisme.lide.editor.EditorConfig
-import kotlin.math.roundToInt
 import com.lioisme.lide.editor.TipIconButton
 import com.lioisme.lide.ui.theme.LideTopBar
 import com.lioisme.lide.ui.theme.SettingsManager
 
 /**
- * 编辑器设置页：编辑器 21 项设置全集（分组见 [EditorConfig]，
- * 持久化经 [SettingsManager.updateEditor]，含恢复默认）。
+ * 编辑器设置页：20 项设置全集（2026-08-11 P4 瘦身 27 → 20，移除 7 项「最佳配置」，
+ * 见 [EditorConfig] KDoc；持久化经 [SettingsManager.updateEditor]，含恢复默认）。
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -180,17 +177,6 @@ fun EditorSettingsScreen(
                     checked = config.readOnly,
                     onCheckedChange = { update(config.copy(readOnly = it)) },
                 )
-                // T5（2026-08-10）：undo 栈容量（sora Content.setMaxUndoStackSize，
-                // 默认 500 对齐 sora；大文件降级 min(容量, 200) 由 LuaEditor 强制）。
-                SettingsStepperItem(
-                    icon = Icons.Default.Refresh,
-                    title = stringResource(R.string.undo_stack_size),
-                    valueText = stringResource(R.string.undo_stack_size_value, config.undoStackSize),
-                    value = config.undoStackSize,
-                    range = 100..5000,
-                    step = 100,
-                    onValueChange = { update(config.copy(undoStackSize = it)) },
-                )
             }
 
             Spacer(Modifier.height(24.dp))
@@ -225,16 +211,6 @@ fun EditorSettingsScreen(
                     checked = config.stickyScroll,
                     enabled = !config.wordWrap,
                     onCheckedChange = { update(config.copy(stickyScroll = it)) },
-                )
-                // T5（2026-08-10）：粘性滚动保留行数（sora props.stickyScrollMaxLines）。
-                SettingsStepperItem(
-                    icon = Icons.AutoMirrored.Filled.MenuBook,
-                    title = stringResource(R.string.sticky_scroll_max_lines),
-                    valueText = stringResource(R.string.sticky_scroll_max_lines_value, config.stickyScrollMaxLines),
-                    value = config.stickyScrollMaxLines,
-                    range = 1..10,
-                    enabled = config.stickyScroll && !config.wordWrap,
-                    onValueChange = { update(config.copy(stickyScrollMaxLines = it)) },
                 )
                 SettingsToggleItem(
                     icon = Icons.Default.GridView,
@@ -271,38 +247,6 @@ fun EditorSettingsScreen(
                     checked = config.minimap,
                     onCheckedChange = { update(config.copy(minimap = it)) },
                 )
-                SettingsToggleItem(
-                    icon = Icons.Default.CheckCircle,
-                    title = stringResource(R.string.ln_panel),
-                    subtitle = onOff(config.lnPanel),
-                    checked = config.lnPanel,
-                    onCheckedChange = { update(config.copy(lnPanel = it)) },
-                )
-                // UI1（2026-08-10）：固定行号 / 行号分割线（sora 上限能力接线）。
-                SettingsToggleItem(
-                    icon = Icons.Default.Lock,
-                    title = stringResource(R.string.pin_line_number),
-                    subtitle =
-                        if (config.pinLineNumber) {
-                            stringResource(R.string.pin_line_number_hint)
-                        } else {
-                            onOff(config.pinLineNumber)
-                        },
-                    checked = config.pinLineNumber,
-                    onCheckedChange = { update(config.copy(pinLineNumber = it)) },
-                )
-                SettingsStepperItem(
-                    icon = Icons.Default.GridView,
-                    title = stringResource(R.string.line_number_divider),
-                    valueText =
-                        stringResource(
-                            R.string.line_number_divider_value,
-                            config.lineNumberDividerWidth,
-                        ),
-                    value = config.lineNumberDividerWidth,
-                    range = 0..6,
-                    onValueChange = { update(config.copy(lineNumberDividerWidth = it)) },
-                )
             }
 
             Spacer(Modifier.height(24.dp))
@@ -322,35 +266,11 @@ fun EditorSettingsScreen(
                     onCheckedChange = { update(config.copy(scalable = it)) },
                 )
                 SettingsToggleItem(
-                    icon = Icons.Default.KeyboardArrowUp,
-                    title = stringResource(R.string.cursor_animation),
-                    subtitle = onOff(config.cursorAnimation),
-                    checked = config.cursorAnimation,
-                    onCheckedChange = { update(config.copy(cursorAnimation = it)) },
-                )
-                SettingsToggleItem(
                     icon = Icons.Default.KeyboardArrowDown,
                     title = stringResource(R.string.disable_soft_kbd_if_hard),
                     subtitle = onOff(config.disableSoftKbdIfHardKbd),
                     checked = config.disableSoftKbdIfHardKbd,
                     onCheckedChange = { update(config.copy(disableSoftKbdIfHardKbd = it)) },
-                )
-                // T5（2026-08-10）：行高倍率（sora setLineSpacingMultiplier，1.0 = 默认）。
-                // 内部以整百分数驱动步进（100..160，步 5），写回浮点倍率。
-                SettingsStepperItem(
-                    icon = Icons.Default.FormatSize,
-                    title = stringResource(R.string.line_spacing),
-                    valueText =
-                        stringResource(
-                            R.string.line_spacing_value,
-                            "%.2f".format(config.lineSpacingMultiplier),
-                        ),
-                    value = (config.lineSpacingMultiplier * 100).roundToInt(),
-                    range = 100..160,
-                    step = 5,
-                    onValueChange = {
-                        update(config.copy(lineSpacingMultiplier = (it / 100f).coerceIn(1.0f, 1.6f)))
-                    },
                 )
             }
 
@@ -370,15 +290,18 @@ fun EditorSettingsScreen(
     }
 }
 
-/** 字体族标签（T5）：id → 本地化文案（设置行尾值）。 */
+/** 字体族标签（T5）：id → 本地化文案（设置行尾值）。
+ * 2026-08-11：默认（0）与等宽同值（Squircle 组合），归一等宽文案。 */
 @Composable
 private fun fontFamilyLabel(id: Int): String =
     stringResource(
         when (id) {
-            EditorConfig.FONT_FAMILY_MONOSPACE -> R.string.font_family_monospace
+            EditorConfig.FONT_FAMILY_MONOSPACE,
+            EditorConfig.FONT_FAMILY_DEFAULT,
+            -> R.string.font_family_monospace
             EditorConfig.FONT_FAMILY_SANS -> R.string.font_family_sans
             EditorConfig.FONT_FAMILY_SERIF -> R.string.font_family_serif
-            else -> R.string.font_family_default
+            else -> R.string.font_family_monospace
         },
     )
 
@@ -400,7 +323,6 @@ private fun FontFamilySheet(
             )
             val options =
                 listOf(
-                    EditorConfig.FONT_FAMILY_DEFAULT to stringResource(R.string.font_family_default),
                     EditorConfig.FONT_FAMILY_MONOSPACE to stringResource(R.string.font_family_monospace),
                     EditorConfig.FONT_FAMILY_SANS to stringResource(R.string.font_family_sans),
                     EditorConfig.FONT_FAMILY_SERIF to stringResource(R.string.font_family_serif),

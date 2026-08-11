@@ -1,7 +1,8 @@
 # lide 架构知识库
 
 > 来源：`AGENTS.md`、`WHITEPAPER.md`、`ANDROLUA_INTEGRATION_PLAN.md`、`ENGINE_MIGRATION_WORK_ORDER.md`、
-> 来源：历史审计报告（`EDITOR_CRASH_ANALYSIS_REPORT.md`、`LIBS_SUPPORT_WORK_ORDER.md`、`DEPENDENCY_MODEL_AUDIT_REPORT.md`，均已删除，结论蒸馏于此）。
+> 来源：历史审计报告（`EDITOR_CRASH_ANALYSIS_REPORT.md`、`LIBS_SUPPORT_WORK_ORDER.md`、`DEPENDENCY_MODEL_AUDIT_REPORT.md`，均已删除，结论蒸馏于此）、
+> `DECOUPLING_AUDIT_REPORT.md`（2026-08-11 解耦审计工作单，全项完工后已删除，结论见 §3.5）。
 > 权威边界规则以 `AGENTS.md`（实时）为准，本文档为解释性索引。
 
 ---
@@ -83,12 +84,47 @@ colorScheme → setEditorLanguage → setText
 ### 3.4 打包器（现状，见 WHITEPAPER §5 与 AGENTS.md 打包构建约定）
 
 ```
-BuildPackagingDialog（打包 UI 唯一入口，编辑器 ⋮ 菜单触发）
+BuildApkDialog（打包 UI 唯一入口，编辑器 ⋮ 菜单触发；P5 打开即构建，无配置 UI）
   → LuaCompiler（LuaState loadbuffer + dump → .luac，去 BOM，错误带行号）
   → AXmlManifest（纯字节级 AXML 解析/补丁：包名/label/versionCode/uses-permission 白名单，无 Android 依赖）
   → ApkBuilder + ZipUtils（zip 重打包/过滤/对齐）
   → ApkSigner + V2Signer（v1 JAR + v2 Signing Block；v1-only 在 targetSdk≥30 不可安装）
 ```
+
+打包配置唯一事实源（P5，2026-08-11）：构建时无任何可配置项——ABI（`preferAbi` 或宿主全部，
+`ZipUtils.listAbis` 实测）、签名方案/档案、安装方式、stripNativeLibs、编译/加密、afterBuild、
+产物目录/命名一律来自设置页持久化 `BuildOpts`；工程侧字段来自 init.lua（packagename/appver/appcode/
+`appsdk`→targetSdk、`minsdk`→minSdk）；预检失败（init.lua 缺失/包名空）Toast 后关闭。
+
+### 3.5 门面契约（2026-08-11 解耦审计 A/B/C/D 级收口，DECOUPLING_AUDIT_REPORT 完工蒸馏）
+
+依赖矩阵（审计后现状，sora 泄漏面已归零）：
+
+```
+vendor sora (io.github.rosemoe.sora)   → 仅 editor 包（LuaEditor/EditorLanguage/LuaDiagnostics…）
+vendor androlua (com.androlua/luajava) → engine/RuntimePaths（存储路径门面）、LideApp（继承点）、
+                                         build/LuaCompiler（打包期）、apibrowser（反射/字符串）、
+                                         EngineActivity（继承点）
+editor 包                             → sora、android、compose、R（零宿主依赖，R4）
+session 包                            → editor（EditorTab/EditorContent）、project、model
+ui 包                                 → editor/session/engine/build/project/apibrowser/install/i18n
+```
+
+- **sora 门面（B 级）**：sora 类型只允许出现在 `editor` 包与 vendor 源码；宿主层经
+  `EditorContent`（不透明文本句柄：`of`/`snapshot`/`isSameAs`）与 `EditorController`
+  （命令门面：`bind`/`isShowing`/`setSelection`/`undo`/`redo`/`canUndo`/`canRedo`）访问。
+  `:app:verifySoraIsolation` 守护（editor 包外零 `io.github.rosemoe`，import 与 FQN 双形态）。
+  详细契约见 `docs/kb/EDITOR.md` §11。
+- **引擎存储路径门面（C 级）**：`engine/RuntimePaths`（`luaExtDir()`/`projectsDir()`/
+  `defaultApkDir()`）为 `LuaApplication` 存储状态唯一宿主入口，一律走 public getter
+  `getLuaExtDir()`；UI / project / 根 Activity 禁止直触 `com.androlua.LuaApplication`
+  （含 Kotlin 对 Java protected 字段的越权直读）；唯一豁免 = `LideApp`（继承点）与
+  `RuntimePaths` 本体。改造前 8 处散落调用点（MainActivity×2 / AlpManager / LideNavHost /
+  ExamplesScreen / ApiBrowserScreen / ProjectListScreen / BuildApkDialog FQN）已全部收拢。
+- **引擎包前缀单一事实源（D 级）**：`apibrowser/EnginePackagePrefixes`
+  （`ANDROLUA_PACKAGES` 全量引擎包 / `JNI_BRIDGE_PACKAGES` JNI 桥接子集）；
+  `ApiCategoryClassifier`（ANDROLUA 归属）与 `ApiUsageClassifier`（UTILITY 归属）消费同表，
+  新增引擎包只改该文件。
 
 ---
 
@@ -112,6 +148,7 @@ Kotlin 编译检查：  .\gradlew.bat :app:compileArm64DebugKotlin --console=pla
 单测：            .\gradlew.bat :app:testX64DebugUnitTest :androlua:testDebugUnitTest
 精简门禁：        .\gradlew.bat :app:verifyMinimalism（+ :app:verifyMinimalismDebug）
 上游隔离：        .\gradlew.bat :app:verifyVendorIsolation
+sora 门面隔离：   .\gradlew.bat :app:verifySoraIsolation
 R1 门禁：         rg -n "luajava|androlua|loadLibrary" app/src/main/kotlin/com/lioisme/lide/editor
 ```
 

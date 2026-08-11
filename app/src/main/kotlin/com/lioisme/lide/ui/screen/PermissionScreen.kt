@@ -231,7 +231,8 @@ fun HostPermissionScreen(
 /**
  * 工程声明权限页（与宿主权限管理分离）。
  *
- * 勾选清单：池 = 权限目录（PermissionCatalog）+ 工程已声明但目录外的权限。
+ * 勾选清单：池 = 权限目录（[PermissionCatalog.ENTRIES]，常规/特殊分组）+ 工程已声明
+ * 但目录外的权限（原样透传，归「其他」组）；[PermissionPickerList] 提供搜索。
  * 勾选结果写回 init.lua 的 user_permission（与 pro projectinfo 行为一致），
  * 打包时按白名单（声明 ∩ 宿主 + 宿主自声明）写入产物 manifest。
  * 与宿主运行时权限无关，因此不提供请求按钮、不展示宿主授予状态。
@@ -263,9 +264,7 @@ fun ProjectPermissionScreen(
                             com.lioisme.lide.project.PermissionResolver
                                 .normalize(it)
                         }.toSet()
-                val known = PermissionCatalog.ALL.map { it.first }.toSet()
                 ProjectPermState(
-                    pool = PermissionCatalog.ALL + (declared - known).sorted().map { it to null },
                     selected = declared.toMutableSet(),
                     original = declared,
                 )
@@ -275,25 +274,15 @@ fun ProjectPermissionScreen(
     fun save() {
         val s = state ?: return
         scope.launch {
+            // B-1：写 init.lua 收敛到 ProjectManager 域服务（原子写盘，UI 不自摸文件）。
             val ok =
                 kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
-                    try {
-                        val file = java.io.File(project.path, "init.lua")
-                        if (!file.exists()) return@withContext false
-                        val checked =
-                            s.pool
-                                .filter { (perm, _) -> perm in s.selected }
-                                .map { (perm, _) -> perm }
-                        file.writeText(
-                            com.lioisme.lide.project.LuaConfigParser.setStringArrayField(
-                                file.readText(),
-                                "user_permission",
-                                checked,
-                            ),
+                    projectManager.writeInitFields(project) { content ->
+                        com.lioisme.lide.project.LuaConfigParser.setStringArrayField(
+                            content,
+                            "user_permission",
+                            s.selected.sorted(),
                         )
-                        true
-                    } catch (_: Throwable) {
-                        false
                     }
                 }
             if (ok) {
@@ -354,11 +343,12 @@ fun ProjectPermissionScreen(
                     }
                 }
             } else {
-                items(s.pool) { (perm, labelRes) ->
-                    ProjectPermissionRow(
-                        label = labelRes?.let { stringResource(it) } ?: perm,
-                        checked = perm in s.selected,
-                        onToggle = {
+                item {
+                    PermissionPickerList(
+                        catalog = PermissionCatalog.ENTRIES,
+                        unknownPermissions = (s.selected - PermissionCatalog.knownNames).sorted(),
+                        selected = s.selected,
+                        onToggle = { perm ->
                             state =
                                 s.copy(
                                     selected = if (perm in s.selected) s.selected - perm else s.selected + perm,
@@ -374,53 +364,11 @@ fun ProjectPermissionScreen(
     }
 }
 
-/** 工程权限编辑状态：勾选池 + 当前勾选 + 已保存基线。 */
+/** 工程权限编辑状态：已保存基线（原始勾选）+ 当前勾选。 */
 private data class ProjectPermState(
-    val pool: List<Pair<String, Int?>>,
     val selected: Set<String>,
     val original: Set<String>,
 )
-
-@Composable
-private fun ProjectPermissionRow(
-    label: String,
-    checked: Boolean,
-    onToggle: () -> Unit,
-) {
-    Card(
-        colors =
-            CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f),
-            ),
-        shape = MaterialTheme.shapes.medium,
-    ) {
-        Row(
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .clickable(onClick = onToggle)
-                    .padding(horizontal = 16.dp, vertical = 12.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    label,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurface,
-                )
-                Text(
-                    stringResource(R.string.perm_package_only),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.primary,
-                )
-            }
-            Checkbox(
-                checked = checked,
-                onCheckedChange = { onToggle() },
-            )
-        }
-    }
-}
 
 @Composable
 private fun PermissionRow(

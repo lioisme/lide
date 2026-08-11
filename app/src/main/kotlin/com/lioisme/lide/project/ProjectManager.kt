@@ -51,7 +51,7 @@ class ProjectManager {
     /**
      * 扫描 luaExtDir/project 下全部工程（Q9，审计 P1-2）。
      *
-     * [luaExtDir] 由调用方注入：宿主在调用点取 `LuaApplication.getInstance().luaExtDir`，
+     * [luaExtDir] 由调用方注入：宿主在调用点取 `RuntimePaths.luaExtDir()`，
      * 本类不再持有进程级全局依赖——JVM 单测可传临时目录直接验证扫描/解析逻辑。
      */
     fun listProjects(luaExtDir: String): List<Project> {

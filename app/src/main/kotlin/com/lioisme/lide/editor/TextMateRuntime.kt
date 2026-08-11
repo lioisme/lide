@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.SystemClock
 import android.util.Log
 import io.github.rosemoe.sora.lang.analysis.AsyncIncrementalAnalyzeManager
-import io.github.rosemoe.sora.langs.textmate.TextMateColorScheme
 import io.github.rosemoe.sora.langs.textmate.registry.FileProviderRegistry
 import io.github.rosemoe.sora.langs.textmate.registry.GrammarRegistry
 import io.github.rosemoe.sora.langs.textmate.registry.ThemeRegistry
@@ -45,7 +44,7 @@ object TextMateRuntime {
     @Volatile
     private var initStarted = false
 
-    private var scheme: TextMateColorScheme? = null
+    private var scheme: io.github.rosemoe.sora.widget.schemes.EditorColorScheme? = null
 
     /**
      * 幂等预热（宿主进程启动调用）：仅触发后台初始化，不阻塞调用方。
@@ -83,14 +82,15 @@ object TextMateRuntime {
     }
 
     /**
-     * 进程级单例 TextMateColorScheme（原 TextMateColorSchemeCache 收敛）。
+     * 进程级单例色彩方案（原 TextMateColorSchemeCache 收敛）。
      *
-     * [TextMateColorScheme] 实现 [ThemeChangeListener]，主题切换时自动跟随
-     * 注册表更新，无需按编辑器实例重建。创建成本 ~70ms（主线程），复用避免
-     * 每进一次编辑器都支付一次。
+     * 使用 [LideTextMateColorScheme]（P3，2026-08-11）：sora 原生 TextMate 方案
+     * 强制 LINE_DIVIDER 透明，本方案按主题 JSON 的 divider 键回填行号分界线颜色。
+     * 方案实现 [ThemeChangeListener]，主题切换时自动跟随注册表更新，无需按编辑器
+     * 实例重建。创建成本 ~70ms（主线程），复用避免每进一次编辑器都支付一次。
      */
-    fun colorScheme(): TextMateColorScheme =
-        scheme ?: TextMateColorScheme.create(ThemeRegistry.getInstance()).also { scheme = it }
+    fun colorScheme(): io.github.rosemoe.sora.widget.schemes.EditorColorScheme =
+        scheme ?: LideTextMateColorScheme(ThemeRegistry.getInstance()).also { scheme = it }
 
     private fun runInit(context: Context) {
         val initStart = SystemClock.elapsedRealtime()
