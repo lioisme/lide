@@ -40,6 +40,8 @@ import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.lioisme.lide.BuildConfig
@@ -588,6 +590,10 @@ private fun ColorSheet(
                 items(colorOptions) { argb ->
                     val color = Color(argb)
                     val isSelected = !useWallpaper && color == selectedColor
+                    // 选中标记色（U1，2026-08-12）：与黑白双候选的 WCAG 对比度取更高者，
+                    // 选中框与对号共用同一色——修「框黑对号白」不一致；两候选对比度
+                    // 至少一者满足 4.5:1 严格档，替代 0.5 luminance 阈值（中灰块判色出错）。
+                    val markColor = selectedMarkColor(color)
                     Box(
                         modifier =
                             Modifier
@@ -596,18 +602,20 @@ private fun ColorSheet(
                                 .background(color)
                                 .then(
                                     if (isSelected) {
-                                        Modifier.border(3.dp, MaterialTheme.colorScheme.onSurface, CircleShape)
+                                        Modifier.border(3.dp, markColor, CircleShape)
                                     } else {
                                         Modifier.border(1.dp, MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f), CircleShape)
                                     },
-                                ).clickable { onSelectColor(argb) },
+                                )
+                                .semantics { selected = isSelected }
+                                .clickable { onSelectColor(argb) },
                         contentAlignment = Alignment.Center,
                     ) {
                         if (isSelected) {
                             Icon(
                                 Icons.Default.Check,
                                 null,
-                                tint = if (color.luminance() > 0.5f) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.surface,
+                                tint = markColor,
                                 modifier = Modifier.size(20.dp),
                             )
                         }
@@ -616,6 +624,18 @@ private fun ColorSheet(
             }
         }
     }
+}
+
+/**
+ * 选中标记色：对 [color] 计算与黑/白候选的 WCAG 相对对比度，取更高者。
+ * 相对亮度经 `luminance()`（sRGB 线性化），黑白固定亮度 0 / 1；
+ * 任意彩色块两候选对比度必然至少一者 ≥ 4.5:1（黑白为极端候选）。
+ */
+private fun selectedMarkColor(color: Color): Color {
+    val l = color.luminance()
+    val contrastWhite = 1.05f / (l + 0.05f)
+    val contrastBlack = (l + 0.05f) / 0.05f
+    return if (contrastWhite >= contrastBlack) Color.White else Color.Black
 }
 
 private tailrec fun Context.resolveActivity(): Activity? =

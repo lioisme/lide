@@ -389,3 +389,53 @@ InstallBackendUi.kt（perm_* 命名）。
 （EditorPaletteContrastTest / ThemeContrastTest 全绿）+ `:app:lintArm64Debug`
 （0 新问题）+ `:app:assembleArm64Debug` + `:app:verifyMinimalism` +
 `:app:verifyMinimalismDebug` 全绿；设备截图核验待 P7 统一执行。
+
+## 15. 查找/替换 + 跳行 + 菜单形态（2026-08-12，SQUIRCLE P5 + MENU 整改完工蒸馏）
+
+### 查找/替换（P5.1）
+- **入口**：⋮ → 编辑 → 查找。`EditorSearchPanel`（ui 包，COMPOSE MD3，
+  surfaceContainerHighest 浮层契约）：查找/替换输入 + 上一个/下一个 + 替换/全部替换 +
+  正则/Aa/整词 FilterChip + 关闭 + BackHandler（面板开启即拦截返回键，不进导航回退）。
+  状态全部宿主持有（可组合最小化）；切标签自动关面板。
+- **接线**：`EditorController` 命令门面包 sora `EditorSearcher`（search/stopSearch/
+  hasQuery/gotoNext/gotoPrevious/replaceCurrentMatch，TYPE_NORMAL/WHOLE_WORD/
+  REGULAR_EXPRESSION + caseInsensitive），全部 try/catch 降级；只读下替换按钮置灰 +
+  sora isEditable 门禁双保险（实测 read_only=true 时按钮静默）。
+- **结果派发**：sora 搜索在后台线程计算，完成经 `PublishSearchResultEvent` →
+  LuaEditor 订阅（onSearchResultPublished 参数）→ 宿主刷新 n/m 计数。
+  **坑：gotoNext/gotoPrevious 选中命中不发该事件** → onNext/onPrevious 回调须主动
+  重读 `searchMatchInfo()`。
+- **替换计数**：replaceCurrent 后 sora 结果集失效（count=0），须手动重搜
+  （防抖 LaunchedEffect + searchTick 同管线）。
+
+### 全部替换自实现（P5.4，BadTokenException 教训）
+- sora `EditorSearcher.replaceAll` 内部 `ProgressDialog.show(context)`——Compose
+  AndroidView 的 context 是 `ContextThemeWrapper`（无 window token）→ 设备实测
+  `BadTokenException: Unable to add window -- token null`。**禁止在 Compose 内嵌
+  View 场景调用任何带 ProgressDialog 的 sora API**。
+- 自实现 `EditorController.replaceAll(pattern, replacement, type, caseInsensitive, cb)`：
+  java.util.regex 对齐 sora 语义（NORMAL=Pattern.quote / WHOLE_WORD=`\b` 包裹 /
+  REGEX=原样，flags=CASE_INSENSITIVE|MULTILINE）从后往前改写区间，单次
+  `Content.replace` 提交（单条 undo、光标保持），零 Dialog，try/catch 降级。
+
+### 跳行（P5.2）
+- ⋮ → 编辑 → 跳转到行；`GotoLineDialog`（EditorDialogs.kt，AlertDialog + 数字输入，
+  0 基行号校验 1..lineCount）；与运行错误跳行共用 pendingJump 管线（经
+  EditorController.setSelection + ensurePositionVisible）。
+
+### 菜单形态（MENU 整改蒸馏）
+- ⋮ 三分类 cascade：**文件**（文件树占位）、**编辑**（查找/只读/跳转到行/格式化/
+  编辑器设置）、**工程**（工程信息/权限/打包 APK/AndroLua 设置）。
+- 2026-08-11 用户红线瘦身：保存/剪贴板菜单项不设（文件=仅占位）；只读为
+  编辑分类勾选切换项（squircle 扩展键盘锁定按钮等价入口）。
+- `EditorSession.reload(fileName)`（脏内容 flushDirty 落盘 → 丢 Content 缓存 →
+  重载路径重读，undo 栈随内容重置）已实现。
+- 设置上限扩展收口：fontFamily 落地（字体面板 + 外部字体导入）；行高/undo 容量/
+  粘性行数三项按 SQUIRCLE P4 瘦身删除（不暴露）。
+- undo/redo 灰态：`canUndo/canRedo` 单条件（值变化才发射，EditorSessionTest:191）；
+  只读不置灰（sora 门禁兜底，P1.2 拍板）。
+
+验证：`:app:testArm64DebugUnitTest` + `:app:verifyMinimalismDebug` +
+`:app:lintArm64Debug`（0 新增）全绿；x86_64 模拟器冒烟（adb uiautomator 驱动）：
+查找 local=12、next=1/12、替换后 localx=1 命中、全部替换后 lua=2 命中、read_only
+按钮静默、跳行对话框往返，全程零 FATAL。

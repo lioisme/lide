@@ -5,6 +5,8 @@ import android.net.Uri
 import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -12,9 +14,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
@@ -24,6 +28,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lioisme.lide.R
 import com.lioisme.lide.engine.EngineActivity
@@ -31,6 +36,8 @@ import com.lioisme.lide.editor.EditorContent
 import com.lioisme.lide.editor.EditorController
 import com.lioisme.lide.editor.EditorMoreAction
 import com.lioisme.lide.editor.EditorToolbar
+import com.lioisme.lide.editor.SearchMatchInfo
+import com.lioisme.lide.editor.SearchMatchType
 import com.lioisme.lide.engine.EngineResultParser
 import com.lioisme.lide.engine.RunEngineLauncher
 import com.lioisme.lide.model.Project
@@ -50,6 +57,9 @@ import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 
 private const val AUTO_SAVE_DELAY_MS = 500L
+
+/** 查找防抖（P5.1）：输入变化 → 250ms 后派发搜索（大文件/连续输入零压力）。 */
+private const val SEARCH_DEBOUNCE_MS = 250L
 
 /** 跳行等待编辑器绑定的超时上限（编辑器错误态/初始化失败时降级跳过定位）。 */
 private const val EDITOR_BIND_TIMEOUT_MS = 5_000L
@@ -135,6 +145,19 @@ fun EditorScreen(
     // 编辑器实例门面（B 级收口，2026-08-11）：宿主不持 CodeEditor 原始引用，
     // 一律经 EditorController 命令访问（LuaEditor 绑定/解绑，仅主线程）。
     val editorController = remember { EditorController() }
+    // U2（2026-08-12）：离场焦点释放兜底——任何离开编辑器页面的路径（返回/导航
+    // 到权限/设置/工程信息页）都会销毁 AndroidView 内嵌的 sora 编辑器，若其持有
+    // View 焦点，系统会把焦点转移到新页面首个可聚焦组件（历史缺陷：主界面
+    // 「新建项目」按钮被聚焦）。onDispose 阶段编辑器实例仍在（LuaEditor 的解绑
+    // 挂在本 body 组合之后），此处先清焦点再让 View 树销毁。
+    DisposableEffect(Unit) {
+        onDispose {
+            // T5E（2026-08-12）：页面级作用域释放——取消在途格式化任务；顺序在
+            // releaseFocus 后（view 销毁前一刻，格式化若正在主线程替换会自行降级）。
+            editorController.disposeScope()
+            editorController.releaseFocus()
+        }
+    }
     // 编辑器绑定门控（Q1，替代 60Hz 忙轮询）：LuaEditor update 阶段绑定后完成；
     // 跳行等待经 withTimeoutOrNull 挂起，编辑器错误态/未绑定超时后降级跳过。
     val editorReady = remember { CompletableDeferred<Unit>() }
@@ -166,6 +189,30 @@ fun EditorScreen(
     var snackbarMsg by remember { mutableStateOf<String?>(null) }
     // 跳行目标（T4）：编辑器绑定到目标 Content 身份后消费（防对旧文档 setSelection）。
     var pendingJump by remember { mutableStateOf<PendingJump?>(null) }
+    // P5.2（2026-08-11）：跳行对话框开关（⋮ 编辑 → 跳转到行）。
+    var showGotoDialog by remember { mutableStateOf(false) }
+
+    // P5.1（2026-08-11）查找/替换面板状态（全部宿主持有；搜索经防抖效应派发）。
+    var searchActive by remember { mutableStateOf(false) }
+    var findQuery by remember { mutableStateOf("") }
+    var replaceQuery by remember { mutableStateOf("") }
+    var showReplace by remember { mutableStateOf(false) }
+    var isRegex by remember { mutableStateOf(false) }
+    var isCaseSensitive by remember { mutableStateOf(false) }
+    var isWholeWord by remember { mutableStateOf(false) }
+    var searchInfo by remember { mutableStateOf(SearchMatchInfo.NONE) }
+    // 手动重搜触发器（替换动作后结果集失效，+1 强制防抖效应重跑）。
+    var searchTick by remember { mutableIntStateOf(0) }
+
+    fun closeSearchPanel() {
+        editorController.stopSearch()
+        searchActive = false
+        searchInfo = SearchMatchInfo.NONE
+    }
+
+    fun runSearchNow() {
+        searchTick++
+    }
 
     val engineResultLauncher =
         rememberLauncherForActivityResult(
@@ -216,6 +263,31 @@ fun EditorScreen(
             editorController.setSelection(jump.line, 0)
         }
         pendingJump = null
+    }
+
+    // P5.1 查找防抖派发：面板开启且查询非空 → 250ms 后搜索；空查询 → stopSearch。
+    // 手动重搜（searchTick）与查询/选项变化共用同一效应（替换后结果集失效用）。
+    LaunchedEffect(searchActive, findQuery, isRegex, isCaseSensitive, isWholeWord, searchTick) {
+        if (!searchActive) return@LaunchedEffect
+        if (findQuery.isEmpty()) {
+            editorController.stopSearch()
+            searchInfo = SearchMatchInfo.NONE
+            return@LaunchedEffect
+        }
+        delay(SEARCH_DEBOUNCE_MS)
+        val type =
+            when {
+                isRegex -> SearchMatchType.REGEX
+                isWholeWord -> SearchMatchType.WHOLE_WORD
+                else -> SearchMatchType.NORMAL
+            }
+        editorController.search(findQuery, type, !isCaseSensitive)
+    }
+
+    // P5.1 切标签守卫：面板开启时换文件 → 自动收起（sora 搜索绑定原编辑器实例，
+    // 新实例无结果集，继续显示计数无意义；防对旧文档替换）。
+    LaunchedEffect(selection.file) {
+        if (searchActive) closeSearchPanel()
     }
 
     fun jumpToError() {
@@ -350,6 +422,8 @@ fun EditorScreen(
                     canUndo = selectedTab?.canUndo == true,
                     canRedo = selectedTab?.canRedo == true,
                     onBack = {
+                        // U2：先释放编辑器 View 焦点再弹栈（防焦点转移到主界面首个可聚焦组件）。
+                        editorController.releaseFocus()
                         session.flushSelectedDirtyAsync()
                         onBack()
                     },
@@ -376,7 +450,42 @@ fun EditorScreen(
                                         .show()
                                 },
                             )
-                            // 编辑分类：格式化（Ctrl+L）+ 编辑器设置直达入口。
+                            // 编辑分类：查找（P5.1）+ 只读切换（P1.4）+ 格式化 + 跳行 + 设置直达。
+                            add(
+                                EditorMoreAction(
+                                    category = stringResource(R.string.menu_category_edit),
+                                    label = stringResource(R.string.menu_find),
+                                    enabled = selectedFile != null,
+                                ) {
+                                    searchActive = true
+                                },
+                            )
+                            // 只读切换（P1.4，2026-08-11 真只读入口 = squircle
+                            // 扩展键盘锁定按钮等价物；勾选态由 EditorMoreAction.checked 承
+                            // 载；切回即时可输入——LuaEditor.applyConfig 守卫式 diff 落
+                            // isEditable，sora 原生门禁接管）。
+                            add(
+                                EditorMoreAction(
+                                    category = stringResource(R.string.menu_category_edit),
+                                    label = stringResource(R.string.read_only),
+                                    checked = appEditorConfig.readOnly,
+                                ) {
+                                    SettingsManager.updateEditor(
+                                        appEditorConfig.copy(readOnly = !appEditorConfig.readOnly),
+                                        context,
+                                    )
+                                },
+                            )
+                            // 格式化（Ctrl+L）+ 跳行 + 编辑器设置直达入口。
+                            add(
+                                EditorMoreAction(
+                                    category = stringResource(R.string.menu_category_edit),
+                                    label = stringResource(R.string.menu_goto_line),
+                                    enabled = selectedFile != null,
+                                ) {
+                                    showGotoDialog = true
+                                },
+                            )
                             add(
                                 EditorMoreAction(
                                     category = stringResource(R.string.menu_category_edit),
@@ -430,42 +539,98 @@ fun EditorScreen(
                 SnackbarHost(hostState = snackbarHostState)
             },
         ) { padding ->
-            // 标签视图列表：状态类已合并（B-5），tabs 直接是 EditorTab，无需逐帧适配。
-            EditorBody(
-                session = session,
-                contentPadding = padding,
-                tabs = tabs,
-                selectedFile = selectedFile,
-                content = content,
-                isDarkTheme = isDarkTheme,
-                editorConfig = appEditorConfig,
-                controller = editorController,
-                onEditorBound = {
-                    // 绑定信号幂等完成（主线程 update 阶段触发；已完成则跳过，防重复 complete 抛异常）。
-                    if (!editorReady.isCompleted) editorReady.complete(Unit)
-                },
-                onFormatRequest = { runFormat() },
-                storagePermissionMissing = extPermissionMissing.value,
-                onTabClose = { file ->
-                    if (session.requestClose(file)) closeQueue = listOf(file)
-                },
-                onTabMoved = { from, to -> session.moveTab(from, to) },
-                onCloseOthers = { file ->
-                    val dirty = session.closeOthers(file)
-                    if (dirty.isNotEmpty()) closeQueue = dirty
-                },
-                onCloseAll = {
-                    val dirty = session.closeAll()
-                    if (dirty.isNotEmpty()) closeQueue = dirty
-                },
-                onGrantStorage = {
-                    manageStorageLauncher.launch(
-                        Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION).apply {
-                            data = Uri.parse("package:${context.packageName}")
+            Column(
+                Modifier
+                    .fillMaxSize()
+                    .padding(padding),
+            ) {
+                // P5.1 查找/替换面板：位于编辑区上方，展开时编辑区自然收缩；关闭即释放。
+                if (searchActive) {
+                    EditorSearchPanel(
+                        findQuery = findQuery,
+                        onFindQueryChange = { findQuery = it },
+                        replaceQuery = replaceQuery,
+                        onReplaceQueryChange = { replaceQuery = it },
+                        showReplace = showReplace,
+                        onToggleReplace = { showReplace = !showReplace },
+                        isRegex = isRegex,
+                        onIsRegexChange = { isRegex = it },
+                        isCaseSensitive = isCaseSensitive,
+                        onIsCaseSensitiveChange = { isCaseSensitive = it },
+                        isWholeWord = isWholeWord,
+                        onIsWholeWordChange = { isWholeWord = it },
+                        matchInfo = searchInfo,
+                        // 只读下替换置灰（sora 另有 isEditable 门禁，双保险）。
+                        replaceEnabled = !appEditorConfig.readOnly,
+                        // sora gotoNext/gotoPrevious 选中命中但不发 PublishSearchResultEvent，主动重读。
+                        onNext = {
+                            editorController.searchNext()
+                            searchInfo = editorController.searchMatchInfo()
                         },
+                        onPrevious = {
+                            editorController.searchPrevious()
+                            searchInfo = editorController.searchMatchInfo()
+                        },
+                        onReplace = {
+                            // 替换后 sora 结果集失效：手动重搜刷新计数。
+                            editorController.replaceCurrent(replaceQuery)
+                            if (findQuery.isNotEmpty()) runSearchNow() else closeSearchPanel()
+                        },
+                        onReplaceAll = {
+                            // 自实现全量替换（sora 版本带 ProgressDialog，AndroidView 上下文无
+                            // window token 会崩），完成后重搜刷新计数。
+                            val type =
+                                when {
+                                    isRegex -> SearchMatchType.REGEX
+                                    isWholeWord -> SearchMatchType.WHOLE_WORD
+                                    else -> SearchMatchType.NORMAL
+                                }
+                            editorController.replaceAll(findQuery, replaceQuery, type, isCaseSensitive) {
+                                if (findQuery.isNotEmpty()) runSearchNow() else closeSearchPanel()
+                            }
+                        },
+                        onClose = { closeSearchPanel() },
                     )
-                },
-            )
+                }
+                // 标签视图列表：状态类已合并（B-5），tabs 直接是 EditorTab，无需逐帧适配。
+                EditorBody(
+                    session = session,
+                    contentPadding = PaddingValues(0.dp),
+                    tabs = tabs,
+                    selectedFile = selectedFile,
+                    content = content,
+                    isDarkTheme = isDarkTheme,
+                    editorConfig = appEditorConfig,
+                    controller = editorController,
+                    onEditorBound = {
+                        // 绑定信号幂等完成（主线程 update 阶段触发；已完成则跳过，防重复 complete 抛异常）。
+                        if (!editorReady.isCompleted) editorReady.complete(Unit)
+                    },
+                    onFormatRequest = { runFormat() },
+                    // P5.1：sora 后台搜索完成 → 主线程回调 → 刷新计数（面板展示 n/m）。
+                    onSearchResultPublished = { searchInfo = editorController.searchMatchInfo() },
+                    storagePermissionMissing = extPermissionMissing.value,
+                    onTabClose = { file ->
+                        if (session.requestClose(file)) closeQueue = listOf(file)
+                    },
+                    onTabMoved = { from, to -> session.moveTab(from, to) },
+                    onCloseOthers = { file ->
+                        val dirty = session.closeOthers(file)
+                        if (dirty.isNotEmpty()) closeQueue = dirty
+                    },
+                    onCloseAll = {
+                        val dirty = session.closeAll()
+                        if (dirty.isNotEmpty()) closeQueue = dirty
+                    },
+                    onGrantStorage = {
+                        manageStorageLauncher.launch(
+                            Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION).apply {
+                                data = Uri.parse("package:${context.packageName}")
+                            },
+                        )
+                    },
+                )
+            }
         }
 
         // 构建 APK 对话框：唯一打包入口（P5，2026-08-11：打开即构建，无配置 UI）。
@@ -506,6 +671,22 @@ fun EditorScreen(
                 // 只读下「插入 import」直写 Content 会被门面拒绝：按钮置灰提示不可用
                 // （insertImport 入口另有读守卫，双保险，见本文件 insertImport）。
                 editable = !appEditorConfig.readOnly,
+            )
+        }
+
+        // P5.2 跳行对话框：确认后走 pendingJump 消费效应（含编辑器绑定门控）。
+        if (showGotoDialog) {
+            GotoLineDialog(
+                maxLine = editorController.lineCount(),
+                onConfirm = { line ->
+                    val content = selection.content ?: run {
+                        showGotoDialog = false
+                        return@GotoLineDialog
+                    }
+                    pendingJump = PendingJump(content, line)
+                    showGotoDialog = false
+                },
+                onDismiss = { showGotoDialog = false },
             )
         }
     }

@@ -28,6 +28,7 @@
     <string name="export_alp">Export as .alp</string>
     <string name="project_rename">Rename</string>
     <string name="project_rename_title">Rename project</string>
+    <string name="rename_name_label">New name</string>
     <string name="project_rename_hint">Renames the project folder and updates appname in init.lua. If the name already exists, a -1/-2 suffix is added automatically.</string>
     <string name="project_renamed">Project renamed</string>
     <string name="project_rename_failed">Failed to rename project</string>
@@ -363,6 +364,23 @@
     <string name="menu_format">Format</string>
     <string name="format_done">Format complete</string>
     <string name="menu_androlua_settings">AndroLua Settings</string>
+    <!-- P5（2026-08-11）：查找/替换 + 跳行 -->
+    <string name="menu_find">Find</string>
+    <string name="menu_goto_line">Go to Line</string>
+    <string name="goto_line_title">Go to Line</string>
+    <string name="goto_line_hint">Line 1–%1$d</string>
+    <string name="goto_action">Go</string>
+    <string name="search_find">Find</string>
+    <string name="search_replace">Replace</string>
+    <string name="search_replace_all">Replace All</string>
+    <string name="search_match_position">%1$d/%2$d</string>
+    <string name="search_regex">Regex</string>
+    <string name="search_case_sensitive">Aa</string>
+    <string name="search_whole_word">Word</string>
+    <string name="search_no_results">No results</string>
+    <string name="cd_search_next">Next match</string>
+    <string name="cd_search_previous">Previous match</string>
+    <string name="cd_search_close">Close search</string>
     <string name="accessibility_service_description">LIDE accessibility service: provides automation capabilities for Lua scripts (tap, swipe, screenshot).</string>
     <!-- API browser (WP-008) -->
     <string name="api_browser">API Browser</string>
@@ -439,6 +457,7 @@
     <string name="signing_gen_c_invalid">Country code must be two letters</string>
     <string name="signing_gen_email_invalid">Invalid email address</string>
     <string name="signing_generated">New signing key generated</string>
+    <string name="signing_generate_failed">Failed to generate signing key</string>
     <string name="signing_name">Profile name</string>
     <string name="signing_store_password">Keystore password</string>
     <string name="signing_alias_label">Choose a key alias</string>
@@ -448,6 +467,7 @@
     <string name="signing_empty">No private-key aliases found in this keystore</string>
     <string name="signing_no_key">No private key</string>
     <string name="signing_imported">Signature imported</string>
+    <string name="signing_import_failed">Failed to import keystore</string>
     <!-- Q14 模板化：证书指纹行（SHA-256 指纹… · 算法） -->
     <string name="signing_cert_detail">SHA-256 %1$s… · %2$s</string>
     <!-- Q14 模板化：档案元信息行（别名 · 仓库类型 · 算法） -->

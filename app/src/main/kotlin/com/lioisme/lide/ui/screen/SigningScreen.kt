@@ -43,9 +43,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -65,6 +68,9 @@ import com.lioisme.lide.build.SigningManager
 import com.lioisme.lide.build.SigningProfile
 import com.lioisme.lide.ui.theme.LideTopBar
 import com.lioisme.lide.ui.theme.SettingsManager
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /** 指纹展示截断长度（Q16 L14 魔数收口）：SHA-256 十六进制 64 字符，界面行内展示截断 + 省略号。 */
 private const val FINGERPRINT_DISPLAY_CHARS = 31
@@ -80,29 +86,50 @@ fun SigningScreen(
     onProfileChanged: () -> Unit = {},
 ) {
     val context = LocalContext.current
-    var profiles by remember { mutableStateOf(SigningManager.profiles()) }
-    var defaultId by remember { mutableStateOf(SigningManager.defaultId()) }
+    val scope = rememberCoroutineScope()
+    // T5A（2026-08-12）：档案目录扫描移出组合期（首帧）与回调主线程——目录列举 +
+    // 证书指纹解析合计秒级（RSA 证书 per-file），主线程执行会卡帧/ANR。
+    var profiles by remember { mutableStateOf(listOf<SigningProfile>()) }
+    var defaultId by remember { mutableStateOf("") }
     var menuOpen by remember { mutableStateOf(false) }
     var importSource by remember { mutableStateOf<ByteArray?>(null) }
     var showGenerate by remember { mutableStateOf(false) }
     var exportTarget by remember { mutableStateOf<SigningProfile?>(null) }
     var deleteTarget by remember { mutableStateOf<SigningProfile?>(null) }
 
-    // 签名档案导入：系统文件选择器（SAF 单文件），直接经 contentResolver 读字节
-    // 后置入导入状态（无落盘副本，不存在临时文件清理）。
+    // 首帧加载：IO 读取档案列表与默认项，加载完成前列表为空（加载后一次性弹出，无感知）。
+    LaunchedEffect(Unit) {
+        val (list, def) =
+            withContext(Dispatchers.IO) {
+                SigningManager.profiles() to SigningManager.defaultId()
+            }
+        profiles = list
+        defaultId = def
+    }
+    // 默认档案详情（指纹等）：IO 计算，仅默认项变化时重取。
+    val defaultProfile by produceState<SigningProfile?>(null, defaultId) {
+        value = withContext(Dispatchers.IO) { SigningManager.profile(defaultId.ifBlank { null }) }
+    }
+
+    // 签名档案导入：系统文件选择器（SAF 单文件），经 contentResolver 读字节
+    // 后置入导入状态（无落盘副本，不存在临时文件清理）；读盘移 IO（T5A）。
     val importLauncher =
         rememberLauncherForActivityResult(
             ActivityResultContracts.OpenDocument(),
         ) { uri ->
             if (uri == null) return@rememberLauncherForActivityResult
-            val bytes =
-                runCatching {
-                    context.contentResolver.openInputStream(uri)?.use { it.readBytes() }
-                }.getOrNull()
-            if (bytes != null && bytes.isNotEmpty()) {
-                importSource = bytes
-            } else {
-                Toast.makeText(context, R.string.signing_read_failed, Toast.LENGTH_SHORT).show()
+            scope.launch {
+                val bytes =
+                    withContext(Dispatchers.IO) {
+                        runCatching {
+                            context.contentResolver.openInputStream(uri)?.use { it.readBytes() }
+                        }.getOrNull()
+                    }
+                if (bytes != null && bytes.isNotEmpty()) {
+                    importSource = bytes
+                } else {
+                    Toast.makeText(context, R.string.signing_read_failed, Toast.LENGTH_SHORT).show()
+                }
             }
         }
     val exportLauncher =
@@ -113,26 +140,35 @@ fun SigningScreen(
             val target = exportTarget
             exportTarget = null
             if (uri == null || target == null) return@rememberLauncherForActivityResult
-            val ok =
-                runCatching {
-                    val bytes = SigningManager.exportBytes(target.id) ?: error("keystore missing")
-                    val os = context.contentResolver.openOutputStream(uri) ?: error("no output stream")
-                    os.use { it.write(bytes) }
-                }.isSuccess
-            Toast.makeText(
-                context,
-                if (ok) R.string.signing_exported else R.string.signing_export_failed,
-                Toast.LENGTH_SHORT,
-            ).show()
+            scope.launch {
+                // 读密钥库字节 + SAF 流写盘移 IO（T5A；密钥库可达 MB 级）。
+                val ok =
+                    withContext(Dispatchers.IO) {
+                        runCatching {
+                            val bytes = SigningManager.exportBytes(target.id) ?: error("keystore missing")
+                            val os = context.contentResolver.openOutputStream(uri) ?: error("no output stream")
+                            os.use { it.write(bytes) }
+                        }.isSuccess
+                    }
+                Toast.makeText(
+                    context,
+                    if (ok) R.string.signing_exported else R.string.signing_export_failed,
+                    Toast.LENGTH_SHORT,
+                ).show()
+            }
         }
 
     fun refresh() {
-        profiles = SigningManager.profiles()
-        defaultId = SigningManager.defaultId()
-        onProfileChanged()
+        scope.launch {
+            val (list, def) =
+                withContext(Dispatchers.IO) {
+                    SigningManager.profiles() to SigningManager.defaultId()
+                }
+            profiles = list
+            defaultId = def
+            onProfileChanged()
+        }
     }
-
-    val defaultProfile = SigningManager.profile(if (defaultId.isBlank()) null else defaultId)
 
     Scaffold(
         topBar = {
@@ -177,16 +213,19 @@ fun SigningScreen(
             profiles.forEach { profile ->
                 SigningRow(
                     profile = profile,
-                    selected = profile.id == defaultProfile.id,
+                    selected = profile.id == defaultProfile?.id,
                     onSelect = {
-                        SigningManager.setDefault(profile.id)
-                        defaultId = profile.id
-                        // 与打包通用选项的默认签名同步，保证打包页初始值一致。
-                        SettingsManager.updateBuild(
-                            SettingsManager.buildOpts.value.copy(signingProfileId = profile.id),
-                            context,
-                        )
-                        refresh()
+                        scope.launch {
+                            // 默认标记持久化移 IO（T5A，目录/偏好写盘）。
+                            withContext(Dispatchers.IO) { SigningManager.setDefault(profile.id) }
+                            defaultId = profile.id
+                            // 与打包通用选项的默认签名同步，保证打包页初始值一致。
+                            SettingsManager.updateBuild(
+                                SettingsManager.buildOpts.value.copy(signingProfileId = profile.id),
+                                context,
+                            )
+                            refresh()
+                        }
                     },
                     onExport = { if (!profile.isBuiltin) exportTarget = profile },
                     onDelete = {
@@ -213,13 +252,21 @@ fun SigningScreen(
         GenerateDialog(
             onConfirm = { name, alias, password, subject, validYears ->
                 showGenerate = false
-                val ok = runCatching { SigningManager.generate(name, alias, password, subject, validYears) }
-                if (ok.isSuccess) {
-                    Toast.makeText(context, R.string.signing_generated, Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(context, ok.exceptionOrNull()?.message ?: "?", Toast.LENGTH_LONG).show()
+                scope.launch {
+                    // RSA 密钥对 + PBKDF + X.509 自签生成移 IO（T5A，秒级阻塞）。
+                    val ok =
+                        withContext(Dispatchers.IO) {
+                            runCatching { SigningManager.generate(name, alias, password, subject, validYears) }
+                        }
+                    if (ok.isSuccess) {
+                        Toast.makeText(context, R.string.signing_generated, Toast.LENGTH_SHORT).show()
+                    } else {
+                        // T5E：失败文案资源化（异常细节仅日志，不直达 UI）。
+                        android.util.Log.w("SigningScreen", "generate failed", ok.exceptionOrNull())
+                        Toast.makeText(context, R.string.signing_generate_failed, Toast.LENGTH_LONG).show()
+                    }
+                    refresh()
                 }
-                refresh()
             },
             onDismiss = { showGenerate = false },
         )
@@ -236,14 +283,17 @@ fun SigningScreen(
             profile = target,
             onConfirm = {
                 deleteTarget = null
-                SigningManager.delete(target.id)
-                if (SettingsManager.buildOpts.value.signingProfileId == target.id) {
-                    SettingsManager.updateBuild(
-                        SettingsManager.buildOpts.value.copy(signingProfileId = ""),
-                        context,
-                    )
+                scope.launch {
+                    // 密钥库文件删除移 IO（T5A）。文件删除先于默认标记检查执行（原语义）。
+                    withContext(Dispatchers.IO) { SigningManager.delete(target.id) }
+                    if (SettingsManager.buildOpts.value.signingProfileId == target.id) {
+                        SettingsManager.updateBuild(
+                            SettingsManager.buildOpts.value.copy(signingProfileId = ""),
+                            context,
+                        )
+                    }
+                    refresh()
                 }
-                refresh()
             },
             onDismiss = { deleteTarget = null },
         )
@@ -557,6 +607,7 @@ private fun ImportDialog(
     onDismiss: () -> Unit,
 ) {
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     val storeType = remember(bytes) { SigningCrypto.detectStoreType(bytes) }
     val emptyMessage = stringResource(R.string.signing_empty)
     val readFailedMessage = stringResource(R.string.signing_read_failed)
@@ -653,16 +704,21 @@ private fun ImportDialog(
                     onClick = {
                         loading = true
                         error = null
-                        val result =
-                            runCatching { SigningCrypto.listAliases(bytes, storePassword.toCharArray(), storeType) }
-                        loading = false
-                        result.onSuccess {
-                            aliases = it
-                            if (it.isEmpty()) error = emptyMessage
-                        }.onFailure { e ->
-                            // T17：读取失败展示本地化文案（异常细节仅日志）。
-                            android.util.Log.w("SigningScreen", "listAliases failed", e)
-                            error = readFailedMessage
+                        scope.launch {
+                            // PBKDF 口令派生 + 密钥库解析移 IO（T5A，毫秒~秒级）。
+                            val result =
+                                withContext(Dispatchers.IO) {
+                                    runCatching { SigningCrypto.listAliases(bytes, storePassword.toCharArray(), storeType) }
+                                }
+                            loading = false
+                            result.onSuccess {
+                                aliases = it
+                                if (it.isEmpty()) error = emptyMessage
+                            }.onFailure { e ->
+                                // T17：读取失败展示本地化文案（异常细节仅日志）。
+                                android.util.Log.w("SigningScreen", "listAliases failed", e)
+                                error = readFailedMessage
+                            }
                         }
                     },
                     enabled = !loading && name.isNotBlank() && storePassword.isNotBlank(),
@@ -674,23 +730,30 @@ private fun ImportDialog(
                     onClick = {
                         val alias = selectedAlias ?: return@TextButton
                         val info = aliasList.firstOrNull { it.alias == alias } ?: return@TextButton
-                        val ok =
-                            runCatching {
-                                SigningManager.import(
-                                    name = name.ifBlank { alias },
-                                    storeType = storeType,
-                                    storePassword = storePassword,
-                                    keyAlias = alias,
-                                    algorithm = info.algorithm,
-                                    certFingerprint = info.certFingerprint,
-                                    bytes = bytes,
-                                )
+                        scope.launch {
+                            // 密钥库文件落盘移 IO（T5A）。
+                            val ok =
+                                withContext(Dispatchers.IO) {
+                                    runCatching {
+                                        SigningManager.import(
+                                            name = name.ifBlank { alias },
+                                            storeType = storeType,
+                                            storePassword = storePassword,
+                                            keyAlias = alias,
+                                            algorithm = info.algorithm,
+                                            certFingerprint = info.certFingerprint,
+                                            bytes = bytes,
+                                        )
+                                    }
+                                }
+                            if (ok.isSuccess) {
+                                Toast.makeText(context, R.string.signing_imported, Toast.LENGTH_SHORT).show()
+                                onDone()
+                            } else {
+                                // T5E：失败文案资源化（异常细节仅日志）。
+                                android.util.Log.w("SigningScreen", "import failed", ok.exceptionOrNull())
+                                Toast.makeText(context, R.string.signing_import_failed, Toast.LENGTH_LONG).show()
                             }
-                        if (ok.isSuccess) {
-                            Toast.makeText(context, R.string.signing_imported, Toast.LENGTH_SHORT).show()
-                            onDone()
-                        } else {
-                            Toast.makeText(context, ok.exceptionOrNull()?.message ?: "?", Toast.LENGTH_LONG).show()
                         }
                     },
                     enabled = selectedAlias != null,

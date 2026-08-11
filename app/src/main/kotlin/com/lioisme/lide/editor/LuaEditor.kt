@@ -31,6 +31,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import io.github.rosemoe.sora.event.ContentChangeEvent
 import io.github.rosemoe.sora.event.EditorKeyEvent
 import io.github.rosemoe.sora.event.KeyBindingEvent
+import io.github.rosemoe.sora.event.PublishSearchResultEvent
 import io.github.rosemoe.sora.lang.diagnostic.DiagnosticRegion
 import io.github.rosemoe.sora.lang.diagnostic.DiagnosticsContainer
 import io.github.rosemoe.sora.langs.textmate.registry.ThemeRegistry
@@ -94,6 +95,7 @@ private class EditorInstance(
     private val onContentModified: () -> Unit,
     private val onUndoRedoStateChanged: (Boolean, Boolean) -> Unit,
     private val onFormatAction: () -> Unit,
+    private val onSearchResultPublished: () -> Unit,
 ) {
     /** 编辑事件节流信号：每键 +1，不触发重组；组合层经 collectLatest 防抖消费。 */
     val diagTick = MutableStateFlow(0)
@@ -222,6 +224,16 @@ private class EditorInstance(
                     syncUndoRedoState()
                 } catch (t: Throwable) {
                     Log.w(TAG, "content change callback failed", t)
+                }
+            }
+
+            // 查找/替换（P5.1，2026-08-11）：搜索结果后台计算完成 / stopSearch /
+            // 编辑触发重搜时通知宿主刷新计数（sora PublishSearchResultEvent 主线程派发）。
+            subscribeEvent(PublishSearchResultEvent::class.java) { _, _ ->
+                try {
+                    onSearchResultPublished()
+                } catch (t: Throwable) {
+                    Log.w(TAG, "search result callback failed", t)
                 }
             }
         }
@@ -425,6 +437,7 @@ fun LuaEditor(
     onRelease: () -> Unit,
     onEditorBound: () -> Unit = {},
     onFormatRequest: () -> Unit = {},
+    onSearchResultPublished: () -> Unit = {},
     controller: EditorController,
     modifier: Modifier = Modifier,
 ) {
@@ -435,6 +448,7 @@ fun LuaEditor(
     val currentOnRelease by rememberUpdatedState(onRelease)
     val currentOnEditorBound by rememberUpdatedState(onEditorBound)
     val currentOnFormatRequest by rememberUpdatedState(onFormatRequest)
+    val currentOnSearchResultPublished by rememberUpdatedState(onSearchResultPublished)
     val currentConfig by rememberUpdatedState(config)
     // 文件 → 语言 scope 由 :editor 解析（文本级能力，宿主只传文件名）。
     // 传入值可能是完整路径，先取 basename 再按扩展名/精确名映射。
@@ -493,6 +507,7 @@ fun LuaEditor(
                 onContentModified = { currentOnContentModified() },
                 onUndoRedoStateChanged = { u, r -> currentOnUndoRedoStateChanged(u, r) },
                 onFormatAction = { currentOnFormatRequest() },
+                onSearchResultPublished = { currentOnSearchResultPublished() },
             )
         }
 

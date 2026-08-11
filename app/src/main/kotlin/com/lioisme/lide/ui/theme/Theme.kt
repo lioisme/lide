@@ -65,17 +65,57 @@ fun resolveIsDark(appearanceMode: AppearanceMode): Boolean =
 fun resolveColorScheme(
     config: ThemeConfig,
     isDark: Boolean,
+): ColorScheme = resolveColorSchemeNow(config, isDark, LocalContext.current)
+
+/**
+ * 非 Composable 色板计算（U4，2026-08-12）：与 [resolveColorScheme] 同一事实源，
+ * 供 MainActivity 在 setContent 之前同步窗口背景色（recreate 首帧底色对齐主题，
+ * 消除切换语言/外观时系统重建的白/黑闪帧）。
+ *
+ * 取舍说明：Composable 路径的 dynamic wallpaper 分支用官方 [dynamicDarkColorScheme]/
+ * [dynamicLightColorScheme]（@Composable），此处非 Composable 等价实现 = 拾取壁纸
+ * 主色经 [generateLightScheme]/[generateDarkScheme]（materialkolor 同算法）生成——
+ * 二者同一 tonal 系，recreate 空档帧差异肉眼不可见（仅动态壁纸模式，随后组合帧
+ * 立即由官方色板接管）；种子色模式两路径完全同源零色差。
+ */
+fun resolveColorSchemeNow(
+    config: ThemeConfig,
+    isDark: Boolean,
+    context: android.content.Context?,
 ): ColorScheme =
     when {
-        config.useWallpaper && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (isDark) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+        config.useWallpaper &&
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
+            context != null -> {
+            val seed = wallpaperPrimaryColor(context) ?: Color(config.customSeedColor)
+            if (isDark) generateDarkScheme(seed) else generateLightScheme(seed)
         }
 
         else -> {
             val seed = Color(config.customSeedColor)
             if (isDark) generateDarkScheme(seed) else generateLightScheme(seed)
         }
+    }
+
+/** 壁纸主色（非 Composable，API 27+ `getWallpaperColors` 可用；更早恒 null 回落种子色）。 */
+@Suppress("NewApi", "DEPRECATION")
+private fun wallpaperPrimaryColor(context: android.content.Context): Color? =
+    try {
+        val manager = context.getSystemService(android.content.Context.WALLPAPER_SERVICE) as? android.app.WallpaperManager ?: return null
+        val colors =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                manager.getWallpaperColors(android.app.WallpaperManager.FLAG_SYSTEM)
+            } else {
+                null
+            }
+        // getPrimaryColor 与 android.graphics.Color.toArgb 的 API 门槛（27/26）由
+        // 外层 SDK_INT >= S 分支保证；lint 静态分析无法跟踪，显式 O_MR1 guard 消除。
+        val primary =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) colors?.primaryColor else null
+        primary?.let { Color(it.toArgb()) }
+    } catch (_: Throwable) {
+        // 降级：部分定制 ROM getWallpaperColors 抛异常 → 回落种子色（AGENTS.md 降级约定）。
+        null
     }
 
 @Composable

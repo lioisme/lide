@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
 
@@ -361,8 +362,13 @@ class EditorSession(
         val tab = _tabs.value.firstOrNull { it.fileName == fileName } ?: return
         if (!tab.dirty) return
         val content = synchronized(cacheLock) { contents[fileName] } ?: return
+        // 写盘段（U7，2026-08-12）：NonCancellable 防自动保存被 collectLatest
+        // 取消——tmp 写入与 rename 之间若被取消，本次保存事件静默丢弃 + 残留 .tmp
+        // 文件（ProjectManager.atomicWrite 保证不损坏目标文件，但脏标记保留的语义
+        // 依赖「写盘已发生」）。NonCancellable 保证落盘原子段完整执行；快照/查表
+        // 段可取消（无副作用）。
         val saved =
-            withContext(ioDispatcher) {
+            withContext(ioDispatcher + NonCancellable) {
                 projectManager.saveProjectScript(project, fileName, content.snapshot())
             }
         if (saved) {

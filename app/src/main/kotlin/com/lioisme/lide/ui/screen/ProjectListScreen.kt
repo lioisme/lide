@@ -9,6 +9,8 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
@@ -22,14 +24,19 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.lioisme.lide.R
 import com.lioisme.lide.project.AlpManager
@@ -63,9 +70,10 @@ fun ProjectListScreen(
     refreshKey: Int = 0,
     pendingImportPaths: List<String> = emptyList(),
 ) {
-    var showCreateDialog by remember { mutableStateOf(false) }
+    var showCreateDialog by rememberSaveable { mutableStateOf(false) }
     var isRefreshing by remember { mutableStateOf(false) }
-    var newName by remember { mutableStateOf("") }
+    // U3（2026-08-12）：输入内容跨配置变更保留（rememberSaveable），旋转不丢用户输入。
+    var newName by rememberSaveable { mutableStateOf("") }
     var errorMsg by remember { mutableStateOf<String?>(null) }
     var pendingExportProject by remember { mutableStateOf<Project?>(null) }
     var pendingDeleteProject by remember { mutableStateOf<Project?>(null) }
@@ -73,12 +81,13 @@ fun ProjectListScreen(
     var sheetProject by remember { mutableStateOf<Project?>(null) }
     // 主界面精简（用户决策）：示例 / API 浏览器迁入设置，导入收进 ⋮ 溢出菜单。
     var menuExpanded by remember { mutableStateOf(false) }
-    // WP-005 工程重命名：挂起对象 + 名称输入。
+    // WP-005 工程重命名：挂起对象 + 名称输入（输入内容跨旋转保留，同上）。
     var pendingRenameProject by remember { mutableStateOf<Project?>(null) }
-    var renameInput by remember { mutableStateOf("") }
+    var renameInput by rememberSaveable { mutableStateOf("") }
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
     val haptics = LocalHapticFeedback.current
+    val focusManager = LocalFocusManager.current
     val strImportSuccess = stringResource(R.string.import_success)
     val strImportFailed = stringResource(R.string.import_failed)
     val strExportSuccess = stringResource(R.string.export_success)
@@ -91,6 +100,12 @@ fun ProjectListScreen(
     // 键值组合天然去重，避免并发重复读盘（同一列表反复重建）。
     LaunchedEffect(Unit, refreshKey, pendingImportPaths.size) {
         refresh()
+    }
+
+    // U2（2026-08-12）双保险：编辑器返回后若仍有焦点残留，首次组合一次性清焦。
+    // 幂等无副作用（本页未主动请求焦点，键盘导航场景亦不受影响——clearFocus 仅清残留）。
+    LaunchedEffect(Unit) {
+        focusManager.clearFocus()
     }
 
     // 下拉刷新：键控效应替代组合期条件副作用。
@@ -296,7 +311,7 @@ fun ProjectListScreen(
                         Text(
                             stringResource(R.string.tap_to_create),
                             style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
                 }
@@ -353,44 +368,39 @@ fun ProjectListScreen(
     }
 
     if (showCreateDialog) {
-        AlertDialog(
-            onDismissRequest = { showCreateDialog = false },
-            title = { Text(stringResource(R.string.new_project)) },
-            text = {
-                OutlinedTextField(
-                    value = newName,
-                    onValueChange = { newName = it },
-                    label = { Text(stringResource(R.string.project_name)) },
-                    singleLine = true,
-                )
-            },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        val name = newName.trim()
-                        if (name.isNotBlank()) {
-                            showCreateDialog = false
-                            newName = ""
-                            scope.launch {
-                                val created =
-                                    withContext(Dispatchers.IO) {
-                                        projectManager.createProject(
-                                            name,
-                                            RuntimePaths.luaExtDir(),
-                                        )
-                                    }
-                                if (created != null) {
-                                    scope.launch { refresh() }
-                                } else {
-                                    errorMsg = context.getString(R.string.project_create_failed, name)
-                                }
+        BottomInputSheet(
+            title = stringResource(R.string.new_project),
+            label = stringResource(R.string.project_name),
+            hintText = null,
+            value = newName,
+            confirmEnabled = newName.isNotBlank(),
+            confirmText = stringResource(R.string.create),
+            onValueChange = { newName = it },
+            onConfirm = {
+                val name = newName.trim()
+                if (name.isNotBlank()) {
+                    showCreateDialog = false
+                    newName = ""
+                    focusManager.clearFocus()
+                    scope.launch {
+                        val created =
+                            withContext(Dispatchers.IO) {
+                                projectManager.createProject(
+                                    name,
+                                    RuntimePaths.luaExtDir(),
+                                )
                             }
+                        if (created != null) {
+                            scope.launch { refresh() }
+                        } else {
+                            errorMsg = context.getString(R.string.project_create_failed, name)
                         }
-                    },
-                ) { Text(stringResource(R.string.create)) }
+                    }
+                }
             },
-            dismissButton = {
-                TextButton(onClick = { showCreateDialog = false }) { Text(stringResource(R.string.cancel)) }
+            onDismiss = {
+                showCreateDialog = false
+                focusManager.clearFocus()
             },
         )
     }
@@ -534,50 +544,34 @@ fun ProjectListScreen(
 
     // WP-005 工程重命名：目录改名 + init.lua appname 同步（重名自动去重 -1/-2）。
     pendingRenameProject?.let { project ->
-        AlertDialog(
-            onDismissRequest = { pendingRenameProject = null },
-            title = { Text(stringResource(R.string.project_rename_title, project.name)) },
-            text = {
-                Column {
-                    Text(
-                        stringResource(R.string.project_rename_hint),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                    Spacer(Modifier.height(8.dp))
-                    OutlinedTextField(
-                        value = renameInput,
-                        onValueChange = { renameInput = it },
-                        singleLine = true,
-                        modifier = Modifier.fillMaxWidth(),
-                    )
-                }
-            },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        val target = pendingRenameProject ?: return@TextButton
-                        pendingRenameProject = null
-                        scope.launch {
-                            val renamed =
-                                withContext(Dispatchers.IO) {
-                                    projectManager.renameProject(target, renameInput)
-                                }
-                            if (renamed != null) {
-                                Toast.makeText(context, strRenameDone, Toast.LENGTH_SHORT).show()
-                                scope.launch { refresh() }
-                            } else {
-                                errorMsg = strRenameFailed
-                            }
+        BottomInputSheet(
+            title = stringResource(R.string.project_rename_title, project.name),
+            label = stringResource(R.string.rename_name_label),
+            hintText = stringResource(R.string.project_rename_hint),
+            value = renameInput,
+            confirmEnabled = projectManager.isValidEntryName(renameInput),
+            confirmText = stringResource(R.string.confirm),
+            onValueChange = { renameInput = it },
+            onConfirm = {
+                val target = pendingRenameProject ?: return@BottomInputSheet
+                pendingRenameProject = null
+                focusManager.clearFocus()
+                scope.launch {
+                    val renamed =
+                        withContext(Dispatchers.IO) {
+                            projectManager.renameProject(target, renameInput)
                         }
-                    },
-                    enabled = projectManager.isValidEntryName(renameInput),
-                ) {
-                    Text(stringResource(R.string.confirm))
+                    if (renamed != null) {
+                        Toast.makeText(context, strRenameDone, Toast.LENGTH_SHORT).show()
+                        scope.launch { refresh() }
+                    } else {
+                        errorMsg = strRenameFailed
+                    }
                 }
             },
-            dismissButton = {
-                TextButton(onClick = { pendingRenameProject = null }) { Text(stringResource(R.string.cancel)) }
+            onDismiss = {
+                pendingRenameProject = null
+                focusManager.clearFocus()
             },
         )
     }
@@ -593,5 +587,91 @@ fun ProjectListScreen(
                 advanceImportQueue()
             },
         )
+    }
+}
+
+/**
+ * 底部输入对话框（U3，2026-08-12）：新建项目 / 工程重命名共用。
+ *
+ * 相对居中 [AlertDialog] 的差异：自动聚焦输入框（FocusRequester，弹出即弹键盘）、
+ * IME 动作 [ImeAction.Done] 直接提交（回车 = 确认）、底部 padding 与导航栏安全区
+ * 由 [ModalBottomSheet] 自带。状态全部由调用方持有（无内部 state），旋转由调用方
+ * `rememberSaveable` 保证。
+ *
+ * @param hintText 可选的输入说明（重命名场景），null 不展示
+ * @param confirmEnabled 确认按钮可用性（空名/非法名禁用）
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun BottomInputSheet(
+    title: String,
+    label: String,
+    hintText: String?,
+    value: String,
+    confirmEnabled: Boolean,
+    confirmText: String,
+    onValueChange: (String) -> Unit,
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit,
+) {
+    ModalBottomSheet(onDismissRequest = onDismiss) {
+        val focusRequester = remember { FocusRequester() }
+        // 弹出即聚焦：键盘直接拉起，免手动点按（对确认类输入框的常规期望）。
+        LaunchedEffect(Unit) { focusRequester.requestFocus() }
+        Column(
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 32.dp),
+        ) {
+            Text(
+                title,
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
+            )
+            if (hintText != null) {
+                Spacer(Modifier.height(4.dp))
+                Text(
+                    hintText,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(horizontal = 24.dp),
+                )
+            }
+            Spacer(Modifier.height(12.dp))
+            OutlinedTextField(
+                value = value,
+                onValueChange = onValueChange,
+                label = { Text(label) },
+                singleLine = true,
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp)
+                        .focusRequester(focusRequester),
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(onDone = { onConfirm() }),
+            )
+            Spacer(Modifier.height(16.dp))
+            Row(
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp),
+                horizontalArrangement = Arrangement.End,
+            ) {
+                TextButton(onClick = onDismiss) {
+                    Text(stringResource(R.string.cancel))
+                }
+                Spacer(Modifier.width(8.dp))
+                TextButton(
+                    onClick = onConfirm,
+                    enabled = confirmEnabled,
+                ) {
+                    Text(confirmText)
+                }
+            }
+        }
     }
 }

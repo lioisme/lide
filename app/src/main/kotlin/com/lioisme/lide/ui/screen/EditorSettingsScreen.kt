@@ -42,8 +42,11 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -63,6 +66,9 @@ import com.lioisme.lide.editor.TipIconButton
 import com.lioisme.lide.ui.theme.LideTopBar
 import com.lioisme.lide.ui.theme.SettingsManager
 import java.io.File
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * 编辑器设置页：21 项设置（2026-08-11 P4 瘦身 27 → 20，移除 7 项「最佳配置」，
@@ -384,33 +390,50 @@ private fun FontFamilySheet(
     onDismiss: () -> Unit,
 ) {
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    // T11：导入成功后 +1 触发 produceState 重查（清 LuaFonts 缓存 + IO 重扫）。
+    val refresh = remember { mutableIntStateOf(0) }
+    // T11：外部字体列表走 produceState + IO：主线程不扫 files/fonts 目录。
+    val importedFonts by
+        produceState(initialValue = emptyList<Pair<Int, String>>(), refresh.intValue, context) {
+            value = withContext(Dispatchers.IO) { LuaFonts.externalLabels(context) }
+        }
     // T11：外部字体导入（SAF 选 ttf → 复制 files/fonts/ → 清 LuaFonts 缓存）。
     val fontPicker =
         rememberLauncherForActivityResult(
             ActivityResultContracts.OpenDocument(),
         ) { uri ->
             if (uri != null) {
-                val ok =
-                    try {
-                        val dir = File(context.filesDir, "fonts").apply { mkdirs() }
-                        val name = uri.lastPathSegment?.substringAfterLast('/') ?: "imported.ttf"
-                        context.contentResolver.openInputStream(uri)?.use { input ->
-                            File(dir, name).outputStream().use { output -> input.copyTo(output) }
-                            true
-                        } ?: false
-                    } catch (_: Throwable) {
-                        false
-                    }
-                LuaFonts.invalidate()
-                android.widget.Toast
-                    .makeText(
-                        context,
-                        context.getString(
-                            if (ok) R.string.font_import_done else R.string.font_import_failed,
-                        ),
-                        android.widget.Toast.LENGTH_SHORT,
-                    )
-                    .show()
+                scope.launch {
+                    // 复制在 IO 线程执行：SAF 回调是主线程，大 ttf 复制不得阻塞 UI。
+                    val ok =
+                        try {
+                            withContext(Dispatchers.IO) {
+                                val dir = File(context.filesDir, "fonts").apply { mkdirs() }
+                                val name =
+                                    uri.lastPathSegment?.substringAfterLast('/') ?: "imported.ttf"
+                                context.contentResolver.openInputStream(uri)?.use { input ->
+                                    File(dir, name).outputStream().use { output ->
+                                        input.copyTo(output)
+                                    }
+                                    true
+                                } ?: false
+                            }
+                        } catch (_: Throwable) {
+                            false
+                        }
+                    LuaFonts.invalidate()
+                    refresh.intValue++
+                    android.widget.Toast
+                        .makeText(
+                            context,
+                            context.getString(
+                                if (ok) R.string.font_import_done else R.string.font_import_failed,
+                            ),
+                            android.widget.Toast.LENGTH_SHORT,
+                        )
+                        .show()
+                }
             }
         }
 
@@ -439,13 +462,12 @@ private fun FontFamilySheet(
                     preview = true,
                 )
             }
-            val externalCount = LuaFonts.externalCount(context)
+            val externalCount = importedFonts.size
             if (externalCount > 0) {
                 sectionTitle(R.string.font_section_imported)
-                for (index in 0 until externalCount) {
-                    val id = EditorConfig.FONT_FAMILY_EXTERNAL_BASE + index
+                for ((id, label) in importedFonts) {
                     FontOptionRow(
-                        label = LuaFonts.externalLabel(context, id) ?: "font-$index",
+                        label = label,
                         current = id == currentId,
                         onClick = { onSelect(id) },
                         preview = true,

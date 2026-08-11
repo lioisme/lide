@@ -90,11 +90,11 @@
 
 | # | 任务 | 优先级 | 状态 | 关键词 |
 |---|---|---|---|---|
-| S1 | 真只读重构：删 ReadOnlyBanner / 菜单置灰去只读 / 删冗余 hideSoftInput / ⋮ 菜单加「只读」直达切换 | 高 | 🔄 进行中 | `readOnly` `只读` `Squircle` |
-| S2 | 去池化：删除 EditorViewPool，回归 remember+release 朴素生命周期 | 高 | 待执行 | `EditorViewPool` `去池化` |
-| S3 | 行号分界线：主题 JSON 加 divider 色键 + LideTextMateColorScheme + 固定 1dp 分割线 | 高 | 待执行 | `LINE_DIVIDER` `分割线` |
-| S4 | 设置瘦身：删 7 项（粘性行数/lnPanel/pin/分割线宽度/光标动画/行高/undo 栈）21→14 | 中 | 待执行 | `编辑器设置` `瘦身` |
-| S5 | 功能补缺：sora 原生 EditorSearcher 查找/替换面板 + 跳行对话框 | 中 | 待执行 | `EditorSearcher` `查找替换` `跳行` |
+| S1 | 真只读重构：删 ReadOnlyBanner / 菜单置灰去只读 / 删冗余 hideSoftInput / ⋮ 菜单加「只读」直达切换 | 高 | ✅ 已完成（2026-08-12，工作单 P1 收口；只读下替换按钮静默实测） | `readOnly` `只读` `Squircle` |
+| S2 | 去池化：删除 EditorViewPool，回归 remember+release 朴素生命周期 | 高 | ✅ 已完成（2026-08-11，工作单 P2；含 S6 闪退修复） | `EditorViewPool` `去池化` |
+| S3 | 行号分界线：主题 JSON 加 divider 色键 + LideTextMateColorScheme + 固定 1dp 分割线 | 高 | ✅ 已完成（2026-08-11，工作单 P3） | `LINE_DIVIDER` `分割线` |
+| S4 | 设置瘦身：删 7 项（粘性行数/lnPanel/pin/分割线宽度/光标动画/行高/undo 栈）27→20 | 中 | ✅ 已完成（2026-08-11，工作单 P4；全库 grep 零残留） | `编辑器设置` `瘦身` |
+| S5 | 功能补缺：sora 原生 EditorSearcher 查找/替换面板 + 跳行对话框 | 中 | ✅ 已完成（2026-08-12，工作单 P5；含全部替换自实现修 BadTokenException；x64 模拟器全链路冒烟零 FATAL） | `EditorSearcher` `查找替换` `跳行` |
 
 ## 2h. 工程属性四项整改（2026-08-11，全部完成，结论已蒸馏进 docs/kb/EDITOR.md 与 ARCHITECTURE.md）
 
@@ -165,6 +165,29 @@
 | L2 | **字体收敛**：字体面板移除系统 3 族可选项（仅内置 + 导入）；fontFamilyLabel 回落默认；LuaFonts 两级兜底链 MONOSPACE → DEFAULT | 高 | ✅ 已完成（2026-08-12，工作单 T3；验收：LuaFontsFallbackTest 5 用例全绿——白名单/别名/拓扑/资产存在一致） | `EDITOR_LINENUM_FONT_FORMAT_FIX` `字体兜底` `LuaFonts` |
 | L3 | **格式化修复**：format 光标恢复（setSelection 夹取）+ 文本一致性守卫；deleteMultiSpaces=1 / deleteEmptyLineFast=false 显式声明；use_tab 默认 false | 高 | ✅ 已完成（2026-08-12，工作单 T5/T6/T7；验收：LuaFormatterTest 增量 2 用例 + EditorConfigTest 全绿） | `EDITOR_LINENUM_FONT_FORMAT_FIX` `格式化` `光标` `deleteMultiSpaces` |
 | L4 | **验证与收口**：LuaFontsFallbackTest / LuaFormatterTest 增量 + compile/test/verify 门禁 + AGENTS.md + kb 蒸馏 + 工作单收口 | 高 | 🔄 进行中（2026-08-12：单测已补全；compile + editor 单测全绿；全量验证与收口进行中） | `EDITOR_LINENUM_FONT_FORMAT_FIX` `验证` `收口` |
+
+## 2m. 主界面与编辑器交互细节整改 + 全量审计批次 A（2026-08-12，工作单 docs/in-progress/UI_UX_DETAILS_WORK_ORDER.md）
+
+> 来源需求（用户 2026-08-12 五条要求，全量审计后立项）：
+> ① 切换语言时整个界面闪烁 → 修复（系统 recreate 首帧底色 + 列表缓存进程级化）；
+> ② 编辑器调出输入法后返回主界面，焦点落在「新建项目」按钮 → 修复（离场释放编辑器 View 焦点）；
+> ③ 新建项目/重命名等输入框对话框改为底部对话框（居中 → ModalBottomSheet，仅这两个，用户拍板）；
+> ④ 主题色选中态选中框与对号颜色不一致（一黑一白）→ 统一按 WCAG 对比度取色的标记色；
+> ⑤ 全量审计其他细节问题，清单与整改方案见工作单（P1/P2 批次 A 本次落地，P3 批次 B 登记）。
+> 质量要求：代码质量/架构达大厂验收标准；每项完成在工作单标记（已完成）+ 验收证据。
+
+| # | 任务 | 优先级 | 状态 | 关键词 |
+|---|---|---|---|---|
+| U1 | 主题色选中态统一（选中框+对号同标记色，WCAG 对比度取色） | 高 | ✅ 已完成（2026-08-12，工作单 T1；selectedMarkColor + semantics selected） | `UI_UX_DETAILS` `ColorSheet` `选中态` |
+| U2 | 编辑器返回主界面焦点残留修复（EditorController.releaseFocus + 离场释放 + 列表页兜底清焦） | 高 | ✅ 已完成（2026-08-12，工作单 T2；模拟器实测 focused=true 零节点） | `UI_UX_DETAILS` `焦点` `IME` |
+| U3 | 新建/重命名对话框转 ModalBottomSheet（自动聚焦 + IME Done 提交） | 高 | ✅ 已完成（2026-08-12，工作单 T3；模拟器实测底部 sheet：标题/输入框/底部取消+创建） | `UI_UX_DETAILS` `ModalBottomSheet` `FocusRequester` |
+| U4 | 语言切换闪烁修复（窗口背景对齐主题 surface + ProjectListCache 进程级缓存） | 高 | ✅ 已完成（2026-08-12，工作单 T4；模拟器实测中英双向切换生效 + recreate 后列表缓存立即可见 + 零 FATAL） | `UI_UX_DETAILS` `语言切换` `recreate` `闪烁` |
+| U5 | 批次 A：SigningScreen 密码学/IO 异步化（generate/listAliases/目录扫描） | 中 | ✅ 已完成（2026-08-12，工作单 T5A；produceState/LaunchedEffect + Dispatchers.IO） | `UI_UX_DETAILS` `SigningScreen` `主线程` |
+| U6 | 批次 A：系统栏图标明暗跟随应用外观（显式 SystemBarStyle + launcher effect） | 中 | ✅ 已完成（2026-08-12，工作单 T5B；systemBarStyleFor + WindowInsetsControllerCompat 同步） | `UI_UX_DETAILS` `enableEdgeToEdge` `SystemBarStyle` |
+| U7 | 批次 A：自动保存写盘 NonCancellable（防 collectLatest 取消丢事件 + tmp 残留） | 中 | ✅ 已完成（2026-08-12，工作单 T5C；flushDirty 写盘段 NonCancellable） | `UI_UX_DETAILS` `自动保存` `NonCancellable` |
+| U8 | 批次 A：字体设置 sheet 列表刷新 + SAF 复制移 IO（EditorSettingsScreen） | 中 | ✅ 已完成（2026-08-12，工作单 T5D；produceState(importVersion) + LuaFonts.externalLabels） | `UI_UX_DETAILS` `LuaFonts` `SAF` |
+| U9 | 批次 A：EditorController 页面级 scope 清理 + 空态文案对比度 + 签名 RAW 异常文案资源化 | 中 | ✅ 已完成（2026-08-12，工作单 T5E；disposeScope + signing_*_failed 资源串） | `UI_UX_DETAILS` `协程` `对比度` `错误码` |
+| U10 | 验证与收口：compile + 全量单测 + 设备验收清单 + kb 蒸馏 + 工作单收口 | 高 | ✅ 已完成（2026-08-12：compile + testArm64DebugUnitTest + verifyMinimalismDebug + lint 0 新增全绿；模拟器自动化冒烟 T2/T3/T4 通过（焦点/底部 sheet/语言切换+列表缓存）；T1/T5B 视觉项代码级验收；kb/EDITOR.md §15 蒸馏） | `UI_UX_DETAILS` `验收` `收口` |
 
 ## 3. 风险与备忘
 

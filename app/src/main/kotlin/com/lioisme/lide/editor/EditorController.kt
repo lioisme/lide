@@ -1,11 +1,28 @@
 package com.lioisme.lide.editor
 
 import io.github.rosemoe.sora.widget.CodeEditor
+import io.github.rosemoe.sora.widget.EditorSearcher
+import java.util.regex.Pattern
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+
+/** 查找匹配类型（P5.1，2026-08-11）：映射 sora `EditorSearcher.SearchOptions.TYPE_*`。 */
+enum class SearchMatchType {
+    NORMAL,
+    WHOLE_WORD,
+    REGEX,
+}
+
+/** 查找结果快照（主线程读取，后台搜索完成经回调刷新）。 */
+data class SearchMatchInfo(val count: Int, val index: Int) {
+    companion object {
+        val NONE = SearchMatchInfo(0, 0)
+    }
+}
 
 /**
  * 编辑器实例命令门面（sora 门面契约，2026-08-11 解耦审计 B 级收口）。
@@ -49,6 +66,16 @@ class EditorController {
             e.setSelection(line.coerceIn(0, last), column.coerceAtLeast(0))
             e.requestFocus()
         }
+    }
+
+    /**
+     * 释放编辑器 View 焦点（U2，2026-08-12）：离开编辑器页面前调用，防止 sora
+     * 编辑器持有的 View 焦点在导航 pop 销毁时被系统转移、落到新页面首个可聚焦
+     * 组件（历史缺陷：焦点落「新建项目」按钮）。仅清焦点不关输入法；未绑定/异常
+     * 经 [runOnEditor] 降级为无操作。
+     */
+    fun releaseFocus() {
+        runOnEditor { it.clearFocus() }
     }
 
     /** 撤销（只读守卫由调用方按 [EditorConfig.readOnly] 前置拦截）。 */
@@ -145,6 +172,139 @@ class EditorController {
     /** 解绑（[LuaEditor] onDispose 调用，仅主线程）。 */
     internal fun unbind() {
         editor = null
+    }
+
+    /**
+     * 页面级作用域释放（T5E，2026-08-12）：仅由 EditorScreen 离场（onDispose / 返回）
+     * 调用，取消仍在途的格式化任务。**不得**与 [unbind] 绑定——LuaEditor 随标签切换
+     * dispose/recreate，若随解绑取消，格式化功能将永久瘫痪；也不得由 LuaEditor
+     * 持有调用。
+     */
+    fun disposeScope() {
+        scope.cancel()
+    }
+
+    // ---- 查找/替换（P5.1，2026-08-11）----
+    // 搜索结果 sora 在后台线程计算，完成时经 PublishSearchResultEvent 通知
+    // （LuaEditor 订阅 → onSearchResultPublished → 宿主刷新 SearchMatchInfo）。
+
+    /** 发起搜索（空/未绑定返回 false；正则非法在 sora 侧预检抛异常 → 降级 false）。 */
+    fun search(pattern: String, type: SearchMatchType, caseInsensitive: Boolean): Boolean {
+        val e = editor ?: return false
+        return try {
+            val soraType =
+                when (type) {
+                    SearchMatchType.NORMAL -> EditorSearcher.SearchOptions.TYPE_NORMAL
+                    SearchMatchType.WHOLE_WORD -> EditorSearcher.SearchOptions.TYPE_WHOLE_WORD
+                    SearchMatchType.REGEX -> EditorSearcher.SearchOptions.TYPE_REGULAR_EXPRESSION
+                }
+            e.getSearcher().search(pattern, EditorSearcher.SearchOptions(soraType, caseInsensitive))
+            true
+        } catch (_: Throwable) {
+            false
+        }
+    }
+
+    /** 停止搜索（清高亮与结果；未绑定/异常降级）。 */
+    fun stopSearch() {
+        runOnEditor { it.getSearcher().stopSearch() }
+    }
+
+    /** 当前是否处于搜索态（有 pattern）。 */
+    fun searchHasQuery(): Boolean {
+        val e = editor ?: return false
+        return try {
+            e.getSearcher().hasQuery()
+        } catch (_: Throwable) {
+            false
+        }
+    }
+
+    /** 结果快照（count / 当前命中序号，0 基；无查询/未就绪 = NONE）。 */
+    fun searchMatchInfo(): SearchMatchInfo {
+        val e = editor ?: return SearchMatchInfo.NONE
+        return try {
+            val searcher = e.getSearcher()
+            SearchMatchInfo(searcher.getMatchedPositionCount(), searcher.getCurrentMatchedPositionIndex())
+        } catch (_: Throwable) {
+            SearchMatchInfo.NONE
+        }
+    }
+
+    /** 下一个命中（未绑定/无结果 false）。 */
+    fun searchNext(): Boolean {
+        val e = editor ?: return false
+        return try {
+            e.getSearcher().gotoNext()
+        } catch (_: Throwable) {
+            false
+        }
+    }
+
+    /** 上一个命中（语义同 [searchNext]）。 */
+    fun searchPrevious(): Boolean {
+        val e = editor ?: return false
+        return try {
+            e.getSearcher().gotoPrevious()
+        } catch (_: Throwable) {
+            false
+        }
+    }
+
+    /**
+     * 替换当前命中（sora 内置 isEditable 门禁，只读下静默无操作；UI 层另按
+     * [EditorConfig.readOnly] 置灰按钮，双保险）。
+     */
+    fun replaceCurrent(replacement: String) {
+        runOnEditor { it.getSearcher().replaceCurrentMatch(replacement) }
+    }
+
+    /**
+     * 全部替换（P5.1，2026-08-11 收口）：sora 自带 [EditorSearcher.replaceAll] 内部
+     * 弹 `ProgressDialog`，在 Compose AndroidView 上下文（`ContextThemeWrapper`，无
+     * window token）下抛 `BadTokenException`——故弃用，自实现同语义替换（对齐 sora
+     * 结果语义：NORMAL = 字面 / WHOLE_WORD = `\b` 包裹 / REGEX = 正则，flags 含
+     * CASE_INSENSITIVE + MULTILINE），从后往前改写区间后单次 [Content.replace] 提交
+     * （单条 undo 记录，光标保持），无需任何 Dialog。只读门禁 sora 同款
+     * （[CodeEditor.isEditable]）。完成后回调经主线程执行。
+     */
+    fun replaceAll(
+        pattern: String,
+        replacement: String,
+        type: SearchMatchType,
+        caseInsensitive: Boolean,
+        whenSucceeded: () -> Unit = {},
+    ) {
+        val e = editor ?: return
+        try {
+            if (!e.isEditable) return
+            if (pattern.isEmpty()) return
+            val text = e.text.toString()
+            val flags = (if (caseInsensitive) Pattern.CASE_INSENSITIVE else 0) or Pattern.MULTILINE
+            val javaPattern =
+                when (type) {
+                    SearchMatchType.NORMAL -> Pattern.quote(pattern)
+                    SearchMatchType.WHOLE_WORD -> "\\b" + Pattern.quote(pattern) + "\\b"
+                    SearchMatchType.REGEX -> pattern
+                }
+            val matcher = Pattern.compile(javaPattern, flags).matcher(text)
+            val ranges = ArrayList<Pair<Int, Int>>()
+            while (matcher.find()) {
+                ranges.add(matcher.start() to matcher.end())
+            }
+            if (ranges.isEmpty()) return
+            val sb = StringBuilder(text)
+            for (i in ranges.indices.reversed()) {
+                sb.replace(ranges[i].first, ranges[i].second, replacement)
+            }
+            val newText = sb.toString()
+            if (newText == text) return
+            val lastLine = e.lineCount - 1
+            e.text.replace(0, 0, lastLine, e.text.getColumnCount(lastLine), newText)
+            whenSucceeded()
+        } catch (_: Throwable) {
+            // 降级：单次命令失败静默放弃（正则非法等）。
+        }
     }
 
     /**

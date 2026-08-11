@@ -7,14 +7,21 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.lioisme.lide.R
 import com.lioisme.lide.editor.pressAndHoldHapticFeedback
@@ -119,6 +126,55 @@ internal fun EditorRunErrorDialog(
                         Text(stringResource(R.string.run_insert_import, nilGlobal))
                     }
                 }
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = onDismiss,
+                modifier = Modifier.pressAndHoldHapticFeedback(),
+            ) {
+                Text(stringResource(R.string.cancel))
+            }
+        },
+    )
+}
+
+/**
+ * 跳行对话框（P5.2，2026-08-11）：数字输入 + 范围校验（1..[maxLine]）。
+ * 确认回调携带 **0 基**行号（对齐 sora `setSelection` 与运行错误跳行的既有语义）。
+ * 与 [EditorScreen] 的 pendingJump 消费效应共用同一跳转管线（含编辑器绑定门控）。
+ */
+@Composable
+internal fun GotoLineDialog(
+    maxLine: Int,
+    onConfirm: (line: Int) -> Unit,
+    onDismiss: () -> Unit,
+) {
+    var input by remember { mutableStateOf("") }
+    val max = maxLine.coerceAtLeast(1)
+    val valid = input.toIntOrNull()?.let { it in 1..max } == true
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.goto_line_title)) },
+        text = {
+            OutlinedTextField(
+                value = input,
+                onValueChange = { v ->
+                    if (v.length <= 9 && v.all(Char::isDigit)) input = v
+                },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                singleLine = true,
+                placeholder = { Text(stringResource(R.string.goto_line_hint, max)) },
+                modifier = Modifier.fillMaxWidth(),
+            )
+        },
+        confirmButton = {
+            TextButton(
+                enabled = valid,
+                onClick = { input.toIntOrNull()?.let { onConfirm(it - 1) } },
+                modifier = Modifier.pressAndHoldHapticFeedback(),
+            ) {
+                Text(stringResource(R.string.goto_action))
             }
         },
         dismissButton = {

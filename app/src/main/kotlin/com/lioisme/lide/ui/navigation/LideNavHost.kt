@@ -20,6 +20,7 @@ import com.lioisme.lide.engine.RuntimePaths
 import com.lioisme.lide.model.PendingOpenFile
 import com.lioisme.lide.model.Project
 import com.lioisme.lide.project.ProjectManager
+import com.lioisme.lide.ui.ProjectListCache
 import com.lioisme.lide.ui.screen.AndroLuaSettingsScreen
 import com.lioisme.lide.ui.screen.ApiBrowserScreen
 import com.lioisme.lide.ui.screen.ApiClassDetailScreen
@@ -96,12 +97,16 @@ fun LideNavHost(
     // Compose 导航会销毁非当前目的地的组合，列表状态若留在页面内，
     // 每次从设置/编辑器返回都会重置为空 → 空态闪烁 + 全量磁盘重扫；
     // 提升后返回时先渲染缓存，再由页面触发式后台刷新。
-    var projects by remember { mutableStateOf(listOf<Project>()) }
+    // U4（2026-08-12）：初值取进程级缓存 ProjectListCache——Activity 重建
+    // （切换语言/外观）后首帧直接渲染缓存，消除空态闪帧；刷新成功后双写。
+    var projects by remember { mutableStateOf(ProjectListCache.projects) }
     val refreshProjects: suspend () -> Unit = {
-        projects =
+        val list =
             withContext(Dispatchers.IO) {
                 projectManager.listProjects(RuntimePaths.luaExtDir())
             }
+        projects = list
+        ProjectListCache.projects = list
     }
 
     LaunchedEffect(navController, pendingOpenFiles) {

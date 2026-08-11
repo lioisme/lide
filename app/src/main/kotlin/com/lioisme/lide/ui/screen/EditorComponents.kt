@@ -86,6 +86,7 @@ internal fun EditorBody(
     controller: EditorController,
     onEditorBound: () -> Unit,
     onFormatRequest: () -> Unit,
+    onSearchResultPublished: () -> Unit,
     storagePermissionMissing: Boolean,
     onTabClose: (String) -> Unit,
     onTabMoved: (from: Int, to: Int) -> Unit,
@@ -138,6 +139,7 @@ internal fun EditorBody(
                     controller = controller,
                     onEditorBound = onEditorBound,
                     onFormatRequest = onFormatRequest,
+                    onSearchResultPublished = onSearchResultPublished,
                     modifier = Modifier.fillMaxSize(),
                 )
             } else {

@@ -5,12 +5,17 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.toArgb
+import androidx.core.graphics.drawable.toDrawable
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import com.lioisme.lide.engine.EngineActivity
@@ -23,8 +28,11 @@ import com.lioisme.lide.project.AlpManager
 import com.lioisme.lide.project.ProjectManager
 import com.lioisme.lide.ui.navigation.LideNavHost
 import com.lioisme.lide.ui.screen.InstallMethodDialog
+import com.lioisme.lide.ui.theme.AppearanceMode
+import com.lioisme.lide.ui.theme.LocalIsDarkTheme
 import com.lioisme.lide.ui.theme.LideTheme
 import com.lioisme.lide.ui.theme.SettingsManager
+import com.lioisme.lide.ui.theme.resolveColorSchemeNow
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -52,13 +60,31 @@ class MainActivity : ComponentActivity() {
             finish()
             return
         }
-        enableEdgeToEdge()
+        enableEdgeToEdge(
+            // T5B（2026-08-12）：系统栏图标明暗按**应用外观模式**显式指定而非
+            // 系统深浅色——应用强制 LIGHT/DARK 时（Theme.kt resolveIsDark），
+            // auto 模式会按系统 uiMode 给出相反图标色（浅底深色图标不可见）。
+            // 外观模式切换不重建 Activity，setContent 内 LaunchedEffect(isDark)
+            // 再同步一次（见下）；scrim 均透明（纯 edge-to-edge）。
+            statusBarStyle = systemBarStyleFor(currentIsDark()),
+            navigationBarStyle = systemBarStyleFor(currentIsDark()),
+        )
+
+        applyWindowBackground()
 
         handleLaunchIntent(intent)
 
         setContent {
             val config by SettingsManager.themeConfig.collectAsState()
             LideTheme(config = config) {
+                val isDarkTheme = LocalIsDarkTheme.current
+                // T5B 兜底：外观模式在应用内切换（设置页）不重建 Activity，
+                // 此效应在 isDark 变化时同步系统栏图标明暗（幂等，重建后亦执行一次）。
+                LaunchedEffect(isDarkTheme) {
+                    val controller = WindowCompat.getInsetsController(window, window.decorView)
+                    controller.isAppearanceLightStatusBars = !isDarkTheme
+                    controller.isAppearanceLightNavigationBars = !isDarkTheme
+                }
                 val navController = rememberNavController()
                 // 一次性消费语义：组合期读取并立即清空（与旧 pendingImport.clear() 等价）；
                 // 异步完成后到达的意图产物经 state 变更触发重组，仍会被本次读取消费。
@@ -253,4 +279,44 @@ class MainActivity : ComponentActivity() {
     override fun attachBaseContext(base: android.content.Context) {
         super.attachBaseContext(LocaleManager.wrap(base))
     }
+
+    /**
+     * 当前明暗（U4/T5B）：与 Compose 侧 [LideTheme] 判定同源——SYSTEM 跟随系统
+     * uiMode，LIGHT/DARK 强制。MainActivity 非 Composable 上下文用，
+     * 供窗口背景与系统栏样式计算。
+     */
+    private fun currentIsDark(): Boolean =
+        when (SettingsManager.themeConfig.value.appearanceMode) {
+            AppearanceMode.SYSTEM ->
+                (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
+                    android.content.res.Configuration.UI_MODE_NIGHT_YES
+            AppearanceMode.LIGHT -> false
+            AppearanceMode.DARK -> true
+        }
+
+    /**
+     * U4（2026-08-12）：窗口背景对齐主题 surface 色（HCT 同源计算，见
+     * Theme.kt resolveColorSchemeNow）。Activity 重建（切换语言 per-app
+     * locale / 外观模式）期间，窗口正文区域以本背景绘制，不闪默认白/黑帧；
+     * 随后 Compose 内容同色接管。
+     */
+    private fun applyWindowBackground() {
+        try {
+            val config = SettingsManager.themeConfig.value
+            val scheme = resolveColorSchemeNow(config, currentIsDark(), this)
+            window.setBackgroundDrawable(scheme.surface.toArgb().toDrawable())
+        } catch (_: Exception) {
+            // 降级：背景设置失败保持系统默认（无害，仅 recreate 帧底色差异）。
+        }
+    }
+
+    /**
+     * T5B：系统栏样式映射（透明 scrim；浅色 = 深色图标，深色 = 浅色图标）。
+     */
+    private fun systemBarStyleFor(isDark: Boolean): SystemBarStyle =
+        if (isDark) {
+            SystemBarStyle.dark(android.graphics.Color.TRANSPARENT)
+        } else {
+            SystemBarStyle.light(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT)
+        }
 }
