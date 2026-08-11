@@ -35,14 +35,12 @@ import com.lioisme.lide.engine.EngineResultParser
 import com.lioisme.lide.engine.RunEngineLauncher
 import com.lioisme.lide.model.Project
 import com.lioisme.lide.project.PermissionResolver
-import com.lioisme.lide.project.LuaConfigParser
 import com.lioisme.lide.project.ProjectManager
 import com.lioisme.lide.session.EditorSession
 import com.lioisme.lide.session.EditorSessionViewModel
 import com.lioisme.lide.session.EditorSessionViewModelFactory
 import com.lioisme.lide.ui.theme.LocalIsDarkTheme
 import com.lioisme.lide.ui.theme.SettingsManager
-import com.lioisme.lide.ui.theme.ThemeCatalog
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -103,24 +101,16 @@ fun EditorScreen(
     onEditorSettings: () -> Unit = {},
     onAndroLuaSettings: () -> Unit = {},
     onRun: (fileName: String) -> Unit,
-    projectInfoVersion: Int = 0,
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+    // 编辑器文本区明暗唯一输入源 = 宿主外观（2026-08-12 红线：编辑器外观必须跟随
+    // 整体外观，禁止用户手选；工程文件（init.lua theme 等）不允许影响宿主 UI）。
     val isDarkTheme = LocalIsDarkTheme.current
-
-    // WP-014 工程深色（T7，2026-08-10；P2，2026-08-11 改走 ThemeCatalog）：
-    // init.lua 可选 theme 字段（dark/light 或 Theme_* 名）——后台解析为编辑器文本区
-    // 深色覆盖值；随 projectInfoVersion 失效重读，未知值/读失败回落宿主主题（null = 不干预）。
-    val projectDarkOverride by produceState<Boolean?>(null, projectInfoVersion) {
-        value =
-            runCatching {
-                val init = projectManager.readInitContent(project) ?: return@runCatching null
-                ThemeCatalog.resolveDark(LuaConfigParser.stringField(init, "theme"))
-            }.getOrNull()
-    }
-    val effectiveDarkTheme = projectDarkOverride ?: isDarkTheme
     val appEditorConfig by SettingsManager.editorConfig.collectAsState()
+    // T19（2026-08-12）：编辑器周边 UI（AppBar/标签行/分隔线/空态）统一宿主
+    // Material3 色板（与主界面一致），色带机制退役；编辑器文本区明暗仅由宿主明暗
+    // 驱动（亮 = LIDE Classic 亮侧 surfaceContainerHigh 底 / 暗 = 暗侧）。
 
     // 会话经 ViewModel 持有（Q8）：旋转/配置变更不销毁，打开标签/撤销历史/选中文件
     // 完整保留；返回栈条目出栈时 onCleared 委托会话兜底保存（脏标签落盘 + 缓存清空）。
@@ -340,6 +330,17 @@ fun EditorScreen(
         session.onUndoRedoChanged(editorController.canUndo(), editorController.canRedo())
     }
 
+    // T15（2026-08-11）：格式化统一入口（⋮「编辑→格式化」+ Ctrl+L 均经此）。
+    // 只读守卫前置；后台计算 + 主线程批量替换由 EditorController.format 完成，
+    // 完成后刷新 undo/redo 能力并展示「格式化完成」Snackbar。
+    fun runFormat() {
+        if (appEditorConfig.readOnly) return
+        editorController.format(appEditorConfig.useTab, appEditorConfig.tabSize) { changed ->
+            session.onUndoRedoChanged(editorController.canUndo(), editorController.canRedo())
+            if (changed) snackbarMsg = context.getString(R.string.format_done)
+        }
+    }
+
     Scaffold(
             topBar = {
                 EditorToolbar(
@@ -356,13 +357,6 @@ fun EditorScreen(
                     onRun = {
                         requestRun()
                     },
-                    // 文件操作入口已收拢（2026-08-09 用户红线：编辑器仅自动打开 main.lua，
-                    // 不再打开其他文件），工程级操作留在更多（⋮）分类菜单：
-                    // Appbar 常驻按钮（含返回）恒为 5 个 —— 返回 / 运行 / 撤销 / 重做 / 更多。
-                    // T3（2026-08-10）：⋮ 菜单重组为 文件 / 编辑 / 工程 三分类（行业惯例）。
-                    // 2026-08-11 用户红线（菜单瘦身）：文件分类仅保留「文件树」（占位按钮，
-                    // 功能待接）；编辑分类仅保留「编辑器设置」（只读等设置移入设置页全局持久化）；
-                    // 工程 = 信息/权限/打包 + AndroLua 设置（cascade 一级分类，见 EditorToolbar）。
                     moreActions =
                         buildList {
                             // 文件分类：文件树（占位，2026-08-11 用户拍板「可以先只做按钮」；
@@ -381,7 +375,16 @@ fun EditorScreen(
                                         .show()
                                 },
                             )
-                            // 编辑分类：编辑器设置直达入口（其余功能按用户红线删除）。
+                            // 编辑分类：格式化（Ctrl+L）+ 编辑器设置直达入口。
+                            add(
+                                EditorMoreAction(
+                                    category = stringResource(R.string.menu_category_edit),
+                                    label = stringResource(R.string.menu_format),
+                                    enabled = selectedTab != null && !appEditorConfig.readOnly,
+                                ) {
+                                    runFormat()
+                                },
+                            )
                             add(
                                 EditorMoreAction(
                                     category = stringResource(R.string.menu_category_edit),
@@ -433,13 +436,14 @@ fun EditorScreen(
                 tabs = tabs,
                 selectedFile = selectedFile,
                 content = content,
-                isDarkTheme = effectiveDarkTheme,
+                isDarkTheme = isDarkTheme,
                 editorConfig = appEditorConfig,
                 controller = editorController,
                 onEditorBound = {
                     // 绑定信号幂等完成（主线程 update 阶段触发；已完成则跳过，防重复 complete 抛异常）。
                     if (!editorReady.isCompleted) editorReady.complete(Unit)
                 },
+                onFormatRequest = { runFormat() },
                 storagePermissionMissing = extPermissionMissing.value,
                 onTabClose = { file ->
                     if (session.requestClose(file)) closeQueue = listOf(file)

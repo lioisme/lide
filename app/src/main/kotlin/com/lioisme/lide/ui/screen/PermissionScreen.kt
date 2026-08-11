@@ -159,33 +159,43 @@ fun HostPermissionScreen(
                 item {
                     Spacer(Modifier.height(16.dp))
                     Text(
-                        stringResource(R.string.perm_privilege_section),
+                        stringResource(R.string.perm_general_section),
                         style = MaterialTheme.typography.titleSmall,
                         color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.SemiBold,
                         modifier = Modifier.padding(start = 4.dp, bottom = 8.dp),
                     )
                 }
-                // 高级权限（T15，2026-08-10 重构）：Card + 图标风格与其余行一致；
-                // 仅标题 + 短状态词 + 「授权」按钮，无描述/指引长文本。权限与功能分离
-                //（D-7）：安装功能（通道选择）在设置页「安装方式」与安装/构建对话框。
+                item {
+                    Text(
+                        stringResource(R.string.perm_general_hint),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(horizontal = 4.dp, vertical = 4.dp),
+                    )
+                }
+                // 通用权限（2026-08-12 治理红线）：Root / Shizuku / Dhizuku 是宿主可
+                // 申请的**通用系统级权限通道**（宿主用其实现静默安装等能力），行标题
+                // 一律 `perm_*`，禁止以用途（安装方式）命名；安装功能（通道选择）在
+                // 设置页「安装方式」与安装/构建对话框。仅标题 + 短状态词 + 「授权」
+                // 按钮，无描述/指引长文本（T15 同款）。
                 item {
                     InstallBackendStatusRow(
-                        label = stringResource(R.string.install_method_shizuku),
+                        label = stringResource(R.string.perm_shizuku),
                         status = InstallerServices.shizuku.status.collectAsState().value,
                         onGrant = { InstallerServices.shizuku.requestPermission() },
                     )
                 }
                 item {
                     InstallBackendStatusRow(
-                        label = stringResource(R.string.install_method_dhizuku),
+                        label = stringResource(R.string.perm_dhizuku),
                         status = InstallerServices.dhizuku.status.collectAsState().value,
                         onGrant = { InstallerServices.dhizuku.requestPermission() },
                     )
                 }
                 item {
                     InstallBackendStatusRow(
-                        label = stringResource(R.string.install_method_root),
+                        label = stringResource(R.string.perm_root),
                         status = InstallerServices.root.status.collectAsState().value,
                         onGrant = { InstallerServices.root.requestPermission() },
                     )

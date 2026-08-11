@@ -71,6 +71,8 @@ internal fun StoragePermissionBanner(
 
 /** 编辑器主体（标签行 + 编辑器 + 权限横幅）。与文件目录对话框解耦：
  * 状态全部经参数注入，仅依赖会话回调上报宿主。
+ * T19（2026-08-12）：标签行/分隔线/空态全部回归宿主 Material3 色板
+ * （与 AppBar/主界面一致），编辑器文本区底色由主题系统独立提供。
  */
 @Composable
 internal fun EditorBody(
@@ -83,6 +85,7 @@ internal fun EditorBody(
     editorConfig: EditorConfig,
     controller: EditorController,
     onEditorBound: () -> Unit,
+    onFormatRequest: () -> Unit,
     storagePermissionMissing: Boolean,
     onTabClose: (String) -> Unit,
     onTabMoved: (from: Int, to: Int) -> Unit,
@@ -134,6 +137,7 @@ internal fun EditorBody(
                     },
                     controller = controller,
                     onEditorBound = onEditorBound,
+                    onFormatRequest = onFormatRequest,
                     modifier = Modifier.fillMaxSize(),
                 )
             } else {

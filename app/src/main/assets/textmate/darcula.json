@@ -6,15 +6,35 @@
             "foreground": "#cccccc",
             "lineHighlight": "#2B2B2B",
             "selection": "#214283",
+            "caret": "#B7B7B7",
+            "invisibles": "#8D8D8D",
+            "lineNumber": "#8E9398",
+            "lineNumberActiveForeground": "#D5D5D5",
             "highlightedDelimitersForeground": "#57f6c0",
-            "lineNumberDivider": "#393B40"
+            "highlightedDelimitersBackground": "#294E4B",
+            "lineNumberDivider": "#393B40",
+            "indentGuideBackground": "#3B3B3B",
+            "indentGuideActiveBackground": "#4A4A4A",
+            "completionWindowBackground": "#343434",
+            "completionWindowBackgroundCurrent": "#424242",
+            "tooltipBackground": "#2B2B2B",
+            "tooltipBriefMessageColor": "#BBBBBB",
+            "tooltipDetailedMessageColor": "#999999",
+            "tooltipActionColor": "#57A64A",
+            "findMatchBackground": "#3A3A3A",
+            "scrollbarThumb": "#4E4E4E",
+            "scrollbarThumbPressed": "#606060",
+            "scrollbarTrack": "#2A2A2A",
+            "minimapBackground": "#242424",
+            "minimapViewport": "#3A3A3A",
+            "minimapViewportBorder": "#4A4A4A"
         }
     },
         {
             "name": "Comment",
             "scope": "comment",
             "settings": {
-                "foreground": "#707070"
+                "foreground": "#909090"
             }
         },
         {
@@ -28,7 +48,7 @@
             "name": "Strings",
             "scope": "string,string.character.escape,string.template.quoted,string.template.quoted.punctuation,string.template.quoted.punctuation.single,string.template.quoted.punctuation.double,string.type.declaration.annotation,string.template.quoted.punctuation.tag",
             "settings": {
-                "foreground": "#6A8759"
+                "foreground": "#7DA46C"
             }
         },
         {
@@ -161,7 +181,7 @@
             "name": "Attribute Value",
             "scope": "string.quoted,meta.attribute-with-value",
             "settings": {
-                "foreground": "#6A8759"
+                "foreground": "#7DA46C"
             }
         },
         {
@@ -182,7 +202,7 @@
             "name": "Shebang",
             "scope": "comment.line.shebang",
             "settings": {
-                "foreground": "#707070"
+                "foreground": "#909090"
             }
         },
         {
@@ -259,7 +279,7 @@
             "name": "Inserted",
             "scope": "markup.inserted",
             "settings": {
-                "foreground": "#6A8759"
+                "foreground": "#7DA46C"
             }
         },
         {

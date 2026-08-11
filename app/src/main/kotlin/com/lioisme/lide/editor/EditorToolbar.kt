@@ -166,6 +166,10 @@ fun EditorToolbar(
             }
         },
         colors =
+            // T19（2026-08-12）：AppBar 与主界面/设置界面实现方式一致
+            // （ProjectListScreen 同款），恒用宿主 Material3 surface/onSurface，
+            // 不随编辑器主题模式（LIGHT/DARK/FOLLOW）变化；编辑器文本区底色
+            // 由主题系统独立提供，二者保持可区分的层次。
             TopAppBarDefaults.topAppBarColors(
                 containerColor = MaterialTheme.colorScheme.surface,
                 titleContentColor = MaterialTheme.colorScheme.onSurface,

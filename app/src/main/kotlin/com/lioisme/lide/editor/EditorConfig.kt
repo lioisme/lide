@@ -47,14 +47,23 @@ data class EditorConfig(
     val disableSoftKbdIfHardKbd: Boolean = true,
 ) {
     companion object {
-        /** 字体族：默认（2026-08-11 起 = Squircle CE 组合 [FONT_FAMILY_MONOSPACE]，
-         * 见 LuaEditor.fontFamilyTypeface——Squircle `TypefaceProvider.DEFAULT` 语义）。 */
+        /** 字体族：默认（2026-08-11 T10 起 = 内置 JetBrains Mono，Squircle CE 组合；
+         * 经 [LuaFonts] 加载 assets/fonts/jetbrains_mono.ttf，失败回落 MONOSPACE）。 */
         const val FONT_FAMILY_DEFAULT = 0
-        /** 字体族：等宽（monospace）。 */
+        /** 字体族：等宽（系统 monospace）。 */
         const val FONT_FAMILY_MONOSPACE = 1
         /** 字体族：无衬线（sans-serif）。 */
         const val FONT_FAMILY_SANS = 2
         /** 字体族：衬线（serif）。 */
         const val FONT_FAMILY_SERIF = 3
+        // T10（2026-08-11）：内置 6 款等宽（OFL，assets/fonts/，白名单见 AGENTS.md R5）。
+        const val FONT_FAMILY_JETBRAINS_MONO = 4
+        const val FONT_FAMILY_DROID_SANS_MONO = 5
+        const val FONT_FAMILY_FIRA_CODE = 6
+        const val FONT_FAMILY_SOURCE_CODE_PRO = 7
+        const val FONT_FAMILY_ANONYMOUS_PRO = 8
+        const val FONT_FAMILY_DEJAVU_SANS_MONO = 9
+        /** 外部导入字体 id 基址（T11）：id = BASE + files/fonts 扫描序（按文件名排序）。 */
+        const val FONT_FAMILY_EXTERNAL_BASE = 100
     }
 }

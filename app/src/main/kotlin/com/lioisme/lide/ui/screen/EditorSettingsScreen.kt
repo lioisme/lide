@@ -1,5 +1,7 @@
 package com.lioisme.lide.ui.screen
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -41,17 +43,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.lioisme.lide.R
 import com.lioisme.lide.editor.EditorConfig
+import com.lioisme.lide.editor.LuaFonts
 import com.lioisme.lide.editor.TipIconButton
 import com.lioisme.lide.ui.theme.LideTopBar
 import com.lioisme.lide.ui.theme.SettingsManager
+import java.io.File
 
 /**
- * 编辑器设置页：20 项设置全集（2026-08-11 P4 瘦身 27 → 20，移除 7 项「最佳配置」，
- * 见 [EditorConfig] KDoc；持久化经 [SettingsManager.updateEditor]，含恢复默认）。
+ * 编辑器设置页：19 项设置全集（2026-08-11 P4 瘦身 27 → 20，移除 7 项「最佳配置」，
+ * 见 [EditorConfig] KDoc；2026-08-12 治理红线移除「编辑器主题」手选项 → 19，
+ * 编辑器外观单一跟随宿主，见 EditorPalette；持久化经 [SettingsManager.updateEditor]，含恢复默认）。
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -305,7 +312,8 @@ private fun fontFamilyLabel(id: Int): String =
         },
     )
 
-/** 字体族选择面板（T5，2026-08-10）：与语言选择同款 ModalBottomSheet。 */
+/** 字体族选择面板（T11，2026-08-11 升级）：内置 6 款（24sp 等宽预览）+
+ * 系统 3 族 + SAF 导入入口；与语言选择同款 ModalBottomSheet。 */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun FontFamilySheet(
@@ -313,6 +321,37 @@ private fun FontFamilySheet(
     onSelect: (Int) -> Unit,
     onDismiss: () -> Unit,
 ) {
+    val context = LocalContext.current
+    // T11：外部字体导入（SAF 选 ttf → 复制 files/fonts/ → 清 LuaFonts 缓存）。
+    val fontPicker =
+        rememberLauncherForActivityResult(
+            ActivityResultContracts.OpenDocument(),
+        ) { uri ->
+            if (uri != null) {
+                val ok =
+                    try {
+                        val dir = File(context.filesDir, "fonts").apply { mkdirs() }
+                        val name = uri.lastPathSegment?.substringAfterLast('/') ?: "imported.ttf"
+                        context.contentResolver.openInputStream(uri)?.use { input ->
+                            File(dir, name).outputStream().use { output -> input.copyTo(output) }
+                            true
+                        } ?: false
+                    } catch (_: Throwable) {
+                        false
+                    }
+                LuaFonts.invalidate()
+                android.widget.Toast
+                    .makeText(
+                        context,
+                        context.getString(
+                            if (ok) R.string.font_import_done else R.string.font_import_failed,
+                        ),
+                        android.widget.Toast.LENGTH_SHORT,
+                    )
+                    .show()
+            }
+        }
+
     ModalBottomSheet(onDismissRequest = onDismiss) {
         Column(modifier = Modifier.padding(bottom = 32.dp)) {
             Text(
@@ -321,35 +360,120 @@ private fun FontFamilySheet(
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
             )
-            val options =
-                listOf(
-                    EditorConfig.FONT_FAMILY_MONOSPACE to stringResource(R.string.font_family_monospace),
-                    EditorConfig.FONT_FAMILY_SANS to stringResource(R.string.font_family_sans),
-                    EditorConfig.FONT_FAMILY_SERIF to stringResource(R.string.font_family_serif),
+            val sectionTitle: @Composable (Int) -> Unit = { titleRes ->
+                Text(
+                    stringResource(titleRes),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
                 )
-            options.forEach { (id, label) ->
-                Row(
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .clickable { onSelect(id) }
-                            .padding(horizontal = 24.dp, vertical = 14.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Text(
-                        text = label,
-                        style = MaterialTheme.typography.bodyLarge,
-                        color =
-                            if (id == currentId) {
-                                MaterialTheme.colorScheme.primary
-                            } else {
-                                MaterialTheme.colorScheme.onSurface
-                            },
-                        fontWeight = if (id == currentId) FontWeight.SemiBold else FontWeight.Normal,
-                        modifier = Modifier.weight(1f),
+            }
+            sectionTitle(R.string.font_section_builtin)
+            builtinFontIds.forEach { id ->
+                FontOptionRow(
+                    label = stringResource(LuaFonts.builtinLabelRes(id)),
+                    current = id == currentId,
+                    onClick = { onSelect(id) },
+                    preview = true,
+                )
+            }
+            sectionTitle(R.string.font_section_system)
+            listOf(
+                EditorConfig.FONT_FAMILY_MONOSPACE to stringResource(R.string.font_family_monospace),
+                EditorConfig.FONT_FAMILY_SANS to stringResource(R.string.font_family_sans),
+                EditorConfig.FONT_FAMILY_SERIF to stringResource(R.string.font_family_serif),
+            ).forEach { (id, label) ->
+                FontOptionRow(
+                    label = label,
+                    current = id == currentId,
+                    onClick = { onSelect(id) },
+                    preview = false,
+                )
+            }
+            val externalCount = LuaFonts.externalCount(context)
+            if (externalCount > 0) {
+                sectionTitle(R.string.font_section_imported)
+                for (index in 0 until externalCount) {
+                    val id = EditorConfig.FONT_FAMILY_EXTERNAL_BASE + index
+                    FontOptionRow(
+                        label = LuaFonts.externalLabel(context, id) ?: "font-$index",
+                        current = id == currentId,
+                        onClick = { onSelect(id) },
+                        preview = true,
                     )
                 }
             }
+            Row(
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            fontPicker.launch(arrayOf("application/x-font-ttf", "font/ttf"))
+                        }
+                        .padding(horizontal = 24.dp, vertical = 16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Icon(
+                    Icons.Default.Add,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                )
+                Spacer(Modifier.width(12.dp))
+                Text(
+                    text = stringResource(R.string.font_import),
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.primary,
+                )
+            }
         }
+    }
+}
+
+/** 内置字体 id 序（面板展示序：JetBrains Mono 在前，与默认 id=0 语义一致）。 */
+private val builtinFontIds: List<Int> =
+    listOf(
+        EditorConfig.FONT_FAMILY_DEFAULT,
+        EditorConfig.FONT_FAMILY_DROID_SANS_MONO,
+        EditorConfig.FONT_FAMILY_FIRA_CODE,
+        EditorConfig.FONT_FAMILY_SOURCE_CODE_PRO,
+        EditorConfig.FONT_FAMILY_ANONYMOUS_PRO,
+        EditorConfig.FONT_FAMILY_DEJAVU_SANS_MONO,
+    )
+
+/** 字体选项行：[preview] = 24sp 等宽预览（T11：内置/导入字体展示实际字形）。 */
+@Composable
+private fun FontOptionRow(
+    label: String,
+    current: Boolean,
+    onClick: () -> Unit,
+    preview: Boolean,
+) {
+    Row(
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .clickable(onClick = onClick)
+                .padding(horizontal = 24.dp, vertical = 10.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            text = label,
+            style =
+                if (preview) {
+                    MaterialTheme.typography.titleMedium
+                } else {
+                    MaterialTheme.typography.bodyLarge
+                },
+            fontFamily = if (preview) FontFamily.Monospace else FontFamily.Default,
+            fontSize = if (preview) 24.sp else 16.sp,
+            color =
+                if (current) {
+                    MaterialTheme.colorScheme.primary
+                } else {
+                    MaterialTheme.colorScheme.onSurface
+                },
+            fontWeight = if (current) FontWeight.SemiBold else FontWeight.Normal,
+            modifier = Modifier.weight(1f),
+        )
     }
 }

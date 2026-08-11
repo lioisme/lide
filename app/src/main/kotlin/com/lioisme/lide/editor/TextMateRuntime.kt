@@ -44,7 +44,8 @@ object TextMateRuntime {
     @Volatile
     private var initStarted = false
 
-    private var scheme: io.github.rosemoe.sora.widget.schemes.EditorColorScheme? = null
+    /** 跟随宿主模式的方案缓存（按明暗各一份，2026-08-11 T3）。 */
+    private val hostSchemes = HashMap<Boolean, LideHostColorScheme>()
 
     /**
      * 幂等预热（宿主进程启动调用）：仅触发后台初始化，不阻塞调用方。
@@ -82,15 +83,26 @@ object TextMateRuntime {
     }
 
     /**
-     * 进程级单例色彩方案（原 TextMateColorSchemeCache 收敛）。
+     * 编辑器配色方案（单一跟随宿主模式，2026-08-12 治理后唯一入口）。
      *
-     * 使用 [LideTextMateColorScheme]（P3，2026-08-11）：sora 原生 TextMate 方案
-     * 强制 LINE_DIVIDER 透明，本方案按主题 JSON 的 divider 键回填行号分界线颜色。
-     * 方案实现 [ThemeChangeListener]，主题切换时自动跟随注册表更新，无需按编辑器
-     * 实例重建。创建成本 ~70ms（主线程），复用避免每进一次编辑器都支付一次。
+     * [LideHostColorScheme]：文本区背景/前景槽与 token 色取当前 TextMate 主题
+     * （调用方须先按明暗 `setTheme(EditorPalette.themeNameFor(...))` 再取本方案），
+     * chrome 部件色（行号/当前行/选区/浮层/滚动条/minimap）取宿主派生色；
+     * 宿主色板变化经 [updateHostColors] 刷新，零重建。
      */
-    fun colorScheme(): io.github.rosemoe.sora.widget.schemes.EditorColorScheme =
-        scheme ?: LideTextMateColorScheme(ThemeRegistry.getInstance()).also { scheme = it }
+    fun hostColorScheme(
+        isDark: Boolean,
+        host: HostEditorColors,
+    ): io.github.rosemoe.sora.widget.schemes.EditorColorScheme =
+        hostSchemes.getOrPut(isDark) { LideHostColorScheme(ThemeRegistry.getInstance(), host) }
+
+    /** 宿主色板刷新（编辑器外观单一跟随宿主路径；值未变自动跳过）。 */
+    fun updateHostColors(
+        isDark: Boolean,
+        host: HostEditorColors,
+    ) {
+        hostSchemes[isDark]?.updateHost(host)
+    }
 
     private fun runInit(context: Context) {
         val initStart = SystemClock.elapsedRealtime()
@@ -101,7 +113,7 @@ object TextMateRuntime {
         )
 
         val themeRegistry = ThemeRegistry.getInstance()
-        for (name in THEMES) {
+        for (name in EditorPalette.allThemes) {
             val path = "textmate/$name.json"
             try {
                 val input = FileProviderRegistry.getInstance().tryGetInputStream(path)
@@ -113,7 +125,7 @@ object TextMateRuntime {
             } catch (_: Exception) {
             }
         }
-        themeRegistry.setTheme("quietlight")
+        themeRegistry.setTheme(EditorPalette.themeNameFor(isDark = false))
 
         // 多语言化（任务单 EDITOR_ALL_LANGUAGES_SUPPORT_WORK_ORDER P1/P2）：
         // 语言目录单一事实源 = assets/textmate/languages.json（架构审计 P0-2 根治，2026-08-06）：
@@ -147,5 +159,4 @@ object TextMateRuntime {
     private const val TAG = "TextMateRuntime"
     private const val PRELOAD_THREAD_NAME = "TextMatePreload"
     private const val LANGUAGES_JSON = "textmate/languages.json"
-    private val THEMES = arrayOf("quietlight", "darcula")
 }

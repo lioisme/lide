@@ -91,6 +91,21 @@
     <string name="font_family_monospace">等宽</string>
     <string name="font_family_sans">无衬线</string>
     <string name="font_family_serif">衬线</string>
+    <!-- 内置字体（T11，2026-08-11）：Squircle CE 组合，OFL -->
+    <string name="font_jetbrains_mono">JetBrains Mono</string>
+    <string name="font_droid_sans_mono">Droid Sans Mono</string>
+    <string name="font_fira_code">Fira Code</string>
+    <string name="font_source_code_pro">Source Code Pro</string>
+    <string name="font_anonymous_pro">Anonymous Pro</string>
+    <string name="font_dejavu_sans_mono">DejaVu Sans Mono</string>
+    <string name="font_import">导入字体…</string>
+    <string name="font_import_picker_title">选择字体文件</string>
+    <string name="font_import_done">字体已导入</string>
+    <string name="font_import_failed">导入失败</string>
+    <string name="font_section_builtin">内置</string>
+    <string name="font_section_system">系统</string>
+    <string name="font_section_imported">已导入</string>
+    <!-- 编辑器主题选择已随 2026-08-12 治理红线移除（外观单一跟随宿主，见 EditorPalette） -->
     <string name="sticky_scroll_word_wrap_hint">自动换行开启时不可用</string>
     <string name="restore_defaults">恢复默认</string>
     <string name="restore_defaults_done">已恢复默认设置</string>
@@ -106,7 +121,8 @@
     <string name="permission_management">权限管理</string>
     <string name="perm_subtitle">管理应用权限</string>
     <string name="perm_special_section">特殊权限</string>
-    <string name="perm_privilege_section">高级权限</string>
+    <string name="perm_general_section">通用权限</string>
+    <string name="perm_general_hint">通用系统级权限通道，宿主用其实现静默安装等能力（安装功能见设置页「安装方式」）。</string>
     <string name="perm_regular_section">常规权限</string>
     <string name="perm_note">部分权限需在系统设置中开启。点击请求打开设置页。</string>
     <string name="perm_granted">已授权</string>
@@ -262,7 +278,11 @@
     <string name="perm_read_frame_buffer">读取帧缓冲</string>
     <string name="perm_battery_stats">电池统计</string>
     <string name="perm_install_shortcut">安装快捷方式</string>
-    <string name="perm_dhizuku_api">Dhizuku API</string>
+
+    <!-- 通用系统级权限通道（2026-08-12 治理红线：权限与用途分离，禁止 install_* 命名） -->
+    <string name="perm_shizuku">Shizuku</string>
+    <string name="perm_dhizuku">Dhizuku</string>
+    <string name="perm_root">Root</string>
 
     <!-- 权限选择器（P4，2026-08-11） -->
     <string name="perm_other_section">其他</string>
@@ -317,6 +337,8 @@
     <string name="menu_file_tree">文件树</string>
     <string name="file_tree_coming_soon">文件树即将推出</string>
     <string name="menu_editor_settings">编辑器设置</string>
+    <string name="menu_format">格式化</string>
+    <string name="format_done">格式化完成</string>
     <string name="menu_androlua_settings">AndroLua 设置</string>
     <string name="accessibility_service_description">LIDE 无障碍服务：为 Lua 脚本提供自动化能力（点击、滑动、截图）。</string>
     <!-- API 浏览器（WP-008） -->

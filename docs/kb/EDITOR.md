@@ -252,3 +252,92 @@ editor 目录外扫描 `io.github.rosemoe` 字面量，import 与 FQN 双形态�
 CI verify-sora-isolation job 挂接；负向拦截实证 = session 包植入 sora import 临时文件
 → FAILURE，移除 → SUCCESS）。关联：宿主路径与引擎前缀单一事实源见
 `kb/ARCHITECTURE.md` §3.5。
+
+## 12. 编辑器颜色体系收口（2026-08-12，EDITOR_THEME_FONT_FORMAT_WORK_ORDER T19 完工蒸馏）
+
+**用户拍板**（2026-08-12）：AppBar 颜色与主界面/设置界面实现方式一致
+（宿主 Material3 surface，不随编辑器主题模式）；编辑器文本区背景跟随主题系统
+且使用科学专业的颜色；AppBar 与编辑器底色必须可区分。标签行/分隔线/空态一并
+回归宿主 Material3（T5 色带机制 `EditorChromeColors.kt` 整体退役删除）。
+
+**最终色彩契约**（x64 模拟器 6 场景像素实测，1440×2560 screencap 逐行采样）：
+
+| 宿主外观 | 编辑器主题 | AppBar/标签行（宿主 surface） | 编辑器文本区 | 来源 |
+|---|---|---|---|---|
+| 暗 | FOLLOW | #1A1C1E | #252629（surfaceContainerHigh） | MD3 容器层级 |
+| 暗 | LIGHT | #1A1C1E | #F5F5F5 | quietlight `editor.background` |
+| 暗 | DARK | #1A1C1E | #242424 | darcula `background` |
+| 亮 | FOLLOW | #FDFCFF | #E6E7EC（surfaceContainerHigh） | MD3 容器层级 |
+| 亮 | LIGHT | #FDFCFF | #F5F5F5 | quietlight |
+| 亮 | DARK | #FDFCFF | #242424 | darcula |
+
+要点：
+
+- **AppBar 与主界面同源**：`EditorToolbar` 直接
+  `MaterialTheme.colorScheme.surface`/`onSurface`（ProjectListScreen 同款），
+  删除 `chrome` 参数注入链（Toolbar/Tabs/EditorBody/EditorScreen）。
+- **编辑器背景三态**：LIGHT/DARK = TextMate 官方主题色（sora 原生
+  `TextMateColorScheme.applyVSCTheme/applyTMTheme` 映射 `editor.background`/`background`
+  → `WHOLE_BACKGROUND`，零覆盖）；FOLLOW = 宿主 `surfaceContainerHigh`
+  （`rememberHostEditorColors.background`，比 AppBar 的 surface 高一档层级，
+  明暗两侧均与 chrome 温和区分，遵循 MD3 明暗表面层级规范）。
+- **浮层层级**：补全窗/tooltip 背景升 `surfaceContainerHighest`
+  （`generateLightScheme` 补 #DADBE1、`generateDarkScheme` 补 #2F3033）——
+  浮层 > 画布 > chrome 三层递进。
+- **标签行归属**：`EditorTabs` 背景与选中/未选中标签色（primary/onSurfaceVariant）
+  全部改 `MaterialTheme.colorScheme.*`；分隔线 outlineVariant、空态文案
+  onSurfaceVariant 同步回归。
+- **历史修正**：旧 AGENTS.md 记录「DARK = RGB(26,28,30)」有误，实测 darcula
+  编辑器背景 = #242424（宿主暗 surface #1A1C1E 的误记）；三路主题切换实测
+  均为正确 TextMate 色。
+
+验证：`:app:compileArm64DebugKotlin` + `:app:testArm64DebugUnitTest` +
+`:app:verifySoraIsolation` + `:app:verifyMinimalismDebug` 全绿；x64 模拟器
+三路主题 × 宿主亮暗 6 场景像素实测通过（AppBar ≠ 编辑器底色，语法高亮
+token 色正确：#448C27 quietlight 字符串绿 / #6A8759 darcula 字符串绿）。
+关联：EditorTheme.kt `HostEditorColors` / `LideHostColorScheme`（FOLLOW 烘焙
+宿主色）；TextMateRuntime.kt `hostColorScheme`/`colorScheme()` 单例。
+
+## 13. 编辑器外观单一跟随宿主（2026-08-12 治理红线，EDITOR_APPEARANCE_GOVERNANCE_WORK_ORDER 完工蒸馏）
+
+**用户拍板**（2026-08-12，覆盖 §12 三态方案）：编辑器外观不是独立主题，是
+宿主外观的派生。设置页禁止出现任何编辑器外观/主题选项；`editor_theme` 偏好键、
+三态 `EditorThemeMode`、`EditorThemeSheet`、`projectDarkOverride`（工程
+init.lua theme 驱动宿主）全部删除，历史引用一律不得回退。
+
+**颜色单一事实源 `EditorPalette`**（editor 包，纯 Kotlin，零 sora 外泄）：
+
+| 套名 | 亮侧（isDark=false） | 暗侧（isDark=true） |
+|---|---|---|
+| LIDE Classic | quietlight（`#F5F5F5` 底） | darcula（`#242424` 底） |
+| Solarized Dual | solarized_light | solarized_dark |
+| Tomorrow Dual | tomorrow | tomorrow_night |
+
+- 激活主题名 = `EditorPalette.themeNameFor(isDark)`，随宿主 `LocalIsDarkTheme`
+  切换；宿主切换浅/深色时触发编辑器重组。
+- 装配链：`TextMateRuntime`（`themeRegistry.setTheme(名)` + 进程级单例
+  `LideTextMateColorScheme` 广播）——`darcula`/`quietlight`/`solarized_*`/
+  `tomorrow*` 为 THEMES 加载白名单，6 个 JSON 全加载、单侧主题禁止入库。
+- 全部 6 主题背景均为平铺色（无渐变），token 配色库补全到 6 组对照；
+  文本承载色 token 对主题背景 WCAG AA 严格档 ≥ 4.5:1，由
+  `EditorPaletteContrastTest` 门禁守护（解析 assets/textmate/ 全部激活主题
+  逐 token 断言，含双模配对结构完整性 + 全 token 对比度两项用例）——
+  主题 JSON 任何改动必须过门禁。
+- **颜色分层契约（§12 T19 延续，不随治理回退）**：AppBar/标签行/分隔线/空态
+  恒为宿主 Material3（surface + onSurface）；编辑器文本区独立着色（双模主题色，
+  sora 原生 `editor.background`/`background` → WHOLE_BACKGROUND）；补全窗/
+  tooltip 浮层 = `surfaceContainerHighest`（浮层 > 画布 > chrome 三层递进）。
+
+**权限页与用途分离**（同单治理，T3）：权限页「高级权限」区更名「通用权限」，
+行标题一律 `perm_*` 前缀（`perm_root`/`perm_shizuku`/`perm_dhizuku`），
+状态行（已授权/需要授权/服务未运行/不可用）为通用词，与设置页「安装方式」组
+共用 `InstallBackendUi` 单一事实源；PermissionCatalog 移除 Dhizuku API 常规
+条目（含「静默安装」别名），工程如需声明经「其他（未登记）」透传组。
+同步于 kb/ARCHITECTURE.md §4「权限与用途分离契约」。
+
+验证：`:app:compileArm64DebugKotlin` 全绿；`:app:testArm64DebugUnitTest`
+EditorPaletteContrastTest 3/3 通过（双模配对结构 / 亮侧全 token / 暗侧全
+token）；LuaConfigParserTest 既有失败与本治理无关（stash 验证基线同样失败）。
+关联：EditorPalette.kt（主题名常量 + 激活表 + 对比度对照）、
+EditorPaletteContrastTest.kt（门禁）、PermissionCatalog.kt / PermissionScreen.kt /
+InstallBackendUi.kt（perm_* 命名）。

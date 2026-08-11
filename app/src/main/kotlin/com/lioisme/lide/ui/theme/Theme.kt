@@ -138,6 +138,7 @@ internal fun generateLightScheme(primary: Color): ColorScheme {
         surfaceContainerLow = Color(0xFFF2F2F7),
         surfaceContainer = Color(0xFFECECF1),
         surfaceContainerHigh = Color(0xFFE6E7EC),
+        surfaceContainerHighest = Color(0xFFDADBE1),
     )
 }
 
@@ -182,6 +183,7 @@ internal fun generateDarkScheme(primary: Color): ColorScheme {
         surfaceContainerLow = Color(0xFF1C1D21),
         surfaceContainer = Color(0xFF1A1C1E),
         surfaceContainerHigh = Color(0xFF252629),
+        surfaceContainerHighest = Color(0xFF2F3033),
     )
 }
 

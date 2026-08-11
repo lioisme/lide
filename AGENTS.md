@@ -24,6 +24,11 @@
   NDK 版本固定为 `29.0.14206865`（`app/build.gradle.kts` `ndkVersion`）。
   例外：`.alp` 作为工程包可直接存在（构建时由 `:app:generateExamples` 从 `scripts/examples-src/` 生成，
   默认零内置，由 `lide.examples` 属性控制，见「精简治理」）。
+  例外（2026-08-11 用户拍板，Squircle CE 字体组合）：`app/src/main/assets/fonts/*.ttf` 内置
+  6 款等宽字体（jetbrains_mono / droid_sans_mono / fira_code / source_code_pro /
+  anonymous_pro / dejavu_sans_mono，OFL 许可，来自 reference/squircle-ce-master/
+  feature-fonts），宿主打包进 assets；`git ls-files '*.ttf'` 白名单仅允许该目录 6 款，
+  其余二进制（.so/.dex/.jar/.zip 等）一律禁止。
 
 验证命令（以下必须全部成立）：
 
@@ -67,6 +72,27 @@ git ls-files '*.jar' | grep -v 'gradle/wrapper/gradle-wrapper.jar'
   `insertText` / `replaceText`（统一脏标记 + 自动保存节流），禁止直接改 `selection.content`。
 - 大文件（> 200 KB）：关闭括号高亮 / 当前块 / 自动换行，并跳过行级诊断。
 - 补全、诊断、事件回调必须 `try/catch(Throwable)` 降级，不得让异常逃逸进 sora 主循环。
+- **编辑器外观单一跟随宿主（2026-08-12 治理红线，替代 T17/T18/T19 三态方案）**：
+  编辑器外观不是独立主题，是宿主外观（`LocalIsDarkTheme`）的派生——设置页**禁止**
+  出现任何编辑器外观/主题选项（「编辑器主题」手选、`EditorThemeSheet`、三态
+  `EditorThemeMode` 已删除），`editor_theme` 偏好键与 `projectDarkOverride`
+  （工程 init.lua theme 驱动宿主）一并删除，历史引用一律不得回退。
+  - **颜色单一事实源**：`EditorPalette`（editor 包）持有 3 套亮/暗双模主题
+    （LIDE Classic = quietlight/darcula、Solarized Dual、Tomorrow Dual），
+    激活主题名随宿主明暗切换（`EditorPalette.themeNameFor(isDark)`），
+    经 `TextMateRuntime`（`themeRegistry.setTheme` + 进程级单例
+    `LideTextMateColorScheme` 广播，`darcula`/`quietlight`/`solarized_*`/
+    `tomorrow*` 为 THEMES 加载白名单）装配；宿主切换浅/深色时须触发编辑器重组。
+  - **对比度门禁（G4）**：全部文本承载色 token 对主题背景 WCAG AA 严格档
+    ≥ 4.5:1，由 `EditorPaletteContrastTest` 守护（解析 assets/textmate/ 全部
+    激活主题逐 token 断言）——主题 JSON 任何改动必须过门禁。
+  - **颜色分层契约（T19 延续）**：AppBar / 标签行 / 分隔线 / 空态一律宿主
+    Material3（AppBar = surface + onSurface，与主界面/设置界面同款）；编辑器
+    文本区独立着色（亮侧 quietlight `#F5F5F5` / 暗侧 darcula `#242424` 等
+    双模主题色，sora 原生 `editor.background`/`background` 映射
+    WHOLE_BACKGROUND）；补全窗 / tooltip 浮层 = `surfaceContainerHighest`
+    （浮层 > 画布 > chrome 三层递进）。`EditorChromeColors.kt` 色带已随 T19
+    删除。历史记录「DARK = RGB(26,28,30)」为宿主 surface 误记，以契约为准。
 - 文件 → 语言 scope 唯一事实源为 `LanguageDetector`（未识别扩展名显式回落
   `text.plain`，绝不回退为 Lua）；宿主「可打开性」判定经 `LanguageDetector.isKnownFile`
   消费同一表，不另维护扩展名白名单。

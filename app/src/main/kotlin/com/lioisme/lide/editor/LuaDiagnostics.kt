@@ -6,11 +6,6 @@ import io.github.rosemoe.sora.lang.diagnostic.Quickfix
 import io.github.rosemoe.sora.text.Content
 
 /**
- * Lua 标识符字符判定（字母/数字/下划线），补全前缀与词法扫描共用。
- */
-internal fun Char.isIdentifierChar(): Boolean = isLetterOrDigit() || this == '_'
-
-/**
  * 纯 Kotlin 词法校验器。
  *
  * 用途：编辑器进程内的行级语法诊断（括号配对、块闭合、字符串/注释完整性）。
@@ -800,22 +795,6 @@ object LuaDiagnostics {
             )
         }
     }
-
-    /** 左括号的对应右括号；未知输入原样返回。 */
-    private fun closeOf(open: Char): String =
-        when (open) {
-            '(' -> ")"
-            '[' -> "]"
-            '{' -> "}"
-            else -> open.toString()
-        }
-
-    /** 长括号关闭序列：`]` + `=`×[level] + `]`。 */
-    private fun closeOfLong(level: Int): String = LONG_CLOSE_PREFIX + "=".repeat(level) + "]"
-
-    private const val LONG_CLOSE_PREFIX = "]"
-    private val BLOCK_KINDS = setOf("if", "ifthen", "for", "while", "do", "function")
-    private val REPEAT_KINDS = setOf("repeat")
 
     /**
      * 默认消息渲染器（中文模板，与历史文案一致）：Incremental 缺省注入，

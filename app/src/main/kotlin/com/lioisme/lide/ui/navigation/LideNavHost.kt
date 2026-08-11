@@ -200,7 +200,6 @@ fun LideNavHost(
                     onRun = { fileName ->
                         engineLauncher.launch(project.path, fileName)
                     },
-                    projectInfoVersion = projectInfoVersion,
                 )
             }
         }

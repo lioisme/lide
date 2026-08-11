@@ -6,12 +6,18 @@ import android.content.pm.PackageManager
 import com.lioisme.lide.R
 
 /**
- * 权限清单数据源（2026-08-11 全面化）：覆盖宿主 manifest 声明的全部 uses-permission
- * （51 项）＋ 6 项特殊权限，按 常规/特殊 分组，常用权限附别名（搜索命中词）。
+ * 权限清单数据源（2026-08-11 全面化；2026-08-12 治理红线修订）：覆盖宿主 manifest
+ * 声明的全部 uses-permission（常规 + 特殊），常用权限附别名（搜索命中词）。
  *
  * 供工程属性页权限弹窗与工程权限页（[SearchablePermissionPicker]）共用；
  * [ALL] 为宿主运行时权限页（HostPermissionScreen）保留的兼容视图。
  * 未知权限（工程已声明但目录外）由调用方透传展示，名称原样。
+ *
+ * 权限与用途分离契约（2026-08-12）：本目录只登记「真权限」；Root / Shizuku /
+ * Dhizuku 为宿主呈现的**通用系统级权限通道**（宿主用其实现静默安装等能力），
+ * 由权限管理页「通用权限」区统一呈现，**不登记在此目录**（避免宿主权限页
+ * 常规区与通用区重复呈现）；工程如需声明 Dhizuku API 等通道权限，经
+ * 「其他（未登记）」透传组勾选。
  */
 internal enum class PermissionGroup {
     REGULAR,
@@ -255,11 +261,6 @@ internal object PermissionCatalog {
                 "com.android.launcher.permission.INSTALL_SHORTCUT",
                 R.string.perm_install_shortcut,
                 aliases = listOf("桌面", "快捷方式", "shortcut"),
-            ),
-            PermissionEntry(
-                "com.rosan.dhizuku.permission.API",
-                R.string.perm_dhizuku_api,
-                aliases = listOf("静默安装", "dhizuku"),
             ),
             // ===== 特殊权限（走系统设置页，不经运行时请求） =====
             PermissionEntry(

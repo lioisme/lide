@@ -5,6 +5,7 @@ import com.lioisme.lide.R
 import android.content.Context
 import android.util.Log
 import android.util.TypedValue
+import android.view.KeyEvent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -28,11 +29,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import io.github.rosemoe.sora.event.ContentChangeEvent
+import io.github.rosemoe.sora.event.EditorKeyEvent
+import io.github.rosemoe.sora.event.KeyBindingEvent
 import io.github.rosemoe.sora.lang.diagnostic.DiagnosticRegion
 import io.github.rosemoe.sora.lang.diagnostic.DiagnosticsContainer
 import io.github.rosemoe.sora.langs.textmate.registry.ThemeRegistry
 import io.github.rosemoe.sora.text.Content
 import io.github.rosemoe.sora.widget.CodeEditor
+import io.github.rosemoe.sora.widget.component.EditorAutoCompletion
 import io.github.rosemoe.sora.widget.minimap.MinimapConfig
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -83,11 +87,13 @@ private const val DEFAULT_UNDO_STACK_SIZE = 500
  * 不触碰文本（由宿主经 [setText] 注入，跳过 O(n) 重建）。
  */
 private class EditorInstance(
-    context: Context,
+    private val context: Context,
     initialConfig: EditorConfig,
     initialScope: String,
+    initialScheme: io.github.rosemoe.sora.widget.schemes.EditorColorScheme,
     private val onContentModified: () -> Unit,
     private val onUndoRedoStateChanged: (Boolean, Boolean) -> Unit,
+    private val onFormatAction: () -> Unit,
 ) {
     /** 编辑事件节流信号：每键 +1，不触发重组；组合层经 collectLatest 防抖消费。 */
     val diagTick = MutableStateFlow(0)
@@ -120,7 +126,8 @@ private class EditorInstance(
         CodeEditor(context).apply {
             // 官方 demo 顺序：colorScheme → language → setText，
             // 使分析器重启都发生在空文本阶段，setText 成为唯一一次全量分析。
-            colorScheme = TextMateRuntime.colorScheme()
+            // 2026-08-12 单一跟随：初始即宿主色方案（宿主明暗 + 激活配色库主题）。
+            colorScheme = initialScheme
 
             setEditorLanguage(createLanguage(initialScope, initialConfig, initialConfig.identifierCompletion, this))
             languageIdentifiersEnabled = initialConfig.identifierCompletion
@@ -139,16 +146,46 @@ private class EditorInstance(
             setTextSize(initialConfig.fontSize.toFloat())
 
             // T5（2026-08-10）sora 上限扩展：初值与守卫式 diff 对齐。
-            val initialTypeface = fontFamilyTypeface(initialConfig.fontFamily)
+            // T10（2026-08-11）：字体经 LuaFonts 解析（内置 6 款 assets + 系统 3 族）。
+            val initialTypeface = fontFamilyTypeface(context, initialConfig.fontFamily)
             setTypefaceText(initialTypeface)
             setTypefaceLineNumber(initialTypeface)
 
             // 迷你地图字符块模式（任务单 G8：0.24.6 原生，默认关由 applyConfig 控制）。
             props.minimapConfig = MinimapConfig(minimapDrawTextAsBlocks = true)
 
+            // T6（2026-08-11）补全窗口自定义：圆角 8dp + 1dp 描边 + 主题色跟随
+            // （对齐 Squircle；装配在 setText 前，色板经 onApplyColorScheme 联动）。
+            try {
+                val completion = getComponent(EditorAutoCompletion::class.java)
+                completion.setLayout(LuaCompletionWindow())
+                completion.setAdapter(LuaCompletionWindow.Adapter())
+            } catch (_: Throwable) {
+                // 补全窗口降级为 sora 默认样式（不逃逸进编辑器初始化链）。
+            }
+
             // P3（2026-08-11）：行号分界线恒为 1dp（sora 原生默认宽度），
-            // 颜色由 LideTextMateColorScheme 按主题键映射，不再暴露宽度设置。
+            // 颜色来自宿主色板（LideHostColorScheme.divider），不再暴露宽度设置。
             setDividerWidth(dpUnit)
+
+            // T15（2026-08-11）Ctrl+L 格式化快捷键：拦截 KeyBindingEvent
+            // （sora 对 Ctrl+字母 分发），消费事件并委托宿主格式化入口（只读守卫在宿主侧）。
+            subscribeEvent(KeyBindingEvent::class.java) { event, _ ->
+                try {
+                    if (
+                        event.getEventType() == EditorKeyEvent.Type.DOWN &&
+                        event.isCtrlPressed() &&
+                        !event.isShiftPressed() &&
+                        !event.isAltPressed() &&
+                        event.getKeyCode() == KeyEvent.KEYCODE_L
+                    ) {
+                        event.markAsConsumed()
+                        onFormatAction()
+                    }
+                } catch (t: Throwable) {
+                    Log.w(TAG, "key binding callback failed", t)
+                }
+            }
 
             subscribeEvent(ContentChangeEvent::class.java) { event, _ ->
                 try {
@@ -331,7 +368,7 @@ private class EditorInstance(
         }
 
         // === T5（2026-08-10）sora 上限扩展：守卫式 diff，值不变不赋值 ===
-        val expectedTypeface = fontFamilyTypeface(config.fontFamily)
+        val expectedTypeface = fontFamilyTypeface(context, config.fontFamily)
         if (editor.typefaceText != expectedTypeface || editor.typefaceLineNumber != expectedTypeface) {
             editor.setTypefaceText(expectedTypeface)
             editor.setTypefaceLineNumber(expectedTypeface)
@@ -368,6 +405,7 @@ fun LuaEditor(
     onUndoRedoStateChanged: (canUndo: Boolean, canRedo: Boolean) -> Unit,
     onRelease: () -> Unit,
     onEditorBound: () -> Unit = {},
+    onFormatRequest: () -> Unit = {},
     controller: EditorController,
     modifier: Modifier = Modifier,
 ) {
@@ -377,6 +415,7 @@ fun LuaEditor(
     val currentOnUndoRedoStateChanged by rememberUpdatedState(onUndoRedoStateChanged)
     val currentOnRelease by rememberUpdatedState(onRelease)
     val currentOnEditorBound by rememberUpdatedState(onEditorBound)
+    val currentOnFormatRequest by rememberUpdatedState(onFormatRequest)
     val currentConfig by rememberUpdatedState(config)
     // 文件 → 语言 scope 由 :editor 解析（文本级能力，宿主只传文件名）。
     // 传入值可能是完整路径，先取 basename 再按扩展名/精确名映射。
@@ -419,6 +458,9 @@ fun LuaEditor(
     // 编辑事件节流信号：组合级 remember，实例订阅回调写入（主线程），诊断协程消费。
     val diagTick = remember { MutableStateFlow(0) }
 
+    // 宿主色板派生（remember(colorScheme) 键控：宿主主题变化自动更新）。
+    val hostColors = rememberHostEditorColors()
+
     // 编辑器实例随组合创建/销毁（去池化）：文件切换同组合复用实例 + setText(Content)，
     // 语言切换经 applyConfig 内部 diff 重建；页面离开时 onDispose 调 release() 销毁。
     val instance =
@@ -427,17 +469,33 @@ fun LuaEditor(
                 context = appContext,
                 initialConfig = currentConfig,
                 initialScope = currentResolvedScope,
+                initialScheme = TextMateRuntime.hostColorScheme(isDarkTheme, hostColors),
                 onContentModified = { currentOnContentModified() },
                 onUndoRedoStateChanged = { u, r -> currentOnUndoRedoStateChanged(u, r) },
+                onFormatAction = { currentOnFormatRequest() },
             )
         }
 
     val initReady = runtimeState is TextMateRuntime.RuntimeState.Ready
 
-    LaunchedEffect(isDarkTheme, initReady) {
-        if (initReady) {
-            ThemeRegistry.getInstance().setTheme(if (isDarkTheme) "darcula" else "quietlight")
-        }
+    // 编辑器外观单一跟随宿主（2026-08-12 治理红线）：文本区明暗唯一输入源 = 宿主
+    // 明暗；配色 = 双模科学配色库（[EditorPalette] 单一事实源：暗 → 暗侧主题，
+    // 亮 → 亮侧主题），禁止用户手选、禁止工程文件干预。
+    val effectiveDark = isDarkTheme
+
+    // 主题装配：setTheme 广播驱动方案动态重算（token 色随明暗主题），编辑器零重建。
+    // setColorScheme 会触发 sora attachEditor（含一次 rerunAnalysis）——仅明暗/
+    // 就绪切换时执行，宿主色板变化走 updateHostColors 免重分析。
+    LaunchedEffect(effectiveDark, initReady) {
+        if (!initReady) return@LaunchedEffect
+        val registry = ThemeRegistry.getInstance()
+        registry.setTheme(EditorPalette.themeNameFor(effectiveDark))
+        instance.editor.colorScheme = TextMateRuntime.hostColorScheme(effectiveDark, hostColors)
+    }
+
+    // 宿主色板刷新（LideHostColorScheme.updateHost 值未变自动跳过）。
+    LaunchedEffect(hostColors) {
+        TextMateRuntime.updateHostColors(effectiveDark, hostColors)
     }
 
     if (!initReady) {
@@ -592,17 +650,12 @@ private fun CodeEditor.applyNonPrintableFlags(config: EditorConfig) {
     setNonPrintablePaintingFlags(nonPrintableFlags(config))
 }
 
-/** T5：字体族 id → Android [android.graphics.Typeface]（代码文本与行号同族）。
- * 2026-08-11 用户红线（Squircle 字体组合）：默认（0）与「等宽」同值映射
- * [android.graphics.Typeface.MONOSPACE]——对齐 Squircle CE `TypefaceProvider.DEFAULT`
- * （core-common TypefaceProvider.kt:23 `DEFAULT = Typeface.MONOSPACE`）。
- * MONOSPACE 为 Android 系统等宽组合（Roboto Mono/Droid Sans Mono fallback 链），
- * 未内置字体文件（Squircle 同款，feature-fonts 仅提供自选字体覆盖）。 */
-private fun fontFamilyTypeface(fontFamily: Int): android.graphics.Typeface =
-    when (fontFamily) {
-        EditorConfig.FONT_FAMILY_MONOSPACE, EditorConfig.FONT_FAMILY_DEFAULT ->
-            android.graphics.Typeface.MONOSPACE
-        EditorConfig.FONT_FAMILY_SANS -> android.graphics.Typeface.SANS_SERIF
-        EditorConfig.FONT_FAMILY_SERIF -> android.graphics.Typeface.SERIF
-        else -> android.graphics.Typeface.MONOSPACE
-    }
+/** T5/T10：字体族 id → Android [android.graphics.Typeface]（代码文本与行号同族）。
+ * 2026-08-11 用户红线（Squircle 字体组合）：默认（0）= 内置 JetBrains Mono
+ * （assets/fonts/jetbrains_mono.ttf）；内置 6 款（OFL）+ 系统 3 族全部经
+ * [LuaFonts.resolve] 解析（进程级缓存 + 失败回落 [android.graphics.Typeface.MONOSPACE]，
+ * 对齐 Squircle CE `TypefaceProvider.DEFAULT` 兜底链）。 */
+private fun fontFamilyTypeface(
+    context: Context,
+    fontFamily: Int,
+): android.graphics.Typeface = LuaFonts.resolve(context, fontFamily)

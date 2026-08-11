@@ -125,6 +125,8 @@ fun EditorTabs(
         modifier =
             modifier
                 .fillMaxWidth()
+                // T19（2026-08-12）：标签行回归宿主 Material3 surface，
+                // 与 AppBar/主界面一致；编辑器画布（文本区）由主题系统独立着色。
                 .background(MaterialTheme.colorScheme.surface),
         // 产品规范：标签与标签栏之间无距离（垂直内边距为 0，标签贴满条带）。
         contentPadding = PaddingValues(horizontal = 8.dp),

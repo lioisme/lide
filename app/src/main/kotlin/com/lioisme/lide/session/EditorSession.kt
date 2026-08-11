@@ -194,6 +194,19 @@ class EditorSession(
     }
 
     /**
+     * 全文档替换门面（T14，2026-08-11）：以 [text] 整体替换选中标签的全部内容，
+     * 内部计算行坐标，统一经 [onContentModified] 置脏并触发自动保存节流信号。
+     * 仅主线程调用。
+     */
+    fun replaceAllText(text: String) {
+        val selected = _selection.value.content ?: return
+        val raw = selected.raw
+        val lastLine = (raw.lineCount - 1).coerceAtLeast(0)
+        raw.replace(0, 0, lastLine, raw.getColumnCount(lastLine), text)
+        onContentModified()
+    }
+
+    /**
      * 编辑事件（每键）：脏标记仅在「首次变脏」时发射，其余仅递增节流信号。
      */
     fun onContentModified() {

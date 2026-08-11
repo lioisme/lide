@@ -91,6 +91,21 @@
     <string name="font_family_monospace">Monospace</string>
     <string name="font_family_sans">Sans Serif</string>
     <string name="font_family_serif">Serif</string>
+    <!-- Built-in fonts (T11, 2026-08-11)：Squircle CE 组合，OFL -->
+    <string name="font_jetbrains_mono">JetBrains Mono</string>
+    <string name="font_droid_sans_mono">Droid Sans Mono</string>
+    <string name="font_fira_code">Fira Code</string>
+    <string name="font_source_code_pro">Source Code Pro</string>
+    <string name="font_anonymous_pro">Anonymous Pro</string>
+    <string name="font_dejavu_sans_mono">DejaVu Sans Mono</string>
+    <string name="font_import">Import font…</string>
+    <string name="font_import_picker_title">Pick a font file</string>
+    <string name="font_import_done">Font imported</string>
+    <string name="font_import_failed">Import failed</string>
+    <string name="font_section_builtin">Built-in</string>
+    <string name="font_section_system">System</string>
+    <string name="font_section_imported">Imported</string>
+    <!-- 编辑器主题选择已随 2026-08-12 治理红线移除（外观单一跟随宿主，见 EditorPalette） -->
     <string name="sticky_scroll_word_wrap_hint">Unavailable while word wrap is on</string>
     <string name="restore_defaults">Restore defaults</string>
     <string name="restore_defaults_done">Settings restored to defaults</string>
@@ -106,7 +121,8 @@
     <string name="permission_management">Permissions</string>
     <string name="perm_subtitle">Manage app permissions</string>
     <string name="perm_special_section">Special Access</string>
-    <string name="perm_privilege_section">Advanced Permissions</string>
+    <string name="perm_general_section">General Access</string>
+    <string name="perm_general_hint">Generic system-level capability channels. LIDE uses them for silent installs and similar features (install method: Settings → AndroLua).</string>
     <string name="perm_regular_section">Regular Permissions</string>
     <string name="perm_note">Some permissions require going to System Settings to enable. Tap \"Request\" to open Settings.</string>
     <string name="perm_granted">Granted</string>
@@ -262,7 +278,11 @@
     <string name="perm_read_frame_buffer">Read frame buffer</string>
     <string name="perm_battery_stats">Battery stats</string>
     <string name="perm_install_shortcut">Install shortcuts</string>
-    <string name="perm_dhizuku_api">Dhizuku API</string>
+
+    <!-- 通用系统级权限通道（2026-08-12 治理红线：权限与用途分离，禁止 install_* 命名） -->
+    <string name="perm_shizuku">Shizuku</string>
+    <string name="perm_dhizuku">Dhizuku</string>
+    <string name="perm_root">Root</string>
 
     <!-- Permission picker (P4, 2026-08-11) -->
     <string name="perm_other_section">Other</string>
@@ -317,6 +337,8 @@
     <string name="menu_file_tree">File Tree</string>
     <string name="file_tree_coming_soon">File tree coming soon</string>
     <string name="menu_editor_settings">Editor Settings</string>
+    <string name="menu_format">Format</string>
+    <string name="format_done">Format complete</string>
     <string name="menu_androlua_settings">AndroLua Settings</string>
     <string name="accessibility_service_description">LIDE 无障碍服务：为 Lua 脚本提供自动化能力（点击、滑动、截图）。</string>
     <!-- API browser (WP-008) -->

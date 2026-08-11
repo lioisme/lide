@@ -1,19 +1,27 @@
 package com.lioisme.lide.editor
 
 import io.github.rosemoe.sora.widget.CodeEditor
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * 编辑器实例命令门面（sora 门面契约，2026-08-11 解耦审计 B 级收口）。
  *
  * 宿主（ui）不得持有 [CodeEditor] 原始引用（此前经 `AtomicReference<CodeEditor?>`
  * 发布，sora 类型泄漏至界面层）；本门面由 [LuaEditor] 绑定/解绑，向宿主暴露最小
- * 命令集：undo / redo / 跳行 / 焦点 / 能力查询 / 文本实体身份判定。
+ * 命令集：undo / redo / 跳行 / 焦点 / 能力查询 / 文本实体身份判定 / 格式化。
  *
  * 线程契约（对齐 AGENTS.md 编辑器关键约定）：绑定与命令仅在主线程调用
  * （AndroidView update 阶段 / 点击回调）；全部命令经 [runOnEditor] 包裹，
  * `try/catch(Throwable)` 降级，异常不得逃逸进 UI 主循环。
  */
 class EditorController {
+
+    /** 格式化协程作用域：后台计算 + 主线程替换（无格式化任务时零开销）。 */
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
     /** 当前绑定的编辑器实例（仅 [LuaEditor] 装配/释放期写入，主线程）。 */
     internal var editor: CodeEditor? = null
@@ -63,6 +71,47 @@ class EditorController {
     fun canRedo(): Boolean {
         val e = editor ?: return false
         return e.canRedo()
+    }
+
+    /**
+     * 全文档格式化（T14，2026-08-11）：后台线程经 [LuaFormatter] 计算（大文件短路），
+     * 主线程 `beginBatchEdit` + 全量 [Content.replace] 一次应用（单组撤销），
+     * try/catch 降级。文本变化经 sora 事件管线驱动会话脏标记/自动保存节流，
+     * 宿主无需额外同步。[onResult] 主线程回调：true = 已替换；false = 未绑定 /
+     * 计算失败 / 无文本变化（宿主据此展示「格式化完成」Snackbar）。
+     */
+    fun format(
+        useTab: Boolean,
+        tabSize: Int,
+        onResult: (changed: Boolean) -> Unit = {},
+    ) {
+        val e = editor ?: return
+        val text = try {
+            e.text.toString()
+        } catch (_: Throwable) {
+            return
+        }
+        scope.launch {
+            val formatted =
+                withContext(Dispatchers.Default) {
+                    LuaFormatter.format(text, useTab, tabSize)
+                }
+            if (formatted == text) {
+                onResult(false)
+                return@launch
+            }
+            runOnEditor { ed ->
+                val lastLine = (ed.text.lineCount - 1).coerceAtLeast(0)
+                val lastCol = ed.text.getColumnCount(lastLine)
+                ed.text.beginBatchEdit()
+                try {
+                    ed.text.replace(0, 0, lastLine, lastCol, formatted)
+                } finally {
+                    ed.text.endBatchEdit()
+                }
+            }
+            onResult(true)
+        }
     }
 
     /** 绑定（[LuaEditor] AndroidView 装配期调用，仅主线程）。 */

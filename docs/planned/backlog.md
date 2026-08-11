@@ -111,6 +111,25 @@
 | S8 | 菜单瘦身（用户拍板）：文件分类仅「文件树」占位按钮（点击 Toast「文件树即将推出」）+ 编辑分类仅「编辑器设置」；工程分类 4 项保留；删 EditorTextOps.kt 与 14 个字符串 | 中 | ✅ 已完成（2026-08-11：`:app:assembleX64Debug` 安装验证——三分类正确、文件树子菜单单项、Toast 实拍确认） | `菜单瘦身` `文件树` `EditorTextOps` |
 | S9 | 编辑器字体对齐 Squircle CE 组合：`FONT_FAMILY_DEFAULT`/`MONOSPACE` 同映射 `Typeface.MONOSPACE`（Squircle `TypefaceProvider.DEFAULT` 同款），设置页字体选项 4→3（删系统默认） | 中 | ✅ 已完成（2026-08-11：设置页「字体=等宽」确认 + 编辑器截图等宽渲染/高亮正常） | `字体` `MONOSPACE` `Squircle` |
 
+## 2i. 编辑器四需求整改（2026-08-11，工作单 docs/in-progress/EDITOR_THEME_FONT_FORMAT_WORK_ORDER.md）
+
+| # | 任务 | 优先级 | 状态 | 关键词 |
+|---|---|---|---|---|
+| F11 | **主题跟随**：编辑器颜色完全跟随主题系统（宿主派生色默认 + 独立主题集手选并存；17 键完整映射；色带解耦修工程 theme 割裂；补全窗口/tooltip 主题化） | 高 | 🔄 进行中（2026-08-12 T19 子项：AppBar/标签行回归宿主 Material3 色板、色带机制退役、FOLLOW 编辑器背景改 surfaceContainerHigh 科学层级色，见工作单阶段 5） | `主题跟随` `SquircleScheme` `EditorChromeColors` `LuaCompletionWindow` |
+| F12 | **字体组合**：Squircle CE 字体组合（内置 JetBrains Mono 等 6 款 ttf + 外部导入 + 预览选择，R5 例外登记） | 高 | 🔄 进行中 | `字体` `JetBrains Mono` `ttf` `LuaFonts` |
+| F13 | **性能优雅度**：补全窗口样式/诊断 tooltip 主题键/主题切换 UI（其余已对齐或超越 Squircle） | 中 | 🔄 进行中 | `补全窗口` `tooltip` |
+| F14 | **语法格式化**：纯 Kotlin LuaFormatter（缩进重排+空白清理档位，零依赖）；⋮ 菜单 + Ctrl+L；单组撤销 | 高 | 🔄 进行中 | `格式化` `LuaFormatter` `LuaLexer` `Ctrl+L` |
+
+## 2j. 权限与编辑器外观治理（2026-08-12，工作单 docs/in-progress/EDITOR_APPEARANCE_GOVERNANCE_WORK_ORDER.md；全部完成，结论已蒸馏进 kb/EDITOR.md §13 与 kb/ARCHITECTURE.md §4）
+
+| # | 任务 | 优先级 | 状态 | 关键词 |
+|---|---|---|---|---|
+| G1 | **权限与用途分离**：权限页「通用权限」区行标题/分区改名 `perm_*`；PermissionCatalog 移除 Dhizuku API 常规条目（含「静默安装」别名）；命名/文档同步 | 高 | ✅ 已完成（2026-08-12，工作单 T3；perm_* 命名 + 分区改名 + catalog 移除 + ARCHITECTURE.md §4 契约） | `EDITOR_APPEARANCE_GOVERNANCE` `权限分离` `perm_` |
+| G2 | **编辑器外观单一跟随**：删除「编辑器主题」手选（设置项/EditorThemeSheet/EditorConfig.editorTheme/editor_theme 键）；LIGHT/DARK 三态残留收敛；工程 init.lua theme 不再影响宿主（projectDarkOverride 删除） | 高 | ✅ 已完成（2026-08-12，工作单 T1/T2；设置页零主题选项 + 三态代码删除 + EditorPalette 装配） | `EDITOR_APPEARANCE_GOVERNANCE` `单一跟随` `editor_theme` |
+| G3 | **双模科学配色库**：LIDE Classic（quietlight/darcula 过 4.5:1 门禁）+ Solarized Dual + Tomorrow Dual 共 3 套 × 亮/暗；EditorPalette 单一事实源 | 高 | ✅ 已完成（2026-08-12，工作单 T4；EditorPalette 3 对 6 JSON + THEMES 白名单 6 全加载） | `EDITOR_APPEARANCE_GOVERNANCE` `Solarized` `Tomorrow` `对比度` |
+| G4 | **对比度门禁**：EditorPaletteContrastTest 逐 token WCAG AA ≥4.5:1 | 高 | ✅ 已完成（2026-08-12，工作单 T5；门禁测试 3/3 通过） | `EDITOR_APPEARANCE_GOVERNANCE` `WCAG` |
+| G5 | **文档收口**：AGENTS.md / kb/EDITOR.md / kb/ARCHITECTURE.md 同步；旧工作单 T17/T18 补勾 | 中 | ✅ 已完成（2026-08-12，工作单 T6/T7；AGENTS.md 治理段重写 + EDITOR.md §13 + ARCHITECTURE.md §4 + 旧工作单补勾） | `EDITOR_APPEARANCE_GOVERNANCE` `文档` |
+
 ## 3. 风险与备忘
 
 | 项 | 说明 |
