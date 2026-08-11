@@ -130,6 +130,42 @@
 | G4 | **对比度门禁**：EditorPaletteContrastTest 逐 token WCAG AA ≥4.5:1 | 高 | ✅ 已完成（2026-08-12，工作单 T5；门禁测试 3/3 通过） | `EDITOR_APPEARANCE_GOVERNANCE` `WCAG` |
 | G5 | **文档收口**：AGENTS.md / kb/EDITOR.md / kb/ARCHITECTURE.md 同步；旧工作单 T17/T18 补勾 | 中 | ✅ 已完成（2026-08-12，工作单 T6/T7；AGENTS.md 治理段重写 + EDITOR.md §13 + ARCHITECTURE.md §4 + 旧工作单补勾） | `EDITOR_APPEARANCE_GOVERNANCE` `文档` |
 
+## 2k. 主题系统与国际化系统规范合规审计整改（2026-08-12，工作单 docs/in-progress/THEME_I18N_SPEC_WORK_ORDER.md）
+
+> 来源需求：主题系统与国际化系统须符合官方规范或社区习惯；全量审计违规/未实现项并整改。
+> 用户拍板（2026-08-12）：① 编辑器配色**方案**可在编辑器界面选择（Squircle CE / Terminus 同款），
+> 每套方案保持亮/暗双模配对、明暗跟随宿主自动切换（G2「单一跟随」红线相应调整）；
+> ② 宿主 Material3 色板引入官方 `material-color-utilities`（HCT）替换手工 HSL 派生。
+
+| # | 任务 | 优先级 | 状态 | 关键词 |
+|---|---|---|---|---|
+| T1 | XML 基础主题 DayNight 双份（values-night）+ Android 12+ Splash Screen（values-v31 双份） | 高 | ✅ 已完成 | `THEME_I18N` `values-night` `splash` |
+| T2 | 宿主色板 HCT 化（material-color-utilities）+ ThemeContrastTest 门禁（含编辑器 chrome 文本槽） | 高 | ✅ 已完成 | `THEME_I18N` `HCT` `对比度门禁` |
+| T3 | 编辑器配色方案可选 + 双模跟随（EditorConfig/Registry/Palette/LuaEditor/SchemeSheet/TextMateRuntime 初值）+ AGENTS.md 红线改写 | 高 | ✅ 已完成 | `THEME_I18N` `SchemeSheet` `EditorPalette` |
+| T4 | 国际化整改：默认资源中文（accessibility_service_description）/复数/中英模板标点/错误消息资源化/DEFAULT_PROVIDER 英文基线/版本号 BuildConfig | 高 | ✅ 已完成 | `THEME_I18N` `i18n` `plurals` `错误码` |
+| T5 | per-app language（Android 13+ localeConfig + locales_config.xml，API 33+ setApplicationLocales 联动） | 中 | ✅ 已完成 | `THEME_I18N` `localeConfig` `per-app` |
+| T6 | lint 配置（abortOnError + HardcodedText/MissingTranslation 等）+ ResourceConsistencyTest + LocaleManagerTest | 中 | ✅ 已完成 | `THEME_I18N` `lint` `资源一致性` |
+| T7 | 全量验证（assembleArm64Debug + verifyMinimalism + 单测）+ 工作单收口蒸馏 | 高 | ✅ 已完成 | `THEME_I18N` `验收` |
+
+> **完结（2026-08-12，全项完成）**：T1-T6 全部完成并通过门禁（compile +
+> 全量单测 + lint 0 新问题 + assemble + verifyMinimalism(Debug) 全绿）；
+> T7 设备验收已于 2026-08-12 在 Android 14 模拟器完成（中英 UI 双向、
+> per-app locale 双向 + 重启保持、3 方案 × 明暗背景像素级核验、
+> Splash 冷启动）。结论蒸馏于 docs/kb/EDITOR.md §14（编辑器配色方案
+> 可选 + 双模跟随）与 docs/kb/ARCHITECTURE.md §7（HCT 色板 / i18n /
+> per-app language / lint 门禁）；工作单已删除。
+
+## 2l. 编辑器三需求整改：固定行号 / 字体收敛 / 格式化缺陷修复（2026-08-12，工作单 docs/in-progress/EDITOR_LINENUM_FONT_FORMAT_FIX_WORK_ORDER.md）
+> 来源需求：① 编辑器支持固定行号；② 字体仅内置 + 用户导入，系统字体仅终极兜底
+> （删内置字体不崩）；③ 修复格式化后跳最后一行 + 删除空格一次删四个的缺陷。
+> 用户拍板：固定行号默认开；默认缩进改空格（对齐 Squircle，退格逐格删除）。
+| # | 任务 | 优先级 | 状态 | 关键词 |
+|---|---|---|---|---|
+| L1 | **固定行号**：EditorConfig.fixedLineNumbers + SettingsRegistry 新键 `fixed_line_numbers`（不复用 P4 已删旧键）+ LuaEditor setPinLineNumber（构造 + 守卫 diff）+ 设置页开关 | 高 | ✅ 已完成（2026-08-12，工作单 T1/T2/T4；验收：compileArm64DebugKotlin + EditorConfigContractTest / EditorSettingsRegistryContractTest 全绿） | `EDITOR_LINENUM_FONT_FORMAT_FIX` `固定行号` `setPinLineNumber` |
+| L2 | **字体收敛**：字体面板移除系统 3 族可选项（仅内置 + 导入）；fontFamilyLabel 回落默认；LuaFonts 两级兜底链 MONOSPACE → DEFAULT | 高 | ✅ 已完成（2026-08-12，工作单 T3；验收：LuaFontsFallbackTest 5 用例全绿——白名单/别名/拓扑/资产存在一致） | `EDITOR_LINENUM_FONT_FORMAT_FIX` `字体兜底` `LuaFonts` |
+| L3 | **格式化修复**：format 光标恢复（setSelection 夹取）+ 文本一致性守卫；deleteMultiSpaces=1 / deleteEmptyLineFast=false 显式声明；use_tab 默认 false | 高 | ✅ 已完成（2026-08-12，工作单 T5/T6/T7；验收：LuaFormatterTest 增量 2 用例 + EditorConfigTest 全绿） | `EDITOR_LINENUM_FONT_FORMAT_FIX` `格式化` `光标` `deleteMultiSpaces` |
+| L4 | **验证与收口**：LuaFontsFallbackTest / LuaFormatterTest 增量 + compile/test/verify 门禁 + AGENTS.md + kb 蒸馏 + 工作单收口 | 高 | 🔄 进行中（2026-08-12：单测已补全；compile + editor 单测全绿；全量验证与收口进行中） | `EDITOR_LINENUM_FONT_FORMAT_FIX` `验证` `收口` |
+
 ## 3. 风险与备忘
 
 | 项 | 说明 |

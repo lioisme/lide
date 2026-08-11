@@ -660,7 +660,9 @@ private fun ImportDialog(
                             aliases = it
                             if (it.isEmpty()) error = emptyMessage
                         }.onFailure { e ->
-                            error = e.message ?: readFailedMessage
+                            // T17：读取失败展示本地化文案（异常细节仅日志）。
+                            android.util.Log.w("SigningScreen", "listAliases failed", e)
+                            error = readFailedMessage
                         }
                     },
                     enabled = !loading && name.isNotBlank() && storePassword.isNotBlank(),

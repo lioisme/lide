@@ -1,0 +1,924 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 8.13.2" type="baseline" client="gradle" dependencies="false" name="AGP (8.13.2)" variant="all" version="8.13.2">
+
+    <issue
+        id="MissingPermission"
+        message="Missing permissions required by PackageInstaller.uninstall: android.permission.DELETE_PACKAGES or android.permission.REQUEST_DELETE_PACKAGES"
+        errorLine1="            installer.uninstall(packageName, pendingIntent.intentSender)"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/install/dhizuku/DhizukuInstallerServiceImpl.kt"
+            line="233"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ScopedStorage"
+        message="The Google Play store has a policy that limits usage of MANAGE_EXTERNAL_STORAGE"
+        errorLine1="    &lt;uses-permission android:name=&quot;android.permission.MANAGE_EXTERNAL_STORAGE&quot; />"
+        errorLine2="                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="57"
+            column="36"/>
+    </issue>
+
+    <issue
+        id="InlinedApi"
+        message="Field requires API level 30 (current min is 24): `android.provider.Settings#ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION`"
+        errorLine1="                        Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION).apply {"
+        errorLine2="                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/ui/screen/EditorScreen.kt"
+            line="463"
+            column="32"/>
+    </issue>
+
+    <issue
+        id="InlinedApi"
+        message="Field requires API level 29 (current min is 24): `android.Manifest.permission#ACCESS_MEDIA_LOCATION`"
+        errorLine1="                Manifest.permission.ACCESS_MEDIA_LOCATION,"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/ui/screen/PermissionCatalog.kt"
+            line="76"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="InlinedApi"
+        message="Field requires API level 26 (current min is 24): `android.Manifest.permission#ANSWER_PHONE_CALLS`"
+        errorLine1="                Manifest.permission.ANSWER_PHONE_CALLS,"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/ui/screen/PermissionCatalog.kt"
+            line="136"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="InlinedApi"
+        message="Field requires API level 33 (current min is 24): `android.Manifest.permission#POST_NOTIFICATIONS`"
+        errorLine1="                Manifest.permission.POST_NOTIFICATIONS,"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/ui/screen/PermissionCatalog.kt"
+            line="191"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="InlinedApi"
+        message="Field requires API level 28 (current min is 24): `android.Manifest.permission#FOREGROUND_SERVICE`"
+        errorLine1="                Manifest.permission.FOREGROUND_SERVICE,"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/ui/screen/PermissionCatalog.kt"
+            line="196"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="InlinedApi"
+        message="Field requires API level 30 (current min is 24): `android.Manifest.permission#MANAGE_EXTERNAL_STORAGE`"
+        errorLine1="                Manifest.permission.MANAGE_EXTERNAL_STORAGE,"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/ui/screen/PermissionCatalog.kt"
+            line="279"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="InlinedApi"
+        message="Field requires API level 30 (current min is 24): `android.Manifest.permission#MANAGE_EXTERNAL_STORAGE`"
+        errorLine1="            name = Manifest.permission.MANAGE_EXTERNAL_STORAGE,"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/ui/screen/PermissionScreen.kt"
+            line="474"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="InlinedApi"
+        message="Field requires API level 30 (current min is 24): `android.provider.Settings#ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION`"
+        errorLine1="                Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)"
+        errorLine2="                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/ui/screen/PermissionScreen.kt"
+            line="481"
+            column="24"/>
+    </issue>
+
+    <issue
+        id="InlinedApi"
+        message="Field requires API level 26 (current min is 24): `android.provider.Settings#ACTION_MANAGE_UNKNOWN_APP_SOURCES`"
+        errorLine1="                Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES)"
+        errorLine2="                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/ui/screen/PermissionScreen.kt"
+            line="505"
+            column="24"/>
+    </issue>
+
+    <issue
+        id="NewApi"
+        message="Call requires API level 34 (current min is 24): `android.content.pm.PackageInstaller.SessionParams#setInstallerPackageName`"
+        errorLine1="                params.setInstallerPackageName(name)"
+        errorLine2="                       ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/install/dhizuku/DhizukuInstallerServiceImpl.kt"
+            line="91"
+            column="24"/>
+    </issue>
+
+    <issue
+        id="NewApi"
+        message="Call requires API level 35 (current min is 24): `java.util.List#addLast`"
+        errorLine1="                                    stack.addLast(BracketFrame(&apos;[&apos;, lineNo))"
+        errorLine2="                                          ~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/editor/LuaDiagnostics.kt"
+            line="549"
+            column="43"/>
+    </issue>
+
+    <issue
+        id="NewApi"
+        message="Call requires API level 35 (current min is 24): `java.util.List#addLast`"
+        errorLine1="                                stack.addLast(BracketFrame(c, lineNo))"
+        errorLine2="                                      ~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/editor/LuaDiagnostics.kt"
+            line="555"
+            column="39"/>
+    </issue>
+
+    <issue
+        id="NewApi"
+        message="Call requires API level 35 (current min is 24): `java.util.List#removeLast` (Prior to API level 35, this call would resolve to a Kotlin stdlib extension function. You can use `removeAt(stack.lastIndex)` instead.)"
+        errorLine1="                                    stack.removeLast()"
+        errorLine2="                                          ~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/editor/LuaDiagnostics.kt"
+            line="568"
+            column="43"/>
+    </issue>
+
+    <issue
+        id="NewApi"
+        message="Call requires API level 35 (current min is 24): `java.util.List#addLast`"
+        errorLine1="                                        stack.addLast(BlockFrame(&quot;if&quot;, lineNo))"
+        errorLine2="                                              ~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/editor/LuaDiagnostics.kt"
+            line="589"
+            column="47"/>
+    </issue>
+
+    <issue
+        id="NewApi"
+        message="Call requires API level 35 (current min is 24): `java.util.List#addLast`"
+        errorLine1="                                        stack.addLast(BlockFrame(&quot;for&quot;, lineNo))"
+        errorLine2="                                              ~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/editor/LuaDiagnostics.kt"
+            line="593"
+            column="47"/>
+    </issue>
+
+    <issue
+        id="NewApi"
+        message="Call requires API level 35 (current min is 24): `java.util.List#addLast`"
+        errorLine1="                                        stack.addLast(BlockFrame(&quot;while&quot;, lineNo))"
+        errorLine2="                                              ~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/editor/LuaDiagnostics.kt"
+            line="597"
+            column="47"/>
+    </issue>
+
+    <issue
+        id="NewApi"
+        message="Call requires API level 35 (current min is 24): `java.util.List#addLast`"
+        errorLine1="                                            stack.addLast(BlockFrame(&quot;do&quot;, lineNo))"
+        errorLine2="                                                  ~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/editor/LuaDiagnostics.kt"
+            line="605"
+            column="51"/>
+    </issue>
+
+    <issue
+        id="NewApi"
+        message="Call requires API level 35 (current min is 24): `java.util.List#addLast`"
+        errorLine1="                                        stack.addLast(BlockFrame(&quot;function&quot;, lineNo))"
+        errorLine2="                                              ~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/editor/LuaDiagnostics.kt"
+            line="610"
+            column="47"/>
+    </issue>
+
+    <issue
+        id="NewApi"
+        message="Call requires API level 35 (current min is 24): `java.util.List#addLast`"
+        errorLine1="                                        stack.addLast(BlockFrame(&quot;repeat&quot;, lineNo))"
+        errorLine2="                                              ~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/editor/LuaDiagnostics.kt"
+            line="614"
+            column="47"/>
+    </issue>
+
+    <issue
+        id="NewApi"
+        message="Call requires API level 35 (current min is 24): `java.util.List#removeLast` (Prior to API level 35, this call would resolve to a Kotlin stdlib extension function. You can use `removeAt(stack.lastIndex)` instead.)"
+        errorLine1="                        stack.removeLast()"
+        errorLine2="                              ~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/editor/LuaDiagnostics.kt"
+            line="678"
+            column="31"/>
+    </issue>
+
+    <issue
+        id="NewApi"
+        message="Call requires API level 35 (current min is 24): `java.util.List#removeLast` (Prior to API level 35, this call would resolve to a Kotlin stdlib extension function. You can use `removeAt(stack.lastIndex)` instead.)"
+        errorLine1="                        stack.removeLast()"
+        errorLine2="                              ~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/editor/LuaDiagnostics.kt"
+            line="687"
+            column="31"/>
+    </issue>
+
+    <issue
+        id="NewApi"
+        message="Call requires API level 26, or core library desugaring (current min is 24): `java.io.File#toPath`"
+        errorLine1="            File(path).toPath().startsWith(rootDir.toPath())"
+        errorLine2="                       ~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/project/ProjectEntryOps.kt"
+            line="42"
+            column="24"/>
+    </issue>
+
+    <issue
+        id="NewApi"
+        message="Call requires API level 26, or core library desugaring (current min is 24): `java.io.File#toPath`"
+        errorLine1="            File(path).toPath().startsWith(rootDir.toPath())"
+        errorLine2="                                                   ~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/project/ProjectEntryOps.kt"
+            line="42"
+            column="52"/>
+    </issue>
+
+    <issue
+        id="NewApi"
+        message="Call requires API level 26, or core library desugaring (current min is 24): `java.nio.file.Path#startsWith`"
+        errorLine1="            File(path).toPath().startsWith(rootDir.toPath())"
+        errorLine2="                                ~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/project/ProjectEntryOps.kt"
+            line="42"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="NewApi"
+        message="Call requires API level 26 (current min is 24): `java.lang.Process#destroyForcibly`"
+        errorLine1="                process.destroyForcibly()"
+        errorLine2="                        ~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/install/shizuku/ShizukuInstallerServiceImpl.kt"
+            line="87"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="NewApi"
+        message="Call requires API level 26 (current min is 24): `java.lang.Process#waitFor`"
+        errorLine1="            val finished = process.waitFor(INSTALL_TIMEOUT_SECONDS, TimeUnit.SECONDS)"
+        errorLine2="                                   ~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/install/shizuku/ShizukuInstallerServiceImpl.kt"
+            line="91"
+            column="36"/>
+    </issue>
+
+    <issue
+        id="NewApi"
+        message="Call requires API level 26 (current min is 24): `java.lang.Process#destroyForcibly`"
+        errorLine1="                process.destroyForcibly()"
+        errorLine2="                        ~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/install/shizuku/ShizukuInstallerServiceImpl.kt"
+            line="94"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="NewApi"
+        message="Call requires API level 26 (current min is 24): `java.lang.Process#waitFor`"
+        errorLine1="            val finished = process.waitFor(UNINSTALL_TIMEOUT_SECONDS, TimeUnit.SECONDS)"
+        errorLine2="                                   ~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/install/shizuku/ShizukuInstallerServiceImpl.kt"
+            line="121"
+            column="36"/>
+    </issue>
+
+    <issue
+        id="NewApi"
+        message="Call requires API level 26 (current min is 24): `java.lang.Process#destroyForcibly`"
+        errorLine1="                process.destroyForcibly()"
+        errorLine2="                        ~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/install/shizuku/ShizukuInstallerServiceImpl.kt"
+            line="124"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="PrivateApi"
+        message="Accessing internal APIs via reflection is not supported and may not work on all devices or in the future"
+        errorLine1="                val cls = Class.forName(&quot;android.app.AppGlobals&quot;)"
+        errorLine2="                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/install/dhizuku/DhizukuInstallerServiceImpl.kt"
+            line="323"
+            column="27"/>
+    </issue>
+
+    <issue
+        id="UnusedAttribute"
+        message="Attribute `localeConfig` is only used in API level 33 and higher (current min is 24)"
+        errorLine1="        android:localeConfig=&quot;@xml/locales_config&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="96"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="AppBundleLocaleChanges"
+        message="Found dynamic locale changes, but did not find corresponding Play Core library calls for downloading languages and splitting by language is not disabled in the `bundle` configuration"
+        errorLine1="        config.setLocales(LocaleList(locale))"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/i18n/LocaleManager.kt"
+            line="110"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="BatteryLife"
+        message="Use of `REQUEST_IGNORE_BATTERY_OPTIMIZATIONS` violates the Play Store Content Policy regarding acceptable use cases, as described in https://developer.android.com/training/monitoring-device-state/doze-standby.html"
+        errorLine1="                Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)"
+        errorLine2="                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/ui/screen/PermissionScreen.kt"
+            line="493"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="RedundantLabel"
+        message="Redundant label can be removed"
+        errorLine1="            android:label=&quot;@string/app_name&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="183"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="RedundantLabel"
+        message="Redundant label can be removed"
+        errorLine1="            android:label=&quot;@string/app_name&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="190"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.compose:compose-bom than 2025.06.00 is available: 2026.01.01"
+        errorLine1="    implementation(platform(&quot;androidx.compose:compose-bom:2025.06.00&quot;))"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle.kts"
+            line="252"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of org.jetbrains:annotations than 23.0.0 is available: 26.1.0"
+        errorLine1="        implementation(&quot;org.jetbrains:annotations:23.0.0&quot;)"
+        errorLine2="                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle.kts"
+            line="254"
+            column="24"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of io.github.iamr0s:Dhizuku-API than 2.5.4 is available: 2.6.0"
+        errorLine1="    implementation(&quot;io.github.iamr0s:Dhizuku-API:2.5.4&quot;)"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle.kts"
+            line="300"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of org.jetbrains.kotlinx:kotlinx-coroutines-test than 1.8.1 is available: 1.11.0"
+        errorLine1="    testImplementation(&quot;org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1&quot;)"
+        errorLine2="                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle.kts"
+            line="305"
+            column="24"/>
+    </issue>
+
+    <issue
+        id="ComposableNaming"
+        message="Composable functions that return Unit should start with an uppercase letter"
+        errorLine1="private fun backGuarded("
+        errorLine2="            ~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/ui/navigation/LideNavHost.kt"
+            line="75"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ModifierParameter"
+        message="Modifier parameter should be the first optional parameter"
+        errorLine1="    modifier: Modifier = Modifier,"
+        errorLine2="    ~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/editor/EditorToolbar.kt"
+            line="66"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ModifierParameter"
+        message="Modifier parameter should be the first optional parameter"
+        errorLine1="    modifier: Modifier = Modifier,"
+        errorLine2="    ~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/editor/LuaEditor.kt"
+            line="410"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MutableCollectionMutableState"
+        message="Creating a MutableState object with a mutable collection type"
+        errorLine1="    var savedTabNames by rememberSaveable(project.path) { mutableStateOf(arrayListOf&lt;String>()) }"
+        errorLine2="                                                          ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/ui/screen/EditorScreen.kt"
+            line="128"
+            column="59"/>
+    </issue>
+
+    <issue
+        id="ChromeOsAbiSupport"
+        message="Missing x86_64 ABI support for ChromeOS"
+        errorLine1="                abiFilters += &quot;arm64-v8a&quot;"
+        errorLine2="                              ~~~~~~~~~~~">
+        <location
+            file="build.gradle.kts"
+            line="54"
+            column="31"/>
+    </issue>
+
+    <issue
+        id="GetInstance"
+        message="ECB encryption mode should not be used (was &quot;DES/ECB/NoPadding&quot;)"
+        errorLine1="        Cipher.getInstance(TRANSFORMATION).apply {"
+        errorLine2="                           ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/build/LuaCrypto.kt"
+            line="22"
+            column="28"/>
+    </issue>
+
+    <issue
+        id="InsecureBaseConfiguration"
+        message="Insecure Base Configuration"
+        errorLine1="    &lt;base-config cleartextTrafficPermitted=&quot;true&quot; />"
+        errorLine2="                                            ~~~~">
+        <location
+            file="src/main/res/xml/network_security_config.xml"
+            line="13"
+            column="45"/>
+    </issue>
+
+    <issue
+        id="SystemPermissionTypo"
+        message="Did you mean `android.permission.WRITE_OBB`?"
+        errorLine1="    &lt;uses-permission android:name=&quot;android.permission.WRITE_SMS&quot; />"
+        errorLine2="                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="30"
+            column="36"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is never &lt; 24"
+        errorLine1="                if (Build.VERSION.SDK_INT &lt; Build.VERSION_CODES.M) return@SpecialPerm true"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/ui/screen/PermissionScreen.kt"
+            line="513"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="StaticFieldLeak"
+        message="Do not place Android context classes in static fields (static reference to `InstallerServices` which has field `ctx` pointing to `Context`); this is a memory leak"
+        errorLine1="/**"
+        errorLine2="^">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/install/InstallerServices.kt"
+            line="13"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="StaticFieldLeak"
+        message="Do not place Android context classes in static fields; this is a memory leak"
+        errorLine1="    private var ctx: Context? = null"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/install/InstallerServices.kt"
+            line="30"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="StaticFieldLeak"
+        message="Do not place Android context classes in static fields (static reference to `ShizukuServiceManager` which has field `context` pointing to `Context`); this is a memory leak"
+        errorLine1="    private var shizukuManager: ShizukuServiceManager? = null"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/install/InstallerServices.kt"
+            line="33"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="StaticFieldLeak"
+        message="Do not place Android context classes in static fields (static reference to `DhizukuServiceManager` which has field `context` pointing to `Context`); this is a memory leak"
+        errorLine1="    private var dhizukuManager: DhizukuServiceManager? = null"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/install/InstallerServices.kt"
+            line="34"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="AutoboxingStateCreation"
+        message="Prefer `mutableIntStateOf` instead of `mutableStateOf`"
+        errorLine1="    var retryTick by remember { mutableStateOf(0) }"
+        errorLine2="                                ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/ui/screen/ApiClassDetailScreen.kt"
+            line="57"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="AutoboxingStateCreation"
+        message="Prefer `mutableIntStateOf` instead of `mutableStateOf`"
+        errorLine1="    var refreshKey by remember { mutableStateOf(0) }"
+        errorLine2="                                 ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/ui/screen/PermissionScreen.kt"
+            line="55"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="AutoboxingStateCreation"
+        message="Prefer `mutableIntStateOf` instead of `mutableStateOf`"
+        errorLine1="    var importedProjectCount by remember { mutableStateOf(0) }"
+        errorLine2="                                           ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/ui/screen/ProjectListScreen.kt"
+            line="110"
+            column="44"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.back_to_parent` appears to be unused"
+        errorLine1="    &lt;string name=&quot;back_to_parent&quot;>Back to parent&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="14"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.setting_value_title` appears to be unused"
+        errorLine1="    &lt;string name=&quot;setting_value_title&quot;>%1$s: %2$s&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="73"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.font_import_picker_title` appears to be unused"
+        errorLine1="    &lt;string name=&quot;font_import_picker_title&quot;>Pick a font file&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="114"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.perm_package_only` appears to be unused"
+        errorLine1="    &lt;string name=&quot;perm_package_only&quot;>Written into packaged APK only&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="150"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.info_theme_custom` appears to be unused"
+        errorLine1="    &lt;string name=&quot;info_theme_custom&quot;>Custom (%1$s)&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="181"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.build_install_failed` appears to be unused"
+        errorLine1="    &lt;string name=&quot;build_install_failed&quot;>Install failed&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="326"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.install_dialog_method` appears to be unused"
+        errorLine1="    &lt;string name=&quot;install_dialog_method&quot;>Install method (this build)&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="488"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="TypographyOther"
+        message="Replace (c) with copyright symbol © (&amp;#169;) ?"
+        errorLine1="    &lt;string name=&quot;signing_gen_c&quot;>Country code (C)&lt;/string>"
+        errorLine2="                                 ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="427"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/icon.png` in densityless folder">
+        <location
+            file="src/main/res/drawable/icon.png"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="                            data = Uri.parse(&quot;package:${context.packageName}&quot;)"
+        errorLine2="                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/ui/screen/EditorScreen.kt"
+            line="464"
+            column="36"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="                            data = Uri.parse(&quot;package:${context.packageName}&quot;)"
+        errorLine2="                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/ui/screen/EditorScreen.kt"
+            line="464"
+            column="36"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        context"
+        errorLine2="        ^">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/i18n/LocaleManager.kt"
+            line="78"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="                        Uri.parse(&quot;package:${context.packageName}&quot;),"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/ui/screen/PermissionScreen.kt"
+            line="90"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="                Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse(&quot;package:${it.packageName}&quot;))"
+        errorLine2="                                                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/ui/screen/PermissionScreen.kt"
+            line="462"
+            column="67"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="                Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS, Uri.parse(&quot;package:${it.packageName}&quot;))"
+        errorLine2="                                                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/ui/screen/PermissionScreen.kt"
+            line="470"
+            column="63"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="                    .setData(Uri.parse(&quot;package:${it.packageName}&quot;))"
+        errorLine2="                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/ui/screen/PermissionScreen.kt"
+            line="482"
+            column="30"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="                    .setData(Uri.parse(&quot;package:${it.packageName}&quot;))"
+        errorLine2="                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/ui/screen/PermissionScreen.kt"
+            line="494"
+            column="30"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="                    .setData(Uri.parse(&quot;package:${it.packageName}&quot;))"
+        errorLine2="                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/ui/screen/PermissionScreen.kt"
+            line="506"
+            column="30"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs.edit().putBoolean(KEY_GRANTED_BEFORE, granted).apply()"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/install/root/RootServiceManager.kt"
+            line="197"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs"
+        errorLine2="        ^">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/ui/theme/SettingsManager.kt"
+            line="66"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        context"
+        errorLine2="        ^">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/ui/theme/SettingsManager.kt"
+            line="85"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs.edit().clear().apply()"
+        errorLine2="        ~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/ui/theme/SettingsManager.kt"
+            line="96"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs"
+        errorLine2="        ^">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/ui/theme/SettingsManager.kt"
+            line="124"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs().edit().putString(KEY_DEFAULT, id).apply()"
+        errorLine2="        ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/build/SigningManager.kt"
+            line="70"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        if (defaultId() == id) prefs().edit().remove(KEY_DEFAULT).apply()"
+        errorLine2="                               ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/build/SigningManager.kt"
+            line="110"
+            column="32"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="            prefs().edit().putString(KEY_CORRUPT_BACKUP, raw).apply()"
+        errorLine2="            ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/build/SigningManager.kt"
+            line="204"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        prefs().edit().putString(KEY_PROFILES, arr.toString()).apply()"
+        errorLine2="        ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/kotlin/com/lioisme/lide/build/SigningManager.kt"
+            line="211"
+            column="9"/>
+    </issue>
+
+</issues>

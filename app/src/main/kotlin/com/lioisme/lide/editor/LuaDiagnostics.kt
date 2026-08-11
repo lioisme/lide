@@ -797,23 +797,24 @@ object LuaDiagnostics {
     }
 
     /**
-     * 默认消息渲染器（中文模板，与历史文案一致）：Incremental 缺省注入，
-     * 保证测试与纯文本诊断路径无需构造 provider；宿主 UI 经资源驱动覆盖。
+     * 默认消息渲染器（英文基线，2026-08-12 T14：默认资源英文化）：
+     * Incremental 缺省注入，保证测试与纯文本诊断路径无需构造 provider；
+     * 文案与 diag_xxx / fix_xxx 资源英文侧一致（宿主 UI 经资源驱动覆盖）。
      */
     val DEFAULT_PROVIDER =
         object : DiagnosticMessageProvider {
             override fun message(key: String, vararg args: Any): String =
                 when (key) {
-                    MSG_UNCLOSED_LONG_COMMENT -> "未闭合的长注释"
-                    MSG_UNCLOSED_LONG_STRING -> "未闭合的长字符串"
-                    MSG_UNCLOSED_QUOTED_STRING -> "未闭合的字符串"
-                    MSG_UNMATCHED_CLOSE -> "不匹配的 '${args[0]}'"
-                    MSG_UNCLOSED_TOKEN -> "未闭合的 '${args[0]}'"
-                    MSG_EXCESS_TOKEN -> "多余的 '${args[0]}'"
-                    MSG_AT_LINE -> "${args[0]}（第 ${args[1]} 行）"
-                    MSG_FIX_DELETE_TOKEN -> "删除多余的 '${args[0]}'"
-                    MSG_FIX_APPEND_LINE_END -> "在行尾补上 '${args[0]}'"
-                    MSG_FIX_APPEND_FILE_END -> "在文件末尾补上 '${args[0]}'"
+                    MSG_UNCLOSED_LONG_COMMENT -> "Unclosed long comment"
+                    MSG_UNCLOSED_LONG_STRING -> "Unclosed long string"
+                    MSG_UNCLOSED_QUOTED_STRING -> "Unclosed string"
+                    MSG_UNMATCHED_CLOSE -> "Mismatched '${args[0]}'"
+                    MSG_UNCLOSED_TOKEN -> "Unclosed '${args[0]}'"
+                    MSG_EXCESS_TOKEN -> "Unexpected '${args[0]}'"
+                    MSG_AT_LINE -> "${args[0]} (line ${args[1]})"
+                    MSG_FIX_DELETE_TOKEN -> "Remove unexpected '${args[0]}'"
+                    MSG_FIX_APPEND_LINE_END -> "Append '${args[0]}' at line end"
+                    MSG_FIX_APPEND_FILE_END -> "Append '${args[0]}' at end of file"
                     else -> key
                 }
         }
@@ -821,7 +822,8 @@ object LuaDiagnostics {
 
 /**
  * 诊断消息渲染器（Q15）：诊断器只产出「消息键 + 参数」，文案本地化在渲染层。
- * 默认实现为中文模板（与历史诊断文案一致，测试依赖）；宿主 UI 注入资源驱动实现。
+ * 默认实现为英文基线（见 [DEFAULT_PROVIDER]，测试依赖其确定性文案）；宿主
+ * UI 注入资源驱动实现（按当前 locale 出文案）。
  */
 fun interface DiagnosticMessageProvider {
     /** [key] 为 [LuaDiagnostics] 的消息键常量；[args] 为按序参数（%1$s/%1$d 等）。 */

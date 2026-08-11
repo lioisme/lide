@@ -3,6 +3,7 @@ package com.lioisme.lide.ui.screen
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
+import android.os.Build
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -41,33 +42,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.lioisme.lide.BuildConfig
 import com.lioisme.lide.R
 import com.lioisme.lide.i18n.LocaleManager
 import com.lioisme.lide.ui.theme.*
 
-private val colorOptions =
-    listOf(
-        0xFFF44336,
-        0xFFE91E63,
-        0xFF9C27B0,
-        0xFF673AB7,
-        0xFF3F51B5,
-        0xFF2196F3,
-        0xFF03A9F4,
-        0xFF00BCD4,
-        0xFF009688,
-        0xFF4CAF50,
-        0xFF8BC34A,
-        0xFFCDDC39,
-        0xFFFFEB3B,
-        0xFFFFC107,
-        0xFFFF9800,
-        0xFFFF5722,
-        0xFF795548,
-        0xFF607D8B,
-        0xFF9E9E9E,
-        0xFF000000,
-    )
+// 主题色预设单一事实源 = ThemeSeeds.OPTIONS（ui/theme，与 ThemeContrastTest 门禁共用）。
+private val colorOptions: List<Long> = ThemeSeeds.OPTIONS
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -183,7 +164,8 @@ fun SettingsScreen(
                 SettingsItem(
                     icon = Icons.Default.Info,
                     title = stringResource(R.string.about),
-                    subtitle = stringResource(R.string.version),
+                    // T18（2026-08-12）：版本号模板化（应用名 + BuildConfig.VERSION_NAME）。
+                    subtitle = stringResource(R.string.version, stringResource(R.string.app_name), BuildConfig.VERSION_NAME),
                     onClick = { showAboutDialog = true },
                 )
             }
@@ -224,7 +206,11 @@ fun SettingsScreen(
             onSelect = { tag ->
                 LocaleManager.setLanguage(context, tag)
                 showLanguageSheet = false
-                activity?.recreate()
+                // T21：API 33+ 由框架按 per-app locale 自动重建 Activity，
+                // 手动 recreate 会双重重建；<33 才手动（wrap 生效路径）。
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+                    activity?.recreate()
+                }
             },
             onDismiss = { showLanguageSheet = false },
         )
@@ -239,7 +225,11 @@ fun SettingsScreen(
                 Column {
                     Text(stringResource(R.string.app_name), style = MaterialTheme.typography.titleMedium)
                     Spacer(Modifier.height(4.dp))
-                    Text(stringResource(R.string.version), style = MaterialTheme.typography.bodyMedium)
+                    // T18：版本号模板化（BuildConfig.VERSION_NAME）。
+                    Text(
+                        stringResource(R.string.version, stringResource(R.string.app_name), BuildConfig.VERSION_NAME),
+                        style = MaterialTheme.typography.bodyMedium,
+                    )
                 }
             },
             confirmButton = {

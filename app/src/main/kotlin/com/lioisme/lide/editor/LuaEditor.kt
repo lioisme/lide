@@ -60,7 +60,7 @@ import kotlinx.coroutines.withContext
  *   页面离开经 [DisposableEffect.onDispose] 调 `release()` 销毁——回归朴素生命周期，
  *   无进程级单实例池、无跨页面状态、无 setText(null) 出池修补；
  * - 文件切换不重建实例：同组合内 `setText(Content)` 复用（undo 历史随 Content 保留）；
- * - 主题方案仍为进程级单例（[TextMateRuntime.colorScheme]，AGENTS.md 约定），
+ * - 主题方案为进程级单例（[TextMateRuntime] 按「方案 + 明暗」缓存，AGENTS.md 约定），
  *   [ThemeRegistry] 切换时经 ThemeChangeListener 广播刷新，与实例生命周期解耦。
  *
  * 重组模型与配置同步：
@@ -126,7 +126,7 @@ private class EditorInstance(
         CodeEditor(context).apply {
             // 官方 demo 顺序：colorScheme → language → setText，
             // 使分析器重启都发生在空文本阶段，setText 成为唯一一次全量分析。
-            // 2026-08-12 单一跟随：初始即宿主色方案（宿主明暗 + 激活配色库主题）。
+            // 2026-08-12 方案可选反转：初始即按「方案 + 明暗」取配色方案对象。
             colorScheme = initialScheme
 
             setEditorLanguage(createLanguage(initialScope, initialConfig, initialConfig.identifierCompletion, this))
@@ -138,6 +138,10 @@ private class EditorInstance(
             lastEditable = !initialConfig.readOnly
 
             isLineNumberEnabled = true
+            // L1（2026-08-12）固定行号：sora 原生 setPinLineNumber，水平滚动时
+            // 行号栏固定于左侧（EditorRenderer pinned 层绘制，x=0 不随内容滚动）；
+            // 与 wordwrap 正交（wrap 下 sora 天然固定），大文件降级关行号后自然失效。
+            setPinLineNumber(initialConfig.fixedLineNumbers)
             isHighlightCurrentLine = true
             tabWidth = initialConfig.tabSize
             setBlockLineWidth(3f)
@@ -153,6 +157,16 @@ private class EditorInstance(
 
             // 迷你地图字符块模式（任务单 G8：0.24.6 原生，默认关由 applyConfig 控制）。
             props.minimapConfig = MinimapConfig(minimapDrawTextAsBlocks = true)
+
+            // L3（2026-08-12）删除语义显式化（sora 原生 props，防止版本漂移回退）：
+            // - deleteMultiSpaces = 1：行首空格退格**逐格**删除（sora 默认值等同，
+            //   显式声明锁定语义，杜绝「一次删 tabWidth 个空格」）；
+            // - deleteEmptyLineFast = false：光标位于仅含空白（空行）的行时按退格
+            //   不再**整行删除**，退化为逐字符删除（sora 默认 true 会连同行首
+            //   缩进整行删除，用户感知为「一次删掉 4 个空格/一整段」，联动
+            //   格式化 3a 根因——格式化后光标落在末尾空行时必然触发）。
+            props.deleteMultiSpaces = 1
+            props.deleteEmptyLineFast = false
 
             // T6（2026-08-11）补全窗口自定义：圆角 8dp + 1dp 描边 + 主题色跟随
             // （对齐 Squircle；装配在 setText 前，色板经 onApplyColorScheme 联动）。
@@ -333,6 +347,11 @@ private class EditorInstance(
         if (editor.isLineNumberEnabled != config.lineNumbers) {
             editor.isLineNumberEnabled = config.lineNumbers
         }
+        // L1（2026-08-12）固定行号守卫式 diff：值不变不赋值。
+        // 行号关闭时 sora 内部自然无效（pinned 仅影响行号绘制层），无需联动置空。
+        if (editor.isLineNumberPinned() != config.fixedLineNumbers) {
+            editor.setPinLineNumber(config.fixedLineNumbers)
+        }
         if (editor.tabWidth != config.tabSize) {
             editor.tabWidth = config.tabSize
         }
@@ -469,7 +488,8 @@ fun LuaEditor(
                 context = appContext,
                 initialConfig = currentConfig,
                 initialScope = currentResolvedScope,
-                initialScheme = TextMateRuntime.hostColorScheme(isDarkTheme, hostColors),
+                initialScheme =
+                    TextMateRuntime.hostColorScheme(currentConfig.themeScheme, isDarkTheme, hostColors),
                 onContentModified = { currentOnContentModified() },
                 onUndoRedoStateChanged = { u, r -> currentOnUndoRedoStateChanged(u, r) },
                 onFormatAction = { currentOnFormatRequest() },
@@ -478,24 +498,25 @@ fun LuaEditor(
 
     val initReady = runtimeState is TextMateRuntime.RuntimeState.Ready
 
-    // 编辑器外观单一跟随宿主（2026-08-12 治理红线）：文本区明暗唯一输入源 = 宿主
-    // 明暗；配色 = 双模科学配色库（[EditorPalette] 单一事实源：暗 → 暗侧主题，
-    // 亮 → 亮侧主题），禁止用户手选、禁止工程文件干预。
+    // 编辑器配色方案可选 + 双模跟随（2026-08-12 用户拍板反转）：明暗唯一输入源 =
+    // 宿主明暗；配色方案 = [EditorConfig.themeScheme]（[EditorPalette] 单一事实源：
+    // 暗 → 该方案暗侧主题，亮 → 亮侧主题），编辑器设置页选择。
     val effectiveDark = isDarkTheme
 
     // 主题装配：setTheme 广播驱动方案动态重算（token 色随明暗主题），编辑器零重建。
-    // setColorScheme 会触发 sora attachEditor（含一次 rerunAnalysis）——仅明暗/
+    // setColorScheme 会触发 sora attachEditor（含一次 rerunAnalysis）——仅明暗/方案/
     // 就绪切换时执行，宿主色板变化走 updateHostColors 免重分析。
-    LaunchedEffect(effectiveDark, initReady) {
+    LaunchedEffect(effectiveDark, initReady, currentConfig.themeScheme) {
         if (!initReady) return@LaunchedEffect
         val registry = ThemeRegistry.getInstance()
-        registry.setTheme(EditorPalette.themeNameFor(effectiveDark))
-        instance.editor.colorScheme = TextMateRuntime.hostColorScheme(effectiveDark, hostColors)
+        registry.setTheme(EditorPalette.themeNameFor(currentConfig.themeScheme, effectiveDark))
+        instance.editor.colorScheme =
+            TextMateRuntime.hostColorScheme(currentConfig.themeScheme, effectiveDark, hostColors)
     }
 
     // 宿主色板刷新（LideHostColorScheme.updateHost 值未变自动跳过）。
     LaunchedEffect(hostColors) {
-        TextMateRuntime.updateHostColors(effectiveDark, hostColors)
+        TextMateRuntime.updateHostColors(currentConfig.themeScheme, effectiveDark, hostColors)
     }
 
     if (!initReady) {
@@ -652,9 +673,10 @@ private fun CodeEditor.applyNonPrintableFlags(config: EditorConfig) {
 
 /** T5/T10：字体族 id → Android [android.graphics.Typeface]（代码文本与行号同族）。
  * 2026-08-11 用户红线（Squircle 字体组合）：默认（0）= 内置 JetBrains Mono
- * （assets/fonts/jetbrains_mono.ttf）；内置 6 款（OFL）+ 系统 3 族全部经
- * [LuaFonts.resolve] 解析（进程级缓存 + 失败回落 [android.graphics.Typeface.MONOSPACE]，
- * 对齐 Squircle CE `TypefaceProvider.DEFAULT` 兜底链）。 */
+ * （assets/fonts/jetbrains_mono.ttf）；内置 6 款（OFL）经 [LuaFonts.resolve] 解析。
+ * L2（2026-08-12）：系统字体仅终极兜底——[LuaFonts] 两级兜底链
+ * （MONOSPACE → DEFAULT，原生 Typeface 常量，`TypefaceProvider.DEFAULT` 同款），
+ * 用户删除全部内置/导入字体后编辑器不崩溃。 */
 private fun fontFamilyTypeface(
     context: Context,
     fontFamily: Int,

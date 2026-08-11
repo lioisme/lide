@@ -1,6 +1,7 @@
 package com.lioisme.lide.ui.theme
 
 import android.os.Build
+import androidx.compose.foundation.isSystemInDarkTheme as platformIsDark
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
@@ -14,13 +15,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.lerp
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.foundation.isSystemInDarkTheme as platformIsDark
+import com.materialkolor.hct.Hct
+import com.materialkolor.scheme.DynamicScheme
+import com.materialkolor.scheme.SchemeTonalSpot
 
 val LocalIsDarkTheme = compositionLocalOf { false }
 
@@ -95,127 +98,108 @@ fun LideTheme(
     }
 }
 
-private const val BG_LIGHT = 0xFFFDFCFF
-private const val BG_DARK = 0xFF1A1C1E
-private const val ON_BG_LIGHT = 0xFF1A1C1E
-private const val ON_BG_DARK = 0xFFE2E2E6
+/**
+ * Material3 官方 HCT 色板（2026-08-12 T-2 整改）。
+ *
+ * 原实现为手工 HSL 派生（lighten/darken/rotateHue + 0.5 亮度阈值对比色），
+ * 中间调 seed 下 onPrimary 等 token 可低于 WCAG AA 4.5:1 且无门禁守护。
+ * 现改用 Google material-color-utilities（Kotlin 移植）官方 TONAL_SPOT 动态
+ * 色板（Compose dynamicColorScheme 同款算法）：任意 seed 生成的 token 对
+ * 保证 Material3 官方对比度规范，由 [ThemeContrastTest] 门禁守护
+ * （与生产同算法的确定性断言：HCT 无平台差异，JVM 直测）。
+ *
+ * 亮/暗各生成一份 [DynamicScheme]（tonal 色板相同、tone 目标不同），
+ * 映射到 Compose [ColorScheme] 全量 60+ token。
+ */
+internal fun generateLightScheme(primary: Color): ColorScheme = generateScheme(primary, isDark = false)
 
-internal fun generateLightScheme(primary: Color): ColorScheme {
-    val s = rotateHue(primary, 30f, 0.6f)
-    val t = rotateHue(primary, -30f, 0.4f)
-    return lightColorScheme(
-        primary = primary,
-        onPrimary = contrastingColor(primary),
-        primaryContainer = lighten(primary, 0.85f),
-        onPrimaryContainer = darken(primary, 0.3f),
-        secondary = s,
-        onSecondary = contrastingColor(s),
-        secondaryContainer = lighten(s, 0.85f),
-        onSecondaryContainer = darken(s, 0.3f),
-        tertiary = t,
-        onTertiary = contrastingColor(t),
-        tertiaryContainer = lighten(t, 0.85f),
-        onTertiaryContainer = darken(t, 0.3f),
-        error = Color(0xFFBA1A1A),
-        onError = Color.White,
-        errorContainer = Color(0xFFFFDAD6),
-        onErrorContainer = Color(0xFF410002),
-        background = Color(BG_LIGHT),
-        onBackground = Color(ON_BG_LIGHT),
-        surface = Color(BG_LIGHT),
-        onSurface = Color(ON_BG_LIGHT),
-        surfaceVariant = Color(0xFFE0E2EC),
-        onSurfaceVariant = Color(0xFF44474E),
-        outline = Color(0xFF74777F),
-        outlineVariant = Color(0xFFC4C6D0),
-        inverseSurface = Color(0xFF2F3033),
-        inverseOnSurface = Color(0xFFF1F0F4),
-        inversePrimary = lighten(primary, 0.4f),
-        surfaceTint = primary,
-        surfaceDim = Color(0xFFD8DAE0),
-        surfaceBright = Color(0xFFFDFCFF),
-        surfaceContainerLowest = Color(0xFFFFFFFF),
-        surfaceContainerLow = Color(0xFFF2F2F7),
-        surfaceContainer = Color(0xFFECECF1),
-        surfaceContainerHigh = Color(0xFFE6E7EC),
-        surfaceContainerHighest = Color(0xFFDADBE1),
-    )
-}
+internal fun generateDarkScheme(primary: Color): ColorScheme = generateScheme(primary, isDark = true)
 
-internal fun generateDarkScheme(primary: Color): ColorScheme {
-    val s = rotateHue(primary, 30f, 0.6f)
-    val t = rotateHue(primary, -30f, 0.4f)
-    val dp = lighten(primary, 0.25f)
-    val ds = lighten(s, 0.25f)
-    val dt = lighten(t, 0.25f)
-    return darkColorScheme(
-        primary = dp,
-        onPrimary = darken(primary, 0.7f),
-        primaryContainer = darken(primary, 0.7f),
-        onPrimaryContainer = lighten(primary, 0.85f),
-        secondary = ds,
-        onSecondary = darken(s, 0.7f),
-        secondaryContainer = darken(s, 0.7f),
-        onSecondaryContainer = lighten(s, 0.85f),
-        tertiary = dt,
-        onTertiary = darken(t, 0.7f),
-        tertiaryContainer = darken(t, 0.7f),
-        onTertiaryContainer = lighten(t, 0.85f),
-        error = Color(0xFFFFB4AB),
-        onError = Color(0xFF690005),
-        errorContainer = Color(0xFF93000A),
-        onErrorContainer = Color(0xFFFFDAD6),
-        background = Color(BG_DARK),
-        onBackground = Color(ON_BG_DARK),
-        surface = Color(BG_DARK),
-        onSurface = Color(ON_BG_DARK),
-        surfaceVariant = Color(0xFF44474E),
-        onSurfaceVariant = Color(0xFFC4C6D0),
-        outline = Color(0xFF8E9099),
-        outlineVariant = Color(0xFF44474E),
-        inverseSurface = Color(ON_BG_DARK),
-        inverseOnSurface = Color(ON_BG_LIGHT),
-        inversePrimary = primary,
-        surfaceTint = dp,
-        surfaceDim = Color(0xFF141518),
-        surfaceBright = Color(0xFF3A3B3E),
-        surfaceContainerLowest = Color(0xFF0F1013),
-        surfaceContainerLow = Color(0xFF1C1D21),
-        surfaceContainer = Color(0xFF1A1C1E),
-        surfaceContainerHigh = Color(0xFF252629),
-        surfaceContainerHighest = Color(0xFF2F3033),
-    )
-}
-
-private fun lighten(
-    c: Color,
-    a: Float,
-) = lerp(c, Color.White, a)
-
-private fun darken(
-    c: Color,
-    a: Float,
-) = lerp(c, Color.Black, a)
-
-private fun contrastingColor(bg: Color): Color {
-    val y = 0.299f * bg.red + 0.587f * bg.green + 0.114f * bg.blue
-    return if (y > 0.5f) Color(ON_BG_LIGHT) else Color.White
-}
-
-private fun rotateHue(
-    c: Color,
-    deg: Float,
-    sf: Float,
-): Color {
-    val hsv = FloatArray(3)
-    android.graphics.Color.RGBToHSV(
-        (c.red * 255).toInt(),
-        (c.green * 255).toInt(),
-        (c.blue * 255).toInt(),
-        hsv,
-    )
-    hsv[0] = (hsv[0] + deg) % 360f
-    hsv[1] = (hsv[1] * sf).coerceIn(0f, 1f)
-    hsv[2] = hsv[2] * 0.85f
-    return Color(android.graphics.Color.HSVToColor(hsv))
+private fun generateScheme(
+    primary: Color,
+    isDark: Boolean,
+): ColorScheme {
+    val scheme =
+        SchemeTonalSpot(
+            sourceColorHct = Hct.fromInt(primary.toArgb()),
+            isDark = isDark,
+            contrastLevel = 0.0,
+        )
+    return if (isDark) {
+        darkColorScheme(
+            primary = Color(scheme.primary),
+            onPrimary = Color(scheme.onPrimary),
+            primaryContainer = Color(scheme.primaryContainer),
+            onPrimaryContainer = Color(scheme.onPrimaryContainer),
+            secondary = Color(scheme.secondary),
+            onSecondary = Color(scheme.onSecondary),
+            secondaryContainer = Color(scheme.secondaryContainer),
+            onSecondaryContainer = Color(scheme.onSecondaryContainer),
+            tertiary = Color(scheme.tertiary),
+            onTertiary = Color(scheme.onTertiary),
+            tertiaryContainer = Color(scheme.tertiaryContainer),
+            onTertiaryContainer = Color(scheme.onTertiaryContainer),
+            error = Color(scheme.error),
+            onError = Color(scheme.onError),
+            errorContainer = Color(scheme.errorContainer),
+            onErrorContainer = Color(scheme.onErrorContainer),
+            background = Color(scheme.background),
+            onBackground = Color(scheme.onBackground),
+            surface = Color(scheme.surface),
+            onSurface = Color(scheme.onSurface),
+            surfaceVariant = Color(scheme.surfaceVariant),
+            onSurfaceVariant = Color(scheme.onSurfaceVariant),
+            outline = Color(scheme.outline),
+            outlineVariant = Color(scheme.outlineVariant),
+            inverseSurface = Color(scheme.inverseSurface),
+            inverseOnSurface = Color(scheme.inverseOnSurface),
+            inversePrimary = Color(scheme.inversePrimary),
+            surfaceTint = Color(scheme.surfaceTint),
+            surfaceDim = Color(scheme.surfaceDim),
+            surfaceBright = Color(scheme.surfaceBright),
+            surfaceContainerLowest = Color(scheme.surfaceContainerLowest),
+            surfaceContainerLow = Color(scheme.surfaceContainerLow),
+            surfaceContainer = Color(scheme.surfaceContainer),
+            surfaceContainerHigh = Color(scheme.surfaceContainerHigh),
+            surfaceContainerHighest = Color(scheme.surfaceContainerHighest),
+        )
+    } else {
+        lightColorScheme(
+            primary = Color(scheme.primary),
+            onPrimary = Color(scheme.onPrimary),
+            primaryContainer = Color(scheme.primaryContainer),
+            onPrimaryContainer = Color(scheme.onPrimaryContainer),
+            secondary = Color(scheme.secondary),
+            onSecondary = Color(scheme.onSecondary),
+            secondaryContainer = Color(scheme.secondaryContainer),
+            onSecondaryContainer = Color(scheme.onSecondaryContainer),
+            tertiary = Color(scheme.tertiary),
+            onTertiary = Color(scheme.onTertiary),
+            tertiaryContainer = Color(scheme.tertiaryContainer),
+            onTertiaryContainer = Color(scheme.onTertiaryContainer),
+            error = Color(scheme.error),
+            onError = Color(scheme.onError),
+            errorContainer = Color(scheme.errorContainer),
+            onErrorContainer = Color(scheme.onErrorContainer),
+            background = Color(scheme.background),
+            onBackground = Color(scheme.onBackground),
+            surface = Color(scheme.surface),
+            onSurface = Color(scheme.onSurface),
+            surfaceVariant = Color(scheme.surfaceVariant),
+            onSurfaceVariant = Color(scheme.onSurfaceVariant),
+            outline = Color(scheme.outline),
+            outlineVariant = Color(scheme.outlineVariant),
+            inverseSurface = Color(scheme.inverseSurface),
+            inverseOnSurface = Color(scheme.inverseOnSurface),
+            inversePrimary = Color(scheme.inversePrimary),
+            surfaceTint = Color(scheme.surfaceTint),
+            surfaceDim = Color(scheme.surfaceDim),
+            surfaceBright = Color(scheme.surfaceBright),
+            surfaceContainerLowest = Color(scheme.surfaceContainerLowest),
+            surfaceContainerLow = Color(scheme.surfaceContainerLow),
+            surfaceContainer = Color(scheme.surfaceContainer),
+            surfaceContainerHigh = Color(scheme.surfaceContainerHigh),
+            surfaceContainerHighest = Color(scheme.surfaceContainerHighest),
+        )
+    }
 }

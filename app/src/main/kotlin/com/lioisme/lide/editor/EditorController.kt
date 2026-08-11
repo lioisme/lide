@@ -78,7 +78,17 @@ class EditorController {
      * 主线程 `beginBatchEdit` + 全量 [Content.replace] 一次应用（单组撤销），
      * try/catch 降级。文本变化经 sora 事件管线驱动会话脏标记/自动保存节流，
      * 宿主无需额外同步。[onResult] 主线程回调：true = 已替换；false = 未绑定 /
-     * 计算失败 / 无文本变化（宿主据此展示「格式化完成」Snackbar）。
+     * 计算失败 / 无文本变化 / 文本一致性守卫未过（宿主据此展示「格式化完成」
+     * Snackbar——`changed=false` 时不展示）。
+     *
+     * L3（2026-08-12）双修复：
+     * - **光标恢复**：sora `Cursor.afterInsert` 对「光标位于插入点之后或重合」
+     *   的语义是右移 `insertedContent.length()`（Cursor.java:338-341），全量
+     *   `replace(0,0,..末行末列)` 后光标必然落在全文末尾——替换前记录光标、
+     *   替换后 `setSelection` 行列双夹取恢复（对齐 sora 官方
+     *   `CodeEditor.onFormatSucceed` 的 `setSelectionAround` 语义）；
+     * - **一致性守卫**：后台计算期间用户可能继续输入，替换前校验
+     *   `text.toString() == 快照`，不一致即放弃（防止覆盖计算期间的新输入）。
      */
     fun format(
         useTab: Boolean,
@@ -100,17 +110,30 @@ class EditorController {
                 onResult(false)
                 return@launch
             }
-            runOnEditor { ed ->
-                val lastLine = (ed.text.lineCount - 1).coerceAtLeast(0)
-                val lastCol = ed.text.getColumnCount(lastLine)
-                ed.text.beginBatchEdit()
-                try {
-                    ed.text.replace(0, 0, lastLine, lastCol, formatted)
-                } finally {
-                    ed.text.endBatchEdit()
+            val applied =
+                runOnEditor { ed ->
+                    // 一致性守卫：快照后文本已被用户编辑 → 放弃本格式化（防覆盖）。
+                    if (ed.text.toString() != text) {
+                        return@runOnEditor false
+                    }
+                    val curLine = ed.cursor.getLeftLine()
+                    val curColumn = ed.cursor.getLeftColumn()
+                    val lastLine = (ed.text.lineCount - 1).coerceAtLeast(0)
+                    val lastCol = ed.text.getColumnCount(lastLine)
+                    ed.text.beginBatchEdit()
+                    try {
+                        ed.text.replace(0, 0, lastLine, lastCol, formatted)
+                    } finally {
+                        ed.text.endBatchEdit()
+                    }
+                    // 光标恢复：行列双夹取（行 → 新 lineCount-1 内；列 → 新行
+                    // 列宽内），越过界回落到有效边界而不抛。
+                    val restoredLine = curLine.coerceIn(0, (ed.text.lineCount - 1).coerceAtLeast(0))
+                    val restoredCol = curColumn.coerceIn(0, ed.text.getColumnCount(restoredLine))
+                    ed.setSelection(restoredLine, restoredCol, true)
+                    true
                 }
-            }
-            onResult(true)
+            onResult(applied == true)
         }
     }
 
@@ -124,13 +147,18 @@ class EditorController {
         editor = null
     }
 
-    /** 命令执行壳：未绑定静默跳过；单次命令失败降级，不逃逸。 */
-    private inline fun runOnEditor(op: (CodeEditor) -> Unit) {
-        val e = editor ?: return
-        try {
+    /**
+     * 命令执行壳：未绑定返回 null；单次命令失败降级（返回 null），不逃逸。
+     * 泛型返回值供 [format] 上报「是否实际替换」（守卫未过 / 异常 = false）。
+     * 既有命令调用忽略返回值（Kotlin 表达式语句语义）。
+     */
+    private inline fun <T> runOnEditor(op: (CodeEditor) -> T): T? {
+        val e = editor ?: return null
+        return try {
             op(e)
         } catch (_: Throwable) {
             // 降级：单次命令失败静默放弃（AGENTS.md 编辑器约定）。
+            null
         }
     }
 }

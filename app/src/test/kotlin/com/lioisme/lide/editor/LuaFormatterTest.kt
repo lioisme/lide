@@ -186,4 +186,20 @@ class LuaFormatterTest {
             fmt(src),
         )
     }
+
+    @Test
+    fun `tab 缩进输入重排为空格缩进`() {
+        // L3（2026-08-12 用户拍板）：默认 useTab=false——tab 缩进输入自动重排为
+        // 空格 × tabSize(4)；格式化器按**语义深度**重写缩进（输入缩进不保留），
+        // 故两 tab 行与单 tab 行同为 if 块内深度 1 → 均 4 空格。
+        val src = "if x then\n\tprint(1)\n\t\tprint(2)\nend"
+        assertEquals("if x then\n    print(1)\n    print(2)\nend", fmt(src))
+    }
+
+    @Test
+    fun `默认参数即空格缩进`() {
+        // L3 语义锁：format(src) 不带参数时缩进 = 空格（非 tab）。
+        val src = "function f()\nreturn 1\nend"
+        assertEquals("function f()\n    return 1\nend", LuaFormatter.format(src))
+    }
 }

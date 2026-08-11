@@ -200,7 +200,11 @@ R1：    rg -n "luajava|androlua|loadLibrary" app/src/main/kotlin/com/lioisme/li
 - **线号分割线 / 固定行号（R4）**：sora 原生 `setDividerWidth(float)`（0=不绘制）与
   `setPinLineNumber(boolean)`（**读端必须用 `isLineNumberPinned()`**——sora 有同名私有字段
   `pinLineNumber`，Kotlin 属性合成失败「field is private」）；设置键 `line_number_divider_width`
-  （0..6 px）与 `pin_line_number`。
+  （0..6 px）；固定行号设置键 = **`fixed_line_numbers`（2026-08-12 L1 恢复，默认 true，
+  编辑器设置页「视图」组开关，行号关闭时置灰）**——P4 曾删的旧键 `pin_line_number`
+  不得回退（历史引用一律不得回退，旧键复活即与 fixed_line_numbers 双键并存违反治理）；
+  新键与旧键语义差异：新键默认**开**（对齐现代 IDE），旧键默认关；构造 + 守卫 diff 双处
+  接线（`isLineNumberPinned()` 读取）。
 - **minSdk 下移（R5）**：`AXmlManifest.readUsesSdk(bytes)` 返回 (min, target)——优先
   `uses-sdk` 元素属性、缺失回落 manifest 根属性（AGP/aapt2 折叠形态），全部带 android 命名空间
   校验；`ManifestEdit.minSdkVersion`（null=不干预）经 `rebuildUsesSdk`（重写或追加，TYPE_INT_DEC）
@@ -341,3 +345,47 @@ token）；LuaConfigParserTest 既有失败与本治理无关（stash 验证基�
 关联：EditorPalette.kt（主题名常量 + 激活表 + 对比度对照）、
 EditorPaletteContrastTest.kt（门禁）、PermissionCatalog.kt / PermissionScreen.kt /
 InstallBackendUi.kt（perm_* 命名）。
+
+## 14. 编辑器配色方案可选 + 明暗双模跟随宿主（2026-08-12 用户拍板反转，THEME_I18N_SPEC_WORK_ORDER 完工蒸馏）
+
+**反转声明**：§13「单一跟随宿主」（当日治理）经用户拍板反转——编辑器文本区
+明暗**唯一输入源**仍 = 宿主外观（`LocalIsDarkTheme`），但配色**方案**可在
+编辑器设置页选择（Squircle CE / Terminus 同款方案选择器）。§13 中「设置页
+禁止任何编辑器外观/主题选项」与「`editor_theme`/三态模式已删除」仅后半
+（旧键与三态类删除、`projectDarkOverride` 删除）仍有效；方案用**新键**
+`editor_scheme`（`IntKey`），历史引用一律不得回退。
+
+**方案 = 亮/暗双模配对**（每套方案两套 TextMate 主题，随宿主明暗自动切换对应侧）：
+
+| 方案 | 亮侧（isDark=false） | 暗侧（isDark=true） |
+|---|---|---|
+| LIDE Classic（`SCHEME_CLASSIC`=0） | quietlight（`#F5F5F5` 底） | darcula（`#242424` 底） |
+| Solarized Dual（`SCHEME_SOLARIZED`=1） | solarized_light | solarized_dark |
+| Tomorrow Dual（`SCHEME_TOMORROW`=2） | tomorrow | tomorrow_night |
+
+- **单一事实源** `EditorPalette`：`pairs` = 3 套亮/暗主题名配对（方案索引
+  `SCHEME_*` 常量 = `pairs` 下标）；`allThemes` = TextMate 加载白名单（6 个
+  JSON 全加载）；`schemeBackgrounds` = 方案面板亮/暗预览色条（与 JSON 背景
+  同源，对比度测试断言）；激活主题名 = `themeNameFor(scheme, isDark)`
+  （越界 coerce 回落）。
+- **持久化**：`EditorConfig.themeScheme` + SettingsRegistry `IntKey("editor_scheme")`
+  （默认 CLASSIC）；编辑器设置项计数为 21（含新增「配色方案」行）。
+- **装配链**：`TextMateRuntime` 单例按主题名分槽缓存 `LideHostColorScheme`
+  （同主题名不重复构造，明暗/方案切换零重建；`ThemeRegistry.setTheme` 广播
+  驱动 token 重算）；`preload(context, initialThemeName)` 由宿主 LideApp
+  按「当前方案 + 系统明暗」计算传入（R4：运行时不读宿主状态）；编辑器打开后
+  由 LuaEditor LaunchedEffect(effectiveDark, initReady, themeScheme) 接管。
+- **对比度门禁（G4，跨 §13 延续强化）**：`EditorPaletteContrastTest` 解析
+  assets/textmate/ 全部激活主题逐 token 断言（含 `schemeBackgrounds` 预览
+  色条与 JSON 同源断言、pairs↔schemeBackgrounds↔JSON 三方同源）；
+  `ThemeContrastTest` 守护宿主 HCT 色板 token + chrome 槽（AppBar/标签行/
+  分隔线 = surface+onSurface）× 全部 3 方案背景颜色槽 ≥ 4.5:1。
+- **颜色分层契约（§12 T19 延续）**：不变——AppBar/标签行/分隔线/空态恒为
+  宿主 Material3；文本区独立着色；浮层 `surfaceContainerHighest`。
+- 历史 `EditorChromeColors.kt` 色带删除不回退；§13「DARK=RGB(26,28,30)」
+  误记（宿主 surface）以契约为准。
+
+验证：`:app:compileArm64DebugKotlin` + `:app:testArm64DebugUnitTest`
+（EditorPaletteContrastTest / ThemeContrastTest 全绿）+ `:app:lintArm64Debug`
+（0 新问题）+ `:app:assembleArm64Debug` + `:app:verifyMinimalism` +
+`:app:verifyMinimalismDebug` 全绿；设备截图核验待 P7 统一执行。

@@ -179,3 +179,59 @@ R1 门禁：         rg -n "luajava|androlua|loadLibrary" app/src/main/kotlin/co
   内联条件提私有谓词（Q16 L8：`ApkBuilder.isLuaFile`）。
 - 延迟项登记 backlog：`ZipUtils` CEN 游标访问（整包 readBytes 优化，P1-11）待打包链
   提交后端到端验证。
+
+## 7. 动态主题与国际化契约（2026-08-12 THEME_I18N_SPEC_WORK_ORDER 完工蒸馏）
+
+### 7.1 宿主色板 = Google material-color-utilities（HCT）
+
+- **依赖**：`com.materialkolor:material-color-utilities:4.1.1`（官方 Java 版仅内嵌于
+  MDC-Android AAR 无法单独取用，Kotlin 移植；JVM 单测直跑）。手工 HSL 派生
+  （lighten/darken/rotateHue/contrastingColor）已全量删除——对比度无门禁风险。
+- **生成**：`SchemeTonalSpot(sourceColorHct = Hct.fromInt(seed), isDark,
+  contrastLevel = 0.0)`（M3 默认 TONAL_SPOT，与 Compose `dynamicColorScheme`
+  同算法）→ 全量 50+ token 映射 Compose `ColorScheme`（亮/暗各一份）。
+- **预设 seed 单一事实源**：`ui/theme/ThemeSeeds.OPTIONS`（20 预设色），
+  SettingsScreen 色板页与 `ThemeContrastTest` 共用同一个表，禁止散落色值。
+- **对比度门禁**：`ThemeContrastTest` 守护全部文本承载 token（HCT 生成 token +
+  chrome 槽）× 20 seed × 亮/暗。**核心教训（2026-08-12）**：手工 HSL 在
+  `container`/`onContainer` 上的对比度不可预测（曾产生 1.44:1 的近白容器色，
+  视觉几乎不可见）——一切手动颜色派生皆为已删除的方向，新增色调一律经
+  material-color-utilities 生成后过门禁。
+
+### 7.2 国际化（默认英文基线 + per-app language）
+
+- 默认资源（values/）全英文；中文走 values-zh；`locales_config.xml`（en/zh）
+  声明系统语言支持（`android:localeConfig`）。
+- **复数**：英文必须 plurals one/other 双档（`ResourceConsistencyTest` 守护），
+  中文仅 other；`getQuantityString` 取文案（不做 int 拼接）。
+- **字符串模板**：UI 一律模板（`%1$s`/`%2$d`），中英同名键参数集合必须一致
+  （`ResourceConsistencyTest` 守护）；版本号 `%1$s v%2$s` + `BuildConfig.VERSION_NAME`。
+- **错误文案**：`BuildException` 携带 `BuildErrorCode`（8 码 + GENERAL），UI 经
+  `buildErrorRes` 映射 `build_error_*` 本地化文案；GENERAL/LUA_COMPILE 保留原始
+  消息（编译器行号诊断价值）；Toast 不直出异常消息（Log.w 保留细节）。
+- **per-app language（API 33+ / T21）**：写入 = 平台 `android.app.LocaleManager`
+  `.setApplicationLocales`（**core 1.15.0 的 `LocaleManagerCompat` 无写入 API**，
+  javap 实锤仅 getSystemLocales/getApplicationLocales）；读取 =
+  `LocaleManagerCompat.getApplicationLocales`（`systemAppLocalesTag`）。
+  `TAG_SYSTEM` → 空列表 = 清空 per-app locale 跟随系统。系统「语言偏好」面板
+  与 App 内选择**双向**生效；启动态 `resolveTag(prefTag, systemTag)` 系统优先。
+  API 33+ 框架自动重建 Activity（调用方**不得**再手动 recreate——双重重建）；
+  API < 33 保持 wrap（`attachBaseContext` 注入 createConfigurationContext）+
+  调用方 recreate。
+- **历史 bug 修复（T21 顺带）**：MainActivity / LuaActivity 此前均未 override
+  `attachBaseContext` → wrap 从未注入，`<33` 语言切换实际无效；已修复。
+  `LocaleManager.currentLanguageTag` 以 `@Volatile` 跨线程可见（§6 约定）。
+
+### 7.3 工程质量门禁
+
+- **lint（T23）**：`lint { abortOnError; warningsAsErrors; checkReleaseBuilds=false;
+  baseline = lint-baseline.xml }`——存量（81 errors + 3 hints，含第三方
+  WorkManager 源码目录与历史代码）冻结于 baseline，**新增零容忍**（lint 链接
+  CI 门禁，`lintArm64Debug`）。业务代码禁止新增 lint 告警；改动 lint 相关
+  配置必须跑 lint 任务。
+
+验证（2026-08-12 全绿）：compileArm64DebugKotlin + testArm64DebugUnitTest
+（含 i18n.ResourceConsistencyTest 5 用例 / LocaleManagerTest 5 用例 /
+build.* 8 用例）+ lintArm64Debug（0 新问题）+ assembleArm64Debug +
+verifyMinimalism + verifyMinimalismDebug；设备截图与 per-app locale 真机
+双向验证待 P7 统一执行。

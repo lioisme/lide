@@ -2,6 +2,7 @@ package com.lioisme.lide.ui.theme
 
 import android.content.SharedPreferences
 import com.lioisme.lide.editor.EditorConfig
+import com.lioisme.lide.editor.EditorPalette
 
 /**
  * 编辑器设置声明式键表（架构审计 B-4）。
@@ -14,6 +15,9 @@ import com.lioisme.lide.editor.EditorConfig
  * undo_stack_size / sticky_scroll_max_lines / ln_panel / pin_line_number /
  * line_number_divider_width / cursor_animation / line_spacing_multiplier，
  * 由 LuaEditor 常量落实（见 EditorConfig KDoc）。
+ * 2026-08-12（EDITOR_LINENUM_FONT_FORMAT_FIX L1）：固定行号以新键
+ * `fixed_line_numbers` 重新落地为设置项（sora 原生 setPinLineNumber）；
+ * 不复用已删除的旧键 `pin_line_number`（历史引用不得回退）。
  */
 internal object SettingsRegistry {
     internal data class BoolKey(
@@ -33,7 +37,7 @@ internal object SettingsRegistry {
     /** 与 [EditorConfig] 字段一一对应；顺序无关（按表驱动读写）。 */
     val boolKeys: List<BoolKey> =
         listOf(
-            BoolKey("use_tab", true, { it.useTab }, { c, v -> c.copy(useTab = v) }),
+            BoolKey("use_tab", false, { it.useTab }, { c, v -> c.copy(useTab = v) }),
             BoolKey("auto_indent", true, { it.autoIndent }, { c, v -> c.copy(autoIndent = v) }),
             BoolKey("auto_close_brackets", true, { it.autoCloseBrackets }, { c, v -> c.copy(autoCloseBrackets = v) }),
             BoolKey("auto_completion", true, { it.autoCompletion }, { c, v -> c.copy(autoCompletion = v) }),
@@ -42,6 +46,8 @@ internal object SettingsRegistry {
             BoolKey("read_only", false, { it.readOnly }, { c, v -> c.copy(readOnly = v) }),
             BoolKey("word_wrap", false, { it.wordWrap }, { c, v -> c.copy(wordWrap = v) }),
             BoolKey("line_numbers", true, { it.lineNumbers }, { c, v -> c.copy(lineNumbers = v) }),
+            // L1（2026-08-12）：固定行号（sora 原生 setPinLineNumber）；默认开。
+            BoolKey("fixed_line_numbers", true, { it.fixedLineNumbers }, { c, v -> c.copy(fixedLineNumbers = v) }),
             BoolKey("highlight_current_line", true, { it.highlightCurrentLine }, { c, v -> c.copy(highlightCurrentLine = v) }),
             BoolKey("highlight_bracket_pair", true, { it.highlightBracketPair }, { c, v -> c.copy(highlightBracketPair = v) }),
             BoolKey("highlight_current_block", true, { it.highlightCurrentBlock }, { c, v -> c.copy(highlightCurrentBlock = v) }),
@@ -58,6 +64,9 @@ internal object SettingsRegistry {
             IntKey("tab_size", 4, { it.tabSize }, { c, v -> c.copy(tabSize = v) }),
             // T5（2026-08-10）：sora 上限扩展
             IntKey("font_family", EditorConfig.FONT_FAMILY_DEFAULT, { it.fontFamily }, { c, v -> c.copy(fontFamily = v) }),
+            // T8（2026-08-12 方案可选反转）：配色方案索引；新键名 editor_scheme，
+            // 不复用已废弃的 editor_theme（历史引用不得回退）。
+            IntKey("editor_scheme", EditorPalette.SCHEME_CLASSIC, { it.themeScheme }, { c, v -> c.copy(themeScheme = v) }),
         )
 
     /** 从 [prefs] 加载 [EditorConfig]（缺失键回落默认值）。 */

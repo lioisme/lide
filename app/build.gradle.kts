@@ -117,6 +117,17 @@ android {
         aidl = true
     }
 
+    // T23（2026-08-12）：Android lint 错误级门禁。warningsAsErrors 使存量/新增
+    // 告警全部阻断构建（增量零容忍）；baseline 冻结存量，CI 一票否决。
+    lint {
+        abortOnError = true
+        warningsAsErrors = true
+        checkReleaseBuilds = false
+        // T23（2026-08-12）：存量告警冻结于 baseline（第三方 WorkManager
+        // 源码目录 + 历史代码），增量零容忍——新增告警即构建失败。
+        baseline = file("lint-baseline.xml")
+    }
+
     // 原生引擎：源码统一位于 src/main/cpp/（AGP 官方 ndk 源码目录）。
     // 由 AGP externalNativeBuild 直接调用 ndk-build，产物自动打进 APK，
     // 不再有 jniLibs 缓存目录 / rebuild 脚本（旧的 scripts/rebuild_engine.* 已废弃）。
@@ -266,6 +277,10 @@ dependencies {
             "androidx.profileinstaller:profileinstaller:1.4.1",
             // APK v1/v2/v3 签名官方实现（Google，AGP 同源）。纯 Java，minSdk 24 可用。
             "com.android.tools.build:apksig:8.13.2",
+            // Material3 官方 HCT 色板算法（2026-08-12 T-2 整改）：Google material-color-utilities
+            // 的 Kotlin 移植（Apache 2.0，零传递依赖，纯 JVM 可测——ThemeContrastTest 依赖）。
+            // 官方 Java 版仅内嵌于 MDC-Android AAR，独立坐标不存在，故用同源移植。
+            "com.materialkolor:material-color-utilities:4.1.1",
         )
     for (d in ideDeps) {
         implementation(d)

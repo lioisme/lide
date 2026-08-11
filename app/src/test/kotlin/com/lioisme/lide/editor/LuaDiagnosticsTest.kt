@@ -32,22 +32,22 @@ class LuaDiagnosticsTest {
 
     @Test
     fun `未闭合括号报错`() {
-        assertTrue(errors("local x = (1 + 2").any { it.contains("未闭合的 '('") })
+        assertTrue(errors("local x = (1 + 2").any { it.contains("Unclosed '('") })
     }
 
     @Test
     fun `不匹配右括号报错`() {
-        assertTrue(errors("local x = }").any { it.contains("不匹配的 '}'") })
+        assertTrue(errors("local x = }").any { it.contains("Mismatched '}'") })
     }
 
     @Test
     fun `多余 end 报错`() {
-        assertTrue(errors("print(1)\nend").any { it.contains("多余的 'end'") })
+        assertTrue(errors("print(1)\nend").any { it.contains("Unexpected 'end'") })
     }
 
     @Test
     fun `未闭合 function 报错`() {
-        assertTrue(errors("local function f()").any { it.contains("未闭合的 'function'") })
+        assertTrue(errors("local function f()").any { it.contains("Unclosed 'function'") })
     }
 
     @Test
@@ -81,7 +81,7 @@ class LuaDiagnosticsTest {
 
     @Test
     fun `未闭合长注释报错并指向起始行`() {
-        assertTrue(errors("print(1)\n--[[ oops\nprint(2)").any { it.contains("未闭合的长注释") })
+        assertTrue(errors("print(1)\n--[[ oops\nprint(2)").any { it.contains("Unclosed long comment") })
     }
 
     @Test
@@ -100,7 +100,7 @@ class LuaDiagnosticsTest {
         // 在 function 行插入括号导致未闭合
         val broken = "local f = function(\nprint(1)\nend"
         inc.onEdit(0, 0)
-        assertTrue(inc.check(broken).any { it.detail.briefMessage.contains("未闭合的 '('") })
+        assertTrue(inc.check(broken).any { it.detail.briefMessage.contains("Unclosed '('") })
         // 删除括号恢复正常
         inc.onEdit(0, 0)
         assertTrue(inc.check(src).isEmpty())
@@ -113,7 +113,7 @@ class LuaDiagnosticsTest {
         assertTrue(inc.check(base).isEmpty())
         val changed = "a(\nb()\nc()\nd()"
         inc.onEdit(0, 2)
-        assertTrue(inc.check(changed).any { it.detail.briefMessage.contains("未闭合") })
+        assertTrue(inc.check(changed).any { it.detail.briefMessage.contains("Unclosed") })
     }
 
     @Test
@@ -223,12 +223,12 @@ class LuaDiagnosticsTest {
         val inc = LuaDiagnostics.Incremental()
         val src = "local function f()\nprint(1)\n})"
         val first = inc.check(src)
-        assertTrue("首扫应报告尾部错误", first.any { it.detail.briefMessage.contains("不匹配的 '}'") })
+        assertTrue("首扫应报告尾部错误", first.any { it.detail.briefMessage.contains("Mismatched '}'") })
 
         // 在错误行之前做不改变解析状态的编辑（行注释追加；栈/模式均不变）。
         inc.onEdit(0, 0)
         val second = inc.check("local function f() -- c\nprint(1)\n})")
-        assertTrue("编辑后尾部错误必须仍可见", second.any { it.detail.briefMessage.contains("不匹配的 '}'") })
+        assertTrue("编辑后尾部错误必须仍可见", second.any { it.detail.briefMessage.contains("Mismatched '}'") })
 
         // 修复尾部错误后（再编辑一次）：收敛门不得误报。
         inc.onEdit(2, 2)
@@ -245,16 +245,16 @@ class LuaDiagnosticsTest {
         val first = inc.check(src)
         assertTrue(
             "双错误首扫可见",
-            first.any { it.detail.briefMessage.contains("未闭合的 'function'") } &&
-                first.any { it.detail.briefMessage.contains("不匹配的 '}'") },
+            first.any { it.detail.briefMessage.contains("Unclosed 'function'") } &&
+                first.any { it.detail.briefMessage.contains("Mismatched '}'") },
         )
         // 编辑中间行（注释），两处错误均不得消失。
         inc.onEdit(1, 1)
         val second = inc.check("local function f()\nprint(1) -- c\n})")
         assertTrue(
             "双错误编辑后均可见",
-            second.any { it.detail.briefMessage.contains("未闭合的 'function'") } &&
-                second.any { it.detail.briefMessage.contains("不匹配的 '}'") },
+            second.any { it.detail.briefMessage.contains("Unclosed 'function'") } &&
+                second.any { it.detail.briefMessage.contains("Mismatched '}'") },
         )
     }
 
@@ -267,10 +267,10 @@ class LuaDiagnosticsTest {
         val a = "print(1)\nlocal x = ("
         val b = "print(2)\nlocal y = )"
         assertEquals("两文本字节长度必须相同", a.length, b.length)
-        assertTrue(inc.check(a).any { it.detail.briefMessage.contains("未闭合的 '('") })
+        assertTrue(inc.check(a).any { it.detail.briefMessage.contains("Unclosed '('") })
         inc.onNewText()
         val second = inc.check(b)
-        assertTrue("同长度切换后诊断不得缺失", second.any { it.detail.briefMessage.contains("不匹配的 ')'") })
+        assertTrue("同长度切换后诊断不得缺失", second.any { it.detail.briefMessage.contains("Mismatched ')'") })
     }
 
     @Test
@@ -289,7 +289,7 @@ class LuaDiagnosticsTest {
         // 默认渲染器仍为中文模板（历史文案契约）。
         assertTrue(
             LuaDiagnostics.checkSyntax("local x = }")
-                .any { it.detail.briefMessage.contains("不匹配的 '}'") },
+                .any { it.detail.briefMessage.contains("Mismatched '}'") },
         )
     }
 }

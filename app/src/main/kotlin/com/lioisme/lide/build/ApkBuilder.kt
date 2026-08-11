@@ -95,9 +95,14 @@ object ApkBuilder {
         val targetSdkVersion: Int? = null,
     )
 
+    /**
+     * 构建异常（T17，2026-08-12）：携带 [code] 供 UI 层映射本地化文案；
+     * 默认 [BuildErrorCode.GENERAL]，历史抛点无感知兼容。
+     */
     class BuildException(
         message: String,
         cause: Throwable? = null,
+        val code: BuildErrorCode = BuildErrorCode.GENERAL,
     ) : Exception(message, cause)
 
     /**
@@ -159,7 +164,7 @@ object ApkBuilder {
         val templateEntries = hostEntries
         val manifestEntry =
             templateEntries.firstOrNull { it.name == "AndroidManifest.xml" }
-                ?: throw BuildException("模板 APK 缺少 AndroidManifest.xml")
+                ?: throw BuildException("模板 APK 缺少 AndroidManifest.xml", code = BuildErrorCode.TEMPLATE_MANIFEST_MISSING)
         val manifestBytes = manifestEntry.data
 
         // 模板原生库 ABI 枚举（lib/<abi>/...）：产物 ABI = 选择 ∩ 模板（保持原始顺序）。
@@ -173,6 +178,7 @@ object ApkBuilder {
         if (input.abiSelection != null && effectiveAbis.isEmpty()) {
             throw BuildException(
                 "宿主 APK 不包含所选 ABI（宿主: ${hostAbis.joinToString()}, 选择: ${input.abiSelection.joinToString()}）",
+                code = BuildErrorCode.HOST_ABI_MISMATCH,
             )
         }
         val effectiveAbiSet = effectiveAbis.toHashSet()
@@ -181,13 +187,13 @@ object ApkBuilder {
             try {
                 AXmlManifest.readUsesPermissions(manifestBytes).toSet()
             } catch (e: Exception) {
-                throw BuildException("解析宿主 manifest 失败: ${e.message}", e)
+                throw BuildException("解析宿主 manifest 失败: ${e.message}", e, code = BuildErrorCode.HOST_MANIFEST_PARSE)
             }
         val selfDeclared =
             try {
                 AXmlManifest.readSelfDeclaredPermissions(manifestBytes)
             } catch (e: Exception) {
-                throw BuildException("解析宿主自声明权限失败: ${e.message}", e)
+                throw BuildException("解析宿主自声明权限失败: ${e.message}", e, code = BuildErrorCode.HOST_PERMISSIONS_PARSE)
             }
         val whitelist =
             dedupe(
@@ -227,13 +233,13 @@ object ApkBuilder {
                     ),
                 )
             } catch (e: Exception) {
-                throw BuildException("manifest 补丁失败: ${e.message}", e)
+                throw BuildException("manifest 补丁失败: ${e.message}", e, code = BuildErrorCode.MANIFEST_PATCH)
             }
 
         onStage(BuildStage.COLLECT_LUA)
         val mainSource =
             input.luaSources[input.mainFile]
-                ?: throw BuildException("工程缺少 ${input.mainFile}")
+                ?: throw BuildException("工程缺少 ${input.mainFile}", code = BuildErrorCode.PROJECT_MAIN_FILE_MISSING)
         onStage(BuildStage.COMPILE_LUA)
 
         // 工程桌面图标（可选）：工程根目录 icon.png（pro 同款约定），
@@ -265,7 +271,7 @@ object ApkBuilder {
                     try {
                         compileLua(String(raw, Charsets.UTF_8), relPath)
                     } catch (e: Exception) {
-                        throw BuildException(e.message ?: "$relPath 编译失败", e)
+                        throw BuildException(e.message ?: "$relPath 编译失败", e, code = BuildErrorCode.LUA_COMPILE)
                     }
                 } else if (isAly) {
                     // .aly 包装策略（pro console.build_aly 同款；2026-08-09 打包双开关对齐）：
@@ -279,7 +285,7 @@ object ApkBuilder {
                         try {
                             compileLua(wrapped, relPath)
                         } catch (e: Exception) {
-                            throw BuildException(e.message ?: "$relPath 编译失败", e)
+                            throw BuildException(e.message ?: "$relPath 编译失败", e, code = BuildErrorCode.LUA_COMPILE)
                         }
                     } else if (input.encryptBytecode) {
                         wrapped.toByteArray(Charsets.UTF_8)

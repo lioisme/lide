@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.Lide" parent="@android:style/Theme.Material.NoActionBar" />
+    <!-- 宿主浅色基线主题（2026-08-12 T-1 整改）：原固定深色 Theme.Material.NoActionBar
+         导致浅色模式冷启动窗口/原生 Activity 骨架恒深色、Android 12+ Splash 跳变。
+         深色版见 values-night/themes.xml；Android 12+ Splash 见 values-v31[-night]。 -->
+    <style name="Theme.Lide" parent="@android:style/Theme.Material.Light.NoActionBar" />
 </resources>

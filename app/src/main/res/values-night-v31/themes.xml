@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Android 12+ Splash Screen（2026-08-12 T-2 整改，深色态）：
+         背景 = 宿主深色 surface（与 Theme.kt BG_DARK 同源），图标 = 宿主自带图标。 -->
+    <style name="Theme.Lide" parent="@android:style/Theme.Material.NoActionBar">
+        <item name="android:windowSplashScreenBackground">@color/lide_surface_background</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/icon</item>
+    </style>
+</resources>

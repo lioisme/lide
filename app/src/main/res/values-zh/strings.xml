@@ -19,8 +19,11 @@
     <string name="tap_to_create">点击 + 创建项目</string>
     <string name="import_alp">导入 .alp</string>
     <string name="import_success">已从 .alp 导入项目</string>
-    <string name="import_failed">导入 .alp 失败</string>
-    <string name="import_projects_success">已导入 %1$d 个工程</string>
+<string name="import_failed">导入 .alp 失败</string>
+    <!-- T15（2026-08-12）：复数资源；中文无复数形态，单条 other 全覆盖 -->
+    <plurals name="import_projects_success">
+        <item quantity="other">已导入 %1$d 个工程</item>
+    </plurals>
     <string name="export_alp">导出为 .alp</string>
     <string name="project_rename">重命名</string>
     <string name="project_rename_title">重命名工程</string>
@@ -75,6 +78,9 @@
     <string name="lexical_diagnostics">语法诊断</string>
     <string name="read_only">只读</string>
     <string name="line_numbers">行号</string>
+    <!-- L1（2026-08-12）：固定行号（sora 原生 setPinLineNumber，水平滚动不跟随） -->
+    <string name="fixed_line_numbers">固定行号</string>
+    <string name="fixed_line_numbers_hint">行号关闭时不可用</string>
     <string name="highlight_current_line">高亮当前行</string>
     <string name="highlight_bracket_pair">高亮括号配对</string>
     <string name="highlight_current_block">高亮当前块</string>
@@ -85,12 +91,19 @@
 <string name="scalable">双指缩放</string>
     <string name="disable_soft_kbd_if_hard">硬键盘优先</string>
     <!-- 编辑器设置 sora 上限扩展（T5，2026-08-10） -->
-    <!-- 2026-08-11：默认字体族 = Squircle CE 组合（TypefaceProvider.DEFAULT = MONOSPACE），
-         设置面板仅保留等宽/无衬线/衬线三项（「系统默认」选项随 DEFAULT 语义收敛删除） -->
+    <!-- 2026-08-11：默认字体族 = Squircle CE 组合（内置 JetBrains Mono）。
+         L2（2026-08-12）：字体面板仅内置 + 导入；系统字体仅终极兜底
+         （font_family_monospace/sans/serif + font_section_system 已随系统族
+         选项移除，历史引用不得回退） -->
     <string name="font_family">字体</string>
-    <string name="font_family_monospace">等宽</string>
-    <string name="font_family_sans">无衬线</string>
-    <string name="font_family_serif">衬线</string>
+    <!-- 编辑器配色方案（T10，2026-08-12 用户拍板反转：方案可选、明暗双模跟随宿主；
+         历史「编辑器主题」字符串已删除，不得回退） -->
+    <string name="editor_color_scheme">配色方案</string>
+    <string name="editor_scheme_classic">LIDE Classic</string>
+    <string name="editor_scheme_solarized">Solarized</string>
+    <string name="editor_scheme_tomorrow">Tomorrow</string>
+    <string name="scheme_preview_light">亮</string>
+    <string name="scheme_preview_dark">暗</string>
     <!-- 内置字体（T11，2026-08-11）：Squircle CE 组合，OFL -->
     <string name="font_jetbrains_mono">JetBrains Mono</string>
     <string name="font_droid_sans_mono">Droid Sans Mono</string>
@@ -103,14 +116,13 @@
     <string name="font_import_done">字体已导入</string>
     <string name="font_import_failed">导入失败</string>
     <string name="font_section_builtin">内置</string>
-    <string name="font_section_system">系统</string>
     <string name="font_section_imported">已导入</string>
-    <!-- 编辑器主题选择已随 2026-08-12 治理红线移除（外观单一跟随宿主，见 EditorPalette） -->
     <string name="sticky_scroll_word_wrap_hint">自动换行开启时不可用</string>
     <string name="restore_defaults">恢复默认</string>
     <string name="restore_defaults_done">已恢复默认设置</string>
     <string name="about">关于</string>
-    <string name="version">LIDE v1.0</string>
+    <!-- T18（2026-08-12）：版本号模板化（%1$s = 应用名，%2$s = BuildConfig.VERSION_NAME） -->
+    <string name="version">%1$s v%2$s</string>
     <string name="system_wallpaper">系统壁纸</string>
     <string name="wallpaper_desc">壁纸动态取色</string>
     <string name="pick_accent">选择强调色</string>
@@ -203,6 +215,15 @@
     <string name="build_stage_compile">编译 Lua</string>
     <string name="build_stage_assemble">打包 APK</string>
     <string name="build_stage_sign">签名 APK</string>
+    <!-- T17（2026-08-12）：打包错误码 → 本地化文案（与 BuildErrorCode 一一对应） -->
+    <string name="build_error_template_manifest_missing">宿主 APK 缺少 AndroidManifest.xml。</string>
+    <string name="build_error_host_abi">宿主 APK 不包含所选 ABI。</string>
+    <string name="build_error_host_manifest_parse">解析宿主 manifest 失败。</string>
+    <string name="build_error_host_permissions_parse">解析宿主权限失败。</string>
+    <string name="build_error_manifest_patch">manifest 补丁失败。</string>
+    <string name="build_error_project_main_missing">工程缺少入口文件。</string>
+    <string name="build_error_lua_compile">Lua 编译失败。</string>
+    <string name="build_error_general">构建失败。</string>
     <string name="run_finished">运行结束</string>
     <string name="run_error_title">运行出错</string>
     <string name="run_jump_to_line">跳到出错行</string>

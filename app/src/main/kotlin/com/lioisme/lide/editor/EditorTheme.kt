@@ -14,13 +14,13 @@ import io.github.rosemoe.sora.widget.schemes.EditorColorScheme
  * 由 [rememberHostEditorColors] 从宿主 Material3 色板生成；经
  * [LideHostColorScheme.updateHost] 应用到编辑器色槽——编辑器 chrome 部件
  * （当前行/选区/光标/浮层/滚动条/minimap）与宿主 UI 同源。
- * 2026-08-12 治理红线：编辑器外观单一跟随宿主（明暗输入源 = 宿主），
- * 编辑器文本区独立着色 = 双模配色库（[EditorPalette]：暗 → 暗侧主题，
- * 亮 → 亮侧主题）——背景/前景槽一律由当前 TextMate 主题提供，本宿主色板
- * **不覆盖** WHOLE_BACKGROUND / LINE_NUMBER_BACKGROUND / TEXT_NORMAL
- * （T19 FOLLOW 时代文本区背景 = 宿主 surfaceContainerHigh 的语义已随治理
- * 删除）；行号文字属 chrome 部件色（sora TM 主题路径不读行号键），仍由
- * 宿主提供。
+ * 2026-08-12 方案可选反转：编辑器文本区明暗输入源 = 宿主（`LocalIsDarkTheme`），
+ * 配色方案可在编辑器设置页选择；文本区独立着色 = 双模配色库
+ * （[EditorPalette]：按方案索引 + 明暗取对应侧主题）——背景/前景槽一律由
+ * 当前 TextMate 主题提供，本宿主色板**不覆盖** WHOLE_BACKGROUND /
+ * LINE_NUMBER_BACKGROUND / TEXT_NORMAL（T19 FOLLOW 时代文本区背景 =
+ * 宿主 surfaceContainerHigh 的语义已随治理删除）；行号文字属 chrome 部件色
+ * （sora TM 主题路径不读行号键），仍由宿主提供。
  */
 data class HostEditorColors(
     val foreground: Int,
@@ -91,13 +91,13 @@ fun rememberHostEditorColors(): HostEditorColors {
 }
 
 /**
- * 编辑器配色方案（编辑器外观单一跟随宿主模式使用）。
+ * 编辑器配色方案（2026-08-12 方案可选反转后使用）。
  *
  * chrome 槽（当前行/选区/光标/行号文字/补全窗/诊断提示/滚动条/minimap/分隔线）
  * 取宿主派生色；文本区背景/前景槽与语法高亮 token 一律来自当前
  * TextMate 主题（[EditorPalette] 双模配色库：构造时
- * [ThemeRegistry.getCurrentThemeModel] 的 token 色与背景，明暗自跟随宿主
- * 切换时由调用方先 `setTheme(EditorPalette.themeNameFor(明暗))` 再更新 scheme）。
+ * [ThemeRegistry.getCurrentThemeModel] 的 token 色与背景，明暗/方案随宿主
+ * 切换时由调用方先 `setTheme(EditorPalette.themeNameFor(方案, 明暗))` 再更新 scheme）。
  *
  * 实现 [ThemeRegistry.ThemeChangeListener]（TextMateColorScheme 内建）：
  * 主题广播时自动重算 applyDefault；宿主色变化经 [updateHost] 主动刷新。

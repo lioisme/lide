@@ -2,6 +2,7 @@ package com.lioisme.lide
 
 import com.androlua.LuaApplication
 import com.lioisme.lide.build.SigningManager
+import com.lioisme.lide.editor.EditorPalette
 import com.lioisme.lide.editor.TextMateRuntime
 import com.lioisme.lide.i18n.LocaleManager
 import com.lioisme.lide.install.InstallerServices
@@ -34,7 +35,18 @@ class LideApp : LuaApplication() {
         bootstrapAssets()
         // TextMate 初始化有进程级一次性契约且禁止在 UI 线程调用（AGENTS.md 编辑器约定），
         // 经 TextMateRuntime 单一入口后台预热（C-4，幂等；失败进入 Failed 态供编辑器展示错误）。
-        TextMateRuntime.preload(applicationContext)
+        // 初始主题名按「当前方案 + 当前系统明暗」传入（R4：运行时不读宿主状态），
+        // 编辑器打开后由 LuaEditor 按实际配置接管。
+        val isSystemDark =
+            resources.configuration.uiMode and
+                android.content.res.Configuration.UI_MODE_NIGHT_MASK ==
+                android.content.res.Configuration.UI_MODE_NIGHT_YES
+        val initialThemeName =
+            EditorPalette.themeNameFor(
+                SettingsManager.editorConfig.value.themeScheme,
+                isSystemDark,
+            )
+        TextMateRuntime.preload(applicationContext, initialThemeName)
     }
 
     /** 资产提取（后台协程）：布局助手模板（示例工程由 :app:generateExamples 生成）。 */

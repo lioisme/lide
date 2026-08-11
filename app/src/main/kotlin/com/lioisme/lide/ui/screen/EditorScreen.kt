@@ -104,13 +104,14 @@ fun EditorScreen(
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    // 编辑器文本区明暗唯一输入源 = 宿主外观（2026-08-12 红线：编辑器外观必须跟随
-    // 整体外观，禁止用户手选；工程文件（init.lua theme 等）不允许影响宿主 UI）。
+    // 编辑器文本区明暗唯一输入源 = 宿主外观（2026-08-12 方案可选反转：配色方案
+    // 可在编辑器设置页选择，明暗双模随宿主自动切换；工程文件（init.lua theme 等）
+    // 不允许影响宿主 UI）。
     val isDarkTheme = LocalIsDarkTheme.current
     val appEditorConfig by SettingsManager.editorConfig.collectAsState()
     // T19（2026-08-12）：编辑器周边 UI（AppBar/标签行/分隔线/空态）统一宿主
     // Material3 色板（与主界面一致），色带机制退役；编辑器文本区明暗仅由宿主明暗
-    // 驱动（亮 = LIDE Classic 亮侧 surfaceContainerHigh 底 / 暗 = 暗侧）。
+    // 驱动（亮 = 当前方案亮侧 / 暗 = 当前方案暗侧）。
 
     // 会话经 ViewModel 持有（Q8）：旋转/配置变更不销毁，打开标签/撤销历史/选中文件
     // 完整保留；返回栈条目出栈时 onCleared 委托会话兜底保存（脏标签落盘 + 缓存清空）。

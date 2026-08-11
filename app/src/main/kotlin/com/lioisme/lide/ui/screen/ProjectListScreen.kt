@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -114,10 +115,14 @@ fun ProjectListScreen(
         }
     }
 
-    /** 队列结束汇总：Toast 结果 + 刷新列表 + 清计数。 */
+    /** 队列结束汇总：Toast 结果 + 刷新列表 + 清计数（T15：复数资源 one/other）。 */
     fun finishImportBatch() {
         if (importedProjectCount > 0) {
-            Toast.makeText(context, context.getString(R.string.import_projects_success, importedProjectCount), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                context,
+                context.resources.getQuantityString(R.plurals.import_projects_success, importedProjectCount, importedProjectCount),
+                Toast.LENGTH_SHORT,
+            ).show()
             scope.launch { refresh() }
         } else {
             errorMsg = strImportFailed

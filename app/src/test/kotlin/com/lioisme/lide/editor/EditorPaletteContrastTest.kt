@@ -76,6 +76,30 @@ class EditorPaletteContrastTest {
     }
 
     @Test
+    fun `方案背景预览色条与主题 JSON 同源`() {
+        assertEquals("pairs 与 schemeBackgrounds 必须同长", EditorPalette.pairs.size, EditorPalette.schemeBackgrounds.size)
+        EditorPalette.pairs.forEachIndexed { index, (lightName, darkName) ->
+            val (lightBg, darkBg) = EditorPalette.schemeBackgrounds[index]
+            assertEquals(
+                "方案[$index] 亮侧背景必须与 $lightName 的 JSON 背景一致",
+                parseArgb(loadTheme(lightName).background ?: error("$lightName 缺少背景色")),
+                lightBg,
+            )
+            assertEquals(
+                "方案[$index] 暗侧背景必须与 $darkName 的 JSON 背景一致",
+                parseArgb(loadTheme(darkName).background ?: error("$darkName 缺少背景色")),
+                darkBg,
+            )
+        }
+    }
+
+    /** #RRGGBB → ARGB Int（与 schemeBackgrounds 常量同形式）。 */
+    private fun parseArgb(hex: String): Int {
+        val clean = hex.removePrefix("#")
+        return 0xFF000000.toInt() or clean.substring(0, 6).toInt(16)
+    }
+
+    @Test
     fun `全部文本承载色对比度大于等于 4 5 比 1`() {
         val failures = mutableListOf<String>()
         for (name in EditorPalette.allThemes) {

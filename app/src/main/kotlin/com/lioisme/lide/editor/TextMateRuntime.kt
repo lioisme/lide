@@ -44,15 +44,23 @@ object TextMateRuntime {
     @Volatile
     private var initStarted = false
 
-    /** 跟随宿主模式的方案缓存（按明暗各一份，2026-08-11 T3）。 */
-    private val hostSchemes = HashMap<Boolean, LideHostColorScheme>()
+    /** 按「方案 + 明暗」缓存的方案对象（2026-08-12 方案可选反转后按主题名分槽；
+     * 同主题名不重复构造，明暗/方案切换零重建）。 */
+    private val hostSchemes = HashMap<String, LideHostColorScheme>()
 
     /**
      * 幂等预热（宿主进程启动调用）：仅触发后台初始化，不阻塞调用方。
      * 编辑器侧无需再起线程（AGENTS.md：不得在 UI 线程初始化）。
      * 初始化失败（[RuntimeState.Failed]）可经 [retry] 重新触发。
+     *
+     * [initialThemeName] 由宿主按「当前方案 + 当前明暗」传入（保 R4：
+     * 运行时不读宿主状态；默认 = LIDE Classic 亮侧），仅决定初始装配主题，
+     * 编辑器打开后由 LuaEditor 的 LaunchedEffect 按实际配置接管。
      */
-    fun preload(context: Context) {
+    fun preload(
+        context: Context,
+        initialThemeName: String = EditorPalette.themeNameFor(EditorPalette.SCHEME_CLASSIC, isDark = false),
+    ) {
         if (initStarted) return
         synchronized(this) {
             if (initStarted) return
@@ -60,9 +68,9 @@ object TextMateRuntime {
         }
         Thread {
             try {
-                runInit(context.applicationContext)
+                runInit(context.applicationContext, initialThemeName)
                 _state.value = RuntimeState.Ready
-                Log.d(TAG, "textmate runtime ready")
+                Log.d(TAG, "textmate runtime ready (theme=$initialThemeName)")
             } catch (t: Throwable) {
                 _state.value = RuntimeState.Failed
                 Log.e(TAG, "textmate runtime failed", t)
@@ -83,28 +91,35 @@ object TextMateRuntime {
     }
 
     /**
-     * 编辑器配色方案（单一跟随宿主模式，2026-08-12 治理后唯一入口）。
+     * 编辑器配色方案（2026-08-12 方案可选反转后唯一入口）。
      *
      * [LideHostColorScheme]：文本区背景/前景槽与 token 色取当前 TextMate 主题
-     * （调用方须先按明暗 `setTheme(EditorPalette.themeNameFor(...))` 再取本方案），
-     * chrome 部件色（行号/当前行/选区/浮层/滚动条/minimap）取宿主派生色；
-     * 宿主色板变化经 [updateHostColors] 刷新，零重建。
+     * （调用方须先按「方案 + 明暗」`setTheme(EditorPalette.themeNameFor(...))`
+     * 再取本方案），chrome 部件色（行号/当前行/选区/浮层/滚动条/minimap）
+     * 取宿主派生色；宿主色板变化经 [updateHostColors] 刷新，零重建。
      */
     fun hostColorScheme(
+        scheme: Int,
         isDark: Boolean,
         host: HostEditorColors,
-    ): io.github.rosemoe.sora.widget.schemes.EditorColorScheme =
-        hostSchemes.getOrPut(isDark) { LideHostColorScheme(ThemeRegistry.getInstance(), host) }
+    ): io.github.rosemoe.sora.widget.schemes.EditorColorScheme {
+        val themeName = EditorPalette.themeNameFor(scheme, isDark)
+        return hostSchemes.getOrPut(themeName) { LideHostColorScheme(ThemeRegistry.getInstance(), host) }
+    }
 
-    /** 宿主色板刷新（编辑器外观单一跟随宿主路径；值未变自动跳过）。 */
+    /** 宿主色板刷新（值未变自动跳过）。 */
     fun updateHostColors(
+        scheme: Int,
         isDark: Boolean,
         host: HostEditorColors,
     ) {
-        hostSchemes[isDark]?.updateHost(host)
+        hostSchemes[EditorPalette.themeNameFor(scheme, isDark)]?.updateHost(host)
     }
 
-    private fun runInit(context: Context) {
+    private fun runInit(
+        context: Context,
+        initialThemeName: String,
+    ) {
         val initStart = SystemClock.elapsedRealtime()
         AsyncIncrementalAnalyzeManager.setUseShallowCopyByDefault(true)
 
@@ -125,7 +140,7 @@ object TextMateRuntime {
             } catch (_: Exception) {
             }
         }
-        themeRegistry.setTheme(EditorPalette.themeNameFor(isDark = false))
+        themeRegistry.setTheme(initialThemeName)
 
         // 多语言化（任务单 EDITOR_ALL_LANGUAGES_SUPPORT_WORK_ORDER P1/P2）：
         // 语言目录单一事实源 = assets/textmate/languages.json（架构审计 P0-2 根治，2026-08-06）：

@@ -35,6 +35,7 @@ import com.lioisme.lide.R
 import com.lioisme.lide.build.AfterBuild
 import com.lioisme.lide.build.ApkBuilder
 import com.lioisme.lide.build.AXmlManifest
+import com.lioisme.lide.build.BuildErrorCode
 import com.lioisme.lide.build.DependencyAnalysis
 import com.lioisme.lide.build.NativeDependencyAnalyzer
 import com.lioisme.lide.build.SigningManager
@@ -58,9 +59,40 @@ private sealed interface BuildResult {
     ) : BuildResult
 
     data class Failure(
+        /** 错误码（T17）：UI 经 [buildErrorDisplay] 映射本地化文案。 */
+        val code: BuildErrorCode,
         val message: String,
     ) : BuildResult
 }
+
+/**
+ * 失败文案（T17 错误消息资源化）：按错误码映射 `build_error_*` 本地化资源；
+ * [BuildErrorCode.GENERAL]（未分类异常）与 [BuildErrorCode.LUA_COMPILE]
+ * （编译器行号细节有诊断价值）保留原始消息。
+ */
+private fun buildErrorDisplay(
+    context: android.content.Context,
+    code: BuildErrorCode,
+    message: String,
+): String =
+    when (code) {
+        BuildErrorCode.GENERAL,
+        BuildErrorCode.LUA_COMPILE,
+        -> message
+        else -> context.getString(buildErrorRes(code))
+    }
+
+private fun buildErrorRes(code: BuildErrorCode): Int =
+    when (code) {
+        BuildErrorCode.TEMPLATE_MANIFEST_MISSING -> R.string.build_error_template_manifest_missing
+        BuildErrorCode.HOST_ABI_MISMATCH -> R.string.build_error_host_abi
+        BuildErrorCode.HOST_MANIFEST_PARSE -> R.string.build_error_host_manifest_parse
+        BuildErrorCode.HOST_PERMISSIONS_PARSE -> R.string.build_error_host_permissions_parse
+        BuildErrorCode.MANIFEST_PATCH -> R.string.build_error_manifest_patch
+        BuildErrorCode.PROJECT_MAIN_FILE_MISSING -> R.string.build_error_project_main_missing
+        BuildErrorCode.LUA_COMPILE -> R.string.build_error_lua_compile
+        BuildErrorCode.GENERAL -> R.string.build_error_general
+    }
 
 /**
  * 构建 APK 对话框（P5，2026-08-11：去配置对话框，打开即构建）：
@@ -143,7 +175,7 @@ fun BuildApkDialog(
                         is BuildResult.Failure -> {
                             Toast.makeText(
                                 context,
-                                context.getString(R.string.build_fail, res.message),
+                                context.getString(R.string.build_fail, buildErrorDisplay(context, res.code, res.message)),
                                 Toast.LENGTH_LONG,
                             ).show()
                         }
@@ -192,7 +224,7 @@ fun BuildApkDialog(
                         )
                         Spacer(Modifier.height(4.dp))
                         Text(
-                            r.message,
+                            buildErrorDisplay(context, r.code, r.message),
                             color = MaterialTheme.colorScheme.error,
                             style = MaterialTheme.typography.bodyMedium,
                         )
@@ -287,7 +319,7 @@ private fun doBuild(
         // UI1（2026-08-10）：最低系统版本 < 24 时旧设备仅能校验 v1，未勾 v1 阻止构建。
         val effectiveMinSdk = projectMinSdk ?: hostMinSdk
         if (effectiveMinSdk in 1..23 && !opts.signingScheme.v1) {
-            return BuildResult.Failure(context.getString(R.string.build_sdk_need_v1))
+            return BuildResult.Failure(BuildErrorCode.GENERAL, context.getString(R.string.build_sdk_need_v1))
         }
 
         val input =
@@ -338,7 +370,9 @@ private fun doBuild(
         outFile.writeBytes(apkBytes)
         return BuildResult.Success(outFile)
     } catch (e: Exception) {
-        return BuildResult.Failure(e.message ?: e.javaClass.simpleName)
+        // T17：BuildException 携带错误码（UI 映射本地化文案），未分类异常回落 GENERAL。
+        val code = (e as? ApkBuilder.BuildException)?.code ?: BuildErrorCode.GENERAL
+        return BuildResult.Failure(code, e.message ?: e.javaClass.simpleName)
     }
 }
 
@@ -498,6 +532,10 @@ private fun shareApk(
             }
         context.startActivity(Intent.createChooser(intent, null))
     } catch (e: Exception) {
-        Toast.makeText(context, e.message ?: context.getString(R.string.build_share_failed), Toast.LENGTH_LONG).show()
+        // T17：分享失败消息资源兜底（异常细节仅日志，用户可见文案本地化）。
+        android.util.Log.w(TAG_SHARE, "share apk failed", e)
+        Toast.makeText(context, context.getString(R.string.build_share_failed), Toast.LENGTH_LONG).show()
     }
 }
+
+private const val TAG_SHARE = "BuildApkDialog"

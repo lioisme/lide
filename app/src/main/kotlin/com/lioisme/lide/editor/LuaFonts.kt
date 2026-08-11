@@ -9,11 +9,16 @@ import java.util.concurrent.ConcurrentHashMap
 
 /**
  * T9/T11（2026-08-11）字体解析：内置 6 款等宽 ttf（Squircle CE 组合，OFL）+
- * 系统 3 族 + 外部导入（files/fonts 目录 ttf）。对齐 Squircle `TypefaceProvider`：
+ * 外部导入（files/fonts 目录 ttf）。对齐 Squircle `TypefaceProvider`：
  * - 内置字体经 assets 加载（assets/fonts/<name>.ttf，白名单见 AGENTS.md R5 例外）；
  * - 外部字体 id = [EditorConfig.FONT_FAMILY_EXTERNAL_BASE] + files/fonts 扫描序
  *   （按文件名排序）；导入/删除后经 [invalidate] 清缓存重扫；
- * - 加载失败 / 未知 id 回落 [Typeface.MONOSPACE]（`TypefaceProvider.DEFAULT` 同款语义）；
+ * - L2（2026-08-12 收敛）：系统字体仅作**终极兜底**、不再作为可选项——
+ *   加载失败 / 未知 id 走两级兜底链 [fallback]（`Typeface.MONOSPACE` →
+ *   `Typeface.DEFAULT`，`TypefaceProvider.DEFAULT` 同款语义加固）；
+ *   系统族常量 id（1/2/3）保留仅为兜底与历史持久化兼容（老用户遗留值仍可渲染，
+ *   设置面板已不再展示）；
+ * - 兜底为原生实现方式（`Typeface` 静态常量直取），无自写字体回退逻辑；
  * - Typeface 实例进程级缓存（按 id），供 LuaEditor 守卫式 diff 稳定比较
  *   （createFromAsset 每次返回新对象，不缓存会让 diff 恒不相等、每次重组重设字体）。
  */
@@ -52,9 +57,10 @@ object LuaFonts {
     private var externalFiles: List<File>? = null
 
     /**
-     * 字体 id → [Typeface]：内置 6 款经 assets 加载（进程级缓存），系统 3 族直取，
+     * 字体 id → [Typeface]：内置 6 款经 assets 加载（进程级缓存），
      * 外部导入（id ≥ [EditorConfig.FONT_FAMILY_EXTERNAL_BASE]）经 files/fonts 扫描；
-     * 一切失败回落 [Typeface.MONOSPACE]。
+     * 系统族常量（1/2/3）直取系统字体（终极兜底语义，不再作为可选项）；
+     * 其余一切失败走两级兜底链 [fallback]（MONOSPACE → DEFAULT），绝不返回 null。
      */
     fun resolve(context: Context, fontFamily: Int): Typeface {
         cache[fontFamily]?.let { return it }
@@ -68,12 +74,21 @@ object LuaFonts {
                         resolveExternal(context, fontFamily)
                     } else {
                         resolveBuiltin(context, fontFamily)
-                    } ?: Typeface.MONOSPACE
+                    } ?: fallback()
                 }
             }
         cache[fontFamily] = resolved
         return resolved
     }
+
+    /** 终极兜底链（L2）：等宽系统字体 → 系统默认字体；恒非空，保证删光内置
+     *  / 导入字体后编辑器不崩溃（原生 Typeface 静态常量，零自写回退逻辑）。 */
+    private fun fallback(): Typeface =
+        try {
+            Typeface.MONOSPACE
+        } catch (_: Throwable) {
+            Typeface.DEFAULT
+        }
 
     /** 外部字体 id → 显示名（文件名去扩展名；越界返回 null）。 */
     fun externalLabel(context: Context, id: Int): String? {

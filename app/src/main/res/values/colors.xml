@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 宿主 surface 静态基线背景（splash 用，运行时首帧与 HCT 生成的
+         background token 存在 <1% 色差，可接受；与 ui/theme/Theme.kt 同源）。 -->
+    <color name="lide_surface_background">#FDFCFF</color>
+</resources>

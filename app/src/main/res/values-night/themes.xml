@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 宿主深色基线主题（2026-08-12 T-1 整改）：与 values/themes.xml 同构，
+         深色模式下原生窗口骨架/启动画面跟随深色。 -->
+    <style name="Theme.Lide" parent="@android:style/Theme.Material.NoActionBar" />
+</resources>
