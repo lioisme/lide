@@ -5,8 +5,12 @@ import com.lioisme.lide.R
 /**
  * 工程主题目录（2026-08-11，P2）：pro `projectinfo/main.lua:63-70` 同款——
  * 运行时反射 `android.R.style` 全部 `Theme_*` 字段作为下拉候选；常见主题映射
- * 友好别名（[COMMON_ALIASES]，中英文案资源化）；[resolveDark] 为编辑器深色跟随
- * （WP-014）提供纯函数推断（legacy `dark`/`light` + `Theme_*` 名启发式）。
+ * 友好别名（[COMMON_ALIASES]，中英文案资源化）。
+ *
+ * 2026-08-12（DEAD_CODE_CLEANUP T5）：`resolveDark` / `resolveDarkFromName` /
+ * `ThemeOption.dark` / `COMMON_ALIASES` 深色判定轴经审计为 WP-014（工程 theme
+ * 驱动编辑器深色）反转删除后的测试残留——生产代码零消费（ProjectInfoScreen 仅
+ * 读 `value`/`labelRes`），随死代码清理一并删除。
  *
  * 与打包产物运行时语义对齐：产物内 `LuaActivity.java:1508-1513` 按
  * `android.R.style.class.getField(theme)` 反射 setTheme，只认 `Theme_*` 字段名。
@@ -19,31 +23,30 @@ object ThemeCatalog {
     data class ThemeOption(
         val value: String,
         val labelRes: Int? = null,
-        val dark: Boolean? = null,
     )
 
     /**
-     * 常见主题别名映射：值 →（文案资源, 深色判定）。仅覆盖各系最常见入口
+     * 常见主题别名文案映射（值 → 文案资源）。仅覆盖各系最常见入口
      * （DeviceDefault / Material / Holo / 经典），其余 `Theme_*` 原样展示。
      */
-    val COMMON_ALIASES: Map<String, Pair<Int, Boolean?>> =
+    val COMMON_ALIASES: Map<String, Int> =
         mapOf(
-            "Theme" to (R.string.theme_alias_classic to false),
-            "Theme_Black" to (R.string.theme_alias_black to true),
-            "Theme_Light" to (R.string.theme_alias_classic_light to false),
-            "Theme_DeviceDefault" to (R.string.theme_alias_device_dark to true),
-            "Theme_DeviceDefault_Light" to (R.string.theme_alias_device_light to false),
-            "Theme_DeviceDefault_DayNight" to (R.string.theme_alias_device_daynight to null),
-            "Theme_DeviceDefault_NoActionBar" to (R.string.theme_alias_device_dark_no_title to true),
-            "Theme_DeviceDefault_Light_NoActionBar" to (R.string.theme_alias_device_light_no_title to false),
-            "Theme_Material" to (R.string.theme_alias_material_dark to true),
-            "Theme_Material_Light" to (R.string.theme_alias_material_light to false),
-            "Theme_Material_NoActionBar" to (R.string.theme_alias_material_dark_no_title to true),
-            "Theme_Material_Light_NoActionBar" to (R.string.theme_alias_material_light_no_title to false),
-            "Theme_Holo" to (R.string.theme_alias_holo_dark to true),
-            "Theme_Holo_Light" to (R.string.theme_alias_holo_light to false),
-            "Theme_Holo_NoActionBar" to (R.string.theme_alias_holo_dark_no_title to true),
-            "Theme_Holo_Light_NoActionBar" to (R.string.theme_alias_holo_light_no_title to false),
+            "Theme" to R.string.theme_alias_classic,
+            "Theme_Black" to R.string.theme_alias_black,
+            "Theme_Light" to R.string.theme_alias_classic_light,
+            "Theme_DeviceDefault" to R.string.theme_alias_device_dark,
+            "Theme_DeviceDefault_Light" to R.string.theme_alias_device_light,
+            "Theme_DeviceDefault_DayNight" to R.string.theme_alias_device_daynight,
+            "Theme_DeviceDefault_NoActionBar" to R.string.theme_alias_device_dark_no_title,
+            "Theme_DeviceDefault_Light_NoActionBar" to R.string.theme_alias_device_light_no_title,
+            "Theme_Material" to R.string.theme_alias_material_dark,
+            "Theme_Material_Light" to R.string.theme_alias_material_light,
+            "Theme_Material_NoActionBar" to R.string.theme_alias_material_dark_no_title,
+            "Theme_Material_Light_NoActionBar" to R.string.theme_alias_material_light_no_title,
+            "Theme_Holo" to R.string.theme_alias_holo_dark,
+            "Theme_Holo_Light" to R.string.theme_alias_holo_light,
+            "Theme_Holo_NoActionBar" to R.string.theme_alias_holo_dark_no_title,
+            "Theme_Holo_Light_NoActionBar" to R.string.theme_alias_holo_light_no_title,
         )
 
     /** 反射失败/空白时降级的精选候选（与 [COMMON_ALIASES] 交集保证有友好名）。 */
@@ -86,36 +89,9 @@ object ThemeCatalog {
     /** 反射全量 → 下拉选项；反射为空时回落精选表。 */
     fun options(names: List<String> = reflectedThemeNames): List<ThemeOption> =
         (names.ifEmpty { FALLBACK_NAMES }).map { name ->
-            val alias = COMMON_ALIASES[name]
             ThemeOption(
                 value = name,
-                labelRes = alias?.first,
-                dark = alias?.second,
+                labelRes = COMMON_ALIASES[name],
             )
         }
-
-    /**
-     * 工程 theme 字段 → 编辑器深色覆盖（WP-014 纯函数，JVM 可测）：
-     * - legacy `dark` / `light` 直判（2026-08-10 旧值兼容）；
-     * - 先查常见别名表（下拉选择的 `Theme_*` 深色判定与其同源），未命中再走
-     *   `Theme_*` 名启发式：DayNight→跟随宿主(null)、含 `Light`→浅色、
-     *   `Black/Dark/Night`→深色、其余 null（跟随宿主）；
-     * - 空/未知 → null（不干预）。
-     */
-    fun resolveDark(theme: String?): Boolean? {
-        if (theme.isNullOrBlank()) return null
-        return when (theme) {
-            "dark" -> true
-            "light" -> false
-            else -> COMMON_ALIASES[theme]?.second ?: resolveDarkFromName(theme)
-        }
-    }
-
-    private fun resolveDarkFromName(name: String): Boolean? {
-        if (!name.startsWith(THEME_PREFIX)) return null
-        if (name.contains("DayNight")) return null
-        if (name.contains("Light")) return false
-        if (name.contains("Black") || name.contains("Dark") || name.contains("Night")) return true
-        return null
-    }
 }

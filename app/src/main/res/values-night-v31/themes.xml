@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Android 12+ Splash Screen（2026-08-12 T-2 整改，深色态）：
-         背景 = 宿主深色 surface（与 Theme.kt BG_DARK 同源），图标 = 宿主自带图标。 -->
+         背景 = 宿主深色 surface（values-night/colors.xml 的 lide_surface_background，
+         原注释误引已删除的 BG_DARK 常量，2026-08-12 T5 修正），
+         图标 = 自适应图标 @drawable/ic_splash_icon（安全区内完整显示）。 -->
     <style name="Theme.Lide" parent="@android:style/Theme.Material.NoActionBar">
         <item name="android:windowSplashScreenBackground">@color/lide_surface_background</item>
-        <item name="android:windowSplashScreenAnimatedIcon">@drawable/icon</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_splash_icon</item>
     </style>
 </resources>

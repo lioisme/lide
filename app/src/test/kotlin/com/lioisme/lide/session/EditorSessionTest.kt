@@ -165,30 +165,6 @@ class EditorSessionTest {
         }
 
     @Test
-    fun `reload 先落盘脏内容再重读磁盘`() =
-        runTest(dispatcher.scheduler) {
-            // T3 回归（2026-08-10）：重新加载必须 (1) 脏内容先落盘防数据丢失，
-            // (2) 丢缓存重载（undo 栈随 Content 释放，撤销历史重置）。
-            writeFiles(1)
-            session.initialize()
-            session.insertText(0, 0, "-- in-memory\n")
-
-            // 磁盘在编辑后发生变化（模拟外部修改）：脏内容先落盘，重载读回落盘结果。
-            session.reload("main.lua")
-            advanceUntilIdle()
-            assertEquals(
-                "-- in-memory\n-- main.lua",
-                session.selection.value.content?.snapshot(),
-            )
-
-            // 非脏标签重载：直接丢缓存读磁盘（外部修改可见）。
-            File(root, "main.lua").writeText("-- changed on disk")
-            session.reload("main.lua")
-            advanceUntilIdle()
-            assertEquals("-- changed on disk", session.selection.value.content?.snapshot())
-        }
-
-    @Test
     fun `onUndoRedoChanged 值未变化时抑制发射`() =
         runTest(dispatcher.scheduler) {
             // T2 回归（2026-08-10）：undo/redo 能力仅在值实际变化时发射

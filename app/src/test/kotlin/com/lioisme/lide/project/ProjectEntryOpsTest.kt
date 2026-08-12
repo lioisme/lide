@@ -3,15 +3,16 @@ package com.lioisme.lide.project
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import java.io.File
 
 /**
- * WP-005 文件树操作纯逻辑测试：名称校验 / 去重 / 锚点保护 / 越界防护 /
- * 新建 / 重命名 / 删除（临时目录，无 Android 依赖）。
+ * 工程文件系统防护逻辑测试（DEAD_CODE_CLEANUP T3 收缩，2026-08-12）：
+ * 名称校验 / 去重 / 越界防护（临时目录，无 Android 依赖）。
+ * createFile / createDirectory / renameEntry / deleteEntry 已随文件树占位
+ * 代码删除（零生产调用），对应用例一并移除；重建见 backlog D8。
  */
 class ProjectEntryOpsTest {
     private lateinit var root: File
@@ -69,41 +70,7 @@ class ProjectEntryOpsTest {
         assertEquals("a-2", ProjectEntryOps.dedupeEntryName(root, "a"))
     }
 
-    // ---- 新建 ----
-
-    @Test
-    fun `create file and directory`() {
-        assertTrue(ProjectEntryOps.createFile(root, root.absolutePath, "new.lua"))
-        assertTrue(File(root, "new.lua").isFile)
-        assertTrue(ProjectEntryOps.createDirectory(root, root.absolutePath, "assets"))
-        assertTrue(File(root, "assets").isDirectory)
-    }
-
-    @Test
-    fun `create refuses duplicate name`() {
-        assertTrue(ProjectEntryOps.createFile(root, root.absolutePath, "main.lua"))
-        // 同名已存在 → 去重为 -1（不覆盖原文件）
-        val created = File(root, "main.lua-1")
-        assertTrue(created.isFile)
-        assertTrue(File(root, "main.lua").readText().contains("-- main"))
-    }
-
-    @Test
-    fun `create rejects invalid name`() {
-        assertFalse(ProjectEntryOps.createFile(root, root.absolutePath, "bad/name"))
-        assertFalse(ProjectEntryOps.createDirectory(root, root.absolutePath, ".."))
-        assertFalse(File(root, "bad").exists())
-    }
-
-    @Test
-    fun `create rejects path outside root`() {
-        val outside = File.createTempFile("outside", "").apply { delete() }.also { it.mkdirs() }
-        try {
-            assertFalse(ProjectEntryOps.createFile(root, outside.absolutePath, "x.lua"))
-        } finally {
-            outside.deleteRecursively()
-        }
-    }
+    // ---- 越界防护 ----
 
     @Test
     fun `isInsideRoot rejects dotdot traversal`() {
@@ -124,84 +91,6 @@ class ProjectEntryOpsTest {
             assertFalse(ProjectEntryOps.isInsideRoot(root, other.absolutePath))
         } finally {
             other.deleteRecursively()
-        }
-    }
-
-    // ---- 重命名 ----
-
-    @Test
-    fun `rename file updates path`() {
-        File(root, "b.lua").writeText("x")
-        val finalName = ProjectEntryOps.renameEntry(root, File(root, "b.lua").absolutePath, "c.lua")
-        assertEquals("c.lua", finalName)
-        assertFalse(File(root, "b.lua").exists())
-        assertTrue(File(root, "c.lua").isFile)
-    }
-
-    @Test
-    fun `rename to existing name dedupes`() {
-        File(root, "b.lua").writeText("x")
-        File(root, "c.lua").writeText("y")
-        val finalName = ProjectEntryOps.renameEntry(root, File(root, "b.lua").absolutePath, "c.lua")
-        assertEquals("c.lua-1", finalName)
-        assertTrue(File(root, "c.lua").readText() == "y")
-        assertTrue(File(root, "c.lua-1").readText() == "x")
-    }
-
-    @Test
-    fun `rename rejects anchor`() {
-        assertNull(ProjectEntryOps.renameEntry(root, File(root, "main.lua").absolutePath, "m2.lua"))
-        assertTrue(File(root, "main.lua").exists())
-    }
-
-    @Test
-    fun `rename rejects root dir itself`() {
-        assertNull(ProjectEntryOps.renameEntry(root, root.absolutePath, "other"))
-        assertTrue(root.isDirectory)
-    }
-
-    // ---- 删除 ----
-
-    @Test
-    fun `delete file and empty dir`() {
-        File(root, "d.lua").writeText("x")
-        assertTrue(ProjectEntryOps.deleteEntry(root, File(root, "d.lua").absolutePath))
-        assertFalse(File(root, "d.lua").exists())
-        assertTrue(ProjectEntryOps.deleteEntry(root, File(root, "sub").absolutePath))
-        assertFalse(File(root, "sub").exists())
-    }
-
-    @Test
-    fun `delete refuses anchor file`() {
-        assertFalse(ProjectEntryOps.deleteEntry(root, File(root, "main.lua").absolutePath))
-        assertTrue(File(root, "main.lua").exists())
-    }
-
-    @Test
-    fun `delete refuses dir containing anchors`() {
-        val nested = File(root, "nested").apply { mkdirs() }
-        File(nested, "main.lua").writeText("-- m")
-        assertFalse(ProjectEntryOps.deleteEntry(root, nested.absolutePath))
-        assertTrue(nested.exists())
-        assertTrue(File(nested, "main.lua").exists())
-    }
-
-    @Test
-    fun `delete dir without anchors succeeds`() {
-        val nested = File(root, "nested").apply { mkdirs() }
-        File(nested, "a.lua").writeText("-- a")
-        assertTrue(ProjectEntryOps.deleteEntry(root, nested.absolutePath))
-        assertFalse(nested.exists())
-    }
-
-    @Test
-    fun `delete rejects outside root`() {
-        val outside = File.createTempFile("outside2", "").apply { delete() }.also { it.mkdirs() }
-        try {
-            assertFalse(ProjectEntryOps.deleteEntry(root, outside.absolutePath))
-            assertTrue(outside.exists())
-        } finally {
-            outside.deleteRecursively()
         }
     }
 }

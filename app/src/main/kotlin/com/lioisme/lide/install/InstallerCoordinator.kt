@@ -11,7 +11,9 @@ import java.io.File
  * 静默安装调度器：后端解析 + 静默安装执行，失败一律回落系统安装器（调用方）。
  *
  * 决策（D-2/D-3，见 docs/in-progress/SILENT_INSTALL_WORK_ORDER.md）：
- * - [resolveBackend] 纯函数：偏好非 DEFAULT 且实时检测 READY 才启用静默，否则回落；
+ * - 后端解析由调用方（BuildApkDialog / InstallMethodDialog）内联判定：偏好非
+ *   DEFAULT 且实时检测 READY 才启用静默，否则回落（resolveBackend 纯函数
+ *   2026-08-12 随 DEAD_CODE_CLEANUP 删除，仅测试引用）；
  * - 安装归属（`-i` / `setInstallerPackageName`）默认不设置（null）；
  * - Dhizuku 返回 `PENDING_USER_ACTION_REQUIRED`（Android 14+ 更新归属门）即视为失败，
  *   由调用方转系统安装器（用户确认），不静默强装；
@@ -24,27 +26,6 @@ object InstallerCoordinator {
 
     /** 后端成功码（与 AIDL 服务实现对齐）。 */
     private const val STATUS_SUCCESS = 0
-
-    /**
-     * 解析本次安装生效的后端（纯函数，可单测）：
-     * 偏好为 [InstallerBackend.DEFAULT] 或对应后端实时不可用 → [InstallerBackend.DEFAULT]。
-     * 检测回调异常按「不可用」处理（AGENTS.md 降级约定，D-5）。
-     *
-     * @param preference 用户偏好（设置页持久化 / 构建对话框本次选择）。
-     * @param isReady 实时无提示检测回调（对应后端的 [InstallerServices] 实时判定）。
-     */
-    fun resolveBackend(
-        preference: InstallerBackend,
-        isReady: (InstallerBackend) -> Boolean,
-    ): InstallerBackend {
-        if (preference == InstallerBackend.DEFAULT) return InstallerBackend.DEFAULT
-        return try {
-            if (isReady(preference)) preference else InstallerBackend.DEFAULT
-        } catch (e: Throwable) {
-            Log.w(TAG, "resolveBackend() — readiness check threw: ${e.javaClass.simpleName}: ${e.message}")
-            InstallerBackend.DEFAULT
-        }
-    }
 
     /**
      * 静默安装打包产物。成功返回 true；后端不可用 / 安装失败 / 需用户介入

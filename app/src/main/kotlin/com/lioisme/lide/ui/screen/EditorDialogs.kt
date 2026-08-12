@@ -7,11 +7,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -140,9 +138,11 @@ internal fun EditorRunErrorDialog(
 }
 
 /**
- * 跳行对话框（P5.2，2026-08-11）：数字输入 + 范围校验（1..[maxLine]）。
- * 确认回调携带 **0 基**行号（对齐 sora `setSelection` 与运行错误跳行的既有语义）。
- * 与 [EditorScreen] 的 pendingJump 消费效应共用同一跳转管线（含编辑器绑定门控）。
+ * 跳行输入框（P5.2 演进，2026-08-12 U5 改底部输入框）：数字输入 + 范围校验
+ * （1..[maxLine]），复用共享底部输入组件 [BottomInputSheet]（键盘随 sheet 同步
+ * 弹出、IME Done 直接跳转）。确认回调携带 **0 基**行号（对齐 sora `setSelection`
+ * 与运行错误跳行的既有语义）。与 [EditorScreen] 的 pendingJump 消费效应共用
+ * 同一跳转管线（含编辑器绑定门控）。
  */
 @Composable
 internal fun GotoLineDialog(
@@ -153,37 +153,17 @@ internal fun GotoLineDialog(
     var input by remember { mutableStateOf("") }
     val max = maxLine.coerceAtLeast(1)
     val valid = input.toIntOrNull()?.let { it in 1..max } == true
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text(stringResource(R.string.goto_line_title)) },
-        text = {
-            OutlinedTextField(
-                value = input,
-                onValueChange = { v ->
-                    if (v.length <= 9 && v.all(Char::isDigit)) input = v
-                },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                singleLine = true,
-                placeholder = { Text(stringResource(R.string.goto_line_hint, max)) },
-                modifier = Modifier.fillMaxWidth(),
-            )
+    BottomInputSheet(
+        title = stringResource(R.string.goto_line_title),
+        placeholder = stringResource(R.string.goto_line_hint, max),
+        value = input,
+        confirmEnabled = valid,
+        confirmText = stringResource(R.string.goto_action),
+        keyboardType = KeyboardType.Number,
+        onValueChange = { v ->
+            if (v.length <= 9 && v.all(Char::isDigit)) input = v
         },
-        confirmButton = {
-            TextButton(
-                enabled = valid,
-                onClick = { input.toIntOrNull()?.let { onConfirm(it - 1) } },
-                modifier = Modifier.pressAndHoldHapticFeedback(),
-            ) {
-                Text(stringResource(R.string.goto_action))
-            }
-        },
-        dismissButton = {
-            TextButton(
-                onClick = onDismiss,
-                modifier = Modifier.pressAndHoldHapticFeedback(),
-            ) {
-                Text(stringResource(R.string.cancel))
-            }
-        },
+        onConfirm = { input.toIntOrNull()?.let { onConfirm(it - 1) } },
+        onDismiss = onDismiss,
     )
 }

@@ -44,9 +44,6 @@ class EditorController {
     internal var editor: CodeEditor? = null
         private set
 
-    /** 是否已绑定编辑器实例。 */
-    fun isBound(): Boolean = editor != null
-
     /** 绑定的编辑器当前是否正在展示 [content]（引用身份判定，跳行等绑定前置）。 */
     fun isShowing(content: EditorContent): Boolean {
         val e = editor ?: return false
@@ -116,6 +113,11 @@ class EditorController {
      *   `CodeEditor.onFormatSucceed` 的 `setSelectionAround` 语义）；
      * - **一致性守卫**：后台计算期间用户可能继续输入，替换前校验
      *   `text.toString() == 快照`，不一致即放弃（防止覆盖计算期间的新输入）。
+     *
+     * U6（2026-08-12）：**视口恢复**——替换前快照 `getFirstVisibleLine()`，
+     * 替换后 `setSelection(..., makeItVisible=false)` 不强制滚动到光标行（否则
+     * 光标在首/末行时等价「跳顶/跳底」），再 `ensurePositionVisible(firstVisible,
+     * 0)` 使格式化前的浏览位置重新可见；行结构变化后夹取到新行数边界。
      */
     fun format(
         useTab: Boolean,
@@ -145,6 +147,8 @@ class EditorController {
                     }
                     val curLine = ed.cursor.getLeftLine()
                     val curColumn = ed.cursor.getLeftColumn()
+                    // U6（2026-08-12）：视口快照——格式化后恢复浏览位置（不跳顶/不跳底/不跳光标行）。
+                    val firstVisible = ed.getFirstVisibleLine()
                     val lastLine = (ed.text.lineCount - 1).coerceAtLeast(0)
                     val lastCol = ed.text.getColumnCount(lastLine)
                     ed.text.beginBatchEdit()
@@ -157,7 +161,13 @@ class EditorController {
                     // 列宽内），越过界回落到有效边界而不抛。
                     val restoredLine = curLine.coerceIn(0, (ed.text.lineCount - 1).coerceAtLeast(0))
                     val restoredCol = curColumn.coerceIn(0, ed.text.getColumnCount(restoredLine))
-                    ed.setSelection(restoredLine, restoredCol, true)
+                    // makeItVisible=false：不得强制滚动到光标行（格式化前光标在视口外
+                    // 时，若强制滚动等于把用户浏览位置拽走）；随后视口按快照行恢复。
+                    ed.setSelection(restoredLine, restoredCol, false)
+                    // 视口恢复：使格式化前的视口首行重新可见（行级近似，行结构变化后
+                    // 夹取到新边界）。光标若原本在视口外，保持用户浏览位置优先。
+                    val restoredFirst = firstVisible.coerceIn(0, (ed.text.lineCount - 1).coerceAtLeast(0))
+                    ed.ensurePositionVisible(restoredFirst, 0, true)
                     true
                 }
             onResult(applied == true)
@@ -208,16 +218,6 @@ class EditorController {
     /** 停止搜索（清高亮与结果；未绑定/异常降级）。 */
     fun stopSearch() {
         runOnEditor { it.getSearcher().stopSearch() }
-    }
-
-    /** 当前是否处于搜索态（有 pattern）。 */
-    fun searchHasQuery(): Boolean {
-        val e = editor ?: return false
-        return try {
-            e.getSearcher().hasQuery()
-        } catch (_: Throwable) {
-            false
-        }
     }
 
     /** 结果快照（count / 当前命中序号，0 基；无查询/未就绪 = NONE）。 */
@@ -304,12 +304,17 @@ class EditorController {
             if (newText == text) return
             val curLine = e.cursor.getLeftLine()
             val curColumn = e.cursor.getLeftColumn()
+            // U6（2026-08-12）：视口快照——替换后恢复浏览位置（与 format 同款）。
+            val firstVisible = e.getFirstVisibleLine()
             val lastLine = e.lineCount - 1
             e.text.replace(0, 0, lastLine, e.text.getColumnCount(lastLine), newText)
             // 光标恢复：行列双夹取（对齐 format 的 L3 模式），越过界回落到有效边界。
             val restoredLine = curLine.coerceIn(0, (e.lineCount - 1).coerceAtLeast(0))
             val restoredCol = curColumn.coerceIn(0, e.text.getColumnCount(restoredLine))
-            e.setSelection(restoredLine, restoredCol, true)
+            // makeItVisible=false + 视口按快照行恢复（同 format U6 语义）。
+            e.setSelection(restoredLine, restoredCol, false)
+            val restoredFirst = firstVisible.coerceIn(0, (e.lineCount - 1).coerceAtLeast(0))
+            e.ensurePositionVisible(restoredFirst, 0, true)
             whenSucceeded()
         } catch (_: Throwable) {
             // 降级：单次命令失败静默放弃（正则非法等）。

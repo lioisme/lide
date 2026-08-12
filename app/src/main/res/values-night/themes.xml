@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- 宿主深色基线主题（2026-08-12 T-1 整改）：与 values/themes.xml 同构，
-         深色模式下原生窗口骨架/启动画面跟随深色。 -->
-    <style name="Theme.Lide" parent="@android:style/Theme.Material.NoActionBar" />
+         深色模式下原生窗口骨架/启动画面跟随深色。
+         2026-08-12 T5 整改：补 android:windowBackground（API 24-30 冷启动帧，
+         深色档 = values-night/colors.xml 的 lide_surface_background）。 -->
+    <style name="Theme.Lide" parent="@android:style/Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/lide_surface_background</item>
+    </style>
 </resources>

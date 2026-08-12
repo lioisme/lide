@@ -181,32 +181,6 @@ class EditorSession(
         onContentModified()
     }
 
-    /** 文本替换门面（语义见 [insertText]）；[start]/[end] 为 (line, column) 二元组。 */
-    fun replaceText(
-        startLine: Int,
-        startColumn: Int,
-        endLine: Int,
-        endColumn: Int,
-        text: String,
-    ) {
-        val selected = _selection.value.content ?: return
-        selected.raw.replace(startLine, startColumn, endLine, endColumn, text)
-        onContentModified()
-    }
-
-    /**
-     * 全文档替换门面（T14，2026-08-11）：以 [text] 整体替换选中标签的全部内容，
-     * 内部计算行坐标，统一经 [onContentModified] 置脏并触发自动保存节流信号。
-     * 仅主线程调用。
-     */
-    fun replaceAllText(text: String) {
-        val selected = _selection.value.content ?: return
-        val raw = selected.raw
-        val lastLine = (raw.lineCount - 1).coerceAtLeast(0)
-        raw.replace(0, 0, lastLine, raw.getColumnCount(lastLine), text)
-        onContentModified()
-    }
-
     /**
      * 编辑事件（每键）：脏标记仅在「首次变脏」时发射，其余仅递增节流信号。
      */
@@ -221,21 +195,6 @@ class EditorSession(
             current.toMutableList().apply {
                 this[index] = current[index].copy(dirty = true)
             }
-    }
-
-    /**
-     * 重新加载标签内容（「文件 → 重新加载」，T3，2026-08-10）：
-     * 先把脏内容落盘（防静默丢修改），再丢弃缓存中的 [Content]（undo 栈随内容释放、
-     * 撤销历史重置），走缓存未命中重载路径重新读盘。已关闭标签忽略。
-     * 仅主线程调用；状态写遵循会话线程契约（scope 为主线程调度器）。
-     */
-    fun reload(fileName: String) {
-        if (_tabs.value.none { it.fileName == fileName }) return
-        scope.launch {
-            flushDirty(fileName)
-            synchronized(cacheLock) { contents.remove(fileName) }
-            select(fileName)
-        }
     }
 
     /** 撤销/重做能力变化：仅在值变化时发射（needsUpdate 判定）。 */
@@ -292,43 +251,6 @@ class EditorSession(
     fun discardAndClose(fileName: String) {
         synchronized(cacheLock) { contents.remove(fileName) }
         close(fileName)
-    }
-
-    /**
-     * 磁盘文件被删除时同步标签（WP-005）：用户已在确认框确认删除，
-     * 丢弃该标签的缓存并关闭（不落盘），防自动保存复活已删文件。
-     */
-    fun removeTab(fileName: String) {
-        synchronized(cacheLock) { contents.remove(fileName) }
-        close(fileName)
-    }
-
-    /**
-     * 磁盘文件被重命名时同步标签（WP-005）：先落盘脏内容（旧路径），
-     * 再将 Content 缓存换键、更新标签名与选中状态（脏标记随落盘清除）。
-     * 仅主线程调用；[oldName]/[newName] 为工程相对路径。
-     */
-    fun renameTab(
-        oldName: String,
-        newName: String,
-    ) {
-        scope.launch {
-            flushDirty(oldName)
-            val current = _tabs.value
-            val index = current.indexOfFirst { it.fileName == oldName }
-            if (index < 0) return@launch
-            val content = synchronized(cacheLock) { contents.remove(oldName) }
-            if (content != null) {
-                synchronized(cacheLock) { contents[newName] = content }
-            }
-            _tabs.value =
-                current.toMutableList().apply {
-                    this[index] = current[index].copy(fileName = newName)
-                }
-            if (_selection.value.file == oldName) {
-                _selection.value = Selection(newName, content ?: return@launch)
-            }
-        }
     }
 
     /** 兜底保存（onRelease / onBack）：在会话作用域上异步执行，不随页面销毁取消。 */

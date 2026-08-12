@@ -22,11 +22,6 @@ import io.github.rosemoe.sora.text.Content
  */
 object LuaDiagnostics {
     /**
-     * 全量校验（等价于 [Incremental] 的首扫路径）。
-     */
-    fun checkSyntax(source: String): List<DiagnosticRegion> = Incremental().check(source)
-
-    /**
      * 增量校验器。
      *
      * 算法：每行扫描结束后缓存「模式 + 括号/块栈」检查点。编辑发生时记录受影响的行区间

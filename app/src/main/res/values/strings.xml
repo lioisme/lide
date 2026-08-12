@@ -133,19 +133,14 @@
     <string name="perm_subtitle">Manage app permissions</string>
     <string name="perm_special_section">Special Access</string>
     <string name="perm_general_section">General Access</string>
-    <string name="perm_general_hint">Generic system-level capability channels. LIDE uses them for silent installs and similar features (install method: Settings → AndroLua).</string>
     <string name="perm_regular_section">Regular Permissions</string>
-    <string name="perm_note">Some permissions require going to System Settings to enable. Tap \"Request\" to open Settings.</string>
     <string name="perm_granted">Granted</string>
     <string name="perm_denied">Denied</string>
     <string name="perm_request">Request</string>
     <string name="perm_project_title">Project Permissions</string>
-    <string name="perm_project_section">Declared in init.lua (%1$s)</string>
-    <string name="perm_project_hint">Check which permissions this project requests. They are saved to init.lua (user_permission) and written into the packaged APK\'s manifest on build.</string>
     <string name="perm_project_save">Save</string>
     <string name="perm_project_saved">Saved</string>
     <string name="perm_project_save_failed">Save failed</string>
-    <string name="perm_host_hint">Permissions of the LIDE host app itself. They apply to the IDE and to scripts running inside the host.</string>
     <string name="project_permissions">Project Permissions</string>
     <string name="run_finished">Run finished</string>
     <string name="run_error_title">Run error</string>
@@ -307,7 +302,6 @@
     <string name="perm_other_section">Other</string>
     <string name="permission_search_hint">Search permissions</string>
     <string name="permission_search_clear">Clear</string>
-    <string name="permission_selected_count">Selected %1$d of %2$d</string>
     <string name="permission_no_result">No matching permissions</string>
 
     <!-- Special permissions -->

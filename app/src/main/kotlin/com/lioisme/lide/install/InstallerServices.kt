@@ -62,11 +62,4 @@ object InstallerServices {
 
     val dhizuku: DhizukuServiceManager
         get() = dhizukuManager ?: error("InstallerServices.init() must be called before access")
-
-    /** 三通道统一刷新（下拉刷新 / 授权回访后调用）。 */
-    fun refreshAll() {
-        root.refreshStatus()
-        shizuku.refreshStatus()
-        dhizuku.refreshStatus()
-    }
 }

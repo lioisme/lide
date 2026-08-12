@@ -128,9 +128,6 @@ object LuaFonts {
         return files.getOrNull(index)?.name?.substringBeforeLast('.')
     }
 
-    /** 外部字体文件数（面板列表长度；未扫描时先扫）。 */
-    fun externalCount(context: Context): Int = scanExternal(context)?.size ?: 0
-
     /** 外部字体 id → 显示名 全量列表（面板一次性渲染，顺序与 id 严格一致；单次扫描）。 */
     fun externalLabels(context: Context): List<Pair<Int, String>> {
         val files = scanExternal(context) ?: return emptyList()

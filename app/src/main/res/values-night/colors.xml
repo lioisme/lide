@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="lide_surface_background">#1A1C1E</color>
+    <!-- 宿主 surface 静态基线背景（splash/冷启动帧用，2026-08-12 T5 整改）：
+         深色档 = Material3 暗色 background token 标准值 #141218（HCT tone 6
+         中性色，与 ui/theme/Theme.kt 暗色 scheme 同源）；浅色档见 values/colors.xml。 -->
+    <color name="lide_surface_background">#141218</color>
 </resources>

@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Android 12+ Splash Screen（2026-08-12 T-2 整改，浅色态）：
-         背景 = 宿主浅色 surface（与 Theme.kt BG_LIGHT 同源），图标 = 宿主自带图标。
+         背景 = 宿主浅色 surface（与 values/colors.xml 同源，night 档见
+         values-night/colors.xml），图标 = 自适应图标 @drawable/ic_splash_icon
+         （2026-08-12 T5：原 @drawable/icon 为 legacy 位图，AOSP splash 按
+         shrinkNonAdaptiveIcons 缩小 + 圆形遮罩 → 显示不完整；adaptive-icon
+         前景图形已居中缩至安全区内，圆形遮罩下完整显示）。
          同名 style 按配置限定覆盖，此处必须完整声明全部 item。 -->
     <style name="Theme.Lide" parent="@android:style/Theme.Material.Light.NoActionBar">
         <item name="android:windowSplashScreenBackground">@color/lide_surface_background</item>
-        <item name="android:windowSplashScreenAnimatedIcon">@drawable/icon</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_splash_icon</item>
     </style>
 </resources>

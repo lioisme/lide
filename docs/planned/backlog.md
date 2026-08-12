@@ -33,15 +33,15 @@
 
 | # | 任务 | 优先级 | 关键词 |
 |---|---|---|---|
-| R1 | 引擎面三处同步收敛（build.gradle / proguard / 分类器）为单一事实源 + 修复 AlertDialogBuilder 分类 | 高 | `engineSurface` `三处同步` |
-| R2 | ApiIndex dexNames 契约对齐：O(1) 可加载性查表 + 宿主 dex 快照进程级缓存 + 修订 AGENTS.md 措辞 | 高 | `dexNames` `DexFile` `O(1)` |
-| R3 | 原生模块表收敛：ApiIndex 补全 lfs/lsqlite3/live2d/luajava + cpp 目录一致性测试 | 高 | `builtinNativeModules` |
-| R4 | apibrowser 测试补位（分类器/过滤/缓存契约） | 高 | `apibrowser 测试` |
-| R5 | LuaDiagnostics 热路径（close 序列预计算 / errorAt 行偏移表 / countLines 增量） | 中 | `LuaDiagnostics` `热路径` |
-| R6 | 机械去重（basename / randomPassword / 错误前缀正则 / u16u32 / 主题名 / 种子色 / onOff / 权限池 / main.lua / 签名 Triple / catch Throwable） | 中 | `去重` |
-| R7 | SigningScreen 主线程密码学/文件 IO 异步化（6 处） | 中 | `SigningScreen` `主线程` |
-| R8 | navigation-compose 升级 2.9.8 后删除 NavigationGate（缺陷根除回归） | 中 | `NavigationGate` `navigation 2.9` |
-| R9 | 依赖栈批量升级：BOM 2026.06.00 / lifecycle 2.10 / activity-compose 1.13 / core-ktx / coroutines-test | 中 | `依赖升级` |
+| R1 | 引擎面三处同步收敛（build.gradle / proguard / 分类器）为单一事实源 + 修复 AlertDialogBuilder 分类 | 高 |（已完成）|
+| R2 | ApiIndex dexNames 契约对齐：O(1) 可加载性查表 + 宿主 dex 快照进程级缓存 + 修订 AGENTS.md 措辞 | 高 |（已完成）|
+| R3 | 原生模块表收敛：ApiIndex 补全 lfs/lsqlite3/live2d/luajava + cpp 目录一致性测试 | 高 |（已完成）|
+| R4 | apibrowser 测试补位（分类器/过滤/缓存契约） | 高 |（已完成）|
+| R5 | LuaDiagnostics 热路径（close 序列预计算 / errorAt 行偏移表 / countLines 增量） | 中 |（已完成）|
+| R6 | 机械去重（basename / randomPassword / 错误前缀正则 / u16u32 / 主题名 / 种子色 / onOff / 权限池 / main.lua / 签名 Triple / catch Throwable） | 中 |（已完成）|
+| R7 | SigningScreen 主线程密码学/文件 IO 异步化（6 处） | 中 |（已完成）|
+| R8 | navigation-compose 升级 2.9.8 后删除 NavigationGate（缺陷根除回归） | 中 |（已完成）|
+| R9 | 依赖栈批量升级：BOM 2026.06.00 / lifecycle 2.10 / activity-compose 1.13 / core-ktx / coroutines-test | 中 |（已完成）|
 | R10 | LuaCrypto 手写 PKCS#7 → 官方 PKCS5Padding（先核 C 端规约） | 低 | `PKCS5` `DES` |
 | R11 | **ktlint 全量红线（2026-08-09 复核）：`ktlintCheck` 既有违规约 1000 处（LanguageKeywordRegistry 838 / AXmlManifest 83 / LuaConfigParser 65 / LuaCompiler 等），`lint` 任务长期阻断；原工作单 T12「ktlint 全绿」断言不成立。建议整仓格式化专项或配置 baseline 后回归** | 中 | `ktlint` `lint` |
 
@@ -79,12 +79,12 @@
 
 | # | 任务 | 优先级 | 状态 | 关键词 |
 |---|---|---|---|---|
-| R1 | 只读绕过修复：insertImport（运行错误对话框）与 toggleCase（文本操作）直写 Content 绕过 sora 门禁 | 高 | ✅ 已完成（2026-08-10，工作单收口） | `readOnly` `insertImport` `toggleCase` |
-| R2 | 只读切换 IME 同步（restartInput / hideSoftInput），修复切回可写键盘假死 | 高 | ✅ 已完成（2026-08-10，工作单收口） | `readOnly` `InputConnection` |
-| R3 | 只读 UX：编辑/保存菜单禁用 + 编辑器只读横幅提示 | 中 | ✅ 已完成（2026-08-10，工作单收口） | `readOnly` `菜单禁用` `横幅` |
-| R4 | 线号分割线宽度 / 固定行号（pinLineNumber）两项 sora 上限能力接线 | 中 | ✅ 已完成（2026-08-10，工作单收口） | `setDividerWidth` `setPinLineNumber` |
-| R5 | 打包 API 级别下移：AXmlManifest uses-sdk 解析/写回 + ManifestEdit + 构建对话框 minSdk 选项 + 测试 | 中 | ✅ 已完成（2026-08-10，工作单收口） | `uses-sdk` `minSdkVersion` `打包` |
-| R6 | WP-014 工程 theme 运行时消费（逐工程深色，编辑器文本区跟随） | 中 | ✅ 已完成（2026-08-10，工作单收口） | `WP-014` `theme` `深色` |
+| R1 | 只读绕过修复：insertImport（运行错误对话框）与 toggleCase（文本操作）直写 Content 绕过 sora 门禁 | 高 |（已完成）| `readOnly` `insertImport` `toggleCase` |
+| R2 | 只读切换 IME 同步（restartInput / hideSoftInput），修复切回可写键盘假死 | 高 |（已完成）| `readOnly` `InputConnection` |
+| R3 | 只读 UX：编辑/保存菜单禁用 + 编辑器只读横幅提示 | 中 |（已完成）| `readOnly` `菜单禁用` `横幅` |
+| R4 | 线号分割线宽度 / 固定行号（pinLineNumber）两项 sora 上限能力接线 | 中 |（已完成）| `setDividerWidth` `setPinLineNumber` |
+| R5 | 打包 API 级别下移：AXmlManifest uses-sdk 解析/写回 + ManifestEdit + 构建对话框 minSdk 选项 + 测试 | 中 |（已完成）| `uses-sdk` `minSdkVersion` `打包` |
+| R6 | WP-014 工程 theme 运行时消费（逐工程深色，编辑器文本区跟随） | 中 |（已完成）| `WP-014` `theme` `深色` |
 
 ## 2g. 编辑器对标 Squircle CE 整改（2026-08-11，工作单 docs/in-progress/EDITOR_SQUIRCLE_ALIGNMENT_WORK_ORDER.md）
 
@@ -232,6 +232,44 @@
 > 管线（sora 单 analyzer 机制限制，需子类化 TextMateAnalyzeManager，风险高，列为 backlog
 > 长期项）；M-T2 列表行 ListItem 化（material3 1.4.0 可用，涉及 7 处组件，另列专项）；
 > 密码明文存 SharedPreferences（SigningManager，已知债务）；DataStore 迁移评估。
+
+## 2o. 死代码/死依赖/死资源全量清理（2026-08-12，工作单 docs/in-progress/DEAD_CODE_CLEANUP_WORK_ORDER.md）
+
+> 来源需求（用户 2026-08-12）：全量审计项目代码，清理所有死代码、死依赖、死资源；
+> 4 路并行审计 + 成员级二轮，结论全部经全仓 grep 实证。
+> 用户拍板：① 文档契约 API 删除+文档同步；② 文件树占位全部删除、落地时重建；
+> ③ uninstallPackage 权限能力保留；④ 用户 Lua 工具库/socket 套件保留；
+> ⑤ testImplementation(:androlua) 删除 + AGENTS.md 同步。
+
+| # | 任务 | 优先级 | 状态 | 关键词 |
+|---|---|---|---|---|
+| D1 | editor 包 5 死方法（isSameAs/isBound/searchHasQuery/isKnownFile/externalCount） | 高 | ⏳ 进行中 | `DEAD_CODE_CLEANUP` `死代码` |
+| D2 | EditorSession 5 死方法（replaceText/replaceAllText/reload/removeTab/renameTab） | 高 | ⏳ 进行中 | `DEAD_CODE_CLEANUP` `会话门面` |
+| D3 | ProjectManager 文件树 4 包装 + install 死方法（refreshAll/refreshStatus） | 高 | ⏳ 进行中 | `DEAD_CODE_CLEANUP` `WP-005` |
+| D4 | 测试死面（resolveDark/resolveBackend/checkSyntax/AXmlManifest read*3）+ 测试迁移 | 高 | ⏳ 进行中 | `DEAD_CODE_CLEANUP` `测试` |
+| D5 | 文件树占位菜单/字符串 + BuildOpts 惰性配置链 + util 空目录 | 中 | ⏳ 进行中 | `DEAD_CODE_CLEANUP` `占位` |
+| D6 | 死依赖（hidden:stub/dontwarn/testImplementation）+ 死资产 5 lua + 死脚本（bat/log/路径修正） | 高 | ⏳ 进行中 | `DEAD_CODE_CLEANUP` `依赖` `资产` |
+| D7 | 文档同步（AGENTS.md/kb/backlog/lint baseline）+ 全量验证 + 收口 | 高 | ⏳ 进行中 | `DEAD_CODE_CLEANUP` `验证` |
+| D8 | **备忘：文件树功能落地时重建** ProjectManager 4 包装 + EditorSession 3 方法（removeTab/renameTab/reload）+ 菜单入口（本次已删） | 低 | 📋 备忘 | `WP-005` `文件树` |
+
+## 2p. 六项 UI 交互与外观整改（2026-08-12，工作单 docs/in-progress/UI_AUDIT_SIX_REQ_WORK_ORDER.md） ——（已完成 2026-08-12，结论蒸馏至 docs/kb/ARCHITECTURE.md §9，工作单已删除）
+> 来源需求（用户 2026-08-12 六条要求，全量审计后立项）：
+> 1. 工程权限界面简约美观，像 API 浏览器一样的搜索和列表，无其他无用内容；
+> 2. 主题色框选和对号颜色按夜间/日间模式显示不同颜色（非统一黑色）；
+> 3. 底部对话输入框弹出时输入法键盘同步弹出（不得先弹框再弹键盘）；
+> 4. 编辑器格式化后不跳顶/不跳底，仅格式化代码（滚动位置保持）；
+> 5. 编辑器「跳转到行」使用底部对话输入框（非居中对话框）；
+> 6. LIDE 启动界面图标完整显示 + 背景颜色跟随外观系统。
+> 质量要求：代码质量/架构达大厂验收标准；每项完成在工作单标记（已完成）+ 验收证据。
+| # | 任务 | 优先级 | 状态 | 关键词 |
+|---|---|---|---|---|
+| R1 | 底部输入框键盘同步（sheetState 动画完成后再 requestFocus）+ BottomInputSheet 提取共享组件 | 高 |（已完成）| `UI_AUDIT_SIX_REQ` `ModalBottomSheet` `键盘同步` |
+| R2 | 跳转到行改底部输入框（ModalBottomSheet + 自动聚焦 + IME Done + 数字键盘） | 高 |（已完成）| `UI_AUDIT_SIX_REQ` `GotoLineDialog` `底部输入框` |
+| R3 | 格式化/全部替换后滚动位置恢复（firstVisibleLine 保存 + 不强制滚动） | 高 |（已完成）| `UI_AUDIT_SIX_REQ` `格式化` `滚动位置` |
+| R4 | 工程权限界面重构（API 浏览器同款搜索 + 单一 LazyColumn + 去冗余文案） | 高 |（已完成）| `UI_AUDIT_SIX_REQ` `权限界面` `搜索` |
+| R5 | 启动界面图标完整显示（adaptive icon）+ 背景跟随应用外观（含 API 24-30 windowBackground） | 高 |（已完成）| `UI_AUDIT_SIX_REQ` `Splash` `adaptive icon` |
+| R6 | 主题色块选中标记色按明暗模式驱动（日间偏好黑、夜间偏好白，WCAG 4.5:1 兜底） | 中 |（已完成）| `UI_AUDIT_SIX_REQ` `ColorSheet` `标记色` |
+| R7 | 验证收口：compile + 单测 + 门禁 + kb 蒸馏 + 工作单收口 | 高 |（已完成）| `UI_AUDIT_SIX_REQ` `验收` `收口` |
 
 ## 3. 风险与备忘
 

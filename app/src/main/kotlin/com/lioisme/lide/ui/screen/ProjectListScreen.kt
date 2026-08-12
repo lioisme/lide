@@ -9,8 +9,6 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
@@ -27,8 +25,6 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
@@ -36,7 +32,6 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.lioisme.lide.R
 import com.lioisme.lide.project.AlpManager
@@ -590,91 +585,5 @@ fun ProjectListScreen(
                 advanceImportQueue()
             },
         )
-    }
-}
-
-/**
- * 底部输入对话框（U3，2026-08-12）：新建项目 / 工程重命名共用。
- *
- * 相对居中 [AlertDialog] 的差异：自动聚焦输入框（FocusRequester，弹出即弹键盘）、
- * IME 动作 [ImeAction.Done] 直接提交（回车 = 确认）、底部 padding 与导航栏安全区
- * 由 [ModalBottomSheet] 自带。状态全部由调用方持有（无内部 state），旋转由调用方
- * `rememberSaveable` 保证。
- *
- * @param hintText 可选的输入说明（重命名场景），null 不展示
- * @param confirmEnabled 确认按钮可用性（空名/非法名禁用）
- */
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun BottomInputSheet(
-    title: String,
-    label: String,
-    hintText: String?,
-    value: String,
-    confirmEnabled: Boolean,
-    confirmText: String,
-    onValueChange: (String) -> Unit,
-    onConfirm: () -> Unit,
-    onDismiss: () -> Unit,
-) {
-    ModalBottomSheet(onDismissRequest = onDismiss) {
-        val focusRequester = remember { FocusRequester() }
-        // 弹出即聚焦：键盘直接拉起，免手动点按（对确认类输入框的常规期望）。
-        LaunchedEffect(Unit) { focusRequester.requestFocus() }
-        Column(
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 32.dp),
-        ) {
-            Text(
-                title,
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
-            )
-            if (hintText != null) {
-                Spacer(Modifier.height(4.dp))
-                Text(
-                    hintText,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(horizontal = 24.dp),
-                )
-            }
-            Spacer(Modifier.height(12.dp))
-            OutlinedTextField(
-                value = value,
-                onValueChange = onValueChange,
-                label = { Text(label) },
-                singleLine = true,
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 24.dp)
-                        .focusRequester(focusRequester),
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone = { onConfirm() }),
-            )
-            Spacer(Modifier.height(16.dp))
-            Row(
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 24.dp),
-                horizontalArrangement = Arrangement.End,
-            ) {
-                TextButton(onClick = onDismiss) {
-                    Text(stringResource(R.string.cancel))
-                }
-                Spacer(Modifier.width(8.dp))
-                TextButton(
-                    onClick = onConfirm,
-                    enabled = confirmEnabled,
-                ) {
-                    Text(confirmText)
-                }
-            }
-        }
     }
 }

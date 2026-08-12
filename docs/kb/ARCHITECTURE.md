@@ -282,3 +282,66 @@ verifyMinimalismDebug。
 build.* 8 用例）+ lintArm64Debug（0 新问题）+ assembleArm64Debug +
 verifyMinimalism + verifyMinimalismDebug；设备截图与 per-app locale 真机
 双向验证待 P7 统一执行。
+
+## 9. UI 交互与启动界面契约（2026-08-12 UI_AUDIT_SIX_REQ 完工蒸馏）
+
+### 9.1 底部输入框（R1/R2，BottomInputSheet）
+
+- 共享组件 `ui/screen/BottomInputSheet.kt`（2026-08-12 提取）：
+  `rememberModalBottomSheetState(skipPartiallyExpanded)` + `sheetState.show()` **动画完成
+  后再 requestFocus**（焦点请求在 sheet 入场动画期间执行会落空——Dialog 窗口焦点树
+  未就绪，表现为「先弹框后弹键盘」）；label/placeholder/keyboardType 参数化；
+  全项目无 `LocalSoftwareKeyboardController` 兜底需求（动画完成后聚焦即可）。
+- 「跳转到行」复用该组件（数字键盘 + 自动聚焦 + IME Done 提交），0 基转换与
+  pendingJump 管线不变；**不再使用居中 AlertDialog 形态**。
+
+### 9.2 编辑器格式化视口保持（R3）
+
+- `EditorController.format` / `replaceAll`：替换前 `getFirstVisibleLine()` 快照；
+  替换后 `setSelection(restoredLine, restoredCol, makeItVisible=false)`（第三参 true
+  会触发 sora `ensurePositionVisible` 强制滚动，光标在首/末行时等价跳顶/跳底）+
+  `ensurePositionVisible(restoredFirst, 0, true)` 恢复视口。光标行列恢复
+  （L3 双夹取）与视口恢复（U6）分离，互不干扰。
+
+### 9.3 工程权限界面（R4）
+
+- `SearchablePermissionPicker.kt` 分层：`rememberPickerItems`（预索引：名称/中文名/
+  别名合并小写串，池 = 目录 + 工程已声明未知权限）→ `filterPickerItems`（纯函数，
+  后台线程）→ `permissionGroupItems`（LazyListScope 扩展：REGULAR → SPECIAL →
+  其他 固定分组序 + 行，页级列表与弹窗共用）→ `PermissionCheckRow` /
+  `PermissionGroupHeader` 共享渲染；`PermissionPickerList` 保留给工程属性页弹窗
+  （常驻搜索框 + `heightIn` 由调用方约束，弹窗内唯一滚动容器）。
+- **页面形态对齐 API 浏览器搜索红线**：折叠自绘条
+  `PermissionCollapsedSearchInput`（`detectTapGestures` 区分单击展开/长按无副作用，
+  规避 SearchBarDefaults.InputField 折叠态长按文本选择崩坏）+ `ExpandedFullScreenSearchBar`
+  全屏展开（`rememberSearchBarState()` 无参 + 独立 `searchActive` 意图 +
+  `LaunchedEffect(searchActive)` 唯一驱动 + `Dispatchers.Default` 过滤 +
+  BackHandler 清焦收起）；正文与全屏搜索各用独立 LazyColumn（互不嵌套）。
+- **无嵌套滚动容器**：页面为单一 LazyColumn 直接渲染分组行（页面不再包裹弹窗组件）；
+  工程属性页弹窗单列唯一滚动容器。无「已选 x/y」计数、无说明文案（host 页 3 处
+  引导文案 + 工程页 section/hint 已删，死资源 6 条随同清理）。
+
+### 9.4 启动界面（R5）
+
+- **splash 图标**：`drawable-v26/ic_splash_icon.xml` adaptive-icon（背景 =
+  `lide_surface_background` 同色融合仅显图形；前景 = `ic_splash_foreground.png`
+  原图标图形居中缩至安全区 ≈58% 画布，圆形遮罩下完整无裁切）——legacy 位图会被
+  AOSP `shrinkNonAdaptiveIcons` 缩小 + 圆形遮罩裁切致显示不完整。
+- **背景跟随外观系统**：浅色档 `values/colors.xml` `#FDFCFF` / 深色档
+  `values-night/colors.xml` `#141218`（M3 暗 background 标准值，HCT tone 6 中性色）；
+  API 24-30 无系统 splash，`values[-night]/themes.xml` 补 `android:windowBackground`
+  使冷启动帧跟随系统 uiMode；API 31+ `windowSplashScreenBackground` 按 night 限定符
+  解析。**平台限制**：应用 AppearanceMode 与系统相反时系统 splash 色无法动态覆盖
+  （splash 在 app 代码运行前由系统绘制），随后 `applyWindowBackground()`
+  （MainActivity，HCT 同源 surface）接管窗口背景。
+- 图标资源位图（icon.png 例外族）不受 R5 二进制禁令约束（禁令限 .so/.dex/.jar/.zip）。
+
+### 9.5 主题色标记（R6）
+
+- `selectedMarkColor(color, isDark)` 双因素（SettingsScreen）：日间偏好黑 / 夜间
+  偏好白为首选候选，黑白候选依序取首个满足 WCAG AA 4.5:1 严格档的；双候选均不满足
+  时取对比度更高者（黑白为极端候选，兜底恒生效）。替代 0.5 luminance 阈值
+  （中灰块判色出错）与单因素亮度判色（夜间模式选中亮色块仍显黑色对号）。
+
+验证（2026-08-12 全绿）：compileArm64DebugKotlin + testArm64DebugUnitTest +
+verifySoraIsolation + verifyMinimalismDebug + verifyMinimalism（release 链路）。

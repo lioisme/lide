@@ -10,6 +10,7 @@ import android.os.Build
 import android.os.PowerManager
 import android.provider.Settings
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
@@ -22,9 +23,11 @@ import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.*
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -129,12 +132,6 @@ fun HostPermissionScreen(
             ) {
                 item {
                     Spacer(Modifier.height(8.dp))
-                    Text(
-                        stringResource(R.string.perm_host_hint),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(horizontal = 4.dp, vertical = 8.dp),
-                    )
                 }
                 item {
                     Text(
@@ -164,14 +161,6 @@ fun HostPermissionScreen(
                         color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.SemiBold,
                         modifier = Modifier.padding(start = 4.dp, bottom = 8.dp),
-                    )
-                }
-                item {
-                    Text(
-                        stringResource(R.string.perm_general_hint),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(horizontal = 4.dp, vertical = 4.dp),
                     )
                 }
                 // 通用权限（2026-08-12 治理红线）：Root / Shizuku / Dhizuku 是宿主可
@@ -224,13 +213,6 @@ fun HostPermissionScreen(
                 }
 
                 item {
-                    Spacer(Modifier.height(16.dp))
-                    Text(
-                        stringResource(R.string.perm_note),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(4.dp),
-                    )
                     Spacer(Modifier.height(80.dp))
                 }
             }
@@ -304,6 +286,32 @@ fun ProjectPermissionScreen(
         }
     }
 
+    // U7（2026-08-12）：搜索对齐 API 浏览器模式（AGENTS.md 搜索红线）——
+    // 独立 searchActive 意图 + SearchBarState 状态机唯一驱动；rememberSearchBarState()
+    // 必须无参调用（按引用比较 key）；展开输入框为官方 InputField（展开态无长按
+    // 文本选择崩坏问题），折叠条为自绘（规避崩坏）。
+    var query by rememberSaveable { mutableStateOf("") }
+    var searchActive by rememberSaveable { mutableStateOf(false) }
+    val searchBarState = rememberSearchBarState()
+    LaunchedEffect(searchActive) {
+        if (searchActive) {
+            searchBarState.animateToExpanded()
+        } else {
+            searchBarState.animateToCollapsed()
+        }
+    }
+    LaunchedEffect(Unit) { if (!searchActive) searchBarState.snapTo(0f) }
+    val focusManager = LocalFocusManager.current
+
+    // 检索池（目录 + 工程已声明未知权限）；随声明集合变化仅重建一次。
+    val poolUnknown = (state?.original ?: emptySet<String>()) - PermissionCatalog.knownNames
+    val allItems = rememberPickerItems(PermissionCatalog.ENTRIES, poolUnknown.sorted(), context)
+
+    // 搜索过滤：后台线程（Dispatchers.Default）经预索引 contains，对齐红线。
+    val filtered by produceState(initialValue = emptyList<PickerItem>(), query, allItems) {
+        value = withContext(Dispatchers.Default) { filterPickerItems(allItems, query) }
+    }
+
     Scaffold(
         topBar = {
             LideTopBar(
@@ -321,56 +329,112 @@ fun ProjectPermissionScreen(
             )
         },
     ) { padding ->
-        LazyColumn(
+        Column(
             modifier =
                 Modifier
                     .fillMaxSize()
-                    .padding(padding)
-                    .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp),
+                    .padding(padding),
         ) {
-            item {
-                Spacer(Modifier.height(8.dp))
-                Text(
-                    stringResource(R.string.perm_project_section, project.name),
-                    style = MaterialTheme.typography.titleSmall,
-                    color = MaterialTheme.colorScheme.primary,
-                    fontWeight = FontWeight.SemiBold,
-                    modifier = Modifier.padding(start = 4.dp, bottom = 2.dp),
-                )
-                Text(
-                    stringResource(R.string.perm_project_hint),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(start = 4.dp, end = 4.dp, bottom = 8.dp),
-                )
-            }
+            PermissionCollapsedSearchInput(
+                query = query,
+                onClear = { query = "" },
+                onTapToExpand = { searchActive = true },
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
+            )
             val s = state
             if (s == null) {
-                item {
-                    Box(Modifier.fillMaxWidth().padding(vertical = 8.dp), contentAlignment = Alignment.Center) {
-                        CircularProgressIndicator(modifier = Modifier.size(24.dp))
-                    }
+                Box(
+                    Modifier.fillMaxWidth().padding(vertical = 8.dp),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    CircularProgressIndicator(modifier = Modifier.size(24.dp))
                 }
             } else {
-                item {
-                    PermissionPickerList(
-                        catalog = PermissionCatalog.ENTRIES,
-                        unknownPermissions = (s.selected - PermissionCatalog.knownNames).sorted(),
-                        selected = s.selected,
-                        onToggle = { perm ->
-                            state =
-                                s.copy(
-                                    selected = if (perm in s.selected) s.selected - perm else s.selected + perm,
-                                )
-                        },
-                    )
+                // 页级单一 LazyColumn：分组标题 + 勾选行直接渲染（消除嵌套滚动容器）。
+                LazyColumn(
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                ) {
+                    permissionGroupItems(allItems) { item ->
+                        PermissionCheckRow(
+                            label = item.label,
+                            alias = item.aliasText,
+                            checked = item.name in s.selected,
+                            onToggle = {
+                                state =
+                                    s.copy(
+                                        selected = if (item.name in s.selected) s.selected - item.name else s.selected + item.name,
+                                    )
+                            },
+                        )
+                    }
+                    item {
+                        Spacer(Modifier.height(80.dp))
+                    }
                 }
             }
-            item {
-                Spacer(Modifier.height(80.dp))
-            }
         }
+    }
+
+    // 全屏展开搜索：Dialog 内独立 LazyColumn（与正文互不嵌套）；建议行点击 = 切换
+    // 勾选（不收起，支持连续勾选）；返回键 / IME 搜索收起（收起路径置 searchActive
+    // = false + 清焦，对齐红线）。
+    if (searchActive) {
+        ExpandedFullScreenSearchBar(
+            state = searchBarState,
+            inputField = {
+                PermissionSearchInputField(
+                    query = query,
+                    onQueryChange = { query = it },
+                    active = searchActive,
+                    onActiveChange = { searchActive = it },
+                    onBack = {
+                        searchActive = false
+                        focusManager.clearFocus()
+                    },
+                )
+            },
+            content = {
+                BackHandler {
+                    searchActive = false
+                    focusManager.clearFocus()
+                }
+                if (filtered.isEmpty()) {
+                    Box(Modifier.fillMaxSize().padding(24.dp), contentAlignment = Alignment.Center) {
+                        Text(
+                            stringResource(R.string.permission_no_result),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                } else {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.spacedBy(4.dp),
+                    ) {
+                        permissionGroupItems(filtered) { item ->
+                            val cur = state
+                            PermissionCheckRow(
+                                label = item.label,
+                                alias = item.aliasText,
+                                checked = cur != null && item.name in cur.selected,
+                                onToggle = {
+                                    state?.let { st ->
+                                        state =
+                                            st.copy(
+                                                selected = if (item.name in st.selected) st.selected - item.name else st.selected + item.name,
+                                            )
+                                    }
+                                },
+                            )
+                        }
+                    }
+                }
+            },
+        )
     }
 }
 

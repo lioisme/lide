@@ -308,10 +308,4 @@ object LanguageDetector {
         if (dot <= 0 || dot == fileName.length - 1) return PLAIN_SCOPE
         return associations[fileName.substring(dot + 1).lowercase()] ?: PLAIN_SCOPE
     }
-
-    /**
-     * 该文件名是否命中语言目录中的某种语言（非纯文本）。
-     * 供宿主「可打开性」判定消费（:editor 唯一事实源，P0-3）。
-     */
-    fun isKnownFile(fileName: String): Boolean = detect(fileName) != PLAIN_SCOPE
 }

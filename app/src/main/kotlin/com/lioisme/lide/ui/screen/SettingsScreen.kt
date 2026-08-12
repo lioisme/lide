@@ -592,10 +592,11 @@ private fun ColorSheet(
                 items(colorOptions) { argb ->
                     val color = Color(argb)
                     val isSelected = !useWallpaper && color == selectedColor
-                    // 选中标记色（U1，2026-08-12）：与黑白双候选的 WCAG 对比度取更高者，
-                    // 选中框与对号共用同一色——修「框黑对号白」不一致；两候选对比度
-                    // 至少一者满足 4.5:1 严格档，替代 0.5 luminance 阈值（中灰块判色出错）。
-                    val markColor = selectedMarkColor(color)
+                    // 选中标记色（U1 + R6，2026-08-12）：黑白双候选 WCAG 对比度取更高者
+                    // 之上叠加明暗双因素——日间偏好黑、夜间偏好白，4.5:1 严格档兜底；
+                    // 选中框与对号共用同一色（修「框黑对号白」不一致，替代 0.5 luminance
+                    // 阈值，中灰块判色不出错）。
+                    val markColor = selectedMarkColor(color, LocalIsDarkTheme.current)
                     Box(
                         modifier =
                             Modifier
@@ -629,15 +630,25 @@ private fun ColorSheet(
 }
 
 /**
- * 选中标记色：对 [color] 计算与黑/白候选的 WCAG 相对对比度，取更高者。
- * 相对亮度经 `luminance()`（sRGB 线性化），黑白固定亮度 0 / 1；
- * 任意彩色块两候选对比度必然至少一者 ≥ 4.5:1（黑白为极端候选）。
+ * 选中标记色（U1 亮度判色 + R6 明暗双因素，2026-08-12）：宿主日间偏好黑、夜间
+ * 偏好白；候选（偏好色、另一色）依序取首个满足 WCAG AA 4.5:1 严格档的；
+ * 双候选均不满足时取对比度更高者（黑白为极端候选，任意色块至少一者达标，
+ * 硬门槛兜底恒生效，无需降级）。
  */
-private fun selectedMarkColor(color: Color): Color {
+private fun selectedMarkColor(color: Color, isDark: Boolean): Color {
     val l = color.luminance()
     val contrastWhite = 1.05f / (l + 0.05f)
     val contrastBlack = (l + 0.05f) / 0.05f
-    return if (contrastWhite >= contrastBlack) Color.White else Color.Black
+    val preferred = if (isDark) Color.White else Color.Black
+    val fallback = if (isDark) Color.Black else Color.White
+    val preferredContrast = if (isDark) contrastWhite else contrastBlack
+    val fallbackContrast = if (isDark) contrastBlack else contrastWhite
+    return when {
+        preferredContrast >= 4.5f -> preferred
+        fallbackContrast >= 4.5f -> fallback
+        preferredContrast >= fallbackContrast -> preferred
+        else -> fallback
+    }
 }
 
 private tailrec fun Context.resolveActivity(): Activity? =

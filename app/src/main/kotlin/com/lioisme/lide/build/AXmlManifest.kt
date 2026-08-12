@@ -123,8 +123,13 @@ object AXmlManifest {
         return elementStringAttrs(bytes, "permission", "name")
     }
 
-    /** manifest 的 package 属性值；缺失返回 null。 */
-    fun readPackageName(bytes: ByteArray): String? {
+    /**
+     * manifest 的 package 属性值；缺失返回 null。
+     *
+     * 内部观测面（DEAD_CODE_CLEANUP，2026-08-12）：二进制解析器唯一测试观测入口
+     * （UTF-8 池编解码回归锚点），生产路径统一走 [patch]；R8 release 自动剥离。
+     */
+    internal fun readPackageName(bytes: ByteArray): String? {
         val parsed = parse(bytes)
         val strings = readPool(parsed.chunks[parsed.poolChunkIndex]).strings
         return packageNameFromParsed(parsed, strings)
@@ -168,15 +173,21 @@ object AXmlManifest {
         return min to target
     }
 
-    /** 现持有 MAIN action 的 activity 全限定名（launcher 入口）；无则返回 null。 */
-    fun readLauncherActivity(bytes: ByteArray): String? {
+    /**
+     * 现持有 MAIN action 的 activity 全限定名（launcher 入口）；无则返回 null。
+     * 内部观测面（语义见 [readPackageName]）。
+     */
+    internal fun readLauncherActivity(bytes: ByteArray): String? {
         val parsed = parse(bytes)
         val strings = readPool(parsed.chunks[parsed.poolChunkIndex]).strings
         return findMainLauncher(parsed.chunks, strings)?.first
     }
 
-    /** 指定 activity 的 android:exported 值；无该属性返回 null。 */
-    fun readExported(bytes: ByteArray, activityName: String): Boolean? {
+    /**
+     * 指定 activity 的 android:exported 值；无该属性返回 null。
+     * 内部观测面（语义见 [readPackageName]；launcher 注入 exported 写回的读回验证）。
+     */
+    internal fun readExported(bytes: ByteArray, activityName: String): Boolean? {
         val parsed = parse(bytes)
         val strings = readPool(parsed.chunks[parsed.poolChunkIndex]).strings
         for (chunk in parsed.chunks) {

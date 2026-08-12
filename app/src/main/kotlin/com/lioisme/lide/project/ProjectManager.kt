@@ -295,39 +295,12 @@ class ProjectManager {
             false
         }
 
-    // ---- WP-005 文件树操作 + 工程重命名（纯逻辑见 [ProjectEntryOps]，可单测）----
+    // ---- 工程重命名（纯逻辑见 [ProjectEntryOps]，可单测）----
 
-    private fun rootDir(project: Project): File = File(project.path)
-
-    /** 条目名校验（委托 [ProjectEntryOps]）。 */
+    /**
+     * 条目名校验（委托 [ProjectEntryOps]；新建工程入口与重命名对话框共用）。
+     */
     fun isValidEntryName(name: String): Boolean = ProjectEntryOps.isValidEntryName(name)
-
-    /** 新建 .lua 文件（[dirPath] 为工程内绝对路径）。 */
-    fun createProjectFile(
-        project: Project,
-        dirPath: String,
-        requestedName: String,
-    ): Boolean = ProjectEntryOps.createFile(rootDir(project), dirPath, requestedName)
-
-    /** 新建目录（[dirPath] 为工程内绝对路径）。 */
-    fun createProjectDirectory(
-        project: Project,
-        dirPath: String,
-        requestedName: String,
-    ): Boolean = ProjectEntryOps.createDirectory(rootDir(project), dirPath, requestedName)
-
-    /** 重命名工程内条目（锚点/越界/非法名防护见 [ProjectEntryOps]）。 */
-    fun renameProjectEntry(
-        project: Project,
-        oldPath: String,
-        requestedName: String,
-    ): String? = ProjectEntryOps.renameEntry(rootDir(project), oldPath, requestedName)
-
-    /** 删除工程内文件/目录（含锚点目录保护）。 */
-    fun deleteProjectEntry(
-        project: Project,
-        path: String,
-    ): Boolean = ProjectEntryOps.deleteEntry(rootDir(project), path)
 
     /**
      * 工程重命名（WP-005）：目录改名 + init.lua appname 同步。

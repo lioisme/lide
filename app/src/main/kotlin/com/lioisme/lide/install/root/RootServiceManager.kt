@@ -65,15 +65,9 @@ class RootServiceManager(
         scope.launch(Dispatchers.IO) { refreshStatusBlocking() }
     }
 
-    /** 刷新可用性状态（异步）。 */
-    fun refreshStatus() {
-        configureDefaultShell()
-        scope.launch(Dispatchers.IO) { refreshStatusBlocking() }
-    }
-
     /**
      * 申请 Root 授权：强制建立主 shell（持久授权静默，未授权则弹 su 确认）。
-     * 结果经 [refreshStatus] 回写状态流。
+     * 结果经 [refreshStatusBlocking] 回写状态流。
      */
     fun requestPermission() {
         configureDefaultShell()

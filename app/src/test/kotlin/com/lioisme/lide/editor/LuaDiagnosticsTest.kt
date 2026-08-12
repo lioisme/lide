@@ -9,7 +9,7 @@ import org.junit.Test
  * LuaDiagnostics 词法校验（WP-019 测试骨架）。
  */
 class LuaDiagnosticsTest {
-    private fun errors(source: String): List<String> = LuaDiagnostics.checkSyntax(source).map { it.detail.briefMessage.toString() }
+    private fun errors(source: String): List<String> = LuaDiagnostics.Incremental().check(source).map { it.detail.briefMessage.toString() }
 
     @Test
     fun `干净脚本零错误`() {
@@ -87,7 +87,7 @@ class LuaDiagnosticsTest {
     @Test
     fun `错误行号定位正确`() {
         val source = "print(1)\nlocal x = ("
-        val region = LuaDiagnostics.checkSyntax(source).first()
+        val region = LuaDiagnostics.Incremental().check(source).first()
         // 错误位于第二行，region 起点应为该行的行首偏移。
         assertEquals("print(1)\n".length, region.startIndex)
     }
@@ -198,7 +198,7 @@ class LuaDiagnosticsTest {
 
     @Test
     fun `无 Content 时不生成 quickfix`() {
-        val regions = LuaDiagnostics.checkSyntax("print(1")
+        val regions = LuaDiagnostics.Incremental().check("print(1")
         assertTrue(regions.isNotEmpty())
         assertTrue(regions.all { it.detail.quickfixes.isNullOrEmpty() })
     }
@@ -288,7 +288,7 @@ class LuaDiagnosticsTest {
         assertTrue(regions.any { it.detail.briefMessage == "bad close: }@1" })
         // 默认渲染器仍为中文模板（历史文案契约）。
         assertTrue(
-            LuaDiagnostics.checkSyntax("local x = }")
+            LuaDiagnostics.Incremental().check("local x = }")
                 .any { it.detail.briefMessage.contains("Mismatched '}'") },
         )
     }
