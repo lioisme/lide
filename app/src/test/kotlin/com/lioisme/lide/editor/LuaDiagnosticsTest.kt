@@ -277,7 +277,10 @@ class LuaDiagnosticsTest {
     fun `自定义消息渲染器覆盖诊断文案`() {
         val provider =
             object : DiagnosticMessageProvider {
-                override fun message(key: String, vararg args: Any): String =
+                override fun message(
+                    key: String,
+                    vararg args: Any,
+                ): String =
                     when (key) {
                         MSG_UNMATCHED_CLOSE -> "bad close: ${args[0]}"
                         MSG_AT_LINE -> "${args[0]}@${args[1]}"
@@ -288,7 +291,9 @@ class LuaDiagnosticsTest {
         assertTrue(regions.any { it.detail.briefMessage == "bad close: }@1" })
         // 默认渲染器仍为中文模板（历史文案契约）。
         assertTrue(
-            LuaDiagnostics.Incremental().check("local x = }")
+            LuaDiagnostics
+                .Incremental()
+                .check("local x = }")
                 .any { it.detail.briefMessage.contains("Mismatched '}'") },
         )
     }

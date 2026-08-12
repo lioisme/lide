@@ -19,7 +19,6 @@ import java.io.File
  * - 清单每个条目必须存在于引擎源码（防幽灵登记：如 ftp / http / import / mime / smtp）。
  */
 class EngineNativeModulesTest {
-
     private val cppDir = File("src/main/cpp")
 
     private fun engineModules(): Set<String> {
@@ -28,17 +27,19 @@ class EngineNativeModulesTest {
             cppDir.isDirectory,
         )
         val dirs = cppDir.listFiles { f -> f.isDirectory && f.name != "lua" && f.name != "live2d" } ?: error("cpp 目录不可读")
-        return dirs.mapNotNull { dir ->
-            val mk = File(dir, "Android.mk")
-            if (!mk.isFile) return@mapNotNull null
-            mk.readLines()
-                .firstOrNull { it.contains("LOCAL_MODULE") }
-                ?.substringAfter("LOCAL_MODULE")
-                ?.substringAfter(":=")
-                ?.trim()
-                // LOCAL_MODULE 带 lib 前缀时（如 zip → libzip）产物仍为 libzip.so，加载名去前缀（zip）。
-                ?.removePrefix("lib")
-        }.toSet()
+        return dirs
+            .mapNotNull { dir ->
+                val mk = File(dir, "Android.mk")
+                if (!mk.isFile) return@mapNotNull null
+                mk
+                    .readLines()
+                    .firstOrNull { it.contains("LOCAL_MODULE") }
+                    ?.substringAfter("LOCAL_MODULE")
+                    ?.substringAfter(":=")
+                    ?.trim()
+                    // LOCAL_MODULE 带 lib 前缀时（如 zip → libzip）产物仍为 libzip.so，加载名去前缀（zip）。
+                    ?.removePrefix("lib")
+            }.toSet()
     }
 
     @Test

@@ -692,8 +692,7 @@ tasks.register("verifySoraIsolation") {
             .filter { f ->
                 val rel = f.relativeTo(hostRoot).invariantSeparatorsPath
                 !rel.startsWith("editor") && !rel.startsWith("editor/")
-            }
-            .forEach { f ->
+            }.forEach { f ->
                 if ("io.github.rosemoe" in f.readText()) {
                     offenders += f.relativeTo(rootProject.rootDir).invariantSeparatorsPath
                 }

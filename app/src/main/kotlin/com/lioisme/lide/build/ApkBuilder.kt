@@ -112,8 +112,7 @@ object ApkBuilder {
     const val DEFAULT_LAUNCHER_ACTIVITY = "com.lioisme.lide.engine.EngineActivity"
 
     /** 编译/加密范围判定（Q16 L8 收口）：仅 .lua/.aly（ignoreCase），其余工程文件恒原样入库。 */
-    private fun isLuaFile(relPath: String): Boolean =
-        relPath.endsWith(".lua", ignoreCase = true) || relPath.endsWith(".aly", ignoreCase = true)
+    private fun isLuaFile(relPath: String): Boolean = relPath.endsWith(".lua", ignoreCase = true) || relPath.endsWith(".aly", ignoreCase = true)
 
     /** 原生库恒保留项：引擎核心（bin.lua checklib 同款强制包含）。 */
     const val ALWAYS_KEEP_NATIVE_LIB = "libluajava.so"
@@ -246,7 +245,9 @@ object ApkBuilder {
         // 工程桌面图标（可选）：工程根目录 icon.png（pro 同款约定），
         // 装配时覆盖宿主默认图标条目；未提供则用宿主图标。
         val projectIcon =
-            input.luaSources.entries.firstOrNull { it.key.equals("icon.png", ignoreCase = true) }?.value
+            input.luaSources.entries
+                .firstOrNull { it.key.equals("icon.png", ignoreCase = true) }
+                ?.value
         // 图标条目路径（D1）：复用单次解析的 [iconEntry]——path 经 Res_value(TYPE_STRING)
         // 引用解析真实路径（资源混淆构建 = res/9T.png 等短名，字面量会落空；P11 实证
         // debug = "res/drawable/icon.png"）；解析失败回落字面量（兼容 / 防御）。
@@ -344,7 +345,7 @@ object ApkBuilder {
                         val libFile = parts.getOrNull(2)
                         if (abi == null || abi !in effectiveAbiSet) continue
                         if (input.stripNativeLibs &&
-                            !nativeLibKept(libFile ?: "", input.requiredNativeLibs, stripNativeLibs = true)
+                            !nativeLibKept(libFile ?: "", input.requiredNativeLibs, stripNativeLibs = input.stripNativeLibs)
                         ) {
                             continue
                         }

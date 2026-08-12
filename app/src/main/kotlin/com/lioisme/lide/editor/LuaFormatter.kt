@@ -15,7 +15,6 @@ package com.lioisme.lide.editor
  * - 纯函数无状态，可后台执行；大文件（>200KB）短路返回原文本（调用方负责后台化）。
  */
 object LuaFormatter {
-
     /** 大文件短路阈值（D2：单一事实源 [EditorLimits.MAX_FORMAT_LENGTH]，与
      *  编辑器大文件降级口径一致——>200KB 不做重排）。 */
     private const val MAX_FORMAT_LENGTH = EditorLimits.MAX_FORMAT_LENGTH
@@ -113,9 +112,12 @@ object LuaFormatter {
                     val text = t.text
                     // 「行首词」判定：`end,` 命中；`while false do end`（行首词
                     // 为 while）不命中，由行内自闭合标记兜住。
-                    if (firstWordIsAny(text, BLOCK_CLOSE)) level--
-                    // 表闭合：行首 `}`（如 `},`）与 end/until 同语义先减级。
-                    else if (text.startsWith("}")) level--
+                    if (firstWordIsAny(text, BLOCK_CLOSE)) {
+                        level--
+                    } else if (text.startsWith("}")) {
+                        level--
+                        // 表闭合：行首 `}`（如 `},`）与 end/until 同语义先减级。
+                    }
                 }
                 writeIndent()
             } else {
@@ -124,10 +126,12 @@ object LuaFormatter {
                 // 以维持 `{ 1, 2 }` 惯例，2026-08-11 T17.4 实测修正）。
                 val noLeadingSpace =
                     t.type == LuaTokenType.CODE &&
-                        (t.text.startsWith(",") ||
-                            t.text.startsWith(")") ||
-                            t.text.startsWith("]") ||
-                            t.text.startsWith(";"))
+                        (
+                            t.text.startsWith(",") ||
+                                t.text.startsWith(")") ||
+                                t.text.startsWith("]") ||
+                                t.text.startsWith(";")
+                        )
                 if (out.isNotEmpty() && out.last() != '\n' && out.last() != ' ' && !noLeadingSpace) {
                     out.append(' ')
                 }
@@ -138,10 +142,12 @@ object LuaFormatter {
                 val text = t.text
                 if (
                     !lineBlockOpen &&
-                    (containsBlockWord(text, BLOCK_OPEN) ||
-                        containsBlockWord(text, "else") ||
-                        containsBlockWord(text, "elseif") ||
-                        (text == "local" && nextCodeWordIs(tokens, i, "function")))
+                    (
+                        containsBlockWord(text, BLOCK_OPEN) ||
+                            containsBlockWord(text, "else") ||
+                            containsBlockWord(text, "elseif") ||
+                            (text == "local" && nextCodeWordIs(tokens, i, "function"))
+                    )
                 ) {
                     lineBlockOpen = true
                 }
@@ -191,7 +197,10 @@ object LuaFormatter {
      * 标识符边界。`onClick = function()` 命中 function；`doSomething`/`endless`
      * 不命中 do/end（前后邻接标识符字符）。
      */
-    private fun containsBlockWord(text: String, word: String): Boolean {
+    private fun containsBlockWord(
+        text: String,
+        word: String,
+    ): Boolean {
         var from = 0
         while (true) {
             val idx = text.indexOf(word, from)
@@ -205,18 +214,25 @@ object LuaFormatter {
     }
 
     /** [words] 中任一在 [text] 内按词边界出现。 */
-    private fun containsBlockWord(text: String, words: Set<String>): Boolean =
-        words.any { containsBlockWord(text, it) }
+    private fun containsBlockWord(
+        text: String,
+        words: Set<String>,
+    ): Boolean = words.any { containsBlockWord(text, it) }
 
     /** [text] 开头（词边界）是否为 [word]（`end,` 命中；`endless` 不命中）。 */
-    private fun firstWordIs(text: String, word: String): Boolean {
+    private fun firstWordIs(
+        text: String,
+        word: String,
+    ): Boolean {
         if (!text.startsWith(word)) return false
         return text.length == word.length || !text[word.length].isIdentifierChar()
     }
 
     /** [words] 中任一在 [text] 开头按词边界匹配。 */
-    private fun firstWordIsAny(text: String, words: Set<String>): Boolean =
-        words.any { firstWordIs(text, it) }
+    private fun firstWordIsAny(
+        text: String,
+        words: Set<String>,
+    ): Boolean = words.any { firstWordIs(text, it) }
 
     private fun countNewlines(s: String): Int {
         var count = 0

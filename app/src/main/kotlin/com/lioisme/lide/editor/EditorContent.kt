@@ -14,8 +14,9 @@ import io.github.rosemoe.sora.text.Content
  * - **快照**：经 [snapshot]（后台线程安全，内部 ReadWriteLock）；
  * - **raw 访问**：仅同模块内部（session 门面实现），不进入公共 API 面。
  */
-class EditorContent internal constructor(internal val raw: Content) {
-
+class EditorContent internal constructor(
+    internal val raw: Content,
+) {
     /** 文本快照（后台线程安全）。 */
     fun snapshot(): String = raw.toString()
 

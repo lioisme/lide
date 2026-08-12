@@ -11,4 +11,7 @@ object EditorLimits {
 
     /** 格式化长度上限（字节）：超过直接原样返回，不做格式化。 */
     const val MAX_FORMAT_LENGTH = LARGE_FILE_THRESHOLD
+
+    /** 大文件 undo 栈深度上限（节点）：超过 [LARGE_FILE_THRESHOLD] 时降级，避免内存膨胀。 */
+    const val LARGE_FILE_UNDO_STACK = 200
 }

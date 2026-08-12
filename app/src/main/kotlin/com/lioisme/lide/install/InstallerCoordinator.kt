@@ -34,19 +34,20 @@ object InstallerCoordinator {
     suspend fun installSilently(
         apkFile: File,
         backend: InstallerBackend,
-    ): Boolean = withContext(Dispatchers.IO) {
-        try {
-            when (backend) {
-                InstallerBackend.DEFAULT -> false
-                InstallerBackend.SHIZUKU -> shizukuInstall(apkFile)
-                InstallerBackend.DHIZUKU -> dhizukuInstall(apkFile)
-                InstallerBackend.ROOT -> rootInstall(apkFile)
+    ): Boolean =
+        withContext(Dispatchers.IO) {
+            try {
+                when (backend) {
+                    InstallerBackend.DEFAULT -> false
+                    InstallerBackend.SHIZUKU -> shizukuInstall(apkFile)
+                    InstallerBackend.DHIZUKU -> dhizukuInstall(apkFile)
+                    InstallerBackend.ROOT -> rootInstall(apkFile)
+                }
+            } catch (e: Throwable) {
+                Log.w(TAG, "$backend install exception, falling back: ${e.javaClass.simpleName}: ${e.message}")
+                false
             }
-        } catch (e: Throwable) {
-            Log.w(TAG, "$backend install exception, falling back: ${e.javaClass.simpleName}: ${e.message}")
-            false
         }
-    }
 
     private suspend fun shizukuInstall(apkFile: File): Boolean {
         if (!InstallerServices.shizuku.isReadyNow()) return false

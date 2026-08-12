@@ -16,7 +16,6 @@ import java.io.File
  * - 本门面无状态（引擎单例即状态源），线程安全天然成立。
  */
 object RuntimePaths {
-
     /** E4（2026-08-12）：工程根目录子目录名（单一事实源，project 包复用）。 */
     const val PROJECT_DIR_NAME = "project"
 

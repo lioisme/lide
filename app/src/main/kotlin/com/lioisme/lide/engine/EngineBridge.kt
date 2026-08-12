@@ -5,14 +5,15 @@ import android.content.Intent
 import com.lioisme.lide.R
 import com.lioisme.lide.model.Project
 
-class EngineBridge(private val context: Context) {
-
+class EngineBridge(
+    private val context: Context,
+) {
     fun createEngineIntent(
         projectDir: String,
         mainFile: String = Project.DEFAULT_MAIN_FILE,
-        args: Array<Any?>? = null
-    ): Intent {
-        return Intent().apply {
+        args: Array<Any?>? = null,
+    ): Intent =
+        Intent().apply {
             setClassName(context.packageName, EngineContract.ENGINE_ACTIVITY)
             putExtra(EngineContract.EXTRA_PROJECT_DIR, projectDir)
             putExtra(EngineContract.EXTRA_MAIN_FILE, mainFile)
@@ -23,5 +24,4 @@ class EngineBridge(private val context: Context) {
             putExtra(EngineContract.EXTRA_ANIM_IN, R.anim.slide_in_left)
             putExtra(EngineContract.EXTRA_ANIM_OUT, R.anim.slide_out_right)
         }
-    }
 }

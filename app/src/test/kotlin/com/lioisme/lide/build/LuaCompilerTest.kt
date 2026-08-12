@@ -5,7 +5,6 @@ import org.junit.Assert.assertNull
 import org.junit.Test
 
 class LuaCompilerTest {
-
     @Test
     fun `parseErrorLine extracts line from file-style chunk`() {
         assertEquals(12, LuaCompiler.parseErrorLine("main.lua:12: syntax error near 'end'"))

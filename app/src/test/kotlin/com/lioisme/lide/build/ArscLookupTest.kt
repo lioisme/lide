@@ -13,7 +13,6 @@ import org.junit.Test
  * - 垃圾输入安全降级 null。
  */
 class ArscLookupTest {
-
     @Test
     fun `utf8 pool resolves icon id and path`() {
         val arsc = TestArscFactory.syntheticArsc(pkgId = 0x7f, iconPath = "res/drawable/icon.png")

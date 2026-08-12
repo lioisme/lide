@@ -16,7 +16,6 @@ import com.lioisme.lide.R
  * `android.R.style.class.getField(theme)` 反射 setTheme，只认 `Theme_*` 字段名。
  */
 object ThemeCatalog {
-
     private const val THEME_PREFIX = "Theme_"
 
     /** 主题选项（下拉候选项）。labelRes 非空 = 常见主题别名；否则展示原名。 */

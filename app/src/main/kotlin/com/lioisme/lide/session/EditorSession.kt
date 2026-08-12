@@ -6,13 +6,13 @@ import com.lioisme.lide.model.Project
 import com.lioisme.lide.project.ProjectManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
 
@@ -82,8 +82,10 @@ class EditorSession(
         if (files.isEmpty()) return
         val main = project.mainFile.takeIf { it in files } ?: files.first()
         val content = withContext(ioDispatcher) { loadContent(main) }
-        _tabs.value = listOf(EditorTab(main, dirty = false))
-        _selection.value = Selection(main, content)
+        withContext(mainDispatcher) {
+            _tabs.value = listOf(EditorTab(main, dirty = false))
+            _selection.value = Selection(main, content)
+        }
     }
 
     private var initialized = false
@@ -115,10 +117,12 @@ class EditorSession(
     /** 打开（或选中）标签：IO 读盘 + IO 线程构造 Content 后入缓存，再切换。 */
     suspend fun openTab(fileName: String) {
         val content = withContext(ioDispatcher) { loadContent(fileName) }
-        if (_tabs.value.none { it.fileName == fileName }) {
-            _tabs.value = _tabs.value + EditorTab(fileName, dirty = false)
+        withContext(mainDispatcher) {
+            if (_tabs.value.none { it.fileName == fileName }) {
+                _tabs.value = _tabs.value + EditorTab(fileName, dirty = false)
+            }
+            select(fileName, content)
         }
-        select(fileName, content)
     }
 
     /**

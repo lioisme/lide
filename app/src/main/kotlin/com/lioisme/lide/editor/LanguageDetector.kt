@@ -9,7 +9,6 @@ package com.lioisme.lide.editor
  * 未知文件不再以 Lua 兜底，杜绝「csv/log 以 Lua 语法打开 + Lua 伪报错」。
  */
 object LanguageDetector {
-
     /** 未识别扩展名的兜底 scope（纯文本，无语义高亮）。 */
     const val PLAIN_SCOPE = "text.plain"
 

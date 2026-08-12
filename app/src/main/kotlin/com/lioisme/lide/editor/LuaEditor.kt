@@ -1,7 +1,5 @@
 package com.lioisme.lide.editor
 
-import com.lioisme.lide.R
-
 import android.content.Context
 import android.util.Log
 import android.util.TypedValue
@@ -28,6 +26,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import com.lioisme.lide.R
 import io.github.rosemoe.sora.event.ContentChangeEvent
 import io.github.rosemoe.sora.event.EditorKeyEvent
 import io.github.rosemoe.sora.event.KeyBindingEvent
@@ -39,6 +38,7 @@ import io.github.rosemoe.sora.text.Content
 import io.github.rosemoe.sora.widget.CodeEditor
 import io.github.rosemoe.sora.widget.component.EditorAutoCompletion
 import io.github.rosemoe.sora.widget.minimap.MinimapConfig
+import io.github.rosemoe.sora.widget.schemes.EditorColorScheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -73,7 +73,6 @@ import kotlinx.coroutines.withContext
  *   / 光标动画 / 行号面板强制关闭，undo 栈 cap [LARGE_FILE_UNDO_STACK]。
  */
 private const val LARGE_FILE_THRESHOLD = EditorLimits.LARGE_FILE_THRESHOLD
-private const val LARGE_FILE_UNDO_STACK = 200
 private const val DIAGNOSTIC_DEBOUNCE_MS = 500L
 private const val TAG = "LuaEditor"
 
@@ -91,7 +90,7 @@ private class EditorInstance(
     private val context: Context,
     initialConfig: EditorConfig,
     initialScope: String,
-    initialScheme: io.github.rosemoe.sora.widget.schemes.EditorColorScheme,
+    initialScheme: EditorColorScheme,
     private val onContentModified: () -> Unit,
     private val onUndoRedoStateChanged: (Boolean, Boolean) -> Unit,
     private val onFormatAction: () -> Unit,
@@ -458,10 +457,11 @@ fun LuaEditor(
     val currentConfig by rememberUpdatedState(config)
     // 文件 → 语言 scope 由 :editor 解析（文本级能力，宿主只传文件名）。
     // 传入值可能是完整路径，先取 basename 再按扩展名/精确名映射。
-    val resolvedScope = remember(fileName) {
-        val base = fileName?.substringAfterLast('/')?.substringAfterLast('\\')
-        if (base.isNullOrEmpty()) LanguageDetector.PLAIN_SCOPE else LanguageDetector.detect(base)
-    }
+    val resolvedScope =
+        remember(fileName) {
+            val base = fileName?.substringAfterLast('/')?.substringAfterLast('\\')
+            if (base.isNullOrEmpty()) LanguageDetector.PLAIN_SCOPE else LanguageDetector.detect(base)
+        }
     // 诊断收集器（LaunchedEffect(Unit) 长驻）不得捕获首帧 scope：
     // remember(fileName) 值变更后，经 rememberUpdatedState 读取最新值（防 stale closure）。
     val currentResolvedScope by rememberUpdatedState(resolvedScope)
@@ -471,7 +471,10 @@ fun LuaEditor(
     val diagMessageProvider =
         remember {
             object : DiagnosticMessageProvider {
-                override fun message(key: String, vararg args: Any): String {
+                override fun message(
+                    key: String,
+                    vararg args: Any,
+                ): String {
                     val resId =
                         when (key) {
                             MSG_UNCLOSED_LONG_COMMENT -> R.string.diag_unclosed_long_comment
@@ -595,7 +598,7 @@ fun LuaEditor(
     LaunchedEffect(content) {
         content.raw.undoManager.setMaxUndoStackSize(
             if (content.raw.length > LARGE_FILE_THRESHOLD) {
-                LARGE_FILE_UNDO_STACK
+                EditorLimits.LARGE_FILE_UNDO_STACK
             } else {
                 DEFAULT_UNDO_STACK_SIZE
             },

@@ -166,7 +166,7 @@ fun EditorScreen(
     var showBuildDialog by remember { mutableStateOf(false) }
     // 脏文件待确认队列：单标签关闭时为单元素列表；「关闭其他/全部」时为批量队列，
     // 逐个确认后经 saveAndClose/discardAndClose 出队，取消即放弃剩余批次。
-    var closeQueue by remember { mutableStateOf<List<String>>(emptyList()) }
+    var closeQueue by rememberSaveable { mutableStateOf<List<String>>(emptyList()) }
 
     val extPermissionMissing =
         remember {
@@ -415,278 +415,278 @@ fun EditorScreen(
     }
 
     Scaffold(
-            topBar = {
-                EditorToolbar(
-                    // 标题显示工程名，不显示当前打开文件的路径（文件身份由标签行承载）。
-                    title = project.name,
-                    canUndo = selectedTab?.canUndo == true,
-                    canRedo = selectedTab?.canRedo == true,
-                    onBack = {
-                        // U2：先释放编辑器 View 焦点再弹栈（防焦点转移到主界面首个可聚焦组件）。
-                        editorController.releaseFocus()
-                        session.flushSelectedDirtyAsync()
-                        onBack()
-                    },
-                    onUndo = { runUndoRedo { it.undo() } },
-                    onRedo = { runUndoRedo { it.redo() } },
-                    onRun = {
-                        requestRun()
-                    },
-                    moreActions =
-                        buildList {
-                            // 文件分类：文件树（占位，2026-08-11 用户拍板「可以先只做按钮」；
-                            // 功能未接，点击提示占位文案）。
-                            add(
-                                EditorMoreAction(
-                                    category = stringResource(R.string.menu_category_file),
-                                    label = stringResource(R.string.menu_file_tree),
-                                ) {
-                                    android.widget.Toast
-                                        .makeText(
-                                            context,
-                                            context.getString(R.string.file_tree_coming_soon),
-                                            android.widget.Toast.LENGTH_SHORT,
-                                        )
-                                        .show()
-                                },
-                            )
-                            // 编辑分类：查找（P5.1）+ 只读切换（P1.4）+ 格式化 + 跳行 + 设置直达。
-                            add(
-                                EditorMoreAction(
-                                    category = stringResource(R.string.menu_category_edit),
-                                    label = stringResource(R.string.menu_find),
-                                    enabled = selectedFile != null,
-                                ) {
-                                    searchActive = true
-                                },
-                            )
-                            // 只读切换（P1.4，2026-08-11 真只读入口 = squircle
-                            // 扩展键盘锁定按钮等价物；勾选态由 EditorMoreAction.checked 承
-                            // 载；切回即时可输入——LuaEditor.applyConfig 守卫式 diff 落
-                            // isEditable，sora 原生门禁接管）。
-                            add(
-                                EditorMoreAction(
-                                    category = stringResource(R.string.menu_category_edit),
-                                    label = stringResource(R.string.read_only),
-                                    checked = appEditorConfig.readOnly,
-                                ) {
-                                    SettingsManager.updateEditor(
-                                        appEditorConfig.copy(readOnly = !appEditorConfig.readOnly),
+        topBar = {
+            EditorToolbar(
+                // 标题显示工程名，不显示当前打开文件的路径（文件身份由标签行承载）。
+                title = project.name,
+                canUndo = selectedTab?.canUndo == true,
+                canRedo = selectedTab?.canRedo == true,
+                onBack = {
+                    // U2：先释放编辑器 View 焦点再弹栈（防焦点转移到主界面首个可聚焦组件）。
+                    editorController.releaseFocus()
+                    session.flushSelectedDirtyAsync()
+                    onBack()
+                },
+                onUndo = { runUndoRedo { it.undo() } },
+                onRedo = { runUndoRedo { it.redo() } },
+                onRun = {
+                    requestRun()
+                },
+                moreActions =
+                    buildList {
+                        // 文件分类：文件树（占位，2026-08-11 用户拍板「可以先只做按钮」；
+                        // 功能未接，点击提示占位文案）。
+                        add(
+                            EditorMoreAction(
+                                category = stringResource(R.string.menu_category_file),
+                                label = stringResource(R.string.menu_file_tree),
+                            ) {
+                                android.widget.Toast
+                                    .makeText(
                                         context,
-                                    )
-                                },
-                            )
-                            // 格式化（Ctrl+L）+ 跳行 + 编辑器设置直达入口。
-                            add(
-                                EditorMoreAction(
-                                    category = stringResource(R.string.menu_category_edit),
-                                    label = stringResource(R.string.menu_goto_line),
-                                    enabled = selectedFile != null,
-                                ) {
-                                    showGotoDialog = true
-                                },
-                            )
-                            add(
-                                EditorMoreAction(
-                                    category = stringResource(R.string.menu_category_edit),
-                                    label = stringResource(R.string.menu_format),
-                                    enabled = selectedTab != null && !appEditorConfig.readOnly,
-                                ) {
-                                    runFormat()
-                                },
-                            )
-                            add(
-                                EditorMoreAction(
-                                    category = stringResource(R.string.menu_category_edit),
-                                    label = stringResource(R.string.menu_editor_settings),
-                                ) {
-                                    onEditorSettings()
-                                },
-                            )
-                            // 工程分类：信息 / 权限 / 打包 + AndroLua 设置直达入口。
-                            addAll(
-                                listOf(
-                                    EditorMoreAction(
-                                        category = stringResource(R.string.menu_category_project),
-                                        label = stringResource(R.string.project_properties),
-                                    ) {
-                                        onProjectInfo()
-                                    },
-                                    EditorMoreAction(
-                                        category = stringResource(R.string.menu_category_project),
-                                        label = stringResource(R.string.project_permissions),
-                                    ) {
-                                        onPermissions()
-                                    },
-                                    EditorMoreAction(
-                                        category = stringResource(R.string.menu_category_project),
-                                        label = stringResource(R.string.build_apk),
-                                    ) {
-                                        showBuildDialog = true
-                                    },
-                                    EditorMoreAction(
-                                        category = stringResource(R.string.menu_category_project),
-                                        label = stringResource(R.string.menu_androlua_settings),
-                                    ) {
-                                        onAndroLuaSettings()
-                                    },
-                                ),
-                            )
-                        },
-                )
-            },
-            snackbarHost = {
-                SnackbarHost(hostState = snackbarHostState)
-            },
-        ) { padding ->
-            Column(
-                Modifier
-                    .fillMaxSize()
-                    .padding(padding),
-            ) {
-                // P5.1 查找/替换面板：位于编辑区上方，展开时编辑区自然收缩；关闭即释放。
-                if (searchActive) {
-                    EditorSearchPanel(
-                        findQuery = findQuery,
-                        onFindQueryChange = { findQuery = it },
-                        replaceQuery = replaceQuery,
-                        onReplaceQueryChange = { replaceQuery = it },
-                        showReplace = showReplace,
-                        onToggleReplace = { showReplace = !showReplace },
-                        isRegex = isRegex,
-                        onIsRegexChange = { isRegex = it },
-                        isCaseSensitive = isCaseSensitive,
-                        onIsCaseSensitiveChange = { isCaseSensitive = it },
-                        isWholeWord = isWholeWord,
-                        onIsWholeWordChange = { isWholeWord = it },
-                        matchInfo = searchInfo,
-                        // 只读下替换置灰（sora 另有 isEditable 门禁，双保险）。
-                        replaceEnabled = !appEditorConfig.readOnly,
-                        // sora gotoNext/gotoPrevious 选中命中但不发 PublishSearchResultEvent，主动重读。
-                        onNext = {
-                            editorController.searchNext()
-                            searchInfo = editorController.searchMatchInfo()
-                        },
-                        onPrevious = {
-                            editorController.searchPrevious()
-                            searchInfo = editorController.searchMatchInfo()
-                        },
-                        onReplace = {
-                            // 替换后 sora 结果集失效：手动重搜刷新计数。
-                            editorController.replaceCurrent(replaceQuery)
-                            if (findQuery.isNotEmpty()) runSearchNow() else closeSearchPanel()
-                        },
-                        onReplaceAll = {
-                            // 自实现全量替换（sora 版本带 ProgressDialog，AndroidView 上下文无
-                            // window token 会崩），完成后重搜刷新计数。
-                            val type =
-                                when {
-                                    isRegex -> SearchMatchType.REGEX
-                                    isWholeWord -> SearchMatchType.WHOLE_WORD
-                                    else -> SearchMatchType.NORMAL
-                                }
-                            editorController.replaceAll(findQuery, replaceQuery, type, isCaseSensitive) {
-                                if (findQuery.isNotEmpty()) runSearchNow() else closeSearchPanel()
-                            }
-                        },
-                        onClose = { closeSearchPanel() },
-                    )
-                }
-                // 标签视图列表：状态类已合并（B-5），tabs 直接是 EditorTab，无需逐帧适配。
-                EditorBody(
-                    session = session,
-                    contentPadding = PaddingValues(0.dp),
-                    tabs = tabs,
-                    selectedFile = selectedFile,
-                    content = content,
-                    isDarkTheme = isDarkTheme,
-                    editorConfig = appEditorConfig,
-                    controller = editorController,
-                    onEditorBound = {
-                        // 绑定信号幂等完成（主线程 update 阶段触发；已完成则跳过，防重复 complete 抛异常）。
-                        if (!editorReady.isCompleted) editorReady.complete(Unit)
-                    },
-                    onFormatRequest = { runFormat() },
-                    // P5.1：sora 后台搜索完成 → 主线程回调 → 刷新计数（面板展示 n/m）。
-                    onSearchResultPublished = { searchInfo = editorController.searchMatchInfo() },
-                    storagePermissionMissing = extPermissionMissing.value,
-                    onTabClose = { file ->
-                        if (session.requestClose(file)) closeQueue = listOf(file)
-                    },
-                    onTabMoved = { from, to -> session.moveTab(from, to) },
-                    onCloseOthers = { file ->
-                        val dirty = session.closeOthers(file)
-                        if (dirty.isNotEmpty()) closeQueue = dirty
-                    },
-                    onCloseAll = {
-                        val dirty = session.closeAll()
-                        if (dirty.isNotEmpty()) closeQueue = dirty
-                    },
-                    onGrantStorage = {
-                        manageStorageLauncher.launch(
-                            Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION).apply {
-                                data = Uri.parse("package:${context.packageName}")
+                                        context.getString(R.string.file_tree_coming_soon),
+                                        android.widget.Toast.LENGTH_SHORT,
+                                    ).show()
                             },
                         )
+                        // 编辑分类：查找（P5.1）+ 只读切换（P1.4）+ 格式化 + 跳行 + 设置直达。
+                        add(
+                            EditorMoreAction(
+                                category = stringResource(R.string.menu_category_edit),
+                                label = stringResource(R.string.menu_find),
+                                enabled = selectedFile != null,
+                            ) {
+                                searchActive = true
+                            },
+                        )
+                        // 只读切换（P1.4，2026-08-11 真只读入口 = squircle
+                        // 扩展键盘锁定按钮等价物；勾选态由 EditorMoreAction.checked 承
+                        // 载；切回即时可输入——LuaEditor.applyConfig 守卫式 diff 落
+                        // isEditable，sora 原生门禁接管）。
+                        add(
+                            EditorMoreAction(
+                                category = stringResource(R.string.menu_category_edit),
+                                label = stringResource(R.string.read_only),
+                                checked = appEditorConfig.readOnly,
+                            ) {
+                                SettingsManager.updateEditor(
+                                    appEditorConfig.copy(readOnly = !appEditorConfig.readOnly),
+                                    context,
+                                )
+                            },
+                        )
+                        // 格式化（Ctrl+L）+ 跳行 + 编辑器设置直达入口。
+                        add(
+                            EditorMoreAction(
+                                category = stringResource(R.string.menu_category_edit),
+                                label = stringResource(R.string.menu_goto_line),
+                                enabled = selectedFile != null,
+                            ) {
+                                showGotoDialog = true
+                            },
+                        )
+                        add(
+                            EditorMoreAction(
+                                category = stringResource(R.string.menu_category_edit),
+                                label = stringResource(R.string.menu_format),
+                                enabled = selectedTab != null && !appEditorConfig.readOnly,
+                            ) {
+                                runFormat()
+                            },
+                        )
+                        add(
+                            EditorMoreAction(
+                                category = stringResource(R.string.menu_category_edit),
+                                label = stringResource(R.string.menu_editor_settings),
+                            ) {
+                                onEditorSettings()
+                            },
+                        )
+                        // 工程分类：信息 / 权限 / 打包 + AndroLua 设置直达入口。
+                        addAll(
+                            listOf(
+                                EditorMoreAction(
+                                    category = stringResource(R.string.menu_category_project),
+                                    label = stringResource(R.string.project_properties),
+                                ) {
+                                    onProjectInfo()
+                                },
+                                EditorMoreAction(
+                                    category = stringResource(R.string.menu_category_project),
+                                    label = stringResource(R.string.project_permissions),
+                                ) {
+                                    onPermissions()
+                                },
+                                EditorMoreAction(
+                                    category = stringResource(R.string.menu_category_project),
+                                    label = stringResource(R.string.build_apk),
+                                ) {
+                                    showBuildDialog = true
+                                },
+                                EditorMoreAction(
+                                    category = stringResource(R.string.menu_category_project),
+                                    label = stringResource(R.string.menu_androlua_settings),
+                                ) {
+                                    onAndroLuaSettings()
+                                },
+                            ),
+                        )
                     },
+            )
+        },
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        },
+    ) { padding ->
+        Column(
+            Modifier
+                .fillMaxSize()
+                .padding(padding),
+        ) {
+            // P5.1 查找/替换面板：位于编辑区上方，展开时编辑区自然收缩；关闭即释放。
+            if (searchActive) {
+                EditorSearchPanel(
+                    findQuery = findQuery,
+                    onFindQueryChange = { findQuery = it },
+                    replaceQuery = replaceQuery,
+                    onReplaceQueryChange = { replaceQuery = it },
+                    showReplace = showReplace,
+                    onToggleReplace = { showReplace = !showReplace },
+                    isRegex = isRegex,
+                    onIsRegexChange = { isRegex = it },
+                    isCaseSensitive = isCaseSensitive,
+                    onIsCaseSensitiveChange = { isCaseSensitive = it },
+                    isWholeWord = isWholeWord,
+                    onIsWholeWordChange = { isWholeWord = it },
+                    matchInfo = searchInfo,
+                    // 只读下替换置灰（sora 另有 isEditable 门禁，双保险）。
+                    replaceEnabled = !appEditorConfig.readOnly,
+                    // sora gotoNext/gotoPrevious 选中命中但不发 PublishSearchResultEvent，主动重读。
+                    onNext = {
+                        editorController.searchNext()
+                        searchInfo = editorController.searchMatchInfo()
+                    },
+                    onPrevious = {
+                        editorController.searchPrevious()
+                        searchInfo = editorController.searchMatchInfo()
+                    },
+                    onReplace = {
+                        // 替换后 sora 结果集失效：手动重搜刷新计数。
+                        editorController.replaceCurrent(replaceQuery)
+                        if (findQuery.isNotEmpty()) runSearchNow() else closeSearchPanel()
+                    },
+                    onReplaceAll = {
+                        // 自实现全量替换（sora 版本带 ProgressDialog，AndroidView 上下文无
+                        // window token 会崩），完成后重搜刷新计数。
+                        val type =
+                            when {
+                                isRegex -> SearchMatchType.REGEX
+                                isWholeWord -> SearchMatchType.WHOLE_WORD
+                                else -> SearchMatchType.NORMAL
+                            }
+                        editorController.replaceAll(findQuery, replaceQuery, type, isCaseSensitive) {
+                            if (findQuery.isNotEmpty()) runSearchNow() else closeSearchPanel()
+                        }
+                    },
+                    onClose = { closeSearchPanel() },
                 )
             }
-        }
-
-        // 构建 APK 对话框：唯一打包入口（P5，2026-08-11：打开即构建，无配置 UI）。
-        if (showBuildDialog) {
-            BuildApkDialog(
-                project = project,
-                projectManager = projectManager,
-                onDismiss = { showBuildDialog = false },
-            )
-        }
-
-        // 脏文件待确认队列：单标签关闭时为单元素列表；「关闭其他/全部」时为批量队列，
-        val pendingFile = closeQueue.firstOrNull()
-        if (pendingFile != null) {
-            EditorCloseConfirmDialog(
-                fileName = pendingFile,
-                onSave = {
-                    session.saveAndClose(pendingFile)
-                    closeQueue = closeQueue.drop(1)
+            // 标签视图列表：状态类已合并（B-5），tabs 直接是 EditorTab，无需逐帧适配。
+            EditorBody(
+                session = session,
+                contentPadding = PaddingValues(0.dp),
+                tabs = tabs,
+                selectedFile = selectedFile,
+                content = content,
+                isDarkTheme = isDarkTheme,
+                editorConfig = appEditorConfig,
+                controller = editorController,
+                onEditorBound = {
+                    // 绑定信号幂等完成（主线程 update 阶段触发；已完成则跳过，防重复 complete 抛异常）。
+                    if (!editorReady.isCompleted) editorReady.complete(Unit)
                 },
-                onDiscard = {
-                    session.discardAndClose(pendingFile)
-                    closeQueue = closeQueue.drop(1)
+                onFormatRequest = { runFormat() },
+                // P5.1：sora 后台搜索完成 → 主线程回调 → 刷新计数（面板展示 n/m）。
+                onSearchResultPublished = { searchInfo = editorController.searchMatchInfo() },
+                storagePermissionMissing = extPermissionMissing.value,
+                onTabClose = { file ->
+                    if (session.requestClose(file)) closeQueue = listOf(file)
                 },
-                onCancel = { closeQueue = emptyList() },
-            )
-        }
-
-        // WP-002 运行结果对话框：失败时展示错误文本 + 跳行 / import 建议。
-        val result = runResult
-        if (result != null) {
-            EditorRunErrorDialog(
-                output = result.output,
-                hasLocation = result.location != null,
-                onJumpToLine = { jumpToError() },
-                onInsertImport = { insertImport(it) },
-                onDismiss = { runResult = null },
-                // 只读下「插入 import」直写 Content 会被门面拒绝：按钮置灰提示不可用
-                // （insertImport 入口另有读守卫，双保险，见本文件 insertImport）。
-                editable = !appEditorConfig.readOnly,
-            )
-        }
-
-        // P5.2 跳行对话框：确认后走 pendingJump 消费效应（含编辑器绑定门控）。
-        if (showGotoDialog) {
-            GotoLineDialog(
-                maxLine = editorController.lineCount(),
-                onConfirm = { line ->
-                    val content = selection.content ?: run {
-                        showGotoDialog = false
-                        return@GotoLineDialog
-                    }
-                    pendingJump = PendingJump(content, line)
-                    showGotoDialog = false
+                onTabMoved = { from, to -> session.moveTab(from, to) },
+                onCloseOthers = { file ->
+                    val dirty = session.closeOthers(file)
+                    if (dirty.isNotEmpty()) closeQueue = dirty
                 },
-                onDismiss = { showGotoDialog = false },
+                onCloseAll = {
+                    val dirty = session.closeAll()
+                    if (dirty.isNotEmpty()) closeQueue = dirty
+                },
+                onGrantStorage = {
+                    manageStorageLauncher.launch(
+                        Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION).apply {
+                            data = Uri.parse("package:${context.packageName}")
+                        },
+                    )
+                },
             )
         }
     }
+
+    // 构建 APK 对话框：唯一打包入口（P5，2026-08-11：打开即构建，无配置 UI）。
+    if (showBuildDialog) {
+        BuildApkDialog(
+            project = project,
+            projectManager = projectManager,
+            onDismiss = { showBuildDialog = false },
+        )
+    }
+
+    // 脏文件待确认队列：单标签关闭时为单元素列表；「关闭其他/全部」时为批量队列，
+    val pendingFile = closeQueue.firstOrNull()
+    if (pendingFile != null) {
+        EditorCloseConfirmDialog(
+            fileName = pendingFile,
+            onSave = {
+                session.saveAndClose(pendingFile)
+                closeQueue = closeQueue.drop(1)
+            },
+            onDiscard = {
+                session.discardAndClose(pendingFile)
+                closeQueue = closeQueue.drop(1)
+            },
+            onCancel = { closeQueue = emptyList() },
+        )
+    }
+
+    // WP-002 运行结果对话框：失败时展示错误文本 + 跳行 / import 建议。
+    val result = runResult
+    if (result != null) {
+        EditorRunErrorDialog(
+            output = result.output,
+            hasLocation = result.location != null,
+            onJumpToLine = { jumpToError() },
+            onInsertImport = { insertImport(it) },
+            onDismiss = { runResult = null },
+            // 只读下「插入 import」直写 Content 会被门面拒绝：按钮置灰提示不可用
+            // （insertImport 入口另有读守卫，双保险，见本文件 insertImport）。
+            editable = !appEditorConfig.readOnly,
+        )
+    }
+
+    // P5.2 跳行对话框：确认后走 pendingJump 消费效应（含编辑器绑定门控）。
+    if (showGotoDialog) {
+        GotoLineDialog(
+            maxLine = editorController.lineCount(),
+            onConfirm = { line ->
+                val content =
+                    selection.content ?: run {
+                        showGotoDialog = false
+                        return@GotoLineDialog
+                    }
+                pendingJump = PendingJump(content, line)
+                showGotoDialog = false
+            },
+            onDismiss = { showGotoDialog = false },
+        )
+    }
+}

@@ -59,8 +59,11 @@ enum class SigningScheme(
             }
 
         /** 开关组合 → 枚举；全关（无签名）返回 null，由 UI 层保证至少选中一项。 */
-        fun fromFlags(v1: Boolean, v2: Boolean, v3: Boolean): SigningScheme? =
-            entries.firstOrNull { it.v1 == v1 && it.v2 == v2 && it.v3 == v3 }
+        fun fromFlags(
+            v1: Boolean,
+            v2: Boolean,
+            v3: Boolean,
+        ): SigningScheme? = entries.firstOrNull { it.v1 == v1 && it.v2 == v2 && it.v3 == v3 }
     }
 }
 

@@ -64,10 +64,10 @@ import com.lioisme.lide.editor.LuaFonts
 import com.lioisme.lide.editor.TipIconButton
 import com.lioisme.lide.ui.theme.LideTopBar
 import com.lioisme.lide.ui.theme.SettingsManager
-import java.io.File
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 
 /**
  * 编辑器设置页：21 项设置（2026-08-11 P4 瘦身 27 → 20，移除 7 项「最佳配置」，
@@ -371,9 +371,15 @@ private fun fontFamilyLabel(id: Int): String {
         id >= EditorConfig.FONT_FAMILY_EXTERNAL_BASE -> {
             LuaFonts.externalLabel(context, id) ?: stringResource(R.string.font_jetbrains_mono)
         }
-        id in LuaFonts.builtinAssets.keys -> stringResource(LuaFonts.builtinLabelRes(id))
+
+        id in LuaFonts.builtinAssets.keys -> {
+            stringResource(LuaFonts.builtinLabelRes(id))
+        }
+
         // 系统族遗留值（历史持久化）：回落内置默认（JetBrains Mono）。
-        else -> stringResource(R.string.font_jetbrains_mono)
+        else -> {
+            stringResource(R.string.font_jetbrains_mono)
+        }
     }
 }
 
@@ -430,8 +436,7 @@ private fun FontFamilySheet(
                                 if (ok) R.string.font_import_done else R.string.font_import_failed,
                             ),
                             android.widget.Toast.LENGTH_SHORT,
-                        )
-                        .show()
+                        ).show()
                 }
             }
         }
@@ -479,8 +484,7 @@ private fun FontFamilySheet(
                         .fillMaxWidth()
                         .clickable {
                             fontPicker.launch(arrayOf("application/x-font-ttf", "font/ttf"))
-                        }
-                        .padding(horizontal = 24.dp, vertical = 16.dp),
+                        }.padding(horizontal = 24.dp, vertical = 16.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Icon(

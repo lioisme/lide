@@ -1,5 +1,6 @@
 package com.lioisme.lide.install.shizuku
 
+import android.os.Build
 import android.os.ParcelFileDescriptor
 import android.util.Log
 import com.lioisme.lide.install.IShizukuInstallerService
@@ -23,9 +24,13 @@ import java.util.concurrent.TimeUnit
  * 注意：本类经 R8 反射实例化，整包 keep（proguard-rules.pro「静默安装 keep」段）。
  */
 class ShizukuInstallerServiceImpl : IShizukuInstallerService.Stub() {
-
     companion object {
         private const val TAG = "ShizukuService"
+
+        /** API 26+ Process.destroyForcibly() 兼容：低版本回落 destroy()。 */
+        private fun Process.destroyForciblySafe() {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) destroyForcibly() else destroy()
+        }
 
         private const val STATUS_SUCCESS = 0
         private const val STATUS_FAILURE = -1
@@ -34,8 +39,13 @@ class ShizukuInstallerServiceImpl : IShizukuInstallerService.Stub() {
         private const val PIPE_BUFFER_SIZE = 65_536
 
         private fun log(msg: String) = Log.d(TAG, msg)
+
         private fun logW(msg: String) = Log.w(TAG, msg)
-        private fun logE(msg: String, e: Throwable? = null) = Log.e(TAG, msg, e)
+
+        private fun logE(
+            msg: String,
+            e: Throwable? = null,
+        ) = Log.e(TAG, msg, e)
     }
 
     override fun installPackage(
@@ -62,25 +72,26 @@ class ShizukuInstallerServiceImpl : IShizukuInstallerService.Stub() {
                     .redirectErrorStream(true)
                     .start()
 
-            val writeThread = Thread {
-                try {
-                    ParcelFileDescriptor.AutoCloseInputStream(pfd).use { input ->
-                        process.outputStream.use { output ->
-                            val buffer = ByteArray(PIPE_BUFFER_SIZE)
-                            var bytesWritten = 0L
-                            var read: Int
-                            while (input.read(buffer).also { read = it } != -1) {
-                                output.write(buffer, 0, read)
-                                bytesWritten += read
+            val writeThread =
+                Thread {
+                    try {
+                        ParcelFileDescriptor.AutoCloseInputStream(pfd).use { input ->
+                            process.outputStream.use { output ->
+                                val buffer = ByteArray(PIPE_BUFFER_SIZE)
+                                var bytesWritten = 0L
+                                var read: Int
+                                while (input.read(buffer).also { read = it } != -1) {
+                                    output.write(buffer, 0, read)
+                                    bytesWritten += read
+                                }
+                                output.flush()
+                                log("APK piped to pm stdin: $bytesWritten bytes (expected: $fileSize)")
                             }
-                            output.flush()
-                            log("APK piped to pm stdin: $bytesWritten bytes (expected: $fileSize)")
                         }
+                    } catch (e: Exception) {
+                        logE("Error piping APK to pm stdin", e)
                     }
-                } catch (e: Exception) {
-                    logE("Error piping APK to pm stdin", e)
                 }
-            }
             writeThread.start()
 
             val stdout = BufferedReader(InputStreamReader(process.inputStream)).readText().trim()
@@ -90,14 +101,14 @@ class ShizukuInstallerServiceImpl : IShizukuInstallerService.Stub() {
             if (writeThread.isAlive) {
                 logE("Write thread timed out after ${INSTALL_TIMEOUT_SECONDS}s, aborting install")
                 writeThread.interrupt()
-                process.destroyForcibly()
+                process.destroyForciblySafe()
                 return STATUS_FAILURE
             }
 
             val finished = process.waitFor(INSTALL_TIMEOUT_SECONDS, TimeUnit.SECONDS)
             if (!finished) {
                 logE("pm install timed out after ${INSTALL_TIMEOUT_SECONDS}s, aborting")
-                process.destroyForcibly()
+                process.destroyForciblySafe()
                 return STATUS_FAILURE
             }
 
@@ -130,7 +141,7 @@ class ShizukuInstallerServiceImpl : IShizukuInstallerService.Stub() {
             val finished = process.waitFor(UNINSTALL_TIMEOUT_SECONDS, TimeUnit.SECONDS)
             if (!finished) {
                 logE("pm uninstall timed out after ${UNINSTALL_TIMEOUT_SECONDS}s, aborting")
-                process.destroyForcibly()
+                process.destroyForciblySafe()
                 return STATUS_FAILURE
             }
 

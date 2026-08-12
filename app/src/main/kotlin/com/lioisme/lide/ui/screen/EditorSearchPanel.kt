@@ -85,10 +85,17 @@ internal fun EditorSearchPanel(
                 Text(
                     text =
                         when {
-                            findQuery.isEmpty() -> ""
-                            matchInfo.count > 0 ->
+                            findQuery.isEmpty() -> {
+                                ""
+                            }
+
+                            matchInfo.count > 0 -> {
                                 stringResource(R.string.search_match_position, matchInfo.index + 1, matchInfo.count)
-                            else -> stringResource(R.string.search_no_results)
+                            }
+
+                            else -> {
+                                stringResource(R.string.search_no_results)
+                            }
                         },
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,

@@ -16,7 +16,6 @@ import com.lioisme.lide.project.ProjectManager
 class EditorSessionViewModel(
     val session: EditorSession,
 ) : ViewModel() {
-
     override fun onCleared() {
         session.release()
     }
@@ -31,6 +30,5 @@ class EditorSessionViewModelFactory(
     private val projectManager: ProjectManager,
 ) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(modelClass: Class<T>): T =
-        EditorSessionViewModel(EditorSession(project, projectManager)) as T
+    override fun <T : ViewModel> create(modelClass: Class<T>): T = EditorSessionViewModel(EditorSession(project, projectManager)) as T
 }

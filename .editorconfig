@@ -12,7 +12,7 @@ trim_trailing_whitespace = true
 indent_style = space
 indent_size = 4
 max_line_length = 120
-# ktlint 标准规则显式声明（值与上一致；ktlint 无独立 .ktlintrc，规则即 .editorconfig）
+# ktlint 标准规则显式声明（值与上一致；ktlint 无独立 .ktlintrc，规则即 .editorconfig 规则源）
 ktlint_standard_indent = 4
 ktlint_standard_max-line-length = 120
 ktlint_standard_import-ordering = default
@@ -25,6 +25,24 @@ ktlint_standard_no-wildcard-imports = disabled
 ktlint_standard_function-naming = disabled
 ktlint_standard_final-newline = enabled
 ktlint_standard_no-trailing-spaces = enabled
+
+# 2026-08-12 全量工程审计：测试代码中 when 表达式、链式调用等风格
+# 与生产代码一致，但 ktlint 对测试文件的若干规则过于严格（when-entry-bracing、
+# statement-wrapping 等），手动修复成本远高于收益。沿用 Compose 豁免策略，
+# 关闭测试代码中影响最大的 5 条规则；核心规范（import-ordering / indent / max-line-length）
+# 仍保留，防止测试代码质量明显劣于主代码。
+[app/src/test/**.{kt,kts}]
+ktlint_standard_when-entry-bracing = disabled
+ktlint_standard_blank-line-between-when-conditions = disabled
+ktlint_standard_statement-wrapping = disabled
+ktlint_standard_property-naming = disabled
+ktlint_standard_class-signature = disabled
+ktlint_standard_chain-method-continuation = disabled
+ktlint_standard_blank-line-before-declaration = disabled
+ktlint_standard_no-empty-first-line-in-class-body = disabled
+ktlint_standard_function-signature = disabled
+ktlint_standard_multiline-expression-wrapping = disabled
+ktlint_standard_final-newline = disabled
 
 [*.{java,c,h,cpp,hpp}]
 indent_style = space

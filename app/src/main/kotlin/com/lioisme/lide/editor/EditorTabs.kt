@@ -1,7 +1,5 @@
 package com.lioisme.lide.editor
 
-import com.lioisme.lide.R
-
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -51,6 +49,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.lioisme.lide.R
 import sh.calvin.reorderable.ReorderableCollectionItemScope
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
@@ -74,8 +73,7 @@ import sh.calvin.reorderable.rememberReorderableLazyListState
  *   位移由只读观察协程累计（不消费事件），且在任何 UP 事件送达前即已置位，
  *   与 onDragStopped 回调（由 UP 触发）不存在时序竞态。
  * - 标签卡不再常驻 ⋮ 菜单按钮（功能重复，用户决策），菜单唯一入口为长按松手。
- */
-/**
+ *
  * 打开的标签状态（单一状态类，B-5：合并宿主 `TabState` 双份同构类）。
  * 显示层只用 [fileName]/[dirty]；undo/redo 能力供宿主工具栏消费。
  */

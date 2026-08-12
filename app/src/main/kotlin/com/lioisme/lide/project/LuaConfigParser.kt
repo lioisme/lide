@@ -11,7 +11,6 @@ package com.lioisme.lide.project
  * 本类只做文本级配置读写，不涉运行时语义（R2 边界）。
  */
 object LuaConfigParser {
-
     /** E3（2026-08-12）：扫描收敛守卫——每字符最多推进的扫描步数。 */
     private const val GUARD_STEPS_PER_CHAR = 8L
 
@@ -64,7 +63,7 @@ object LuaConfigParser {
                                 rawValue = content.substring(valueStart, valueEnd).trim(),
                                 startOffset = lineStart,
                                 endOffset = valueEnd,
-                            )
+                            ),
                         )
                         i = valueEnd
                         atLineStart = false
@@ -97,9 +96,18 @@ object LuaConfigParser {
                     i++
                     while (i < n) {
                         when (content[i]) {
-                            '\\' -> i += 2
-                            quote -> { i++; break }
-                            else -> i++
+                            '\\' -> {
+                                i += 2
+                            }
+
+                            quote -> {
+                                i++
+                                break
+                            }
+
+                            else -> {
+                                i++
+                            }
                         }
                     }
                     if (i >= n) return fields
@@ -141,7 +149,9 @@ object LuaConfigParser {
                     atLineStart = true
                 }
 
-                c == ' ' || c == '\t' || c == '\r' -> i++
+                c == ' ' || c == '\t' || c == '\r' -> {
+                    i++
+                }
 
                 else -> {
                     i++
@@ -153,8 +163,10 @@ object LuaConfigParser {
     }
 
     /** 取单个字段的原始值（无该字段返回 null）。 */
-    fun field(content: String, name: String): String? =
-        parse(content).firstOrNull { it.name == name }?.rawValue
+    fun field(
+        content: String,
+        name: String,
+    ): String? = parse(content).firstOrNull { it.name == name }?.rawValue
 
     /**
      * D3（2026-08-12）：单遍解析全部顶层**字符串**字段（去引号），供多字段并发
@@ -174,7 +186,10 @@ object LuaConfigParser {
     }
 
     /** 取字符串字段（去引号；非字符串/不存在返回 null）。 */
-    fun stringField(content: String, name: String): String? {
+    fun stringField(
+        content: String,
+        name: String,
+    ): String? {
         val raw = field(content, name) ?: return null
         val v = raw.trim()
         if (v.length >= 2 && (v.first() == '"' || v.first() == '\'') && v.last() == v.first()) {
@@ -184,7 +199,10 @@ object LuaConfigParser {
     }
 
     /** 解析字符串数组字段（`{ "a", b }` 或裸标识符）；空表/缺省返回空表。 */
-    fun stringArrayField(content: String, name: String): List<String> {
+    fun stringArrayField(
+        content: String,
+        name: String,
+    ): List<String> {
         val raw = field(content, name) ?: return emptyList()
         val v = raw.trim()
         if (!v.startsWith("{")) return emptyList()
@@ -195,7 +213,11 @@ object LuaConfigParser {
      * 字段级写入：将 [name] 字段替换为 `name = [valueText]`。
      * 未找到字段时追加到文件末尾（以换行分隔）。其余字节与注释原样保留。
      */
-    fun setField(content: String, name: String, valueText: String): String {
+    fun setField(
+        content: String,
+        name: String,
+        valueText: String,
+    ): String {
         val fields = parse(content)
         val existing = fields.firstOrNull { it.name == name }
         val replacement = "$name = $valueText"
@@ -210,7 +232,11 @@ object LuaConfigParser {
     }
 
     /** 将字符串数组字段写回（`{ "a", "b" }` 格式，与 pro 模板一致）。 */
-    fun setStringArrayField(content: String, name: String, items: List<String>): String {
+    fun setStringArrayField(
+        content: String,
+        name: String,
+        items: List<String>,
+    ): String {
         val formatted = items.joinToString(", ") { "\"$it\"" }
         return setField(content, name, if (items.isEmpty()) "{ }" else "{ $formatted }")
     }
@@ -220,7 +246,10 @@ object LuaConfigParser {
      * 整行删除（字段值之后到行尾的内容——含行注释等尾随文本——一并删除）；
      * 字段不存在时原样返回。仅删除字段所在行，不触碰其他内容。
      */
-    fun removeField(content: String, name: String): String {
+    fun removeField(
+        content: String,
+        name: String,
+    ): String {
         val fields = parse(content)
         val existing = fields.firstOrNull { it.name == name } ?: return content
         // 字段值结束可能早于行尾（值后跟行注释/逗号等），删除到行尾换行处。
@@ -253,19 +282,31 @@ object LuaConfigParser {
 
     // ---- 内部工具 ----
 
-    private fun skipWhitespace(s: String, from: Int, n: Int): Int {
+    private fun skipWhitespace(
+        s: String,
+        from: Int,
+        n: Int,
+    ): Int {
         var i = from
         while (i < n && (s[i] == ' ' || s[i] == '\t' || s[i] == '\r')) i++
         return i
     }
 
-    private fun skipToNextLine(s: String, from: Int, n: Int): Int {
+    private fun skipToNextLine(
+        s: String,
+        from: Int,
+        n: Int,
+    ): Int {
         val nl = s.indexOf('\n', from)
         return if (nl < 0) n else nl + 1
     }
 
     /** 值结束偏移：`{...}` 配平（跳过字符串）；标量取行尾（剔除行注释与尾随逗号）。 */
-    private fun scanValueEnd(s: String, from: Int, n: Int): Int {
+    private fun scanValueEnd(
+        s: String,
+        from: Int,
+        n: Int,
+    ): Int {
         var i = from
         if (i < n && s[i] == '{') {
             var d = 0
@@ -275,22 +316,39 @@ object LuaConfigParser {
                         d++
                         i++
                     }
+
                     '}' -> {
                         d--
-                        if (d == 0) { i++; break }
+                        if (d == 0) {
+                            i++
+                            break
+                        }
                     }
+
                     '"', '\'' -> {
                         val q = s[i]
                         i++
                         while (i < n) {
                             when (s[i]) {
-                                '\\' -> i += 2
-                                q -> { i++; break }
-                                else -> i++
+                                '\\' -> {
+                                    i += 2
+                                }
+
+                                q -> {
+                                    i++
+                                    break
+                                }
+
+                                else -> {
+                                    i++
+                                }
                             }
                         }
                     }
-                    else -> i++
+
+                    else -> {
+                        i++
+                    }
                 }
             }
             return i
@@ -304,14 +362,21 @@ object LuaConfigParser {
         // 剔除 `--` 行注释。
         var k = i
         while (k < j - 1) {
-            if (s[k] == '-' && s[k + 1] == '-') { j = k; break }
+            if (s[k] == '-' && s[k + 1] == '-') {
+                j = k
+                break
+            }
             k++
         }
         while (j > i && (s[j - 1] == ' ' || s[j - 1] == '\t')) j--
         return j
     }
 
-    private fun longBracketLevel(s: String, i: Int, n: Int): Int {
+    private fun longBracketLevel(
+        s: String,
+        i: Int,
+        n: Int,
+    ): Int {
         if (i >= n || s[i] != '[') return -1
         var j = i + 1
         while (j < n && s[j] == '=') j++
@@ -330,9 +395,18 @@ object LuaConfigParser {
                     i++
                     while (i < n) {
                         when (v[i]) {
-                            '\\' -> i += 2
-                            q -> { i++; break }
-                            else -> i++
+                            '\\' -> {
+                                i += 2
+                            }
+
+                            q -> {
+                                i++
+                                break
+                            }
+
+                            else -> {
+                                i++
+                            }
                         }
                     }
                     items.add(v.substring(start + 1, i - 1))
@@ -344,7 +418,9 @@ object LuaConfigParser {
                     items.add(v.substring(start, i))
                 }
 
-                else -> i++
+                else -> {
+                    i++
+                }
             }
         }
         return items

@@ -38,6 +38,7 @@ class EditorPaletteContrastTest {
             ?: throw IllegalStateException("assets root not found (cwd=${File("").absolutePath})")
 
     /** WCAG 对比度下限（严格档，含注释/行号）。 */
+    @Suppress("ktlint:standard:property-naming")
     private val MIN_CONTRAST = 4.5
 
     @Test

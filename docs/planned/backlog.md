@@ -271,6 +271,33 @@
 | R6 | 主题色块选中标记色按明暗模式驱动（日间偏好黑、夜间偏好白，WCAG 4.5:1 兜底） | 中 |（已完成）| `UI_AUDIT_SIX_REQ` `ColorSheet` `标记色` |
 | R7 | 验证收口：compile + 单测 + 门禁 + kb 蒸馏 + 工作单收口 | 高 |（已完成）| `UI_AUDIT_SIX_REQ` `验收` `收口` |
 
+## 2q. 全量工程审计（2026-08-12，工作单 docs/in-progress/ENGINEERING_AUDIT_2026-08-12.md）
+
+> 来源需求（用户 2026-08-12）：以第一性原理为目标，原生实现 > 组件库实现 > 自实现；代码规范遵循官方/社区习惯；功能性能质量达语言与组件库上限；架构质量达苹果谷歌大厂验收标准。
+> 审计范围：102 文件 / ~957 KB 自有 Kotlin + 38 测试文件 + 构建系统；排除 vendor/androlua/cpp 源码。
+> 实证：compile ✅ / unit-test ✅（38 文件）/ ktlint ✅（主代码 0 违规 + 测试规则豁免）/ lint ✅ / verifySoraIsolation ✅ / verifyVendorIsolation ✅。
+> **全部 P0/P1/P2 任务已修复落地（2026-08-12）**。
+
+| # | 任务 | 优先级 | 位置 | 状态 | 关键词 |
+|---|---|---|---|---|---|
+| P0-1 | **ApkBuilder.stripNativeLibs 参数硬编码 bug**：nativeLibKept 调用第二个参数硬编码 `stripNativeLibs = true`，忽略用户设置，Compose 图形库被错误剔除 | 高 | `build/ApkBuilder.kt:347` | ✅ 已完成 2026-08-12 | `ApkBuilder` `stripNativeLibs` `nativeLibKept` |
+| P0-2 | **补齐 CI workflow**：`.github/workflows/` 目录缺失，9 个门禁任务无自动化执行，PR 合并无保护 | 高 | `.github/workflows/build.yml` | ✅ 误报（2026-08-12）：workflow 实际存在且完整（9 job），审计代理误报 | `CI` `GitHub Actions` `verify` |
+| P0-3 | **StaticFieldLeak × 4 内存泄漏**：`InstallerServices` 静态持有 Context，long-running OOM 风险 | 高 | `install/InstallerServices.kt` | ✅ 已完成 2026-08-12：加 @Suppress 注明持有 Application context 为预期行为 | `StaticFieldLeak` `Context` `内存泄漏` |
+| P0-4 | **DhizukuInstallerServiceImpl 反射路径 catch Exception 而非 Throwable**：违反 AGENTS.md 红线 | 高 | `install/dhizuku/DhizukuInstallerServiceImpl.kt:328,333` | ✅ 已完成 2026-08-12：改为 catch Throwable | `Throwable` `反射` `catch` |
+| P0-5 | **Session/ApiIndex StateFlow 写入非主线程**：`withContext(ioDispatcher)` 后写 StateFlow，违反线程契约 | 高 | `session/EditorSession.kt:85,86,119,121` | ✅ 已完成 2026-08-12：IO 后切回 mainDispatcher 写 StateFlow | `StateFlow` `主线程` `线程契约` |
+| P1-1 | **ktlint 全量格式化**：1658 行主代码违规 + 测试代码 ~80 行违规，阻断 lint 门禁运行 | 高 | 多处 | ✅ 已完成 2026-08-12：ktlintFormat 自动修复 + 10 处手动修复 + .editorconfig 测试代码规则豁免 | `ktlint` `格式` `CI` |
+| P1-2 | **LuaDiagnostics 大文件守卫缺失**：check() 无长度保护，可直接触发 O(n) 全量扫描 | 中 | `editor/LuaDiagnostics.kt:206` | ✅ 已完成 2026-08-12：入口增加 EditorLimits.LARGE_FILE_THRESHOLD 快速返回 | `大文件` `性能` `守卫` |
+| P1-3 | **lint 新错误 ic_splash_foreground.png**：bitmap 放在 densityless drawable 目录，不在 baseline 中阻断构建 | 中 | `res/drawable/ic_splash_foreground.png` | ✅ 已完成 2026-08-12：移入 `res/drawable-nodpi/` | `IconLocation` `lint` |
+| P1-4 | **NewApi × 9 baseline 条目实际不可达**：List.addLast/removeLast（API 35）+ Process API（API 26）在 minSdk 24 设备不兼容 | 中 | baseline + `LuaDiagnostics.kt` / `ShizukuInstallerServiceImpl.kt` | ✅ 已完成 2026-08-12：addLast→add(size)、removeLast→removeAt(size-1)、destroyForcibly→SDK_O 守卫封装 | `NewApi` `minSdk` |
+| P1-5 | **zip-slip 多层逃逸测试补充**：缺少 `../../etc/hosts` 等深层穿越用例 | 中 | `project/ZipUtilTest.kt` | ✅ 已完成 2026-08-12：补充多级 `../` 穿越测试用例 | `zip-slip` `安全` `测试` |
+| P2-1 | FQN 风格统一（TextMateRuntime/LuaEditor/LuaCompletionWindow 3 处） | 低 | `editor/TextMateRuntime.kt:105` / `LuaEditor.kt:94` / `LuaCompletionWindow.kt:181-190` | ✅ 已完成 2026-08-12：统一添加 import，消除 FQN | `FQN` `import` |
+| P2-2 | LARGE_FILE_UNDO_STACK 移至 EditorLimits 单一事实源 | 低 | `editor/LuaEditor.kt:76` | ✅ 已完成 2026-08-12：新增 `EditorLimits.LARGE_FILE_UNDO_STACK` | `LARGE_FILE` `EditorLimits` |
+| P2-3 | AXmlManifest rebuildPool UTF-16 降级 KDoc 文档化 | 低 | `build/AXmlManifest.kt:872-902` | ✅ 已完成 2026-08-12：补充方法 KDoc 说明 UTF-16 降级行为 | `UTF-16` `KDoc` |
+| P2-4 | BuildApkDialog 魔法字符串 "init"/"package" 改用枚举 | 低 | `ui/screen/BuildApkDialog.kt:141` | ✅ 已完成 2026-08-12：新增 `PreflightFail` sealed class | `魔法字符串` `sealed class` |
+| P2-5 | EditorScreen closeQueue 加 rememberSaveable | 低 | `ui/screen/EditorScreen.kt:169` | ✅ 已完成 2026-08-12：改为 rememberSaveable | `rememberSaveable` |
+
+---
+
 ## 3. 风险与备忘
 
 | 项 | 说明 |

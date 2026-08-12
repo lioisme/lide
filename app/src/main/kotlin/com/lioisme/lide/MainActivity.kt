@@ -30,8 +30,8 @@ import com.lioisme.lide.project.ProjectManager
 import com.lioisme.lide.ui.navigation.LideNavHost
 import com.lioisme.lide.ui.screen.InstallMethodDialog
 import com.lioisme.lide.ui.theme.AppearanceMode
-import com.lioisme.lide.ui.theme.LocalIsDarkTheme
 import com.lioisme.lide.ui.theme.LideTheme
+import com.lioisme.lide.ui.theme.LocalIsDarkTheme
 import com.lioisme.lide.ui.theme.SettingsManager
 import com.lioisme.lide.ui.theme.resolveColorSchemeNow
 import kotlinx.coroutines.Dispatchers
@@ -51,6 +51,7 @@ class MainActivity : ComponentActivity() {
     // 追加的条目永远不会被组合消费——state 承载后迟到条目仍会被读取。
     private var pendingImportPaths by mutableStateOf<List<String>>(emptyList())
     private var pendingOpenFiles by mutableStateOf<List<PendingOpenFile>>(emptyList())
+
     // 系统「用 LIDE 打开 APK」→ 安装方式选择（T16，2026-08-10）。
     private var pendingApkFile by mutableStateOf<File?>(null)
 
@@ -103,7 +104,7 @@ class MainActivity : ComponentActivity() {
                     pendingOpenFiles = openFiles,
                 )
                 // 系统「用 LIDE 打开 APK」（T16）：一次性消费，展示安装方式选择对话框
-                //（普通系统安装器 / Shizuku / Dhizuku / Root）。
+                // （普通系统安装器 / Shizuku / Dhizuku / Root）。
                 val apk = pendingApkFile
                 if (apk != null) {
                     InstallMethodDialog(
@@ -286,7 +287,7 @@ class MainActivity : ComponentActivity() {
                     file.absolutePath
                 } catch (e: Exception) {
                     // M3（2026-08-12）：解析/拷贝失败返回 null 而非回落 uri.path
-                    //（/document/123 不是真实文件，后续按扩展名分派全部落空，
+                    // （/document/123 不是真实文件，后续按扩展名分派全部落空，
                     // 且会以无效路径进安装/导入流程）。
                     Log.w(TAG, "resolve content uri failed: $uri", e)
                     null
@@ -309,11 +310,18 @@ class MainActivity : ComponentActivity() {
      */
     private fun currentIsDark(): Boolean =
         when (SettingsManager.themeConfig.value.appearanceMode) {
-            AppearanceMode.SYSTEM ->
+            AppearanceMode.SYSTEM -> {
                 (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
                     android.content.res.Configuration.UI_MODE_NIGHT_YES
-            AppearanceMode.LIGHT -> false
-            AppearanceMode.DARK -> true
+            }
+
+            AppearanceMode.LIGHT -> {
+                false
+            }
+
+            AppearanceMode.DARK -> {
+                true
+            }
         }
 
     /**

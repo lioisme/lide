@@ -17,7 +17,6 @@ import org.junit.Test
  * （EngineSurfaceConsistencyTest 已守护清单类全部归 ANDROLUA 的静态闭环）。
  */
 class ApiCategoryClassifierTest {
-
     @Test
     fun `R 资源类优先短路`() {
         assertEquals(ApiCategory.R_RESOURCES, ApiCategoryClassifier.categorizeBase("android.R"))

@@ -37,9 +37,9 @@ import java.io.File
  * 设置页「安装方式」组与权限管理页「通用权限」区共用——
  * 禁止两处各自实现状态文案与行样式（单一事实源）。
  * 2026-08-12 治理红线：权限页行标题经 perm_* 传参（用途与权限分离）。
+ *
+ * 后端状态 → 文案资源。
  */
-
-/** 后端状态 → 文案资源。 */
 @Composable
 fun installBackendStatusLabel(status: BackendStatus): String =
     stringResource(

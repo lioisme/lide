@@ -11,7 +11,6 @@ import org.junit.Test
  * - 否则 App 内 preference（[LocaleManager.TAG_SYSTEM] = 未选择，跟随系统）。
  */
 class LocaleManagerTest {
-
     @Test
     fun `系统状态优先于 App preference`() {
         assertEquals("en", LocaleManager.resolveTag(prefTag = "zh", systemTag = "en"))

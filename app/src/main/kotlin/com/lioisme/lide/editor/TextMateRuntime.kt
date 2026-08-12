@@ -10,6 +10,7 @@ import io.github.rosemoe.sora.langs.textmate.registry.ThemeRegistry
 import io.github.rosemoe.sora.langs.textmate.registry.model.ThemeModel
 import io.github.rosemoe.sora.langs.textmate.registry.provider.AssetsFileResolver
 import io.github.rosemoe.sora.langs.textmate.registry.reader.LanguageDefinitionReader
+import io.github.rosemoe.sora.widget.schemes.EditorColorScheme
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -30,11 +31,12 @@ import org.eclipse.tm4e.core.registry.IThemeSource
  * StateFlow 供 Compose 主线程消费；[colorScheme] 仅供初始化完成后（主线程）调用。
  */
 object TextMateRuntime {
-
     /** 运行时状态机：Loading（初始化中/未触发）→ Ready / Failed。 */
     sealed interface RuntimeState {
         data object Loading : RuntimeState
+
         data object Ready : RuntimeState
+
         data object Failed : RuntimeState
     }
 
@@ -102,7 +104,7 @@ object TextMateRuntime {
         scheme: Int,
         isDark: Boolean,
         host: HostEditorColors,
-    ): io.github.rosemoe.sora.widget.schemes.EditorColorScheme {
+    ): EditorColorScheme {
         val themeName = EditorPalette.themeNameFor(scheme, isDark)
         return hostSchemes.getOrPut(themeName) { LideHostColorScheme(ThemeRegistry.getInstance(), host) }
     }
@@ -148,12 +150,13 @@ object TextMateRuntime {
         // 优先走 loadGrammars(list) 批量加载（先 prepare 全部 scope id，跨语言嵌入引用可解析）；
         // 批量失败时逐条降级加载（任一文法失败仅记录日志，不中断其余文法，降级原则）。
         val grammarRegistry = GrammarRegistry.getInstance()
-        val definitions = try {
-            LanguageDefinitionReader.read(LANGUAGES_JSON)
-        } catch (t: Throwable) {
-            Log.e(TAG, "read languages.json failed", t)
-            emptyList()
-        }
+        val definitions =
+            try {
+                LanguageDefinitionReader.read(LANGUAGES_JSON)
+            } catch (t: Throwable) {
+                Log.e(TAG, "read languages.json failed", t)
+                emptyList()
+            }
         if (definitions.isNotEmpty()) {
             try {
                 grammarRegistry.loadGrammars(definitions)

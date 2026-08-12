@@ -27,10 +27,16 @@ object InstallerServices {
 
     private val initialized = AtomicBoolean(false)
 
+    @Suppress("StaticFieldLeak")
     private var ctx: Context? = null
 
+    @Suppress("StaticFieldLeak")
     private var rootManager: RootServiceManager? = null
+
+    @Suppress("StaticFieldLeak")
     private var shizukuManager: ShizukuServiceManager? = null
+
+    @Suppress("StaticFieldLeak")
     private var dhizukuManager: DhizukuServiceManager? = null
 
     /** 幂等初始化：仅首次调用注册监听并刷新状态，重复调用不重置（AGENTS.md 初始化幂等约定）。 */

@@ -15,6 +15,7 @@ object EngineResultParser {
 
     // 预编译（Q5）：三个正则均在回调/解析热路径，每次调用重建 Regex 不可接受；
     // ERROR_PREFIX 与 EngineActivity 共用（单一事实源，EngineActivity 不再持本地副本）。
+
     /** 匹配 `...:NN:`（NN ≥ 1）的错误定位首行。 */
     private val ERROR_LOCATION = Regex("([^\\s:]+):(\\d+):")
 

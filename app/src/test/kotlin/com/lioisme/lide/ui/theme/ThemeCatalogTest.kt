@@ -14,7 +14,6 @@ import org.junit.Test
  * 已删除（WP-014 反转后的测试残留，生产零消费），对应用例移除。
  */
 class ThemeCatalogTest {
-
     @Test
     fun `options fallback list covers common aliases with labels`() {
         val options = ThemeCatalog.options(emptyList())

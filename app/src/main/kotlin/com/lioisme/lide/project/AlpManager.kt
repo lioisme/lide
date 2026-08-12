@@ -6,7 +6,9 @@ import android.util.Log
 import com.lioisme.lide.engine.RuntimePaths
 import java.io.File
 
-class AlpManager(private val context: Context) {
+class AlpManager(
+    private val context: Context,
+) {
     /** 单一日志 TAG（Q13 收口：历史字面量 Log.e("AlpManager", ...) 统一为常量）。 */
     private companion object {
         const val TAG = "AlpManager"
@@ -15,7 +17,9 @@ class AlpManager(private val context: Context) {
     /** 同名冲突处理策略（WP-015）：覆盖 / 改名（dedupe -1/-2）。 */
     enum class ImportMode { OVERWRITE, RENAME }
 
-    data class AlpImportResult(val dir: String)
+    data class AlpImportResult(
+        val dir: String,
+    )
 
     /** 导入计划：无副作用地解析目标名/冲突态，供 UI 先弹确认再执行（WP-015）。 */
     data class ImportPlan(
@@ -24,7 +28,10 @@ class AlpManager(private val context: Context) {
         val conflict: Boolean,
     )
 
-    fun export(projectDir: String, uri: Uri): Boolean {
+    fun export(
+        projectDir: String,
+        uri: Uri,
+    ): Boolean {
         val srcDir = File(projectDir)
         if (!srcDir.isDirectory) {
             Log.e(TAG, "project directory not found: $projectDir")
@@ -68,7 +75,10 @@ class AlpManager(private val context: Context) {
         val plan = planImport(alpFile) ?: return null
         val target =
             when {
-                !plan.conflict -> plan.targetDir
+                !plan.conflict -> {
+                    plan.targetDir
+                }
+
                 mode == ImportMode.RENAME -> {
                     val parent = plan.targetDir.parentFile
                     val deduped =
@@ -78,7 +88,10 @@ class AlpManager(private val context: Context) {
                         )
                     deduped
                 }
-                else -> plan.targetDir.also { it.deleteRecursively() }
+
+                else -> {
+                    plan.targetDir.also { it.deleteRecursively() }
+                }
             }
         return if (ZipUtil.unzip(File(alpFile), target)) {
             AlpImportResult(target.absolutePath)
@@ -93,7 +106,5 @@ class AlpManager(private val context: Context) {
      * 否则取文件名去扩展名后截断到首个 `.`/`_`。
      * 不做任何删除/覆盖（冲突判定与处置分离，WP-015）。
      */
-    private fun targetDirFor(name: String): File {
-        return File(RuntimePaths.projectsDir(), name)
-    }
+    private fun targetDirFor(name: String): File = File(RuntimePaths.projectsDir(), name)
 }

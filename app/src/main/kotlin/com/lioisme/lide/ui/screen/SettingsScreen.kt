@@ -609,8 +609,7 @@ private fun ColorSheet(
                                     } else {
                                         Modifier.border(1.dp, MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f), CircleShape)
                                     },
-                                )
-                                .semantics { selected = isSelected }
+                                ).semantics { selected = isSelected }
                                 .clickable { onSelectColor(argb) },
                         contentAlignment = Alignment.Center,
                     ) {
@@ -635,7 +634,10 @@ private fun ColorSheet(
  * 双候选均不满足时取对比度更高者（黑白为极端候选，任意色块至少一者达标，
  * 硬门槛兜底恒生效，无需降级）。
  */
-private fun selectedMarkColor(color: Color, isDark: Boolean): Color {
+private fun selectedMarkColor(
+    color: Color,
+    isDark: Boolean,
+): Color {
     val l = color.luminance()
     val contrastWhite = 1.05f / (l + 0.05f)
     val contrastBlack = (l + 0.05f) / 0.05f

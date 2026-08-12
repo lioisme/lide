@@ -2,13 +2,13 @@ package com.lioisme.lide.editor
 
 import io.github.rosemoe.sora.widget.CodeEditor
 import io.github.rosemoe.sora.widget.EditorSearcher
-import java.util.regex.Pattern
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.regex.Pattern
 
 /** 查找匹配类型（P5.1，2026-08-11）：映射 sora `EditorSearcher.SearchOptions.TYPE_*`。 */
 enum class SearchMatchType {
@@ -18,7 +18,10 @@ enum class SearchMatchType {
 }
 
 /** 查找结果快照（主线程读取，后台搜索完成经回调刷新）。 */
-data class SearchMatchInfo(val count: Int, val index: Int) {
+data class SearchMatchInfo(
+    val count: Int,
+    val index: Int,
+) {
     companion object {
         val NONE = SearchMatchInfo(0, 0)
     }
@@ -36,7 +39,6 @@ data class SearchMatchInfo(val count: Int, val index: Int) {
  * `try/catch(Throwable)` 降级，异常不得逃逸进 UI 主循环。
  */
 class EditorController {
-
     /** 格式化协程作用域：后台计算 + 主线程替换（无格式化任务时零开销）。 */
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
@@ -57,7 +59,10 @@ class EditorController {
     }
 
     /** 定位到指定行（0 基，内部夹取到有效区间）并请求焦点。 */
-    fun setSelection(line: Int, column: Int) {
+    fun setSelection(
+        line: Int,
+        column: Int,
+    ) {
         runOnEditor { e ->
             val last = (e.text.lineCount - 1).coerceAtLeast(0)
             e.setSelection(line.coerceIn(0, last), column.coerceAtLeast(0))
@@ -125,11 +130,12 @@ class EditorController {
         onResult: (changed: Boolean) -> Unit = {},
     ) {
         val e = editor ?: return
-        val text = try {
-            e.text.toString()
-        } catch (_: Throwable) {
-            return
-        }
+        val text =
+            try {
+                e.text.toString()
+            } catch (_: Throwable) {
+                return
+            }
         scope.launch {
             val formatted =
                 withContext(Dispatchers.Default) {
@@ -199,7 +205,11 @@ class EditorController {
     // （LuaEditor 订阅 → onSearchResultPublished → 宿主刷新 SearchMatchInfo）。
 
     /** 发起搜索（空/未绑定返回 false；正则非法在 sora 侧预检抛异常 → 降级 false）。 */
-    fun search(pattern: String, type: SearchMatchType, caseInsensitive: Boolean): Boolean {
+    fun search(
+        pattern: String,
+        type: SearchMatchType,
+        caseInsensitive: Boolean,
+    ): Boolean {
         val e = editor ?: return false
         return try {
             val soraType =

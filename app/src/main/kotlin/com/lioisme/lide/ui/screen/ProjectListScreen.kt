@@ -34,11 +34,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.lioisme.lide.R
-import com.lioisme.lide.project.AlpManager
 import com.lioisme.lide.editor.TipIconButton
 import com.lioisme.lide.engine.RuntimePaths
 import com.lioisme.lide.import.AlpImportCoordinator
 import com.lioisme.lide.model.Project
+import com.lioisme.lide.project.AlpManager
 import com.lioisme.lide.project.ProjectManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -131,11 +131,12 @@ fun ProjectListScreen(
     /** 队列结束汇总：Toast 结果 + 刷新列表 + 清计数（T15：复数资源 one/other）。 */
     fun finishImportBatch() {
         if (importedProjectCount > 0) {
-            Toast.makeText(
-                context,
-                context.resources.getQuantityString(R.plurals.import_projects_success, importedProjectCount, importedProjectCount),
-                Toast.LENGTH_SHORT,
-            ).show()
+            Toast
+                .makeText(
+                    context,
+                    context.resources.getQuantityString(R.plurals.import_projects_success, importedProjectCount, importedProjectCount),
+                    Toast.LENGTH_SHORT,
+                ).show()
             scope.launch { refresh() }
         } else {
             errorMsg = strImportFailed

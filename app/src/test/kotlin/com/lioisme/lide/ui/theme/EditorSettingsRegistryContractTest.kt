@@ -16,11 +16,11 @@ import org.junit.Test
  *   旧键若复活即与固定行号双键并存，违反治理红线）。
  */
 class EditorSettingsRegistryContractTest {
-
     @Test
     fun `固定行号键存在且默认开启`() {
-        val key = SettingsRegistry.boolKeys.find { it.name == "fixed_line_numbers" }
-            ?: error("缺少 fixed_line_numbers 键（SettingsRegistry.boolKeys）")
+        val key =
+            SettingsRegistry.boolKeys.find { it.name == "fixed_line_numbers" }
+                ?: error("缺少 fixed_line_numbers 键（SettingsRegistry.boolKeys）")
         assertTrue("fixed_line_numbers 默认必须为 true", key.default)
         assertTrue("get 必须映射 fixedLineNumbers", key.get(EditorConfig()))
         val updated = key.with(EditorConfig(), false)
@@ -29,8 +29,9 @@ class EditorSettingsRegistryContractTest {
 
     @Test
     fun `use_tab 键默认空格缩进`() {
-        val key = SettingsRegistry.boolKeys.find { it.name == "use_tab" }
-            ?: error("缺少 use_tab 键")
+        val key =
+            SettingsRegistry.boolKeys.find { it.name == "use_tab" }
+                ?: error("缺少 use_tab 键")
         assertFalse("use_tab 默认必须为 false（空格缩进）", key.default)
     }
 
@@ -51,8 +52,9 @@ class EditorSettingsRegistryContractTest {
 
     @Test
     fun `行号键默认开启且与固定行号解耦存储`() {
-        val lineNumbers = SettingsRegistry.boolKeys.find { it.name == "line_numbers" }
-            ?: error("缺少 line_numbers 键")
+        val lineNumbers =
+            SettingsRegistry.boolKeys.find { it.name == "line_numbers" }
+                ?: error("缺少 line_numbers 键")
         assertTrue("line_numbers 默认必须为 true", lineNumbers.default)
         // 固定行号默认值独立于行号开关（联动在设置页 UI 层，存储解耦）。
         val fixed = SettingsRegistry.boolKeys.find { it.name == "fixed_line_numbers" }!!

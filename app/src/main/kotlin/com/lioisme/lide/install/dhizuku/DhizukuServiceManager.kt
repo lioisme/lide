@@ -73,16 +73,18 @@ class DhizukuServiceManager(
                 refreshStatus()
                 return
             }
-            Dhizuku.requestPermission(object : DhizukuRequestPermissionListener() {
-                @Throws(RemoteException::class)
-                override fun onRequestPermission(grantResult: Int) {
-                    Log.d(
-                        TAG,
-                        "Dhizuku permission result: granted=${grantResult == PackageManager.PERMISSION_GRANTED}",
-                    )
-                    refreshStatus()
-                }
-            })
+            Dhizuku.requestPermission(
+                object : DhizukuRequestPermissionListener() {
+                    @Throws(RemoteException::class)
+                    override fun onRequestPermission(grantResult: Int) {
+                        Log.d(
+                            TAG,
+                            "Dhizuku permission result: granted=${grantResult == PackageManager.PERMISSION_GRANTED}",
+                        )
+                        refreshStatus()
+                    }
+                },
+            )
         } catch (e: Exception) {
             Log.w(TAG, "Failed to request Dhizuku permission: ${e.message}")
         }

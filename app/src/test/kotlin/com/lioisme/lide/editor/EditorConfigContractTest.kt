@@ -13,7 +13,6 @@ import org.junit.Test
  * 改动默认值必须同步本测试与 SettingsRegistry 键默认。
  */
 class EditorConfigContractTest {
-
     @Test
     fun `固定行号默认开启`() {
         assertTrue("fixedLineNumbers 默认必须为 true（对齐现代 IDE 体验）", EditorConfig().fixedLineNumbers)
@@ -39,15 +38,16 @@ class EditorConfigContractTest {
 
     @Test
     fun `字体 id 拓扑无冲突`() {
-        val builtin = setOf(
-            EditorConfig.FONT_FAMILY_DEFAULT,
-            EditorConfig.FONT_FAMILY_JETBRAINS_MONO,
-            EditorConfig.FONT_FAMILY_DROID_SANS_MONO,
-            EditorConfig.FONT_FAMILY_FIRA_CODE,
-            EditorConfig.FONT_FAMILY_SOURCE_CODE_PRO,
-            EditorConfig.FONT_FAMILY_ANONYMOUS_PRO,
-            EditorConfig.FONT_FAMILY_DEJAVU_SANS_MONO,
-        )
+        val builtin =
+            setOf(
+                EditorConfig.FONT_FAMILY_DEFAULT,
+                EditorConfig.FONT_FAMILY_JETBRAINS_MONO,
+                EditorConfig.FONT_FAMILY_DROID_SANS_MONO,
+                EditorConfig.FONT_FAMILY_FIRA_CODE,
+                EditorConfig.FONT_FAMILY_SOURCE_CODE_PRO,
+                EditorConfig.FONT_FAMILY_ANONYMOUS_PRO,
+                EditorConfig.FONT_FAMILY_DEJAVU_SANS_MONO,
+            )
         val system = setOf(EditorConfig.FONT_FAMILY_MONOSPACE, EditorConfig.FONT_FAMILY_SANS, EditorConfig.FONT_FAMILY_SERIF)
         assertTrue("内置 id 与系统族 id 必须互斥", builtin.intersect(system).isEmpty())
         assertTrue("外部基址必须高于内置域", EditorConfig.FONT_FAMILY_EXTERNAL_BASE > builtin.max())

@@ -33,7 +33,6 @@ internal data class PermissionEntry(
 )
 
 internal object PermissionCatalog {
-
     val ENTRIES: List<PermissionEntry> =
         listOf(
             // ===== 常规权限（宿主 manifest 声明，按可读性排序） =====

@@ -1,7 +1,9 @@
 package com.lioisme.lide.build
 
 /** AXML（Android Binary XML）解析/补丁失败。 */
-class AXmlException(message: String) : Exception(message)
+class AXmlException(
+    message: String,
+) : Exception(message)
 
 /**
  * 打包产物 manifest 的补丁目标。
@@ -70,7 +72,6 @@ data class ManifestEdit(
  *   原位替换一并更新，dex 类名（com.lioisme.lide.*）不动。
  */
 object AXmlManifest {
-
     private const val CHUNK_STRING_POOL = 0x0001
     private const val CHUNK_START_NS = 0x0100
     private const val CHUNK_END_NS = 0x0101
@@ -88,7 +89,9 @@ object AXmlManifest {
     private const val LAUNCHER_CATEGORY = "android.intent.category.LAUNCHER"
     private const val DYNAMIC_RECEIVER_SUFFIX = ".DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
 
-    private class Pool(val strings: MutableList<String>)
+    private class Pool(
+        val strings: MutableList<String>,
+    )
 
     private class ElementRef(
         val chunk: ByteArray,
@@ -110,18 +113,18 @@ object AXmlManifest {
         val data: Long,
     )
 
-    private class Parsed(val poolChunkIndex: Int, val chunks: List<ByteArray>)
+    private class Parsed(
+        val poolChunkIndex: Int,
+        val chunks: List<ByteArray>,
+    )
 
     // ===== 读取入口 =====
+
     /** 现有 uses-permission 名称（文档序，去重）。 */
-    fun readUsesPermissions(bytes: ByteArray): List<String> {
-        return elementStringAttrs(bytes, "uses-permission", "name")
-    }
+    fun readUsesPermissions(bytes: ByteArray): List<String> = elementStringAttrs(bytes, "uses-permission", "name")
 
     /** 宿主自声明的权限名（<permission> 元素，去重）。 */
-    fun readSelfDeclaredPermissions(bytes: ByteArray): List<String> {
-        return elementStringAttrs(bytes, "permission", "name")
-    }
+    fun readSelfDeclaredPermissions(bytes: ByteArray): List<String> = elementStringAttrs(bytes, "permission", "name")
 
     /**
      * manifest 的 package 属性值；缺失返回 null。
@@ -187,7 +190,10 @@ object AXmlManifest {
      * 指定 activity 的 android:exported 值；无该属性返回 null。
      * 内部观测面（语义见 [readPackageName]；launcher 注入 exported 写回的读回验证）。
      */
-    internal fun readExported(bytes: ByteArray, activityName: String): Boolean? {
+    internal fun readExported(
+        bytes: ByteArray,
+        activityName: String,
+    ): Boolean? {
         val parsed = parse(bytes)
         val strings = readPool(parsed.chunks[parsed.poolChunkIndex]).strings
         for (chunk in parsed.chunks) {
@@ -204,7 +210,11 @@ object AXmlManifest {
         return null
     }
 
-    private fun elementStringAttrs(bytes: ByteArray, element: String, attr: String): List<String> {
+    private fun elementStringAttrs(
+        bytes: ByteArray,
+        element: String,
+        attr: String,
+    ): List<String> {
         val parsed = parse(bytes)
         val strings = readPool(parsed.chunks[parsed.poolChunkIndex]).strings
         val out = LinkedHashSet<String>()
@@ -303,11 +313,14 @@ object AXmlManifest {
         return false
     }
 
-        /**
+    /**
      * 按 [edit] 重写 manifest；池内原位替换包名相关字符串并追加新字符串。
      * D1（2026-08-12）：包名读取复用 [parse] 结果（原 readPackageName 二次全量 parse）。
      */
-    fun patch(bytes: ByteArray, edit: ManifestEdit): ByteArray {
+    fun patch(
+        bytes: ByteArray,
+        edit: ManifestEdit,
+    ): ByteArray {
         val parsed = parse(bytes)
         val pool = readPool(parsed.chunks[parsed.poolChunkIndex])
         val strings = pool.strings
@@ -361,6 +374,7 @@ object AXmlManifest {
             if (idx[s] == null && appended[s] == null) appended[s] = strings.size + appended.size
         }
         strings += appended.keys
+
         fun newIdx(s: String): Int = idx[s] ?: appended.getValue(s)
 
         // 3) 重写元素：manifest 属性 / application label / uses-permission 过滤 / launcher 重定向。
@@ -399,9 +413,13 @@ object AXmlManifest {
             }
             if (droppingActivity) {
                 when (typeOf(chunk)) {
-                    CHUNK_START_ELEMENT -> dropActivityDepth++
-                    CHUNK_END_ELEMENT ->
+                    CHUNK_START_ELEMENT -> {
+                        dropActivityDepth++
+                    }
+
+                    CHUNK_END_ELEMENT -> {
                         if (dropActivityDepth == 0) droppingActivity = false else dropActivityDepth--
+                    }
                 }
                 continue
             }
@@ -461,11 +479,12 @@ object AXmlManifest {
                 val pi = newIdx(perm)
                 val uriIdx = newIdx(ANDROID_URI)
                 val nameIdx = newIdx("name")
-                val elem = emitElement(
-                    newIdx("uses-permission"),
-                    listOf(emitAttr(uriIdx, nameIdx, pi, TYPE_STRING, pi.toLong())),
-                    line = 1,
-                )
+                val elem =
+                    emitElement(
+                        newIdx("uses-permission"),
+                        listOf(emitAttr(uriIdx, nameIdx, pi, TYPE_STRING, pi.toLong())),
+                        line = 1,
+                    )
                 pairs += elem
                 pairs += emitEndElement(newIdx("uses-permission"))
             }
@@ -505,41 +524,51 @@ object AXmlManifest {
         var hasTargetSdk = false
         for (a in el.attrs) {
             val attrName = strings.getOrNull(a.name)
-            attrs += when (attrName) {
-                "versionCode" -> emitAttr(a.ns, a.name, NO_INDEX.toInt(), TYPE_INT_DEC, edit.versionCode.toLong())
-                "versionName" -> {
-                    val i = newIdx(edit.versionName)
-                    emitAttr(a.ns, a.name, i, TYPE_STRING, i.toLong())
-                }
-                "package" -> {
-                    hasPackage = true
-                    if (edit.packageName.isBlank()) {
-                        attrBytes(chunk, el, a)
-                    } else {
-                        val i = newIdx(edit.packageName)
+            attrs +=
+                when (attrName) {
+                    "versionCode" -> {
+                        emitAttr(a.ns, a.name, NO_INDEX.toInt(), TYPE_INT_DEC, edit.versionCode.toLong())
+                    }
+
+                    "versionName" -> {
+                        val i = newIdx(edit.versionName)
                         emitAttr(a.ns, a.name, i, TYPE_STRING, i.toLong())
                     }
-                }
-                "minSdkVersion" -> {
-                    // 折叠形态（属性在 manifest 根）：有覆盖则重写，无覆盖原样保留。
-                    hasMinSdk = true
-                    if (edit.minSdkVersion != null && strings.getOrNull(a.ns) == ANDROID_URI) {
-                        emitAttr(a.ns, a.name, NO_INDEX.toInt(), TYPE_INT_DEC, edit.minSdkVersion.toLong())
-                    } else {
+
+                    "package" -> {
+                        hasPackage = true
+                        if (edit.packageName.isBlank()) {
+                            attrBytes(chunk, el, a)
+                        } else {
+                            val i = newIdx(edit.packageName)
+                            emitAttr(a.ns, a.name, i, TYPE_STRING, i.toLong())
+                        }
+                    }
+
+                    "minSdkVersion" -> {
+                        // 折叠形态（属性在 manifest 根）：有覆盖则重写，无覆盖原样保留。
+                        hasMinSdk = true
+                        if (edit.minSdkVersion != null && strings.getOrNull(a.ns) == ANDROID_URI) {
+                            emitAttr(a.ns, a.name, NO_INDEX.toInt(), TYPE_INT_DEC, edit.minSdkVersion.toLong())
+                        } else {
+                            attrBytes(chunk, el, a)
+                        }
+                    }
+
+                    "targetSdkVersion" -> {
+                        // P3（2026-08-11）：与 minSdkVersion 同形态写回（pro appsdk 语义）。
+                        hasTargetSdk = true
+                        if (edit.targetSdkVersion != null && strings.getOrNull(a.ns) == ANDROID_URI) {
+                            emitAttr(a.ns, a.name, NO_INDEX.toInt(), TYPE_INT_DEC, edit.targetSdkVersion.toLong())
+                        } else {
+                            attrBytes(chunk, el, a)
+                        }
+                    }
+
+                    else -> {
                         attrBytes(chunk, el, a)
                     }
                 }
-                "targetSdkVersion" -> {
-                    // P3（2026-08-11）：与 minSdkVersion 同形态写回（pro appsdk 语义）。
-                    hasTargetSdk = true
-                    if (edit.targetSdkVersion != null && strings.getOrNull(a.ns) == ANDROID_URI) {
-                        emitAttr(a.ns, a.name, NO_INDEX.toInt(), TYPE_INT_DEC, edit.targetSdkVersion.toLong())
-                    } else {
-                        attrBytes(chunk, el, a)
-                    }
-                }
-                else -> attrBytes(chunk, el, a)
-            }
         }
         if (!hasPackage && edit.packageName.isNotBlank()) {
             val i = newIdx(edit.packageName)
@@ -547,22 +576,24 @@ object AXmlManifest {
         }
         // UI1/P3：无 uses-sdk 元素且根元素未声明对应版本属性时兜底追加（折叠形态写回）。
         if (edit.minSdkVersion != null && !hasMinSdk && !hasUsesSdkElement) {
-            attrs += emitAttr(
-                newIdx(ANDROID_URI),
-                newIdx("minSdkVersion"),
-                NO_INDEX.toInt(),
-                TYPE_INT_DEC,
-                edit.minSdkVersion.toLong(),
-            )
+            attrs +=
+                emitAttr(
+                    newIdx(ANDROID_URI),
+                    newIdx("minSdkVersion"),
+                    NO_INDEX.toInt(),
+                    TYPE_INT_DEC,
+                    edit.minSdkVersion.toLong(),
+                )
         }
         if (edit.targetSdkVersion != null && !hasTargetSdk && !hasUsesSdkElement) {
-            attrs += emitAttr(
-                newIdx(ANDROID_URI),
-                newIdx("targetSdkVersion"),
-                NO_INDEX.toInt(),
-                TYPE_INT_DEC,
-                edit.targetSdkVersion.toLong(),
-            )
+            attrs +=
+                emitAttr(
+                    newIdx(ANDROID_URI),
+                    newIdx("targetSdkVersion"),
+                    NO_INDEX.toInt(),
+                    TYPE_INT_DEC,
+                    edit.targetSdkVersion.toLong(),
+                )
         }
         return emitElement(el.name, attrs, el.line)
     }
@@ -596,7 +627,9 @@ object AXmlManifest {
                     attrs += emitAttr(a.ns, a.name, NO_INDEX.toInt(), TYPE_INT_DEC, edit.targetSdkVersion.toLong())
                 }
 
-                else -> attrs += attrBytes(chunk, el, a)
+                else -> {
+                    attrs += attrBytes(chunk, el, a)
+                }
             }
         }
         if (!hasMinSdk && edit.minSdkVersion != null) {
@@ -653,13 +686,14 @@ object AXmlManifest {
         // 打包图标兜底：仅模板无 icon 属性时注入 android:icon 资源引用（TYPE_REFERENCE），
         // Launcher 经产物 arsc 定位 res/drawable/icon.png 条目——工程 icon.png 覆盖即生效。
         if (edit.applicationIconId != null && !hasIcon) {
-            attrs += emitAttr(
-                newIdx(ANDROID_URI),
-                newIdx("icon"),
-                NO_INDEX.toInt(),
-                TYPE_REFERENCE,
-                edit.applicationIconId.toLong(),
-            )
+            attrs +=
+                emitAttr(
+                    newIdx(ANDROID_URI),
+                    newIdx("icon"),
+                    NO_INDEX.toInt(),
+                    TYPE_REFERENCE,
+                    edit.applicationIconId.toLong(),
+                )
         }
         return emitElement(el.name, attrs, el.line)
     }
@@ -718,12 +752,19 @@ object AXmlManifest {
 
     private fun typeOf(chunk: ByteArray): Int = u16(chunk, 0)
 
-    private fun isElement(chunk: ByteArray, strings: List<String>, name: String): Boolean {
-        return typeOf(chunk) == CHUNK_START_ELEMENT &&
+    private fun isElement(
+        chunk: ByteArray,
+        strings: List<String>,
+        name: String,
+    ): Boolean =
+        typeOf(chunk) == CHUNK_START_ELEMENT &&
             strings.getOrNull(u32(chunk, 20).toInt()) == name
-    }
 
-    private fun attrBytes(chunk: ByteArray, el: ElementRef, a: Attr): ByteArray {
+    private fun attrBytes(
+        chunk: ByteArray,
+        el: ElementRef,
+        a: Attr,
+    ): ByteArray {
         // 属性记录整块拷贝（attrStart 起 20 字节：ns/name/raw + Res_value），
         // 不能只拷 Res_value 的 a.size（8 字节），否则 name/type/data 被清零。
         return chunk.copyOfRange(a.offset, a.offset + el.attrSize)
@@ -737,16 +778,17 @@ object AXmlManifest {
         val attrs = ArrayList<Attr>(attrCount)
         for (a in 0 until attrCount) {
             val p = base + a * attrSize
-            attrs += Attr(
-                offset = p,
-                ns = u32(chunk, p).toInt(),
-                name = u32(chunk, p + 4).toInt(),
-                raw = u32(chunk, p + 8).toInt(),
-                size = u16(chunk, p + 12),
-                res0 = chunk[p + 14].toInt() and 0xFF,
-                type = chunk[p + 15].toInt() and 0xFF,
-                data = u32(chunk, p + 16),
-            )
+            attrs +=
+                Attr(
+                    offset = p,
+                    ns = u32(chunk, p).toInt(),
+                    name = u32(chunk, p + 4).toInt(),
+                    raw = u32(chunk, p + 8).toInt(),
+                    size = u16(chunk, p + 12),
+                    res0 = chunk[p + 14].toInt() and 0xFF,
+                    type = chunk[p + 15].toInt() and 0xFF,
+                    data = u32(chunk, p + 16),
+                )
         }
         return ElementRef(
             chunk = chunk,
@@ -758,7 +800,11 @@ object AXmlManifest {
         )
     }
 
-    private fun stringAttr(el: ElementRef, strings: List<String>, attrName: String): String? {
+    private fun stringAttr(
+        el: ElementRef,
+        strings: List<String>,
+        attrName: String,
+    ): String? {
         val a = el.attrs.firstOrNull { strings.getOrNull(it.name) == attrName } ?: return null
         if (a.type != TYPE_STRING || a.data !in 0 until strings.size.toLong()) return null
         return strings[a.data.toInt()]
@@ -778,7 +824,11 @@ object AXmlManifest {
         return a.data.toInt()
     }
 
-    private fun emitElement(nameIdx: Int, attrs: List<ByteArray>, line: Int): ByteArray {
+    private fun emitElement(
+        nameIdx: Int,
+        attrs: List<ByteArray>,
+        line: Int,
+    ): ByteArray {
         val out = ByteArray(36 + 20 * attrs.size)
         putU16(out, 0, CHUNK_START_ELEMENT)
         putU16(out, 2, 16)
@@ -801,7 +851,13 @@ object AXmlManifest {
         return out
     }
 
-    private fun emitAttr(ns: Int, name: Int, raw: Int, type: Int, data: Long): ByteArray {
+    private fun emitAttr(
+        ns: Int,
+        name: Int,
+        raw: Int,
+        type: Int,
+        data: Long,
+    ): ByteArray {
         val out = ByteArray(20)
         putU32(out, 0, ns.toLong())
         putU32(out, 4, name.toLong())
@@ -844,12 +900,18 @@ object AXmlManifest {
         return Pool(strings)
     }
 
-    private fun readUtf16(b: ByteArray, o: Int): String {
+    private fun readUtf16(
+        b: ByteArray,
+        o: Int,
+    ): String {
         val len = u16(b, o)
         return String(b, o + 2, len * 2, Charsets.UTF_16LE)
     }
 
-    private fun readUtf8(b: ByteArray, o: Int): String {
+    private fun readUtf8(
+        b: ByteArray,
+        o: Int,
+    ): String {
         var p = o
         // AXML UTF-8 池条目 = 变长长度前缀 × 2（先 charLen 后 byteLen）+ UTF-8 数据 + 0 终止。
         // 与 aapt 的 ENCODE_LENGTH/decode_length 一致：首字节 < 0x80 时取单字节，
@@ -862,13 +924,22 @@ object AXmlManifest {
     }
 
     /** 解码一个 AXML UTF-8 长度前缀，返回（长度, 占用字节数）。 */
-    private fun readUtf8Length(b: ByteArray, o: Int): Pair<Int, Int> {
+    private fun readUtf8Length(
+        b: ByteArray,
+        o: Int,
+    ): Pair<Int, Int> {
         val first = b[o].toInt() and 0xFF
         if (first and 0x80 == 0) return first to 1
         val len = (first and 0x7F) shl 8 or (b[o + 1].toInt() and 0xFF)
         return len to 2
     }
 
+    /**
+     * 重建 ResStringPool（UTF-16 编码，flags=0）。
+     * 源池可能是 UTF-8 或 UTF-16，但 Android 系统对两种编码均接受，
+     * 本方法统一输出 UTF-16 以确保与 aapt2 产物的 chunk flags 一致。
+     * （旧 aapt 兼容模式下 UTF-8 源池会被静默降级，此处不做区分。）
+     */
     private fun rebuildPool(strings: List<String>): ByteArray {
         val count = strings.size
         val offsets = IntArray(count)
@@ -926,23 +997,34 @@ object AXmlManifest {
         return Parsed(poolIndex, chunks)
     }
 
-    private fun u16(b: ByteArray, o: Int): Int {
-        return (b[o].toInt() and 0xFF) or ((b[o + 1].toInt() and 0xFF) shl 8)
-    }
+    private fun u16(
+        b: ByteArray,
+        o: Int,
+    ): Int = (b[o].toInt() and 0xFF) or ((b[o + 1].toInt() and 0xFF) shl 8)
 
-    private fun u32(b: ByteArray, o: Int): Long {
-        return (b[o].toLong() and 0xFF) or
+    private fun u32(
+        b: ByteArray,
+        o: Int,
+    ): Long =
+        (b[o].toLong() and 0xFF) or
             ((b[o + 1].toLong() and 0xFF) shl 8) or
             ((b[o + 2].toLong() and 0xFF) shl 16) or
             ((b[o + 3].toLong() and 0xFF) shl 24)
-    }
 
-    private fun putU16(out: ByteArray, o: Int, v: Int) {
+    private fun putU16(
+        out: ByteArray,
+        o: Int,
+        v: Int,
+    ) {
         out[o] = (v and 0xFF).toByte()
         out[o + 1] = ((v shr 8) and 0xFF).toByte()
     }
 
-    private fun putU32(out: ByteArray, o: Int, v: Long) {
+    private fun putU32(
+        out: ByteArray,
+        o: Int,
+        v: Long,
+    ) {
         out[o] = (v and 0xFF).toByte()
         out[o + 1] = ((v shr 8) and 0xFF).toByte()
         out[o + 2] = ((v shr 16) and 0xFF).toByte()

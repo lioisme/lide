@@ -300,11 +300,12 @@ object SigningCrypto {
         return der(
             TAG_SEQUENCE,
             concat(
-                *attrs.map { (oid, value) ->
-                    val tag = if (oid in IA5_ATTRS) TAG_IA5 else TAG_UTF8
-                    val bytes = value.toByteArray(Charsets.UTF_8)
-                    der(TAG_SET, der(TAG_SEQUENCE, concat(oidBytes(oid), der(tag, bytes))))
-                }.toTypedArray(),
+                *attrs
+                    .map { (oid, value) ->
+                        val tag = if (oid in IA5_ATTRS) TAG_IA5 else TAG_UTF8
+                        val bytes = value.toByteArray(Charsets.UTF_8)
+                        der(TAG_SET, der(TAG_SEQUENCE, concat(oidBytes(oid), der(tag, bytes))))
+                    }.toTypedArray(),
             ),
         )
     }

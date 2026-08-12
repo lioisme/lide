@@ -29,7 +29,10 @@ class ProjectManagerTest {
         luaExtDir.deleteRecursively()
     }
 
-    private fun makeProject(name: String, withInit: Boolean = true) {
+    private fun makeProject(
+        name: String,
+        withInit: Boolean = true,
+    ) {
         val dir = File(luaExtDir, "project/$name").apply { mkdirs() }
         File(dir, "main.lua").writeText("-- main of $name")
         if (withInit) {

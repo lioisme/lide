@@ -1,7 +1,6 @@
 package com.lioisme.lide.ui.theme
 
 import android.os.Build
-import androidx.compose.foundation.isSystemInDarkTheme as platformIsDark
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
@@ -25,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import com.materialkolor.hct.Hct
 import com.materialkolor.scheme.DynamicScheme
 import com.materialkolor.scheme.SchemeTonalSpot
+import androidx.compose.foundation.isSystemInDarkTheme as platformIsDark
 
 val LocalIsDarkTheme = compositionLocalOf { false }
 

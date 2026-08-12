@@ -23,7 +23,6 @@ import java.util.concurrent.ConcurrentHashMap
  *   （createFromAsset 每次返回新对象，不缓存会让 diff 恒不相等、每次重组重设字体）。
  */
 object LuaFonts {
-
     /** 内置字体 id → asset 文件名（id 常量见 [EditorConfig] companion；值与设置键持久化）。 */
     internal val builtinAssets: Map<Int, String> =
         mapOf(
@@ -43,11 +42,17 @@ object LuaFonts {
             EditorConfig.FONT_FAMILY_DEFAULT,
             EditorConfig.FONT_FAMILY_JETBRAINS_MONO,
             -> R.string.font_jetbrains_mono
+
             EditorConfig.FONT_FAMILY_DROID_SANS_MONO -> R.string.font_droid_sans_mono
+
             EditorConfig.FONT_FAMILY_FIRA_CODE -> R.string.font_fira_code
+
             EditorConfig.FONT_FAMILY_SOURCE_CODE_PRO -> R.string.font_source_code_pro
+
             EditorConfig.FONT_FAMILY_ANONYMOUS_PRO -> R.string.font_anonymous_pro
+
             EditorConfig.FONT_FAMILY_DEJAVU_SANS_MONO -> R.string.font_dejavu_sans_mono
+
             else -> R.string.font_jetbrains_mono
         }
 
@@ -66,7 +71,10 @@ object LuaFonts {
      * 与 4（JETBRAINS_MONO）同映射 jetbrains_mono.ttf，按 id 缓存同一文件两份
      * Typeface；按文件名缓存后两 id 共享实例，且 LuaEditor diff 相等性判定一致。
      */
-    fun resolve(context: Context, fontFamily: Int): Typeface {
+    fun resolve(
+        context: Context,
+        fontFamily: Int,
+    ): Typeface {
         if (fontFamily in 1..EditorConfig.FONT_FAMILY_SERIF) {
             return systemFamily(fontFamily)
         }
@@ -122,7 +130,10 @@ object LuaFonts {
         }
 
     /** 外部字体 id → 显示名（文件名去扩展名；越界返回 null）。 */
-    fun externalLabel(context: Context, id: Int): String? {
+    fun externalLabel(
+        context: Context,
+        id: Int,
+    ): String? {
         val index = id - EditorConfig.FONT_FAMILY_EXTERNAL_BASE
         val files = scanExternal(context) ?: return null
         return files.getOrNull(index)?.name?.substringBeforeLast('.')
@@ -148,12 +159,15 @@ object LuaFonts {
     private fun scanExternal(context: Context): List<File>? {
         externalFiles?.let { return it }
         val dir = File(context.filesDir, "fonts")
-        val list = try {
-            dir.listFiles { f -> f.isFile && f.extension.equals("ttf", ignoreCase = true) }
-                ?.sortedBy { it.name }?.toList() ?: emptyList()
-        } catch (_: Throwable) {
-            emptyList()
-        }
+        val list =
+            try {
+                dir
+                    .listFiles { f -> f.isFile && f.extension.equals("ttf", ignoreCase = true) }
+                    ?.sortedBy { it.name }
+                    ?.toList() ?: emptyList()
+            } catch (_: Throwable) {
+                emptyList()
+            }
         externalFiles = list
         return list
     }

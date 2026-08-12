@@ -1,5 +1,6 @@
 package com.lioisme.lide.ui.screen
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -28,7 +29,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import android.widget.Toast
 import com.lioisme.lide.R
 import com.lioisme.lide.install.BackendStatus
 import com.lioisme.lide.install.InstallerBackend
@@ -60,9 +60,27 @@ fun InstallMethodDialog(
     val backendStatuses =
         listOf(
             Triple(InstallerBackend.DEFAULT, stringResource(R.string.install_method_default), null),
-            Triple(InstallerBackend.SHIZUKU, stringResource(R.string.install_method_shizuku), InstallerServices.shizuku.status.collectAsState().value),
-            Triple(InstallerBackend.DHIZUKU, stringResource(R.string.install_method_dhizuku), InstallerServices.dhizuku.status.collectAsState().value),
-            Triple(InstallerBackend.ROOT, stringResource(R.string.install_method_root), InstallerServices.root.status.collectAsState().value),
+            Triple(
+                InstallerBackend.SHIZUKU,
+                stringResource(R.string.install_method_shizuku),
+                InstallerServices.shizuku.status
+                    .collectAsState()
+                    .value,
+            ),
+            Triple(
+                InstallerBackend.DHIZUKU,
+                stringResource(R.string.install_method_dhizuku),
+                InstallerServices.dhizuku.status
+                    .collectAsState()
+                    .value,
+            ),
+            Triple(
+                InstallerBackend.ROOT,
+                stringResource(R.string.install_method_root),
+                InstallerServices.root.status
+                    .collectAsState()
+                    .value,
+            ),
         )
 
     fun installNow() {

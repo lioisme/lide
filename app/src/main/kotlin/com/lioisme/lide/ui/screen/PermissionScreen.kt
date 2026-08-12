@@ -171,21 +171,30 @@ fun HostPermissionScreen(
                 item {
                     InstallBackendStatusRow(
                         label = stringResource(R.string.perm_shizuku),
-                        status = InstallerServices.shizuku.status.collectAsState().value,
+                        status =
+                            InstallerServices.shizuku.status
+                                .collectAsState()
+                                .value,
                         onGrant = { InstallerServices.shizuku.requestPermission() },
                     )
                 }
                 item {
                     InstallBackendStatusRow(
                         label = stringResource(R.string.perm_dhizuku),
-                        status = InstallerServices.dhizuku.status.collectAsState().value,
+                        status =
+                            InstallerServices.dhizuku.status
+                                .collectAsState()
+                                .value,
                         onGrant = { InstallerServices.dhizuku.requestPermission() },
                     )
                 }
                 item {
                     InstallBackendStatusRow(
                         label = stringResource(R.string.perm_root),
-                        status = InstallerServices.root.status.collectAsState().value,
+                        status =
+                            InstallerServices.root.status
+                                .collectAsState()
+                                .value,
                         onGrant = { InstallerServices.root.requestPermission() },
                     )
                 }

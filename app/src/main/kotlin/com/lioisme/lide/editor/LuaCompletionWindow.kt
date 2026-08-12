@@ -17,6 +17,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ListView
 import android.widget.TextView
+import io.github.rosemoe.sora.R
 import io.github.rosemoe.sora.widget.component.CompletionLayout
 import io.github.rosemoe.sora.widget.component.EditorAutoCompletion
 import io.github.rosemoe.sora.widget.component.EditorCompletionAdapter
@@ -33,7 +34,6 @@ import io.github.rosemoe.sora.widget.schemes.EditorColorScheme
  * [EditorColorScheme.getColor] 默认值，读取失败静默降级（sora 主循环不逃逸异常）。
  */
 class LuaCompletionWindow : CompletionLayout {
-
     private var listView: ListView? = null
     private var rootView: LinearLayout? = null
     private var editorAutoCompletion: EditorAutoCompletion? = null
@@ -54,13 +54,14 @@ class LuaCompletionWindow : CompletionLayout {
         listView =
             ListView(context).apply {
                 dividerHeight = 0
-                onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-                    try {
-                        editorAutoCompletion?.select(position)
-                    } catch (_: Throwable) {
-                        // 选择失败静默降级（补全窗口生命周期由 sora 主循环管理）。
+                onItemClickListener =
+                    AdapterView.OnItemClickListener { _, _, position, _ ->
+                        try {
+                            editorAutoCompletion?.select(position)
+                        } catch (_: Throwable) {
+                            // 选择失败静默降级（补全窗口生命周期由 sora 主循环管理）。
+                        }
                     }
-                }
             }
         rootView?.addView(listView, LinearLayout.LayoutParams(-1, -1))
         return rootView!!
@@ -86,7 +87,10 @@ class LuaCompletionWindow : CompletionLayout {
 
     override fun getCompletionList(): ListView = listView!!
 
-    override fun ensureListPositionVisible(position: Int, increment: Int) {
+    override fun ensureListPositionVisible(
+        position: Int,
+        increment: Int,
+    ) {
         // S2（2026-08-12）：迭代上限对齐上游 DefaultCompletionLayout（MAX_SCROLL_ITERATIONS
         // = 100，上游注释 "prevent infinite loops that can cause ANR!!!"）——列表状态异常时
         // while 循环无界执行会致主线程 ANR。
@@ -135,8 +139,7 @@ class LuaCompletionWindow : CompletionLayout {
                         TypedValue.COMPLEX_UNIT_DIP,
                         STROKE_WIDTH_DP,
                         context.resources.displayMetrics,
-                    )
-                    .toInt(),
+                    ).toInt(),
                 stroke,
             )
             setColor(color)
@@ -145,7 +148,10 @@ class LuaCompletionWindow : CompletionLayout {
     private fun setRoundedOutline(view: View) {
         view.outlineProvider =
             object : ViewOutlineProvider() {
-                override fun getOutline(view: View, outline: Outline) {
+                override fun getOutline(
+                    view: View,
+                    outline: Outline,
+                ) {
                     outline.setRoundRect(
                         0,
                         0,
@@ -168,7 +174,6 @@ class LuaCompletionWindow : CompletionLayout {
      * 当前项背景 = [EditorColorScheme.COMPLETION_WND_ITEM_CURRENT]，非当前透明。
      */
     class Adapter : EditorCompletionAdapter() {
-
         override fun getView(
             position: Int,
             convertView: View?,
@@ -177,17 +182,19 @@ class LuaCompletionWindow : CompletionLayout {
         ): View {
             val item = getItem(position)
             val view =
-                convertView ?: LayoutInflater.from(context)
-                    .inflate(io.github.rosemoe.sora.R.layout.default_completion_result_item, parent, false)
+                convertView ?: LayoutInflater
+                    .from(context)
+                    .inflate(R.layout.default_completion_result_item, parent, false)
 
-            view.findViewById<ImageView>(io.github.rosemoe.sora.R.id.result_item_image)
+            view
+                .findViewById<ImageView>(R.id.result_item_image)
                 ?.setImageDrawable(item.icon)
-            view.findViewById<TextView>(io.github.rosemoe.sora.R.id.result_item_label)?.apply {
+            view.findViewById<TextView>(R.id.result_item_label)?.apply {
                 text = item.label
                 setTextColor(getThemeColor(EditorColorScheme.COMPLETION_WND_TEXT_PRIMARY))
                 setTypeface(Typeface.MONOSPACE)
             }
-            view.findViewById<TextView>(io.github.rosemoe.sora.R.id.result_item_desc)?.apply {
+            view.findViewById<TextView>(R.id.result_item_desc)?.apply {
                 text = item.desc
                 setTextColor(getThemeColor(EditorColorScheme.COMPLETION_WND_TEXT_SECONDARY))
             }
@@ -208,8 +215,7 @@ class LuaCompletionWindow : CompletionLayout {
                     TypedValue.COMPLEX_UNIT_DIP,
                     ITEM_HEIGHT_DP,
                     context.resources.displayMetrics,
-                )
-                .toInt()
+                ).toInt()
     }
 
     private companion object {

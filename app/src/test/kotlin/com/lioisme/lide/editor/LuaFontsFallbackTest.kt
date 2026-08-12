@@ -32,6 +32,7 @@ class LuaFontsFallbackTest {
             ?: throw IllegalStateException("assets root not found (cwd=${File("").absolutePath})")
 
     /** R5 白名单（AGENTS.md）：恰 6 款内置等宽，新增必须同步登记。 */
+    @Suppress("ktlint:standard:property-naming")
     private val WHITELIST =
         setOf(
             "jetbrains_mono.ttf",

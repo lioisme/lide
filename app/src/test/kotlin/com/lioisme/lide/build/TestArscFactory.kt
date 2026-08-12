@@ -11,7 +11,6 @@ import java.io.ByteArrayOutputStream
  * 供 ArscLookupTest / ApkBuilderTest 混淆宿主用例共用。
  */
 internal object TestArscFactory {
-
     fun syntheticArsc(
         pkgId: Int = 0x7f,
         iconKey: String = "icon.png",
@@ -134,31 +133,49 @@ internal object TestArscFactory {
         out.write(padded)
     }
 
-    private fun u16(out: ByteArrayOutputStream, v: Int) {
+    private fun u16(
+        out: ByteArrayOutputStream,
+        v: Int,
+    ) {
         out.write(v and 0xFF)
         out.write((v ushr 8) and 0xFF)
     }
 
-    private fun u16(buf: ByteArray, off: Int, v: Int) {
+    private fun u16(
+        buf: ByteArray,
+        off: Int,
+        v: Int,
+    ) {
         buf[off] = (v and 0xFF).toByte()
         buf[off + 1] = ((v ushr 8) and 0xFF).toByte()
     }
 
-    private fun u32(out: ByteArrayOutputStream, v: Int) {
+    private fun u32(
+        out: ByteArrayOutputStream,
+        v: Int,
+    ) {
         out.write(v and 0xFF)
         out.write((v ushr 8) and 0xFF)
         out.write((v ushr 16) and 0xFF)
         out.write((v ushr 24) and 0xFF)
     }
 
-    private fun u32(buf: ByteArray, off: Int, v: Int) {
+    private fun u32(
+        buf: ByteArray,
+        off: Int,
+        v: Int,
+    ) {
         buf[off] = (v and 0xFF).toByte()
         buf[off + 1] = ((v ushr 8) and 0xFF).toByte()
         buf[off + 2] = ((v ushr 16) and 0xFF).toByte()
         buf[off + 3] = ((v ushr 24) and 0xFF).toByte()
     }
 
-    private fun patchU32(out: ByteArrayOutputStream, off: Int, v: Int) {
+    private fun patchU32(
+        out: ByteArrayOutputStream,
+        off: Int,
+        v: Int,
+    ) {
         val bytes = out.toByteArray()
         u32(bytes, off, v)
         out.reset()

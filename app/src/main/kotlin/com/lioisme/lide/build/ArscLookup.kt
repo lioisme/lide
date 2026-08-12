@@ -77,7 +77,10 @@ internal object ArscLookup {
             val size = u32(arsc, pos + 4).toInt()
             if (size < 8 || pos + size > arsc.size) return null
             when (type) {
-                RES_STRING_POOL_TYPE -> if (globalPool == null) globalPool = pos to size
+                RES_STRING_POOL_TYPE -> {
+                    if (globalPool == null) globalPool = pos to size
+                }
+
                 RES_TABLE_PACKAGE_TYPE -> {
                     pkgOff = pos
                     pkgSize = size
@@ -169,11 +172,12 @@ internal object ArscLookup {
             }
             // 紧凑布局步长：entry 头 8B + Res_value 8B（aapt2 36 esize=8，无 valueCount）；
             // 传统布局 esize=16（头 + 首个 value 尺寸自含）按 esize 前进。
-            ep += when {
-                esize == 8 -> 16
-                esize >= 16 -> esize
-                else -> 16
-            }
+            ep +=
+                when {
+                    esize == 8 -> 16
+                    esize >= 16 -> esize
+                    else -> 16
+                }
         }
         return null
     }
@@ -193,7 +197,11 @@ internal object ArscLookup {
      * 读字符串池（UTF-8 / UTF-16 均支持，相对 [baseOff] 的偏移 [poolOff]）。
      * 返回 null 表示池结构异常；非法桶尾取池头（防御）。
      */
-    private fun stringPool(arsc: ByteArray, baseOff: Int, poolOff: Int): List<String>? {
+    private fun stringPool(
+        arsc: ByteArray,
+        baseOff: Int,
+        poolOff: Int,
+    ): List<String>? {
         if (poolOff < 0) return null
         val o = baseOff + poolOff
         if (o + 28 > arsc.size) return null
@@ -212,13 +220,19 @@ internal object ArscLookup {
         return out
     }
 
-    private fun readUtf16(b: ByteArray, o: Int): String {
+    private fun readUtf16(
+        b: ByteArray,
+        o: Int,
+    ): String {
         val len = u16(b, o)
         if (o + 2 + len * 2 > b.size) return ""
         return String(b, o + 2, len * 2, Charsets.UTF_16LE)
     }
 
-    private fun readUtf8(b: ByteArray, o: Int): String {
+    private fun readUtf8(
+        b: ByteArray,
+        o: Int,
+    ): String {
         var p = o
         val charLen = readUtf8Length(b, p)
         if (charLen == null) return ""
@@ -231,7 +245,10 @@ internal object ArscLookup {
     }
 
     /** 解码一个 ResStringPool UTF-8 长度前缀：返回（长度, 占用字节数）。 */
-    private fun readUtf8Length(b: ByteArray, o: Int): Pair<Int, Int>? {
+    private fun readUtf8Length(
+        b: ByteArray,
+        o: Int,
+    ): Pair<Int, Int>? {
         if (o >= b.size) return null
         val first = b[o].toInt() and 0xFF
         if (first and 0x80 == 0) return first to 1
@@ -240,10 +257,15 @@ internal object ArscLookup {
         return len to 2
     }
 
-    private fun u16(b: ByteArray, o: Int): Int =
-        (b[o].toInt() and 0xFF) or ((b[o + 1].toInt() and 0xFF) shl 8)
+    private fun u16(
+        b: ByteArray,
+        o: Int,
+    ): Int = (b[o].toInt() and 0xFF) or ((b[o + 1].toInt() and 0xFF) shl 8)
 
-    private fun u32(b: ByteArray, o: Int): Long =
+    private fun u32(
+        b: ByteArray,
+        o: Int,
+    ): Long =
         (b[o].toLong() and 0xFF) or
             ((b[o + 1].toLong() and 0xFF) shl 8) or
             ((b[o + 2].toLong() and 0xFF) shl 16) or

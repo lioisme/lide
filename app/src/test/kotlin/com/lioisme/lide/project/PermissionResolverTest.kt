@@ -6,13 +6,13 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class PermissionResolverTest {
-
     @Test
     fun `declared reads array from init_lua`() {
-        val content = """
+        val content =
+            """
             appname = "demo"
             user_permission = {"android.permission.CAMERA", "android.permission.RECORD_AUDIO"}
-        """.trimIndent()
+            """.trimIndent()
         assertEquals(
             listOf("android.permission.CAMERA", "android.permission.RECORD_AUDIO"),
             PermissionResolver.declared(content),
@@ -21,20 +21,22 @@ class PermissionResolverTest {
 
     @Test
     fun `declared ignores commented block`() {
-        val content = """
+        val content =
+            """
             --[[
             user_permission = {"android.permission.CAMERA"}
             ]]
             user_permission = {"android.permission.INTERNET"}
-        """.trimIndent()
+            """.trimIndent()
         assertEquals(listOf("android.permission.INTERNET"), PermissionResolver.declared(content))
     }
 
     @Test
     fun `declared tolerates bare identifiers`() {
-        val content = """
+        val content =
+            """
             user_permission = {CAMERA, RECORD_AUDIO}
-        """.trimIndent()
+            """.trimIndent()
         assertEquals(listOf("CAMERA", "RECORD_AUDIO"), PermissionResolver.declared(content))
     }
 
@@ -56,11 +58,12 @@ class PermissionResolverTest {
 
     @Test
     fun `runtimeRequestable keeps order and drops special`() {
-        val declared = listOf(
-            "android.permission.CAMERA",
-            "android.permission.MANAGE_EXTERNAL_STORAGE",
-            "android.permission.RECORD_AUDIO",
-        )
+        val declared =
+            listOf(
+                "android.permission.CAMERA",
+                "android.permission.MANAGE_EXTERNAL_STORAGE",
+                "android.permission.RECORD_AUDIO",
+            )
         assertEquals(
             listOf("android.permission.CAMERA", "android.permission.RECORD_AUDIO"),
             PermissionResolver.runtimeRequestable(declared),

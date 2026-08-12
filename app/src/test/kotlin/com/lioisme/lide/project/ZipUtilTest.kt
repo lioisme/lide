@@ -62,6 +62,20 @@ class ZipUtilTest {
     }
 
     @Test
+    fun `zip-slip 多级上级目录条目被拒绝`() {
+        val zip = zipOf(mapOf("../../etc/hosts" to "evil", "../../../system/x.lua" to "evil2", "ok.lua" to "fine"))
+        val dest = tempDir()
+        try {
+            assertTrue(ZipUtil.unzipFromStream(ByteArrayInputStream(zip), dest))
+            assertFalse(File("/etc/hosts").canRead())
+            assertFalse(File("/system/x.lua").canRead())
+            assertTrue(File(dest, "ok.lua").exists())
+        } finally {
+            dest.deleteRecursively()
+        }
+    }
+
+    @Test
     fun `反斜杠路径统一为正斜杠后安全解压`() {
         val zip = zipOf(mapOf("..\\evil.lua" to "evil", "sub\\file.lua" to "fine"))
         val dest = tempDir()

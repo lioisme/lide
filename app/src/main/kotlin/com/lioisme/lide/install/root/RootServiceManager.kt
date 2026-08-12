@@ -49,7 +49,8 @@ class RootServiceManager(
             if (configured.get()) return
             try {
                 Shell.setDefaultBuilder(
-                    Shell.Builder.create()
+                    Shell.Builder
+                        .create()
                         .setTimeout(SHELL_TIMEOUT_SECONDS),
                 )
             } catch (e: IllegalStateException) {
@@ -100,55 +101,56 @@ class RootServiceManager(
     suspend fun installPackage(
         apkFile: File,
         installerPackageName: String?,
-    ): Int? = withContext(Dispatchers.IO) {
-        configureDefaultShell()
-        if (!isRootGranted()) {
-            Log.w(TAG, "installPackage() — root not granted, aborting")
-            return@withContext null
-        }
-        val safeInstaller = installerPackageName?.takeIf { it.isNotBlank() }
-        if (safeInstaller != null && !PACKAGE_NAME_PATTERN.matches(safeInstaller)) {
-            Log.w(TAG, "installPackage() — rejecting non-conformant installerPackageName='$safeInstaller'")
-            return@withContext STATUS_FAILURE
-        }
-
-        val tmpPath = "/data/local/tmp/lide_${System.currentTimeMillis()}_${(0..Int.MAX_VALUE).random()}.apk"
-        val srcPath = shellQuote(apkFile.absolutePath)
-        val tmpPathQuoted = shellQuote(tmpPath)
-
-        try {
-            val copyRes = Shell.cmd("cp $srcPath $tmpPathQuoted && chmod 644 $tmpPathQuoted").exec()
-            if (!copyRes.isSuccess) {
-                Log.e(
-                    TAG,
-                    "installPackage() — staging copy failed: exit=${copyRes.code} " +
-                        "out='${copyRes.out.joinToString("\n")}' err='${copyRes.err.joinToString("\n")}'",
-                )
+    ): Int? =
+        withContext(Dispatchers.IO) {
+            configureDefaultShell()
+            if (!isRootGranted()) {
+                Log.w(TAG, "installPackage() — root not granted, aborting")
+                return@withContext null
+            }
+            val safeInstaller = installerPackageName?.takeIf { it.isNotBlank() }
+            if (safeInstaller != null && !PACKAGE_NAME_PATTERN.matches(safeInstaller)) {
+                Log.w(TAG, "installPackage() — rejecting non-conformant installerPackageName='$safeInstaller'")
                 return@withContext STATUS_FAILURE
             }
 
-            val command =
-                buildString {
-                    append("pm install ")
-                    if (safeInstaller != null) append("-i ").append(safeInstaller).append(' ')
-                    append("-r ")
-                    append(tmpPathQuoted)
+            val tmpPath = "/data/local/tmp/lide_${System.currentTimeMillis()}_${(0..Int.MAX_VALUE).random()}.apk"
+            val srcPath = shellQuote(apkFile.absolutePath)
+            val tmpPathQuoted = shellQuote(tmpPath)
+
+            try {
+                val copyRes = Shell.cmd("cp $srcPath $tmpPathQuoted && chmod 644 $tmpPathQuoted").exec()
+                if (!copyRes.isSuccess) {
+                    Log.e(
+                        TAG,
+                        "installPackage() — staging copy failed: exit=${copyRes.code} " +
+                            "out='${copyRes.out.joinToString("\n")}' err='${copyRes.err.joinToString("\n")}'",
+                    )
+                    return@withContext STATUS_FAILURE
                 }
-            Log.d(TAG, "installPackage() — executing: $command")
-            val result = Shell.cmd(command).exec()
-            val stdout = result.out.joinToString("\n").trim()
-            val stderr = result.err.joinToString("\n").trim()
-            Log.d(TAG, "installPackage() — exit=${result.code} stdout='$stdout' stderr='$stderr'")
-            if (result.isSuccess && stdout.contains("Success")) {
-                STATUS_SUCCESS
-            } else {
-                Log.w(TAG, "installPackage() — pm reported failure: stdout='$stdout' stderr='$stderr'")
-                STATUS_FAILURE
+
+                val command =
+                    buildString {
+                        append("pm install ")
+                        if (safeInstaller != null) append("-i ").append(safeInstaller).append(' ')
+                        append("-r ")
+                        append(tmpPathQuoted)
+                    }
+                Log.d(TAG, "installPackage() — executing: $command")
+                val result = Shell.cmd(command).exec()
+                val stdout = result.out.joinToString("\n").trim()
+                val stderr = result.err.joinToString("\n").trim()
+                Log.d(TAG, "installPackage() — exit=${result.code} stdout='$stdout' stderr='$stderr'")
+                if (result.isSuccess && stdout.contains("Success")) {
+                    STATUS_SUCCESS
+                } else {
+                    Log.w(TAG, "installPackage() — pm reported failure: stdout='$stdout' stderr='$stderr'")
+                    STATUS_FAILURE
+                }
+            } finally {
+                Shell.cmd("rm -f $tmpPathQuoted").submit()
             }
-        } finally {
-            Shell.cmd("rm -f $tmpPathQuoted").submit()
         }
-    }
 
     private fun refreshStatusBlocking() {
         val computed = computeStatus()

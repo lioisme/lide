@@ -64,13 +64,17 @@ data class EditorConfig(
         /** 字体族：默认（2026-08-11 T10 起 = 内置 JetBrains Mono，Squircle CE 组合；
          * 经 [LuaFonts] 加载 assets/fonts/jetbrains_mono.ttf，失败回落 MONOSPACE）。 */
         const val FONT_FAMILY_DEFAULT = 0
+
         /** 字体族：系统等宽（L2 2026-08-12 起不再作为面板可选项，仅终极兜底
          * 与历史持久化兼容；面板 = 内置 + 导入，见 LuaFonts KDoc）。 */
         const val FONT_FAMILY_MONOSPACE = 1
+
         /** 字体族：系统无衬线（同 [FONT_FAMILY_MONOSPACE] 兜底语义）。 */
         const val FONT_FAMILY_SANS = 2
+
         /** 字体族：系统衬线（同 [FONT_FAMILY_MONOSPACE] 兜底语义）。 */
         const val FONT_FAMILY_SERIF = 3
+
         // T10（2026-08-11）：内置 6 款等宽（OFL，assets/fonts/，白名单见 AGENTS.md R5）。
         const val FONT_FAMILY_JETBRAINS_MONO = 4
         const val FONT_FAMILY_DROID_SANS_MONO = 5
@@ -78,6 +82,7 @@ data class EditorConfig(
         const val FONT_FAMILY_SOURCE_CODE_PRO = 7
         const val FONT_FAMILY_ANONYMOUS_PRO = 8
         const val FONT_FAMILY_DEJAVU_SANS_MONO = 9
+
         /** 外部导入字体 id 基址（T11）：id = BASE + files/fonts 扫描序（按文件名排序）。 */
         const val FONT_FAMILY_EXTERNAL_BASE = 100
     }

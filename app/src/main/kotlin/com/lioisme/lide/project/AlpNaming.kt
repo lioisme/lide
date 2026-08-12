@@ -10,11 +10,13 @@ package com.lioisme.lide.project
  * （插件容器类型判定已随插件功能移除——.alp 一律按工程导入。）
  */
 object AlpNaming {
-
     /**
      * 目标名：优先 init.lua 的 appname，否则取文件名去扩展名后截断到首个 `.`/`_`。
      */
-    fun resolveName(alpFileName: String, initContent: String?): String {
+    fun resolveName(
+        alpFileName: String,
+        initContent: String?,
+    ): String {
         val appName = initContent?.let { LuaConfigParser.stringField(it, "appname") }
         if (!appName.isNullOrBlank()) return appName
         val base = alpFileName.substringBeforeLast('.')
@@ -25,7 +27,10 @@ object AlpNaming {
      * 同名冲突处理：目标名已存在时追加 `-1`/`-2` 后缀（对齐 .alp 导入策略）。
      * [exists] 谓词判定冲突（由调用方注入，避免依赖 Android 文件系统）。
      */
-    fun dedupeName(base: String, exists: (String) -> Boolean): String {
+    fun dedupeName(
+        base: String,
+        exists: (String) -> Boolean,
+    ): String {
         if (!exists(base)) return base
         var n = 1
         while (exists("$base-$n")) n++

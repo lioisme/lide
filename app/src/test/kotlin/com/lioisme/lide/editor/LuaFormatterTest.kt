@@ -8,7 +8,6 @@ import org.junit.Test
  * 换行符归一 / 空行折叠 / 大文件短路 / useTab-tabSize 矩阵。
  */
 class LuaFormatterTest {
-
     private fun fmt(src: String): String = LuaFormatter.format(src)
 
     @Test

@@ -34,7 +34,6 @@ import java.util.concurrent.atomic.AtomicInteger
  * 注意：本类经 R8 反射实例化，整包 keep（proguard-rules.pro「静默安装 keep」段）。
  */
 class DhizukuInstallerServiceImpl : IDhizukuInstallerService.Stub() {
-
     companion object {
         private const val TAG = "DhizukuService"
 
@@ -59,8 +58,13 @@ class DhizukuInstallerServiceImpl : IDhizukuInstallerService.Stub() {
             }
 
         private fun log(msg: String) = Log.d(TAG, msg)
+
         private fun logW(msg: String) = Log.w(TAG, msg)
-        private fun logE(msg: String, e: Throwable? = null) = Log.e(TAG, msg, e)
+
+        private fun logE(
+            msg: String,
+            e: Throwable? = null,
+        ) = Log.e(TAG, msg, e)
     }
 
     override fun installPackage(
@@ -75,10 +79,11 @@ class DhizukuInstallerServiceImpl : IDhizukuInstallerService.Stub() {
                 "$expectedVersionCode, installer=$installerPackageName",
         )
 
-        val ctx: Context = currentApplicationOrNull() ?: run {
-            logE("currentApplication() returned null — no context available")
-            return STATUS_FAILURE
-        }
+        val ctx: Context =
+            currentApplicationOrNull() ?: run {
+                logE("currentApplication() returned null — no context available")
+                return STATUS_FAILURE
+            }
 
         val installer = ctx.packageManager.packageInstaller
         val params = PackageInstaller.SessionParams(PackageInstaller.SessionParams.MODE_FULL_INSTALL)
@@ -124,40 +129,49 @@ class DhizukuInstallerServiceImpl : IDhizukuInstallerService.Stub() {
             val token = UUID.randomUUID().toString()
             val action = "$ACTION_INSTALL_RESULT.$token"
 
-            receiver = object : BroadcastReceiver() {
-                override fun onReceive(context: Context, intent: Intent) {
-                    val status =
-                        intent.getIntExtra(
-                            PackageInstaller.EXTRA_STATUS,
-                            PackageInstaller.STATUS_FAILURE,
-                        )
-                    val message = intent.getStringExtra(PackageInstaller.EXTRA_STATUS_MESSAGE)
-                    log("install result — status=$status, message='$message'")
-                    when (status) {
-                        PackageInstaller.STATUS_SUCCESS -> resultRef.set(STATUS_SUCCESS)
-                        PackageInstaller.STATUS_PENDING_USER_ACTION -> {
-                            logW(
-                                "install requires user action (Android 14+ update-ownership gate) — " +
-                                    "installerAttribution=$installerPackageName",
+            receiver =
+                object : BroadcastReceiver() {
+                    override fun onReceive(
+                        context: Context,
+                        intent: Intent,
+                    ) {
+                        val status =
+                            intent.getIntExtra(
+                                PackageInstaller.EXTRA_STATUS,
+                                PackageInstaller.STATUS_FAILURE,
                             )
-                            resultRef.set(STATUS_PENDING_USER_ACTION_REQUIRED)
+                        val message = intent.getStringExtra(PackageInstaller.EXTRA_STATUS_MESSAGE)
+                        log("install result — status=$status, message='$message'")
+                        when (status) {
+                            PackageInstaller.STATUS_SUCCESS -> {
+                                resultRef.set(STATUS_SUCCESS)
+                            }
+
+                            PackageInstaller.STATUS_PENDING_USER_ACTION -> {
+                                logW(
+                                    "install requires user action (Android 14+ update-ownership gate) — " +
+                                        "installerAttribution=$installerPackageName",
+                                )
+                                resultRef.set(STATUS_PENDING_USER_ACTION_REQUIRED)
+                            }
+
+                            else -> {
+                                logW("install failed status=$status: $message")
+                                resultRef.set(STATUS_FAILURE)
+                            }
                         }
-                        else -> {
-                            logW("install failed status=$status: $message")
-                            resultRef.set(STATUS_FAILURE)
-                        }
+                        latch.countDown()
                     }
-                    latch.countDown()
                 }
-            }
             registerInternalReceiver(ctx, receiver, action)
 
-            val pendingIntent = PendingIntent.getBroadcast(
-                ctx,
-                token.hashCode(),
-                Intent(action).setPackage(ctx.packageName),
-                PENDING_INTENT_FLAGS,
-            )
+            val pendingIntent =
+                PendingIntent.getBroadcast(
+                    ctx,
+                    token.hashCode(),
+                    Intent(action).setPackage(ctx.packageName),
+                    PENDING_INTENT_FLAGS,
+                )
 
             session.commit(pendingIntent.intentSender)
             committed = true
@@ -202,10 +216,11 @@ class DhizukuInstallerServiceImpl : IDhizukuInstallerService.Stub() {
     override fun uninstallPackage(packageName: String): Int {
         log("uninstallPackage() called for: $packageName")
 
-        val ctx: Context = currentApplicationOrNull() ?: run {
-            logE("currentApplication() returned null — no context available")
-            return STATUS_FAILURE
-        }
+        val ctx: Context =
+            currentApplicationOrNull() ?: run {
+                logE("currentApplication() returned null — no context available")
+                return STATUS_FAILURE
+            }
 
         val installer = ctx.packageManager.packageInstaller
         val latch = CountDownLatch(1)
@@ -215,27 +230,32 @@ class DhizukuInstallerServiceImpl : IDhizukuInstallerService.Stub() {
         var receiver: BroadcastReceiver? = null
 
         return try {
-            receiver = object : BroadcastReceiver() {
-                override fun onReceive(context: Context, intent: Intent) {
-                    val status =
-                        intent.getIntExtra(
-                            PackageInstaller.EXTRA_STATUS,
-                            PackageInstaller.STATUS_FAILURE,
-                        )
-                    val message = intent.getStringExtra(PackageInstaller.EXTRA_STATUS_MESSAGE)
-                    log("uninstall result — status=$status, message='$message'")
-                    resultRef.set(if (status == PackageInstaller.STATUS_SUCCESS) STATUS_SUCCESS else STATUS_FAILURE)
-                    latch.countDown()
+            receiver =
+                object : BroadcastReceiver() {
+                    override fun onReceive(
+                        context: Context,
+                        intent: Intent,
+                    ) {
+                        val status =
+                            intent.getIntExtra(
+                                PackageInstaller.EXTRA_STATUS,
+                                PackageInstaller.STATUS_FAILURE,
+                            )
+                        val message = intent.getStringExtra(PackageInstaller.EXTRA_STATUS_MESSAGE)
+                        log("uninstall result — status=$status, message='$message'")
+                        resultRef.set(if (status == PackageInstaller.STATUS_SUCCESS) STATUS_SUCCESS else STATUS_FAILURE)
+                        latch.countDown()
+                    }
                 }
-            }
             registerInternalReceiver(ctx, receiver, action)
 
-            val pendingIntent = PendingIntent.getBroadcast(
-                ctx,
-                token.hashCode(),
-                Intent(action).setPackage(ctx.packageName),
-                PENDING_INTENT_FLAGS,
-            )
+            val pendingIntent =
+                PendingIntent.getBroadcast(
+                    ctx,
+                    token.hashCode(),
+                    Intent(action).setPackage(ctx.packageName),
+                    PENDING_INTENT_FLAGS,
+                )
 
             installer.uninstall(packageName, pendingIntent.intentSender)
 
@@ -307,35 +327,35 @@ class DhizukuInstallerServiceImpl : IDhizukuInstallerService.Stub() {
     private fun packageInfoOrNull(
         ctx: Context,
         packageName: String,
-    ): android.content.pm.PackageInfo? = try {
-        ctx.packageManager.getPackageInfo(packageName, 0)
-    } catch (_: android.content.pm.PackageManager.NameNotFoundException) {
-        null
-    } catch (e: Exception) {
-        logE("getPackageInfo($packageName) failed", e)
-        null
-    }
+    ): android.content.pm.PackageInfo? =
+        try {
+            ctx.packageManager.getPackageInfo(packageName, 0)
+        } catch (_: android.content.pm.PackageManager.NameNotFoundException) {
+            null
+        } catch (e: Exception) {
+            logE("getPackageInfo($packageName) failed", e)
+            null
+        }
 
     /**
      * UserService 进程内无 Application 入口，经系统 API 反射取当前 Application
      * 作为 Context（ActivityThread.currentApplication → AppGlobals.getInitialApplication）。
      */
-    private fun currentApplicationOrNull(): Context? {
-        return try {
+    private fun currentApplicationOrNull(): Context? =
+        try {
             val cls = Class.forName("android.app.ActivityThread")
             val app = cls.getMethod("currentApplication").invoke(null)
             app as? Context
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             try {
                 val cls = Class.forName("android.app.AppGlobals")
                 val app = cls.getMethod("getInitialApplication").invoke(null)
                 app as? Context
-            } catch (_: Exception) {
+            } catch (_: Throwable) {
                 logE("Failed to obtain Application context", e)
                 null
             }
         }
-    }
 
     private fun registerInternalReceiver(
         ctx: Context,

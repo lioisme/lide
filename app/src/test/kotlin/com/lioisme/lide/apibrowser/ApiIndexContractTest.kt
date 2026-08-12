@@ -23,30 +23,29 @@ import org.junit.Test
  *    未知类返回 null 且幂等（负缓存生效，同名二次调用不再解析）。
  */
 class ApiIndexContractTest {
-
     private fun snapshot(
         entryNames: Set<String> = emptySet(),
         dexNames: Set<String> = emptySet(),
-    ) =
-        ApiIndex.Snapshot(
-            classes =
-                entryNames.map {
-                    ApiIndex.ApiClassEntry(it, ApiCategory.ANDROLUA, fromProject = false)
-                },
-            nativeModules = emptyList(),
-            nameLower = entryNames.toList(),
-            categories = emptyMap(),
-            categoryCounts = emptyMap(),
-            dexNames = dexNames,
-            entryNames = entryNames,
-        )
+    ) = ApiIndex.Snapshot(
+        classes =
+            entryNames.map {
+                ApiIndex.ApiClassEntry(it, ApiCategory.ANDROLUA, fromProject = false)
+            },
+        nativeModules = emptyList(),
+        nameLower = entryNames.toList(),
+        categories = emptyMap(),
+        categoryCounts = emptyMap(),
+        dexNames = dexNames,
+        entryNames = entryNames,
+    )
 
     @Test
     fun `isKnown 命中静态表条目与 dex 枚举类名`() {
-        val s = snapshot(
-            entryNames = setOf("android.widget.ListView", "com.androlua.LuaActivity"),
-            dexNames = setOf("com.google.android.material.button.MaterialButton", "android.R"),
-        )
+        val s =
+            snapshot(
+                entryNames = setOf("android.widget.ListView", "com.androlua.LuaActivity"),
+                dexNames = setOf("com.google.android.material.button.MaterialButton", "android.R"),
+            )
         assertTrue("静态表条目应命中 entryNames", s.isKnown("android.widget.ListView"))
         assertTrue("dex 枚举类名应命中 dexNames", s.isKnown("com.google.android.material.button.MaterialButton"))
         assertTrue("dexNames 与 entryNames 交集类名应命中", s.isKnown("android.R"))
@@ -54,10 +53,11 @@ class ApiIndexContractTest {
 
     @Test
     fun `isKnown 未知类名与内部类判定`() {
-        val s = snapshot(
-            entryNames = setOf("com.lioisme.lide.apibrowser.ApiIndex"),
-            dexNames = setOf("com.lioisme.lide.ui.MainActivity", "com.lioisme.lide.ui.MainActivity\$Inner"),
-        )
+        val s =
+            snapshot(
+                entryNames = setOf("com.lioisme.lide.apibrowser.ApiIndex"),
+                dexNames = setOf("com.lioisme.lide.ui.MainActivity", "com.lioisme.lide.ui.MainActivity\$Inner"),
+            )
         assertFalse("未知类名必须判定不可加载", s.isKnown("com.lioisme.lide.UnknownT3Class"))
         assertFalse("未登记的内部类名不可加载", s.isKnown("android.widget.ListView\$1"))
         assertTrue("已登记的内部类名可加载", s.isKnown("com.lioisme.lide.ui.MainActivity\$Inner"))

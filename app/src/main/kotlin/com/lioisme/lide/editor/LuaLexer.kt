@@ -4,9 +4,9 @@ package com.lioisme.lide.editor
  * T12（2026-08-11）Lua 词法层（单事实源）：标识符 / 长括号 / 长字符串 / 长注释 /
  * 行注释 / 引号字符串原语与 token 流，供行级诊断（[LuaDiagnostics]）与格式化
  * （[LuaFormatter]）共享。纯 Kotlin，零原生依赖（R1 合规），单遍 O(n)。
+ *
+ * Lua 标识符字符判定（字母/数字/下划线），补全前缀与词法扫描共用。
  */
-
-/** Lua 标识符字符判定（字母/数字/下划线），补全前缀与词法扫描共用。 */
 internal fun Char.isIdentifierChar(): Boolean = isLetterOrDigit() || this == '_'
 
 /** 左括号的对应右括号；未知输入原样返回。 */
@@ -96,7 +96,6 @@ data class LuaToken(
  * 合并为单一 token，与 [LuaDiagnostics] 的模式语义一致。
  */
 object LuaLexer {
-
     fun tokenize(source: String): List<LuaToken> {
         val tokens = ArrayList<LuaToken>(source.length / 8)
         val n = source.length
@@ -131,12 +130,18 @@ object LuaLexer {
                 i++
                 while (i < n) {
                     when (source[i]) {
-                        '\\' -> i += 2
+                        '\\' -> {
+                            i += 2
+                        }
+
                         quote -> {
                             i++
                             break
                         }
-                        else -> i++
+
+                        else -> {
+                            i++
+                        }
                     }
                 }
                 tokens.add(LuaToken(LuaTokenType.STRING, source.substring(start, i), start, i))

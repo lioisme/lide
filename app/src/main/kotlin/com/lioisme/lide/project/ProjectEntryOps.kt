@@ -62,12 +62,18 @@ object ProjectEntryOps {
         val segments = ArrayList<String>()
         for (part in path.split('/', '\\')) {
             when {
-                part.isEmpty() || part == "." -> Unit
+                part.isEmpty() || part == "." -> {
+                    Unit
+                }
+
                 part == ".." -> {
                     if (segments.isEmpty()) return null
                     segments.removeAt(segments.size - 1)
                 }
-                else -> segments.add(part)
+
+                else -> {
+                    segments.add(part)
+                }
             }
         }
         return segments

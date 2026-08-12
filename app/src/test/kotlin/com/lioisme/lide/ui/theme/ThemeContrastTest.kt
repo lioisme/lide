@@ -25,7 +25,6 @@ import org.junit.Test
  * seed 集单一事实源 = [ThemeSeeds.OPTIONS]（与 SettingsScreen 色板同源）。
  */
 class ThemeContrastTest {
-
     private fun schemeFor(
         seed: Long,
         isDark: Boolean,
@@ -36,7 +35,10 @@ class ThemeContrastTest {
             contrastLevel = 0.0,
         )
 
-    private fun contrastRatio(fg: Int, bg: Int): Double {
+    private fun contrastRatio(
+        fg: Int,
+        bg: Int,
+    ): Double {
         val l1 = ColorUtils.calculateLuminance(fg)
         val l2 = ColorUtils.calculateLuminance(bg)
         val lighter = maxOf(l1, l2)

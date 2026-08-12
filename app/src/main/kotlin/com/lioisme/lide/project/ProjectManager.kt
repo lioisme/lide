@@ -57,7 +57,9 @@ class ProjectManager {
          */
         fun packageNameFor(name: String): String {
             val cleaned =
-                name.trim().lowercase()
+                name
+                    .trim()
+                    .lowercase()
                     .map { ch -> if (ch.isLetterOrDigit() || ch == '_') ch else '_' }
                     .joinToString("")
                     .trim('_')
@@ -339,7 +341,7 @@ class ProjectManager {
         } catch (e: Exception) {
             // 元数据同步失败：回滚目录改名，保证磁盘工程名与显示名一致；回滚也失败时
             // 保留告警（目录已改名但 appname 未同步，用户可见工程名由列表刷新兜底）。
-                Log.e(TAG, "renameProject: init.lua appname sync failed, rolling back rename: $name", e)
+            Log.e(TAG, "renameProject: init.lua appname sync failed, rolling back rename: $name", e)
             val rollbackOk =
                 try {
                     targetDir.renameTo(File(project.path))

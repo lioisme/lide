@@ -18,8 +18,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.lioisme.lide.R
 import com.lioisme.lide.engine.RuntimePaths
-import com.lioisme.lide.project.AlpManager
 import com.lioisme.lide.import.AlpImportCoordinator
+import com.lioisme.lide.project.AlpManager
 import com.lioisme.lide.ui.theme.LideTopBar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

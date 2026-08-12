@@ -28,7 +28,9 @@ object ApiReflection {
     )
 
     /** 非空缓存包装（CHM 拒绝 null）：[detail] 为 null 表示反射失败（负缓存）。 */
-    private data class CacheEntry(val detail: Detail?)
+    private data class CacheEntry(
+        val detail: Detail?,
+    )
 
     private val detailCache = ConcurrentHashMap<String, CacheEntry>()
 
@@ -43,8 +45,7 @@ object ApiReflection {
      * [ApiIndex.loadClassRef]，同一类名全进程一次反射；初始化语义一致（initialize=false）。
      * 必须在 IO 线程调用（AGENTS.md 线程契约）。
      */
-    fun reflect(className: String): Detail? =
-        detailCache.computeIfAbsent(className) { name -> CacheEntry(reflectUncached(name)) }.detail
+    fun reflect(className: String): Detail? = detailCache.computeIfAbsent(className) { name -> CacheEntry(reflectUncached(name)) }.detail
 
     private fun reflectUncached(className: String): Detail? {
         return try {

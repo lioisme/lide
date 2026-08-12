@@ -22,7 +22,6 @@ import java.io.File
  * 注意：从源码树读取清单与 keep 规则（Gradle 单测工作目录 = 模块目录），不依赖 Android 运行时。
  */
 class EngineSurfaceConsistencyTest {
-
     private val surfaceFile = File("engine-surface.txt")
     private val proguardFile = File("proguard-rules.pro")
 

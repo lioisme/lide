@@ -106,7 +106,6 @@ class LideHostColorScheme(
     themeRegistry: ThemeRegistry,
     host: HostEditorColors,
 ) : TextMateColorScheme(themeRegistry, themeRegistry.getCurrentThemeModel()) {
-
     // Java 超类构造器会调用虚方法 applyDefault()，彼时本属性尚未赋值（null），
     // 故置空安全 + init 块补一次全量刷新（2026-08-11 T17.4 设备实测抓到的 NPE）。
     private var host: HostEditorColors? = host

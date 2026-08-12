@@ -21,7 +21,6 @@ import java.io.File
  * 不依赖 Android 运行时（与 EditorPaletteContrastTest 同款）。
  */
 class ResourceConsistencyTest {
-
     private val enFile = File("src/main/res/values/strings.xml")
     private val zhFile = File("src/main/res/values-zh/strings.xml")
 
@@ -57,7 +56,10 @@ class ResourceConsistencyTest {
     }
 
     /** 一个键的全部参数（string 单值；plurals 聚合全部档位）。 */
-    private fun argsOf(catalog: Catalog, key: String): Set<String> {
+    private fun argsOf(
+        catalog: Catalog,
+        key: String,
+    ): Set<String> {
         catalog.strings[key]?.let { return formatArgs(it) }
         val plurals = catalog.plurals[key] ?: return emptySet()
         return plurals.values.flatMap { formatArgs(it) }.toSet()

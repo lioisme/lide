@@ -16,7 +16,6 @@ package com.lioisme.lide.editor
  * - 未来扩展（系统高对比度无障碍联动等）只改激活配对表，编辑器侧零改动。
  */
 object EditorPalette {
-
     /** LIDE Classic：VS Code Quiet Light / IntelliJ Darcula 谱系（默认激活方案）。 */
     const val CLASSIC_LIGHT = "quietlight"
     const val CLASSIC_DARK = "darcula"

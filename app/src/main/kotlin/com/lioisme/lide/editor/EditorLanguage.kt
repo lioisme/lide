@@ -43,7 +43,10 @@ class EditorLanguage(
      *  `CodeEditor.getContext()`（lint WrongThread：分析线程推断为 worker）。 */
     private var appContext: Context? = null
 
-    fun attachEditor(editor: CodeEditor, context: Context) {
+    fun attachEditor(
+        editor: CodeEditor,
+        context: Context,
+    ) {
         this.editor = editor
         this.appContext = context
     }

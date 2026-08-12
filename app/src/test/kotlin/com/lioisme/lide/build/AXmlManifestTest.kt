@@ -9,10 +9,7 @@ import org.junit.Test
 import java.io.ByteArrayOutputStream
 
 class AXmlManifestTest {
-
-    private fun sample(): ByteArray {
-        return javaClass.getResourceAsStream("/manifest_sample.bin")!!.readBytes()
-    }
+    private fun sample(): ByteArray = javaClass.getResourceAsStream("/manifest_sample.bin")!!.readBytes()
 
     @Test
     fun `readPackageName reads host package`() {
@@ -32,23 +29,25 @@ class AXmlManifestTest {
     fun `readSelfDeclaredPermissions includes dynamic receiver permission`() {
         assertTrue(
             "com.lioisme.lide.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" in
-                AXmlManifest.readSelfDeclaredPermissions(sample())
+                AXmlManifest.readSelfDeclaredPermissions(sample()),
         )
     }
 
     @Test
     fun `patch rewrites package label version and permission filter`() {
-        val edit = ManifestEdit(
-            packageName = "com.demo.app",
-            appLabel = "Demo",
-            versionCode = 1234,
-            versionName = "2.0",
-            usesPermissions = listOf(
-                "android.permission.INTERNET",
-                "android.permission.CAMERA",
-                "com.lioisme.lide.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION",
-            ),
-        )
+        val edit =
+            ManifestEdit(
+                packageName = "com.demo.app",
+                appLabel = "Demo",
+                versionCode = 1234,
+                versionName = "2.0",
+                usesPermissions =
+                    listOf(
+                        "android.permission.INTERNET",
+                        "android.permission.CAMERA",
+                        "com.lioisme.lide.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION",
+                    ),
+            )
         val patched = AXmlManifest.patch(sample(), edit)
 
         assertEquals("com.demo.app", AXmlManifest.readPackageName(patched))
@@ -65,29 +64,32 @@ class AXmlManifestTest {
 
     @Test
     fun `patch adds package attr when missing`() {
-        val edit = ManifestEdit(
-            packageName = "com.renamed.app",
-            appLabel = "Demo",
-            versionCode = 1,
-            versionName = "1.0",
-            usesPermissions = listOf("android.permission.INTERNET"),
-        )
+        val edit =
+            ManifestEdit(
+                packageName = "com.renamed.app",
+                appLabel = "Demo",
+                versionCode = 1,
+                versionName = "1.0",
+                usesPermissions = listOf("android.permission.INTERNET"),
+            )
         val patched = AXmlManifest.patch(sample(), edit)
         assertEquals("com.renamed.app", AXmlManifest.readPackageName(patched))
     }
 
     @Test
     fun `patch with same package keeps self-referenced permission`() {
-        val edit = ManifestEdit(
-            packageName = "com.lioisme.lide",
-            appLabel = "LIDE",
-            versionCode = 272,
-            versionName = "1.0",
-            usesPermissions = listOf(
-                "android.permission.INTERNET",
-                "com.lioisme.lide.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION",
-            ),
-        )
+        val edit =
+            ManifestEdit(
+                packageName = "com.lioisme.lide",
+                appLabel = "LIDE",
+                versionCode = 272,
+                versionName = "1.0",
+                usesPermissions =
+                    listOf(
+                        "android.permission.INTERNET",
+                        "com.lioisme.lide.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION",
+                    ),
+            )
         val patched = AXmlManifest.patch(sample(), edit)
         assertEquals("com.lioisme.lide", AXmlManifest.readPackageName(patched))
         assertEquals(
@@ -101,13 +103,14 @@ class AXmlManifestTest {
 
     @Test
     fun `patch output is structurally valid`() {
-        val edit = ManifestEdit(
-            packageName = "com.demo.app",
-            appLabel = "Demo",
-            versionCode = 9,
-            versionName = "9.9",
-            usesPermissions = listOf("android.permission.INTERNET"),
-        )
+        val edit =
+            ManifestEdit(
+                packageName = "com.demo.app",
+                appLabel = "Demo",
+                versionCode = 9,
+                versionName = "9.9",
+                usesPermissions = listOf("android.permission.INTERNET"),
+            )
         val patched = AXmlManifest.patch(sample(), edit)
         assertEquals(0x0003, u16(patched, 0))
         assertEquals(patched.size.toLong(), u32(patched, 4))
@@ -118,13 +121,14 @@ class AXmlManifestTest {
 
     @Test
     fun `patch renames provider authorities with package prefix`() {
-        val edit = ManifestEdit(
-            packageName = "com.demo.buildapp",
-            appLabel = "builddemo",
-            versionCode = 2,
-            versionName = "2.0",
-            usesPermissions = listOf("android.permission.INTERNET"),
-        )
+        val edit =
+            ManifestEdit(
+                packageName = "com.demo.buildapp",
+                appLabel = "builddemo",
+                versionCode = 2,
+                versionName = "2.0",
+                usesPermissions = listOf("android.permission.INTERNET"),
+            )
         val patched = AXmlManifest.patch(sample(), edit)
         val poolText = String(patched, Charsets.UTF_16LE)
         assertFalse(
@@ -142,17 +146,19 @@ class AXmlManifestTest {
 
     @Test
     fun `patch chunks are 4-byte aligned`() {
-        val edit = ManifestEdit(
-            packageName = "com.demo.app",
-            appLabel = "builddemo",
-            versionCode = 2,
-            versionName = "2.0",
-            usesPermissions = listOf(
-                "android.permission.INTERNET",
-                "android.permission.CAMERA",
-                "com.demo.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION",
-            ),
-        )
+        val edit =
+            ManifestEdit(
+                packageName = "com.demo.app",
+                appLabel = "builddemo",
+                versionCode = 2,
+                versionName = "2.0",
+                usesPermissions =
+                    listOf(
+                        "android.permission.INTERNET",
+                        "android.permission.CAMERA",
+                        "com.demo.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION",
+                    ),
+            )
         val patched = AXmlManifest.patch(sample(), edit)
         var pos = 8
         while (pos < patched.size) {
@@ -167,13 +173,14 @@ class AXmlManifestTest {
 
     @Test
     fun `patch preserves copied attrs like application name and int flags`() {
-        val edit = ManifestEdit(
-            packageName = "com.demo.app",
-            appLabel = "Demo",
-            versionCode = 2,
-            versionName = "2.0",
-            usesPermissions = listOf("android.permission.INTERNET"),
-        )
+        val edit =
+            ManifestEdit(
+                packageName = "com.demo.app",
+                appLabel = "Demo",
+                versionCode = 2,
+                versionName = "2.0",
+                usesPermissions = listOf("android.permission.INTERNET"),
+            )
         val patched = AXmlManifest.patch(sample(), edit)
         val strings = readUtf16Strings(patched)
 
@@ -223,16 +230,17 @@ class AXmlManifestTest {
     @Test
     fun `patch rewrites application name and removes activities unconditionally`() {
         // 2026-08-09：引擎并入单 dex 集后补丁无条件回落引擎 Application + IDE 主入口整树移除。
-        val edit = ManifestEdit(
-            packageName = "com.demo.app",
-            appLabel = "Demo",
-            versionCode = 2,
-            versionName = "2.0",
-            usesPermissions = listOf("android.permission.INTERNET"),
-            launcherActivity = "com.lioisme.lide.engine.EngineActivity",
-            applicationName = "com.androlua.LuaApplication",
-            removeActivities = listOf("com.lioisme.lide.MainActivity"),
-        )
+        val edit =
+            ManifestEdit(
+                packageName = "com.demo.app",
+                appLabel = "Demo",
+                versionCode = 2,
+                versionName = "2.0",
+                usesPermissions = listOf("android.permission.INTERNET"),
+                launcherActivity = "com.lioisme.lide.engine.EngineActivity",
+                applicationName = "com.androlua.LuaApplication",
+                removeActivities = listOf("com.lioisme.lide.MainActivity"),
+            )
         val patched = AXmlManifest.patch(sample(), edit)
         val strings = readUtf16Strings(patched)
 
@@ -279,14 +287,15 @@ class AXmlManifestTest {
         // 2026-08-09 P9：宿主自身无图标（manifest 无 android:icon），打包器注入
         // TYPE_REFERENCE 资源引用（引用产物 arsc 中存在的 drawable/icon 条目）。
         // 样本 manifest_sample.bin 的 application 无 icon 属性（宿主 icon 移除前基线）。
-        val edit = ManifestEdit(
-            packageName = "com.demo.app",
-            appLabel = "Demo",
-            versionCode = 2,
-            versionName = "2.0",
-            usesPermissions = listOf("android.permission.INTERNET"),
-            applicationIconId = 0x7f05000c,
-        )
+        val edit =
+            ManifestEdit(
+                packageName = "com.demo.app",
+                appLabel = "Demo",
+                versionCode = 2,
+                versionName = "2.0",
+                usesPermissions = listOf("android.permission.INTERNET"),
+                applicationIconId = 0x7f05000c,
+            )
         val patched = AXmlManifest.patch(sample(), edit)
         val strings = readUtf16Strings(patched)
 
@@ -327,28 +336,30 @@ class AXmlManifestTest {
     fun `patch keeps template icon when template declares one`() {
         // 未来宿主自带 android:icon 时：attrBytes 原样保留且不重复注入。
         // 以 patch 两次的产物为模板（前一次注入的 icon 属性成为模板已有属性）。
-        val first = AXmlManifest.patch(
-            sample(),
-            ManifestEdit(
-                packageName = "com.demo.app",
-                appLabel = "Demo",
-                versionCode = 2,
-                versionName = "2.0",
-                usesPermissions = listOf("android.permission.INTERNET"),
-                applicationIconId = 0x7f05000c,
-            ),
-        )
-        val second = AXmlManifest.patch(
-            first,
-            ManifestEdit(
-                packageName = "com.demo.app",
-                appLabel = "Demo",
-                versionCode = 2,
-                versionName = "2.0",
-                usesPermissions = listOf("android.permission.INTERNET"),
-                applicationIconId = 0x7f05000c,
-            ),
-        )
+        val first =
+            AXmlManifest.patch(
+                sample(),
+                ManifestEdit(
+                    packageName = "com.demo.app",
+                    appLabel = "Demo",
+                    versionCode = 2,
+                    versionName = "2.0",
+                    usesPermissions = listOf("android.permission.INTERNET"),
+                    applicationIconId = 0x7f05000c,
+                ),
+            )
+        val second =
+            AXmlManifest.patch(
+                first,
+                ManifestEdit(
+                    packageName = "com.demo.app",
+                    appLabel = "Demo",
+                    versionCode = 2,
+                    versionName = "2.0",
+                    usesPermissions = listOf("android.permission.INTERNET"),
+                    applicationIconId = 0x7f05000c,
+                ),
+            )
         val strings = readUtf16Strings(second)
 
         var iconCount = 0
@@ -399,13 +410,14 @@ class AXmlManifestTest {
     @Test
     fun `patch rebuilds utf8 source pool to utf16 output`() {
         val axml = buildUtf8Axml(packageIndex = 4)
-        val edit = ManifestEdit(
-            packageName = "com.demo.app",
-            appLabel = "Demo",
-            versionCode = 2,
-            versionName = "2.0",
-            usesPermissions = listOf("android.permission.INTERNET"),
-        )
+        val edit =
+            ManifestEdit(
+                packageName = "com.demo.app",
+                appLabel = "Demo",
+                versionCode = 2,
+                versionName = "2.0",
+                usesPermissions = listOf("android.permission.INTERNET"),
+            )
         val patched = AXmlManifest.patch(axml, edit)
         assertEquals("com.demo.app", AXmlManifest.readPackageName(patched))
         // 输出池固定为 UTF-16（flags=0），不再含 UTF-8 标志。
@@ -426,14 +438,15 @@ class AXmlManifestTest {
     @Test
     fun `patch rewrites uses-sdk element minSdkVersion`() {
         val axml = buildSdkAxml(elementForm = true)
-        val edit = ManifestEdit(
-            packageName = "com.demo.app",
-            appLabel = "Demo",
-            versionCode = 1,
-            versionName = "1.0",
-            usesPermissions = listOf("android.permission.INTERNET"),
-            minSdkVersion = 21,
-        )
+        val edit =
+            ManifestEdit(
+                packageName = "com.demo.app",
+                appLabel = "Demo",
+                versionCode = 1,
+                versionName = "1.0",
+                usesPermissions = listOf("android.permission.INTERNET"),
+                minSdkVersion = 21,
+            )
         val patched = AXmlManifest.patch(axml, edit)
         val (min, target) = AXmlManifest.readUsesSdk(patched)
         assertEquals(21, min)
@@ -443,14 +456,15 @@ class AXmlManifestTest {
     @Test
     fun `patch writes minSdkVersion onto manifest root when sdk folded as attrs`() {
         val axml = buildSdkAxml(elementForm = false)
-        val edit = ManifestEdit(
-            packageName = "com.demo.app",
-            appLabel = "Demo",
-            versionCode = 1,
-            versionName = "1.0",
-            usesPermissions = listOf("android.permission.INTERNET"),
-            minSdkVersion = 19,
-        )
+        val edit =
+            ManifestEdit(
+                packageName = "com.demo.app",
+                appLabel = "Demo",
+                versionCode = 1,
+                versionName = "1.0",
+                usesPermissions = listOf("android.permission.INTERNET"),
+                minSdkVersion = 19,
+            )
         val patched = AXmlManifest.patch(axml, edit)
         val (min, _) = AXmlManifest.readUsesSdk(patched)
         assertEquals(19, min)
@@ -459,13 +473,14 @@ class AXmlManifestTest {
     @Test
     fun `patch keeps sdk untouched when minSdkVersion null`() {
         val axml = buildSdkAxml(elementForm = true)
-        val edit = ManifestEdit(
-            packageName = "com.demo.app",
-            appLabel = "Demo",
-            versionCode = 1,
-            versionName = "1.0",
-            usesPermissions = listOf("android.permission.INTERNET"),
-        )
+        val edit =
+            ManifestEdit(
+                packageName = "com.demo.app",
+                appLabel = "Demo",
+                versionCode = 1,
+                versionName = "1.0",
+                usesPermissions = listOf("android.permission.INTERNET"),
+            )
         val patched = AXmlManifest.patch(axml, edit)
         val (min, target) = AXmlManifest.readUsesSdk(patched)
         assertEquals(24, min)
@@ -475,14 +490,15 @@ class AXmlManifestTest {
     @Test
     fun `patch rewrites uses-sdk element targetSdkVersion`() {
         val axml = buildSdkAxml(elementForm = true)
-        val edit = ManifestEdit(
-            packageName = "com.demo.app",
-            appLabel = "Demo",
-            versionCode = 1,
-            versionName = "1.0",
-            usesPermissions = listOf("android.permission.INTERNET"),
-            targetSdkVersion = 30,
-        )
+        val edit =
+            ManifestEdit(
+                packageName = "com.demo.app",
+                appLabel = "Demo",
+                versionCode = 1,
+                versionName = "1.0",
+                usesPermissions = listOf("android.permission.INTERNET"),
+                targetSdkVersion = 30,
+            )
         val patched = AXmlManifest.patch(axml, edit)
         val (min, target) = AXmlManifest.readUsesSdk(patched)
         assertEquals(24, min)
@@ -492,14 +508,15 @@ class AXmlManifestTest {
     @Test
     fun `patch writes targetSdkVersion onto manifest root when sdk folded as attrs`() {
         val axml = buildSdkAxml(elementForm = false)
-        val edit = ManifestEdit(
-            packageName = "com.demo.app",
-            appLabel = "Demo",
-            versionCode = 1,
-            versionName = "1.0",
-            usesPermissions = listOf("android.permission.INTERNET"),
-            targetSdkVersion = 28,
-        )
+        val edit =
+            ManifestEdit(
+                packageName = "com.demo.app",
+                appLabel = "Demo",
+                versionCode = 1,
+                versionName = "1.0",
+                usesPermissions = listOf("android.permission.INTERNET"),
+                targetSdkVersion = 28,
+            )
         val patched = AXmlManifest.patch(axml, edit)
         val (_, target) = AXmlManifest.readUsesSdk(patched)
         assertEquals(28, target)
@@ -508,15 +525,16 @@ class AXmlManifestTest {
     @Test
     fun `patch rewrites both sdk versions simultaneously`() {
         val axml = buildSdkAxml(elementForm = true)
-        val edit = ManifestEdit(
-            packageName = "com.demo.app",
-            appLabel = "Demo",
-            versionCode = 1,
-            versionName = "1.0",
-            usesPermissions = listOf("android.permission.INTERNET"),
-            minSdkVersion = 21,
-            targetSdkVersion = 30,
-        )
+        val edit =
+            ManifestEdit(
+                packageName = "com.demo.app",
+                appLabel = "Demo",
+                versionCode = 1,
+                versionName = "1.0",
+                usesPermissions = listOf("android.permission.INTERNET"),
+                minSdkVersion = 21,
+                targetSdkVersion = 30,
+            )
         val patched = AXmlManifest.patch(axml, edit)
         val (min, target) = AXmlManifest.readUsesSdk(patched)
         assertEquals(21, min)
@@ -606,7 +624,12 @@ class AXmlManifestTest {
     }
 
     /** 20 字节属性记录（ns/name/raw + Res_value）。 */
-    private fun intAttr(ns: Int, name: Int, type: Int, data: Long): ByteArray {
+    private fun intAttr(
+        ns: Int,
+        name: Int,
+        type: Int,
+        data: Long,
+    ): ByteArray {
         val a = ByteArray(20)
         putU32(a, 0, ns.toLong())
         putU32(a, 4, name.toLong())
@@ -619,7 +642,10 @@ class AXmlManifestTest {
     }
 
     /** 起始元素（nameIdx 为字符串池索引；attrSize=20 与 AXmlManifest 一致）。 */
-    private fun elementChunk(nameIdx: Int, attrs: List<ByteArray>): ByteArray {
+    private fun elementChunk(
+        nameIdx: Int,
+        attrs: List<ByteArray>,
+    ): ByteArray {
         val out = ByteArray(36 + 20 * attrs.size)
         putU16(out, 0, 0x0102)
         putU16(out, 2, 16)
@@ -652,10 +678,12 @@ class AXmlManifestTest {
         return out.firstOrNull { it == "Demo" } ?: ""
     }
 
-    private fun encodeUtf8Len(len: Int): ByteArray {
-        return if (len < 0x80) byteArrayOf(len.toByte())
-        else byteArrayOf((0x80 or (len shr 8)).toByte(), (len and 0xFF).toByte())
-    }
+    private fun encodeUtf8Len(len: Int): ByteArray =
+        if (len < 0x80) {
+            byteArrayOf(len.toByte())
+        } else {
+            byteArrayOf((0x80 or (len shr 8)).toByte(), (len and 0xFF).toByte())
+        }
 
     private fun encodeUtf8Entry(s: String): ByteArray {
         val bytes = s.encodeToByteArray()
@@ -669,14 +697,15 @@ class AXmlManifestTest {
 
     /** 构建最小 UTF-8 池 AXML：池 + manifest 元素（含一个 package 属性）。 */
     private fun buildUtf8Axml(packageIndex: Int): ByteArray {
-        val strings = listOf(
-            "http://schemas.android.com/apk/res/android",
-            "manifest",
-            "package",
-            "a".repeat(130), // charLen 与 byteLen 均两字节前缀
-            "测试".repeat(45), // charLen 单字节 / byteLen 两字节前缀
-            "ok",
-        )
+        val strings =
+            listOf(
+                "http://schemas.android.com/apk/res/android",
+                "manifest",
+                "package",
+                "a".repeat(130), // charLen 与 byteLen 均两字节前缀
+                "测试".repeat(45), // charLen 单字节 / byteLen 两字节前缀
+                "ok",
+            )
         check(packageIndex in strings.indices && packageIndex >= 3)
 
         val stringsStart = 28 + 4 * strings.size
@@ -741,12 +770,20 @@ class AXmlManifestTest {
         return out
     }
 
-    private fun putU16(out: ByteArray, o: Int, v: Int) {
+    private fun putU16(
+        out: ByteArray,
+        o: Int,
+        v: Int,
+    ) {
         out[o] = (v and 0xFF).toByte()
         out[o + 1] = ((v shr 8) and 0xFF).toByte()
     }
 
-    private fun putU32(out: ByteArray, o: Int, v: Long) {
+    private fun putU32(
+        out: ByteArray,
+        o: Int,
+        v: Long,
+    ) {
         out[o] = (v and 0xFF).toByte()
         out[o + 1] = ((v shr 8) and 0xFF).toByte()
         out[o + 2] = ((v shr 16) and 0xFF).toByte()
@@ -776,14 +813,17 @@ class AXmlManifestTest {
         return pos
     }
 
-    private fun u16(b: ByteArray, o: Int): Int {
-        return (b[o].toInt() and 0xFF) or ((b[o + 1].toInt() and 0xFF) shl 8)
-    }
+    private fun u16(
+        b: ByteArray,
+        o: Int,
+    ): Int = (b[o].toInt() and 0xFF) or ((b[o + 1].toInt() and 0xFF) shl 8)
 
-    private fun u32(b: ByteArray, o: Int): Long {
-        return (b[o].toLong() and 0xFF) or
+    private fun u32(
+        b: ByteArray,
+        o: Int,
+    ): Long =
+        (b[o].toLong() and 0xFF) or
             ((b[o + 1].toLong() and 0xFF) shl 8) or
             ((b[o + 2].toLong() and 0xFF) shl 16) or
             ((b[o + 3].toLong() and 0xFF) shl 24)
-    }
 }

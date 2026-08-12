@@ -169,7 +169,10 @@ fun AndroLuaSettingsScreen(
                     onSelect = { persist { it.copy(installBackend = InstallerBackend.DEFAULT) } },
                     onGrant = null,
                 )
-                val shizukuStatus = InstallerServices.shizuku.status.collectAsState().value
+                val shizukuStatus =
+                    InstallerServices.shizuku.status
+                        .collectAsState()
+                        .value
                 InstallBackendRadioRow(
                     label = stringResource(R.string.install_method_shizuku),
                     status = shizukuStatus,
@@ -178,7 +181,10 @@ fun AndroLuaSettingsScreen(
                     onSelect = { persist { it.copy(installBackend = InstallerBackend.SHIZUKU) } },
                     onGrant = { InstallerServices.shizuku.requestPermission() },
                 )
-                val dhizukuStatus = InstallerServices.dhizuku.status.collectAsState().value
+                val dhizukuStatus =
+                    InstallerServices.dhizuku.status
+                        .collectAsState()
+                        .value
                 InstallBackendRadioRow(
                     label = stringResource(R.string.install_method_dhizuku),
                     status = dhizukuStatus,
@@ -187,7 +193,10 @@ fun AndroLuaSettingsScreen(
                     onSelect = { persist { it.copy(installBackend = InstallerBackend.DHIZUKU) } },
                     onGrant = { InstallerServices.dhizuku.requestPermission() },
                 )
-                val rootStatus = InstallerServices.root.status.collectAsState().value
+                val rootStatus =
+                    InstallerServices.root.status
+                        .collectAsState()
+                        .value
                 InstallBackendRadioRow(
                     label = stringResource(R.string.install_method_root),
                     status = rootStatus,

@@ -206,8 +206,9 @@ object LuaDiagnostics {
         fun check(
             source: String,
             quickfixSource: Content? = null,
-        ): List<DiagnosticRegion> =
-            try {
+        ): List<DiagnosticRegion> {
+            if (source.length > EditorLimits.LARGE_FILE_THRESHOLD) return emptyList()
+            return try {
                 checkInternal(source, quickfixSource)
             } catch (t: Throwable) {
                 // 降级：清空增量状态后全量重扫，保证诊断永不因状态损坏而缺失。
@@ -220,6 +221,7 @@ object LuaDiagnostics {
                     emptyList()
                 }
             }
+        }
 
         private fun checkInternal(
             source: String,
@@ -346,20 +348,17 @@ object LuaDiagnostics {
                 .distinctBy { Triple(it.startIndex, it.endIndex, it.detail?.briefMessage) }
         }
 
-        /**
-         * 构造 [Quickfix]：捕获实时 [Content] 与 [DiagnosticRegion] 引用（区域坐标由
+        /** 构造 [Quickfix]：捕获实时 [Content] 与 [DiagnosticRegion] 引用（区域坐标由
          * DiagnosticsContainer 在文本变化时原位平移，点击时读取的是当前坐标）。
          * 执行全部 try/catch(Throwable) 降级；[FixSpec.DeleteToken] 先校验预期文本
-         * 再删除，避免行内编辑后的错位删除。
-         */
-        /** 未闭合栈帧的展示参数（[MSG_UNCLOSED_TOKEN] 的 %1$s）。 */
-    private fun unclosedArgs(frame: Frame): List<String> =
-        when (frame) {
-            is BracketFrame -> listOf(frame.ch.toString())
-            is BlockFrame -> listOf(frame.kind)
-        }
+         * 再删除，避免行内编辑后的错位删除。未闭合栈帧的展示参数（[MSG_UNCLOSED_TOKEN] 的 %1$s）。 */
+        private fun unclosedArgs(frame: Frame): List<String> =
+            when (frame) {
+                is BracketFrame -> listOf(frame.ch.toString())
+                is BlockFrame -> listOf(frame.kind)
+            }
 
-    private fun buildQuickfix(
+        private fun buildQuickfix(
             content: Content,
             region: DiagnosticRegion,
             spec: FixSpec,
@@ -798,7 +797,10 @@ object LuaDiagnostics {
      */
     val DEFAULT_PROVIDER =
         object : DiagnosticMessageProvider {
-            override fun message(key: String, vararg args: Any): String =
+            override fun message(
+                key: String,
+                vararg args: Any,
+            ): String =
                 when (key) {
                     MSG_UNCLOSED_LONG_COMMENT -> "Unclosed long comment"
                     MSG_UNCLOSED_LONG_STRING -> "Unclosed long string"
@@ -822,7 +824,10 @@ object LuaDiagnostics {
  */
 fun interface DiagnosticMessageProvider {
     /** [key] 为 [LuaDiagnostics] 的消息键常量；[args] 为按序参数（%1$s/%1$d 等）。 */
-    fun message(key: String, vararg args: Any): String
+    fun message(
+        key: String,
+        vararg args: Any,
+    ): String
 }
 
 /** 诊断消息键（Q15）：文案唯一事实源为 strings.xml `diag_*` / `fix_*`，此处键与资源名对应。 */

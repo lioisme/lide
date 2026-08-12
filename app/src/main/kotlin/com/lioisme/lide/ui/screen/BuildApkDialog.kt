@@ -32,9 +32,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import com.lioisme.lide.R
+import com.lioisme.lide.build.AXmlManifest
 import com.lioisme.lide.build.AfterBuild
 import com.lioisme.lide.build.ApkBuilder
-import com.lioisme.lide.build.AXmlManifest
 import com.lioisme.lide.build.BuildErrorCode
 import com.lioisme.lide.build.DependencyAnalysis
 import com.lioisme.lide.build.NativeDependencyAnalyzer
@@ -94,6 +94,13 @@ private fun buildErrorRes(code: BuildErrorCode): Int =
         BuildErrorCode.GENERAL -> R.string.build_error_general
     }
 
+/** 构建预检失败原因（替换魔法字符串 "init"/"package"，P2-4）。 */
+private sealed class PreflightFail {
+    data object MissingInit : PreflightFail()
+
+    data object BlankPackage : PreflightFail()
+}
+
 /**
  * 构建 APK 对话框（P5，2026-08-11：去配置对话框，打开即构建）：
  * 打开后立即按设置页持久化配置构建（[SettingsManager.buildOpts] 为唯一事实源：
@@ -127,22 +134,22 @@ fun BuildApkDialog(
 
     // 打开即构建：仅预检（init.lua 可读 + 包名非空）后直接进入构建，无配置 UI。
     LaunchedEffect(project) {
-        val preflightFailed: String? =
+        val preflightFailed: PreflightFail? =
             withContext(Dispatchers.IO) {
                 val content = projectManager.readInitContent(project)
                 when {
-                    content == null -> "init"
-                    LuaConfigParser.stringField(content, "packagename").isNullOrBlank() -> "package"
+                    content == null -> PreflightFail.MissingInit
+                    LuaConfigParser.stringField(content, "packagename").isNullOrBlank() -> PreflightFail.BlankPackage
                     else -> null
                 }
             }
         when (preflightFailed) {
-            "init" -> {
+            PreflightFail.MissingInit -> {
                 Toast.makeText(context, strLoadFailed, Toast.LENGTH_SHORT).show()
                 onDismiss()
             }
 
-            "package" -> {
+            PreflightFail.BlankPackage -> {
                 Toast.makeText(context, strNeedPackage, Toast.LENGTH_SHORT).show()
                 onDismiss()
             }
@@ -173,11 +180,12 @@ fun BuildApkDialog(
                         }
 
                         is BuildResult.Failure -> {
-                            Toast.makeText(
-                                context,
-                                context.getString(R.string.build_fail, buildErrorDisplay(context, res.code, res.message)),
-                                Toast.LENGTH_LONG,
-                            ).show()
+                            Toast
+                                .makeText(
+                                    context,
+                                    context.getString(R.string.build_fail, buildErrorDisplay(context, res.code, res.message)),
+                                    Toast.LENGTH_LONG,
+                                ).show()
                         }
                     }
                 }
@@ -519,8 +527,7 @@ internal fun engineLuaLibs(
 // E3（2026-08-12）：打包输出文件名清理后的最大长度（防超长导致文件系统/分享失败）。
 private const val SANITIZED_NAME_MAX_LENGTH = 60
 
-private fun sanitizeName(s: String): String =
-    s.replace(Regex("[^A-Za-z0-9_.-]"), "_").take(SANITIZED_NAME_MAX_LENGTH)
+private fun sanitizeName(s: String): String = s.replace(Regex("[^A-Za-z0-9_.-]"), "_").take(SANITIZED_NAME_MAX_LENGTH)
 
 private fun shareApk(
     context: android.content.Context,

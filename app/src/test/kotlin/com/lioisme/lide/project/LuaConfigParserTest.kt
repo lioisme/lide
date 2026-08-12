@@ -6,7 +6,6 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class LuaConfigParserTest {
-
     // ---- P5b 测试迁移：以下用例从 :app 误置副本（app/src/test/.../project/ 下同包名）
     // ---- 迁入 :androlua 权威测试（被测类 LuaConfigParser 属 :androlua）。
 
@@ -158,9 +157,12 @@ class LuaConfigParserTest {
     @Test
     fun `setStringArrayField writes pro style multiline`() {
         val content = "appname = \"demo\"\n"
-        val out = LuaConfigParser.setStringArrayField(
-            content, "user_permission", listOf("INTERNET", "WRITE_EXTERNAL_STORAGE")
-        )
+        val out =
+            LuaConfigParser.setStringArrayField(
+                content,
+                "user_permission",
+                listOf("INTERNET", "WRITE_EXTERNAL_STORAGE"),
+            )
         assertEquals(
             "appname = \"demo\"\nuser_permission = { \"INTERNET\", \"WRITE_EXTERNAL_STORAGE\" }\n",
             out,
@@ -169,7 +171,8 @@ class LuaConfigParserTest {
 
     @Test
     fun `setField preserves unrelated content and comments`() {
-        val content = """
+        val content =
+            """
             --[[
             appname = "old-blocked"
             ]]
@@ -177,7 +180,7 @@ class LuaConfigParserTest {
             appname = "old"
             appver = "1.0"
             -- tail comment
-        """.trimIndent() + "\n"
+            """.trimIndent() + "\n"
         val out = LuaConfigParser.setField(content, "appname", "\"new\"")
         assertEquals(
             """
@@ -202,21 +205,23 @@ class LuaConfigParserTest {
 
     @Test
     fun `repro sequential save of full field set`() {
-        val content = "appname=\"demo\"\nappver=\"1.0\"\npackagename=\"com.androlua.demo\"\n" +
-            "user_permission={\n  \"INTERNET\",\n  \"WRITE_EXTERNAL_STORAGE\",\n}\n"
-        val values = listOf(
-            "appname" to "testapp",
-            "appver" to "2.5",
-            "appcode" to "",
-            "appsdk" to "",
-            "path_pattern" to "",
-            "packagename" to "com.androlua.testapp",
-            "theme" to "",
-            "app_key" to "",
-            "app_channel" to "",
-            "developer" to "",
-            "description" to "hello",
-        )
+        val content =
+            "appname=\"demo\"\nappver=\"1.0\"\npackagename=\"com.androlua.demo\"\n" +
+                "user_permission={\n  \"INTERNET\",\n  \"WRITE_EXTERNAL_STORAGE\",\n}\n"
+        val values =
+            listOf(
+                "appname" to "testapp",
+                "appver" to "2.5",
+                "appcode" to "",
+                "appsdk" to "",
+                "path_pattern" to "",
+                "packagename" to "com.androlua.testapp",
+                "theme" to "",
+                "app_key" to "",
+                "app_channel" to "",
+                "developer" to "",
+                "description" to "hello",
+            )
         var c = content
         for ((k, v) in values) {
             c = LuaConfigParser.setField(c, k, LuaConfigParser.quoteLuaString(v))

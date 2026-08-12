@@ -34,8 +34,11 @@ object ZipUtil {
         return if (normalized.split('/').any { it == ".." }) null else normalized
     }
 
-    fun zipToStream(srcDir: File, outputStream: OutputStream): Boolean {
-        return try {
+    fun zipToStream(
+        srcDir: File,
+        outputStream: OutputStream,
+    ): Boolean =
+        try {
             ZipOutputStream(outputStream).use { zos ->
                 srcDir.walkTopDown().forEach { file ->
                     val entryName = file.relativeTo(srcDir).path.replace('\\', '/')
@@ -54,20 +57,24 @@ object ZipUtil {
             Log.e(TAG, "zipToStream failed: ${e.message}")
             false
         }
-    }
 
-    fun unzip(zipFile: File, destDir: File): Boolean {
-        return try {
+    fun unzip(
+        zipFile: File,
+        destDir: File,
+    ): Boolean =
+        try {
             destDir.mkdirs()
             FileInputStream(zipFile).use { unzipFromStream(it, destDir) }
         } catch (e: Exception) {
             Log.e(TAG, "unzip failed: ${e.message}")
             false
         }
-    }
 
-    fun unzipFromStream(inputStream: InputStream, destDir: File): Boolean {
-        return try {
+    fun unzipFromStream(
+        inputStream: InputStream,
+        destDir: File,
+    ): Boolean =
+        try {
             destDir.mkdirs()
             val canonicalDest = destDir.canonicalFile
             ZipInputStream(inputStream).use { zis ->
@@ -85,8 +92,9 @@ object ZipUtil {
                         // 双保险：段级校验之外再做一次 canonical 前缀校验，
                         // 防符号链接等绕过手段把文件写出目标目录。
                         val canonicalTarget = target.canonicalFile
-                        val underDest = canonicalTarget.path == canonicalDest.path ||
-                            canonicalTarget.path.startsWith(canonicalDest.path + File.separator)
+                        val underDest =
+                            canonicalTarget.path == canonicalDest.path ||
+                                canonicalTarget.path.startsWith(canonicalDest.path + File.separator)
                         if (underDest) {
                             if (entry.isDirectory) {
                                 target.mkdirs()
@@ -126,25 +134,31 @@ object ZipUtil {
             Log.e(TAG, "unzipFromStream aborted: ${e.message}")
             false
         } catch (e: Exception) {
-            val snapshot = try {
-                val children = destDir.listFiles()?.joinToString { f ->
-                    "${f.name} dir=${f.isDirectory} len=${f.length()}"
-                } ?: "null"
-                "dest=$destDir exists=${destDir.exists()} isDir=${destDir.isDirectory} children=[$children]"
-            } catch (ex: Exception) {
-                "snapshot failed: ${ex.message}"
-            }
+            val snapshot =
+                try {
+                    val children =
+                        destDir.listFiles()?.joinToString { f ->
+                            "${f.name} dir=${f.isDirectory} len=${f.length()}"
+                        } ?: "null"
+                    "dest=$destDir exists=${destDir.exists()} isDir=${destDir.isDirectory} children=[$children]"
+                } catch (ex: Exception) {
+                    "snapshot failed: ${ex.message}"
+                }
             Log.e(TAG, "unzipFromStream failed: ${e.message}; $snapshot", e)
             false
         }
-    }
 
     /** 读取压缩包内首个不区分大小写匹配的文件文本；找不到或读取失败返回 null。 */
-    fun readEntryText(zipFile: File, entryName: String): String? {        return try {
+    fun readEntryText(
+        zipFile: File,
+        entryName: String,
+    ): String? {
+        return try {
             ZipFile(zipFile).use { zip ->
-                val entry = zip.entries().asSequence().firstOrNull { e ->
-                    !e.isDirectory && e.name.equals(entryName, ignoreCase = true)
-                } ?: return null
+                val entry =
+                    zip.entries().asSequence().firstOrNull { e ->
+                        !e.isDirectory && e.name.equals(entryName, ignoreCase = true)
+                    } ?: return null
                 zip.getInputStream(entry).use { it.readBytes().toString(Charsets.UTF_8) }
             }
         } catch (e: Exception) {
@@ -155,4 +169,6 @@ object ZipUtil {
 }
 
 /** C5（2026-08-12）：解压超限中止信号（[ZipUtil.unzipFromStream] 分支捕获）。 */
-private class ZipBombException(message: String) : IOException(message)
+private class ZipBombException(
+    message: String,
+) : IOException(message)

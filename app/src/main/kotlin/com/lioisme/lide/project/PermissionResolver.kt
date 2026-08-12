@@ -14,7 +14,6 @@ package com.lioisme.lide.project
  *   （系统只认 `android.permission.` 全名），归一化是运行前请求生效的前提。
  */
 object PermissionResolver {
-
     private const val PREFIX = "android.permission."
 
     /** 从 init.lua 读取工程声明的权限清单（缺省/空表 → 空集合）。 */
@@ -49,15 +48,15 @@ object PermissionResolver {
     }
 
     /** 仅保留可运行时请求的权限（过滤掉特殊权限）。 */
-    fun runtimeRequestable(declared: List<String>): List<String> =
-        declared.filter(::isRuntimeRequestable)
+    fun runtimeRequestable(declared: List<String>): List<String> = declared.filter(::isRuntimeRequestable)
 
-    private val SPECIAL_PERMISSIONS = setOf(
-        "SYSTEM_ALERT_WINDOW",
-        "WRITE_SETTINGS",
-        "MANAGE_EXTERNAL_STORAGE",
-        "REQUEST_IGNORE_BATTERY_OPTIMIZATIONS",
-        "REQUEST_INSTALL_PACKAGES",
-        "PACKAGE_USAGE_STATS",
-    )
+    private val SPECIAL_PERMISSIONS =
+        setOf(
+            "SYSTEM_ALERT_WINDOW",
+            "WRITE_SETTINGS",
+            "MANAGE_EXTERNAL_STORAGE",
+            "REQUEST_IGNORE_BATTERY_OPTIMIZATIONS",
+            "REQUEST_INSTALL_PACKAGES",
+            "PACKAGE_USAGE_STATS",
+        )
 }

@@ -28,12 +28,12 @@ import java.io.FileInputStream
  * 注意：本测试从源码树读取资产（Gradle 单测工作目录 = 模块目录），不依赖 Android 运行时。
  */
 class LanguageCatalogConsistencyTest {
-
     private lateinit var assetsRoot: File
-    private val testResolver = io.github.rosemoe.sora.langs.textmate.registry.provider.FileResolver { path ->
-        val file = File(assetsRoot, path)
-        if (file.isFile) FileInputStream(file) else null
-    }
+    private val testResolver =
+        io.github.rosemoe.sora.langs.textmate.registry.provider.FileResolver { path ->
+            val file = File(assetsRoot, path)
+            if (file.isFile) FileInputStream(file) else null
+        }
 
     @Before
     fun setUp() {
@@ -56,11 +56,9 @@ class LanguageCatalogConsistencyTest {
             ?: throw IllegalStateException("assets root not found (cwd=${File("").absolutePath})")
     }
 
-    private fun readDefinitions(): List<GrammarDefinition> =
-        LanguageDefinitionReader.read("textmate/languages.json")
+    private fun readDefinitions(): List<GrammarDefinition> = LanguageDefinitionReader.read("textmate/languages.json")
 
-    private fun definitionsOf(defs: List<GrammarDefinition>): Map<String, GrammarDefinition> =
-        defs.associateBy { it.name }
+    private fun definitionsOf(defs: List<GrammarDefinition>): Map<String, GrammarDefinition> = defs.associateBy { it.name }
 
     @Test
     fun `语言目录经 sora 原生读取且嵌入语言映射保留`() {

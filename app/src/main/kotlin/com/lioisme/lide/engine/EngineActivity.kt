@@ -21,7 +21,6 @@ import java.io.File
  * 2026-08-09 引擎并入单 dex 集后，引擎类与宿主类同 dex 集，全 APK 仅一份（无拆分）。
  */
 class EngineActivity : LuaActivity() {
-
     companion object {
         /** extra 截断上限：Binder 事务 ~1MB，取 200KB 留足余量（ACC-4）。 */
         private const val OUTPUT_LIMIT = 200 * 1024
@@ -62,7 +61,10 @@ class EngineActivity : LuaActivity() {
     }
 
     /** runFunc 等回调错误路径（LuaActivity 经 sendError 上报）同样计入错误标记。 */
-    override fun sendError(title: String?, msg: Exception?) {
+    override fun sendError(
+        title: String?,
+        msg: Exception?,
+    ) {
         synchronized(outputBuffer) {
             scriptError = true
         }
