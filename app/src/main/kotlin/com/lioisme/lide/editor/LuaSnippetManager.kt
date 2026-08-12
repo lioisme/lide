@@ -1,5 +1,8 @@
 package com.lioisme.lide.editor
 
+import android.content.Context
+import androidx.annotation.StringRes
+import com.lioisme.lide.R
 import io.github.rosemoe.sora.lang.completion.CompletionItem
 import io.github.rosemoe.sora.lang.completion.CompletionItemKind
 import io.github.rosemoe.sora.lang.completion.snippet.CodeSnippet
@@ -12,7 +15,8 @@ private data class LuaSnippet(
     val prefix: String,
     val label: String,
     val body: String,
-    val description: String,
+    /** C2（2026-08-12）：描述本地化——原硬编码英文字符串直出补全窗次级行。 */
+    @StringRes val descriptionRes: Int,
 )
 
 /**
@@ -33,7 +37,7 @@ object LuaSnippetManager {
                 """function ${'$'}{1:name}(${'$'}{2:args})
     ${'$'}{3:-- body}
 end${'$'}{0}""",
-                "Define a function",
+                R.string.snippet_desc_fun,
             ),
             LuaSnippet(
                 "for",
@@ -41,7 +45,7 @@ end${'$'}{0}""",
                 """for ${'$'}{1:i}=${'$'}{2:1}, ${'$'}{3:10} do
     ${'$'}{4:-- body}
 end${'$'}{0}""",
-                "Numeric for loop",
+                R.string.snippet_desc_for,
             ),
             LuaSnippet(
                 "fori",
@@ -49,7 +53,7 @@ end${'$'}{0}""",
                 """for ${'$'}{1:k}, ${'$'}{2:v} in ${'$'}{3:pairs}(${'$'}{4:t}) do
     ${'$'}{5:-- body}
 end${'$'}{0}""",
-                "Generic for loop",
+                R.string.snippet_desc_fori,
             ),
             LuaSnippet(
                 "if",
@@ -57,7 +61,7 @@ end${'$'}{0}""",
                 """if ${'$'}{1:condition} then
     ${'$'}{2:-- body}
 end${'$'}{0}""",
-                "If statement",
+                R.string.snippet_desc_if,
             ),
             LuaSnippet(
                 "ifel",
@@ -67,7 +71,7 @@ end${'$'}{0}""",
 else
     ${'$'}{3:-- body}
 end${'$'}{0}""",
-                "If-else statement",
+                R.string.snippet_desc_ifel,
             ),
             LuaSnippet(
                 "while",
@@ -75,7 +79,7 @@ end${'$'}{0}""",
                 """while ${'$'}{1:condition} do
     ${'$'}{2:-- body}
 end${'$'}{0}""",
-                "While loop",
+                R.string.snippet_desc_while,
             ),
             LuaSnippet(
                 "repeat",
@@ -83,7 +87,7 @@ end${'$'}{0}""",
                 """repeat
     ${'$'}{1:-- body}
 until ${'$'}{2:condition}${'$'}{0}""",
-                "Repeat-until loop",
+                R.string.snippet_desc_repeat,
             ),
             LuaSnippet(
                 "localfun",
@@ -91,13 +95,13 @@ until ${'$'}{2:condition}${'$'}{0}""",
                 """local function ${'$'}{1:name}(${'$'}{2:args})
     ${'$'}{3:-- body}
 end${'$'}{0}""",
-                "Local function definition",
+                R.string.snippet_desc_localfun,
             ),
             LuaSnippet(
                 "require",
                 "require",
                 """local ${'$'}{1:name} = require("${'$'}{2:module}")${'$'}{0}""",
-                "Module require",
+                R.string.snippet_desc_require,
             ),
             LuaSnippet(
                 "class",
@@ -110,22 +114,29 @@ function ${'$'}{1:ClassName}.new(${'$'}{3:args})
     ${'$'}{4:-- init}
     return self
 end${'$'}{0}""",
-                "Table-based OOP pattern",
+                R.string.snippet_desc_class,
             ),
         )
 
-    private val completionItems: List<CompletionItem> by lazy {
+    private val snippetAndParsed: List<Pair<LuaSnippet, CodeSnippet>> by lazy {
         // 惰性解析：首次补全时执行一次（分析线程），失败降级为空片段，不阻断补全窗。
         val parsedByLabel = HashMap<String, CodeSnippet>(snippets.size)
         snippets.map { snippet ->
-            LuaSnippetCompletionItem(
-                snippet = snippet,
-                parsed = parsedByLabel.getOrPut(snippet.label) { parseSafely(snippet.body) },
-            )
+            snippet to parsedByLabel.getOrPut(snippet.label) { parseSafely(snippet.body) }
         }
     }
 
-    fun toCompletionItems(): List<CompletionItem> = completionItems
+    fun toCompletionItems(context: Context): List<CompletionItem> {
+        // C2：描述经 context.getString 按当前 locale 解析（CompletionItem.desc 不可变，
+        // 每次调用重建 item；10 个 getString 开销可忽略，补全热路径零额外解析）。
+        return snippetAndParsed.map { (snippet, parsed) ->
+            LuaSnippetCompletionItem(
+                snippet = snippet,
+                parsed = parsed,
+                description = context.getString(snippet.descriptionRes),
+            )
+        }
+    }
 
     private fun parseSafely(body: String): CodeSnippet =
         try {
@@ -145,7 +156,8 @@ end${'$'}{0}""",
 private class LuaSnippetCompletionItem(
     private val snippet: LuaSnippet,
     private val parsed: CodeSnippet,
-) : CompletionItem(snippet.label, snippet.description, null) {
+    description: String,
+) : CompletionItem(snippet.label, description, null) {
     init {
         kind(CompletionItemKind.Snippet)
     }

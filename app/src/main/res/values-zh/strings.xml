@@ -11,15 +11,14 @@
     <string name="alp_conflict_rename">改名</string>
     <string name="create">创建</string>
     <string name="project_name">项目名称</string>
-    <string name="back_to_parent">返回上一目录</string>
 
-    <!-- Project List -->
+<!-- Project List -->
     <string name="new_project">新建项目</string>
     <string name="no_projects">暂无项目</string>
     <string name="tap_to_create">点击 + 创建项目</string>
-    <string name="import_alp">导入 .alp</string>
+<string name="import_alp">导入 .alp</string>
     <string name="import_success">已从 .alp 导入项目</string>
-<string name="import_failed">导入 .alp 失败</string>
+    <string name="import_failed">导入 .alp 失败</string>
     <!-- T15（2026-08-12）：复数资源；中文无复数形态，单条 other 全覆盖 -->
     <plurals name="import_projects_success">
         <item quantity="other">已导入 %1$d 个工程</item>
@@ -70,7 +69,6 @@
     <string name="setting_on">开</string>
     <string name="setting_off">关</string>
     <!-- Q14 模板化：设置项标题：值（全角冒号整句） -->
-    <string name="setting_value_title">%1$s：%2$s</string>
     <string name="use_tab">使用制表符</string>
     <string name="auto_indent">自动缩进</string>
     <string name="auto_close_brackets">自动闭合括号</string>
@@ -113,7 +111,6 @@
     <string name="font_anonymous_pro">Anonymous Pro</string>
     <string name="font_dejavu_sans_mono">DejaVu Sans Mono</string>
     <string name="font_import">导入字体…</string>
-    <string name="font_import_picker_title">选择字体文件</string>
     <string name="font_import_done">字体已导入</string>
     <string name="font_import_failed">导入失败</string>
     <string name="font_section_builtin">内置</string>
@@ -148,7 +145,6 @@
     <string name="perm_project_saved">已保存</string>
     <string name="perm_project_save_failed">保存失败</string>
     <string name="perm_host_hint">LIDE 宿主应用自身的权限。它们适用于 IDE 及宿主内运行的脚本。</string>
-    <string name="perm_package_only">仅写入打包 APK</string>
     <string name="project_permissions">工程权限</string>
     <string name="build_apk">构建 APK</string>
 
@@ -170,7 +166,6 @@
     <string name="info_packagename">包名</string>
     <string name="info_theme">主题</string>
     <string name="info_theme_keep_host">跟随宿主</string>
-    <string name="info_theme_custom">自定义（%1$s）</string>
 
     <!-- 常见主题别名（P2，2026-08-11，ThemeCatalog） -->
     <string name="theme_alias_classic">经典</string>
@@ -323,7 +318,6 @@
     <string name="perm_settings_unavailable">系统设置不可用</string>
 
     <!-- Build APK fallbacks -->
-    <string name="build_install_failed">安装失败</string>
     <string name="build_share_failed">分享失败</string>
 
 
@@ -505,7 +499,6 @@
     <string name="install_backend_status_not_running">服务未运行</string>
     <string name="install_backend_status_unavailable">不可用</string>
     <string name="install_backend_grant">授权</string>
-    <string name="install_dialog_method">安装方式（本次构建）</string>
     <string name="install_apk_title">安装安装包</string>
     <string name="install_confirm">安装</string>
     <string name="install_success">安装完成</string>
@@ -536,4 +529,15 @@
     <string name="fix_delete_token">删除多余的 \'%1$s\'</string>
     <string name="fix_append_line_end">在行尾补上 \'%1$s\'</string>
     <string name="fix_append_file_end">在文件末尾补上 \'%1$s\'</string>
+    <!-- 片段补全描述（C2：本地化，替代硬编码英文） -->
+    <string name="snippet_desc_fun">定义函数</string>
+    <string name="snippet_desc_for">数值 for 循环</string>
+    <string name="snippet_desc_fori">泛型 for 循环</string>
+    <string name="snippet_desc_if">if 语句</string>
+    <string name="snippet_desc_ifel">if-else 语句</string>
+    <string name="snippet_desc_while">while 循环</string>
+    <string name="snippet_desc_repeat">repeat-until 循环</string>
+    <string name="snippet_desc_localfun">局部函数定义</string>
+    <string name="snippet_desc_require">模块引入</string>
+    <string name="snippet_desc_class">基于表的 OOP 模式</string>
 </resources>

@@ -51,7 +51,7 @@ object LuaFonts {
             else -> R.string.font_jetbrains_mono
         }
 
-    private val cache = ConcurrentHashMap<Int, Typeface>()
+    private val cache = ConcurrentHashMap<String, Typeface>()
 
     /** 外部字体扫描结果（按文件名排序的文件列表）；null = 未扫描。 */
     private var externalFiles: List<File>? = null
@@ -61,25 +61,56 @@ object LuaFonts {
      * 外部导入（id ≥ [EditorConfig.FONT_FAMILY_EXTERNAL_BASE]）经 files/fonts 扫描；
      * 系统族常量（1/2/3）直取系统字体（终极兜底语义，不再作为可选项）；
      * 其余一切失败走两级兜底链 [fallback]（MONOSPACE → DEFAULT），绝不返回 null。
+     *
+     * C4（2026-08-12）：缓存键由 id 改「asset 文件名 / 文件路径」——id 0（DEFAULT）
+     * 与 4（JETBRAINS_MONO）同映射 jetbrains_mono.ttf，按 id 缓存同一文件两份
+     * Typeface；按文件名缓存后两 id 共享实例，且 LuaEditor diff 相等性判定一致。
      */
     fun resolve(context: Context, fontFamily: Int): Typeface {
-        cache[fontFamily]?.let { return it }
-        val resolved =
-            when (fontFamily) {
-                EditorConfig.FONT_FAMILY_MONOSPACE -> Typeface.MONOSPACE
-                EditorConfig.FONT_FAMILY_SANS -> Typeface.SANS_SERIF
-                EditorConfig.FONT_FAMILY_SERIF -> Typeface.SERIF
-                else -> {
-                    if (fontFamily >= EditorConfig.FONT_FAMILY_EXTERNAL_BASE) {
-                        resolveExternal(context, fontFamily)
-                    } else {
-                        resolveBuiltin(context, fontFamily)
-                    } ?: fallback()
-                }
-            }
-        cache[fontFamily] = resolved
+        if (fontFamily in 1..EditorConfig.FONT_FAMILY_SERIF) {
+            return systemFamily(fontFamily)
+        }
+        val key = cacheKey(context, fontFamily) ?: return fallback()
+        cache[key]?.let { return it }
+        val resolved = loadByKey(context, key) ?: fallback()
+        cache[key] = resolved
         return resolved
     }
+
+    /** 系统族常量直取（MONOSPACE/SANS/SERIF；恒非空，无缓存必要）。 */
+    private fun systemFamily(fontFamily: Int): Typeface =
+        when (fontFamily) {
+            EditorConfig.FONT_FAMILY_MONOSPACE -> Typeface.MONOSPACE
+            EditorConfig.FONT_FAMILY_SANS -> Typeface.SANS_SERIF
+            EditorConfig.FONT_FAMILY_SERIF -> Typeface.SERIF
+            else -> fallback()
+        }
+
+    /** 缓存键：内置 = `asset:<文件名>`；外部 = 文件绝对路径；解析失败返回 null。 */
+    private fun cacheKey(
+        context: Context,
+        fontFamily: Int,
+    ): String? =
+        if (fontFamily >= EditorConfig.FONT_FAMILY_EXTERNAL_BASE) {
+            val index = fontFamily - EditorConfig.FONT_FAMILY_EXTERNAL_BASE
+            scanExternal(context)?.getOrNull(index)?.absolutePath
+        } else {
+            builtinAssets[fontFamily]?.let { "asset:$it" }
+        }
+
+    private fun loadByKey(
+        context: Context,
+        key: String,
+    ): Typeface? =
+        try {
+            if (key.startsWith(ASSET_KEY_PREFIX)) {
+                Typeface.createFromAsset(context.assets, "fonts/${key.removePrefix(ASSET_KEY_PREFIX)}")
+            } else {
+                Typeface.createFromFile(File(key))
+            }
+        } catch (_: Throwable) {
+            null
+        }
 
     /** 终极兜底链（L2）：等宽系统字体 → 系统默认字体；恒非空，保证删光内置
      *  / 导入字体后编辑器不崩溃（原生 Typeface 静态常量，零自写回退逻辑）。 */
@@ -113,18 +144,8 @@ object LuaFonts {
         externalFiles = null
     }
 
-    /** assets 内置字体加载（失败回落 null → 调用方兜底 MONOSPACE）。 */
-    private fun resolveBuiltin(
-        context: Context,
-        fontFamily: Int,
-    ): Typeface? {
-        val asset = builtinAssets[fontFamily] ?: return null
-        return try {
-            Typeface.createFromAsset(context.assets, "fonts/$asset")
-        } catch (_: Throwable) {
-            null
-        }
-    }
+    /** 缓存键前缀（内置字体 asset 名；见 [cacheKey]）。 */
+    private const val ASSET_KEY_PREFIX = "asset:"
 
     /** files/fonts 扫描（缓存；ttf 过滤 + 按文件名排序，与 id 序一致）。 */
     private fun scanExternal(context: Context): List<File>? {
@@ -138,18 +159,5 @@ object LuaFonts {
         }
         externalFiles = list
         return list
-    }
-
-    private fun resolveExternal(
-        context: Context,
-        fontFamily: Int,
-    ): Typeface? {
-        val index = fontFamily - EditorConfig.FONT_FAMILY_EXTERNAL_BASE
-        val file = scanExternal(context)?.getOrNull(index) ?: return null
-        return try {
-            Typeface.createFromFile(file)
-        } catch (_: Throwable) {
-            null
-        }
     }
 }

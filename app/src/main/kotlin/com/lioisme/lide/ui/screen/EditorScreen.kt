@@ -31,13 +31,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lioisme.lide.R
-import com.lioisme.lide.engine.EngineActivity
 import com.lioisme.lide.editor.EditorContent
 import com.lioisme.lide.editor.EditorController
 import com.lioisme.lide.editor.EditorMoreAction
 import com.lioisme.lide.editor.EditorToolbar
 import com.lioisme.lide.editor.SearchMatchInfo
 import com.lioisme.lide.editor.SearchMatchType
+import com.lioisme.lide.engine.EngineContract
 import com.lioisme.lide.engine.EngineResultParser
 import com.lioisme.lide.engine.RunEngineLauncher
 import com.lioisme.lide.model.Project
@@ -219,9 +219,9 @@ fun EditorScreen(
             ActivityResultContracts.StartActivityForResult(),
         ) { result ->
             val data = result.data
-            val output = data?.getStringExtra(EngineActivity.EXTRA_OUTPUT) ?: ""
+            val output = data?.getStringExtra(EngineContract.EXTRA_OUTPUT) ?: ""
             val isError =
-                data?.getBooleanExtra(EngineActivity.EXTRA_ERROR, false) == true ||
+                data?.getBooleanExtra(EngineContract.EXTRA_ERROR, false) == true ||
                     EngineResultParser.isErrorOutput(output)
             if (isError) {
                 runResult = RunResult(output, EngineResultParser.findErrorLocation(output, project.path))

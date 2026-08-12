@@ -117,4 +117,50 @@ class ZipUtilTest {
             dest.deleteRecursively()
         }
     }
+
+    @Test
+    fun `单条目超过上限被拒绝`() {
+        // C5：单条目 > 64MB（MAX_SINGLE_ENTRY）必须中止，不写满磁盘。
+        val bos = ByteArrayOutputStream()
+        ZipOutputStream(bos).use { zos ->
+            zos.putNextEntry(ZipEntry("big.bin"))
+            val chunk = ByteArray(1024 * 1024)
+            var total = 0
+            while (total < ZipUtil.MAX_SINGLE_ENTRY + (1L * 1024 * 1024)) {
+                zos.write(chunk)
+                total += chunk.size
+            }
+            zos.closeEntry()
+        }
+        val dest = tempDir()
+        try {
+            assertFalse(ZipUtil.unzipFromStream(ByteArrayInputStream(bos.toByteArray()), dest))
+            val written = File(dest, "big.bin").let { if (it.exists()) it.length() else 0 }
+            assertTrue("partial write should not exceed limit, got $written", written <= ZipUtil.MAX_SINGLE_ENTRY)
+        } finally {
+            dest.deleteRecursively()
+        }
+    }
+
+    @Test
+    fun `总解压字节超过上限被拒绝`() {
+        // C5：多条目合计 > 512MB（MAX_TOTAL_UNCOMPRESSED）必须中止。
+        val bos = ByteArrayOutputStream()
+        ZipOutputStream(bos).use { zos ->
+            val chunk = ByteArray(1024 * 1024)
+            var total = 0
+            while (total < ZipUtil.MAX_TOTAL_UNCOMPRESSED + (1L * 1024 * 1024)) {
+                zos.putNextEntry(ZipEntry("f$total.bin"))
+                zos.write(chunk)
+                zos.closeEntry()
+                total += chunk.size
+            }
+        }
+        val dest = tempDir()
+        try {
+            assertFalse(ZipUtil.unzipFromStream(ByteArrayInputStream(bos.toByteArray()), dest))
+        } finally {
+            dest.deleteRecursively()
+        }
+    }
 }

@@ -72,7 +72,7 @@ import kotlinx.coroutines.withContext
  * - 大文件降级矩阵（>200KB）：wordwrap / 括号高亮 / 当前块 / minimap / stickyScroll
  *   / 光标动画 / 行号面板强制关闭，undo 栈 cap [LARGE_FILE_UNDO_STACK]。
  */
-private const val LARGE_FILE_THRESHOLD = 200 * 1024
+private const val LARGE_FILE_THRESHOLD = EditorLimits.LARGE_FILE_THRESHOLD
 private const val LARGE_FILE_UNDO_STACK = 200
 private const val DIAGNOSTIC_DEBOUNCE_MS = 500L
 private const val TAG = "LuaEditor"
@@ -100,7 +100,13 @@ private class EditorInstance(
     /** 编辑事件节流信号：每键 +1，不触发重组；组合层经 collectLatest 防抖消费。 */
     val diagTick = MutableStateFlow(0)
 
+    // H2（2026-08-12）：provider/checker 后台线程（syntaxCheck）重赋值、
+    // 主线程（onEdit）读取，@Volatile 保证可见性 + 换引用先建后赋（非原子窗口内
+    // 旧 checker 仍可安全使用，仅可能丢一次增量退化为全量重扫，语义无损失）。
+    @Volatile
     private var messageProvider: DiagnosticMessageProvider = LuaDiagnostics.DEFAULT_PROVIDER
+
+    @Volatile
     private var syntaxChecker: LuaDiagnostics.Incremental = LuaDiagnostics.Incremental()
     private var lastDiagSignature = ""
 
@@ -268,7 +274,7 @@ private class EditorInstance(
             setAutoCompleteEnabled(true)
             setCompleterKeywords(LanguageKeywordRegistry.keywordsFor(scope))
             configure(config)
-            attachEditor(attachTo)
+            attachEditor(attachTo, attachTo.context)
         }
 
     /**
@@ -488,28 +494,8 @@ fun LuaEditor(
     // rememberUpdatedState：事件回调 / factory / update 块中读取「最新」值而不触发重组。
     val currentContent = rememberUpdatedState(content)
 
-    // 编辑事件节流信号：组合级 remember，实例订阅回调写入（主线程），诊断协程消费。
-    val diagTick = remember { MutableStateFlow(0) }
-
     // 宿主色板派生（remember(colorScheme) 键控：宿主主题变化自动更新）。
     val hostColors = rememberHostEditorColors()
-
-    // 编辑器实例随组合创建/销毁（去池化）：文件切换同组合复用实例 + setText(Content)，
-    // 语言切换经 applyConfig 内部 diff 重建；页面离开时 onDispose 调 release() 销毁。
-    val instance =
-        remember {
-            EditorInstance(
-                context = appContext,
-                initialConfig = currentConfig,
-                initialScope = currentResolvedScope,
-                initialScheme =
-                    TextMateRuntime.hostColorScheme(currentConfig.themeScheme, isDarkTheme, hostColors),
-                onContentModified = { currentOnContentModified() },
-                onUndoRedoStateChanged = { u, r -> currentOnUndoRedoStateChanged(u, r) },
-                onFormatAction = { currentOnFormatRequest() },
-                onSearchResultPublished = { currentOnSearchResultPublished() },
-            )
-        }
 
     val initReady = runtimeState is TextMateRuntime.RuntimeState.Ready
 
@@ -517,17 +503,6 @@ fun LuaEditor(
     // 宿主明暗；配色方案 = [EditorConfig.themeScheme]（[EditorPalette] 单一事实源：
     // 暗 → 该方案暗侧主题，亮 → 亮侧主题），编辑器设置页选择。
     val effectiveDark = isDarkTheme
-
-    // 主题装配：setTheme 广播驱动方案动态重算（token 色随明暗主题），编辑器零重建。
-    // setColorScheme 会触发 sora attachEditor（含一次 rerunAnalysis）——仅明暗/方案/
-    // 就绪切换时执行，宿主色板变化走 updateHostColors 免重分析。
-    LaunchedEffect(effectiveDark, initReady, currentConfig.themeScheme) {
-        if (!initReady) return@LaunchedEffect
-        val registry = ThemeRegistry.getInstance()
-        registry.setTheme(EditorPalette.themeNameFor(currentConfig.themeScheme, effectiveDark))
-        instance.editor.colorScheme =
-            TextMateRuntime.hostColorScheme(currentConfig.themeScheme, effectiveDark, hostColors)
-    }
 
     // 宿主色板刷新（LideHostColorScheme.updateHost 值未变自动跳过）。
     LaunchedEffect(hostColors) {
@@ -556,6 +531,38 @@ fun LuaEditor(
             }
         }
         return
+    }
+
+    // 编辑器实例随组合创建/销毁（去池化）：文件切换同组合复用实例 + setText(Content)，
+    // 语言切换经 applyConfig 内部 diff 重建；页面离开时 onDispose 调 release() 销毁。
+    // S3（2026-08-12）：构造延迟至 TextMate initReady 门控之后——构造链内
+    // createLanguage → GrammarRegistry.findGrammar 为无锁读，与后台 loadGrammars
+    // synchronized 写并发存在竞态（冷启动高亮静默失效）；门控后构造保证语法表已就绪。
+    // （组合位置稳定：initReady 单向转 Ready 后恒 true；Failed 分支不构造实例。）
+    val instance =
+        remember {
+            EditorInstance(
+                context = appContext,
+                initialConfig = currentConfig,
+                initialScope = currentResolvedScope,
+                initialScheme =
+                    TextMateRuntime.hostColorScheme(currentConfig.themeScheme, effectiveDark, hostColors),
+                onContentModified = { currentOnContentModified() },
+                onUndoRedoStateChanged = { u, r -> currentOnUndoRedoStateChanged(u, r) },
+                onFormatAction = { currentOnFormatRequest() },
+                onSearchResultPublished = { currentOnSearchResultPublished() },
+            )
+        }
+
+    // 主题装配：setTheme 广播驱动方案动态重算（token 色随明暗主题），编辑器零重建。
+    // setColorScheme 会触发 sora attachEditor（含一次 rerunAnalysis）——仅明暗/方案/
+    // 就绪切换时执行，宿主色板变化走 updateHostColors 免重分析。
+    // 位于门控之后：effect body 延迟至组合提交后执行，此时 instance 已构造。
+    LaunchedEffect(effectiveDark, initReady, currentConfig.themeScheme) {
+        val registry = ThemeRegistry.getInstance()
+        registry.setTheme(EditorPalette.themeNameFor(currentConfig.themeScheme, effectiveDark))
+        instance.editor.colorScheme =
+            TextMateRuntime.hostColorScheme(currentConfig.themeScheme, effectiveDark, hostColors)
     }
 
     AndroidView(
@@ -601,8 +608,11 @@ fun LuaEditor(
 
     // 500ms 防抖诊断：后台线程增量扫描 + 签名比对去重。
     // 「行级词法诊断」设置关闭时跳过扫描并清空诊断（重启后签名复位，恢复时自动重跑）。
+    // S1（2026-08-12）：订阅实例级 diagTick（编辑事件/语言重建在主线程事件回调递增，
+    // StateFlow 线程安全）——此前误订阅组合级孤立 flow 且无人递增，`it == 0` 恒命中，
+    // 行级词法诊断 UI 全灭（波浪线/tooltip/quickfix 均不可达）。
     LaunchedEffect(Unit) {
-        diagTick.collectLatest {
+        instance.diagTick.collectLatest {
             if (it == 0) return@collectLatest
             delay(DIAGNOSTIC_DEBOUNCE_MS)
             val editor = controller.editor ?: return@collectLatest

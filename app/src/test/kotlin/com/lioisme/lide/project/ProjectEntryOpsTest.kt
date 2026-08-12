@@ -105,6 +105,28 @@ class ProjectEntryOpsTest {
         }
     }
 
+    @Test
+    fun `isInsideRoot rejects dotdot traversal`() {
+        // S4（2026-08-12）：词法 `..` 段回退后越出根的路径必须判为越界。
+        val parent = root.parentFile!!.absolutePath
+        assertFalse(ProjectEntryOps.isInsideRoot(root, "$parent/../lidetest2"))
+        assertFalse(ProjectEntryOps.isInsideRoot(root, "${root.absolutePath}/../escape"))
+        // `..` 未越出根时归一化后仍属内部（如 a/../b → b）。
+        assertTrue(ProjectEntryOps.isInsideRoot(root, "${root.absolutePath}/sub/.."))
+        assertTrue(ProjectEntryOps.isInsideRoot(root, "${root.absolutePath}/sub/../sub"))
+    }
+
+    @Test
+    fun `isInsideRoot rejects relative and foreign paths`() {
+        assertFalse(ProjectEntryOps.isInsideRoot(root, "relative/path"))
+        val other = File.createTempFile("other", "").apply { delete() }.also { it.mkdirs() }
+        try {
+            assertFalse(ProjectEntryOps.isInsideRoot(root, other.absolutePath))
+        } finally {
+            other.deleteRecursively()
+        }
+    }
+
     // ---- 重命名 ----
 
     @Test

@@ -127,6 +127,17 @@ object AXmlManifest {
     fun readPackageName(bytes: ByteArray): String? {
         val parsed = parse(bytes)
         val strings = readPool(parsed.chunks[parsed.poolChunkIndex]).strings
+        return packageNameFromParsed(parsed, strings)
+    }
+
+    /**
+     * 从已 parse 结果读 package（D1：patch 复用单次 parse，避免 readPackageName
+     * 二次全量解析）。
+     */
+    private fun packageNameFromParsed(
+        parsed: Parsed,
+        strings: List<String>,
+    ): String? {
         val manifest = parsed.chunks.firstOrNull { isElement(it, strings, "manifest") } ?: return null
         return stringAttr(parseElement(manifest), strings, "package")
     }
@@ -281,7 +292,10 @@ object AXmlManifest {
         return false
     }
 
-    /** 按 [edit] 重写 manifest；池内原位替换包名相关字符串并追加新字符串。 */
+        /**
+     * 按 [edit] 重写 manifest；池内原位替换包名相关字符串并追加新字符串。
+     * D1（2026-08-12）：包名读取复用 [parse] 结果（原 readPackageName 二次全量 parse）。
+     */
     fun patch(bytes: ByteArray, edit: ManifestEdit): ByteArray {
         val parsed = parse(bytes)
         val pool = readPool(parsed.chunks[parsed.poolChunkIndex])
@@ -290,7 +304,7 @@ object AXmlManifest {
 
         fun origIdx(s: String): Int? = idx[s]
 
-        val oldPackage = readPackageName(bytes)
+        val oldPackage = packageNameFromParsed(parsed, strings)
 
         // 1) 池内原位替换：包名与自引用权限名。
         if (oldPackage != null && oldPackage != edit.packageName) {

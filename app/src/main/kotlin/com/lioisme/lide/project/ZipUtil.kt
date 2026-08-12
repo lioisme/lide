@@ -4,6 +4,7 @@ import android.util.Log
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
+import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
 import java.util.zip.ZipEntry
@@ -14,6 +15,12 @@ import java.util.zip.ZipOutputStream
 object ZipUtil {
     /** 单一日志 TAG（Q13 收口：历史全限定名 Log.e("ZipUtil", ...) 统一为常量）。 */
     private const val TAG = "ZipUtil"
+
+    /** C5（2026-08-12）Zip Bomb 防护上限：解压总字节 / 条目数 / 单条目大小。
+     * 恶意 .alp 可声明极小压缩比以写满磁盘，超限即中止并抛异常（调用方清理半成品）。 */
+    const val MAX_TOTAL_UNCOMPRESSED = 512L * 1024 * 1024
+    const val MAX_ENTRY_COUNT = 10_000
+    const val MAX_SINGLE_ENTRY = 64L * 1024 * 1024
 
     /**
      * 解压条目名安全化：拒绝绝对路径与含 `..` 段的条目（Zip Slip 防护），
@@ -65,7 +72,13 @@ object ZipUtil {
             val canonicalDest = destDir.canonicalFile
             ZipInputStream(inputStream).use { zis ->
                 var entry = zis.nextEntry
+                var entryCount = 0
+                var totalBytes = 0L
                 while (entry != null) {
+                    entryCount++
+                    if (entryCount > MAX_ENTRY_COUNT) {
+                        throw ZipBombException("entry count exceeded $MAX_ENTRY_COUNT")
+                    }
                     val name = safeEntryName(entry.name)
                     if (name != null) {
                         val target = File(canonicalDest, name)
@@ -79,7 +92,28 @@ object ZipUtil {
                                 target.mkdirs()
                             } else {
                                 target.parentFile?.mkdirs()
-                                FileOutputStream(target).use { zis.copyTo(it) }
+                                FileOutputStream(target).use { out ->
+                                    val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
+                                    var entryBytes = 0L
+                                    var read: Int
+                                    while (zis.read(buffer).also { read = it } != -1) {
+                                        entryBytes += read
+                                        totalBytes += read
+                                        // C5：单条目 / 总量超限即中止——先查后写，
+                                        // 超限 chunk 不落盘（防大文件先写满磁盘再被拒绝）。
+                                        if (entryBytes > MAX_SINGLE_ENTRY) {
+                                            throw ZipBombException(
+                                                "entry ${entry.name} exceeds $MAX_SINGLE_ENTRY bytes",
+                                            )
+                                        }
+                                        if (totalBytes > MAX_TOTAL_UNCOMPRESSED) {
+                                            throw ZipBombException(
+                                                "total uncompressed exceeds $MAX_TOTAL_UNCOMPRESSED bytes",
+                                            )
+                                        }
+                                        out.write(buffer, 0, read)
+                                    }
+                                }
                             }
                         }
                     }
@@ -88,6 +122,9 @@ object ZipUtil {
                 }
             }
             true
+        } catch (e: ZipBombException) {
+            Log.e(TAG, "unzipFromStream aborted: ${e.message}")
+            false
         } catch (e: Exception) {
             val snapshot = try {
                 val children = destDir.listFiles()?.joinToString { f ->
@@ -103,8 +140,7 @@ object ZipUtil {
     }
 
     /** 读取压缩包内首个不区分大小写匹配的文件文本；找不到或读取失败返回 null。 */
-    fun readEntryText(zipFile: File, entryName: String): String? {
-        return try {
+    fun readEntryText(zipFile: File, entryName: String): String? {        return try {
             ZipFile(zipFile).use { zip ->
                 val entry = zip.entries().asSequence().firstOrNull { e ->
                     !e.isDirectory && e.name.equals(entryName, ignoreCase = true)
@@ -117,3 +153,6 @@ object ZipUtil {
         }
     }
 }
+
+/** C5（2026-08-12）：解压超限中止信号（[ZipUtil.unzipFromStream] 分支捕获）。 */
+private class ZipBombException(message: String) : IOException(message)

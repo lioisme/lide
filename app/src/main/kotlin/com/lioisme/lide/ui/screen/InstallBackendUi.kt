@@ -67,7 +67,8 @@ fun InstallBackendStatusRow(
     Card(
         colors =
             CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f),
+                // E1（2026-08-12）：surfaceVariant 已废弃——内容卡用 surfaceContainerLow。
+                containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
             ),
         shape = MaterialTheme.shapes.medium,
     ) {
@@ -162,7 +163,8 @@ fun InstallBackendRadioRow(
                     if (enabled) {
                         MaterialTheme.colorScheme.onSurface
                     } else {
-                        MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                        // E1（2026-08-12）：禁用态 M3 惯例 = onSurface@38%。
+                        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
                     },
             )
             if (status != null) {

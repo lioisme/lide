@@ -54,7 +54,13 @@ class ShizukuInstallerServiceImpl : IShizukuInstallerService.Stub() {
                 }
             log("Executing: ${command.joinToString(" ")}")
 
-            val process = Runtime.getRuntime().exec(command)
+            val process =
+                ProcessBuilder(*command)
+                    // B3（2026-08-12）：redirectErrorStream 合并 stderr→stdout 单流读取——
+                    // 顺序双流 readText() 在 stderr 超过 64KB 管道缓冲（如 pm 打印完整
+                    // 堆栈）时会死锁（子进程阻塞写 stderr、父进程阻塞读 stdout）。
+                    .redirectErrorStream(true)
+                    .start()
 
             val writeThread = Thread {
                 try {
@@ -78,7 +84,7 @@ class ShizukuInstallerServiceImpl : IShizukuInstallerService.Stub() {
             writeThread.start()
 
             val stdout = BufferedReader(InputStreamReader(process.inputStream)).readText().trim()
-            val stderr = BufferedReader(InputStreamReader(process.errorStream)).readText().trim()
+            val stderr = "" // B3（2026-08-12）：redirectErrorStream 合并后无独立 stderr 流
 
             writeThread.join(INSTALL_TIMEOUT_SECONDS * 1000)
             if (writeThread.isAlive) {
@@ -114,9 +120,12 @@ class ShizukuInstallerServiceImpl : IShizukuInstallerService.Stub() {
     override fun uninstallPackage(packageName: String): Int {
         log("uninstallPackage() called for: $packageName")
         return try {
-            val process = Runtime.getRuntime().exec(arrayOf("pm", "uninstall", packageName))
+            val process =
+                ProcessBuilder("pm", "uninstall", packageName)
+                    .redirectErrorStream(true) // B3 同款：单流读取防 stderr 管道死锁
+                    .start()
             val stdout = BufferedReader(InputStreamReader(process.inputStream)).readText().trim()
-            val stderr = BufferedReader(InputStreamReader(process.errorStream)).readText().trim()
+            val stderr = ""
 
             val finished = process.waitFor(UNINSTALL_TIMEOUT_SECONDS, TimeUnit.SECONDS)
             if (!finished) {

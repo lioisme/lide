@@ -265,8 +265,11 @@ class EditorController {
      * window token）下抛 `BadTokenException`——故弃用，自实现同语义替换（对齐 sora
      * 结果语义：NORMAL = 字面 / WHOLE_WORD = `\b` 包裹 / REGEX = 正则，flags 含
      * CASE_INSENSITIVE + MULTILINE），从后往前改写区间后单次 [Content.replace] 提交
-     * （单条 undo 记录，光标保持），无需任何 Dialog。只读门禁 sora 同款
-     * （[CodeEditor.isEditable]）。完成后回调经主线程执行。
+     * （单条 undo 记录）。只读门禁 sora 同款（[CodeEditor.isEditable]）。
+     * H1（2026-08-12）：sora `Cursor.afterInsert` 语义下，在 0 处整文替换光标必然
+     * 右移到全文末尾——替换前记录光标、替换后按 format 同款行列双夹取恢复
+     * （`Cursor.afterInsert` 的 index ≥ 插入点整体右移行为见 sora Cursor.java）。
+     * 完成后回调经主线程执行。
      */
     fun replaceAll(
         pattern: String,
@@ -299,8 +302,14 @@ class EditorController {
             }
             val newText = sb.toString()
             if (newText == text) return
+            val curLine = e.cursor.getLeftLine()
+            val curColumn = e.cursor.getLeftColumn()
             val lastLine = e.lineCount - 1
             e.text.replace(0, 0, lastLine, e.text.getColumnCount(lastLine), newText)
+            // 光标恢复：行列双夹取（对齐 format 的 L3 模式），越过界回落到有效边界。
+            val restoredLine = curLine.coerceIn(0, (e.lineCount - 1).coerceAtLeast(0))
+            val restoredCol = curColumn.coerceIn(0, e.text.getColumnCount(restoredLine))
+            e.setSelection(restoredLine, restoredCol, true)
             whenSucceeded()
         } catch (_: Throwable) {
             // 降级：单次命令失败静默放弃（正则非法等）。

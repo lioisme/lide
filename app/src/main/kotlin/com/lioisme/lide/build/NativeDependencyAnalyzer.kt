@@ -70,7 +70,12 @@ class NativeDependencyAnalyzer(
     }
 
     companion object {
-        /** Lua 5.3 标准库模块名：require/import 命中后不查宿主、不推导 .so、不告警。 */
+        /**
+         * Lua 5.3 标准库模块名：require/import 命中后不查宿主、不推导 .so、不告警。
+         * C8（2026-08-12）：对照引擎 linit.c 实际注册表（loadedlibs + LUA_COMPAT_5_2）
+         * 补齐 bit32（官方 5.3 lbitlib 经 luaopen_bit32 注册）；Lua 5.4 的 `bit`
+         * 引擎未提供，不入表。
+         */
         val LUA_STDLIB =
             setOf(
                 "table",
@@ -82,6 +87,7 @@ class NativeDependencyAnalyzer(
                 "debug",
                 "utf8",
                 "package",
+                "bit32",
             )
 
         /** 打包必须保留的宿主引擎 Lua 库（import.lua 无条件加载、permission 权限提示、loadlayout 系布局）。 */

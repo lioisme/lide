@@ -209,7 +209,8 @@ fun ExamplesScreen(onBack: () -> Unit) {
                                 .padding(horizontal = 16.dp, vertical = 4.dp),
                         colors =
                             CardDefaults.cardColors(
-                                containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f),
+                                // E1（2026-08-12）：surfaceVariant 已废弃——内容卡用 surfaceContainerLow。
+                                containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
                             ),
                     ) {
                         Row(

@@ -15,6 +15,12 @@ import java.security.interfaces.RSAPublicKey
 import java.util.Calendar
 import java.util.Date
 
+/** E3（2026-08-12）：自签证书 RSA 密钥强度（bit）。 */
+const val RSA_KEY_BITS = 2048
+
+/** E3（2026-08-12）：X.509 UTCTime 表示年份上限——超过改用 GeneralizedTime（RFC 5280 §4.1.2.5）。 */
+const val UTC_TIME_MAX_YEAR = 2050
+
 /** 密钥库单项（元数据），供导入 UI 列别名选择。 */
 data class AliasInfo(
     val alias: String,
@@ -100,13 +106,13 @@ object SigningCrypto {
         val ks = loadKeyStore(content, storePassword, storeType)
         val key =
             ks.getKey(alias, keyPassword)
-                ?: throw IllegalArgumentException("别名不存在或无私钥：$alias")
+                ?: throw IllegalArgumentException("Alias not found or has no private key: $alias")
         if (key !is PrivateKey) {
-            throw IllegalArgumentException("别名 $alias 不是私钥项（$key）")
+            throw IllegalArgumentException("Alias $alias is not a private-key entry ($key)")
         }
         val cert =
             certOf(ks, alias)
-                ?: throw IllegalArgumentException("别名 $alias 无证书链")
+                ?: throw IllegalArgumentException("Alias $alias has no certificate chain")
         return SigningMaterial(key, cert)
     }
 
@@ -129,11 +135,11 @@ object SigningCrypto {
         validYears: Int = DEFAULT_VALID_YEARS,
     ): GeneratedKey {
         require(validYears in 1..MAX_VALID_YEARS) {
-            "有效期须在 1~$MAX_VALID_YEARS 年之间（got $validYears）"
+            "validYears must be in 1..$MAX_VALID_YEARS (got $validYears)"
         }
         val pwd = password ?: randomPassword().toCharArray()
         val kpg = KeyPairGenerator.getInstance("RSA")
-        kpg.initialize(2048)
+        kpg.initialize(RSA_KEY_BITS)
         val pair = kpg.generateKeyPair()
         val cert = buildSelfSignedCert(subject, name, pair, validYears)
         val ks = KeyStore.getInstance(PKCS12_STORE_TYPE)
@@ -290,7 +296,7 @@ object SigningCrypto {
                 val value = if (oid == OID_CN) cn else pick(subject)
                 value.trim().takeIf { it.isNotEmpty() }?.let { oid to it }
             }
-        require(attrs.isNotEmpty()) { "subject DN 至少需要一个属性" }
+        require(attrs.isNotEmpty()) { "subject DN requires at least one attribute" }
         return der(
             TAG_SEQUENCE,
             concat(
@@ -334,7 +340,7 @@ object SigningCrypto {
         fun two(n: Int): String = "%02d".format(n)
         val y = cal.get(Calendar.YEAR)
         val body =
-            if (y >= 2050) {
+            if (y >= UTC_TIME_MAX_YEAR) {
                 // GeneralizedTime（YYYYMMDDHHMMSSZ）
                 "%04d%s%s%s%s%sZ".format(
                     y,
@@ -355,7 +361,7 @@ object SigningCrypto {
                     two(cal.get(Calendar.SECOND)),
                 )
             }
-        return der(if (y >= 2050) TAG_GENERALIZED_TIME else TAG_UTCTIME, body.toByteArray(Charsets.US_ASCII))
+        return der(if (y >= UTC_TIME_MAX_YEAR) TAG_GENERALIZED_TIME else TAG_UTCTIME, body.toByteArray(Charsets.US_ASCII))
     }
 
     private fun oidBytes(oid: String): ByteArray {

@@ -16,8 +16,9 @@ package com.lioisme.lide.editor
  */
 object LuaFormatter {
 
-    /** 大文件短路阈值：与编辑器大文件降级口径一致（>200KB 不做重排）。 */
-    private const val MAX_FORMAT_LENGTH = 200 * 1024
+    /** 大文件短路阈值（D2：单一事实源 [EditorLimits.MAX_FORMAT_LENGTH]，与
+     *  编辑器大文件降级口径一致——>200KB 不做重排）。 */
+    private const val MAX_FORMAT_LENGTH = EditorLimits.MAX_FORMAT_LENGTH
 
     /** 行首开启块的词（[blockOpenAt] 已含 `local function` 组合）。 */
     private val BLOCK_OPEN = setOf("if", "for", "while", "function", "repeat", "do")

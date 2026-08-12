@@ -53,6 +53,9 @@ import kotlinx.coroutines.withContext
 /** 批量导入 .alp 的单批上限（串行队列逐个处理，防单批无线排队）。 */
 private const val IMPORT_BATCH_LIMIT = 50
 
+// E3（2026-08-12）：错误提示自动消除前的最小展示时长（防一闪而过）。
+private const val SNACKBAR_DISMISS_DELAY_MS = 100L
+
 /** 导入队列条目：缓存临时 .alp 文件路径（系统选择器产物，导入完成后删除）。 */
 private data class ImportSource(
     val path: String,
@@ -191,7 +194,7 @@ fun ProjectListScreen(
     LaunchedEffect(errorMsg) {
         if (errorMsg != null) {
             snackbarHostState.showSnackbar(errorMsg!!)
-            delay(100)
+            delay(SNACKBAR_DISMISS_DELAY_MS)
             errorMsg = null
         }
     }

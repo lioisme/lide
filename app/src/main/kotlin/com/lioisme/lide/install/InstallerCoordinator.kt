@@ -40,7 +40,7 @@ object InstallerCoordinator {
         if (preference == InstallerBackend.DEFAULT) return InstallerBackend.DEFAULT
         return try {
             if (isReady(preference)) preference else InstallerBackend.DEFAULT
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             Log.w(TAG, "resolveBackend() — readiness check threw: ${e.javaClass.simpleName}: ${e.message}")
             InstallerBackend.DEFAULT
         }
@@ -61,7 +61,7 @@ object InstallerCoordinator {
                 InstallerBackend.DHIZUKU -> dhizukuInstall(apkFile)
                 InstallerBackend.ROOT -> rootInstall(apkFile)
             }
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             Log.w(TAG, "$backend install exception, falling back: ${e.javaClass.simpleName}: ${e.message}")
             false
         }
@@ -100,7 +100,7 @@ object InstallerCoordinator {
         val info =
             try {
                 InstallerServices.appContext.packageManager.getPackageArchiveInfo(filePath, 0)
-            } catch (e: Exception) {
+            } catch (e: Throwable) {
                 Log.w(TAG, "getPackageArchiveInfo($filePath) failed: ${e.message}")
                 null
             } ?: return null to -1L

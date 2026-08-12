@@ -258,7 +258,8 @@ internal fun SettingsSection(
     Card(
         colors =
             CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f),
+                // E1（2026-08-12）：surfaceVariant 已废弃——内容卡用 surfaceContainerLow。
+                containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
             ),
         shape = MaterialTheme.shapes.medium,
     ) { Column { content() } }
@@ -302,11 +303,12 @@ internal fun SettingsToggleItem(
     onCheckedChange: (Boolean) -> Unit,
 ) {
     // T4（2026-08-10）：互斥置灰（wordWrap↔stickyScroll）——禁用时整体淡化且不可点击。
+    // E1（2026-08-12）：禁用态 M3 惯例 = onSurface@38%（原 onSurfaceVariant@50% 非规范值）。
     val titleColor =
         if (enabled) {
             MaterialTheme.colorScheme.onSurface
         } else {
-            MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+            MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
         }
     Row(
         modifier =
@@ -323,7 +325,7 @@ internal fun SettingsToggleItem(
                 if (enabled) {
                     MaterialTheme.colorScheme.onSurfaceVariant
                 } else {
-                    MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                    MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
                 },
             modifier = Modifier.size(24.dp),
         )
@@ -362,7 +364,7 @@ internal fun SettingsStepperItem(
         if (enabled) {
             MaterialTheme.colorScheme.onSurface
         } else {
-            MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+            MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
         }
     Row(
         modifier =
@@ -378,7 +380,7 @@ internal fun SettingsStepperItem(
                 if (enabled) {
                     MaterialTheme.colorScheme.onSurfaceVariant
                 } else {
-                    MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                    MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
                 },
             modifier = Modifier.size(24.dp),
         )

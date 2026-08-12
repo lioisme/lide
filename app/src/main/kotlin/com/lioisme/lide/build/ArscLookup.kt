@@ -50,6 +50,13 @@ internal object ArscLookup {
     /** 应用图标引用的资源文件路径（如 res/drawable/icon.png 或混淆名 res/9T.png）。 */
     fun drawableIconPath(arsc: ByteArray?): String? = safeFind(arsc)?.path
 
+    /**
+     * 单次解析入口（D1，2026-08-12）：一次返回资源 ID + 文件路径，供
+     * [ApkBuilder] 装配复用（原 drawableIconId/drawableIconPath 各全量解析
+     * 一次 arsc）。安全降级 null。
+     */
+    fun drawableIcon(arsc: ByteArray?): IconEntry? = safeFind(arsc)
+
     private fun safeFind(arsc: ByteArray?): IconEntry? {
         if (arsc == null || arsc.size < 12) return null
         return try {

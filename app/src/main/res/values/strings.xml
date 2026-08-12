@@ -11,7 +11,6 @@
     <string name="alp_conflict_rename">Rename</string>
     <string name="create">Create</string>
     <string name="project_name">Project name</string>
-    <string name="back_to_parent">Back to parent</string>
 
     <!-- Project List -->
     <string name="new_project">New Project</string>
@@ -71,7 +70,6 @@
     <string name="setting_on">On</string>
     <string name="setting_off">Off</string>
     <!-- Q14+T16 模板化：设置项标题：值（2026-08-12 英文侧改半角冒号，中文保持全角） -->
-    <string name="setting_value_title">%1$s: %2$s</string>
     <string name="use_tab">Use Tabs</string>
     <string name="auto_indent">Auto Indent</string>
     <string name="auto_close_brackets">Auto Close Brackets</string>
@@ -114,7 +112,6 @@
     <string name="font_anonymous_pro">Anonymous Pro</string>
     <string name="font_dejavu_sans_mono">DejaVu Sans Mono</string>
     <string name="font_import">Import font…</string>
-    <string name="font_import_picker_title">Pick a font file</string>
     <string name="font_import_done">Font imported</string>
     <string name="font_import_failed">Import failed</string>
     <string name="font_section_builtin">Built-in</string>
@@ -149,7 +146,6 @@
     <string name="perm_project_saved">Saved</string>
     <string name="perm_project_save_failed">Save failed</string>
     <string name="perm_host_hint">Permissions of the LIDE host app itself. They apply to the IDE and to scripts running inside the host.</string>
-    <string name="perm_package_only">Written into packaged APK only</string>
     <string name="project_permissions">Project Permissions</string>
     <string name="run_finished">Run finished</string>
     <string name="run_error_title">Run error</string>
@@ -180,7 +176,6 @@
     <string name="info_sdk_invalid">Target SDK cannot be lower than min SDK</string>
     <string name="info_theme">Theme</string>
     <string name="info_theme_keep_host">Follow host</string>
-    <string name="info_theme_custom">Custom (%1$s)</string>
     <string name="info_permissions_btn">User permissions (%1$d)</string>
     <string name="info_permissions_title">Select user permissions</string>
     <string name="info_permissions_confirm">Done</string>
@@ -325,7 +320,6 @@
     <string name="perm_settings_unavailable">System settings unavailable</string>
 
     <!-- Build APK fallbacks -->
-    <string name="build_install_failed">Install failed</string>
     <string name="build_share_failed">Share failed</string>
 
 
@@ -506,7 +500,6 @@
     <string name="install_backend_status_not_running">Service not running</string>
     <string name="install_backend_status_unavailable">Unavailable</string>
     <string name="install_backend_grant">Grant</string>
-    <string name="install_dialog_method">Install method (this build)</string>
     <string name="install_apk_title">Install APK</string>
     <string name="install_confirm">Install</string>
     <string name="install_success">Installed</string>
@@ -537,4 +530,15 @@
     <string name="fix_delete_token">Remove unexpected \'%1$s\'</string>
     <string name="fix_append_line_end">Append \'%1$s\' at line end</string>
     <string name="fix_append_file_end">Append \'%1$s\' at end of file</string>
+    <!-- Snippet completion descriptions (C2: localized, replaces hardcoded English) -->
+    <string name="snippet_desc_fun">Define a function</string>
+    <string name="snippet_desc_for">Numeric for loop</string>
+    <string name="snippet_desc_fori">Generic for loop</string>
+    <string name="snippet_desc_if">If statement</string>
+    <string name="snippet_desc_ifel">If-else statement</string>
+    <string name="snippet_desc_while">While loop</string>
+    <string name="snippet_desc_repeat">Repeat-until loop</string>
+    <string name="snippet_desc_localfun">Local function definition</string>
+    <string name="snippet_desc_require">Module require</string>
+    <string name="snippet_desc_class">Table-based OOP pattern</string>
 </resources>

@@ -129,7 +129,8 @@ internal fun ApiCollapsedSearchInput(
     filterSlot: @Composable () -> Unit,
 ) {
     val placeholder = stringResource(R.string.api_search_hint)
-    val container = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.55f)
+    // E1（2026-08-12）：搜索条浮于表面之上——surfaceContainerHigh（M3 search bar 容器）。
+    val container = MaterialTheme.colorScheme.surfaceContainerHigh
     Row(
         modifier =
             Modifier
@@ -338,7 +339,8 @@ private fun TypeBadge(
             else -> return
         }
     Surface(
-        shape = RoundedCornerShape(6.dp),
+        // E1（2026-08-12）：硬编码圆角 → MaterialTheme.shapes。
+        shape = MaterialTheme.shapes.small,
         color = MaterialTheme.colorScheme.secondaryContainer,
     ) {
         Text(

@@ -189,6 +189,50 @@
 | U9 | 批次 A：EditorController 页面级 scope 清理 + 空态文案对比度 + 签名 RAW 异常文案资源化 | 中 | ✅ 已完成（2026-08-12，工作单 T5E；disposeScope + signing_*_failed 资源串） | `UI_UX_DETAILS` `协程` `对比度` `错误码` |
 | U10 | 验证与收口：compile + 全量单测 + 设备验收清单 + kb 蒸馏 + 工作单收口 | 高 | ✅ 已完成（2026-08-12：compile + testArm64DebugUnitTest + verifyMinimalismDebug + lint 0 新增全绿；模拟器自动化冒烟 T2/T3/T4 通过（焦点/底部 sheet/语言切换+列表缓存）；T1/T5B 视觉项代码级验收；kb/EDITOR.md §15 蒸馏） | `UI_UX_DETAILS` `验收` `收口` |
 
+## 2n. 全量规范审计整改（2026-08-12，工作单 docs/in-progress/FULL_AUDIT_SPEC_WORK_ORDER.md）
+
+> 来源需求（用户 2026-08-12 六条要求，全量审计后立项）：
+> ① 主题、权限、国际化等系统符合官方规范或社区习惯；② 逻辑实现尽量组件库原生实现；
+> ③ 禁止修改组件库、用其 API；④ 在保持既有功能与规范代码前提下性能达语言与组件库上限；
+> ⑤ 代码/API 用法遵守官方规范或社区习惯，杜绝不良编码习惯；⑥ 解决所有应当处理的临时性硬编码。
+> 全量审计共发现 5 严重 / 10 高 / 20+ 中 / 30+ 低（报告见工作单「基线审计」段）。
+
+| # | 任务 | 优先级 | 状态 | 关键词 |
+|---|---|---|---|---|
+| A1 | S1 行级词法诊断 UI 全灭：双 diagTick 断线修复（实例级 flow 递增无人消费 / 组合级 flow 被消费无人递增） | 高 | ✅ 已完成（2026-08-12，工作单 FULL_AUDIT_SPEC 收口） | `FULL_AUDIT_SPEC` `diagTick` `诊断` |
+| A2 | S2 补全窗滚动无迭代上限（复制上游 DefaultCompletionLayout 时删除 MAX_SCROLL_ITERATIONS 防护） | 高 | ✅ 已完成（2026-08-12，工作单 FULL_AUDIT_SPEC 收口） | `FULL_AUDIT_SPEC` `LuaCompletionWindow` `ANR` |
+| A3 | S4 ProjectEntryOps `File.toPath()`（API 26）致 API 24/25 文件树操作静默失败 | 高 | ✅ 已完成（2026-08-12，工作单 FULL_AUDIT_SPEC 收口） | `FULL_AUDIT_SPEC` `toPath` `minSdk` |
+| A4 | S5 MainActivity content:// 全量拷贝在主线程（ANR 风险） | 高 | ✅ 已完成（2026-08-12，工作单 FULL_AUDIT_SPEC 收口） | `FULL_AUDIT_SPEC` `主线程` `resolveFilePath` |
+| A5 | H1 replaceAll 全文档替换后光标跳文末（sora Cursor.afterInsert 语义，注释不实） | 高 | ✅ 已完成（2026-08-12，工作单 FULL_AUDIT_SPEC 收口） | `FULL_AUDIT_SPEC` `replaceAll` `光标` |
+| B1 | S3 EditorInstance 构造先于 TextMate initReady 门控（GrammarRegistry 无锁读竞态） | 高 | ✅ 已完成（2026-08-12，工作单 FULL_AUDIT_SPEC 收口） | `FULL_AUDIT_SPEC` `initReady` `竞态` |
+| B2 | H2 syntaxChecker/messageProvider 跨线程无同步（增量丢失退化全量扫描） | 高 | ✅ 已完成（2026-08-12，工作单 FULL_AUDIT_SPEC 收口） | `FULL_AUDIT_SPEC` `volatile` `并发` |
+| B3 | H6 Shizuku stdout/stderr 顺序读取管道死锁（超 64KB stderr 卡 120s） | 高 | ✅ 已完成（2026-08-12，工作单 FULL_AUDIT_SPEC 收口） | `FULL_AUDIT_SPEC` `管道` `死锁` |
+| B4 | H7 Dhizuku setInstallerPackageName（API 34）守卫只到 S（31）+ catch(Exception) 抓不住 NoSuchMethodError | 高 | ✅ 已完成（2026-08-12，工作单 FULL_AUDIT_SPEC 收口） | `FULL_AUDIT_SPEC` `API 34` `Dhizuku` |
+| B5 | H9 androlua:// scheme 无 containment 校验（.. 段路径穿越） | 高 | ✅ 已完成（2026-08-12，工作单 FULL_AUDIT_SPEC 收口） | `FULL_AUDIT_SPEC` `androlua://` `穿越` |
+| B6 | H10 EngineResultParser 错误定位全文首匹配误报（未锚定 ERROR_PREFIX 行） | 中 | ✅ 已完成（2026-08-12，工作单 FULL_AUDIT_SPEC 收口） | `FULL_AUDIT_SPEC` `EngineResultParser` |
+| C1 | H4 ApkBuilder 中文异常消息直达用户（GENERAL/LUA_COMPILE 分支原样透传） | 中 | ✅ 已完成（2026-08-12，工作单 FULL_AUDIT_SPEC 收口） | `FULL_AUDIT_SPEC` `错误码` `资源化` |
+| C2 | H5 补全窗口 snippet 描述硬编码英文（中文用户补全窗永久英文） | 中 | ✅ 已完成（2026-08-12，工作单 FULL_AUDIT_SPEC 收口） | `FULL_AUDIT_SPEC` `LuaSnippetManager` `i18n` |
+| C3 | H8 「壁纸动态色」未走官方 dynamicColorScheme 且注释失实 | 中 | ✅ 已完成（2026-08-12，工作单 FULL_AUDIT_SPEC 收口） | `FULL_AUDIT_SPEC` `dynamicColorScheme` |
+| C4 | M-E1 同一 ttf 双 Typeface 实例（LuaFonts 缓存键应为 asset 文件名） | 中 | ✅ 已完成（2026-08-12，工作单 FULL_AUDIT_SPEC 收口） | `FULL_AUDIT_SPEC` `LuaFonts` `缓存` |
+| C5 | M-P1 ZipUtil 无 Zip Bomb 防护（条目数/总字节/单文件无上限） | 中 | ✅ 已完成（2026-08-12，工作单 FULL_AUDIT_SPEC 收口） | `FULL_AUDIT_SPEC` `ZipUtil` `ZipBomb` |
+| C6 | M-P2 AlpManager import 默认 OVERWRITE 破坏性（先删后解压） | 中 | ✅ 已完成（2026-08-12，工作单 FULL_AUDIT_SPEC 收口） | `FULL_AUDIT_SPEC` `OVERWRITE` `导入` |
+| C7 | M-P3 包名模板 com.lioisme.lide.<name> 两处重复 + 非法名不设防 | 中 | ✅ 已完成（2026-08-12，工作单 FULL_AUDIT_SPEC 收口） | `FULL_AUDIT_SPEC` `包名` |
+| C8 | M-B4 NativeDependencyAnalyzer LUA_STDLIB 缺 bit32/bit（与引擎模块表核对） | 低 | ✅ 已完成（2026-08-12，工作单 FULL_AUDIT_SPEC 收口） | `FULL_AUDIT_SPEC` `LUA_STDLIB` |
+| D1 | M-B1 打包链性能：宿主 APK 三遍解析 + arsc 双解析 + manifest 双解析 | 中 | ✅ 已完成（2026-08-12，工作单 FULL_AUDIT_SPEC 收口） | `FULL_AUDIT_SPEC` `打包` `重复解析` |
+| D2 | M-E5 200KB 大文件阈值两处独立定义（单一事实源缺失） | 低 | ✅ 已完成（2026-08-12，工作单 FULL_AUDIT_SPEC 收口） | `FULL_AUDIT_SPEC` `LARGE_FILE_THRESHOLD` |
+| D3 | M-P5 同一 init.lua 在 loadProject 流程被 parse 5-6 次 | 低 | ✅ 已完成（2026-08-12，工作单 FULL_AUDIT_SPEC 收口） | `FULL_AUDIT_SPEC` `LuaConfigParser` |
+| D4 | M-E6 补全前缀重复计算 + 两次分配（官方 CompletionHelper 已有） | 低 | ✅ 已完成（2026-08-12，工作单 FULL_AUDIT_SPEC 收口） | `FULL_AUDIT_SPEC` `CompletionHelper` |
+| E1 | M-T1/M-T2/M-T4 M3 token 合规：surfaceVariant alpha 叠卡、禁用态色、headline 字阶、displayLarge 字距、硬编码圆角 | 中 | ✅ 已完成（2026-08-12，工作单 FULL_AUDIT_SPEC 收口） | `FULL_AUDIT_SPEC` `Material3` `token` |
+| E2 | 死资源清理：7 对未引用字符串 + lint-baseline 条目 + assets-zh 空目录 | 中 | ✅ 已完成（2026-08-12，工作单 FULL_AUDIT_SPEC 收口） | `FULL_AUDIT_SPEC` `死资源` |
+| E3 | 裸魔法数提升常量（delay(100)/字号范围/take(60)/maxLength/2048/2050/guardLimit） | 低 | ✅ 已完成（2026-08-12，工作单 FULL_AUDIT_SPEC 收口） | `FULL_AUDIT_SPEC` `魔法数` |
+| E4 | 杂项收口：日志 TAG 统一、catch(Throwable)、EngineContract extra 键、RuntimePaths 子目录常量、死代码 | 低 | ✅ 已完成（2026-08-12，工作单 FULL_AUDIT_SPEC 收口） | `FULL_AUDIT_SPEC` `TAG` `Throwable` |
+| V1 | 终验：compile + 全量单测 + lint + verifyMinimalismDebug + kb 蒸馏 + 工作单收口 | 高 | ✅ 已完成（2026-08-12，工作单 FULL_AUDIT_SPEC 收口） | `FULL_AUDIT_SPEC` `验收` |
+
+> 架构级长期项（本次不落地，登记备忘）：H3 手写诊断管线迁移 sora 官方 AnalyzeManager
+> 管线（sora 单 analyzer 机制限制，需子类化 TextMateAnalyzeManager，风险高，列为 backlog
+> 长期项）；M-T2 列表行 ListItem 化（material3 1.4.0 可用，涉及 7 处组件，另列专项）；
+> 密码明文存 SharedPreferences（SigningManager，已知债务）；DataStore 迁移评估。
+
 ## 3. 风险与备忘
 
 | 项 | 说明 |

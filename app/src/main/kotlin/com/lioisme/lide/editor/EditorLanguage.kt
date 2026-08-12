@@ -1,7 +1,9 @@
 package com.lioisme.lide.editor
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import io.github.rosemoe.sora.lang.completion.CompletionHelper
 import io.github.rosemoe.sora.lang.completion.CompletionPublisher
 import io.github.rosemoe.sora.langs.textmate.TextMateLanguage
 import io.github.rosemoe.sora.langs.textmate.registry.GrammarRegistry
@@ -36,8 +38,14 @@ class EditorLanguage(
     ) {
     private var editor: CodeEditor? = null
 
-    fun attachEditor(editor: CodeEditor) {
+    /** C2 附带（2026-08-12）：snippet 描述本地化用的应用 context。
+     *  主线程 attach 时快照（经参数注入，满足 R4），补全回调不触碰
+     *  `CodeEditor.getContext()`（lint WrongThread：分析线程推断为 worker）。 */
+    private var appContext: Context? = null
+
+    fun attachEditor(editor: CodeEditor, context: Context) {
         this.editor = editor
+        this.appContext = context
     }
 
     /**
@@ -67,17 +75,17 @@ class EditorLanguage(
             val editor = this.editor ?: return
             if (!isAutoCompleteEnabled) return
 
-            val line = content.getLine(position.line)
-            val prefix =
-                if (position.column <= line.length) {
-                    line.substring(0, position.column).takeLastWhile(Char::isIdentifierChar)
-                } else {
-                    ""
-                }
+            // D4（2026-08-12）：前缀计算复用 sora 原生 CompletionHelper.computePrefix
+            // （超类 TextMateLanguage.requireAutoComplete 同款），替代手写
+            // takeLastWhile + substring 双分配；语义一致（identifier 字符回溯）。
+            val prefix = CompletionHelper.computePrefix(content, position) { it.isIdentifierChar() }
 
             if (prefix.length >= 1) {
+                // C2：描述本地化——经 attach 时快照的 context 解析 snippet 描述资源
+                // （分析线程不得调 CodeEditor.getContext，lint WrongThread 守护）。
+                val context = appContext ?: return
                 LuaSnippetManager
-                    .toCompletionItems()
+                    .toCompletionItems(context)
                     .filter { it.label.startsWith(prefix, ignoreCase = true) }
                     .forEach { publisher.addItem(it) }
             }

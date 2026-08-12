@@ -12,6 +12,12 @@ package com.lioisme.lide.project
  */
 object LuaConfigParser {
 
+    /** E3（2026-08-12）：扫描收敛守卫——每字符最多推进的扫描步数。 */
+    private const val GUARD_STEPS_PER_CHAR = 8L
+
+    /** E3（2026-08-12）：扫描收敛守卫——固定步数基数（覆盖空输入等边界）。 */
+    private const val GUARD_STEPS_BASE = 1024L
+
     /** 解析出的顶层字段：原始值文本 + 可替换区间（行首 → 值结束）。 */
     data class Field(
         val name: String,
@@ -31,13 +37,14 @@ object LuaConfigParser {
         var depth = 0
         // 防死循环：任何单遍扫描都必须在有限步内推进（防御异常输入）。
         var guard = 0L
-        val guardLimit = n.toLong() * 8 + 1024
+        // E3（2026-08-12）：扫描步数上限 = 输入长度 × GUARD_STEPS_PER_CHAR + GUARD_STEPS_BASE。
+        val guardLimit = n.toLong() * GUARD_STEPS_PER_CHAR + GUARD_STEPS_BASE
         // 行首扫描态：所在行尚未产出字段时，从行首第一个非空白开始尝试匹配 `name =`。
         var lineStart = 0
         var atLineStart = true
         while (i < n) {
             if (++guard > guardLimit) {
-                throw IllegalStateException("LuaConfigParser.parse 扫描未收敛（疑似异常输入）")
+                throw IllegalStateException("LuaConfigParser.parse scan did not converge (abnormal input)")
             }
             val c = content[i]
             when {
@@ -148,6 +155,23 @@ object LuaConfigParser {
     /** 取单个字段的原始值（无该字段返回 null）。 */
     fun field(content: String, name: String): String? =
         parse(content).firstOrNull { it.name == name }?.rawValue
+
+    /**
+     * D3（2026-08-12）：单遍解析全部顶层**字符串**字段（去引号），供多字段并发
+     * 读取的调用方复用一次 [parse]——loadProject 原对 appname/packagename/icon
+     * 各做一次全量扫描。非字符串字段（表/裸标识符）不进入结果。
+     */
+    fun stringFields(content: String): Map<String, String> {
+        val result = HashMap<String, String>()
+        for (f in parse(content)) {
+            if (result.containsKey(f.name)) continue
+            val v = f.rawValue.trim()
+            if (v.length >= 2 && (v.first() == '"' || v.first() == '\'') && v.last() == v.first()) {
+                result[f.name] = v.substring(1, v.length - 1)
+            }
+        }
+        return result
+    }
 
     /** 取字符串字段（去引号；非字符串/不存在返回 null）。 */
     fun stringField(content: String, name: String): String? {

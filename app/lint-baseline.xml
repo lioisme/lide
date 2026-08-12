@@ -124,17 +124,6 @@
 
     <issue
         id="NewApi"
-        message="Call requires API level 34 (current min is 24): `android.content.pm.PackageInstaller.SessionParams#setInstallerPackageName`"
-        errorLine1="                params.setInstallerPackageName(name)"
-        errorLine2="                       ~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/kotlin/com/lioisme/lide/install/dhizuku/DhizukuInstallerServiceImpl.kt"
-            line="91"
-            column="24"/>
-    </issue>
-
-    <issue
-        id="NewApi"
         message="Call requires API level 35 (current min is 24): `java.util.List#addLast`"
         errorLine1="                                    stack.addLast(BracketFrame(&apos;[&apos;, lineNo))"
         errorLine2="                                          ~~~~~~~">
@@ -252,39 +241,6 @@
             file="src/main/kotlin/com/lioisme/lide/editor/LuaDiagnostics.kt"
             line="687"
             column="31"/>
-    </issue>
-
-    <issue
-        id="NewApi"
-        message="Call requires API level 26, or core library desugaring (current min is 24): `java.io.File#toPath`"
-        errorLine1="            File(path).toPath().startsWith(rootDir.toPath())"
-        errorLine2="                       ~~~~~~">
-        <location
-            file="src/main/kotlin/com/lioisme/lide/project/ProjectEntryOps.kt"
-            line="42"
-            column="24"/>
-    </issue>
-
-    <issue
-        id="NewApi"
-        message="Call requires API level 26, or core library desugaring (current min is 24): `java.io.File#toPath`"
-        errorLine1="            File(path).toPath().startsWith(rootDir.toPath())"
-        errorLine2="                                                   ~~~~~~">
-        <location
-            file="src/main/kotlin/com/lioisme/lide/project/ProjectEntryOps.kt"
-            line="42"
-            column="52"/>
-    </issue>
-
-    <issue
-        id="NewApi"
-        message="Call requires API level 26, or core library desugaring (current min is 24): `java.nio.file.Path#startsWith`"
-        errorLine1="            File(path).toPath().startsWith(rootDir.toPath())"
-        errorLine2="                                ~~~~~~~~~~">
-        <location
-            file="src/main/kotlin/com/lioisme/lide/project/ProjectEntryOps.kt"
-            line="42"
-            column="33"/>
     </issue>
 
     <issue
@@ -626,83 +582,6 @@
             file="src/main/kotlin/com/lioisme/lide/ui/screen/ProjectListScreen.kt"
             line="110"
             column="44"/>
-    </issue>
-
-    <issue
-        id="UnusedResources"
-        message="The resource `R.string.back_to_parent` appears to be unused"
-        errorLine1="    &lt;string name=&quot;back_to_parent&quot;>Back to parent&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="14"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="UnusedResources"
-        message="The resource `R.string.setting_value_title` appears to be unused"
-        errorLine1="    &lt;string name=&quot;setting_value_title&quot;>%1$s: %2$s&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="73"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="UnusedResources"
-        message="The resource `R.string.font_import_picker_title` appears to be unused"
-        errorLine1="    &lt;string name=&quot;font_import_picker_title&quot;>Pick a font file&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="114"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="UnusedResources"
-        message="The resource `R.string.perm_package_only` appears to be unused"
-        errorLine1="    &lt;string name=&quot;perm_package_only&quot;>Written into packaged APK only&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="150"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="UnusedResources"
-        message="The resource `R.string.info_theme_custom` appears to be unused"
-        errorLine1="    &lt;string name=&quot;info_theme_custom&quot;>Custom (%1$s)&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="181"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="UnusedResources"
-        message="The resource `R.string.build_install_failed` appears to be unused"
-        errorLine1="    &lt;string name=&quot;build_install_failed&quot;>Install failed&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="326"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="UnusedResources"
-        message="The resource `R.string.install_dialog_method` appears to be unused"
-        errorLine1="    &lt;string name=&quot;install_dialog_method&quot;>Install method (this build)&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="488"
-            column="13"/>
     </issue>
 
     <issue

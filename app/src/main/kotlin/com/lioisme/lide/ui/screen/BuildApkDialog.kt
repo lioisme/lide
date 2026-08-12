@@ -68,18 +68,18 @@ private sealed interface BuildResult {
 /**
  * 失败文案（T17 错误消息资源化）：按错误码映射 `build_error_*` 本地化资源；
  * [BuildErrorCode.GENERAL]（未分类异常）与 [BuildErrorCode.LUA_COMPILE]
- * （编译器行号细节有诊断价值）保留原始消息。
+ * （编译器行号细节有诊断价值）以「本地化标题 + 技术明细」两段式展示
+ * （C1 收口：明细保留英文技术文本，不再直出硬编码中文）。
  */
 private fun buildErrorDisplay(
     context: android.content.Context,
     code: BuildErrorCode,
     message: String,
 ): String =
-    when (code) {
-        BuildErrorCode.GENERAL,
-        BuildErrorCode.LUA_COMPILE,
-        -> message
-        else -> context.getString(buildErrorRes(code))
+    if (message.isBlank()) {
+        context.getString(buildErrorRes(code))
+    } else {
+        context.getString(buildErrorRes(code)) + "\n" + message
     }
 
 private fun buildErrorRes(code: BuildErrorCode): Int =
@@ -516,7 +516,11 @@ internal fun engineLuaLibs(
         .luaLibs
         .sorted()
 
-private fun sanitizeName(s: String): String = s.replace(Regex("[^A-Za-z0-9_.-]"), "_").take(60)
+// E3（2026-08-12）：打包输出文件名清理后的最大长度（防超长导致文件系统/分享失败）。
+private const val SANITIZED_NAME_MAX_LENGTH = 60
+
+private fun sanitizeName(s: String): String =
+    s.replace(Regex("[^A-Za-z0-9_.-]"), "_").take(SANITIZED_NAME_MAX_LENGTH)
 
 private fun shareApk(
     context: android.content.Context,

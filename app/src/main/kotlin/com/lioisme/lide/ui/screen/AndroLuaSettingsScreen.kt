@@ -285,7 +285,8 @@ private fun CheckboxSettingRow(
                 if (enabled) {
                     MaterialTheme.colorScheme.onSurface
                 } else {
-                    MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                    // E1（2026-08-12）：禁用态 M3 惯例 = onSurface@38%。
+                    MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
                 },
             modifier = Modifier.weight(1f),
         )

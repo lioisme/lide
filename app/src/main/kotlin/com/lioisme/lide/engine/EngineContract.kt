@@ -30,6 +30,12 @@ object EngineContract {
     /** 引擎页关闭转场动画资源 ID（int），见 [EXTRA_ANIM_IN]。 */
     const val EXTRA_ANIM_OUT = "animOut"
 
+    /** 引擎页结果回传：控制台输出文本 extra（String，已截断；E4 并入契约）。 */
+    const val EXTRA_OUTPUT = "output"
+
+    /** 引擎页结果回传：脚本错误标记 extra（boolean；E4 并入契约）。 */
+    const val EXTRA_ERROR = "error"
+
     /** 引擎页类名（:app 模块，宿主 manifest 与打包 launcher 同源）。 */
     const val ENGINE_ACTIVITY = "com.lioisme.lide.engine.EngineActivity"
 }

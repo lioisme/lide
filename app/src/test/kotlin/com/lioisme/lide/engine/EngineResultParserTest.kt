@@ -46,6 +46,35 @@ class EngineResultParserTest {
     }
 
     @Test
+    fun `findErrorLocation anchors to error line ignoring leading timestamps`() {
+        // B6 回归：stdout 先输出 `12:34:56` 时间戳行（NN:NN:NN 形态），
+        // 错误定位必须锚定在 Runtime error 首行，不得被时间戳误导。
+        val output =
+            """
+            12:34:56.789 starting demo
+            download https://example.com/1:2:3
+            Runtime error: /p/main.lua:7: attempt to call a nil value
+            stack traceback:
+            	/p/main.lua:7: in main chunk
+            """.trimIndent()
+        assertEquals(
+            EngineResultParser.ErrorLocation("main.lua", 7),
+            EngineResultParser.findErrorLocation(output, "/p"),
+        )
+    }
+
+    @Test
+    fun `findErrorLocation falls back to whole-output match when no error prefix`() {
+        // B6 兜底语义：输出无错误前缀行时保持历史全文首匹配行为（此时无锚可依，
+        // 首定位即最可能出错处——时间戳类误判仅存在于无错误前缀的兜底场景）。
+        val output = "note line\n/p/main.lua:3: boom"
+        assertEquals(
+            EngineResultParser.ErrorLocation("main.lua", 3),
+            EngineResultParser.findErrorLocation(output),
+        )
+    }
+
+    @Test
     fun `findErrorLocation preserves project relative path for subdir files`() {
         val output =
             """

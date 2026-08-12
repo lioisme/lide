@@ -148,6 +148,20 @@ class NativeDependencyAnalyzerTest {
     }
 
     @Test
+    fun `bit32 is stdlib per engine linit registration`() {
+        // C8 回归：引擎 linit.c 注册 bit32（LUA_COMPAT_5_2 + luaopen_bit32），
+        // require "bit32" 不得推导 .so / 告警缺失；bit（Lua 5.4 名）不在表中。
+        val r =
+            analyze(
+                listOf("require \"bit32\"\n"),
+                host = hostLua,
+                hostNativeLibs = emptySet(),
+            )
+        assertFalse(r.nativeLibs.any { it == "libbit32.so" })
+        assertFalse(r.missingModules.contains("bit32.lua"))
+    }
+
+    @Test
     fun `module name shapes`() {
         assertEquals("import.lua", NativeDependencyAnalyzer.modulePath("import", ""))
         assertEquals("socket/http.lua", NativeDependencyAnalyzer.modulePath("socket", "http"))

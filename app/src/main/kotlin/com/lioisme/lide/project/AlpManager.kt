@@ -56,12 +56,14 @@ class AlpManager(private val context: Context) {
     }
 
     /**
-     * 执行导入。[mode] 决定同名冲突处置：OVERWRITE 删除既有目标（默认，历史语义），
-     * RENAME 经 [AlpNaming.dedupeName] 追加 -1/-2 后缀（非破坏，供自动导入路径使用）。
+     * 执行导入。[mode] 决定同名冲突处置：RENAME 经 [AlpNaming.dedupeName] 追加
+     * -1/-2 后缀（非破坏，默认——批量导入同名工程不再静默删除既有数据），
+     * OVERWRITE 删除既有目标（仅用户显式确认路径使用，ProjectListScreen/
+     * ExamplesScreen 冲突对话框）。
      */
     fun import(
         alpFile: String,
-        mode: ImportMode = ImportMode.OVERWRITE,
+        mode: ImportMode = ImportMode.RENAME,
     ): AlpImportResult? {
         val plan = planImport(alpFile) ?: return null
         val target =

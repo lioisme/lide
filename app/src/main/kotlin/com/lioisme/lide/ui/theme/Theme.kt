@@ -14,6 +14,7 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
@@ -29,12 +30,14 @@ val LocalIsDarkTheme = compositionLocalOf { false }
 
 val AppTypography =
     Typography(
-        displayLarge = TextStyle(fontWeight = FontWeight.Normal, fontSize = 57.sp, lineHeight = 64.sp),
+        displayLarge = TextStyle(fontWeight = FontWeight.Normal, fontSize = 57.sp, lineHeight = 64.sp, letterSpacing = (-0.25).sp),
         displayMedium = TextStyle(fontWeight = FontWeight.Normal, fontSize = 45.sp, lineHeight = 52.sp),
         displaySmall = TextStyle(fontWeight = FontWeight.Normal, fontSize = 36.sp, lineHeight = 44.sp),
-        headlineLarge = TextStyle(fontWeight = FontWeight.SemiBold, fontSize = 32.sp, lineHeight = 40.sp),
-        headlineMedium = TextStyle(fontWeight = FontWeight.SemiBold, fontSize = 28.sp, lineHeight = 36.sp),
-        headlineSmall = TextStyle(fontWeight = FontWeight.SemiBold, fontSize = 24.sp, lineHeight = 32.sp),
+        // E1（2026-08-12）：headline 系回归 M3 官方字阶（Normal 权重，原 SemiBold 属
+        // 规范外加强，同层字体混排时视觉不一致）。
+        headlineLarge = TextStyle(fontWeight = FontWeight.Normal, fontSize = 32.sp, lineHeight = 40.sp),
+        headlineMedium = TextStyle(fontWeight = FontWeight.Normal, fontSize = 28.sp, lineHeight = 36.sp),
+        headlineSmall = TextStyle(fontWeight = FontWeight.Normal, fontSize = 24.sp, lineHeight = 32.sp),
         titleLarge = TextStyle(fontWeight = FontWeight.Medium, fontSize = 22.sp, lineHeight = 28.sp),
         titleMedium = TextStyle(fontWeight = FontWeight.Medium, fontSize = 16.sp, lineHeight = 24.sp, letterSpacing = 0.15.sp),
         titleSmall = TextStyle(fontWeight = FontWeight.Medium, fontSize = 14.sp, lineHeight = 20.sp, letterSpacing = 0.1.sp),
@@ -65,18 +68,31 @@ fun resolveIsDark(appearanceMode: AppearanceMode): Boolean =
 fun resolveColorScheme(
     config: ThemeConfig,
     isDark: Boolean,
-): ColorScheme = resolveColorSchemeNow(config, isDark, LocalContext.current)
+): ColorScheme {
+    val context = LocalContext.current
+    return if (config.useWallpaper && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        // C3（2026-08-12）：壁纸模式走官方 dynamicColorScheme（系统全图量化调色板，
+        // 覆盖全部 60+ token）——原实现单主色种子 + materialkolor，注释却声称官方
+        // 函数，import 零调用点。官方动态色由系统配置驱动，无需自建缓存。
+        if (isDark) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+    } else {
+        // 种子色模式：remember 缓存（LideTheme 重组不重复计算 tonal 色板）。
+        val seed = config.customSeedColor
+        remember(seed, isDark) { resolveColorSchemeNow(config, isDark, context) }
+    }
+}
 
 /**
  * 非 Composable 色板计算（U4，2026-08-12）：与 [resolveColorScheme] 同一事实源，
  * 供 MainActivity 在 setContent 之前同步窗口背景色（recreate 首帧底色对齐主题，
  * 消除切换语言/外观时系统重建的白/黑闪帧）。
  *
- * 取舍说明：Composable 路径的 dynamic wallpaper 分支用官方 [dynamicDarkColorScheme]/
- * [dynamicLightColorScheme]（@Composable），此处非 Composable 等价实现 = 拾取壁纸
- * 主色经 [generateLightScheme]/[generateDarkScheme]（materialkolor 同算法）生成——
- * 二者同一 tonal 系，recreate 空档帧差异肉眼不可见（仅动态壁纸模式，随后组合帧
- * 立即由官方色板接管）；种子色模式两路径完全同源零色差。
+ * C3 取舍说明（2026-08-12 注释如实化）：本函数为非 Composable 路径，无法调用官方
+ * [dynamicDarkColorScheme]/[dynamicLightColorScheme]（@Composable）；壁纸模式用
+ * 壁纸主色 + materialkolor 同算法（[generateLightScheme]/[generateDarkScheme]）
+ * 生成近似色板——二者同一 TONAL_SPOT 色系，recreate 空档帧差异肉眼不可见
+ * （仅动态壁纸模式，随后组合帧立即由 [resolveColorScheme] 官方色板接管）；
+ * 种子色模式两路径完全同源零色差。
  */
 fun resolveColorSchemeNow(
     config: ThemeConfig,

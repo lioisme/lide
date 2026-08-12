@@ -1,6 +1,7 @@
 package com.lioisme.lide.project
 
 import android.util.Log
+import com.lioisme.lide.engine.RuntimePaths
 import com.lioisme.lide.model.Project
 import java.io.File
 import java.util.concurrent.ConcurrentHashMap
@@ -46,6 +47,22 @@ class ProjectManager {
             pages = {"main"}
             user_permission = {}
             """.trimIndent()
+
+        /**
+         * C7（2026-08-12）：工程包名生成单一事实源（MainActivity 单文件收养与
+         * [createProject] 共用，消除 `com.lioisme.lide.<name>` 模板两处重复）。
+         *
+         * 清洗规则（工程名可含空格/连字符，而 Java 包段要求标识符字符）：
+         * 小写化、非字母数字/下划线字符 → 下划线、剥首尾下划线；空结果回落 "app"。
+         */
+        fun packageNameFor(name: String): String {
+            val cleaned =
+                name.trim().lowercase()
+                    .map { ch -> if (ch.isLetterOrDigit() || ch == '_') ch else '_' }
+                    .joinToString("")
+                    .trim('_')
+            return "com.lioisme.lide." + cleaned.ifEmpty { "app" }
+        }
     }
 
     /**
@@ -57,7 +74,7 @@ class ProjectManager {
     fun listProjects(luaExtDir: String): List<Project> {
         try {
             val extBase = File(luaExtDir)
-            val projectSub = File(extBase, "project")
+            val projectSub = File(extBase, RuntimePaths.PROJECT_DIR_NAME)
             return scanProjectsIn(projectSub)
         } catch (e: Exception) {
             Log.e(TAG, "failed to scan luaExtDir: ${e.message}")
@@ -105,10 +122,11 @@ class ProjectManager {
             try {
                 val content = initFile.readText()
                 // 结构化解析（跳过注释/字符串，避免正则命中注释内容）。
-                appName = LuaConfigParser.stringField(content, "appname") ?: appName
-                packageName = LuaConfigParser.stringField(content, "packagename")
-                    ?: LuaConfigParser.stringField(content, "package") ?: ""
-                icon = LuaConfigParser.stringField(content, "icon")
+                // D3：单次 parse 取全部字符串字段（原按字段各扫一遍）。
+                val fields = LuaConfigParser.stringFields(content)
+                appName = fields["appname"] ?: appName
+                packageName = fields["packagename"] ?: fields["package"] ?: ""
+                icon = fields["icon"]
             } catch (e: Exception) {
                 Log.w(TAG, "loadProject: parse init.lua failed (fallback to dir name): ${dir.name}", e)
             }
@@ -241,7 +259,7 @@ class ProjectManager {
         }
         // 隐私（P3-7）：不打印 luaExtDir/工程绝对路径，仅记录工程名。
         Log.d(TAG, "createProject: name=$name")
-        val base = File(luaExtDir, "project")
+        val base = File(luaExtDir, RuntimePaths.PROJECT_DIR_NAME)
         if (!base.exists() && !base.mkdirs()) {
             Log.e(TAG, "Failed to create project base directory")
             return null
@@ -251,7 +269,7 @@ class ProjectManager {
             Log.e(TAG, "Failed to create project directory: $name")
             return null
         }
-        val packageName = "com.lioisme.lide.$name"
+        val packageName = packageNameFor(name)
         try {
             File(dir, Project.DEFAULT_MAIN_FILE).writeText("-- $name\nprint(\"hello from $name!\")\n")
             File(dir, "init.lua").writeText(initLuaTemplate(name, packageName))

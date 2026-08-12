@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.MenuBook
@@ -571,9 +570,10 @@ private fun RowScope.SchemePreviewBar(
                 Modifier
                     .fillMaxWidth()
                     .height(40.dp)
-                    .clip(RoundedCornerShape(8.dp))
+                    // E1（2026-08-12）：硬编码圆角 → MaterialTheme.shapes（small = 8dp）。
+                    .clip(MaterialTheme.shapes.small)
                     .background(background)
-                    .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(8.dp)),
+                    .border(1.dp, MaterialTheme.colorScheme.outlineVariant, MaterialTheme.shapes.small),
         )
         Spacer(Modifier.height(4.dp))
         Text(

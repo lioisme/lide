@@ -230,6 +230,53 @@ R1 门禁：         rg -n "luajava|androlua|loadLibrary" app/src/main/kotlin/co
   CI 门禁，`lintArm64Debug`）。业务代码禁止新增 lint 告警；改动 lint 相关
   配置必须跑 lint 任务。
 
+## 8. 全量规范审计整改（2026-08-12 FULL_AUDIT_SPEC 完工蒸馏）
+
+> 28 项全部落地（工作单 docs/in-progress/FULL_AUDIT_SPEC_WORK_ORDER.md 已收口，
+> backlog §2n 全部标记）。改动 42 文件，验收全绿：compile + 全量单测
+> （含新增 A5/B6/C5/C7/C8/D1 用例）+ lint 0 新问题 + verifyMinimalismDebug。
+
+### 8.1 打包链单遍解析（D1，M-B1）
+
+- `AXmlManifest.patch` 复用单次解析结果（`packageNameFromParsed`，`readPackageName`
+  委托同 helper）；`ArscLookup.drawableIcon(arsc): IconEntry?` 单次解析同时产出
+  **资源 ID + 条目路径**，`ApkBuilder` 装配时 iconEntry 一处引用两用（`resourceId`
+  兜底注入 + `path` 覆盖桌面图标）。原「id/路径各全量解析一次 arsc」已消除。
+
+### 8.2 编辑器补全/诊断契约（A2/A5/C2/C4/D2/D4）
+
+- 补全窗滚动 while 上限 100 次（上游 DefaultCompletionLayout 同款防 ANR）；
+- replaceAll 光标恢复 = 替换前记录 + 双夹取 setSelection（sora afterInsert 语义）；
+- snippet 描述本地化：`LuaSnippet.descriptionRes` + `toCompletionItems(context)`
+  ——**lint WrongThread 教训**：分析线程禁止 `CodeEditor.getContext()`（推断
+  worker），context 须 attach 时（主线程）快照注入；
+- LuaFonts 缓存键 = asset 文件名（id 0 恒走内置 jetbrains_mono）；
+- 200KB 大文件阈值/格式化上限单一事实源 `EditorLimits`；补全前缀复用 sora
+  `CompletionHelper.computePrefix`。
+
+### 8.3 M3 token 合规基线（E1/E2/E3/E4）
+
+- 卡片容器一律 `surfaceContainerLow`（内容卡）/`surfaceContainerHigh`（搜索条浮层），
+  `surfaceVariant` alpha 叠卡已清零；禁用态文本/图标 = `onSurface@38%`；
+- `AppTypography` headline 系回归官方 Normal 权重 + displayLarge -0.25sp 字距；
+  硬编码圆角 → `MaterialTheme.shapes`；
+- 死资源 7 对字符串 + assets-zh 空目录已清理；裸魔法数提升常量（含
+  `RSA_KEY_BITS=2048`、`UTC_TIME_MAX_YEAR=2050`（X.509 UTCTime/GeneralizedTime
+  分界，RFC 5280 §4.1.2.5）、ZipBomb 三上限 512MB/10k 条目/64MB 单文件）。
+
+### 8.4 线程/安全治理（A3/A4/B1-B6）
+
+- androlua:// 与 ProjectEntryOps containment 一律纯词法归一化（去 `File.toPath()`
+  API 26 依赖，minSdk 24 安全）；content:// 解析拷贝整体 IO 线程；
+- Shizuku 合并流读（redirectErrorStream）防管道死锁；Dhizuku setInstallerPackageName
+  守卫 `SDK_INT >= UPSIDE_DOWN_CAKE`（34）+ 全部后端路径 `catch(Throwable)`；
+- EngineResultParser 错误定位锚定 ERROR_PREFIX 行；EngineContract 收敛全部
+  extra 键（含 output/error 回传键）；RuntimePaths 子目录名常量（project/apk）。
+
+验证（2026-08-12 全绿）：compileArm64DebugKotlin + testArm64DebugUnitTest +
+lintArm64Debug（0 新问题，baseline 同步删 9 条已修复条目）+
+verifyMinimalismDebug。
+
 验证（2026-08-12 全绿）：compileArm64DebugKotlin + testArm64DebugUnitTest
 （含 i18n.ResourceConsistencyTest 5 用例 / LocaleManagerTest 5 用例 /
 build.* 8 用例）+ lintArm64Debug（0 新问题）+ assembleArm64Debug +

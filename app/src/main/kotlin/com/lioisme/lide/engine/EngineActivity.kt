@@ -5,6 +5,7 @@ import android.os.Build
 import android.os.Bundle
 import com.androlua.LuaActivity
 import com.lioisme.lide.model.Project
+import java.io.File
 
 /**
  * 引擎页：纯 LuaActivity 子类（全屏内置控制台）。
@@ -22,12 +23,6 @@ import com.lioisme.lide.model.Project
 class EngineActivity : LuaActivity() {
 
     companion object {
-        /** 输出文本 extra（String，已截断）。 */
-        const val EXTRA_OUTPUT = "output"
-
-        /** 脚本错误标记 extra（boolean）。 */
-        const val EXTRA_ERROR = "error"
-
         /** extra 截断上限：Binder 事务 ~1MB，取 200KB 留足余量（ACC-4）。 */
         private const val OUTPUT_LIMIT = 200 * 1024
 
@@ -90,8 +85,8 @@ class EngineActivity : LuaActivity() {
     private fun deliverResult() {
         val result = Intent()
         val output: String = synchronized(outputBuffer) { outputBuffer.toString() }
-        result.putExtra(EXTRA_OUTPUT, output)
-        result.putExtra(EXTRA_ERROR, scriptError)
+        result.putExtra(EngineContract.EXTRA_OUTPUT, output)
+        result.putExtra(EngineContract.EXTRA_ERROR, scriptError)
         setResult(RESULT_OK, result)
     }
 
@@ -117,6 +112,7 @@ class EngineActivity : LuaActivity() {
 
     override fun getLuaPath(): String {
         luaDir = projectDir.orEmpty()
-        return "$projectDir/$mainFile"
+        // E4（2026-08-12）：路径拼接统一走 File(dir, name)，避免分隔符/空目录拼接问题。
+        return File(projectDir.orEmpty(), mainFile).absolutePath
     }
 }

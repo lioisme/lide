@@ -142,4 +142,35 @@ class ProjectManagerTest {
         assertEquals(listOf("newName"), listed.map { it.name })
         assertTrue(File(luaExtDir, "project/newName").isDirectory)
     }
+
+    // ---- C7 包名生成单一事实源 ----
+
+    @Test
+    fun `packageNameFor basic and legacy names`() {
+        assertEquals("com.lioisme.lide.demo", ProjectManager.packageNameFor("demo"))
+        assertEquals("com.lioisme.lide.demo", ProjectManager.packageNameFor("Demo"))
+    }
+
+    @Test
+    fun `packageNameFor sanitizes illegal package segments`() {
+        assertEquals("com.lioisme.lide.my_app", ProjectManager.packageNameFor("my app"))
+        assertEquals("com.lioisme.lide.foo_bar", ProjectManager.packageNameFor("foo-bar"))
+        assertEquals("com.lioisme.lide.a_1", ProjectManager.packageNameFor("a.1"))
+    }
+
+    @Test
+    fun `packageNameFor falls back to app for empty or symbol-only names`() {
+        assertEquals("com.lioisme.lide.app", ProjectManager.packageNameFor(""))
+        assertEquals("com.lioisme.lide.app", ProjectManager.packageNameFor("   "))
+        assertEquals("com.lioisme.lide.app", ProjectManager.packageNameFor("!!!"))
+    }
+
+    @Test
+    fun `createProject persists sanitized packageName`() {
+        val p = manager.createProject("My Project", luaExtDir.absolutePath)!!
+        assertEquals("com.lioisme.lide.my_project", p.packageName)
+        assertTrue(
+            File(p.path, "init.lua").readText().contains("packagename = \"com.lioisme.lide.my_project\""),
+        )
+    }
 }

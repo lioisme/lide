@@ -164,7 +164,7 @@ object ApkBuilder {
         val templateEntries = hostEntries
         val manifestEntry =
             templateEntries.firstOrNull { it.name == "AndroidManifest.xml" }
-                ?: throw BuildException("模板 APK 缺少 AndroidManifest.xml", code = BuildErrorCode.TEMPLATE_MANIFEST_MISSING)
+                ?: throw BuildException("Template APK missing AndroidManifest.xml", code = BuildErrorCode.TEMPLATE_MANIFEST_MISSING)
         val manifestBytes = manifestEntry.data
 
         // 模板原生库 ABI 枚举（lib/<abi>/...）：产物 ABI = 选择 ∩ 模板（保持原始顺序）。
@@ -177,7 +177,7 @@ object ApkBuilder {
             }
         if (input.abiSelection != null && effectiveAbis.isEmpty()) {
             throw BuildException(
-                "宿主 APK 不包含所选 ABI（宿主: ${hostAbis.joinToString()}, 选择: ${input.abiSelection.joinToString()}）",
+                "Host APK lacks selected ABI (host: ${hostAbis.joinToString()}, selected: ${input.abiSelection.joinToString()})",
                 code = BuildErrorCode.HOST_ABI_MISMATCH,
             )
         }
@@ -187,18 +187,22 @@ object ApkBuilder {
             try {
                 AXmlManifest.readUsesPermissions(manifestBytes).toSet()
             } catch (e: Exception) {
-                throw BuildException("解析宿主 manifest 失败: ${e.message}", e, code = BuildErrorCode.HOST_MANIFEST_PARSE)
+                throw BuildException("Parse host manifest failed: ${e.message}", e, code = BuildErrorCode.HOST_MANIFEST_PARSE)
             }
         val selfDeclared =
             try {
                 AXmlManifest.readSelfDeclaredPermissions(manifestBytes)
             } catch (e: Exception) {
-                throw BuildException("解析宿主自声明权限失败: ${e.message}", e, code = BuildErrorCode.HOST_PERMISSIONS_PARSE)
+                throw BuildException("Parse host declared permissions failed: ${e.message}", e, code = BuildErrorCode.HOST_PERMISSIONS_PARSE)
             }
         val whitelist =
             dedupe(
                 input.declaredPermissions.filter { it in hostPermissions } + selfDeclared,
             )
+
+        // 图标信息（D1，2026-08-12）：单次解析 arsc 复用资源 ID + 条目路径
+        // （原 drawableIconId/drawableIconPath 各全量解析一次）。
+        val iconEntry = ArscLookup.drawableIcon(templateEntries.firstOrNull { it.name == "resources.arsc" }?.data)
 
         val patchedManifest =
             try {
@@ -222,10 +226,7 @@ object ApkBuilder {
                         // applicationIconId 仅对模板无 icon 属性时兜底注入（TYPE_REFERENCE）。
                         // arsc 缺失/解析失败返回 null 即不注入（安全降级）。工程 icon.png
                         // 覆盖条目数据后 Launcher 即显示工程图标，无工程图标时显示宿主图标。
-                        applicationIconId =
-                            ArscLookup.drawableIconId(
-                                templateEntries.firstOrNull { it.name == "resources.arsc" }?.data,
-                            ),
+                        applicationIconId = iconEntry?.resourceId,
                         // UI1（2026-08-10）：产物最低系统版本覆盖（null = 保持模板）。
                         minSdkVersion = input.minSdkVersion,
                         // P3（2026-08-11）：产物目标系统版本覆盖（pro appsdk 语义，null = 保持模板）。
@@ -233,26 +234,23 @@ object ApkBuilder {
                     ),
                 )
             } catch (e: Exception) {
-                throw BuildException("manifest 补丁失败: ${e.message}", e, code = BuildErrorCode.MANIFEST_PATCH)
+                throw BuildException("Manifest patch failed: ${e.message}", e, code = BuildErrorCode.MANIFEST_PATCH)
             }
 
         onStage(BuildStage.COLLECT_LUA)
         val mainSource =
             input.luaSources[input.mainFile]
-                ?: throw BuildException("工程缺少 ${input.mainFile}", code = BuildErrorCode.PROJECT_MAIN_FILE_MISSING)
+                ?: throw BuildException("Project missing ${input.mainFile}", code = BuildErrorCode.PROJECT_MAIN_FILE_MISSING)
         onStage(BuildStage.COMPILE_LUA)
 
         // 工程桌面图标（可选）：工程根目录 icon.png（pro 同款约定），
         // 装配时覆盖宿主默认图标条目；未提供则用宿主图标。
         val projectIcon =
             input.luaSources.entries.firstOrNull { it.key.equals("icon.png", ignoreCase = true) }?.value
-        // 图标条目名：经宿主 arsc 的 Res_value(TYPE_STRING) 引用解析真实路径
-        // （资源混淆构建 = res/9T.png 等短名，字面量会落空；P11 实证 debug =
-        // "res/drawable/icon.png"）；解析失败回落字面量（兼容 / 防御）。
-        val iconEntryPath =
-            ArscLookup.drawableIconPath(
-                templateEntries.firstOrNull { it.name == "resources.arsc" }?.data,
-            ) ?: "res/drawable/icon.png"
+        // 图标条目路径（D1）：复用单次解析的 [iconEntry]——path 经 Res_value(TYPE_STRING)
+        // 引用解析真实路径（资源混淆构建 = res/9T.png 等短名，字面量会落空；P11 实证
+        // debug = "res/drawable/icon.png"）；解析失败回落字面量（兼容 / 防御）。
+        val iconEntryPath = iconEntry?.path ?: "res/drawable/icon.png"
 
         // 编译与加密相互独立：compileLua=false 时全部文件（含 main.lua）以源码文本入库；
         // encryptBytecode 对入库内容（字节码或源码文本）统一 DES 加密（运行端 C 解密）。
@@ -271,7 +269,7 @@ object ApkBuilder {
                     try {
                         compileLua(String(raw, Charsets.UTF_8), relPath)
                     } catch (e: Exception) {
-                        throw BuildException(e.message ?: "$relPath 编译失败", e, code = BuildErrorCode.LUA_COMPILE)
+                        throw BuildException(e.message ?: "Failed to compile $relPath", e, code = BuildErrorCode.LUA_COMPILE)
                     }
                 } else if (isAly) {
                     // .aly 包装策略（pro console.build_aly 同款；2026-08-09 打包双开关对齐）：
@@ -285,7 +283,7 @@ object ApkBuilder {
                         try {
                             compileLua(wrapped, relPath)
                         } catch (e: Exception) {
-                            throw BuildException(e.message ?: "$relPath 编译失败", e, code = BuildErrorCode.LUA_COMPILE)
+                            throw BuildException(e.message ?: "Failed to compile $relPath", e, code = BuildErrorCode.LUA_COMPILE)
                         }
                     } else if (input.encryptBytecode) {
                         wrapped.toByteArray(Charsets.UTF_8)

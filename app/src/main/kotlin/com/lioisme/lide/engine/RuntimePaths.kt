@@ -17,12 +17,18 @@ import java.io.File
  */
 object RuntimePaths {
 
+    /** E4（2026-08-12）：工程根目录子目录名（单一事实源，project 包复用）。 */
+    const val PROJECT_DIR_NAME = "project"
+
+    /** E4（2026-08-12）：打包产物目录子目录名（与 AndroLua Pro 一致）。 */
+    const val APK_DIR_NAME = "apk"
+
     /** 引擎外部存储根（`/storage/emulated/0/AndroLua` 或私有回落目录，pro 同款规则）。 */
     fun luaExtDir(): String = LuaApplication.getInstance().getLuaExtDir()
 
     /** 工程根目录（`<luaExtDir>/project/`，工程列表/新建/收养的基目录）。 */
-    fun projectsDir(): File = File(luaExtDir(), "project")
+    fun projectsDir(): File = File(luaExtDir(), PROJECT_DIR_NAME)
 
     /** 打包产物默认输出目录（`<luaExtDir>/apk/`，与 AndroLua Pro 一致）。 */
-    fun defaultApkDir(): File = File(luaExtDir(), "apk")
+    fun defaultApkDir(): File = File(luaExtDir(), APK_DIR_NAME)
 }

@@ -87,11 +87,17 @@ class LuaCompletionWindow : CompletionLayout {
     override fun getCompletionList(): ListView = listView!!
 
     override fun ensureListPositionVisible(position: Int, increment: Int) {
+        // S2（2026-08-12）：迭代上限对齐上游 DefaultCompletionLayout（MAX_SCROLL_ITERATIONS
+        // = 100，上游注释 "prevent infinite loops that can cause ANR!!!"）——列表状态异常时
+        // while 循环无界执行会致主线程 ANR。
         listView?.post {
+            var iterations = 0
             while (listView!!.firstVisiblePosition + 1 > position && listView!!.canScrollList(-1)) {
+                if (iterations++ >= MAX_SCROLL_ITERATIONS) break
                 performScrollList(increment / 2)
             }
             while (listView!!.lastVisiblePosition - 1 < position && listView!!.canScrollList(1)) {
+                if (iterations++ >= MAX_SCROLL_ITERATIONS) break
                 performScrollList(-increment / 2)
             }
         }
@@ -173,7 +179,6 @@ class LuaCompletionWindow : CompletionLayout {
             val view =
                 convertView ?: LayoutInflater.from(context)
                     .inflate(io.github.rosemoe.sora.R.layout.default_completion_result_item, parent, false)
-            view.tag = position
 
             view.findViewById<ImageView>(io.github.rosemoe.sora.R.id.result_item_image)
                 ?.setImageDrawable(item.icon)
@@ -211,5 +216,8 @@ class LuaCompletionWindow : CompletionLayout {
         const val CORNER_RADIUS_DP = 8f
         const val STROKE_WIDTH_DP = 1f
         const val ITEM_HEIGHT_DP = 46f
+
+        /** 滚动定位迭代上限（对齐上游 DefaultCompletionLayout 同值，防 ANR 死循环）。 */
+        const val MAX_SCROLL_ITERATIONS = 100
     }
 }

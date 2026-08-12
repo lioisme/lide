@@ -30,6 +30,11 @@ object EngineResultParser {
      * （报错点），取第一次出现即真正出错位置；traceback 栈帧中的行号为调用点，
      * 不用于跳行。找不到返回 null。
      *
+     * B6（2026-08-12）：定位先锚定引擎错误前缀行（[ERROR_PREFIX]），仅在该行内
+     * 提取 `path:line:`——stdout 先输出的时间戳 `12:34:56` / URL 等带 `NN:NN:`
+     * 形态的行不再被误认作错误位置；输出无错误前缀时才回落全文首匹配（保持
+     * 历史兜底语义）。
+     *
      * [projectPath] 传入工程根路径时，结果保留工程相对路径（含子目录），
      * 使「跳到出错行」对子目录文件也能命中会话标签；未传（或路径不在
      * 工程内）时回退为 basename（历史行为）。
@@ -39,7 +44,10 @@ object EngineResultParser {
         projectPath: String? = null,
     ): ErrorLocation? {
         if (output.isNullOrEmpty()) return null
-        val match = ERROR_LOCATION.find(output) ?: return null
+        val match =
+            locateOnErrorLine(output)
+                ?: ERROR_LOCATION.find(output)
+                ?: return null
         val line = match.groupValues[2].toIntOrNull() ?: return null
         if (line < 1) return null
         val raw = match.groupValues[1]
@@ -47,6 +55,16 @@ object EngineResultParser {
             projectPath?.let { toProjectRelativePath(raw, it) }
                 ?: basename(raw)
         return ErrorLocation(file, line)
+    }
+
+    /** 错误前缀行内的 `path:line:` 定位（B6）；无错误前缀或行内无定位返回 null。 */
+    private fun locateOnErrorLine(output: String): MatchResult? {
+        val prefix = ERROR_PREFIX.find(output) ?: return null
+        val lineEnd = output.indexOf('\n', prefix.range.first)
+        val lineEndIdx = if (lineEnd < 0) output.length else lineEnd
+        return ERROR_LOCATION
+            .find(output, prefix.range.last + 1)
+            ?.takeIf { it.range.last < lineEndIdx }
     }
 
     /** 将错误路径裁剪为工程相对路径；路径不在工程内时返回 basename。 */

@@ -86,12 +86,19 @@ class DhizukuInstallerServiceImpl : IDhizukuInstallerService.Stub() {
             params.setRequireUserAction(PackageInstaller.SessionParams.USER_ACTION_NOT_REQUIRED)
         }
         if (fileSize > 0) params.setSize(fileSize)
-        installerPackageName?.takeIf { it.isNotBlank() }?.let { name ->
-            try {
-                params.setInstallerPackageName(name)
-            } catch (e: Exception) {
-                logW("setInstallerPackageName($name) failed: ${e.message}")
+        // B4（2026-08-12）：setInstallerPackageName 为 API 34（UPSIDE_DOWN_CAKE）
+        // 引入——先前守卫为 SDK_INT >= S（31），API 31-33 上抛 NoSuchMethodError
+        // （Error 类型，catch(Exception) 抓不住）→ 静默崩溃。低版本记录日志忽略归属。
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            installerPackageName?.takeIf { it.isNotBlank() }?.let { name ->
+                try {
+                    params.setInstallerPackageName(name)
+                } catch (t: Throwable) {
+                    logW("setInstallerPackageName($name) failed: ${t.message}")
+                }
             }
+        } else {
+            log("setInstallerPackageName skipped — requires API 34, device is ${Build.VERSION.SDK_INT}")
         }
 
         var sessionId = -1

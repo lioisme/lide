@@ -33,7 +33,9 @@ fun TipIconButton(
 ) {
     val haptics = LocalHapticFeedback.current
     val tooltipState = rememberTooltipState()
-    // 长按展示 tooltip 的同时执行原生振动（isVisible 翻转一次触发一次）。
+    // 长按展示 tooltip 的同时执行原生振动（isVisible 仅由长按置 true，
+    // 点击收起/超时隐藏走 false 分支，不触发振动——触发面恒等于「tooltip
+    // 出现」这一事件，每次长按至多一次，无重复过振）。
     LaunchedEffect(tooltipState.isVisible) {
         if (tooltipState.isVisible) {
             haptics.performHapticFeedback(HapticFeedbackType.LongPress)

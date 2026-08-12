@@ -147,7 +147,7 @@ object SigningManager {
         } else {
             val file = File(signingDir(), p.storeFile)
             if (!file.isFile) {
-                throw IllegalStateException("签名密钥库缺失：${p.name}（请重新导入）")
+                throw IllegalStateException("signing keystore missing for profile ${p.name} (re-import required)")
             }
             SigningCrypto.resolveMaterial(
                 content = file.readBytes(),

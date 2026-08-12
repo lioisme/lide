@@ -25,6 +25,7 @@ import com.lioisme.lide.i18n.LocaleManager
 import com.lioisme.lide.model.PendingOpenFile
 import com.lioisme.lide.model.Project
 import com.lioisme.lide.project.AlpManager
+import com.lioisme.lide.project.ProjectEntryOps
 import com.lioisme.lide.project.ProjectManager
 import com.lioisme.lide.ui.navigation.LideNavHost
 import com.lioisme.lide.ui.screen.InstallMethodDialog
@@ -39,6 +40,10 @@ import kotlinx.coroutines.withContext
 import java.io.File
 
 class MainActivity : ComponentActivity() {
+    private companion object {
+        const val TAG = "MainActivity"
+    }
+
     // 启动意图产物以 Compose state 承载（P2#11 修复）：.alp 解压导入 / 独立 .lua 收养
     // 原在 onCreate/onNewIntent 主线程同步执行（冷启动与点按卡顿），现移入
     // lifecycleScope + Dispatchers.IO，完成后写 state 触发重组。
@@ -124,11 +129,15 @@ class MainActivity : ComponentActivity() {
             return
         }
 
-        val path = resolveFilePath(uri) ?: return
-        when {
-            path.endsWith(".alp", ignoreCase = true) -> {
-                // 解压落盘在 IO 线程（P2#11），完成后经 state 通知列表刷新。
-                lifecycleScope.launch {
+        // A4（2026-08-12）：URI 解析整体移 IO 线程——content:// 分支做 query +
+        // openInputStream + 全量拷贝（大 .alp/.apk 可达百 MB），原在 onCreate/
+        // onNewIntent 主线程同步执行，冷启动被系统拉起大文件时首帧卡死/ANR。
+        // 文件类型分派与导入/收养同在线程，完成后写 state 触发重组。
+        lifecycleScope.launch {
+            val path = withContext(Dispatchers.IO) { resolveFilePath(uri) } ?: return@launch
+            when {
+                path.endsWith(".alp", ignoreCase = true) -> {
+                    // 解压落盘在 IO 线程（P2#11），完成后经 state 通知列表刷新。
                     val result =
                         withContext(Dispatchers.IO) {
                             // WP-015：系统拉起属自动导入路径，冲突时改名（-1/-2）而非覆盖，
@@ -139,17 +148,17 @@ class MainActivity : ComponentActivity() {
                         pendingImportPaths = pendingImportPaths + path
                     }
                 }
-            }
 
-            path.endsWith(".lua", ignoreCase = true) -> {
-                openOrAdoptLuaFile(path)
-            }
+                path.endsWith(".lua", ignoreCase = true) -> {
+                    openOrAdoptLuaFile(path)
+                }
 
-            // APK 安装（2026-08-10 T16）：系统「打开方式」将 APK 交给 LIDE 时展示
-            // 安装方式选择（普通系统安装器 / Shizuku / Dhizuku / Root 静默安装）。
-            path.endsWith(".apk", ignoreCase = true) -> {
-                Log.d("act", "handleLaunchIntent() — apk install: $path")
-                pendingApkFile = File(path)
+                // APK 安装（2026-08-10 T16）：系统「打开方式」将 APK 交给 LIDE 时展示
+                // 安装方式选择（普通系统安装器 / Shizuku / Dhizuku / Root 静默安装）。
+                path.endsWith(".apk", ignoreCase = true) -> {
+                    Log.d(TAG, "handleLaunchIntent() — apk install: $path")
+                    pendingApkFile = File(path)
+                }
             }
         }
     }
@@ -161,7 +170,15 @@ class MainActivity : ComponentActivity() {
      */
     private fun handleAndroluaScheme(uri: Uri) {
         val relPath = uri.path?.trimStart('/') ?: return
-        val target = File(RuntimePaths.luaExtDir(), relPath)
+        val extRoot = RuntimePaths.luaExtDir()
+        val target = File(extRoot, relPath)
+        // B5（2026-08-12）：containment 校验——`..` 段可越出引擎根读取/运行任意
+        // .lua（androlua:// scheme 无签名保护，任意应用可发；引擎进程带宿主全量
+        // 权限），归一化后目标必须位于 luaExtDir 之内，越界直接拒绝。
+        if (!ProjectEntryOps.isInsideRoot(File(extRoot), target.absolutePath)) {
+            Log.w(TAG, "androlua:// rejected (target outside luaExtDir): $relPath")
+            return
+        }
         if (target.isDirectory) {
             val main = File(target, Project.DEFAULT_MAIN_FILE)
             if (main.isFile) {
@@ -226,11 +243,12 @@ class MainActivity : ComponentActivity() {
             projectDir.mkdirs()
             val dest = File(projectDir, file.name)
             file.copyTo(dest, overwrite = true)
-            val packageName = "com.lioisme.lide.$baseName"
+            // C7：包名生成单一事实源（ProjectManager.packageNameFor 清洗收敛）。
+            val packageName = ProjectManager.packageNameFor(baseName)
             File(projectDir, "init.lua").writeText(ProjectManager.initLuaTemplate(baseName, packageName))
             PendingOpenFile(projectDir.absolutePath, file.name)
         } catch (e: Exception) {
-            Log.e("MainActivity", "adopt standalone lua failed: ${e.message}")
+            Log.e(TAG, "adopt standalone lua failed: ${e.message}")
             null
         }
 
@@ -266,8 +284,12 @@ class MainActivity : ComponentActivity() {
                         file.outputStream().use { output -> input.copyTo(output) }
                     }
                     file.absolutePath
-                } catch (_: Exception) {
-                    uri.path
+                } catch (e: Exception) {
+                    // M3（2026-08-12）：解析/拷贝失败返回 null 而非回落 uri.path
+                    //（/document/123 不是真实文件，后续按扩展名分派全部落空，
+                    // 且会以无效路径进安装/导入流程）。
+                    Log.w(TAG, "resolve content uri failed: $uri", e)
+                    null
                 }
             }
 
