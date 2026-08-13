@@ -96,18 +96,14 @@
          （font_family_monospace/sans/serif + font_section_system 已随系统族
          选项移除，历史引用不得回退） -->
     <string name="font_family">Font Family</string>
-    <!-- 编辑器主题（2026-08-13 Squircle 对齐拍板：9 款单侧手选，替代双模方案；
-         旧 editor_scheme_classic/solarized/tomorrow 字符串已删除，不得回退） -->
+    <!-- 编辑器主题（2026-08-13 第三次拍板：恢复双模方案选择器，方案 = 亮/暗
+         双模对（Classic = IntelliJ 谱系 / Solarized / Eclipse），宿主明暗自动换侧；
+         语法高亮与 Squircle CE 100% 一致——9 款主题 JSON 全量保留于 assets；
+         9 款单侧主题文案 editor_theme_* 已随单侧形态一并删除，不得回退） -->
     <string name="editor_color_scheme">Editor Theme</string>
-    <string name="editor_theme_darcula">Darcula</string>
-    <string name="editor_theme_eclipse">Eclipse</string>
-    <string name="editor_theme_intellij_light">IntelliJ Light</string>
-    <string name="editor_theme_ladies_night">Ladies Night</string>
-    <string name="editor_theme_monokai">Monokai</string>
-    <string name="editor_theme_obsidian">Obsidian</string>
-    <string name="editor_theme_solarized_light">Solarized Light</string>
-    <string name="editor_theme_tomorrow_night">Tomorrow Night</string>
-    <string name="editor_theme_visual_studio">Visual Studio</string>
+    <string name="editor_scheme_classic">Classic</string>
+    <string name="editor_scheme_solarized">Solarized</string>
+    <string name="editor_scheme_eclipse">Eclipse</string>
     <string name="scheme_preview_light">Light</string>
     <string name="scheme_preview_dark">Dark</string>
     <!-- Built-in fonts (T11, 2026-08-11)：Squircle CE 组合，OFL -->
@@ -156,7 +152,6 @@
     <string name="info_section_basic">Basic</string>
     <string name="info_section_system">System</string>
     <string name="info_section_advanced">Advanced</string>
-    <string name="info_section_permissions">Permissions</string>
     <string name="info_appname">App name</string>
     <string name="info_appver">App version</string>
     <string name="info_appcode">Version code</string>
@@ -174,9 +169,6 @@
     <string name="info_sdk_invalid">Target SDK cannot be lower than min SDK</string>
     <string name="info_theme">Theme</string>
     <string name="info_theme_keep_host">Follow host</string>
-    <string name="info_permissions_btn">User permissions (%1$d)</string>
-    <string name="info_permissions_title">Select user permissions</string>
-    <string name="info_permissions_confirm">Done</string>
     <string name="info_save">Save</string>
     <string name="info_save_success">Saved</string>
     <string name="info_save_failed">Save failed</string>

@@ -2,7 +2,6 @@ package com.lioisme.lide.ui.screen
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,31 +11,23 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.FilterList
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.SearchBarDefaults
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -47,10 +38,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.lioisme.lide.R
@@ -64,78 +53,18 @@ import com.lioisme.lide.editor.TipIconButton
  * - [PermissionSearchInputField]：全屏搜索输入条（SearchBarDefaults.InputField，
  *   返回 / 清除 / 分类筛选按钮，展开态与收起态共用）；
  * - [PermissionFilterMenuButton]：分类筛选按钮 + DropdownMenu（ALL / REGULAR / SPECIAL / OTHER）；
- * - [PermissionGroupHeader] / [PermissionCheckRow]：分组标题与勾选行，供页级
- *   LazyColumn 直接消费（消除嵌套滚动容器）；
- * - [PermissionPickerList]：工程属性页弹窗专用（常驻搜索框 + 列表，高度由调用方约束）。
+ * - [PermissionCheckRow]：勾选行——行本身全宽（无相对外部边距），内部边距
+ *   （horizontal 16dp / vertical 12dp，对齐主界面工程列表行）由行内 padding 承担，
+ *   供页级 LazyColumn 与全屏搜索直接消费（消除嵌套滚动容器）。
+ *
+ * 2026-08-13 拍板：列表**平铺渲染**（不区分常规/特殊/其他分组标题——分类
+ * 区分与筛选按钮功能冲突），分组语义仅保留于筛选菜单（[PermissionGroupFilter]）。
  *
  * 过滤全部经 [Dispatchers.Default] 后台执行（AGENTS.md 搜索红线：禁止 UI 线程
  * 对全量条目做 O(n) 过滤）。
  */
-@Composable
-internal fun PermissionPickerList(
-    catalog: List<PermissionEntry>,
-    unknownPermissions: List<String>,
-    selected: Set<String>,
-    onToggle: (String) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    // T-06（2026-08-12）：Surface 包裹确保在任意父容器（含 AlertDialog）中背景一致。
-    val context = LocalContext.current
-    var query by remember { mutableStateOf("") }
-
-    // 预建小写检索索引（名称 + 中文名 + 别名）；池在组合期内不变，只算一次。
-    val items = rememberPickerItems(catalog, unknownPermissions, context)
-
-    val queryText = query.trim().lowercase()
-    val filtered =
-        remember(query, items) {
-            if (queryText.isEmpty()) items else items.filter { it.searchKeys.contains(queryText) }
-        }
-
-    Surface(color = MaterialTheme.colorScheme.surfaceContainerHighest) {
-        Column(modifier = modifier) {
-            OutlinedTextField(
-                value = query,
-                onValueChange = { query = it },
-                label = { Text(stringResource(R.string.permission_search_hint)) },
-                leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
-                trailingIcon = {
-                    if (query.isNotEmpty()) {
-                        IconButton(onClick = { query = "" }) {
-                            Icon(Icons.Default.Clear, contentDescription = stringResource(R.string.permission_search_clear))
-                        }
-                    }
-                },
-                singleLine = true,
-                modifier = Modifier.fillMaxWidth(),
-            )
-            Spacer(Modifier.height(8.dp))
-
-            if (filtered.isEmpty()) {
-                Text(
-                    stringResource(R.string.permission_no_result),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(vertical = 16.dp),
-                )
-            } else {
-                LazyColumn(Modifier.heightIn(max = 460.dp)) {
-                    items(filtered, key = { it.name }) { item ->
-                        PermissionCheckRow(
-                            label = item.label,
-                            alias = item.aliasText,
-                            checked = item.name in selected,
-                            onToggle = { onToggle(item.name) },
-                        )
-                    }
-                }
-            }
-        }
-    }
-}
-
 /**
- * 检索索引构建（页面 / 弹窗共用）：池 = 目录条目 + 工程已声明但目录外的未知权限。
+ * 检索索引构建（页面与全屏搜索共用）：池 = 目录条目 + 工程已声明但目录外的未知权限。
  * KDoc 契约与 PermissionCatalog 同步（未知权限归「其他」组，名称原样）。
  */
 @Composable
@@ -189,42 +118,6 @@ internal data class PickerItem(
     val searchKeys: String,
 )
 
-/** 分组序（常规 → 特殊 → 其他），空组跳过；页级 LazyColumn 与弹窗列表共用。 */
-private val PICKER_GROUPS: List<Triple<PermissionGroup?, Int, (PickerItem) -> Boolean>> =
-    listOf(
-        Triple(PermissionGroup.REGULAR, R.string.perm_regular_section, { g: PickerItem -> g.group == PermissionGroup.REGULAR }),
-        Triple(PermissionGroup.SPECIAL, R.string.perm_special_section, { g: PickerItem -> g.group == PermissionGroup.SPECIAL }),
-        Triple(null, R.string.perm_other_section, { g: PickerItem -> g.group == null }),
-    )
-
-/** 分组渲染（LazyListScope 扩展）：标题 + 行，空组跳过（页面与弹窗共用渲染序）。 */
-internal fun androidx.compose.foundation.lazy.LazyListScope.permissionGroupItems(
-    items: List<PickerItem>,
-    row: @Composable (PickerItem) -> Unit,
-) {
-    for ((_, headerRes, predicate) in PICKER_GROUPS) {
-        val groupItems = items.filter(predicate)
-        if (groupItems.isEmpty()) continue
-        item(key = "header-$headerRes") {
-            PermissionGroupHeader(headerRes)
-        }
-        items(groupItems, key = { it.name }) { item ->
-            row(item)
-        }
-    }
-}
-
-@Composable
-internal fun PermissionGroupHeader(headerRes: Int) {
-    Text(
-        stringResource(headerRes),
-        style = MaterialTheme.typography.titleSmall,
-        color = MaterialTheme.colorScheme.primary,
-        fontWeight = FontWeight.SemiBold,
-        modifier = Modifier.padding(start = 4.dp, top = 10.dp, bottom = 4.dp),
-    )
-}
-
 @Composable
 internal fun PermissionCheckRow(
     label: String,
@@ -236,6 +129,10 @@ internal fun PermissionCheckRow(
     // Checkbox 仅作视觉（onCheckedChange = null）——避免「Row.clickable +
     // Checkbox.onCheckedChange」同区位双触发（先 add 后 remove 状态不变），
     // 同时整行（含文字区）可点，扩展点击热区。
+    // 边距契约（2026-08-13 二次拍板，三修）：修饰符顺序对齐主界面工程列表
+    // （ProjectListScreen `fillMaxWidth → combinedClickable → padding`）——
+    // toggleable 在 padding **外层**：点击热区 / 波纹全宽（无相对外部边距，
+    // 长按波纹铺满整行），padding 在内层只缩进内容（左右 16dp / 顶底 12dp）。
     Row(
         modifier =
             Modifier
@@ -244,7 +141,8 @@ internal fun PermissionCheckRow(
                     value = checked,
                     role = Role.Checkbox,
                     onValueChange = { onToggle() },
-                ),
+                )
+                .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Checkbox(checked = checked, onCheckedChange = null)

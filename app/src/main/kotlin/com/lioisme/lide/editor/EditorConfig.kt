@@ -33,10 +33,9 @@ data class EditorConfig(
     val useTab: Boolean = false,
     // T5：字体族（[FONT_FAMILY_*] 常量 id；等宽族用于代码文本与行号）。
     val fontFamily: Int = FONT_FAMILY_DEFAULT,
-    // T8（2026-08-12 方案可选反转）→ 2026-08-13 Squircle 对齐拍板：主题索引
-    // （EditorPalette.themes 下标，0..8 单侧主题手选，默认 darcula）。
-    // 旧值迁移：0=darcula（原双模方案暗侧）✓；1=eclipse（原 solarized 亮侧方向）；
-    // 2=intellij_light（原 tomorrow 亮侧方向）。
+    // T8 → 2026-08-13 第三次拍板：配色方案索引（EditorPalette.SCHEME_*，
+    // 0..2 双模方案对，亮/暗配对（Classic = intellij_light/darcula 等），
+    // 明暗跟随宿主外观系统自动换侧；默认 Classic）。
     val themeScheme: Int = EditorPalette.THEME_DEFAULT_INDEX,
     // === 编辑 ===
     val autoIndent: Boolean = true,

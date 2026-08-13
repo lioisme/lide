@@ -55,13 +55,13 @@ object TextMateRuntime {
      * 编辑器侧无需再起线程（AGENTS.md：不得在 UI 线程初始化）。
      * 初始化失败（[RuntimeState.Failed]）可经 [retry] 重新触发。
      *
-     * [initialThemeName] 由宿主按当前主题索引传入（保 R4：运行时不读宿主
-     * 状态；默认 = 默认主题 darcula），仅决定初始装配主题，
+     * [initialThemeName] 由宿主按当前方案 + 明暗传入（保 R4：运行时不读宿主
+     * 状态；默认 = 默认方案暗侧 darcula），仅决定初始装配主题，
      * 编辑器打开后由 LuaEditor 的 LaunchedEffect 按实际配置接管。
      */
     fun preload(
         context: Context,
-        initialThemeName: String = EditorPalette.themeNameFor(EditorPalette.THEME_DEFAULT_INDEX),
+        initialThemeName: String = EditorPalette.themeNameFor(EditorPalette.SCHEME_CLASSIC, true),
     ) {
         if (initStarted) return
         synchronized(this) {
@@ -96,24 +96,26 @@ object TextMateRuntime {
      * 编辑器主题方案（2026-08-13 Squircle 对齐后唯一入口）。
      *
      * [LideHostColorScheme]：文本区背景/前景槽与 token 色取当前 TextMate 主题
-     * （调用方须先 `setTheme(EditorPalette.themeNameFor(scheme))`
+     * （调用方须先 `setTheme(EditorPalette.themeNameFor(scheme, isDark))`
      * 再取本方案），chrome 部件色（行号/当前行/选区/浮层/滚动条/minimap）
      * 取宿主派生色；宿主色板变化经 [updateHostColors] 刷新，零重建。
      */
     fun hostColorScheme(
         scheme: Int,
+        isDark: Boolean,
         host: HostEditorColors,
     ): EditorColorScheme {
-        val themeName = EditorPalette.themeNameFor(scheme)
+        val themeName = EditorPalette.themeNameFor(scheme, isDark)
         return hostSchemes.getOrPut(themeName) { LideHostColorScheme(ThemeRegistry.getInstance(), host) }
     }
 
     /** 宿主色板刷新（值未变自动跳过）。 */
     fun updateHostColors(
         scheme: Int,
+        isDark: Boolean,
         host: HostEditorColors,
     ) {
-        hostSchemes[EditorPalette.themeNameFor(scheme)]?.updateHost(host)
+        hostSchemes[EditorPalette.themeNameFor(scheme, isDark)]?.updateHost(host)
     }
 
     private fun runInit(

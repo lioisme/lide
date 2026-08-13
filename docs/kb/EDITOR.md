@@ -346,57 +346,63 @@ token）；LuaConfigParserTest 既有失败与本治理无关（stash 验证基�
 EditorPaletteContrastTest.kt（门禁）、PermissionCatalog.kt / PermissionScreen.kt /
 InstallBackendUi.kt（perm_* 命名）。
 
-## 14. 编辑器主题 = 9 款 Squircle CE 手选单侧主题（2026-08-13 用户拍板，覆盖 §14 旧版「双模跟随宿主」；SQUIRCLE_ALIGNMENT_FOUR_FIX 完工蒸馏）
+## 14. 编辑器主题 = 双模跟随宿主 + 语法 100% Squircle（2026-08-13 用户第三次拍板，覆盖 §14 旧版「9 款单侧手选」；THEME_DUAL_MODE_FOLLOW_HOST 完工蒸馏）
 
-**拍板声明**（2026-08-13）：编辑器文本区配色与 Squircle CE **完全一致**——全部
-9 款 Squircle 主题单侧手选（不随宿主明暗），方案选择器与 Squircle CE 同款。
-§13/§14 旧版「单一跟随宿主」→「双模跟随宿主」两级形态全部作废：
-`editor_theme` 键、三态 `EditorThemeMode`/`EditorThemeSheet`、双模 `pairs`、
-`LocalIsDarkTheme` 输入、`projectDarkOverride`——历史引用一律不得回退。
+**拍板声明**（2026-08-13 第三次）：恢复「适配全局外观系统」——一套方案 =
+亮/暗双模对，宿主明暗切换自动换侧（宿主外观模式 = 系统/浅/深，
+`LocalIsDarkTheme` 注入 LuaEditor）；**仅语法高亮与 Squircle CE 保持 100% 一致**
+（磁盘 9 款 Squircle JSON 全量保留、TextMate 加载白名单不变）。
+§14 旧版「9 款单侧手选」（0..8 索引语义）与 `editor_theme_*` 文案作废：
 
-**主题目录 = 9 款单侧**（`EditorPalette.themes`，darcula 默认 `THEME_DEFAULT_INDEX=0`）：
+**方案配对 = 3 对恢复 T19 选择器**（`EditorPalette.pairs`，默认
+`SCHEME_CLASSIC=0`；亮侧 = `pairs.first`、暗侧 = `pairs.second`）：
 
-| 索引 | 主题 | 明暗 | 背景 | 行号 / 行号激活 |
+| 方案 | 亮侧 | 暗侧 | 亮/暗背景 | 亮/暗行号 |
 |---|---|---|---|---|
-| 0 | darcula | dark | `#1E1F22` | `#616366` / `#A4A3A3` |
-| 1 | eclipse | light | `#FFFFFF` | `#ADADAD` / `#828282` |
-| 2 | intellij_light | light | `#FFFFFF` | `#ADADAD` / `#828282` |
-| 3 | ladies_night | dark | `#21282D` | `#859599` / `#E0E2E4` |
-| 4 | monokai | dark | `#1D1E19` | `#575850` / `#C0C1B6` |
-| 5 | obsidian | dark | `#23282A` | `#859599` / `#C6C6C6` |
-| 6 | solarized_light | light | `#FCF6E5` | `#A5ADAB` / `#858A84` |
-| 7 | tomorrow_night | dark | `#1D1F21` | `#858585` / `#FFFFFF` |
-| 8 | visual_studio | dark | `#1E1E1E` | `#6F7680` / `#CCCCCC` |
+| 0 Classic | intellij_light | darcula | `#FFFFFF` / `#1E1F22` | `#ADADAD` / `#616366` |
+| 1 Solarized | solarized_light | obsidian | `#FCF6E5` / `#23282A` | `#A5ADAB` / `#859599` |
+| 2 Eclipse | eclipse | visual_studio | `#FFFFFF` / `#1E1E1E` | `#ADADAD` / `#6F7680` |
 
-- **单一事实源** `EditorPalette`：9 款 `ThemeEntry(name, isDark)` + 索引/名称互转
-  `themeNameFor(index)` / `isDarkTheme(index)`（越界 coerce 回落）+ 静态预览表
-  （`themeBackgrounds` / `themeLineNumbers` / `themeLineNumbersActive`，均与
-  Squircle 源 JSON 同源，测试断言）。
+- **单一事实源** `EditorPalette`：9 款 `ThemeEntry(name, isDark)` 全量
+  （`themes` + THEMES 加载白名单不变）+ 方案配对表 `pairs` +
+  静态镜像表（`themeBackgrounds`/`themeLineNumbers`/`themeLineNumbersActive`
+  9 款 = Squircle 源 JSON 同源）+ 双模派生表（`schemeBackgrounds`/
+  `schemeLineNumbers`/`schemeLineNumbersActive` 按 pairs 名查镜像表）；
+  装配唯一入口 `themeNameFor(scheme, isDark)`（越界 coerce 回落），
+  行号改侧取值经 `lineNumberPairFor(scheme, isDark)`；旧单参
+  `themeNameFor(index)` / `isDarkTheme(index)` 删除。
 - **主题 JSON**：`assets/textmate/` 9 款 = Squircle CE 源 JSON 原样转换
   （VS Code tokenColors → TextMate settings 格式；`scripts/convert-squircle-themes.ps1`
-  纯 ASCII PowerShell），源基线归档 `app/src/test/resources/squircle-themes/`；
-  旧 quietlight/solarized_dark/tomorrow 已删除。
+  ，源基线归档 `app/src/test/resources/squircle-themes/`）：语法高亮
+  （token 色/背景/前景）100% 与 Squircle 一致，双模仅改变「装配哪一侧 JSON」。
 - **装配链**：`TextMateRuntime` 单例 `themeRegistry.setTheme(名)` + 按主题名分槽
   的进程级 `LideTextMateColorScheme` 缓存（9 主题全名 THEMES 加载白名单 =
   Squircle 源全集）；`preload(context, initialThemeName)` 由宿主 LideApp 按
-  `themeNameFor(themeScheme)` 计算传入（R4：运行时不读宿主状态）；编辑器打开后
-  由 LuaEditor `LaunchedEffect(initReady, themeScheme)` 接管（切换主题触发重组）。
-- **行号文字色随主题**（Squircle 行为）：sora `TextMateColorScheme.applyTMTheme`
-  不读 lineNumber 键——由 LuaEditor `themedHostColors`（remember(themeScheme,
-  hostColors) `copy(lineNumber, lineNumberActive)`）覆写，不随宿主 M3。
+  `themeNameFor(scheme, 系统明暗)` 计算传入（R4：运行时不读宿主状态）；编辑器
+  打开后由 LuaEditor `LaunchedEffect(initReady, themeScheme, isDarkTheme)` 接管
+  （方案或宿主明暗变化 → setTheme 换侧 + 编辑器零重建）。
+- **行号文字色随主题侧**（Squircle 行为）：sora `TextMateColorScheme.applyTMTheme`
+  不读 lineNumber 键——由 LuaEditor `themedHostColors`
+  （remember(themeScheme, isDarkTheme, hostColors) 经 `lineNumberPairFor` 覆写
+  `copy(lineNumber, lineNumberActive)`），不随宿主 M3。
 - **持久化**：`EditorConfig.themeScheme` + SettingsRegistry `IntKey("editor_scheme")`
-  （0..8 主题索引，键名不变、语义迁移；旧值 0=darcula、1=eclipse、2=intellij_light
-  恰好顺序一致）。
-- **主题 JSON 门禁（G4 改版）**：`EditorPaletteContrastTest` 改为「与 Squircle
+  （0..2 方案索引，键名不变；旧 0..8 单侧残留值 0..2 恰好 = 方案索引，0 默认
+  Classic）。
+- **主题 JSON 门禁（G4 改版）**：`EditorPaletteContrastTest` 仍为「与 Squircle
   源完全一致」断言（基线 `app/src/test/resources/squircle-themes/`）：colorParity
   分组映射 + tokenRules 逐项 scope/fg/fontStyle 配平 + 白名单 9 全量与文件树一致 +
-  背景/行号预览与 JSON 同源 + 明暗声明与背景亮度一致。**不再设 WCAG 4.5:1
-  文本色门禁**（Squircle 原版配色系数其自有对比度，eclipse 行号 #ADADAD 对白底
-  2.75:1 为原样）；宿主 chrome 槽门禁 `ThemeContrastTest` 保留（补全窗/tooltip
-  浮层 = `surfaceContainerHighest` 5 对槽断言）——主题 JSON 任何改动必须过门禁。
+  背景/行号预览与 JSON 同源 + 明暗声明与背景亮度一致；**新增双模配对断言**
+  （pairs 每对亮/暗明暗声明与背景亮度一致、scheme* 表与 9 款静态镜像同源、
+  `themeNameFor` 双参侧选择与越界回落、`lineNumberPairFor` 对侧取值）。
+  **不再设 WCAG 4.5:1 文本色门禁**（Squircle 原版配色系数其自有对比度，
+  eclipse 行号 #ADADAD 对白底 2.75:1 为原样）；宿主 chrome 槽门禁
+  `ThemeContrastTest` 保留（补全窗/tooltip 浮层 = `surfaceContainerHighest`
+  5 对槽断言）——主题 JSON 任何改动必须过门禁。`editor_theme_*` 9 款单侧
+  string 已删（含 values-zh），`editor_scheme_classic/solarized/eclipse` 恢复。
 - **颜色分层契约（§12 T19 延续）**：不变——AppBar/标签行/分隔线/空态恒为
-  宿主 Material3（surface + onSurface）；文本区独立按主题着色（sora 原生
-  `editor.background`/`background` → WHOLE_BACKGROUND）；浮层
+  宿主 Material3（surface + onSurface）；文本区独立按激活侧主题着色（sora 原生
+  `editor.background`/`background` → WHOLE_BACKGROUND；亮侧 intellij_light
+  `#FFFFFF` / 暗侧 darcula `#1E1F22` 为双模对代表）；浮层
   `surfaceContainerHighest`。历史 `EditorChromeColors.kt` 色带删除不回退；
   §13「DARK=RGB(26,28,30)」误记（宿主 surface）以契约为准。
 - **text.plain 装配（SQUIRCLE_FOUR_FIX T7）**：`LuaEditor.createLanguage`
@@ -406,9 +412,11 @@ InstallBackendUi.kt（perm_* 命名）。
   → source.cpp（Squircle FileAssociation 同款）。
 
 验证：`:app:compileArm64DebugKotlin` + `:app:testArm64DebugUnitTest`
-（EditorPaletteContrastTest / ThemeContrastTest 全绿）+ `:app:lintArm64Debug` +
-`:app:verifyMinimalism` + `:app:verifyMinimalismDebug` + `:app:verifySoraIsolation`
-全绿；设备截图核验（9 主题 × token 色对照 Squircle 源）见 ADB 实测。
+（EditorPaletteContrastTest 6/6 + ThemeContrastTest 全绿）+ `:app:lintArm64Debug`；
+设备实测（2026-08-13）：系统浅色 → 宿主浅色 → 编辑器 intellij_light 白底 +
+多彩高亮、行号区 `#1E1F22`；系统切深色 → 编辑器自动换 darcula（文本区
+`#2F312F`、语法绿 `#6A8759`）——双模跟随宿主双向验证通过；设置页方案选择器
+3 对双模色条（Classic 选中 + Classic/Solarized/Eclipse 三项）正常。
 
 ## 15. 查找/替换 + 跳行 + 菜单形态（2026-08-12，SQUIRCLE P5 + MENU 整改完工蒸馏）
 

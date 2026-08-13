@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
@@ -22,12 +21,10 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -45,7 +42,6 @@ import androidx.compose.ui.unit.dp
 import com.lioisme.lide.R
 import com.lioisme.lide.model.Project
 import com.lioisme.lide.project.LuaConfigParser
-import com.lioisme.lide.project.PermissionResolver
 import com.lioisme.lide.project.ProjectManager
 import com.lioisme.lide.ui.theme.LideTopBar
 import com.lioisme.lide.ui.theme.ThemeCatalog
@@ -57,8 +53,8 @@ import kotlinx.coroutines.withContext
  * 工程属性页（WP-004 / P1-P4，2026-08-11 重构）：
  *
  * - 分区展示：基本信息（appname/appver/appcode/packagename/developer/description）、
- *   系统（目标 SDK/最低 SDK/主题/屏幕方向）、高级（app_key/app_channel/debugmode）、
- *   权限（user_permission 搜索选择器）；
+ *   系统（目标 SDK/最低 SDK/主题/屏幕方向）、高级（app_key/app_channel/debugmode）；
+ *   （2026-08-13：权限区已删除——工程权限由独立界面「工程权限」页管理。）
  * - 目标 SDK（pro `appsdk` 字段，打包写 manifest targetSdkVersion）与最低 SDK
  *   （`minsdk` 字段）为「保持宿主（字段缺失）/ 自定义」下拉；主题（`theme` 字段，
  *   pro 同名）为「跟随宿主 / 常见主题别名 / 反射全部 Theme_*」下拉；
@@ -78,7 +74,6 @@ fun ProjectInfoScreen(
     var loaded by remember { mutableStateOf(false) }
     var state by remember { mutableStateOf<ProjectInfoState?>(null) }
     var original by remember { mutableStateOf<ProjectInfoState?>(null) }
-    var showPermissionDialog by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
     val strSaveSuccess = stringResource(R.string.info_save_success)
     val strSaveFailed = stringResource(R.string.info_save_failed)
@@ -96,7 +91,6 @@ fun ProjectInfoScreen(
                         LuaConfigParser.stringField(content, "debugmode")?.let {
                             it != "false" && it != "0"
                         } ?: true,
-                    permissions = LuaConfigParser.stringArrayField(content, "user_permission"),
                     minSdk = intField(content, "minsdk") ?: intField(content, "minSdk"),
                     targetSdk = intField(content, "appsdk") ?: intField(content, "targetSdk"),
                     theme = LuaConfigParser.stringField(content, "theme"),
@@ -146,11 +140,7 @@ fun ProjectInfoScreen(
                             } else {
                                 LuaConfigParser.setField(updated, "theme", LuaConfigParser.quoteLuaString(s.theme))
                             }
-                        LuaConfigParser.setStringArrayField(
-                            updated,
-                            "user_permission",
-                            s.permissions.map { PermissionResolver.normalize(it) },
-                        )
+                        updated
                     }
                 }
             if (ok) {
@@ -255,17 +245,6 @@ fun ProjectInfoScreen(
                 }
             }
 
-            // ===== 权限 =====
-            item { SectionHeader(R.string.info_section_permissions) }
-            item {
-                OutlinedButton(
-                    onClick = { showPermissionDialog = true },
-                    modifier = Modifier.fillMaxWidth(),
-                ) {
-                    Text(stringResource(R.string.info_permissions_btn, s.permissions.size))
-                }
-            }
-
             item { Spacer(Modifier.height(8.dp)) }
             item {
                 Button(
@@ -278,35 +257,6 @@ fun ProjectInfoScreen(
             }
             item { Spacer(Modifier.height(32.dp)) }
         }
-    }
-
-    if (showPermissionDialog) {
-        val s = state ?: return
-        var draft by remember { mutableStateOf(s.permissions.toSet()) }
-        AlertDialog(
-            onDismissRequest = { showPermissionDialog = false },
-            title = { Text(stringResource(R.string.info_permissions_title)) },
-            text = {
-                PermissionPickerList(
-                    catalog = PermissionCatalog.ENTRIES,
-                    unknownPermissions = (s.permissions - PermissionCatalog.knownNames).sorted(),
-                    selected = draft,
-                    onToggle = { perm -> draft = if (perm in draft) draft - perm else draft + perm },
-                    modifier = Modifier.heightIn(max = 480.dp),
-                )
-            },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        showPermissionDialog = false
-                        state = s.copy(permissions = draft.toList())
-                    },
-                ) { Text(stringResource(R.string.info_permissions_confirm)) }
-            },
-            dismissButton = {
-                TextButton(onClick = { showPermissionDialog = false }) { Text(stringResource(R.string.cancel)) }
-            },
-        )
     }
 }
 
@@ -345,7 +295,6 @@ private const val HOST_MIN_SDK = 24
 private data class ProjectInfoState(
     val values: Map<String, String>,
     val debugMode: Boolean,
-    val permissions: List<String>,
     val minSdk: Int?,
     val targetSdk: Int?,
     val theme: String?,

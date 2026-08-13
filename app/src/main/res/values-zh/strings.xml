@@ -95,18 +95,14 @@
          （font_family_monospace/sans/serif + font_section_system 已随系统族
          选项移除，历史引用不得回退） -->
     <string name="font_family">字体</string>
-    <!-- 编辑器主题（2026-08-13 Squircle 对齐拍板：9 款单侧手选，替代双模方案；
-         旧 editor_scheme_classic/solarized/tomorrow 字符串已删除，不得回退） -->
+    <!-- 编辑器主题（2026-08-13 第三次拍板：恢复双模方案选择器，方案 = 亮/暗
+         双模对（Classic / Solarized / Eclipse），宿主明暗自动换侧；
+         语法高亮与 Squircle CE 100% 一致——9 款主题 JSON 全量保留于 assets；
+         9 款单侧主题文案 editor_theme_* 已随单侧形态一并删除，不得回退） -->
     <string name="editor_color_scheme">编辑器主题</string>
-    <string name="editor_theme_darcula">Darcula</string>
-    <string name="editor_theme_eclipse">Eclipse</string>
-    <string name="editor_theme_intellij_light">IntelliJ Light</string>
-    <string name="editor_theme_ladies_night">Ladies Night</string>
-    <string name="editor_theme_monokai">Monokai</string>
-    <string name="editor_theme_obsidian">Obsidian</string>
-    <string name="editor_theme_solarized_light">Solarized Light</string>
-    <string name="editor_theme_tomorrow_night">Tomorrow Night</string>
-    <string name="editor_theme_visual_studio">Visual Studio</string>
+    <string name="editor_scheme_classic">Classic</string>
+    <string name="editor_scheme_solarized">Solarized</string>
+    <string name="editor_scheme_eclipse">Eclipse</string>
     <string name="scheme_preview_light">亮</string>
     <string name="scheme_preview_dark">暗</string>
     <!-- 内置字体（T11，2026-08-11）：Squircle CE 组合，OFL -->
@@ -151,7 +147,6 @@
     <string name="info_section_basic">基本信息</string>
     <string name="info_section_system">系统</string>
     <string name="info_section_advanced">高级</string>
-    <string name="info_section_permissions">权限</string>
     <string name="info_appname">应用名称</string>
     <string name="info_appver">应用版本</string>
     <string name="info_appcode">版本号</string>
@@ -187,9 +182,6 @@
     <string name="info_developer">开发者</string>
     <string name="info_description">描述</string>
     <string name="info_debugmode">调试模式</string>
-    <string name="info_permissions_btn">用户权限（%1$d）</string>
-    <string name="info_permissions_title">选择用户权限</string>
-    <string name="info_permissions_confirm">完成</string>
     <string name="info_save">保存</string>
     <string name="info_save_success">已保存</string>
     <string name="info_save_failed">保存失败</string>

@@ -9,7 +9,8 @@ import com.lioisme.lide.R
  * 权限清单数据源（2026-08-11 全面化；2026-08-12 治理红线修订）：覆盖宿主 manifest
  * 声明的全部 uses-permission（常规 + 特殊），常用权限附别名（搜索命中词）。
  *
- * 供工程属性页权限弹窗与工程权限页（[SearchablePermissionPicker]）共用；
+ * 供工程权限页（[SearchablePermissionPicker]）使用（2026-08-13：工程属性页
+ * 权限弹窗已删除，权限编辑收敛至独立工程权限页）；
  * [ALL] 为宿主运行时权限页（HostPermissionScreen）保留的兼容视图。
  * 未知权限（工程已声明但目录外）由调用方透传展示，名称原样。
  *

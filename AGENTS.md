@@ -72,39 +72,49 @@ git ls-files '*.jar' | grep -v 'gradle/wrapper/gradle-wrapper.jar'
   `insertText` / `replaceText`（统一脏标记 + 自动保存节流），禁止直接改 `selection.content`。
 - 大文件（> 200 KB）：关闭括号高亮 / 当前块 / 自动换行，并跳过行级诊断。
 - 补全、诊断、事件回调必须 `try/catch(Throwable)` 降级，不得让异常逃逸进 sora 主循环。
-- **编辑器主题 = 9 款 Squircle CE 手选单侧主题（2026-08-13 用户拍板，替代
-  当日「双模跟随宿主」；方案选择器与 Squircle CE 同款）**：编辑器文本区配色
-  与 Squircle CE **完全一致**，9 款主题在编辑器设置页手选（`EditorConfig`
-  `themeScheme` + `editor_scheme` 键，0..8 主题索引，键名不变、语义迁移；
-  旧 `editor_theme` 键 / 三态 `EditorThemeMode`/`EditorThemeSheet` / 双模
-  `pairs` 等历史形态一律禁止回退）；工程 init.lua theme 不驱动宿主
-  （`projectDarkOverride` 已删除）。
-  - **颜色单一事实源**：`EditorPalette`（editor 包）持有 9 款单侧主题目录
-    （darcula/eclipse/intellij_light/ladies_night/monokai/obsidian/
+- **编辑器主题 = 双模跟随宿主（2026-08-13 用户第三次拍板：恢复「适配全局外观
+  系统」，替代当日「Squircle 单侧手选」）**：一套方案 = 亮/暗双模对，宿主明暗
+  切换自动换侧（宿主外观模式 = 系统/浅/深，`LocalIsDarkTheme` 注入 LuaEditor）；
+  **仅语法高亮与 Squircle CE 保持 100% 一致**（磁盘 9 款 Squircle JSON 全量
+  保留、TextMate 加载白名单不变）。方案 = 3 对恢复 T19 选择器（`EditorConfig`
+  `themeScheme` + `editor_scheme` 键，0..2 方案索引：Classic =
+  intellij_light/darcula、Solarized = solarized_light/obsidian、Eclipse =
+  eclipse/visual_studio，默认 Classic）；旧 `editor_theme` 键 / 单侧 9 款手选
+  形态（0..8 语义）/ 三态 `EditorThemeMode`/`EditorThemeSheet` 一律禁止回退；
+  工程 init.lua theme 不驱动宿主（`projectDarkOverride` 已删除）。
+  - **颜色单一事实源**：`EditorPalette`（editor 包）持有 9 款 Squircle 主题
+    目录（darcula/eclipse/intellij_light/ladies_night/monokai/obsidian/
     solarized_light/tomorrow_night/visual_studio，`themes` 列表 +
-    `THEME_DEFAULT_INDEX`），每款含 `ThemeEntry(name, isDark)`；
-    主题索引与名称互转 = `themeNameFor(index)` / `isDarkTheme(index)`
-    （越界 coerce 回落）；预览色条/行号色静态表
-    （`themeBackgrounds`/`themeLineNumbers`/`themeLineNumbersActive`）。
+    `ThemeEntry(name, isDark)`）与双模方案配对表（`pairs`，亮/暗侧名；
+    `SCHEME_CLASSIC`/`SCHEME_SOLARIZED`/`SCHEME_ECLIPSE` = 0..2，
+    `THEME_DEFAULT_INDEX` = Classic）；装配唯一入口 =
+    `themeNameFor(scheme, isDark)`（越界 coerce 回落）；预览色条/行号色静态表
+    = `themeBackgrounds`/`themeLineNumbers`/`themeLineNumbersActive`（9 款镜像）
+    + `schemeBackgrounds`/`schemeLineNumbers`/`schemeLineNumbersActive`
+    （双模对派生，`lineNumberPairFor(scheme, isDark)` 取侧）。
     经 `TextMateRuntime`（`themeRegistry.setTheme` + 按主题名分槽的进程级
     `LideTextMateColorScheme` 缓存，9 主题全名 THEMES 加载白名单 = Squircle
-    源 JSON 全集）装配；切换主题时须触发编辑器重组；`TextMateRuntime.preload`
-    接受宿主传入的初始主题名（R4：运行时不读宿主状态）。行号文字色随主题
-    （Squircle 行为，由 LuaEditor `themedHostColors` 覆写，不随宿主 M3）。
-  - **主题 JSON 门禁（G4 改版）**：`EditorPaletteContrastTest` 改为「与
-    Squircle 源完全一致」断言（`app/src/test/resources/squircle-themes/`
-    基线：colorParity 分组映射 + tokenRules 逐项 scope/fg/fontStyle 配平 +
-    白名单 9 全量与文件树一致 + 背景/行号预览与 JSON 同源 + 明暗声明一致）——
-    不再设 WCAG 4.5:1 文本色门禁（Squircle 原版配色系数其自有对比度）；
-    宿主 chrome 槽（补全窗/tooltip 浮层 = `surfaceContainerHighest`）仍由
-    `ThemeContrastTest` 守护——主题 JSON 任何改动必须过门禁。
-  - **颜色分层契约（T19 延续）**：AppBar / 标签行 / 分隔线 / 空态一律宿主
-    Material3（AppBar = surface + onSurface，与主界面/设置界面同款）；编辑器
-    文本区独立着色（亮侧 quietlight `#F5F5F5` / 暗侧 darcula `#242424` 等
-    双模主题色，sora 原生 `editor.background`/`background` 映射
-    WHOLE_BACKGROUND）；补全窗 / tooltip 浮层 = `surfaceContainerHighest`
-    （浮层 > 画布 > chrome 三层递进）。`EditorChromeColors.kt` 色带已随 T19
-    删除。历史记录「DARK = RGB(26,28,30)」为宿主 surface 误记，以契约为准。
+    源 JSON 全集）装配；方案/明暗变化经 LaunchedEffect 触发 setTheme 换侧 +
+    编辑器重组；`TextMateRuntime.preload` 接受宿主传入的初始主题名
+    （R4：运行时不读宿主状态；LideApp 按「方案 + 系统明暗」传入）。
+    行号文字色随主题侧（Squircle 行为，由 LuaEditor `themedHostColors` 覆写，
+    不随宿主 M3）。
+- **主题 JSON 门禁（G4 改版）**：`EditorPaletteContrastTest` 改为「与
+     Squircle 源完全一致」断言（`app/src/test/resources/squircle-themes/`
+     基线：colorParity 分组映射 + tokenRules 逐项 scope/fg/fontStyle 配平 +
+     白名单 9 全量与文件树一致 + 背景/行号预览与 JSON 同源 + 明暗声明一致）+
+     双模配对断言（pairs 每对亮/暗明暗与背景亮度一致、scheme* 表与 9 款
+     静态镜像同源、`themeNameFor` 双参侧选择与越界回落）——不再设 WCAG
+     4.5:1 文本色门禁（Squircle 原版配色系数其自有对比度）；
+     宿主 chrome 槽（补全窗/tooltip 浮层 = `surfaceContainerHighest`）仍由
+     `ThemeContrastTest` 守护——主题 JSON 任何改动必须过门禁。
+   - **颜色分层契约（T19 延续）**：AppBar / 标签行 / 分隔线 / 空态一律宿主
+     Material3（AppBar = surface + onSurface，与主界面/设置界面同款）；编辑器
+     文本区独立着色（亮侧 intellij_light `#FFFFFF` / 暗侧 darcula `#1E1F22`
+     等双模对主题色，sora 原生 `editor.background`/`background` 映射
+     WHOLE_BACKGROUND）；补全窗 / tooltip 浮层 = `surfaceContainerHighest`
+     （浮层 > 画布 > chrome 三层递进）。`EditorChromeColors.kt` 色带已随 T19
+     删除。历史记录「DARK = RGB(26,28,30)」为宿主 surface 误记，以契约为准。
 - 文件 → 语言 scope 唯一事实源为 `LanguageDetector`（未识别扩展名显式回落
   `text.plain`，绝不回退为 Lua）；宿主「可打开性」判定经 `LanguageDetector.isKnownFile`
   消费同一表，不另维护扩展名白名单。

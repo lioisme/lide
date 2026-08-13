@@ -1,33 +1,39 @@
 package com.lioisme.lide.editor
 
 /**
- * 编辑器主题库单一事实源（2026-08-13 用户拍板：编辑器高亮与 Squircle CE 完全一致）。
+ * 编辑器主题库单一事实源（2026-08-13 用户第三次拍板：恢复「适配全局外观系统」）。
  *
  * 决策链：
  * - 2026-08-12：配色方案可选 + 双模配对（Squircle / Terminus 同款方案选择器），
  *   token 对比度 ≥ 4.5:1 门禁。
- * - 2026-08-13（本轮）：语法文件、高亮配色全部对齐 Squircle CE 基线——主题层直接
- *   引入 Squircle 9 款配色（VS Code 格式 → TextMate settings 格式，一次性转换脚本
- *   `scripts/convert-squircle-themes.ps1`）；「与源 JSON 一致」取代逐 token 对比度
- *   断言成为新门禁（[EditorPaletteContrastTest]），宿主 chrome 槽门禁
- *   （[com.lioisme.lide.ui.theme.ThemeContrastTest]）保留。
+ * - 2026-08-13（上午）：改为 Squircle CE 9 款单侧主题手选（T1-T6），
+ *   「与 Squircle 源 JSON 完全一致」取代逐 token 对比度成为新门禁
+ *   （[EditorPaletteContrastTest]）。
+ * - 2026-08-13（下午，本轮拍板）：恢复「适配全局外观系统」——一套方案 = 亮/暗
+ *   双模对（宿主明暗自动切换对应侧，替代单侧手选）；**语法高亮与 Squircle CE
+ *   保持 100% 一致**（磁盘 9 款 Squircle JSON 全量保留、TextMate 加载白名单不变）。
  *
- * 激活机制（同步拍板反转）：
- * - 编辑器文本区主题 = **手选单侧主题**（9 款直接选择，Squircle 同款交互），
- *   不再「方案 + 宿主明暗」双模跟随；
- * - [EditorConfig.themeScheme] 语义 = 0..8 主题索引（持久化键名 `editor_scheme`
- *   不变；旧值 0..2 在新表下的语义迁移记录于 EditorConfig）；
- * - 默认激活 = 0（darcula，Squircle 默认主题）。
+ * 双模配对（用户拍板方案）：3 对恢复 T19 选择器——
+ * - Classic（默认）：IntelliJ 谱系 = 亮 intellij_light / 暗 darcula；
+ * - Solarized：亮 solarized_light / 暗 obsidian；
+ * - Eclipse：亮 eclipse / 暗 visual_studio。
+ *
+ * 激活机制：
+ * - 主题 = 「方案索引 + 宿主明暗」（[EditorConfig.themeScheme] 0..2 方案索引，
+ *   持久化键名 `editor_scheme` 不变；默认 [SCHEME_CLASSIC]）；
+ * - [themeNameFor] 为激活装配唯一入口（越界安全回落，非法值永不崩溃）；
+ * - 宿主明暗输入源 = 宿主外观系统（LideApp 系统明暗预热 + LuaEditor
+ *   `LocalIsDarkTheme` 注入；R4：运行时不读宿主状态）。
  *
  * 消费方：
  * - [TextMateRuntime] 按 [allThemes] 加载全部主题 JSON（assets/textmate/<名>.json），
  *   [themeNameFor] 为激活装配唯一入口；
- * - [LuaEditor] / [LideApp] 经 [themeNameFor] 装配当前主题；
- * - [EditorSettingsScreen] 主题选择面板展示 [themeCount] 款 + [themeBackgrounds]
- *   单背景预览；（[themeNameFor] 越界安全回落，非法值永不崩溃）。
+ * - [LuaEditor] / [LideApp] 经 [themeNameFor(scheme, isDark)] 装配当前主题；
+ * - [EditorSettingsScreen] 方案选择面板展示 [schemeCount] 套方案 + [schemeBackgrounds]
+ *   双模预览色条。
  */
 object EditorPalette {
-    /** 主题文件名常量（= assets/textmate/<名>.json；索引 = [themes] 下表）。 */
+    /** 主题文件名常量（= assets/textmate/<名>.json；Squircle feature-themes 全量）。 */
     const val DARCULA = "darcula"
     const val ECLIPSE = "eclipse"
     const val INTELLIJ_LIGHT = "intellij_light"
@@ -38,19 +44,23 @@ object EditorPalette {
     const val TOMORROW_NIGHT = "tomorrow_night"
     const val VISUAL_STUDIO = "visual_studio"
 
-    /** 默认激活主题索引（= darcula，Squircle 默认），EditorConfig 初值。 */
-    const val THEME_DEFAULT_INDEX = 0
+    /** 方案索引（EditorConfig.themeScheme 取值；索引 = [pairs] 下表）。 */
+    const val SCHEME_CLASSIC = 0
+    const val SCHEME_SOLARIZED = 1
+    const val SCHEME_ECLIPSE = 2
 
-    /** 主题条目：名 + 明暗（明暗仅用于设置页预览标识与宿主 chrome 组合校验；
-     * 实际文本区装配直接按主题 JSON 自身值。）。 */
+    /** 默认激活方案索引（= Classic），EditorConfig 初值。 */
+    const val THEME_DEFAULT_INDEX = SCHEME_CLASSIC
+
+    /** 主题条目：名 + 明暗（Squircle 源声明；用于加载面与静态镜像表）。 */
     data class ThemeEntry(
         val name: String,
         val isDark: Boolean,
     )
 
-    /** 全部可选主题（Squircle feature-themes 全量，索引 = EditorConfig.themeScheme
-     * 取值；[THEME_DEFAULT_INDEX] 为默认）。顺序 = 转换脚本输入目录字母序，
-     * 与 Squircle 上游一致。 */
+    /** Squircle feature-themes 全量主题（顺序 = 转换脚本输入目录字母序，
+     * 与 Squircle 上游一致；TextMate 加载白名单 = 本表，禁止旁路加主题）。
+     * 实际文本区装配按 [pairs] 侧选择，此处仅承载 9 款 JSON 全量。 */
     val themes: List<ThemeEntry> =
         listOf(
             ThemeEntry(DARCULA, isDark = true),
@@ -64,18 +74,29 @@ object EditorPalette {
             ThemeEntry(VISUAL_STUDIO, isDark = true),
         )
 
-    /** 全部主题名（TextMate 加载白名单 = 本表，禁止旁路加主题；与
-     * assets/textmate 目录 + 转换脚本输出集一一对应）。 */
-    val allThemes: List<String> = themes.map { it.name }
+    /**
+     * 双模方案配对表：每套方案 = (亮侧主题名, 暗侧主题名)，宿主明暗自动换侧
+     * （2026-08-13 拍板；配对 = Classic IntelliJ 谱系 / Solarized / Eclipse）。
+     */
+    val pairs: List<Pair<String, String>> =
+        listOf(
+            INTELLIJ_LIGHT to DARCULA,
+            SOLARIZED_LIGHT to OBSIDIAN,
+            ECLIPSE to VISUAL_STUDIO,
+        )
 
-    /** 主题数（= 选择面板可选项数）。 */
-    val themeCount: Int = themes.size
+    /** 全部主题名（TextMate 加载白名单 = Squircle 源 JSON 全集，与
+     * assets/textmate 目录 + 转换脚本输出集一一对应；EditorPaletteContrastTest 守护）。 */
+    val allThemes: List<String> = themes.map { it.name }
 
     /** 兼容别名：旧调用方读主题列表（供 TextMateRuntime 全量加载）。 */
     val themeFiles: List<String>
         get() = allThemes
 
-    /** 各主题背景色（ARGB，供设置页预览色条 + 宿主 chrome 对比度门禁组合；
+    /** 方案数（= 选择面板可选项数；pairs 与 scheme* 表必须同长，测试守护）。 */
+    val schemeCount: Int = pairs.size
+
+    /** 各主题背景色（ARGB，供 9 款静态镜像断言 + [schemeBackgrounds] 派生；
      * 与 assets/textmate/<名>.json 的 settings[0].settings.background 同源，
      * 一致性由 EditorPaletteContrastTest 逐主题断言守护——本表是静态镜像，
      * JSON 是运行期事实源。）。 */
@@ -92,9 +113,9 @@ object EditorPalette {
             0xFF1E1E1E.toInt(), // visual_studio
         )
 
-    /** 各主题行号文字色（ARGB，与 settings[0].settings.lineNumber 同源；2026-08-13
-     * 起行号文字随主题（Squircle 行为），替代旧「宿主 M3 行号」——亮主题 × 暗宿主
-     * 组合下行号不可读的集成缺陷的根治。一致性由 EditorPaletteContrastTest 守护。 */
+    /** 各主题行号文字色（ARGB，与 settings[0].settings.lineNumber 同源；行号随
+     * 主题（Squircle 行为），替代旧「宿主 M3 行号」。一致性由
+     * EditorPaletteContrastTest 守护）。 */
     val themeLineNumbers: List<Int> =
         listOf(
             0xFF616366.toInt(), // darcula
@@ -123,15 +144,47 @@ object EditorPalette {
             0xFFCCCCCC.toInt(), // visual_studio
         )
 
-    /** 按索引取激活主题名（编辑器文本区装配唯一入口；越界安全回落）。 */
-    fun themeNameFor(index: Int): String {
-        val i = index.coerceIn(0, themes.lastIndex)
-        return themes[i].name
+    /** 各方案亮/暗侧背景色（ARGB，设置页双模预览色条用；派生自
+     * [themeBackgrounds] 按 [pairs] 名查找，同一静态镜像源）。 */
+    val schemeBackgrounds: List<Pair<Int, Int>> =
+        pairs.map { (light, dark) -> themeBackgrounds[indexOfName(light)] to themeBackgrounds[indexOfName(dark)] }
+
+    /** 各方案亮/暗侧行号文字色（派生自 [themeLineNumbers] 按 [pairs] 名查找）。 */
+    val schemeLineNumbers: List<Pair<Int, Int>> =
+        pairs.map { (light, dark) -> themeLineNumbers[indexOfName(light)] to themeLineNumbers[indexOfName(dark)] }
+
+    /** 各方案亮/暗侧当前行行号文字色（派生自 [themeLineNumbersActive]）。 */
+    val schemeLineNumbersActive: List<Pair<Int, Int>> =
+        pairs.map { (light, dark) -> themeLineNumbersActive[indexOfName(light)] to themeLineNumbersActive[indexOfName(dark)] }
+
+    /** 按「方案索引 + 宿主明暗」取激活主题名（编辑器文本区装配唯一入口；
+     * 索引越界安全回落，非法值永不崩溃）。 */
+    fun themeNameFor(
+        scheme: Int,
+        isDark: Boolean,
+    ): String {
+        val pair = pairs[scheme.coerceIn(0, pairs.lastIndex)]
+        return if (isDark) pair.second else pair.first
     }
 
-    /** 按索引判定主题明暗（设置页展示 / 宿主 chrome 组合校验用）。 */
-    fun isDarkTheme(index: Int): Boolean {
-        val i = index.coerceIn(0, themes.lastIndex)
-        return themes[i].isDark
+    /** 按「方案索引 + 宿主明暗」取激活主题行号色对（行号随主题侧，
+     * LuaEditor themedHostColors 用）。 */
+    fun lineNumberPairFor(
+        scheme: Int,
+        isDark: Boolean,
+    ): Pair<Int, Int> {
+        val pair = schemeLineNumbers[scheme.coerceIn(0, schemeLineNumbers.lastIndex)]
+        val active = schemeLineNumbersActive[scheme.coerceIn(0, schemeLineNumbersActive.lastIndex)]
+        return if (isDark) {
+            pair.second to active.second
+        } else {
+            pair.first to active.first
+        }
+    }
+
+    private fun indexOfName(name: String): Int {
+        val i = themes.indexOfFirst { it.name == name }
+        check(i >= 0) { "EditorPalette: 主题名 $name 不在 themes 表（pairs 必须引用 9 款全量之一）" }
+        return i
     }
 }

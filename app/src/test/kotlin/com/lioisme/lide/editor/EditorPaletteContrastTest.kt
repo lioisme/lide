@@ -90,8 +90,8 @@ class EditorPaletteContrastTest {
     @Test
     fun `主题背景预览与主题 JSON 同源`() {
         assertEquals(
-            "themeCount 与 themeBackgrounds 必须同长",
-            EditorPalette.themeCount,
+            "themeBackgrounds.size 与 themeBackgrounds 必须同长",
+            EditorPalette.themeBackgrounds.size,
             EditorPalette.themeBackgrounds.size,
         )
         EditorPalette.themes.forEachIndexed { index, entry ->
@@ -106,10 +106,10 @@ class EditorPaletteContrastTest {
 
     @Test
     fun `行号文字预览与主题 JSON 同源`() {
-        assertEquals("themeCount 与 themeLineNumbers 必须同长", EditorPalette.themeCount, EditorPalette.themeLineNumbers.size)
+        assertEquals("themeBackgrounds.size 与 themeLineNumbers 必须同长", EditorPalette.themeBackgrounds.size, EditorPalette.themeLineNumbers.size)
         assertEquals(
-            "themeCount 与 themeLineNumbersActive 必须同长",
-            EditorPalette.themeCount,
+            "themeBackgrounds.size 与 themeLineNumbersActive 必须同长",
+            EditorPalette.themeBackgrounds.size,
             EditorPalette.themeLineNumbersActive.size,
         )
         EditorPalette.themes.forEachIndexed { index, entry ->
@@ -140,6 +140,107 @@ class EditorPaletteContrastTest {
                 "主题[$index] ${entry.name}: isDark=${entry.isDark} 与背景亮度 $lum 矛盾",
                 if (entry.isDark) lum <= 0.5 else lum > 0.5,
             )
+        }
+    }
+
+    @Test
+    fun `双模方案配对表一致性`() {
+        assertEquals(
+            "schemeCount 与 pairs 必须同长",
+            EditorPalette.pairs.size,
+            EditorPalette.schemeCount,
+        )
+        assertEquals(
+            "schemeCount 与 schemeBackgrounds 必须同长",
+            EditorPalette.schemeCount,
+            EditorPalette.schemeBackgrounds.size,
+        )
+        assertEquals(
+            "schemeCount 与 schemeLineNumbers 必须同长",
+            EditorPalette.schemeCount,
+            EditorPalette.schemeLineNumbers.size,
+        )
+        assertEquals(
+            "schemeCount 与 schemeLineNumbersActive 必须同长",
+            EditorPalette.schemeCount,
+            EditorPalette.schemeLineNumbersActive.size,
+        )
+        val names = mutableSetOf<String>()
+        EditorPalette.pairs.forEachIndexed { index, (light, dark) ->
+            val lightEntry =
+                EditorPalette.themes.firstOrNull { it.name == light }
+                    ?: error("方案[$index] 亮侧 $light 不在 themes 表（pairs 必须引用 9 款全量）")
+            val darkEntry =
+                EditorPalette.themes.firstOrNull { it.name == dark }
+                    ?: error("方案[$index] 暗侧 $dark 不在 themes 表（pairs 必须引用 9 款全量）")
+            assertTrue(
+                "方案[$index] 亮侧 $light 明暗声明必须为亮（isDark=false）",
+                !lightEntry.isDark,
+            )
+            assertTrue(
+                "方案[$index] 暗侧 $dark 明暗声明必须为暗（isDark=true）",
+                darkEntry.isDark,
+            )
+            assertTrue("方案[$index] 亮暗两侧主题名不得重复", light != dark)
+            assertTrue("方案[$index] $light 重复出现在 pairs", names.add(light))
+            assertTrue("方案[$index] $dark 重复出现在 pairs", names.add(dark))
+            assertTrue(
+                "方案[$index] 亮侧 $light 背景亮度必须 > 0.5",
+                relativeLuminance(loadTheme(light).background ?: error("$light 缺少背景色")) > 0.5,
+            )
+            assertTrue(
+                "方案[$index] 暗侧 $dark 背景亮度必须 <= 0.5",
+                relativeLuminance(loadTheme(dark).background ?: error("$dark 缺少背景色")) <= 0.5,
+            )
+        }
+    }
+
+    @Test
+    fun `双模方案预览表与主题静态镜像同源`() {
+        fun indexOf(name: String): Int =
+            EditorPalette.themes.indexOfFirst { it.name == name }
+                .also { check(it >= 0) { "主题 $name 不在 themes 表" } }
+        EditorPalette.pairs.forEachIndexed { index, (light, dark) ->
+            val (lightBg, darkBg) = EditorPalette.schemeBackgrounds[index]
+            assertEquals(
+                "方案[$index] 亮侧背景必须与 themeBackgrounds 同源",
+                EditorPalette.themeBackgrounds[indexOf(light)],
+                lightBg,
+            )
+            assertEquals(
+                "方案[$index] 暗侧背景必须与 themeBackgrounds 同源",
+                EditorPalette.themeBackgrounds[indexOf(dark)],
+                darkBg,
+            )
+            val (lightLn, darkLn) = EditorPalette.schemeLineNumbers[index]
+            assertEquals(
+                "方案[$index] 亮侧行号必须与 themeLineNumbers 同源",
+                EditorPalette.themeLineNumbers[indexOf(light)],
+                lightLn,
+            )
+            assertEquals(
+                "方案[$index] 暗侧行号必须与 themeLineNumbers 同源",
+                EditorPalette.themeLineNumbers[indexOf(dark)],
+                darkLn,
+            )
+        }
+    }
+
+    @Test
+    fun `themeNameFor 双参侧选择与越界回落`() {
+        EditorPalette.pairs.forEachIndexed { index, (light, dark) ->
+            assertEquals("方案[$index] 亮侧装配", light, EditorPalette.themeNameFor(index, false))
+            assertEquals("方案[$index] 暗侧装配", dark, EditorPalette.themeNameFor(index, true))
+        }
+        val fallbackLight = EditorPalette.themeNameFor(-1, false)
+        val fallbackDark = EditorPalette.themeNameFor(Int.MAX_VALUE, true)
+        assertEquals("负索引回落首对亮侧", EditorPalette.pairs.first().first, fallbackLight)
+        assertEquals("越界索引回落末对暗侧", EditorPalette.pairs.last().second, fallbackDark)
+        EditorPalette.pairs.forEachIndexed { index, (_, _) ->
+            val lightPair = EditorPalette.schemeLineNumbers[index].first to EditorPalette.schemeLineNumbersActive[index].first
+            val darkPair = EditorPalette.schemeLineNumbers[index].second to EditorPalette.schemeLineNumbersActive[index].second
+            assertEquals("方案[$index] 亮侧行号对", lightPair, EditorPalette.lineNumberPairFor(index, false))
+            assertEquals("方案[$index] 暗侧行号对", darkPair, EditorPalette.lineNumberPairFor(index, true))
         }
     }
 

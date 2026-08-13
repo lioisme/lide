@@ -31,6 +31,7 @@ import com.lioisme.lide.editor.EditorTabs
 import com.lioisme.lide.editor.LuaEditor
 import com.lioisme.lide.editor.pressAndHoldHapticFeedback
 import com.lioisme.lide.session.EditorSession
+import com.lioisme.lide.ui.theme.LocalIsDarkTheme
 
 /** 宿主存储权限门：Android 11+ 需要「所有文件访问」授权。 */
 internal fun hasStoragePermission(context: Context): Boolean {
@@ -128,6 +129,7 @@ internal fun EditorBody(
                     content = currentContent,
                     config = editorConfig,
                     fileName = selectedFile,
+                    isDarkTheme = LocalIsDarkTheme.current,
                     onContentModified = { session.onContentModified() },
                     onUndoRedoStateChanged = { u, r -> session.onUndoRedoChanged(u, r) },
                     onRelease = {

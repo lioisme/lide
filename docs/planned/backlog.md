@@ -267,6 +267,57 @@
 | S4 | BottomInputSheet 输入法同步修复 | 高 | ⏳ 待执行 | `SQUIRCLE_FOUR_FIX` `输入法` |
 | S5 | 文档同步 + 全量验证 + ADB 模拟器实测 + 收口 | 高 | ⏳ 待执行 | `SQUIRCLE_FOUR_FIX` `验收` |
 
+## 2s. 编辑器主题第三次拍板：双模跟随宿主（2026-08-13，结论已蒸馏至 docs/kb/EDITOR.md §14）
+
+> 用户第三次拍板（2026-08-13）：编辑器主题**保持之前的适配全局外观系统**——
+> 一套主题在宿主深色/浅色模式下自动呈现深色/浅色版本（**非 Squircle 单侧**）；
+> **仅语法高亮与 Squircle CE 保持 100% 一致**（9 款 JSON 全量保留）。
+> 实现（THEME_DUAL_MODE_FOLLOW_HOST）：
+> - `EditorPalette` 恢复双模结构：`pairs` 3 对（Classic = intellij_light/darcula、
+>   Solarized = solarized_light/obsidian、Eclipse = eclipse/visual_studio）+ 9 款
+>   `ThemeEntry` 全量（加载白名单不变）+ `schemeBackgrounds`/`schemeLineNumbers`/
+>   `schemeLineNumbersActive` 双模派生表 + 装配唯一入口 `themeNameFor(scheme, isDark)`
+>   与 `lineNumberPairFor(scheme, isDark)`（越界回落）；
+> - `TextMateRuntime`/`LuaEditor` 双参链路（`hostColorScheme(scheme, isDark, host)`、
+>   `LaunchedEffect(initReady, themeScheme, isDarkTheme)` 换侧）；宿主 `LocalIsDarkTheme`
+>   经 `EditorComponents` 注入 LuaEditor；LideApp 预热按「方案 + 系统明暗」；
+> - 设置页恢复 3 对双模选择器（亮/暗双色条），`editor_scheme_classic/solarized/eclipse`
+>   文案恢复，9 款单侧文案 `editor_theme_*` 删除（中英同步）；
+> - `EditorPaletteContrastTest` 保留 Squircle 源一致断言 + 新增双模配对断言（6/6 通过）。
+> 验收证据（2026-08-13 ADB x64 模拟器实测）：宿主浅色 → 编辑器 intellij_light 白底 +
+> 多彩高亮；系统切深色 → 编辑器自动 darcula（文本区 #2F312F / 行号区 #1E1F22 /
+> 语法绿 #6A8759）；设置页方案选择器 3 对双模色条正常。单测全绿 + lint 0 新问题。
+
+## 2t. 工程权限列表三点整改（2026-08-13 拍板，改动已入库）
+
+> 用户拍板：① 工程权限列表**不区分「常规/特殊…」分组标题**（与 AppBar 筛选
+> 按钮功能冲突）；② 权限列表 item **无左右距**（此前误改到主界面工程列表，
+> 本次恢复主界面列表原貌并改正确位置）；③ item **大小正常合适**。
+> 实现：
+> - `ProjectPermissionScreen`：页级 LazyColumn 平铺（`items(displayItems)`，
+>   删除 `contentPadding(horizontal = 16.dp)` 全宽）；全屏搜索 Dialog 同步平铺；
+> - `SearchablePermissionPicker`：删除 `permissionGroupItems` /
+>   `PermissionGroupHeader` / `PICKER_GROUPS`（分组语义仅保留于筛选菜单
+>   `PermissionGroupFilter`）；`PermissionCheckRow` 行内 `padding(vertical = 8.dp)`
+>   保证行高合适；
+> - `ProjectListScreen`（主界面工程列表）恢复 `padding(horizontal = 16.dp,
+>   vertical = 12.dp)` + Divider 缩进（回退误改）。
+> 二次拍板（同日）：① 权限 item 边距改「内部边距」——行全宽（无相对外部
+> 边距），左右/顶底 = 行内 `padding(horizontal = 16.dp, vertical = 12.dp)`
+> （对齐主界面工程列表行），列表/搜索 `spacedBy(4.dp)` 删除（行距由行内
+> padding 承担）；② 工程属性页（ProjectInfoScreen）权限区 + 权限弹窗 +
+> `user_permission` 读写整体删除（工程权限收敛至独立「工程权限」页），
+> `PermissionPickerList` 组件与 `info_section_permissions` /
+> `info_permissions_*` 资源（中英）同步删除。
+> 三修（同日，用户长按波纹确认）：`PermissionCheckRow` 修饰符顺序对齐主界面
+> 工程列表（`fillMaxWidth → toggleable → padding`）——**toggleable 在 padding
+> 外层**，点击热区/波纹全宽（无相对外部边距），padding 内层只缩进内容
+> （16/12dp）。
+> 验收证据（2026-08-13 ADB x64 模拟器实测）：权限页首行 = 「访问网络」无分组
+> 标题；行主体（toggleable/波纹区）bounds = `[0,352][1440,599]` 全宽、内容
+> 起点 16dp 内部缩进；工程属性页 = 基本信息 → 系统 → 高级 → 保存（无「权限」
+> 分区）。compile + 单测 + lint 全绿。
+
 ## 2p. 六项 UI 交互与外观整改（2026-08-12，工作单 docs/in-progress/UI_AUDIT_SIX_REQ_WORK_ORDER.md） ——（已完成 2026-08-12，结论蒸馏至 docs/kb/ARCHITECTURE.md §9，工作单已删除）
 > 来源需求（用户 2026-08-12 六条要求，全量审计后立项）：
 > 1. 工程权限界面简约美观，像 API 浏览器一样的搜索和列表，无其他无用内容；

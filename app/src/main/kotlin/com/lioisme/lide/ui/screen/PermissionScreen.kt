@@ -415,10 +415,13 @@ fun ProjectPermissionScreen(
                         }
                     }
                 }
-            // 页级单一 LazyColumn：筛选后平铺展示勾选行（无分组标题，无额外行间距）。
+            // 页级单一 LazyColumn：勾选行平铺渲染（2026-08-13 用户拍板：无分组
+            // 标题——分类区分与 AppBar 筛选按钮功能冲突；共享 searchActive/
+            // 筛选菜单语义）；行全宽无外部边距，左右/顶底边距为行内内部边距
+            // （PermissionCheckRow horizontal 16 / vertical 12，对齐主界面工程
+            // 列表），行距由行内 padding 承担（无 spacedBy）。
             LazyColumn(
                 modifier = Modifier.fillMaxSize().padding(padding),
-                contentPadding = PaddingValues(horizontal = 16.dp),
             ) {
                 items(displayItems, key = { it.name }) { item ->
                     PermissionCheckRow(
