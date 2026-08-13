@@ -97,11 +97,11 @@ class MainActivity : ComponentActivity() {
                 val imports = pendingImportPaths
                 pendingImportPaths = emptyList()
                 val openFiles = pendingOpenFiles
-                pendingOpenFiles = emptyList()
                 LideNavHost(
                     navController = navController,
                     pendingImportPaths = imports,
                     pendingOpenFiles = openFiles,
+                    onOpenFilesConsumed = { pendingOpenFiles = emptyList() },
                 )
                 // 系统「用 LIDE 打开 APK」（T16）：一次性消费，展示安装方式选择对话框
                 // （普通系统安装器 / Shizuku / Dhizuku / Root）。

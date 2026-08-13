@@ -362,6 +362,23 @@
 | P2-4 | BuildApkDialog 魔法字符串 "init"/"package" 改用枚举 | 低 | `ui/screen/BuildApkDialog.kt:141` | ✅ 已完成 2026-08-12：新增 `PreflightFail` sealed class | `魔法字符串` `sealed class` |
 | P2-5 | EditorScreen closeQueue 加 rememberSaveable | 低 | `ui/screen/EditorScreen.kt:169` | ✅ 已完成 2026-08-12：改为 rememberSaveable | `rememberSaveable` |
 
+## 2r. 编辑器性能审计与 Squircle 渲染面对齐（2026-08-13，工作单 docs/in-progress/EDITOR_PERF_AUDIT_WORK_ORDER.md）
+
+> 来源需求（用户 2026-08-13）：全量审计 LIDE 编辑器 vs sora-editor（上限）/ Squircle CE（持平基线），
+> 保持现有功能前提下做性能优化，最后经 ADB 双端实测（模拟器已装 Squircle CE）确认性能达标。
+> 审计结论：LIDE 已全面对齐/超越 Squircle（守卫式 diff / Content 复用 / 防抖增量诊断 / 大文件降级矩阵）；
+> 差距 = 4 项 Squircle 显式关闭的渲染开销开关 LIDE 保持 sora 默认（详见工作单「基线审计」段）。
+> 质量要求：代码质量/架构达大厂验收标准；每项完成在工作单标记（已完成）+ 验收证据。
+
+| # | 任务 | 优先级 | 状态 | 关键词 |
+|---|---|---|---|---|
+| EP1 | 光标动画显式关闭（Gap-2：`setCursorAnimationEnabled(false)`，落实 EditorConfig P4「光标动画（关）」声明，对齐 Squircle view/CodeEditor.kt:59） | 高 | ✅ 已完成（2026-08-13，工作单 T1） | `EDITOR_PERF_AUDIT` `光标动画` |
+| EP2 | 渲染裁剪对齐（Gap-1：`drawSideBlockLine` / `boldMatchingDelimiters` / `enableRoundTextBackground` 三项关默认，对齐 Squircle view/CodeEditor.kt:66-68） | 高 | ✅ 已完成（2026-08-13，工作单 T2） | `EDITOR_PERF_AUDIT` `渲染裁剪` |
+| EP3 | 长行 RenderNode 缓存开启（`props.cacheRenderNodeForLongLines`，sora 上限能力，>128 字符行走硬件显示列表） | 中 | ✅ 已完成（2026-08-13，工作单 T3） | `EDITOR_PERF_AUDIT` `RenderNode` |
+| EP4 | 构建验证（compile + 单元测试 + verifySoraIsolation + 红线 grep） | 高 | ✅ 已完成（2026-08-13，工作单 T4） | `EDITOR_PERF_AUDIT` `验证` |
+| EP5 | ADB 双端性能对比实测（LIDE x64 debug vs Squircle CE：冷启动/滚动 fling/打字/大文件 framestats + meminfo） | 高 | ✅ 已完成（2026-08-13，工作单 T5/T6） | `EDITOR_PERF_AUDIT` `ADB` `framestats` |
+| EP6 | 收口：工作单完成标记 + kb/EDITOR.md 性能基线章节蒸馏 | 高 | ✅ 已完成（2026-08-13，工作单 T7） | `EDITOR_PERF_AUDIT` `蒸馏` `收口` |
+
 ---
 
 ## 3. 风险与备忘

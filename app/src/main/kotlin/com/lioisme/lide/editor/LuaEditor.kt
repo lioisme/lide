@@ -150,6 +150,11 @@ private class EditorInstance(
             // 与 wordwrap 正交（wrap 下 sora 天然固定），大文件降级关行号后自然失效。
             setPinLineNumber(initialConfig.fixedLineNumbers)
             isHighlightCurrentLine = true
+            // P4 声明落实（2026-08-13，EDITOR_PERF_AUDIT T1）：光标动画显式关闭
+            // （sora 默认 true，CodeEditor.java:644），每键/光标移动触发
+            // FadeCursorAnimator 动画帧（FadeCursorAnimator.java:84,138）；
+            // 对齐 Squircle view/CodeEditor.kt:59（EditorConfig P4「光标动画（关）」）。
+            setCursorAnimationEnabled(false)
             tabWidth = initialConfig.tabSize
             setBlockLineWidth(3f)
             isUndoEnabled = true
@@ -174,6 +179,22 @@ private class EditorInstance(
             //   格式化 3a 根因——格式化后光标落在末尾空行时必然触发）。
             props.deleteMultiSpaces = 1
             props.deleteEmptyLineFast = false
+
+            // 渲染裁剪对齐 Squircle（2026-08-13，EDITOR_PERF_AUDIT T2，view/CodeEditor.kt:66-68）：
+            // - drawSideBlockLine=false：省每帧对每个可见代码块行新建 TextRow 测量
+            //   （EditorRenderer.java:1999-2016，O(可见块)/帧）；
+            // - boldMatchingDelimiters=false：省匹配定界符粗体 Paint 切换；
+            // - enableRoundTextBackground=false：高亮背景 drawRect 替代 drawRoundRect
+            //   （EditorRenderer.java:1889，纯视觉直角化，与 Squircle 渲染面 100% 同构）。
+            props.drawSideBlockLine = false
+            props.boldMatchingDelimiters = false
+            props.enableRoundTextBackground = false
+
+            // 长行 RenderNode 缓存（2026-08-13，EDITOR_PERF_AUDIT T3，sora 上限能力）：
+            // 默认仅 <128 字符行走硬件显示列表（EditorRenderer.java:757 门控），
+            // 开启后 >128 字符长行同样缓存 RenderNode（DirectAccessProps.java:256，
+            // "Save memory" 注释即指此开关；内存代价有界：RenderNodeHolder 池复用）。
+            props.cacheRenderNodeForLongLines = true
 
             // T6（2026-08-11）补全窗口自定义：圆角 8dp + 1dp 描边 + 主题色跟随
             // （对齐 Squircle；装配在 setText 前，色板经 onApplyColorScheme 联动）。

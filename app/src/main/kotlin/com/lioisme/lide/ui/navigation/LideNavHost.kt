@@ -86,6 +86,7 @@ fun LideNavHost(
     navController: NavHostController,
     pendingImportPaths: List<String> = emptyList(),
     pendingOpenFiles: List<PendingOpenFile> = emptyList(),
+    onOpenFilesConsumed: () -> Unit = {},
 ) {
     val context = LocalContext.current
     val projectManager = remember { ProjectManager() }
@@ -119,6 +120,8 @@ fun LideNavHost(
                     Project(name = dir.name, path = dir.absolutePath, mainFile = open.fileName),
                 ),
             )
+            // 导航完成后才清空：挂起等待期间 key 保持稳定，不会被重组取消。
+            onOpenFilesConsumed()
         }
     }
 
