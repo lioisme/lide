@@ -86,31 +86,27 @@ class ThemeContrastTest {
 
     @Test
     fun chromeSlotsMeetAaForAllPresets() {
-        // 文本区背景 = TextMate 主题背景（EditorPalette.schemeBackgrounds，
-        // 与 assets/textmate JSON 同源，一致性由 EditorPaletteContrastTest 守护）——
-        // 行号等 chrome 文字槽随可选配色方案（T10）组合全部校验。
-        for ((lightBg, darkBg) in EditorPalette.schemeBackgrounds) {
-            for (seed in ThemeSeeds.OPTIONS) {
-                for (isDark in listOf(false, true)) {
-                    val s = schemeFor(seed, isDark)
-                    val lineBg = if (isDark) darkBg else lightBg
-                    val float = s.surfaceContainerHighest
-                    val pairs =
-                        listOf(
-                            "lineNumber/editorBg" to (s.onSurfaceVariant to lineBg),
-                            "completionText/float" to (s.onSurface to float),
-                            "completionMatched/float" to (s.primary to float),
-                            "tooltipBrief/float" to (s.onSurface to float),
-                            "tooltipDetailed/float" to (s.onSurfaceVariant to float),
-                            "tooltipAction/float" to (s.primary to float),
-                        )
-                    for ((name, pair) in pairs) {
-                        val ratio = contrastRatio(pair.first, pair.second)
-                        assertTrue(
-                            "chrome seed=0x%08X dark=$isDark $name ratio=$ratio 低于 AA 严格档 4.5:1".format(seed),
-                            ratio >= 4.5,
-                        )
-                    }
+        // 浮层（补全窗/tooltip）chrome 槽：宿主 M3 文字 × 宿主浮层背景
+        // （surfaceContainerHighest），与编辑器主题解耦（2026-08-13：行号文字已
+        // 随主题、由 EditorPaletteContrastTest 守护 JSON 同源，不再宿主提供）。
+        for (seed in ThemeSeeds.OPTIONS) {
+            for (isDark in listOf(false, true)) {
+                val s = schemeFor(seed, isDark)
+                val float = s.surfaceContainerHighest
+                val pairs =
+                    listOf(
+                        "completionText/float" to (s.onSurface to float),
+                        "completionMatched/float" to (s.primary to float),
+                        "tooltipBrief/float" to (s.onSurface to float),
+                        "tooltipDetailed/float" to (s.onSurfaceVariant to float),
+                        "tooltipAction/float" to (s.primary to float),
+                    )
+                for ((name, pair) in pairs) {
+                    val ratio = contrastRatio(pair.first, pair.second)
+                    assertTrue(
+                        "chrome seed=0x%08X dark=$isDark $name ratio=$ratio 低于 AA 严格档 4.5:1".format(seed),
+                        ratio >= 4.5,
+                    )
                 }
             }
         }

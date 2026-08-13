@@ -18,19 +18,25 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.SearchBarDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -43,6 +49,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -55,7 +62,8 @@ import com.lioisme.lide.editor.TipIconButton
  * - [PermissionCollapsedSearchInput]：折叠搜索条（与 API 浏览器折叠条同款交互——
  *   单击展开全屏搜索、长按无副作用），权限场景 leading 为搜索图标；
  * - [PermissionSearchInputField]：全屏搜索输入条（SearchBarDefaults.InputField，
- *   返回 / 清除按钮，展开态与收起态共用）；
+ *   返回 / 清除 / 分类筛选按钮，展开态与收起态共用）；
+ * - [PermissionFilterMenuButton]：分类筛选按钮 + DropdownMenu（ALL / REGULAR / SPECIAL / OTHER）；
  * - [PermissionGroupHeader] / [PermissionCheckRow]：分组标题与勾选行，供页级
  *   LazyColumn 直接消费（消除嵌套滚动容器）；
  * - [PermissionPickerList]：工程属性页弹窗专用（常驻搜索框 + 列表，高度由调用方约束）。
@@ -71,6 +79,7 @@ internal fun PermissionPickerList(
     onToggle: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    // T-06（2026-08-12）：Surface 包裹确保在任意父容器（含 AlertDialog）中背景一致。
     val context = LocalContext.current
     var query by remember { mutableStateOf("") }
 
@@ -83,40 +92,42 @@ internal fun PermissionPickerList(
             if (queryText.isEmpty()) items else items.filter { it.searchKeys.contains(queryText) }
         }
 
-    Column(modifier) {
-        OutlinedTextField(
-            value = query,
-            onValueChange = { query = it },
-            label = { Text(stringResource(R.string.permission_search_hint)) },
-            leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
-            trailingIcon = {
-                if (query.isNotEmpty()) {
-                    IconButton(onClick = { query = "" }) {
-                        Icon(Icons.Default.Clear, contentDescription = stringResource(R.string.permission_search_clear))
+    Surface(color = MaterialTheme.colorScheme.surfaceContainerHighest) {
+        Column(modifier = modifier) {
+            OutlinedTextField(
+                value = query,
+                onValueChange = { query = it },
+                label = { Text(stringResource(R.string.permission_search_hint)) },
+                leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+                trailingIcon = {
+                    if (query.isNotEmpty()) {
+                        IconButton(onClick = { query = "" }) {
+                            Icon(Icons.Default.Clear, contentDescription = stringResource(R.string.permission_search_clear))
+                        }
                     }
-                }
-            },
-            singleLine = true,
-            modifier = Modifier.fillMaxWidth(),
-        )
-        Spacer(Modifier.height(8.dp))
-
-        if (filtered.isEmpty()) {
-            Text(
-                stringResource(R.string.permission_no_result),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(vertical = 16.dp),
+                },
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth(),
             )
-        } else {
-            LazyColumn(Modifier.heightIn(max = 460.dp)) {
-                permissionGroupItems(filtered) { item ->
-                    PermissionCheckRow(
-                        label = item.label,
-                        alias = item.aliasText,
-                        checked = item.name in selected,
-                        onToggle = { onToggle(item.name) },
-                    )
+            Spacer(Modifier.height(8.dp))
+
+            if (filtered.isEmpty()) {
+                Text(
+                    stringResource(R.string.permission_no_result),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(vertical = 16.dp),
+                )
+            } else {
+                LazyColumn(Modifier.heightIn(max = 460.dp)) {
+                    items(filtered, key = { it.name }) { item ->
+                        PermissionCheckRow(
+                            label = item.label,
+                            alias = item.aliasText,
+                            checked = item.name in selected,
+                            onToggle = { onToggle(item.name) },
+                        )
+                    }
                 }
             }
         }
@@ -221,18 +232,26 @@ internal fun PermissionCheckRow(
     checked: Boolean,
     onToggle: () -> Unit,
 ) {
+    // 行主体整行 toggleable（T5，2026-08-13）：点击消费收敛到外层单一 toggleable，
+    // Checkbox 仅作视觉（onCheckedChange = null）——避免「Row.clickable +
+    // Checkbox.onCheckedChange」同区位双触发（先 add 后 remove 状态不变），
+    // 同时整行（含文字区）可点，扩展点击热区。
     Row(
         modifier =
             Modifier
                 .fillMaxWidth()
-                .clickable(onClick = onToggle)
-                .padding(vertical = 4.dp),
+                .toggleable(
+                    value = checked,
+                    role = Role.Checkbox,
+                    onValueChange = { onToggle() },
+                ),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Checkbox(checked = checked, onCheckedChange = { onToggle() })
+        Checkbox(checked = checked, onCheckedChange = null)
         Spacer(Modifier.width(8.dp))
         Column(Modifier.weight(1f), verticalArrangement = Arrangement.Center) {
-            Text(label, style = MaterialTheme.typography.bodyMedium)
+            // T-01（2026-08-12）：显式声明 onSurface，确保任意 seed 色下对比度达标。
+            Text(label, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurface)
             if (alias.isNotEmpty()) {
                 Text(
                     alias,
@@ -247,8 +266,8 @@ internal fun PermissionCheckRow(
 /**
  * 折叠搜索条（U7，2026-08-12）：与 API 浏览器折叠条同款交互——`detectTapGestures`
  * 区分单击（展开）与长按（无副作用），规避 SearchBarDefaults.InputField 内部
- * `onFocusChanged` 因长按文本选择/获得焦点误触发展开；leading 为搜索图标
- * （页面顶栏已承载返回），尾部清除按钮在查询非空时展示。
+ * `onFocusChanged` 因长按文本选择/获得焦点误触发展开；leading 为返回按钮
+ * （与 [ApiCollapsedSearchInput] 同款，点击收起搜索态），尾部清除按钮在查询非空时展示。
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -257,6 +276,8 @@ internal fun PermissionCollapsedSearchInput(
     onClear: () -> Unit,
     onTapToExpand: () -> Unit,
     modifier: Modifier = Modifier,
+    onBack: () -> Unit = {},
+    filterSlot: @Composable () -> Unit = {},
 ) {
     val placeholder = stringResource(R.string.permission_search_hint)
     // E1（2026-08-12）：搜索条浮于表面之上——surfaceContainerHigh（M3 search bar 容器）。
@@ -271,12 +292,16 @@ internal fun PermissionCollapsedSearchInput(
                 .padding(horizontal = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Icon(
-            Icons.Default.Search,
-            contentDescription = stringResource(R.string.permission_search_hint),
-            tint = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.padding(start = 12.dp).size(24.dp),
-        )
+        // B1（2026-08-12）：leading 与 API 浏览器同款——返回箭头（收起搜索态），
+        // 而非搜索图标；返回语义由调用方传入 [onBack]。
+        TipIconButton(tooltip = stringResource(R.string.cd_back), onClick = onBack) {
+            Icon(
+                Icons.AutoMirrored.Filled.ArrowBack,
+                contentDescription = stringResource(R.string.cd_back),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.size(24.dp),
+            )
+        }
         Box(
             modifier =
                 Modifier
@@ -312,11 +337,12 @@ internal fun PermissionCollapsedSearchInput(
                 )
             }
         }
+        filterSlot()
         Spacer(Modifier.width(4.dp))
     }
 }
 
-/** 全屏搜索输入条（ExpandedFullScreenSearchBar inputField 槽）：返回 / 清除。 */
+/** 全屏搜索输入条（ExpandedFullScreenSearchBar inputField 槽）：返回 / 清除 / 分类筛选。 */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun PermissionSearchInputField(
@@ -325,6 +351,7 @@ internal fun PermissionSearchInputField(
     active: Boolean,
     onActiveChange: (Boolean) -> Unit,
     onBack: () -> Unit,
+    filterSlot: @Composable () -> Unit = {},
 ) {
     SearchBarDefaults.InputField(
         query = query,
@@ -342,15 +369,98 @@ internal fun PermissionSearchInputField(
             }
         },
         trailingIcon = {
-            if (query.isNotEmpty()) {
-                TipIconButton(tooltip = stringResource(R.string.permission_search_clear), onClick = { onQueryChange("") }) {
-                    Icon(
-                        Icons.Default.Close,
-                        contentDescription = stringResource(R.string.permission_search_clear),
-                    )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                if (query.isNotEmpty()) {
+                    TipIconButton(tooltip = stringResource(R.string.permission_search_clear), onClick = { onQueryChange("") }) {
+                        Icon(
+                            Icons.Default.Close,
+                            contentDescription = stringResource(R.string.permission_search_clear),
+                        )
+                    }
                 }
+                filterSlot()
             }
         },
         modifier = Modifier.fillMaxWidth(),
     )
+}
+
+/**
+ * 权限分类筛选按钮 + DropdownMenu（PermissionScreen AppBar trailingIcon 槽内使用）。
+ * 选项：全部 / 常规 / 特殊 / 其他；计数来自 [groupCounts]（由调用方预计算）。
+ */
+@Composable
+internal fun PermissionFilterMenuButton(
+    expanded: Boolean,
+    onExpandedChange: (Boolean) -> Unit,
+    selectedGroup: PermissionGroupFilter?,
+    onGroupSelect: (PermissionGroupFilter?) -> Unit,
+    groupCounts: Map<PermissionGroupFilter?, Int>,
+    totalCount: Int?,
+) {
+    Box {
+        TipIconButton(tooltip = stringResource(R.string.perm_filter), onClick = { onExpandedChange(true) }) {
+            Icon(
+                Icons.Default.FilterList,
+                contentDescription = stringResource(R.string.perm_filter),
+            )
+        }
+        DropdownMenu(expanded = expanded, onDismissRequest = { onExpandedChange(false) }) {
+            FilterOption(
+                label = stringResource(R.string.perm_filter_all),
+                count = totalCount,
+                selected = selectedGroup == null,
+                onClick = {
+                    onGroupSelect(null)
+                    onExpandedChange(false)
+                },
+            )
+            PermissionGroupFilter.entries.forEach { group ->
+                FilterOption(
+                    label =
+                        when (group) {
+                            PermissionGroupFilter.REGULAR -> stringResource(R.string.perm_regular_section)
+                            PermissionGroupFilter.SPECIAL -> stringResource(R.string.perm_special_section)
+                            PermissionGroupFilter.OTHER -> stringResource(R.string.perm_other_section)
+                        },
+                    count = groupCounts[group],
+                    selected = selectedGroup == group,
+                    onClick = {
+                        onGroupSelect(group)
+                        onExpandedChange(false)
+                    },
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun FilterOption(
+    label: String,
+    count: Int?,
+    selected: Boolean,
+    onClick: () -> Unit,
+) {
+    DropdownMenuItem(
+        text = { Text(label, maxLines = 1, overflow = TextOverflow.Ellipsis) },
+        leadingIcon = { RadioButton(selected = selected, onClick = null) },
+        trailingIcon = {
+            if (count != null) {
+                Text(
+                    text = stringResource(R.string.perm_filter_count, count),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+        },
+        onClick = onClick,
+    )
+}
+
+/** 权限分类筛选器选项（全部 / 常规 / 特殊 / 其他）。 */
+internal enum class PermissionGroupFilter {
+    REGULAR,
+    SPECIAL,
+    OTHER,
 }

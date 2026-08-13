@@ -91,13 +91,13 @@ fun rememberHostEditorColors(): HostEditorColors {
 }
 
 /**
- * 编辑器配色方案（2026-08-12 方案可选反转后使用）。
+ * 编辑器主题方案（2026-08-13 Squircle 对齐拍板后使用：单侧手选 9 款）。
  *
  * chrome 槽（当前行/选区/光标/行号文字/补全窗/诊断提示/滚动条/minimap/分隔线）
  * 取宿主派生色；文本区背景/前景槽与语法高亮 token 一律来自当前
- * TextMate 主题（[EditorPalette] 双模配色库：构造时
- * [ThemeRegistry.getCurrentThemeModel] 的 token 色与背景，明暗/方案随宿主
- * 切换时由调用方先 `setTheme(EditorPalette.themeNameFor(方案, 明暗))` 再更新 scheme）。
+ * TextMate 主题（[EditorPalette] 主题库：构造时
+ * [ThemeRegistry.getCurrentThemeModel] 的 token 色与背景；主题切换
+ * 时由调用方先 `setTheme(EditorPalette.themeNameFor(索引))` 再更新 scheme）。
  *
  * 实现 [ThemeRegistry.ThemeChangeListener]（TextMateColorScheme 内建）：
  * 主题广播时自动重算 applyDefault；宿主色变化经 [updateHost] 主动刷新。

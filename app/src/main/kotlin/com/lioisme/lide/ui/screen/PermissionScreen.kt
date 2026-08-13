@@ -237,6 +237,10 @@ fun HostPermissionScreen(
  * 勾选结果写回 init.lua 的 user_permission（与 pro projectinfo 行为一致），
  * 打包时按白名单（声明 ∩ 宿主 + 宿主自声明）写入产物 manifest。
  * 与宿主运行时权限无关，因此不提供请求按钮、不展示宿主授予状态。
+ *
+ * T2（2026-08-12）：勾选即生效，toggle 时立即触发 [persistSelected] 写盘，无需保存按钮。
+ * T3（2026-08-12）：搜索内嵌 AppBar（CenterAlignedTopAppBar），对齐 API 浏览器同款。
+ * T4（2026-08-12）：AppBar trailingIcon 含分类筛选按钮（PermissionFilterMenuButton）。
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -252,8 +256,6 @@ fun ProjectPermissionScreen(
         }
     var state by remember(project) { mutableStateOf<ProjectPermState?>(null) }
     val scope = rememberCoroutineScope()
-    val strSaved = stringResource(R.string.perm_project_saved)
-    val strSaveFailed = stringResource(R.string.perm_project_save_failed)
 
     LaunchedEffect(project) {
         state =
@@ -265,42 +267,40 @@ fun ProjectPermissionScreen(
                             com.lioisme.lide.project.PermissionResolver
                                 .normalize(it)
                         }.toSet()
-                ProjectPermState(
-                    selected = declared.toMutableSet(),
-                    original = declared,
-                )
+                ProjectPermState(selected = declared)
             }
     }
 
-    fun save() {
-        val s = state ?: return
+    // U8（2026-08-12）：勾选即生效——toggle 直接触发异步写盘，无需保存按钮。
+    // 写盘收敛到 [projectManager.writeInitFields] 域服务（B-1）。
+    // T5（2026-08-13）：参数化快照集合（调用方传 toggle 后的新 Set），
+    // 不依赖闭包读 state 的时序（写盘与重组解耦）。
+    fun persistSelected(selected: Set<String>) {
         scope.launch {
-            // B-1：写 init.lua 收敛到 ProjectManager 域服务（原子写盘，UI 不自摸文件）。
             val ok =
                 kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
                     projectManager.writeInitFields(project) { content ->
                         com.lioisme.lide.project.LuaConfigParser.setStringArrayField(
                             content,
                             "user_permission",
-                            s.selected.sorted(),
+                            selected.sorted(),
                         )
                     }
                 }
-            if (ok) {
-                state = state?.let { it.copy(original = it.selected.toSet()) }
-                Toast.makeText(context, strSaved, Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(context, strSaveFailed, Toast.LENGTH_SHORT).show()
+            if (!ok) {
+                Toast.makeText(context, R.string.perm_project_save_failed, Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    // U7（2026-08-12）：搜索对齐 API 浏览器模式（AGENTS.md 搜索红线）——
+    // U7/T3（2026-08-12）：搜索对齐 API 浏览器模式（AGENTS.md 搜索红线）——
     // 独立 searchActive 意图 + SearchBarState 状态机唯一驱动；rememberSearchBarState()
     // 必须无参调用（按引用比较 key）；展开输入框为官方 InputField（展开态无长按
     // 文本选择崩坏问题），折叠条为自绘（规避崩坏）。
     var query by rememberSaveable { mutableStateOf("") }
     var searchActive by rememberSaveable { mutableStateOf(false) }
+    var selectedGroup by rememberSaveable { mutableStateOf<PermissionGroupFilter?>(null) }
+    var filterMenuOpen by remember { mutableStateOf(false) }
     val searchBarState = rememberSearchBarState()
     LaunchedEffect(searchActive) {
         if (searchActive) {
@@ -312,77 +312,130 @@ fun ProjectPermissionScreen(
     LaunchedEffect(Unit) { if (!searchActive) searchBarState.snapTo(0f) }
     val focusManager = LocalFocusManager.current
 
-    // 检索池（目录 + 工程已声明未知权限）；随声明集合变化仅重建一次。
-    val poolUnknown = (state?.original ?: emptySet<String>()) - PermissionCatalog.knownNames
+    // 检索池（目录 + 工程已声明未知权限）；remember 稳定 key，仅在 selected 内容变化时重建。
+    val poolUnknown by remember(state?.selected) {
+        derivedStateOf { (state?.selected ?: emptySet<String>()) - PermissionCatalog.knownNames }
+    }
     val allItems = rememberPickerItems(PermissionCatalog.ENTRIES, poolUnknown.sorted(), context)
 
-    // 搜索过滤：后台线程（Dispatchers.Default）经预索引 contains，对齐红线。
-    val filtered by produceState(initialValue = emptyList<PickerItem>(), query, allItems) {
-        value = withContext(Dispatchers.Default) { filterPickerItems(allItems, query) }
+    // 分组计数（用于筛选菜单）；allItems 稳定时只算一次。
+    val groupCounts by remember(allItems) {
+        mutableStateOf(
+            mapOf<PermissionGroupFilter?, Int>(
+                null to allItems.size,
+                PermissionGroupFilter.REGULAR to allItems.count { it.group == PermissionGroup.REGULAR },
+                PermissionGroupFilter.SPECIAL to allItems.count { it.group == PermissionGroup.SPECIAL },
+                PermissionGroupFilter.OTHER to allItems.count { it.group == null },
+            ),
+        )
+    }
+
+    // 搜索 + 分类过滤：后台线程（Dispatchers.Default）经预索引 contains，对齐红线。
+    val filtered by produceState(
+        initialValue = emptyList<PickerItem>(),
+        query,
+        allItems,
+        selectedGroup,
+    ) {
+        value =
+            withContext(Dispatchers.Default) {
+                val q = query.trim().lowercase()
+                val base = if (q.isEmpty()) allItems else allItems.filter { it.searchKeys.contains(q) }
+                if (selectedGroup == null) {
+                    base
+                } else {
+                    base.filter {
+                        when (selectedGroup) {
+                            PermissionGroupFilter.REGULAR -> it.group == PermissionGroup.REGULAR
+                            PermissionGroupFilter.SPECIAL -> it.group == PermissionGroup.SPECIAL
+                            PermissionGroupFilter.OTHER -> it.group == null
+                            else -> true
+                        }
+                    }
+                }
+            }
     }
 
     Scaffold(
         topBar = {
-            LideTopBar(
-                title = stringResource(R.string.perm_project_title),
-                onBack = onBack,
-                actions = {
-                    val s = state
-                    TextButton(
-                        onClick = { save() },
-                        enabled = s != null && s.selected != s.original,
-                    ) {
-                        Text(stringResource(R.string.perm_project_save))
-                    }
+            // T3（2026-08-12）：搜索内嵌 AppBar，与 API 浏览器同款 CenterAlignedTopAppBar。
+            CenterAlignedTopAppBar(
+                title = {
+                    SearchBar(
+                        state = searchBarState,
+                        inputField = {
+                            PermissionCollapsedSearchInput(
+                                query = query,
+                                onClear = { query = "" },
+                                onTapToExpand = { searchActive = true },
+                                onBack = onBack,
+                                filterSlot = {
+                                    PermissionFilterMenuButton(
+                                        expanded = filterMenuOpen,
+                                        onExpandedChange = { filterMenuOpen = it },
+                                        selectedGroup = selectedGroup,
+                                        onGroupSelect = { selectedGroup = it },
+                                        groupCounts = groupCounts,
+                                        totalCount = allItems.size,
+                                    )
+                                },
+                            )
+                        },
+                        modifier = Modifier.fillMaxWidth(0.92f),
+                    )
                 },
+                colors =
+                    TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        titleContentColor = MaterialTheme.colorScheme.onSurface,
+                    ),
             )
         },
     ) { padding ->
-        Column(
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .padding(padding),
-        ) {
-            PermissionCollapsedSearchInput(
-                query = query,
-                onClear = { query = "" },
-                onTapToExpand = { searchActive = true },
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
-            )
-            val s = state
-            if (s == null) {
-                Box(
-                    Modifier.fillMaxWidth().padding(vertical = 8.dp),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    CircularProgressIndicator(modifier = Modifier.size(24.dp))
+        val s = state
+        if (s == null) {
+            Box(
+                Modifier.fillMaxSize().padding(padding),
+                contentAlignment = Alignment.Center,
+            ) {
+                CircularProgressIndicator(modifier = Modifier.size(24.dp))
+            }
+        } else {
+            // 正文列表受分类筛选影响：selectedGroup != null 时仅展示对应分组。
+            val displayItems =
+                if (selectedGroup == null) {
+                    allItems
+                } else {
+                    allItems.filter {
+                        when (selectedGroup) {
+                            PermissionGroupFilter.REGULAR -> it.group == PermissionGroup.REGULAR
+                            PermissionGroupFilter.SPECIAL -> it.group == PermissionGroup.SPECIAL
+                            PermissionGroupFilter.OTHER -> it.group == null
+                            else -> true
+                        }
+                    }
                 }
-            } else {
-                // 页级单一 LazyColumn：分组标题 + 勾选行直接渲染（消除嵌套滚动容器）。
-                LazyColumn(
-                    modifier =
-                        Modifier
-                            .fillMaxSize()
-                            .padding(horizontal = 16.dp),
-                    verticalArrangement = Arrangement.spacedBy(4.dp),
-                ) {
-                    permissionGroupItems(allItems) { item ->
-                        PermissionCheckRow(
-                            label = item.label,
-                            alias = item.aliasText,
-                            checked = item.name in s.selected,
-                            onToggle = {
-                                state =
-                                    s.copy(
-                                        selected = if (item.name in s.selected) s.selected - item.name else s.selected + item.name,
-                                    )
-                            },
-                        )
-                    }
-                    item {
-                        Spacer(Modifier.height(80.dp))
-                    }
+            // 页级单一 LazyColumn：筛选后平铺展示勾选行（无分组标题，无额外行间距）。
+            LazyColumn(
+                modifier = Modifier.fillMaxSize().padding(padding),
+                contentPadding = PaddingValues(horizontal = 16.dp),
+            ) {
+                items(displayItems, key = { it.name }) { item ->
+                    PermissionCheckRow(
+                        label = item.label,
+                        alias = item.aliasText,
+                        checked = item.name in s.selected,
+                        onToggle = {
+                            // T5（2026-08-13）：不可变 Set 重赋（快照写入 → 重组），
+                            // 不再原地修改 MutableSet。
+                            val next = togglePermission(s.selected, item.name)
+                            state = s.copy(selected = next)
+                            persistSelected(next)
+                        },
+                    )
+                }
+                item {
+                    Spacer(Modifier.height(80.dp))
                 }
             }
         }
@@ -404,41 +457,53 @@ fun ProjectPermissionScreen(
                         searchActive = false
                         focusManager.clearFocus()
                     },
+                    filterSlot = {
+                        PermissionFilterMenuButton(
+                            expanded = filterMenuOpen,
+                            onExpandedChange = { filterMenuOpen = it },
+                            selectedGroup = selectedGroup,
+                            onGroupSelect = { selectedGroup = it },
+                            groupCounts = groupCounts,
+                            totalCount = allItems.size,
+                        )
+                    },
                 )
             },
             content = {
-                BackHandler {
-                    searchActive = false
-                    focusManager.clearFocus()
-                }
-                if (filtered.isEmpty()) {
-                    Box(Modifier.fillMaxSize().padding(24.dp), contentAlignment = Alignment.Center) {
-                        Text(
-                            stringResource(R.string.permission_no_result),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        )
+                Surface(color = MaterialTheme.colorScheme.surfaceContainerHighest) {
+                    BackHandler {
+                        searchActive = false
+                        focusManager.clearFocus()
                     }
-                } else {
-                    LazyColumn(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.spacedBy(4.dp),
-                    ) {
-                        permissionGroupItems(filtered) { item ->
-                            val cur = state
-                            PermissionCheckRow(
-                                label = item.label,
-                                alias = item.aliasText,
-                                checked = cur != null && item.name in cur.selected,
-                                onToggle = {
-                                    state?.let { st ->
-                                        state =
-                                            st.copy(
-                                                selected = if (item.name in st.selected) st.selected - item.name else st.selected + item.name,
-                                            )
-                                    }
-                                },
+                    if (filtered.isEmpty()) {
+                        Box(Modifier.fillMaxSize().padding(24.dp), contentAlignment = Alignment.Center) {
+                            Text(
+                                stringResource(R.string.permission_no_result),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
+                        }
+                    } else {
+                        LazyColumn(
+                            modifier = Modifier.fillMaxSize(),
+                        ) {
+                            items(filtered, key = { it.name }) { item ->
+                                val cur = state
+                                PermissionCheckRow(
+                                    label = item.label,
+                                    alias = item.aliasText,
+                                    checked = cur != null && item.name in cur.selected,
+                                    onToggle = {
+                                        // T5（2026-08-13）：同正文列表——不可变 Set
+                                        // 重赋 + 参数化写盘。
+                                        if (cur != null) {
+                                            val next = togglePermission(cur.selected, item.name)
+                                            state = cur.copy(selected = next)
+                                            persistSelected(next)
+                                        }
+                                    },
+                                )
+                            }
                         }
                     }
                 }
@@ -447,11 +512,21 @@ fun ProjectPermissionScreen(
     }
 }
 
-/** 工程权限编辑状态：已保存基线（原始勾选）+ 当前勾选。 */
+/** 工程权限编辑状态（勾选即生效，无保存基线）。 */
 private data class ProjectPermState(
     val selected: Set<String>,
-    val original: Set<String>,
 )
+
+/**
+ * 切换勾选（T5，2026-08-13）：返回**新不可变集合**，配合
+ * `state = s.copy(selected = ...)` 重赋触发 Compose 快照写入 → 重组。
+ * 禁止对 MutableSet 原地增删（快照系统检测不到变化 → 无重组 → 勾选框视觉不动，
+ * 历史缺陷根因）。
+ */
+private fun togglePermission(
+    selected: Set<String>,
+    name: String,
+): Set<String> = if (name in selected) selected - name else selected + name
 
 @Composable
 private fun PermissionRow(

@@ -95,12 +95,18 @@
          （font_family_monospace/sans/serif + font_section_system 已随系统族
          选项移除，历史引用不得回退） -->
     <string name="font_family">字体</string>
-    <!-- 编辑器配色方案（T10，2026-08-12 用户拍板反转：方案可选、明暗双模跟随宿主；
-         历史「编辑器主题」字符串已删除，不得回退） -->
-    <string name="editor_color_scheme">配色方案</string>
-    <string name="editor_scheme_classic">LIDE Classic</string>
-    <string name="editor_scheme_solarized">Solarized</string>
-    <string name="editor_scheme_tomorrow">Tomorrow</string>
+    <!-- 编辑器主题（2026-08-13 Squircle 对齐拍板：9 款单侧手选，替代双模方案；
+         旧 editor_scheme_classic/solarized/tomorrow 字符串已删除，不得回退） -->
+    <string name="editor_color_scheme">编辑器主题</string>
+    <string name="editor_theme_darcula">Darcula</string>
+    <string name="editor_theme_eclipse">Eclipse</string>
+    <string name="editor_theme_intellij_light">IntelliJ Light</string>
+    <string name="editor_theme_ladies_night">Ladies Night</string>
+    <string name="editor_theme_monokai">Monokai</string>
+    <string name="editor_theme_obsidian">Obsidian</string>
+    <string name="editor_theme_solarized_light">Solarized Light</string>
+    <string name="editor_theme_tomorrow_night">Tomorrow Night</string>
+    <string name="editor_theme_visual_studio">Visual Studio</string>
     <string name="scheme_preview_light">亮</string>
     <string name="scheme_preview_dark">暗</string>
     <!-- 内置字体（T11，2026-08-11）：Squircle CE 组合，OFL -->
@@ -136,9 +142,6 @@
     <string name="perm_granted">已授权</string>
     <string name="perm_denied">未授权</string>
     <string name="perm_request">请求</string>
-    <string name="perm_project_title">工程权限</string>
-    <string name="perm_project_save">保存</string>
-    <string name="perm_project_saved">已保存</string>
     <string name="perm_project_save_failed">保存失败</string>
     <string name="project_permissions">工程权限</string>
     <string name="build_apk">构建 APK</string>
@@ -301,6 +304,9 @@
     <string name="permission_search_hint">搜索权限</string>
     <string name="permission_search_clear">清除</string>
     <string name="permission_no_result">未找到匹配的权限</string>
+    <string name="perm_filter">筛选</string>
+    <string name="perm_filter_all">全部</string>
+    <string name="perm_filter_count">%1$d</string>
 
     <!-- Special permissions -->
     <string name="perm_special_overlay">悬浮窗</string>

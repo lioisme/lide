@@ -81,7 +81,6 @@ internal fun EditorBody(
     tabs: List<EditorTab>,
     selectedFile: String?,
     content: EditorContent?,
-    isDarkTheme: Boolean,
     editorConfig: EditorConfig,
     controller: EditorController,
     onEditorBound: () -> Unit,
@@ -127,7 +126,6 @@ internal fun EditorBody(
             if (currentContent != null && selectedFile != null) {
                 LuaEditor(
                     content = currentContent,
-                    isDarkTheme = isDarkTheme,
                     config = editorConfig,
                     fileName = selectedFile,
                     onContentModified = { session.onContentModified() },

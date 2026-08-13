@@ -46,8 +46,8 @@ object TextMateRuntime {
     @Volatile
     private var initStarted = false
 
-    /** 按「方案 + 明暗」缓存的方案对象（2026-08-12 方案可选反转后按主题名分槽；
-     * 同主题名不重复构造，明暗/方案切换零重建）。 */
+    /** 按主题名缓存的方案对象（2026-08-13 Squircle 对齐后按主题名分槽；
+     * 同主题名不重复构造，主题切换零重建）。 */
     private val hostSchemes = HashMap<String, LideHostColorScheme>()
 
     /**
@@ -55,13 +55,13 @@ object TextMateRuntime {
      * 编辑器侧无需再起线程（AGENTS.md：不得在 UI 线程初始化）。
      * 初始化失败（[RuntimeState.Failed]）可经 [retry] 重新触发。
      *
-     * [initialThemeName] 由宿主按「当前方案 + 当前明暗」传入（保 R4：
-     * 运行时不读宿主状态；默认 = LIDE Classic 亮侧），仅决定初始装配主题，
+     * [initialThemeName] 由宿主按当前主题索引传入（保 R4：运行时不读宿主
+     * 状态；默认 = 默认主题 darcula），仅决定初始装配主题，
      * 编辑器打开后由 LuaEditor 的 LaunchedEffect 按实际配置接管。
      */
     fun preload(
         context: Context,
-        initialThemeName: String = EditorPalette.themeNameFor(EditorPalette.SCHEME_CLASSIC, isDark = false),
+        initialThemeName: String = EditorPalette.themeNameFor(EditorPalette.THEME_DEFAULT_INDEX),
     ) {
         if (initStarted) return
         synchronized(this) {
@@ -93,29 +93,27 @@ object TextMateRuntime {
     }
 
     /**
-     * 编辑器配色方案（2026-08-12 方案可选反转后唯一入口）。
+     * 编辑器主题方案（2026-08-13 Squircle 对齐后唯一入口）。
      *
      * [LideHostColorScheme]：文本区背景/前景槽与 token 色取当前 TextMate 主题
-     * （调用方须先按「方案 + 明暗」`setTheme(EditorPalette.themeNameFor(...))`
+     * （调用方须先 `setTheme(EditorPalette.themeNameFor(scheme))`
      * 再取本方案），chrome 部件色（行号/当前行/选区/浮层/滚动条/minimap）
      * 取宿主派生色；宿主色板变化经 [updateHostColors] 刷新，零重建。
      */
     fun hostColorScheme(
         scheme: Int,
-        isDark: Boolean,
         host: HostEditorColors,
     ): EditorColorScheme {
-        val themeName = EditorPalette.themeNameFor(scheme, isDark)
+        val themeName = EditorPalette.themeNameFor(scheme)
         return hostSchemes.getOrPut(themeName) { LideHostColorScheme(ThemeRegistry.getInstance(), host) }
     }
 
     /** 宿主色板刷新（值未变自动跳过）。 */
     fun updateHostColors(
         scheme: Int,
-        isDark: Boolean,
         host: HostEditorColors,
     ) {
-        hostSchemes[EditorPalette.themeNameFor(scheme, isDark)]?.updateHost(host)
+        hostSchemes[EditorPalette.themeNameFor(scheme)]?.updateHost(host)
     }
 
     private fun runInit(

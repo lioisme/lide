@@ -252,6 +252,21 @@
 | D7 | 文档同步（AGENTS.md/kb/backlog/lint baseline）+ 全量验证 + 收口 | 高 | ⏳ 进行中 | `DEAD_CODE_CLEANUP` `验证` |
 | D8 | **备忘：文件树功能落地时重建** ProjectManager 4 包装 + EditorSession 3 方法（removeTab/renameTab/reload）+ 菜单入口（本次已删） | 低 | 📋 备忘 | `WP-005` `文件树` |
 
+## 2r. Squircle 对齐四需求整改（2026-08-13，工作单 docs/in-progress/SQUIRCLE_ALIGNMENT_FOUR_FIX_WORK_ORDER.md）
+
+> 来源需求（用户 2026-08-13 四条要求）：① 编辑器所有语言高亮与 Squircle CE 完全一致；
+> ② 格式化代码禁止自动滚动到顶部/底部；③ 工程权限界面权限支持勾选和取消勾选；
+> ④ 底部对话输入框调出时同步调出输入法。
+> 用户拍板：① 完全一致 → 引入 Squircle 9 款主题 + 放宽 WCAG 4.5:1 门禁（改 Squircle 源一致断言）；
+> ④ 即 BottomInputSheet 三场景实测仍不弹。
+| # | 任务 | 优先级 | 状态 | 关键词 |
+|---|------|--------|------|--------|
+| S1 | 主题转换 + EditorPalette 9 款目录 + 装配链 + 方案选择器 + 门禁改版 + text.plain 对齐 | 高 | 🔄 进行中 | `SQUIRCLE_FOUR_FIX` `主题` `门禁` |
+| S2 | 格式化滚动修复（sora 官方 onFormatSucceed 配方） | 高 | ⏳ 待执行 | `SQUIRCLE_FOUR_FIX` `格式化` |
+| S3 | 工程权限勾选修复（不可变 Set + 整行 toggleable） | 高 | ⏳ 待执行 | `SQUIRCLE_FOUR_FIX` `权限` |
+| S4 | BottomInputSheet 输入法同步修复 | 高 | ⏳ 待执行 | `SQUIRCLE_FOUR_FIX` `输入法` |
+| S5 | 文档同步 + 全量验证 + ADB 模拟器实测 + 收口 | 高 | ⏳ 待执行 | `SQUIRCLE_FOUR_FIX` `验收` |
+
 ## 2p. 六项 UI 交互与外观整改（2026-08-12，工作单 docs/in-progress/UI_AUDIT_SIX_REQ_WORK_ORDER.md） ——（已完成 2026-08-12，结论蒸馏至 docs/kb/ARCHITECTURE.md §9，工作单已删除）
 > 来源需求（用户 2026-08-12 六条要求，全量审计后立项）：
 > 1. 工程权限界面简约美观，像 API 浏览器一样的搜索和列表，无其他无用内容；

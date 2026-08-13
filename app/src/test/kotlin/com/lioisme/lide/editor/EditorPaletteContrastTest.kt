@@ -6,25 +6,22 @@ import org.junit.Test
 import java.io.File
 
 /**
- * 编辑器配色对比度门禁（2026-08-12 治理红线 C4）。
+ * 编辑器主题一致性门禁（2026-08-13 Squircle 对齐拍板：编辑器高亮与 Squircle CE 完全一致）。
  *
- * 硬性契约（WCAG AA 严格档）：
- * - 全部激活主题（[EditorPalette.allThemes]）的**文本承载色** vs 该主题背景
- *   对比度 ≥ 4.5:1——含注释、行号、次要元素，无豁免；
- * - 前景色不得等于背景色（背景与代码文本禁止混淆）；
- * - 双模配对结构：每对亮/暗主题的 `editor.background` 亮度必须分居
- *   0.5/0.1 两侧（亮侧为浅底、暗侧为深底），且每对亮/暗侧主题 JSON 文件必须存在；
- * - 新增主题必须登记进 [EditorPalette.pairs]，测试从该表读取——白名单单一事实源。
+ * 旧「逐 token WCAG 4.5:1」门禁已随 2026-08-13 拍板替换（Squircle 源 token 色
+ * 有弱对比项，用户明确「高亮与 Squircle 完全一致」，对比度要求让位于一致性；
+ * 宿主 chrome 槽门禁保留在 [com.lioisme.lide.ui.theme.ThemeContrastTest]）。
  *
- * 文本承载色来源（与 LideHostColorScheme / sora 读取一致）：
- * - VSC 格式（tokenColors 段）：`tokenColors[].settings.foreground` +
- *   `colors.editor.foreground` / `editorLineNumber.foreground` /
- *   `editorLineNumber.activeForeground` / `editorWhitespace.foreground` /
- *   `editor.highlightedDelimiters.foreground`；
- * - TM 格式（settings 数组，darcula.json）：`settings[0].settings` 的
- *   `foreground` / `lineNumber` / `lineNumberActiveForeground` / `invisibles` /
- *   `highlightedDelimitersForeground` + 其余条目的 `settings.foreground`。
- * 装饰性槽位（背景/边框/选区底层/滚动条/minimap 等）不承载文本，免检。
+ * 本门禁断言（硬性契约）：
+ * 1. 白名单：[EditorPalette.allThemes] 与 assets/textmate/ 目录 JSON 集一致；
+ * 2. **与 Squircle 源完全一致（双向）**：9 款主题的
+ *    - colors 段全键 → settings[0].settings 同值（映射表见下方）；
+ *    - tokenColors → settings[1..] 逐项 scope + foreground + fontStyle 配平
+ *      （Squircle 无 scope 的全局首项 = settings[0] 承载，跳过）；
+ *    源基线 = `app/src/test/resources/squircle-themes/`（转换脚本导入，CI 无
+ *    reference/ 也可跑）；
+ * 3. 背景预览：[EditorPalette.themeBackgrounds] 与各主题 JSON 背景同源；
+ * 4. 明暗声明：[EditorPalette.isDarkTheme] 与主题背景亮度一致。
  *
  * 注意：本测试从源码树读取资产（Gradle 单测工作目录 = 模块目录），不依赖 Android 运行时。
  */
@@ -37,28 +34,42 @@ class EditorPaletteContrastTest {
         ).firstOrNull { it.isDirectory }
             ?: throw IllegalStateException("assets root not found (cwd=${File("").absolutePath})")
 
-    /** WCAG 对比度下限（严格档，含注释/行号）。 */
-    @Suppress("ktlint:standard:property-naming")
-    private val MIN_CONTRAST = 4.5
+    private val squircleBaselineRoot =
+        listOf(
+            File("src/test/resources/squircle-themes"),
+            File("editor/src/test/resources/squircle-themes"),
+        ).firstOrNull { it.isDirectory }
+            ?: throw IllegalStateException("squircle-themes baseline not found (cwd=${File("").absolutePath})")
 
-    @Test
-    fun `双模配对结构完整且亮暗分居`() {
-        assertTrue("激活主题库必须至少一套双模配对", EditorPalette.pairs.isNotEmpty())
-        for ((light, dark) in EditorPalette.pairs) {
-            val lightTheme = loadTheme(light)
-            val darkTheme = loadTheme(dark)
-            val lightBg = lightTheme.background ?: error("$light 缺少背景色")
-            val darkBg = darkTheme.background ?: error("$dark 缺少背景色")
-            assertTrue(
-                "亮侧主题 $light 背景应为浅色（luminance=${"%.3f".format(relativeLuminance(lightBg))}）",
-                relativeLuminance(lightBg) > 0.5,
-            )
-            assertTrue(
-                "暗侧主题 $dark 背景应为深色（luminance=${"%.3f".format(relativeLuminance(darkBg))}）",
-                relativeLuminance(darkBg) < 0.1,
-            )
-        }
-    }
+    /** Squircle colors 键 → TextMate settings[0] 键（与 scripts/convert-squircle-themes.ps1 同一映射表）。 */
+    private val colorParity: List<Pair<String, List<String>>> =
+        listOf(
+            "editor.background" to listOf("background"),
+            "editor.foreground" to listOf("foreground"),
+            "editor.cursor" to listOf("caret"),
+            "editor.selection.background" to listOf("selection"),
+            "editor.currentLine.background" to listOf("lineHighlight"),
+            "editor.whitespace" to listOf("invisibles"),
+            "editor.lineNumber.foreground" to listOf("lineNumber"),
+            "editor.lineNumber.activeForeground" to listOf("lineNumberActiveForeground"),
+            "editor.lineNumber.divider" to listOf("lineNumberDivider"),
+            "editor.indentGuide.background" to listOf("indentGuideBackground"),
+            "editor.indentGuide.activeBackground" to listOf("indentGuideActiveBackground"),
+            "editor.highlightedDelimiters.foreground" to listOf("highlightedDelimitersForeground"),
+            "editor.highlightedDelimiters.background" to listOf("highlightedDelimitersBackground"),
+            "editor.matchHighlight.background" to listOf("findMatchBackground"),
+            "editor.popupWindow.background" to listOf("completionWindowBackground", "tooltipBackground"),
+            "editor.popupWindow.activeBackground" to listOf("completionWindowBackgroundCurrent"),
+        )
+
+    private class ParsedTheme(
+        val name: String,
+        val background: String?,
+        /** 文本承载槽：槽名 → 前景色（parseVscTheme / parseTmTheme 产出的同结构集合）。 */
+        val globalColors: Map<String, String>,
+        /** token 规则（保持源顺序）：scope 串 → settings。 */
+        val tokenRules: List<Pair<String, Map<String, String>>>,
+    )
 
     @Test
     fun `主题白名单与文件树一致`() {
@@ -77,60 +88,121 @@ class EditorPaletteContrastTest {
     }
 
     @Test
-    fun `方案背景预览色条与主题 JSON 同源`() {
-        assertEquals("pairs 与 schemeBackgrounds 必须同长", EditorPalette.pairs.size, EditorPalette.schemeBackgrounds.size)
-        EditorPalette.pairs.forEachIndexed { index, (lightName, darkName) ->
-            val (lightBg, darkBg) = EditorPalette.schemeBackgrounds[index]
+    fun `主题背景预览与主题 JSON 同源`() {
+        assertEquals(
+            "themeCount 与 themeBackgrounds 必须同长",
+            EditorPalette.themeCount,
+            EditorPalette.themeBackgrounds.size,
+        )
+        EditorPalette.themes.forEachIndexed { index, entry ->
+            val bg = loadTheme(entry.name).background ?: error("${entry.name} 缺少背景色")
             assertEquals(
-                "方案[$index] 亮侧背景必须与 $lightName 的 JSON 背景一致",
-                parseArgb(loadTheme(lightName).background ?: error("$lightName 缺少背景色")),
-                lightBg,
-            )
-            assertEquals(
-                "方案[$index] 暗侧背景必须与 $darkName 的 JSON 背景一致",
-                parseArgb(loadTheme(darkName).background ?: error("$darkName 缺少背景色")),
-                darkBg,
+                "主题[$index] ${entry.name} 背景必须与 JSON 背景一致",
+                parseArgb(bg),
+                EditorPalette.themeBackgrounds[index],
             )
         }
     }
 
-    /** #RRGGBB → ARGB Int（与 schemeBackgrounds 常量同形式）。 */
+    @Test
+    fun `行号文字预览与主题 JSON 同源`() {
+        assertEquals("themeCount 与 themeLineNumbers 必须同长", EditorPalette.themeCount, EditorPalette.themeLineNumbers.size)
+        assertEquals(
+            "themeCount 与 themeLineNumbersActive 必须同长",
+            EditorPalette.themeCount,
+            EditorPalette.themeLineNumbersActive.size,
+        )
+        EditorPalette.themes.forEachIndexed { index, entry ->
+            val theme = loadTheme(entry.name)
+            val lineNumber = theme.globalColors["lineNumber"]
+                ?: error("${entry.name} 缺少 lineNumber 键（行号随主题契约）")
+            val lineNumberActive = theme.globalColors["lineNumberActiveForeground"]
+                ?: error("${entry.name} 缺少 lineNumberActiveForeground 键")
+            assertEquals(
+                "主题[$index] ${entry.name} 行号色必须与 JSON lineNumber 一致",
+                parseArgb(lineNumber),
+                EditorPalette.themeLineNumbers[index],
+            )
+            assertEquals(
+                "主题[$index] ${entry.name} 当前行号色必须与 JSON lineNumberActiveForeground 一致",
+                parseArgb(lineNumberActive),
+                EditorPalette.themeLineNumbersActive[index],
+            )
+        }
+    }
+
+    @Test
+    fun `主题明暗声明与背景亮度一致`() {
+        EditorPalette.themes.forEachIndexed { index, entry ->
+            val bg = loadTheme(entry.name).background ?: error("${entry.name} 缺少背景色")
+            val lum = relativeLuminance(bg)
+            assertTrue(
+                "主题[$index] ${entry.name}: isDark=${entry.isDark} 与背景亮度 $lum 矛盾",
+                if (entry.isDark) lum <= 0.5 else lum > 0.5,
+            )
+        }
+    }
+
+    @Test
+    fun `全部主题与 Squircle 源完全一致`() {
+        val failures = mutableListOf<String>()
+        for (name in EditorPalette.allThemes) {
+            val lide = loadTheme(name)
+            val squircle = loadSquircleSource(name)
+
+            // colors 段全键配对
+            for ((srcKey, dstKeys) in colorParity) {
+                val srcValue = squircle.globalColors[srcKey]
+                for (dstKey in dstKeys) {
+                    val dstValue = lide.globalColors[dstKey]
+                    if (srcValue == null) {
+                        if (dstValue != null) {
+                            failures += "$name: 源缺 $srcKey 但 LIDE 有 $dstKey=$dstValue"
+                        }
+                        continue
+                    }
+                    if (srcValue != dstValue) {
+                        failures += "$name: $srcKey($srcValue) != settings[$dstKey]($dstValue)"
+                    }
+                }
+            }
+
+            // tokenColors 配平（LIDE settings[1..] ↔ Squircle tokenColors 跳过无 scope 首项）
+            val lideRules = lide.tokenRules
+            val srcRules = squircle.tokenRules
+            if (lideRules.size != srcRules.size) {
+                failures += "$name: token 规则数不一致 LIDE=${lideRules.size} Squircle=${srcRules.size}"
+            }
+            val common = minOf(lideRules.size, srcRules.size)
+            for (i in 0 until common) {
+                val (lideScope, lideSettings) = lideRules[i]
+                val (srcScope, srcSettings) = srcRules[i]
+                if (lideScope != srcScope) {
+                    failures += "$name: token[$i] scope 不一致 LIDE=[$lideScope] Squircle=[$srcScope]"
+                }
+                val allKeys = (lideSettings.keys + srcSettings.keys).distinct().sorted()
+                for (key in allKeys) {
+                    val lv = lideSettings[key]
+                    val sv = srcSettings[key]
+                    if (lv != sv) {
+                        failures += "$name: token[$i] [$lideScope] $key 不一致 LIDE=$lv Squircle=$sv"
+                    }
+                }
+            }
+        }
+        assertTrue(
+            "与 Squircle 源一致性门禁失败（改动主题 JSON 必须过门禁）：\n" + failures.joinToString("\n"),
+            failures.isEmpty(),
+        )
+    }
+
+    /** #RRGGBB → ARGB Int（与 themeBackgrounds 常量同形式）。 */
     private fun parseArgb(hex: String): Int {
         val clean = hex.removePrefix("#")
         return 0xFF000000.toInt() or clean.substring(0, 6).toInt(16)
     }
 
-    @Test
-    fun `全部文本承载色对比度大于等于 4 5 比 1`() {
-        val failures = mutableListOf<String>()
-        for (name in EditorPalette.allThemes) {
-            val theme = loadTheme(name)
-            val bg = theme.background ?: error("$name 缺少背景色")
-            for ((slot, fg) in theme.textColors) {
-                if (fg == bg) {
-                    failures += "$name [$slot]: 前景 $fg 与背景 $bg 相同（禁止混淆）"
-                    continue
-                }
-                val ratio = contrast(fg, bg)
-                if (ratio < MIN_CONTRAST) {
-                    failures += "$name [$slot]: $fg 对比 $bg = ${"%.2f".format(ratio)} < $MIN_CONTRAST"
-                }
-            }
-        }
-        assertTrue(
-            "对比度门禁失败（全部 token ≥ 4.5:1，注释/行号不豁免）：\n" + failures.joinToString("\n"),
-            failures.isEmpty(),
-        )
-    }
-
     // ---------- 主题模型与解析 ----------
-
-    private class ParsedTheme(
-        val name: String,
-        val background: String?,
-        /** 文本承载槽：槽名 → 前景色。 */
-        val textColors: List<Pair<String, String>>,
-    )
 
     private fun loadTheme(name: String): ParsedTheme {
         val file = File(assetsRoot, "textmate/$name.json")
@@ -143,30 +215,35 @@ class EditorPaletteContrastTest {
         }
     }
 
+    private fun loadSquircleSource(name: String): ParsedTheme {
+        val file = File(squircleBaselineRoot, "$name.json")
+        assertTrue("Squircle 源基线缺失: ${file.path}", file.isFile)
+        val root = JsonParser(file.readText()).parse() as Map<*, *>
+        return parseVscTheme(name, root)
+    }
+
     private fun parseVscTheme(
         name: String,
         root: Map<*, *>,
     ): ParsedTheme {
         val colors = (root["colors"] as? Map<*, *>) ?: error("$name 缺少 colors 段")
         val bg = colors["editor.background"] as? String
-        val textColors = mutableListOf<Pair<String, String>>()
-        listOf(
-            "editor.foreground",
-            "editorLineNumber.foreground",
-            "editorLineNumber.activeForeground",
-            "editorWhitespace.foreground",
-            "editor.highlightedDelimiters.foreground",
-        ).forEach { key ->
-            (colors[key] as? String)?.let { textColors += key to it }
-        }
+        val globalColors =
+            colors.entries
+                .filter { it.key as? String in colorParity.map { p -> p.first } }
+                .associate { it.key.toString() to it.value.toString() }
+        val tokenRules = mutableListOf<Pair<String, Map<String, String>>>()
         val tokenColors = (root["tokenColors"] as? List<*>) ?: emptyList<Any>()
-        tokenColors.forEachIndexed { index, raw ->
-            val entry = raw as? Map<*, *> ?: return@forEachIndexed
-            val settings = entry["settings"] as? Map<*, *> ?: return@forEachIndexed
-            val fg = settings["foreground"] as? String ?: return@forEachIndexed
-            textColors += "tokenColors[$index]" to fg
+        tokenColors.forEach { raw ->
+            val entry = raw as? Map<*, *> ?: return@forEach
+            val scope = entry["scope"] as? String ?: return@forEach // 无 scope 全局首项跳过
+            val settings = entry["settings"] as? Map<*, *> ?: return@forEach
+            val rule = linkedMapOf<String, String>()
+            (settings["foreground"] as? String)?.let { rule["foreground"] = it }
+            (settings["fontStyle"] as? String)?.let { rule["fontStyle"] = it }
+            tokenRules += scope to rule
         }
-        return ParsedTheme(name, bg, textColors)
+        return ParsedTheme(name, bg, globalColors, tokenRules)
     }
 
     private fun parseTmTheme(
@@ -177,26 +254,22 @@ class EditorPaletteContrastTest {
         val global = (settings.firstOrNull() as? Map<*, *>)?.get("settings") as? Map<*, *>
             ?: error("$name 缺少全局 settings 段")
         val bg = global["background"] as? String
-        val textColors = mutableListOf<Pair<String, String>>()
-        listOf(
-            "foreground",
-            "lineNumber",
-            "lineNumberActiveForeground",
-            "invisibles",
-            "highlightedDelimitersForeground",
-        ).forEach { key ->
-            (global[key] as? String)?.let { textColors += key to it }
+        val globalColors = linkedMapOf<String, String>()
+        global.forEach { (k, v) -> globalColors[k.toString()] = v.toString() }
+        val tokenRules = mutableListOf<Pair<String, Map<String, String>>>()
+        settings.drop(1).forEach { raw ->
+            val entry = raw as? Map<*, *> ?: return@forEach
+            val scope = entry["scope"] as? String ?: return@forEach
+            val entrySettings = entry["settings"] as? Map<*, *> ?: return@forEach
+            val rule = linkedMapOf<String, String>()
+            (entrySettings["foreground"] as? String)?.let { rule["foreground"] = it }
+            (entrySettings["fontStyle"] as? String)?.let { rule["fontStyle"] = it }
+            tokenRules += scope to rule
         }
-        settings.drop(1).forEachIndexed { index, raw ->
-            val entry = raw as? Map<*, *> ?: return@forEachIndexed
-            val entrySettings = entry["settings"] as? Map<*, *> ?: return@forEachIndexed
-            val fg = entrySettings["foreground"] as? String ?: return@forEachIndexed
-            textColors += "settings[${index + 1}]" to fg
-        }
-        return ParsedTheme(name, bg, textColors)
+        return ParsedTheme(name, bg, globalColors, tokenRules)
     }
 
-    // ---------- WCAG 相对亮度与对比度 ----------
+    // ---------- WCAG 相对亮度（明暗判定用） ----------
 
     private fun relativeLuminance(hex: String): Double {
         val (r, g, b) = parseRgb(hex)
@@ -205,18 +278,7 @@ class EditorPaletteContrastTest {
         return 0.2126 * linear(r) + 0.7152 * linear(g) + 0.0722 * linear(b)
     }
 
-    private fun contrast(
-        fg: String,
-        bg: String,
-    ): Double {
-        val l1 = relativeLuminance(fg)
-        val l2 = relativeLuminance(bg)
-        val hi = maxOf(l1, l2)
-        val lo = minOf(l1, l2)
-        return (hi + 0.05) / (lo + 0.05)
-    }
-
-    /** 解析 #RRGGBB 或 #RRGGBBAA（alpha 键不参与对比度，仅校验存在）。 */
+    /** 解析 #RRGGBB 或 #RRGGBBAA（alpha 不参与亮度）。 */
     private fun parseRgb(hex: String): Triple<Double, Double, Double> {
         val clean = hex.removePrefix("#")
         require(clean.length == 6 || clean.length == 8) { "非法颜色值: $hex" }

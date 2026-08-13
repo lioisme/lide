@@ -134,7 +134,7 @@ ui 包                                 → editor/session/engine/build/project/a
 |--------|------|
 | 工程元数据 | `init.lua`（appname/appver/packagename/user_permission/pages...）由 `LuaConfigParser`（结构化，非正则）读写 |
 | 依赖声明 | **无全局仓库**：`common/` 已删除（WP-009 方案 A）；工程 = 自治单元，`libs/` + `lua/` 自管 |
-| 权限 | 运行前按 `user_permission` 一次性 `RequestMultiplePermissions`（拒绝仅 Toast 继续运行，pro 行为）；`PermissionResolver` 纯函数 |
+| 权限 | 运行前按 `user_permission` 一次性 `RequestMultiplePermissions`（拒绝仅 Toast 继续运行，pro 行为）；`PermissionResolver` 纯函数。工程权限页（`ProjectPermissionScreen`）勾选即生效：`ProjectPermState.selected` 不可变 Set + toggle 重赋（快照写入 → 重组）+ `persistSelected(Set)` 参数化写盘；`PermissionCheckRow` 整行 `Modifier.toggleable`（Checkbox `onCheckedChange=null` 仅视觉，单点消费防双触发）。**禁止对 `MutableSet` 原地增删**（无快照写入 → 无重组 → 勾选框视觉不动，2026-08-13 修复根因） |
 | 设置 | `SettingsManager`（SharedPreferences）+ `LocaleManager`（中英 i18n） |
 
 ---

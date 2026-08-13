@@ -629,29 +629,16 @@ private fun ColorSheet(
 }
 
 /**
- * 选中标记色（U1 亮度判色 + R6 明暗双因素，2026-08-12）：宿主日间偏好黑、夜间
- * 偏好白；候选（偏好色、另一色）依序取首个满足 WCAG AA 4.5:1 严格档的；
- * 双候选均不满足时取对比度更高者（黑白为极端候选，任意色块至少一者达标，
- * 硬门槛兜底恒生效，无需降级）。
+ * 选中标记色（B4，2026-08-12）：暗色模式恒白、亮色模式恒黑。
+ * 原实现基于种子色 luminance 计算对比度，中灰色种子（l ≈ 0.5）在暗色模式下
+ * 返回 Color.Black，与深色背景融为一体导致边框和对号不可见。
+ * 简化后：标记色仅取决于主题明暗，不依赖种子色本身亮度，确保任意 seed 色下
+ * 选中边框和对号始终清晰可见。
  */
 private fun selectedMarkColor(
     color: Color,
     isDark: Boolean,
-): Color {
-    val l = color.luminance()
-    val contrastWhite = 1.05f / (l + 0.05f)
-    val contrastBlack = (l + 0.05f) / 0.05f
-    val preferred = if (isDark) Color.White else Color.Black
-    val fallback = if (isDark) Color.Black else Color.White
-    val preferredContrast = if (isDark) contrastWhite else contrastBlack
-    val fallbackContrast = if (isDark) contrastBlack else contrastWhite
-    return when {
-        preferredContrast >= 4.5f -> preferred
-        fallbackContrast >= 4.5f -> fallback
-        preferredContrast >= fallbackContrast -> preferred
-        else -> fallback
-    }
-}
+): Color = if (isDark) Color.White else Color.Black
 
 private tailrec fun Context.resolveActivity(): Activity? =
     when (this) {

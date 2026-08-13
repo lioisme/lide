@@ -119,10 +119,15 @@ class EditorController {
      * - **一致性守卫**：后台计算期间用户可能继续输入，替换前校验
      *   `text.toString() == 快照`，不一致即放弃（防止覆盖计算期间的新输入）。
      *
-     * U6（2026-08-12）：**视口恢复**——替换前快照 `getFirstVisibleLine()`，
-     * 替换后 `setSelection(..., makeItVisible=false)` 不强制滚动到光标行（否则
-     * 光标在首/末行时等价「跳顶/跳底」），再 `ensurePositionVisible(firstVisible,
-     * 0)` 使格式化前的浏览位置重新可见；行结构变化后夹取到新行数边界。
+     * U6（2026-08-12）+ T14（2026-08-13）**视口恢复 = sora 官方
+     * `onFormatSucceed` 配方**（CodeEditor.java:5364-5398）：全量替换时
+     * sora `afterInsert` 无条件 `ensureSelectionVisible()` 启动滚动动画
+     * （光标已被推到文末 → 动画滚向文末 = 用户看到的「先滚动」）；替换前
+     * 快照 `getOffsetX()/getOffsetY()`，替换后杀动画 + `startScroll(x,y,0,0,0)`
+     * 零时长瞬移回快照偏移 + `scrollBy(0,0)` 钳制越界（行结构调整后快照偏移
+     * 可能超出新 `scrollMax`）。全过程在同一主线程消息内完成，动画帧无机会
+     * 渲染 → 视口视觉零移动。替代 U6 早期的「行级 ensurePositionVisible」实现
+     * （行首恢复语义粗糙且可能再次触发滚动）。
      */
     fun format(
         useTab: Boolean,
@@ -153,8 +158,10 @@ class EditorController {
                     }
                     val curLine = ed.cursor.getLeftLine()
                     val curColumn = ed.cursor.getLeftColumn()
-                    // U6（2026-08-12）：视口快照——格式化后恢复浏览位置（不跳顶/不跳底/不跳光标行）。
-                    val firstVisible = ed.getFirstVisibleLine()
+                    // T14（2026-08-13）：滚动偏移快照（官方 onFormatSucceed 配方，
+                    // 见本方法 KDoc U6 段）。
+                    val offsetX = ed.getOffsetX()
+                    val offsetY = ed.getOffsetY()
                     val lastLine = (ed.text.lineCount - 1).coerceAtLeast(0)
                     val lastCol = ed.text.getColumnCount(lastLine)
                     ed.text.beginBatchEdit()
@@ -168,12 +175,11 @@ class EditorController {
                     val restoredLine = curLine.coerceIn(0, (ed.text.lineCount - 1).coerceAtLeast(0))
                     val restoredCol = curColumn.coerceIn(0, ed.text.getColumnCount(restoredLine))
                     // makeItVisible=false：不得强制滚动到光标行（格式化前光标在视口外
-                    // 时，若强制滚动等于把用户浏览位置拽走）；随后视口按快照行恢复。
+                    // 时，若强制滚动等于把用户浏览位置拽走）。
                     ed.setSelection(restoredLine, restoredCol, false)
-                    // 视口恢复：使格式化前的视口首行重新可见（行级近似，行结构变化后
-                    // 夹取到新边界）。光标若原本在视口外，保持用户浏览位置优先。
-                    val restoredFirst = firstVisible.coerceIn(0, (ed.text.lineCount - 1).coerceAtLeast(0))
-                    ed.ensurePositionVisible(restoredFirst, 0, true)
+                    // 视口恢复（T14，官方 onFormatSucceed 配方）：杀滚动动画 +
+                    // duration 0 瞬移回快照偏移 + 越界钳制（见本方法 KDoc U6 段）。
+                    restoreScrollOffset(ed, offsetX, offsetY)
                     true
                 }
             onResult(applied == true)
@@ -279,6 +285,8 @@ class EditorController {
      * H1（2026-08-12）：sora `Cursor.afterInsert` 语义下，在 0 处整文替换光标必然
      * 右移到全文末尾——替换前记录光标、替换后按 format 同款行列双夹取恢复
      * （`Cursor.afterInsert` 的 index ≥ 插入点整体右移行为见 sora Cursor.java）。
+     * T14（2026-08-13）：视口恢复与 [format] 同款（sora 官方 `onFormatSucceed`
+     * 配方，偏移级快照 + 杀动画瞬移），替代 U6 早期的行级恢复。
      * 完成后回调经主线程执行。
      */
     fun replaceAll(
@@ -314,21 +322,44 @@ class EditorController {
             if (newText == text) return
             val curLine = e.cursor.getLeftLine()
             val curColumn = e.cursor.getLeftColumn()
-            // U6（2026-08-12）：视口快照——替换后恢复浏览位置（与 format 同款）。
-            val firstVisible = e.getFirstVisibleLine()
+            // T14（2026-08-13）：滚动偏移快照（与 format 同款官方配方）。
+            val offsetX = e.getOffsetX()
+            val offsetY = e.getOffsetY()
             val lastLine = e.lineCount - 1
             e.text.replace(0, 0, lastLine, e.text.getColumnCount(lastLine), newText)
             // 光标恢复：行列双夹取（对齐 format 的 L3 模式），越过界回落到有效边界。
             val restoredLine = curLine.coerceIn(0, (e.lineCount - 1).coerceAtLeast(0))
             val restoredCol = curColumn.coerceIn(0, e.text.getColumnCount(restoredLine))
-            // makeItVisible=false + 视口按快照行恢复（同 format U6 语义）。
+            // makeItVisible=false + 视口偏移级恢复（T14，与 format 同款官方配方）。
             e.setSelection(restoredLine, restoredCol, false)
-            val restoredFirst = firstVisible.coerceIn(0, (e.lineCount - 1).coerceAtLeast(0))
-            e.ensurePositionVisible(restoredFirst, 0, true)
+            restoreScrollOffset(e, offsetX, offsetY)
             whenSucceeded()
         } catch (_: Throwable) {
             // 降级：单次命令失败静默放弃（正则非法等）。
         }
+    }
+
+    /**
+     * 视口恢复（sora 官方 `CodeEditor.onFormatSucceed` 配方，CodeEditor.java:5364-5398）：
+     * 批量文本替换时 sora `afterInsert` 无条件 `ensureSelectionVisible()` 启动滚动动画
+     * （全量替换场景光标已被推到文末 → 动画滚向文末）；本方法在同一主线程消息内
+     * `forceFinished` 杀动画 → `startScroll(x, y, 0, 0, 0)` 零时长把滚动位置瞬移回
+     * 快照偏移 → `abortAnimation` 终止后续动画帧 → `scrollBy(0, 0)` 钳制越界
+     * （行结构调整后快照偏移可能超出新 `scrollMax`）。动画帧无机会渲染，
+     * 视口视觉零移动（消除「先滚动再跳回」）。
+     */
+    private fun restoreScrollOffset(
+        e: CodeEditor,
+        offsetX: Int,
+        offsetY: Int,
+    ) {
+        val scroller = e.getScroller()
+        scroller.forceFinished(true)
+        scroller.startScroll(offsetX, offsetY, 0, 0, 0)
+        scroller.abortAnimation()
+        // 钳制滚动偏移到 [0, scrollMax]（0 位移但内部按边界夹取，见
+        // EditorTouchEventHandler.scrollBy(…, smooth=false) 实现）。
+        e.getEventHandler().scrollBy(0f, 0f)
     }
 
     /**

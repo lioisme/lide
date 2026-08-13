@@ -346,49 +346,69 @@ token）；LuaConfigParserTest 既有失败与本治理无关（stash 验证基�
 EditorPaletteContrastTest.kt（门禁）、PermissionCatalog.kt / PermissionScreen.kt /
 InstallBackendUi.kt（perm_* 命名）。
 
-## 14. 编辑器配色方案可选 + 明暗双模跟随宿主（2026-08-12 用户拍板反转，THEME_I18N_SPEC_WORK_ORDER 完工蒸馏）
+## 14. 编辑器主题 = 9 款 Squircle CE 手选单侧主题（2026-08-13 用户拍板，覆盖 §14 旧版「双模跟随宿主」；SQUIRCLE_ALIGNMENT_FOUR_FIX 完工蒸馏）
 
-**反转声明**：§13「单一跟随宿主」（当日治理）经用户拍板反转——编辑器文本区
-明暗**唯一输入源**仍 = 宿主外观（`LocalIsDarkTheme`），但配色**方案**可在
-编辑器设置页选择（Squircle CE / Terminus 同款方案选择器）。§13 中「设置页
-禁止任何编辑器外观/主题选项」与「`editor_theme`/三态模式已删除」仅后半
-（旧键与三态类删除、`projectDarkOverride` 删除）仍有效；方案用**新键**
-`editor_scheme`（`IntKey`），历史引用一律不得回退。
+**拍板声明**（2026-08-13）：编辑器文本区配色与 Squircle CE **完全一致**——全部
+9 款 Squircle 主题单侧手选（不随宿主明暗），方案选择器与 Squircle CE 同款。
+§13/§14 旧版「单一跟随宿主」→「双模跟随宿主」两级形态全部作废：
+`editor_theme` 键、三态 `EditorThemeMode`/`EditorThemeSheet`、双模 `pairs`、
+`LocalIsDarkTheme` 输入、`projectDarkOverride`——历史引用一律不得回退。
 
-**方案 = 亮/暗双模配对**（每套方案两套 TextMate 主题，随宿主明暗自动切换对应侧）：
+**主题目录 = 9 款单侧**（`EditorPalette.themes`，darcula 默认 `THEME_DEFAULT_INDEX=0`）：
 
-| 方案 | 亮侧（isDark=false） | 暗侧（isDark=true） |
-|---|---|---|
-| LIDE Classic（`SCHEME_CLASSIC`=0） | quietlight（`#F5F5F5` 底） | darcula（`#242424` 底） |
-| Solarized Dual（`SCHEME_SOLARIZED`=1） | solarized_light | solarized_dark |
-| Tomorrow Dual（`SCHEME_TOMORROW`=2） | tomorrow | tomorrow_night |
+| 索引 | 主题 | 明暗 | 背景 | 行号 / 行号激活 |
+|---|---|---|---|---|
+| 0 | darcula | dark | `#1E1F22` | `#616366` / `#A4A3A3` |
+| 1 | eclipse | light | `#FFFFFF` | `#ADADAD` / `#828282` |
+| 2 | intellij_light | light | `#FFFFFF` | `#ADADAD` / `#828282` |
+| 3 | ladies_night | dark | `#21282D` | `#859599` / `#E0E2E4` |
+| 4 | monokai | dark | `#1D1E19` | `#575850` / `#C0C1B6` |
+| 5 | obsidian | dark | `#23282A` | `#859599` / `#C6C6C6` |
+| 6 | solarized_light | light | `#FCF6E5` | `#A5ADAB` / `#858A84` |
+| 7 | tomorrow_night | dark | `#1D1F21` | `#858585` / `#FFFFFF` |
+| 8 | visual_studio | dark | `#1E1E1E` | `#6F7680` / `#CCCCCC` |
 
-- **单一事实源** `EditorPalette`：`pairs` = 3 套亮/暗主题名配对（方案索引
-  `SCHEME_*` 常量 = `pairs` 下标）；`allThemes` = TextMate 加载白名单（6 个
-  JSON 全加载）；`schemeBackgrounds` = 方案面板亮/暗预览色条（与 JSON 背景
-  同源，对比度测试断言）；激活主题名 = `themeNameFor(scheme, isDark)`
-  （越界 coerce 回落）。
+- **单一事实源** `EditorPalette`：9 款 `ThemeEntry(name, isDark)` + 索引/名称互转
+  `themeNameFor(index)` / `isDarkTheme(index)`（越界 coerce 回落）+ 静态预览表
+  （`themeBackgrounds` / `themeLineNumbers` / `themeLineNumbersActive`，均与
+  Squircle 源 JSON 同源，测试断言）。
+- **主题 JSON**：`assets/textmate/` 9 款 = Squircle CE 源 JSON 原样转换
+  （VS Code tokenColors → TextMate settings 格式；`scripts/convert-squircle-themes.ps1`
+  纯 ASCII PowerShell），源基线归档 `app/src/test/resources/squircle-themes/`；
+  旧 quietlight/solarized_dark/tomorrow 已删除。
+- **装配链**：`TextMateRuntime` 单例 `themeRegistry.setTheme(名)` + 按主题名分槽
+  的进程级 `LideTextMateColorScheme` 缓存（9 主题全名 THEMES 加载白名单 =
+  Squircle 源全集）；`preload(context, initialThemeName)` 由宿主 LideApp 按
+  `themeNameFor(themeScheme)` 计算传入（R4：运行时不读宿主状态）；编辑器打开后
+  由 LuaEditor `LaunchedEffect(initReady, themeScheme)` 接管（切换主题触发重组）。
+- **行号文字色随主题**（Squircle 行为）：sora `TextMateColorScheme.applyTMTheme`
+  不读 lineNumber 键——由 LuaEditor `themedHostColors`（remember(themeScheme,
+  hostColors) `copy(lineNumber, lineNumberActive)`）覆写，不随宿主 M3。
 - **持久化**：`EditorConfig.themeScheme` + SettingsRegistry `IntKey("editor_scheme")`
-  （默认 CLASSIC）；编辑器设置项计数为 21（含新增「配色方案」行）。
-- **装配链**：`TextMateRuntime` 单例按主题名分槽缓存 `LideHostColorScheme`
-  （同主题名不重复构造，明暗/方案切换零重建；`ThemeRegistry.setTheme` 广播
-  驱动 token 重算）；`preload(context, initialThemeName)` 由宿主 LideApp
-  按「当前方案 + 系统明暗」计算传入（R4：运行时不读宿主状态）；编辑器打开后
-  由 LuaEditor LaunchedEffect(effectiveDark, initReady, themeScheme) 接管。
-- **对比度门禁（G4，跨 §13 延续强化）**：`EditorPaletteContrastTest` 解析
-  assets/textmate/ 全部激活主题逐 token 断言（含 `schemeBackgrounds` 预览
-  色条与 JSON 同源断言、pairs↔schemeBackgrounds↔JSON 三方同源）；
-  `ThemeContrastTest` 守护宿主 HCT 色板 token + chrome 槽（AppBar/标签行/
-  分隔线 = surface+onSurface）× 全部 3 方案背景颜色槽 ≥ 4.5:1。
+  （0..8 主题索引，键名不变、语义迁移；旧值 0=darcula、1=eclipse、2=intellij_light
+  恰好顺序一致）。
+- **主题 JSON 门禁（G4 改版）**：`EditorPaletteContrastTest` 改为「与 Squircle
+  源完全一致」断言（基线 `app/src/test/resources/squircle-themes/`）：colorParity
+  分组映射 + tokenRules 逐项 scope/fg/fontStyle 配平 + 白名单 9 全量与文件树一致 +
+  背景/行号预览与 JSON 同源 + 明暗声明与背景亮度一致。**不再设 WCAG 4.5:1
+  文本色门禁**（Squircle 原版配色系数其自有对比度，eclipse 行号 #ADADAD 对白底
+  2.75:1 为原样）；宿主 chrome 槽门禁 `ThemeContrastTest` 保留（补全窗/tooltip
+  浮层 = `surfaceContainerHighest` 5 对槽断言）——主题 JSON 任何改动必须过门禁。
 - **颜色分层契约（§12 T19 延续）**：不变——AppBar/标签行/分隔线/空态恒为
-  宿主 Material3；文本区独立着色；浮层 `surfaceContainerHighest`。
-- 历史 `EditorChromeColors.kt` 色带删除不回退；§13「DARK=RGB(26,28,30)」
-  误记（宿主 surface）以契约为准。
+  宿主 Material3（surface + onSurface）；文本区独立按主题着色（sora 原生
+  `editor.background`/`background` → WHOLE_BACKGROUND）；浮层
+  `surfaceContainerHighest`。历史 `EditorChromeColors.kt` 色带删除不回退；
+  §13「DARK=RGB(26,28,30)」误记（宿主 surface）以契约为准。
+- **text.plain 装配（SQUIRCLE_FOUR_FIX T7）**：`LuaEditor.createLanguage`
+  内 `scope == LanguageDetector.PLAIN_SCOPE` → sora 原生
+  `io.github.rosemoe.sora.lang.EmptyLanguage()`（Squircle createFromRegistry
+  同款：纯文本零语法/补全/诊断）；`LanguageDetector` 扩展名补齐 `.c++/.h++/.in`
+  → source.cpp（Squircle FileAssociation 同款）。
 
 验证：`:app:compileArm64DebugKotlin` + `:app:testArm64DebugUnitTest`
-（EditorPaletteContrastTest / ThemeContrastTest 全绿）+ `:app:lintArm64Debug`
-（0 新问题）+ `:app:assembleArm64Debug` + `:app:verifyMinimalism` +
-`:app:verifyMinimalismDebug` 全绿；设备截图核验待 P7 统一执行。
+（EditorPaletteContrastTest / ThemeContrastTest 全绿）+ `:app:lintArm64Debug` +
+`:app:verifyMinimalism` + `:app:verifyMinimalismDebug` + `:app:verifySoraIsolation`
+全绿；设备截图核验（9 主题 × token 色对照 Squircle 源）见 ADB 实测。
 
 ## 15. 查找/替换 + 跳行 + 菜单形态（2026-08-12，SQUIRCLE P5 + MENU 整改完工蒸馏）
 
@@ -417,6 +437,23 @@ InstallBackendUi.kt（perm_* 命名）。
   java.util.regex 对齐 sora 语义（NORMAL=Pattern.quote / WHOLE_WORD=`\b` 包裹 /
   REGEX=原样，flags=CASE_INSENSITIVE|MULTILINE）从后往前改写区间，单次
   `Content.replace` 提交（单条 undo、光标保持），零 Dialog，try/catch 降级。
+
+### 格式化/整文替换滚动恢复（SQUIRCLE_FOUR_FIX T8，2026-08-13）
+- **根因链**：全量 `Content.replace` 时 sora `Cursor.afterInsert` 推光标到文末
+  （Cursor.java:338-344）→ `CodeEditor.afterInsert` **无条件**
+  `ensureSelectionVisible()`（CodeEditor.java:5294）动画滚向文末 = 用户看到的
+  「先滚动」；随后光标恢复/行级视口恢复 = 「再跳回」。
+- **正解 = sora 官方 `onFormatSucceed` 配方**（CodeEditor.java:5364-5398）：
+  替换前快照 `getOffsetX()/getOffsetY()`；替换后
+  `getScroller().forceFinished(true)`（杀动画）→
+  `startScroll(x, y, 0, 0, 0)`（零时长瞬移回快照偏移）→
+  `abortAnimation()` → `getEventHandler().scrollBy(0f, 0f)`（钳制越界，
+  行结构调整后快照偏移可能超出新 scrollMax，scrollBy 内部按 [0,max] 夹取）。
+  全过程同一主线程消息内完成 → 动画帧无机会渲染 → 视口视觉零移动。
+- 实现：`EditorController.restoreScrollOffset(e, offsetX, offsetY)` 私有公共恢复，
+  `format` 与 `replaceAll` 共用（替代 U6 早期「行级 ensurePositionVisible」——
+  行首恢复语义粗糙且可能再次触发滚动）。`format` 光标恢复仍为行列双夹取
+  `setSelection(line, col, makeItVisible=false)`（L3 语义不变）。
 
 ### 跳行（P5.2）
 - ⋮ → 编辑 → 跳转到行；`GotoLineDialog`（EditorDialogs.kt，AlertDialog + 数字输入，

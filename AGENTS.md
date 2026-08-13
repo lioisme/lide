@@ -72,27 +72,32 @@ git ls-files '*.jar' | grep -v 'gradle/wrapper/gradle-wrapper.jar'
   `insertText` / `replaceText`（统一脏标记 + 自动保存节流），禁止直接改 `selection.content`。
 - 大文件（> 200 KB）：关闭括号高亮 / 当前块 / 自动换行，并跳过行级诊断。
 - 补全、诊断、事件回调必须 `try/catch(Throwable)` 降级，不得让异常逃逸进 sora 主循环。
-- **编辑器配色方案可选 + 明暗双模跟随宿主（2026-08-12 用户拍板反转，替代
-  当日「单一跟随宿主」治理红线；方案选择器与 Squircle CE / Terminus 同款）**：
-  编辑器文本区明暗唯一输入源 = 宿主外观（`LocalIsDarkTheme`），配色**方案**可
-  在编辑器设置页选择（`EditorConfig.themeScheme` + `editor_scheme` 键，新键名，
-  旧 `editor_theme` 键与三态 `EditorThemeMode`/`EditorThemeSheet` 已删除，
-  历史引用一律不得回退）；工程 init.lua theme 不驱动宿主（`projectDarkOverride`
-  已删除）。每套方案为**亮/暗双模配对**，随宿主明暗自动切换对应侧。
-  - **颜色单一事实源**：`EditorPalette`（editor 包）持有 3 套亮/暗双模主题
-    （LIDE Classic = quietlight/darcula、Solarized Dual、Tomorrow Dual），
-    方案索引 `SCHEME_CLASSIC/SOLARIZED/TOMORROW` = `pairs` 下标，
-    激活主题名 = `EditorPalette.themeNameFor(scheme, isDark)`（越界 coerce 回落），
+- **编辑器主题 = 9 款 Squircle CE 手选单侧主题（2026-08-13 用户拍板，替代
+  当日「双模跟随宿主」；方案选择器与 Squircle CE 同款）**：编辑器文本区配色
+  与 Squircle CE **完全一致**，9 款主题在编辑器设置页手选（`EditorConfig`
+  `themeScheme` + `editor_scheme` 键，0..8 主题索引，键名不变、语义迁移；
+  旧 `editor_theme` 键 / 三态 `EditorThemeMode`/`EditorThemeSheet` / 双模
+  `pairs` 等历史形态一律禁止回退）；工程 init.lua theme 不驱动宿主
+  （`projectDarkOverride` 已删除）。
+  - **颜色单一事实源**：`EditorPalette`（editor 包）持有 9 款单侧主题目录
+    （darcula/eclipse/intellij_light/ladies_night/monokai/obsidian/
+    solarized_light/tomorrow_night/visual_studio，`themes` 列表 +
+    `THEME_DEFAULT_INDEX`），每款含 `ThemeEntry(name, isDark)`；
+    主题索引与名称互转 = `themeNameFor(index)` / `isDarkTheme(index)`
+    （越界 coerce 回落）；预览色条/行号色静态表
+    （`themeBackgrounds`/`themeLineNumbers`/`themeLineNumbersActive`）。
     经 `TextMateRuntime`（`themeRegistry.setTheme` + 按主题名分槽的进程级
-    `LideTextMateColorScheme` 缓存，`darcula`/`quietlight`/`solarized_*`/
-    `tomorrow*` 为 THEMES 加载白名单）装配；宿主切换浅/深色或切换方案时
-    须触发编辑器重组；`TextMateRuntime.preload` 接受宿主传入的初始主题名
-    （R4：运行时不读宿主状态）。
-  - **对比度门禁（G4）**：全部文本承载色 token 对主题背景 WCAG AA 严格档
-    ≥ 4.5:1，由 `EditorPaletteContrastTest` 守护（解析 assets/textmate/ 全部
-    激活主题逐 token 断言，含 `schemeBackgrounds` 预览色条与 JSON 同源断言）；
-    宿主色板另由 `ThemeContrastTest` 守护（HCT 生成 token + chrome 槽
-    × 全部方案背景）——主题 JSON 任何改动必须过门禁。
+    `LideTextMateColorScheme` 缓存，9 主题全名 THEMES 加载白名单 = Squircle
+    源 JSON 全集）装配；切换主题时须触发编辑器重组；`TextMateRuntime.preload`
+    接受宿主传入的初始主题名（R4：运行时不读宿主状态）。行号文字色随主题
+    （Squircle 行为，由 LuaEditor `themedHostColors` 覆写，不随宿主 M3）。
+  - **主题 JSON 门禁（G4 改版）**：`EditorPaletteContrastTest` 改为「与
+    Squircle 源完全一致」断言（`app/src/test/resources/squircle-themes/`
+    基线：colorParity 分组映射 + tokenRules 逐项 scope/fg/fontStyle 配平 +
+    白名单 9 全量与文件树一致 + 背景/行号预览与 JSON 同源 + 明暗声明一致）——
+    不再设 WCAG 4.5:1 文本色门禁（Squircle 原版配色系数其自有对比度）；
+    宿主 chrome 槽（补全窗/tooltip 浮层 = `surfaceContainerHighest`）仍由
+    `ThemeContrastTest` 守护——主题 JSON 任何改动必须过门禁。
   - **颜色分层契约（T19 延续）**：AppBar / 标签行 / 分隔线 / 空态一律宿主
     Material3（AppBar = surface + onSurface，与主界面/设置界面同款）；编辑器
     文本区独立着色（亮侧 quietlight `#F5F5F5` / 暗侧 darcula `#242424` 等

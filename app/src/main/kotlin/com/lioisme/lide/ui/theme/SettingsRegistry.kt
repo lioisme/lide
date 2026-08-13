@@ -64,9 +64,10 @@ internal object SettingsRegistry {
             IntKey("tab_size", 4, { it.tabSize }, { c, v -> c.copy(tabSize = v) }),
             // T5（2026-08-10）：sora 上限扩展
             IntKey("font_family", EditorConfig.FONT_FAMILY_DEFAULT, { it.fontFamily }, { c, v -> c.copy(fontFamily = v) }),
-            // T8（2026-08-12 方案可选反转）：配色方案索引；新键名 editor_scheme，
+            // T8（2026-08-12 方案可选反转）→ 2026-08-13 Squircle 对齐：主题索引 0..8；
+            // 键名 editor_scheme 沿用（语义迁移见 EditorConfig.themeScheme 注释），
             // 不复用已废弃的 editor_theme（历史引用不得回退）。
-            IntKey("editor_scheme", EditorPalette.SCHEME_CLASSIC, { it.themeScheme }, { c, v -> c.copy(themeScheme = v) }),
+            IntKey("editor_scheme", EditorPalette.THEME_DEFAULT_INDEX, { it.themeScheme }, { c, v -> c.copy(themeScheme = v) }),
         )
 
     /** 从 [prefs] 加载 [EditorConfig]（缺失键回落默认值）。 */

@@ -263,18 +263,27 @@ private class EditorInstance(
         }
     }
 
+    /**
+     * 语言装配中心（Squircle createFromRegistry 同款路径）：scope → Language。
+     * `text.plain` 走 [EmptyLanguage]（纯文本零语法/补全/诊断，Squircle 同款），
+     * 其余 scope 走 [EditorLanguage]（TextMate 语法装配 + 关键字/标识符补全）。
+     */
     private fun createLanguage(
         scope: String,
         config: EditorConfig,
         collectIdentifiers: Boolean,
         attachTo: CodeEditor,
-    ): EditorLanguage =
-        EditorLanguage(scope, collectIdentifiers = collectIdentifiers).apply {
+    ): io.github.rosemoe.sora.lang.Language {
+        if (scope == LanguageDetector.PLAIN_SCOPE) {
+            return io.github.rosemoe.sora.lang.EmptyLanguage()
+        }
+        return EditorLanguage(scope, collectIdentifiers = collectIdentifiers).apply {
             setAutoCompleteEnabled(true)
             setCompleterKeywords(LanguageKeywordRegistry.keywordsFor(scope))
             configure(config)
             attachEditor(attachTo, attachTo.context)
         }
+    }
 
     /**
      * 后台线程增量校验入口（诊断防抖协程调用，内部同步线程安全）。
@@ -434,7 +443,6 @@ fun rememberTextMateState(): TextMateRuntime.RuntimeState {
 @Composable
 fun LuaEditor(
     content: EditorContent,
-    isDarkTheme: Boolean,
     config: EditorConfig,
     fileName: String?,
     onContentModified: () -> Unit,
@@ -500,16 +508,28 @@ fun LuaEditor(
     // 宿主色板派生（remember(colorScheme) 键控：宿主主题变化自动更新）。
     val hostColors = rememberHostEditorColors()
 
+    // 行号文字随主题（2026-08-13 Squircle 对齐：行号 = 主题 JSON lineNumber 色，
+    // 亮主题×暗宿主下仍可读；覆写宿主 M3 行号槽，其余 chrome 槽保持宿主）。
+    // 索引越界安全（themeNameFor 回落）+ 静态表与 JSON 同源（EditorPaletteContrastTest）。
+    val themedHostColors =
+        remember(currentConfig.themeScheme, hostColors) {
+            val scheme = currentConfig.themeScheme.coerceIn(0, EditorPalette.themeLineNumbers.lastIndex)
+            hostColors.copy(
+                lineNumber = EditorPalette.themeLineNumbers[scheme],
+                lineNumberActive = EditorPalette.themeLineNumbersActive[scheme],
+            )
+        }
+
     val initReady = runtimeState is TextMateRuntime.RuntimeState.Ready
 
-    // 编辑器配色方案可选 + 双模跟随（2026-08-12 用户拍板反转）：明暗唯一输入源 =
-    // 宿主明暗；配色方案 = [EditorConfig.themeScheme]（[EditorPalette] 单一事实源：
-    // 暗 → 该方案暗侧主题，亮 → 亮侧主题），编辑器设置页选择。
-    val effectiveDark = isDarkTheme
+    // 编辑器主题手选单侧（2026-08-13 Squircle 对齐拍板）：主题 = [EditorConfig.themeScheme]
+    // 索引（[EditorPalette] 单一事实源：0..8 单侧主题），编辑器设置页选择；
+    // 不再按宿主明暗双模跟随（Squircle 同款交互）。宿主明暗仍驱动 chrome 部件
+    // （行号/当前行/浮层/滚动条），与文本区主题解耦。
 
     // 宿主色板刷新（LideHostColorScheme.updateHost 值未变自动跳过）。
     LaunchedEffect(hostColors) {
-        TextMateRuntime.updateHostColors(currentConfig.themeScheme, effectiveDark, hostColors)
+        TextMateRuntime.updateHostColors(currentConfig.themeScheme, themedHostColors)
     }
 
     if (!initReady) {
@@ -549,7 +569,7 @@ fun LuaEditor(
                 initialConfig = currentConfig,
                 initialScope = currentResolvedScope,
                 initialScheme =
-                    TextMateRuntime.hostColorScheme(currentConfig.themeScheme, effectiveDark, hostColors),
+                    TextMateRuntime.hostColorScheme(currentConfig.themeScheme, themedHostColors),
                 onContentModified = { currentOnContentModified() },
                 onUndoRedoStateChanged = { u, r -> currentOnUndoRedoStateChanged(u, r) },
                 onFormatAction = { currentOnFormatRequest() },
@@ -557,15 +577,15 @@ fun LuaEditor(
             )
         }
 
-    // 主题装配：setTheme 广播驱动方案动态重算（token 色随明暗主题），编辑器零重建。
-    // setColorScheme 会触发 sora attachEditor（含一次 rerunAnalysis）——仅明暗/方案/
+    // 主题装配：setTheme 广播驱动主题动态重算（token 色随所选主题），编辑器零重建。
+    // setColorScheme 会触发 sora attachEditor（含一次 rerunAnalysis）——仅主题/
     // 就绪切换时执行，宿主色板变化走 updateHostColors 免重分析。
     // 位于门控之后：effect body 延迟至组合提交后执行，此时 instance 已构造。
-    LaunchedEffect(effectiveDark, initReady, currentConfig.themeScheme) {
+    LaunchedEffect(initReady, currentConfig.themeScheme) {
         val registry = ThemeRegistry.getInstance()
-        registry.setTheme(EditorPalette.themeNameFor(currentConfig.themeScheme, effectiveDark))
+        registry.setTheme(EditorPalette.themeNameFor(currentConfig.themeScheme))
         instance.editor.colorScheme =
-            TextMateRuntime.hostColorScheme(currentConfig.themeScheme, effectiveDark, hostColors)
+            TextMateRuntime.hostColorScheme(currentConfig.themeScheme, themedHostColors)
     }
 
     AndroidView(

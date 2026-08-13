@@ -459,22 +459,6 @@ fun EditorScreen(
                                 searchActive = true
                             },
                         )
-                        // 只读切换（P1.4，2026-08-11 真只读入口 = squircle
-                        // 扩展键盘锁定按钮等价物；勾选态由 EditorMoreAction.checked 承
-                        // 载；切回即时可输入——LuaEditor.applyConfig 守卫式 diff 落
-                        // isEditable，sora 原生门禁接管）。
-                        add(
-                            EditorMoreAction(
-                                category = stringResource(R.string.menu_category_edit),
-                                label = stringResource(R.string.read_only),
-                                checked = appEditorConfig.readOnly,
-                            ) {
-                                SettingsManager.updateEditor(
-                                    appEditorConfig.copy(readOnly = !appEditorConfig.readOnly),
-                                    context,
-                                )
-                            },
-                        )
                         // 格式化（Ctrl+L）+ 跳行 + 编辑器设置直达入口。
                         add(
                             EditorMoreAction(
@@ -598,7 +582,6 @@ fun EditorScreen(
                 tabs = tabs,
                 selectedFile = selectedFile,
                 content = content,
-                isDarkTheme = isDarkTheme,
                 editorConfig = appEditorConfig,
                 controller = editorController,
                 onEditorBound = {

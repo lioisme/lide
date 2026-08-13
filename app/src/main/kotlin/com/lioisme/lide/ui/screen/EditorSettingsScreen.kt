@@ -349,16 +349,24 @@ fun EditorSettingsScreen(
     }
 }
 
-/** 配色方案标签（T10）：方案索引 → 本地化文案（设置行尾值）。 */
+/** 主题标签（2026-08-13 Squircle 对齐拍板）：主题索引（0..8）→ 本地化文案（设置行尾值）。
+ * 单一事实源 = [EditorPalette.themes]；索引越界安全回落（默认主题文案）。 */
+private val themeLabelRes: Map<String, Int> =
+    mapOf(
+        EditorPalette.DARCULA to R.string.editor_theme_darcula,
+        EditorPalette.ECLIPSE to R.string.editor_theme_eclipse,
+        EditorPalette.INTELLIJ_LIGHT to R.string.editor_theme_intellij_light,
+        EditorPalette.LADIES_NIGHT to R.string.editor_theme_ladies_night,
+        EditorPalette.MONOKAI to R.string.editor_theme_monokai,
+        EditorPalette.OBSIDIAN to R.string.editor_theme_obsidian,
+        EditorPalette.SOLARIZED_LIGHT to R.string.editor_theme_solarized_light,
+        EditorPalette.TOMORROW_NIGHT to R.string.editor_theme_tomorrow_night,
+        EditorPalette.VISUAL_STUDIO to R.string.editor_theme_visual_studio,
+    )
+
 @Composable
 private fun schemeLabel(scheme: Int): String =
-    stringResource(
-        when (scheme) {
-            EditorPalette.SCHEME_SOLARIZED -> R.string.editor_scheme_solarized
-            EditorPalette.SCHEME_TOMORROW -> R.string.editor_scheme_tomorrow
-            else -> R.string.editor_scheme_classic
-        },
-    )
+    stringResource(themeLabelRes[EditorPalette.themeNameFor(scheme)] ?: R.string.editor_theme_darcula)
 
 /** 字体族标签（L2，2026-08-12 收敛）：id → 本地化文案（设置行行尾值）。
  * 字体仅支持内置 + 用户导入；系统族（1/2/3）不再是可选项，仅作终极兜底
@@ -503,9 +511,10 @@ private fun FontFamilySheet(
     }
 }
 
-/** 配色方案选择面板（T10，2026-08-12 用户拍板反转）：Squircle CE / Terminus
- * 同款方案选择器——每行方案名 + 亮/暗双模背景预览色条（[EditorPalette.schemeBackgrounds]
- * 单一事实源，一致性由 EditorPaletteContrastTest 守护）；选择即持久化，明暗随宿主。 */
+/** 主题选择面板（2026-08-13 Squircle 对齐拍板）：Squircle CE 同款主题选择器——
+ * 每行主题名 + 单背景预览色条 + 明暗徽标（[EditorPalette.themeBackgrounds] /
+ * [EditorPalette.isDarkTheme] 单一事实源，一致性由 EditorPaletteContrastTest 守护）；
+ * 选择即持久化，主题自带明暗（不再双模跟随宿主）。 */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SchemeSheet(
@@ -521,8 +530,8 @@ private fun SchemeSheet(
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
             )
-            for (scheme in 0 until EditorPalette.schemeCount) {
-                val (lightBg, darkBg) = EditorPalette.schemeBackgrounds[scheme]
+            for (scheme in 0 until EditorPalette.themeCount) {
+                val bg = EditorPalette.themeBackgrounds[scheme]
                 Row(
                     modifier =
                         Modifier
@@ -553,16 +562,25 @@ private fun SchemeSheet(
                     }
                 }
                 Row(modifier = Modifier.padding(horizontal = 24.dp, vertical = 2.dp)) {
-                    SchemePreviewBar(Color(lightBg), label = stringResource(R.string.scheme_preview_light))
-                    Spacer(Modifier.width(8.dp))
-                    SchemePreviewBar(Color(darkBg), label = stringResource(R.string.scheme_preview_dark))
+                    SchemePreviewBar(
+                        Color(bg),
+                        label =
+                            stringResource(
+                                if (EditorPalette.isDarkTheme(scheme)) {
+                                    R.string.scheme_preview_dark
+                                } else {
+                                    R.string.scheme_preview_light
+                                },
+                            ),
+                    )
                 }
             }
         }
     }
 }
 
-/** 双模预览色条：背景色块 + 侧标（亮/暗）。[RowScope] 接收者提供等宽分割。 */
+/** 主题预览色条：背景色块 + 明暗侧标（2026-08-13：单主题单色条）。
+ * [RowScope] 接收者提供等宽分割。 */
 @Composable
 private fun RowScope.SchemePreviewBar(
     background: Color,
