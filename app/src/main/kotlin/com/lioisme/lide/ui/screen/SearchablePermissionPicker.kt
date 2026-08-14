@@ -45,7 +45,7 @@ import androidx.compose.ui.unit.dp
 import com.lioisme.lide.R
 import com.lioisme.lide.editor.TipIconButton
 
-/**
+/*
  * 工程权限搜索选择器组件集（2026-08-11 P4 建立；2026-08-12 U7 简约化重构）：
  *
  * - [PermissionCollapsedSearchInput]：折叠搜索条（与 API 浏览器折叠条同款交互——

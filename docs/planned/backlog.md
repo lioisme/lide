@@ -379,6 +379,103 @@
 | EP5 | ADB 双端性能对比实测（LIDE x64 debug vs Squircle CE：冷启动/滚动 fling/打字/大文件 framestats + meminfo） | 高 | ✅ 已完成（2026-08-13，工作单 T5/T6） | `EDITOR_PERF_AUDIT` `ADB` `framestats` |
 | EP6 | 收口：工作单完成标记 + kb/EDITOR.md 性能基线章节蒸馏 | 高 | ✅ 已完成（2026-08-13，工作单 T7） | `EDITOR_PERF_AUDIT` `蒸馏` `收口` |
 
+## 2u. 日志猫（Logcat 全局日志查看器）（2026-08-14，工作单 docs/in-progress/LOGCAT_WORK_ORDER.md）
+
+> 来源需求（用户 2026-08-14 四项要求）：① 标准、专业的日志猫功能（全局日志，
+> 非 androlua 专用）；② 界面与 API 浏览器一致（searchbar + searchview + 日志列表，
+> 单击进详情展示完整日志）；③ 界面风格与 LIDE 整体一致（优美、简约）；
+> ④ 专业筛选：All / Test / Tcc / Error / Warning / Info / Debug / Verbose / Clear。
+> 质量要求：代码质量/架构达大厂验收标准；每项完成在工作单标记（已完成）+ 验收证据。
+
+| # | 任务 | 优先级 | 状态 | 关键词 |
+|---|---|---|---|---|
+| L1 | 数据层：`com.lioisme.lide.log` 包（LogEntry/LogLevel/LogFilter/LogcatParser/LogBuffer/LogcatReader/LogcatStore）+ JVM 单测 | 高 | ✅ 已完成 | `LOGCAT` `logcat` `LogcatStore` `LogcatParser` |
+| L2 | 列表页：LogcatScreen + LogcatComponents（搜索状态机红线 + 8 项筛选 + 级别色行 + 空态 + 自动滚动） | 高 | ✅ 已完成 | `LOGCAT` `搜索红线` `筛选` |
+| L3 | 详情页：LogcatDetailScreen（三态 + 完整消息 + 元数据 + 复制） | 高 | ✅ 已完成 | `LOGCAT` `详情` `三态` |
+| L4 | 接线：Routes/导航注册 + AndroLua 设置「工具」区入口 + LideApp 启动采集 + i18n 双语文案 | 高 | ✅ 已完成 | `LOGCAT` `路由` `i18n` |
+| L5 | 验证收口：compile + 单测 + 红线自检 + kb 蒸馏 + 工作单收口 | 高 | ✅ 已完成 | `LOGCAT` `验收` `收口` |
+
+> **（已完成，2026-08-14）** L1–L5 全部完成：`com.lioisme.lide.log` 数据层 7 文件 +
+> 列表/详情页 + 接线（Routes/入口/LideApp 启动采集/i18n 中英）。验收证据：
+> `:app:compileArm64DebugKotlin` BUILD SUCCESSFUL（0 error/0 warning）；
+> 全量 `:app:testArm64DebugUnitTest` = **355 tests / 0 failures**（含 logcat 四件套
+> 36 例：Parser 12 + Filter 8 + Buffer 8 + Store 8）；红线自检三连 grep 全零输出
+> （log 包零 sora/引擎引用、editor 包零 log 触碰）。结论已蒸馏进
+> `docs/kb/ARCHITECTURE.md` §10；工作单已删除。
+
+> **（已完成，2026-08-14 修订 LOGCAT_REVISION）** 用户四项修订要求：
+> ① 全局定位——入口从 AndroLua 设置页迁移至**主设置页「工具」分区**
+> （SettingsScreen 新增分区 + `onLogcatClick`，AndroLua 页回滚）；
+> ② Clear 按钮移至**筛选按钮左侧**（共享组件 `ApiSearchInputField` /
+> `ApiCollapsedSearchInput` 新增可选 `clearSlot`，折叠/展开两态 [Clear][Filter]，
+> 顶栏 actions 移除；API 浏览器/权限页默认 null 零影响）；
+> ③ 筛选对齐 pro logcat.lua：菜单 **All/Lua/Test/Tcc/Error/Warning/Info/Debug/
+> Verbose**（新增 `LUA(tag="lua")`；`TEST` 改 `tag="test"`；顺序断言入测试）；
+> ④ 日志行重设计：**[级别色点] + [tag 徽章（surfaceContainerHighest 底 + 6dp 圆角
+> + labelSmall 等宽）] + [时间 tnum 右对齐] + 消息单行省略**，删除逐行分隔线留白
+> 呼吸。验收证据：`compileArm64DebugKotlin` 0 error（0 新增 warning）；
+> 全量单测 = **357 tests / 0 failures**（LogFilterTest 10 例）；`verifySoraIsolation`
+> PASS；红线 grep 三连全零。结论已并入 `docs/kb/ARCHITECTURE.md` §10。
+
+## 2v. 日志猫界面重构（2026-08-14，工作单 docs/in-progress/LOGCAT_UI_REDESIGN_WORK_ORDER.md）
+
+> 来源需求（用户 2026-08-14 三条 + 审计附加）：① 日志列表整齐简约——**时间固定列位**
+> （当前因 tag 长短不同导致时间视觉锚点漂移）；② 列表**无相对外部间距**；③ 「清除」
+> 功能移入菜单；④ 界面风格与 LIDE 完全一致（审计附加：搜索占位符文案错位）。
+> 用户拍板：时间列 `MM-DD HH:MM:SS` 固定 84dp（毫秒降级详情页）；清除并入类型筛选
+> 菜单（Delete + error 色）；直接清除无确认。
+> 质量要求：代码质量/架构达大厂验收标准；每项完成在工作单标记（已完成）+ 验收证据。
+
+| # | 任务 | 优先级 | 状态 | 关键词 |
+|---|---|---|---|---|
+| R1 | 共享搜索组件占位符参数化（placeholder）+ 删除无调用方 clearSlot 死参数 | 高 | ✅ 已完成（2026-08-14，工作单 T1） | `LOGCAT_UI_REDESIGN` `placeholder` |
+| R2 | LogRow 固定时间列重构（84dp 右对齐 tnum + tag 徽章弹性 maxWidth + 消息对齐） | 高 | ✅ 已完成（2026-08-14，工作单 T2） | `LOGCAT_UI_REDESIGN` `固定时间列` |
+| R3 | 列表全宽（contentPadding 归零）+ 移除 clearSlot 挂载 | 高 | ✅ 已完成（2026-08-14，工作单 T3） | `LOGCAT_UI_REDESIGN` `全宽` |
+| R4 | 清除并入筛选菜单（分隔线 + 清空项）+ 删除 LogClearButton | 高 | ✅ 已完成（2026-08-14，工作单 T4） | `LOGCAT_UI_REDESIGN` `清除` `菜单` |
+| R5 | 验证收口：compile + 单测 + 红线自检 + kb 蒸馏 + 工作单收口 | 高 | ✅ 已完成（2026-08-14，工作单 T5/T6） | `LOGCAT_UI_REDESIGN` `验收` |
+
+> **（已完成，2026-08-14 LOGCAT_UI_REDESIGN）** 日志猫界面三项重构 + 两项审计
+> 修复全部落地：① 时间固定列（84dp 右对齐 tnum，`MM-DD HH:MM:SS` 毫秒降级详情页，
+> tag 徽章 maxWidth 160dp，消息与 tag 左缘对齐）；② 列表全宽（contentPadding 归零）；
+> ③ 「清空日志」并入类型筛选菜单底部（分隔线 + Delete + error 色，直接清除）；
+> ④ 搜索占位符参数化（日志猫显示「搜索日志…」，修复「搜索类名…」错位）；
+> ⑤ `LogClearButton`/`clearSlot` 死代码删除。验收证据：compileArm64DebugKotlin
+> 0 error + 全量单测全绿 + ktlintCheck 相关文件 0 违规（顺手修复新文件 LogcatScreen
+> 既有 6 处 + 文件尾换行）+ 红线 grep 三连全零。结论已蒸馏进
+> `docs/kb/ARCHITECTURE.md` §10。
+
+## 2w. 日志猫列表风格重构（2026-08-14，工作单 docs/in-progress/LOGCAT_LIST_REDESIGN_WORK_ORDER.md）
+
+> 来源需求（用户 2026-08-14）：重构日志猫列表，要求整洁、优美、简约，设计风格
+> 与 LIDE 整体界面一致。用户三项拍板：① 行结构 = **两行式应用列表**（对齐
+> ProjectList/ClassRow 范式：色点垂直居中 + 行1 tag 主文字 + 行尾时间 tnum 右缘
+> 对齐 + 行2 消息副行）；② **去掉 tag 灰块徽章**（surfaceContainerHighest 底块
+> 删除，tag 纯文字 onSurface）；③ **加行末细分隔线**（outlineVariant 0.4 alpha，
+> ClassRow/MemberRow 同款惯例）。
+> 质量要求：代码质量/架构达大厂验收标准；每项完成在工作单标记（已完成）+
+> 验收证据。
+
+| # | 任务 | 优先级 | 状态 | 关键词 |
+|---|---|---|---|---|
+| W1 | 代码：LogRow 两行式重构（色点居中 + tag 主行 + 时间行尾右缘 + 消息副行 + 分隔线 + 16dp 边距；删除 TIME_COLUMN_WIDTH/TIME_COLUMN_START 固定列机制） | 高 | ✅ 已完成（2026-08-14，工作单 T1） | `LOGCAT_LIST_REDESIGN` `LogRow` `两行式` |
+| W2 | 验证：ktlintCheck + compileArm64DebugKotlin + 全量单测 + 红线 grep 三连 | 高 | ✅ 已完成（2026-08-14，工作单 T2） | `LOGCAT_LIST_REDESIGN` `验收` |
+| W3 | 收口：工作单标记 + kb/ARCHITECTURE.md §10 日志行设计段更新 + 工作单删除 | 高 | ✅ 已完成（2026-08-14，工作单 T3） | `LOGCAT_LIST_REDESIGN` `蒸馏` `收口` |
+
+> **（已完成，2026-08-14 LOGCAT_LIST_REDESIGN）** 日志行从「色点 + 时间固定
+> 84dp 列 + tag 灰块徽章 + 消息 108dp 缩进 + 无分隔线 + 贴边」重构为 LIDE
+> 主界面同款「两行式应用列表」：级别色点垂直居中；行1 = tag 主文字（labelMedium
+> Monospace Medium onSurface + widthIn(max=160dp) 省略）→ 时间行尾右缘对齐
+> （labelSmall tnum onSurfaceVariant，weight 占位天然列位）；行2 = 消息副行
+> （bodySmall Monospace onSurfaceVariant 单行省略，与 tag 垂直对齐消除错位
+> 阶梯）；行末 HorizontalDivider（outlineVariant 0.4 alpha）；行内
+> padding(h16, v10)。删除固定时间列/消息缩进机制（TIME_COLUMN_WIDTH 84dp /
+> TIME_COLUMN_START 108dp 常量删除），保留 TIME_TEXT_LENGTH/timeForList 与
+> TAG_MAX_WIDTH。顺手修复 ktlint 既有违规（LogLevel 1 + LogcatDetailScreen 2 +
+> SearchablePermissionPicker 文件头 KDoc 1 + log 包 5 文件 ktlintFormat 16 处），
+> ktlintCheck 恢复全量 PASS。验收证据：ktlintCheck PASS + compileArm64DebugKotlin
+> 0 error/0 warning + 全量 testArm64DebugUnitTest 全绿（357 tests / 0 failures）
+> + 红线 grep 三连全零。结论已蒸馏进 `docs/kb/ARCHITECTURE.md` §10。
+
 ---
 
 ## 3. 风险与备忘

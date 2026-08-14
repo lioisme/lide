@@ -6,6 +6,7 @@ import com.lioisme.lide.editor.EditorPalette
 import com.lioisme.lide.editor.TextMateRuntime
 import com.lioisme.lide.i18n.LocaleManager
 import com.lioisme.lide.install.InstallerServices
+import com.lioisme.lide.log.LogcatStore
 import com.lioisme.lide.ui.theme.SettingsManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -47,6 +48,9 @@ class LideApp : LuaApplication() {
                 isSystemDark,
             )
         TextMateRuntime.preload(applicationContext, initialThemeName)
+        // 日志猫采集器（进程级常驻，幂等）：logd 按 UID 过滤，本进程
+        // （宿主 + 引擎 + Lua print）日志全量可见；打包产物不运行 LideApp，天然不含。
+        LogcatStore.ensureStarted()
     }
 
     /** 资产提取（后台协程）：布局助手模板（示例工程由 :app:generateExamples 生成）。 */

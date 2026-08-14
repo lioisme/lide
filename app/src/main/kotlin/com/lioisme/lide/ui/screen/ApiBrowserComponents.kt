@@ -64,7 +64,8 @@ import com.lioisme.lide.editor.TipIconButton
  * 本组件不直接触碰 SearchBarState 动画，动画由宿主 LaunchedEffect(active) 幂等驱动，
  * 避免焦点回调与动画互相激发（死循环红线）。
  * 返回按钮置于 leadingIcon、清除 + 分类筛选（[filterSlot]，含 DropdownMenu）置于
- * trailingIcon，与 SearchBar 共占顶栏一行。
+ * trailingIcon，与 SearchBar 共占顶栏一行；[placeholder] 由调用方传入（API 浏览器 /
+ * 日志猫各自语义文案）。
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -75,6 +76,7 @@ internal fun ApiSearchInputField(
     onActiveChange: (Boolean) -> Unit,
     onSearch: () -> Unit,
     onBack: () -> Unit,
+    placeholder: String,
     filterSlot: @Composable () -> Unit,
 ) {
     SearchBarDefaults.InputField(
@@ -83,7 +85,7 @@ internal fun ApiSearchInputField(
         onSearch = { onSearch() },
         expanded = active,
         onExpandedChange = onActiveChange,
-        placeholder = { Text(stringResource(R.string.api_search_hint)) },
+        placeholder = { Text(placeholder) },
         leadingIcon = {
             TipIconButton(tooltip = stringResource(R.string.cd_back), onClick = onBack) {
                 Icon(
@@ -118,6 +120,7 @@ internal fun ApiSearchInputField(
  * 本组件用 [detectTapGestures] 区分单击（展开）与长按（无副作用），
  * 首尾图标按钮（返回 / 清除 / 分类筛选）各自保留单击语义与长按 tooltip。
  * 展开后的输入、焦点与键盘由 ExpandedFullScreenSearchBar 的 focusRequester 自动接管。
+ * [placeholder] 由调用方传入（API 浏览器 / 日志猫各自语义文案）。
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -126,10 +129,9 @@ internal fun ApiCollapsedSearchInput(
     onBack: () -> Unit,
     onClear: () -> Unit,
     onTapToExpand: () -> Unit,
+    placeholder: String,
     filterSlot: @Composable () -> Unit,
 ) {
-    val placeholder = stringResource(R.string.api_search_hint)
-    // E1（2026-08-12）：搜索条浮于表面之上——surfaceContainerHigh（M3 search bar 容器）。
     val container = MaterialTheme.colorScheme.surfaceContainerHigh
     Row(
         modifier =

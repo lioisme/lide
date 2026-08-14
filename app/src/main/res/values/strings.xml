@@ -533,4 +533,37 @@
     <string name="snippet_desc_localfun">Local function definition</string>
     <string name="snippet_desc_require">Module require</string>
     <string name="snippet_desc_class">Table-based OOP pattern</string>
+    <!-- Logcat viewer (LOGCAT work order, 2026-08-14) -->
+    <string name="logcat">Logcat</string>
+    <string name="logcat_subtitle">View app logs</string>
+    <string name="logcat_search_hint">Search logs…</string>
+    <string name="logcat_filter">Filter</string>
+    <string name="logcat_clear">Clear logs</string>
+    <string name="logcat_empty">No logs yet.\nRun a Lua project to see its output here.</string>
+    <string name="logcat_unavailable">Logcat is unavailable on this device.</string>
+    <string name="logcat_no_result">No matching logs</string>
+    <string name="logcat_loading">Loading…</string>
+    <string name="logcat_detail_missing">This log entry is no longer available</string>
+    <string name="logcat_filter_all">All</string>
+    <string name="logcat_filter_lua">Lua</string>
+    <string name="logcat_filter_test">Test</string>
+    <string name="logcat_filter_tcc">Tcc</string>
+    <string name="logcat_filter_error">Error</string>
+    <string name="logcat_filter_warning">Warning</string>
+    <string name="logcat_filter_info">Info</string>
+    <string name="logcat_filter_debug">Debug</string>
+    <string name="logcat_filter_verbose">Verbose</string>
+    <string name="log_level_verbose">Verbose</string>
+    <string name="log_level_debug">Debug</string>
+    <string name="log_level_info">Info</string>
+    <string name="log_level_warning">Warning</string>
+    <string name="log_level_error">Error</string>
+    <string name="log_meta_time">Time</string>
+    <string name="log_meta_level">Level</string>
+    <string name="log_meta_tag">Tag</string>
+    <string name="log_meta_pid">PID</string>
+    <string name="log_meta_tid">TID</string>
+    <string name="log_message">Message</string>
+    <string name="log_copy">Copy</string>
+    <string name="log_copied">Copied to clipboard</string>
 </resources>

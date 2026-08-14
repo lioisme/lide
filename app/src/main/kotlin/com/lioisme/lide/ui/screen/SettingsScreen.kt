@@ -15,6 +15,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Article
 import androidx.compose.material.icons.automirrored.filled.WrapText
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Android
@@ -57,6 +58,7 @@ private val colorOptions: List<Long> = ThemeSeeds.OPTIONS
 fun SettingsScreen(
     onBack: () -> Unit,
     onEditorClick: () -> Unit = {},
+    onLogcatClick: () -> Unit = {},
     onAndroLuaClick: () -> Unit = {},
     onPermissionsClick: () -> Unit = {},
     onSigningClick: () -> Unit = {},
@@ -129,6 +131,17 @@ fun SettingsScreen(
                     title = stringResource(R.string.editor),
                     subtitle = stringResource(R.string.editor_subtitle),
                     onClick = onEditorClick,
+                )
+            }
+            Spacer(Modifier.height(24.dp))
+            SettingsSection(stringResource(R.string.tools)) {
+                // 日志猫 = 整个 LIDE 的全局日志查看器（宿主 + 引擎 + Lua print），
+                // 非 androlua 专属（2026-08-14 LOGCAT 修订 R3 入口迁移）。
+                SettingsItem(
+                    icon = Icons.AutoMirrored.Filled.Article,
+                    title = stringResource(R.string.logcat),
+                    subtitle = stringResource(R.string.logcat_subtitle),
+                    onClick = onLogcatClick,
                 )
             }
             Spacer(Modifier.height(24.dp))

@@ -532,4 +532,37 @@
     <string name="snippet_desc_localfun">局部函数定义</string>
     <string name="snippet_desc_require">模块引入</string>
     <string name="snippet_desc_class">基于表的 OOP 模式</string>
+    <!-- 日志猫（LOGCAT 工作单，2026-08-14） -->
+    <string name="logcat">日志猫</string>
+    <string name="logcat_subtitle">查看应用日志</string>
+    <string name="logcat_search_hint">搜索日志…</string>
+    <string name="logcat_filter">筛选</string>
+    <string name="logcat_clear">清空日志</string>
+    <string name="logcat_empty">暂无日志。\n运行 Lua 工程后将在此显示其输出。</string>
+    <string name="logcat_unavailable">当前设备无法读取日志。</string>
+    <string name="logcat_no_result">无匹配日志</string>
+    <string name="logcat_loading">加载中…</string>
+    <string name="logcat_detail_missing">该日志条目已不存在</string>
+    <string name="logcat_filter_all">全部</string>
+    <string name="logcat_filter_lua">Lua</string>
+    <string name="logcat_filter_test">Test</string>
+    <string name="logcat_filter_tcc">Tcc</string>
+    <string name="logcat_filter_error">错误</string>
+    <string name="logcat_filter_warning">警告</string>
+    <string name="logcat_filter_info">信息</string>
+    <string name="logcat_filter_debug">调试</string>
+    <string name="logcat_filter_verbose">详细</string>
+    <string name="log_level_verbose">详细</string>
+    <string name="log_level_debug">调试</string>
+    <string name="log_level_info">信息</string>
+    <string name="log_level_warning">警告</string>
+    <string name="log_level_error">错误</string>
+    <string name="log_meta_time">时间</string>
+    <string name="log_meta_level">级别</string>
+    <string name="log_meta_tag">标签</string>
+    <string name="log_meta_pid">PID</string>
+    <string name="log_meta_tid">TID</string>
+    <string name="log_message">日志内容</string>
+    <string name="log_copy">复制</string>
+    <string name="log_copied">已复制到剪贴板</string>
 </resources>

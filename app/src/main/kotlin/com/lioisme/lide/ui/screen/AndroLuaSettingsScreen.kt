@@ -55,6 +55,7 @@ import java.io.File
 /**
  * AndroLua 合并页（2026-08-07 设置简约化 T1）：
  * AndroLua 工具（API 浏览器 / 示例）+ 打包选项（自动安装 / 优化打包 / 编译 / 加密 / 默认 ABI）。
+ * 日志猫入口已迁移至主设置页「工具」分区（2026-08-14 LOGCAT 修订 R3，全局定位）。
  * 打包选项持久化唯一事实源 = [SettingsManager]（`lide_build` 域，经 [SettingsManager.updateBuild] 写回）。
  * 行样式与主设置 / 编辑器设置页统一（图标 + 标题 + 副标题 + 尾部控件）：
  * 签名方案 / 默认 ABI 用 Checkbox 尾部控件，安装方式用 RadioButton 单选；

@@ -28,6 +28,8 @@ import com.lioisme.lide.ui.screen.EditorScreen
 import com.lioisme.lide.ui.screen.EditorSettingsScreen
 import com.lioisme.lide.ui.screen.ExamplesScreen
 import com.lioisme.lide.ui.screen.HostPermissionScreen
+import com.lioisme.lide.ui.screen.LogcatDetailScreen
+import com.lioisme.lide.ui.screen.LogcatScreen
 import com.lioisme.lide.ui.screen.ProjectInfoScreen
 import com.lioisme.lide.ui.screen.ProjectListScreen
 import com.lioisme.lide.ui.screen.ProjectPermissionScreen
@@ -50,6 +52,8 @@ object Routes {
     const val EXAMPLES = "examples"
     const val API_BROWSER = "apibrowser"
     const val API_CLASS_DETAIL = "apibrowser/{className}"
+    const val LOGCAT = "logcat"
+    const val LOG_DETAIL = "logcat/{entryId}"
 
     fun editor(project: Project): String = "editor/${enc(project.name)}/${enc(project.path)}?fileName=${enc(project.mainFile)}"
 
@@ -58,6 +62,8 @@ object Routes {
     fun projectInfo(project: Project): String = "projectinfo?projectName=${enc(project.name)}&projectPath=${enc(project.path)}"
 
     fun apiClassDetail(className: String): String = "apibrowser/${enc(className)}"
+
+    fun logDetail(entryId: Long): String = "logcat/${enc(entryId.toString())}"
 
     // Uri.encode/decode 与 navigation-compose 的内部解码语义一致（%XX 转义，`+` 保留字面），
     // 取代 URLEncoder/URLDecoder（后者把空格编为 `+`，nav 解码后 `+` 无法还原，含 `+` 的
@@ -216,6 +222,7 @@ fun LideNavHost(
                 SettingsScreen(
                     onBack = { navController.popGuarded() },
                     onEditorClick = { navController.navigateGuarded(Routes.EDITOR_SETTINGS) },
+                    onLogcatClick = { navController.navigateGuarded(Routes.LOGCAT) },
                     onAndroLuaClick = { navController.navigateGuarded(Routes.ANDROLUA_SETTINGS) },
                     onPermissionsClick = { navController.navigateGuarded(Routes.PERMISSIONS) },
                     onSigningClick = { navController.navigateGuarded(Routes.SIGNING) },
@@ -242,6 +249,35 @@ fun LideNavHost(
                     onBack = { navController.popGuarded() },
                     onApiBrowserClick = { navController.navigateGuarded(Routes.API_BROWSER) },
                     onExamplesClick = { navController.navigateGuarded(Routes.EXAMPLES) },
+                )
+            }
+        }
+        slideComposable(route = Routes.LOGCAT) {
+            backGuarded(navController) {
+                LogcatScreen(
+                    onBack = { navController.popGuarded() },
+                    onEntryClick = { entryId ->
+                        navController.navigateGuarded(Routes.logDetail(entryId))
+                    },
+                )
+            }
+        }
+        slideComposable(
+            route = Routes.LOG_DETAIL,
+            arguments =
+                listOf(
+                    navArgument("entryId") { type = NavType.StringType },
+                ),
+        ) { backStackEntry ->
+            val entryId = Routes.dec(backStackEntry.arguments?.getString("entryId"))
+            if (entryId.isBlank()) {
+                LaunchedEffect(Unit) { navController.popWhenReady() }
+                return@slideComposable
+            }
+            backGuarded(navController) {
+                LogcatDetailScreen(
+                    entryId = entryId,
+                    onBack = { navController.popGuarded() },
                 )
             }
         }

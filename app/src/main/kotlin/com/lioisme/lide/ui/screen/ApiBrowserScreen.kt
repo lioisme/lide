@@ -194,6 +194,7 @@ fun ApiBrowserScreen(
                                 onBack = onBack,
                                 onClear = { query = "" },
                                 onTapToExpand = { searchActive = true },
+                                placeholder = stringResource(R.string.api_search_hint),
                                 filterSlot = {
                                     FilterMenuButton(
                                         expanded = filterMenuOpen,
@@ -288,6 +289,7 @@ fun ApiBrowserScreen(
                         searchActive = false
                         focusManager.clearFocus()
                     },
+                    placeholder = stringResource(R.string.api_search_hint),
                     filterSlot = {
                         FilterMenuButton(
                             expanded = filterMenuOpen,

@@ -345,3 +345,89 @@ verifyMinimalism + verifyMinimalismDebug；设备截图与 per-app locale 真机
 
 验证（2026-08-12 全绿）：compileArm64DebugKotlin + testArm64DebugUnitTest +
 verifySoraIsolation + verifyMinimalismDebug + verifyMinimalism（release 链路）。
+
+## 10. 日志猫（全局 Logcat 查看器）（2026-08-14 LOGCAT 完工蒸馏）
+
+- **定位**：宿主级全局日志查看器（非 androlua 专用）；UI 与 API 浏览器同构
+  （折叠搜索条 + 全屏 SearchView + 列表 + 详情），风格与 LIDE 一致。
+- **范围契约**：仅 LIDE 进程日志——现代 Android（7.0+）未授予 READ_LOGS 时
+  logd 按 UID 过滤；宿主 + 引擎**同进程**（AGENTS R2），故「整个软件」=
+  宿主 + 引擎 + Lua print 全部可见，其他 App/系统日志不可见（无 root 不另议）。
+- **采集时机**：`LideApp.onCreate` 启动即采集（进程级常驻，环形缓冲上限 3000 条），
+  打开日志页可见本次运行全过程，无丢失窗口；打包产物不运行 LideApp（manifest
+  回落引擎入口 Activity），天然不含此功能。
+- **数据层**（`com.lioisme.lide.log`，宿主能力，R1/R3/R4 合规，纯 Kotlin 零 sora/
+  引擎依赖）：
+  - `LogcatParser`：`logcat -v threadtime` 行解析（正则前缀 + 首 `": "` tag/消息
+    切分——含冒号 tag 按标准首切分语义，消息以 `" : "` 开头；多行 continuation
+    由 store 归并；`----- beginning of` 头丢弃；乱行兜底）。
+  - `LogBuffer`：环形缓冲（容量 3000，溢出丢最旧）+ continuation 归并 + 按 id 查找
+    ——JVM 可测。
+  - `LogcatReader`：`ProcessBuilder("logcat","-v","threadtime")` 流式读取，
+    `Dispatchers.IO` 阻塞循环；断线自动重启（5s 退避）；全路径 `try/catch(Throwable)`。
+  - `LogcatStore`：进程级单例（ApiIndex 同款模式），`StateFlow<List<LogEntry>>`
+    （采集器线程写、原子发布不可变快照）+ `StateFlow<LogcatStatus>`
+    （Streaming/Unavailable）+ id 单调分配 + `clear()`（内存清空 + best-effort
+    `logcat -c`）+ `entryById(id)` + `ensureStarted()` 幂等 + `resetForTest()`。
+    单条消息上限 16384（超长截断，详情展示截断后全文）。
+- **筛选语义**（`LogFilter`，2026-08-14 修订对齐 pro `logcat.lua` 菜单与语义）：
+  All/Lua/Test/Tcc/Error/Warning/Info/Debug/Verbose（[LogFilter.entries] 遍历即菜单
+  序）；Lua = tag `lua`（`lua:* *:S`，Lua print + 引擎 Lua 业务日志）；Test = tag
+  `test`（`test:* *:S`，工程测试约定通道，现无来源恒空态）；Tcc = tag `tcc`
+  （LIDE 不构建 tcc 恒空态）；Error≥E、Warning≥W、Info≥I、Debug≥D、Verbose 恒真。
+  `filterEntries` 纯函数：类型 ∩ 查询词（tag+message 小写子串），
+  `Dispatchers.Default` + produceState。
+- **UI 层**（`ui/screen`，搜索状态机红线照抄 ApiBrowserScreen）：
+  - `LogcatScreen`：CenterAlignedTopAppBar + 折叠搜索条（复用 `ApiCollapsedSearchInput`）
+    + 类型筛选菜单（9 项单选 + 菜单底部「清空日志」）；搜索状态机红线
+    （`rememberSearchBarState()` 无参 + `searchActive` 独立意图 +
+    `LaunchedEffect(searchActive)` 唯一驱动 + 收起路径三件套 + BackHandler）；空态
+    三文案（未开始/不可用/无匹配）；列表自动滚动（底部跟随，userHasScrolledUp 时
+    暂停）。
+  - **清除/筛选布局（2026-08-14 界面重构）**：「清空日志」并入**类型筛选菜单**
+    （9 项筛选后 `HorizontalDivider` + DropdownMenuItem：Delete 图标 +
+    `colorScheme.error`，对齐宿主危险操作惯例）；折叠/全屏两态共享组件自动同步；
+    直接清除（内存必清 + `logcat -c` best-effort，无二次确认）。搜索条 trailing
+    仅余筛选按钮；`LogClearButton` 组件删除；共享组件 `ApiSearchInputField` /
+    `ApiCollapsedSearchInput` 的 `clearSlot` 死参数删除（历史 R2 布局已废止）。
+  - **搜索占位符（2026-08-14 界面重构）**：共享搜索组件占位符参数化
+    （`placeholder: String` 必传）——LogcatScreen 传 `logcat_search_hint`
+    （「搜索日志…」），ApiBrowserScreen 传 `api_search_hint`（修复日志猫显示
+    「搜索类名…」文案错位）。
+  - `LogcatDetailScreen`：路由 `logcat/{entryId}`（Long id 经 enc）；三态
+    Loading/Loaded/Failed（id 被溢出清除 → `logcat_detail_missing` + 重试，对齐
+    API 详情契约）；完整消息 SelectionContainer + 元数据（时间/级别/tag/pid/tid）
+    + 复制按钮（snackbar 提示）。顶栏保持手写 TopAppBar（动态 tag 标题需省略
+    控制，LideTopBar 无此参数，配色已一致）。
+  - **日志行设计（2026-08-14 LOGCAT_LIST_REDESIGN：两行式应用列表，对齐 LIDE
+    主界面列表范式）**：**[级别色点 8dp 垂直居中] + [行1：tag 主文字（labelMedium
+    Monospace Medium onSurface，`widthIn(max = 160dp)` 超宽省略）·行尾时间
+    （labelSmall tnum onSurfaceVariant，tag 以 `weight(1f, fill = false)` 占位
+    推至行尾右缘——右缘天然列位恒定，不占行首固定列）] + [行2：消息副行
+    （bodySmall Monospace onSurfaceVariant 单行省略，与 tag 垂直对齐）]**；
+    行末 `HorizontalDivider(outlineVariant.copy(alpha = 0.4f))` 细分隔线
+    （ClassRow/MemberRow 同款惯例）；行内 `padding(horizontal = 16.dp,
+    vertical = 10.dp)` 承担边距。历史形态（2v 拍板：时间固定 84dp 列 + tag 灰块
+    徽章 + 消息 108dp 缩进 + 无分隔线）已废止——`TIME_COLUMN_WIDTH`(84dp) /
+    `TIME_COLUMN_START`(108dp) 常量删除；保留 `TIME_TEXT_LENGTH`(14) /
+    `timeForList`（列表时间 `MM-DD HH:MM:SS`，毫秒降级详情页——详情页展示完整
+    `timeText`）与 `TAG_MAX_WIDTH`(160dp)。级别语义色固定（V 灰 / D 蓝 / I 绿 /
+    W 琥珀 / E 红，经典 logcat 色，双模 Material 300/800 配对）；其余全部 M3
+    token；i18n 中英全量。
+  - **列表全宽（2026-08-14 界面重构 R3 延续）**：LazyColumn `contentPadding =
+    0`——无相对外部间距，边距由行内 padding（horizontal 16 / vertical 10）承担
+    （对齐 ProjectList 主界面写法，波纹全宽）。
+- **入口（2026-08-14 修订 R3，全局定位）**：**主设置页（SettingsScreen）新增
+  「工具」分区**（Article 图标 + `logcat` + `logcat_subtitle`），AndroLua 设置页
+  工具区仅余 API 浏览器/示例；Routes（LOGCAT / LOG_DETAIL）+ slideComposable 注册。
+- **验证**（2026-08-14 重构后全绿）：compileArm64DebugKotlin 0 error；全量
+  testArm64DebugUnitTest 全绿；ktlintCheck 对日志猫/API 浏览器相关文件 0 违规
+  （log 包与 LogcatDetailScreen 的既有违规登记 backlog R11 ktlint 全量专项）；
+  红线自检三连 grep 全零输出（log 包零 sora/引擎引用、editor 包零 log 触碰）。
+- **验证**（2026-08-14 LOGCAT_LIST_REDESIGN 收口）：ktlintCheck **全量 PASS**
+  （顺手修复既有违规：LogLevel 1 处 + LogcatDetailScreen 2 处 +
+  SearchablePermissionPicker 文件头 KDoc 转块注释 1 处 + log 包 5 文件
+  ktlintFormat 16 处）；compileArm64DebugKotlin 0 error / 0 warning；
+  全量 testArm64DebugUnitTest = **357 tests / 0 failures**；红线三连 grep
+  全零（editor 包零 luajava/androlua/loadLibrary、vendor 源码零 com.lioisme、
+  git ls-files 二进制零）。
