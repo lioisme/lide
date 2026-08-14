@@ -63,6 +63,7 @@ import com.lioisme.lide.editor.TipIconButton
  * 过滤全部经 [Dispatchers.Default] 后台执行（AGENTS.md 搜索红线：禁止 UI 线程
  * 对全量条目做 O(n) 过滤）。
  */
+
 /**
  * 检索索引构建（页面与全屏搜索共用）：池 = 目录条目 + 工程已声明但目录外的未知权限。
  * KDoc 契约与 PermissionCatalog 同步（未知权限归「其他」组，名称原样）。
@@ -141,8 +142,7 @@ internal fun PermissionCheckRow(
                     value = checked,
                     role = Role.Checkbox,
                     onValueChange = { onToggle() },
-                )
-                .padding(horizontal = 16.dp, vertical = 12.dp),
+                ).padding(horizontal = 16.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Checkbox(checked = checked, onCheckedChange = null)

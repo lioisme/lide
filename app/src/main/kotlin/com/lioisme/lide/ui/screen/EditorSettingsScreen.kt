@@ -359,8 +359,7 @@ private val schemeLabelRes: Map<Int, Int> =
     )
 
 @Composable
-private fun schemeLabel(scheme: Int): String =
-    stringResource(schemeLabelRes[scheme.coerceIn(0, EditorPalette.pairs.lastIndex)] ?: R.string.editor_scheme_classic)
+private fun schemeLabel(scheme: Int): String = stringResource(schemeLabelRes[scheme.coerceIn(0, EditorPalette.pairs.lastIndex)] ?: R.string.editor_scheme_classic)
 
 /** 字体族标签（L2，2026-08-12 收敛）：id → 本地化文案（设置行行尾值）。
  * 字体仅支持内置 + 用户导入；系统族（1/2/3）不再是可选项，仅作终极兜底

@@ -122,6 +122,7 @@ fun AndroLuaSettingsScreen(
                     title = stringResource(R.string.examples),
                     onClick = onExamplesClick,
                 )
+                Spacer(Modifier.height(8.dp))
             }
 
             Spacer(Modifier.height(24.dp))

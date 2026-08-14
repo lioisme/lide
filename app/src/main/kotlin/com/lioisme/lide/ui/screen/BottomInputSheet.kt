@@ -82,7 +82,7 @@ internal fun BottomInputSheet(
     onConfirm: () -> Unit,
     onDismiss: () -> Unit,
 ) {
-val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val context = LocalContext.current
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -102,7 +102,7 @@ val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
         LaunchedEffect(Unit) {
             // 不调 sheetState.show()：ModalBottomSheet 组合时内部自驱动入场动画
             // （mutator 互斥），content 内重复 show() 与内部驱动力竞争导致
-            // 永久挂起（实测 logcat 卡在 before/after 之间）。
+            // 永久挂起（实测卡在 before/after 之间）。
             // content 组合发生即窗口已创建，直接重试焦点请求。
             repeat(10) {
                 if (inputFocused) return@LaunchedEffect

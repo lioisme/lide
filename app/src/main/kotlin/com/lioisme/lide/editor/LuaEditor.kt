@@ -296,7 +296,8 @@ private class EditorInstance(
         attachTo: CodeEditor,
     ): io.github.rosemoe.sora.lang.Language {
         if (scope == LanguageDetector.PLAIN_SCOPE) {
-            return io.github.rosemoe.sora.lang.EmptyLanguage()
+            return io.github.rosemoe.sora.lang
+                .EmptyLanguage()
         }
         return EditorLanguage(scope, collectIdentifiers = collectIdentifiers).apply {
             setAutoCompleteEnabled(true)
