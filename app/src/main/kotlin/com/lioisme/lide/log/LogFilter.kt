@@ -1,5 +1,7 @@
 package com.lioisme.lide.log
 
+import io.github.oshai.kotlinlogging.Level
+
 /**
  * 日志类型筛选（pro `logcat.lua` 菜单与语义的逐项复刻，2026-08-14 LOGCAT 修订）。
  *
@@ -17,24 +19,24 @@ package com.lioisme.lide.log
  */
 enum class LogFilter(
     private val tag: String? = null,
-    private val minLevel: LogLevel? = null,
+    private val minLevel: Level? = null,
 ) {
     ALL,
     LUA(tag = "lua"),
     TEST(tag = "test"),
     TCC(tag = "tcc"),
-    ERROR(minLevel = LogLevel.ERROR),
-    WARNING(minLevel = LogLevel.WARN),
-    INFO(minLevel = LogLevel.INFO),
-    DEBUG(minLevel = LogLevel.DEBUG),
-    VERBOSE(minLevel = LogLevel.VERBOSE),
+    ERROR(minLevel = Level.ERROR),
+    WARNING(minLevel = Level.WARN),
+    INFO(minLevel = Level.INFO),
+    DEBUG(minLevel = Level.DEBUG),
+    VERBOSE(minLevel = Level.TRACE),
     ;
 
     /** 类型匹配（查询词过滤不在此列，见 [filterEntries]）。 */
     fun matches(entry: LogEntry): Boolean =
         when {
             tag != null -> entry.tag == tag
-            minLevel != null -> entry.level.priority >= minLevel.priority
+            minLevel != null -> entry.level.toInt() >= minLevel.toInt()
             else -> true
         }
 }

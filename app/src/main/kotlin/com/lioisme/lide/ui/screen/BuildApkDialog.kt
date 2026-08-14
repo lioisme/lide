@@ -52,6 +52,9 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import io.github.oshai.kotlinlogging.KotlinLogging
+
+private val logger = KotlinLogging.logger("BuildApkDialog")
 
 private sealed interface BuildResult {
     data class Success(
@@ -544,9 +547,8 @@ private fun shareApk(
         context.startActivity(Intent.createChooser(intent, null))
     } catch (e: Exception) {
         // T17：分享失败消息资源兜底（异常细节仅日志，用户可见文案本地化）。
-        android.util.Log.w(TAG_SHARE, "share apk failed", e)
+        logger.warn(e) { "share apk failed" }
         Toast.makeText(context, context.getString(R.string.build_share_failed), Toast.LENGTH_LONG).show()
     }
 }
 
-private const val TAG_SHARE = "BuildApkDialog"

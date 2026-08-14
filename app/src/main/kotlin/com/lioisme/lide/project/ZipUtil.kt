@@ -1,6 +1,5 @@
 package com.lioisme.lide.project
 
-import android.util.Log
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -11,11 +10,11 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
 import java.util.zip.ZipInputStream
 import java.util.zip.ZipOutputStream
+import io.github.oshai.kotlinlogging.KotlinLogging
+
+private val logger = KotlinLogging.logger("ZipUtil")
 
 object ZipUtil {
-    /** 单一日志 TAG（Q13 收口：历史全限定名 Log.e("ZipUtil", ...) 统一为常量）。 */
-    private const val TAG = "ZipUtil"
-
     /** C5（2026-08-12）Zip Bomb 防护上限：解压总字节 / 条目数 / 单条目大小。
      * 恶意 .alp 可声明极小压缩比以写满磁盘，超限即中止并抛异常（调用方清理半成品）。 */
     const val MAX_TOTAL_UNCOMPRESSED = 512L * 1024 * 1024
@@ -54,7 +53,7 @@ object ZipUtil {
             }
             true
         } catch (e: Exception) {
-            Log.e(TAG, "zipToStream failed: ${e.message}")
+            logger.error { "zipToStream failed: ${e.message}" }
             false
         }
 
@@ -66,7 +65,7 @@ object ZipUtil {
             destDir.mkdirs()
             FileInputStream(zipFile).use { unzipFromStream(it, destDir) }
         } catch (e: Exception) {
-            Log.e(TAG, "unzip failed: ${e.message}")
+            logger.error { "unzip failed: ${e.message}" }
             false
         }
 
@@ -131,7 +130,7 @@ object ZipUtil {
             }
             true
         } catch (e: ZipBombException) {
-            Log.e(TAG, "unzipFromStream aborted: ${e.message}")
+            logger.error { "unzipFromStream aborted: ${e.message}" }
             false
         } catch (e: Exception) {
             val snapshot =
@@ -144,7 +143,7 @@ object ZipUtil {
                 } catch (ex: Exception) {
                     "snapshot failed: ${ex.message}"
                 }
-            Log.e(TAG, "unzipFromStream failed: ${e.message}; $snapshot", e)
+            logger.error(e) { "unzipFromStream failed: ${e.message}; $snapshot" }
             false
         }
 
@@ -162,7 +161,7 @@ object ZipUtil {
                 zip.getInputStream(entry).use { it.readBytes().toString(Charsets.UTF_8) }
             }
         } catch (e: Exception) {
-            Log.e(TAG, "readEntryText failed: ${e.message}")
+            logger.error { "readEntryText failed: ${e.message}" }
             null
         }
     }

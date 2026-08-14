@@ -142,6 +142,10 @@ android {
     testOptions {
         // JVM 单测：android.util.Log 等桩方法返回默认值（不加载设备类）。
         unitTests.isReturnDefaultValues = true
+        // kotlin-logging（2026-08-15 迁移）：宿主 JVM 单测类路径携带 Android 变体，其 detectLogger
+        // 仅识别 kotlin-logging-to-android-native（否则回落 Slf4j 缺类）。置位后走
+        // AndroidNativeLoggerFactory，与运行时同工厂；单测下 android.util.Log 桩返回默认值（isLoggable=false）即 no-op。
+        unitTests.all { it.systemProperty("kotlin-logging-to-android-native", "true") }
     }
 
     packaging {
@@ -281,6 +285,11 @@ dependencies {
             // 的 Kotlin 移植（Apache 2.0，零传递依赖，纯 JVM 可测——ThemeContrastTest 依赖）。
             // 官方 Java 版仅内嵌于 MDC-Android AAR，独立坐标不存在，故用同源移植。
             "com.materialkolor:material-color-utilities:4.1.1",
+            // 日志门面唯一实现（KOTLIN_LOGGING，2026-08-15）：宿主全部日志经 kotlin-logging
+            // 产出（Android 原生工厂直连 android.util.Log，懒求值 + isLoggable 门控内建；
+            // slf4j-api 为库侧 compileOnly，选 native 工厂则运行时零 SLF4J 依赖）。
+            // 版本 pin 8.0.4（maven 已发布 tag；HEAD 的 8.0.5 为未发布 next，禁引用）。
+            "io.github.oshai:kotlin-logging:8.0.4",
         )
     for (d in ideDeps) {
         implementation(d)

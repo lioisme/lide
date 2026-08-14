@@ -2,7 +2,6 @@ package com.lioisme.lide.apibrowser
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.util.Log
 import android.view.View
 import dalvik.system.DexFile
 import kotlinx.coroutines.Dispatchers
@@ -10,6 +9,9 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import java.util.Collections
 import java.util.concurrent.ConcurrentHashMap
+import io.github.oshai.kotlinlogging.KotlinLogging
+
+private val logger = KotlinLogging.logger("ApiIndex")
 
 /**
  * API 索引：静态类表（assets/javaapi/android.lua，pro 类表平移 + 扩展）
@@ -31,9 +33,6 @@ import java.util.concurrent.ConcurrentHashMap
  * 全部反射路径 try/catch(Throwable) 降级（AGENTS.md 约定）。
  */
 object ApiIndex {
-    /** 单一日志 TAG（Q13：历史双 TAG「ApiBrowser / ApiIndex」已统一）。 */
-    private const val TAG = "ApiIndex"
-
     private const val ASSET_CLASS_TABLE = "javaapi/android.lua"
 
     /** 类形态（反射解析）：接口判定 + 完整类声明签名（列表行第二行）。 */
@@ -251,10 +250,8 @@ object ApiIndex {
             snapshot = base
             completePhaseDone = false
             builtProjectRoots = roots
-            // Q13：单一 TAG 常量 + DEBUG 守卫（release 零开销；双 TAG 历史写法已统一）。
-            if (Log.isLoggable(TAG, Log.DEBUG)) {
-                Log.d(TAG, "built base ${classList.size} classes, ${nativeModules.size} modules in ${System.currentTimeMillis() - start}ms")
-            }
+            // 2026-08-15 kotlin-logging 迁移：debug 懒求值，无需手动 isLoggable 守卫。
+            logger.debug { "built base ${classList.size} classes, ${nativeModules.size} modules in ${System.currentTimeMillis() - start}ms" }
             return base
         }
     }
@@ -271,9 +268,7 @@ object ApiIndex {
             assignUsages()
             refineCategories()
             completePhaseDone = true
-            if (Log.isLoggable(TAG, Log.DEBUG)) {
-                Log.d(TAG, "complete phase done ${System.currentTimeMillis() - start}ms")
-            }
+            logger.debug { "complete phase done ${System.currentTimeMillis() - start}ms" }
         }
     }
 

@@ -2,9 +2,11 @@ package com.lioisme.lide.import
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import com.lioisme.lide.project.AlpManager
 import java.io.File
+import io.github.oshai.kotlinlogging.KotlinLogging
+
+private val logger = KotlinLogging.logger("AlpImportCoordinator")
 
 /**
  * .alp 导入协调器（架构审计 B-1）：两屏（工程列表 / 示例）共用的
@@ -22,9 +24,6 @@ import java.io.File
 class AlpImportCoordinator(
     private val context: Context,
 ) {
-    private companion object {
-        const val TAG = "AlpImportCoordinator"
-    }
 
     /** 待确认导入：临时 .alp 文件路径 + 已解析的导入计划（冲突态）。 */
     data class Pending(
@@ -51,7 +50,7 @@ class AlpImportCoordinator(
                 f.absolutePath
             }
         } catch (t: Throwable) {
-            Log.e(TAG, "copyUriToTemp failed: uri=$uri", t)
+            logger.error(t) { "copyUriToTemp failed: uri=$uri" }
             null
         }
 
@@ -69,7 +68,7 @@ class AlpImportCoordinator(
             if (deleteAfter) File(tempPath).delete()
             result
         } catch (t: Throwable) {
-            Log.e(TAG, "import failed: temp=$tempPath mode=$mode", t)
+            logger.error(t) { "import failed: temp=$tempPath mode=$mode" }
             if (deleteAfter) File(tempPath).delete()
             null
         }

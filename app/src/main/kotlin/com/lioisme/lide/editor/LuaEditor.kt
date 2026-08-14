@@ -1,7 +1,6 @@
 package com.lioisme.lide.editor
 
 import android.content.Context
-import android.util.Log
 import android.util.TypedValue
 import android.view.KeyEvent
 import androidx.compose.foundation.layout.Box
@@ -44,6 +43,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.withContext
+import io.github.oshai.kotlinlogging.KotlinLogging
+
+private val logger = KotlinLogging.logger("LuaEditor")
 
 /**
  * 纯编辑器组件（零宿主依赖）。
@@ -74,7 +76,6 @@ import kotlinx.coroutines.withContext
  */
 private const val LARGE_FILE_THRESHOLD = EditorLimits.LARGE_FILE_THRESHOLD
 private const val DIAGNOSTIC_DEBOUNCE_MS = 500L
-private const val TAG = "LuaEditor"
 
 // P4（2026-08-11 设置瘦身，对标 Squircle 硬编码常量）：not 设置项。
 private const val DEFAULT_UNDO_STACK_SIZE = 500
@@ -225,7 +226,7 @@ private class EditorInstance(
                         onFormatAction()
                     }
                 } catch (t: Throwable) {
-                    Log.w(TAG, "key binding callback failed", t)
+                    logger.warn(t) { "key binding callback failed" }
                 }
             }
 
@@ -249,7 +250,7 @@ private class EditorInstance(
                     }
                     syncUndoRedoState()
                 } catch (t: Throwable) {
-                    Log.w(TAG, "content change callback failed", t)
+                    logger.warn(t) { "content change callback failed" }
                 }
             }
 
@@ -259,7 +260,7 @@ private class EditorInstance(
                 try {
                     onSearchResultPublished()
                 } catch (t: Throwable) {
-                    Log.w(TAG, "search result callback failed", t)
+                    logger.warn(t) { "search result callback failed" }
                 }
             }
         }
@@ -700,7 +701,7 @@ fun LuaEditor(
                         }
                     }
             } catch (t: Throwable) {
-                Log.w(TAG, "apply diagnostics failed", t)
+                logger.warn(t) { "apply diagnostics failed" }
             }
         }
     }

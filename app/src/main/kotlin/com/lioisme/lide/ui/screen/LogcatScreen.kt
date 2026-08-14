@@ -59,9 +59,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-/** 单一日志 TAG（Q13 收口：历史字面量统一为常量）。 */
-private const val TAG = "LogcatScreen"
-
 /**
  * 日志猫列表页：全局日志查看器（LIDE 进程日志，宿主 + 引擎 + Lua print）。
  *

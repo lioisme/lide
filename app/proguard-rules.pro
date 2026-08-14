@@ -95,3 +95,8 @@
 # Dhizuku API（io.github.iamr0s）：Binder 代理按接口反射绑定，整包 keep 防混淆。
 -keep class com.rosan.dhizuku.api.** { *; }
 -dontwarn com.rosan.dhizuku.**
+
+# ---- kotlin-logging (io.github.oshai) ----
+# Android 变体工厂编译期引用 org.slf4j 接口（compileOnly，运行时零 slf4j），
+# R8 报 missing classes，须 dontwarn（kotlin-logging 官方 R8 约定）。
+-dontwarn org.slf4j.**

@@ -1,13 +1,15 @@
 package com.lioisme.lide.build
 
 import android.content.Context
-import android.util.Log
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
 import java.security.KeyFactory
 import java.security.cert.CertificateFactory
 import java.security.spec.PKCS8EncodedKeySpec
+import io.github.oshai.kotlinlogging.KotlinLogging
+
+private val logger = KotlinLogging.logger("SigningManager")
 
 /**
  * 签名档案管理（宿主域，仅 :app 使用）：
@@ -19,7 +21,6 @@ import java.security.spec.PKCS8EncodedKeySpec
  */
 object SigningManager {
     const val BUILTIN_ID = "builtin-testkey"
-    private const val TAG = "SigningManager"
     private const val PREF_NAME = "lide_signing"
     private const val KEY_PROFILES = "profiles"
     private const val KEY_DEFAULT = "default"
@@ -200,7 +201,7 @@ object SigningManager {
         } catch (e: Exception) {
             // 数据保全（Q4）：损坏原文先备份，随后 write() 覆盖损坏值时用户档案不静默丢失；
             // 备份键供人工/未来恢复路径使用（原始内容逐字节保留）。
-            Log.e(TAG, "lide_signing profiles parse failed, original backed up to $KEY_CORRUPT_BACKUP", e)
+            logger.error(e) { "lide_signing profiles parse failed, original backed up to $KEY_CORRUPT_BACKUP" }
             prefs().edit().putString(KEY_CORRUPT_BACKUP, raw).apply()
             emptyList()
         }

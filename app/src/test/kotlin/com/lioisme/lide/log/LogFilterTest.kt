@@ -5,6 +5,7 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertSame
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import io.github.oshai.kotlinlogging.Level
 
 /**
  * LogFilter 语义表 + filterEntries 过滤契约测试（2026-08-14 LOGCAT L1，
@@ -17,7 +18,7 @@ class LogFilterTest {
 
     private fun entry(
         tag: String = "lua",
-        level: LogLevel = LogLevel.INFO,
+        level: Level = Level.INFO,
         message: String = "msg",
         id: Long = 0,
     ): LogEntry =
@@ -51,8 +52,8 @@ class LogFilterTest {
 
     @Test
     fun `ALL 匹配一切`() {
-        assertTrue(LogFilter.ALL.matches(entry(tag = "lua", level = LogLevel.VERBOSE)))
-        assertTrue(LogFilter.ALL.matches(entry(tag = "crash", level = LogLevel.ERROR)))
+        assertTrue(LogFilter.ALL.matches(entry(tag = "lua", level = Level.TRACE)))
+        assertTrue(LogFilter.ALL.matches(entry(tag = "crash", level = Level.ERROR)))
     }
 
     @Test
@@ -80,23 +81,23 @@ class LogFilterTest {
 
     @Test
     fun `级别阈值语义`() {
-        assertTrue(LogFilter.ERROR.matches(entry(level = LogLevel.ERROR)))
-        assertFalse(LogFilter.ERROR.matches(entry(level = LogLevel.WARN)))
+        assertTrue(LogFilter.ERROR.matches(entry(level = Level.ERROR)))
+        assertFalse(LogFilter.ERROR.matches(entry(level = Level.WARN)))
 
-        assertTrue(LogFilter.WARNING.matches(entry(level = LogLevel.WARN)))
-        assertTrue(LogFilter.WARNING.matches(entry(level = LogLevel.ERROR)))
-        assertFalse(LogFilter.WARNING.matches(entry(level = LogLevel.INFO)))
+        assertTrue(LogFilter.WARNING.matches(entry(level = Level.WARN)))
+        assertTrue(LogFilter.WARNING.matches(entry(level = Level.ERROR)))
+        assertFalse(LogFilter.WARNING.matches(entry(level = Level.INFO)))
 
-        assertTrue(LogFilter.INFO.matches(entry(level = LogLevel.INFO)))
-        assertTrue(LogFilter.INFO.matches(entry(level = LogLevel.WARN)))
-        assertFalse(LogFilter.INFO.matches(entry(level = LogLevel.DEBUG)))
+        assertTrue(LogFilter.INFO.matches(entry(level = Level.INFO)))
+        assertTrue(LogFilter.INFO.matches(entry(level = Level.WARN)))
+        assertFalse(LogFilter.INFO.matches(entry(level = Level.DEBUG)))
 
-        assertTrue(LogFilter.DEBUG.matches(entry(level = LogLevel.DEBUG)))
-        assertTrue(LogFilter.DEBUG.matches(entry(level = LogLevel.INFO)))
-        assertFalse(LogFilter.DEBUG.matches(entry(level = LogLevel.VERBOSE)))
+        assertTrue(LogFilter.DEBUG.matches(entry(level = Level.DEBUG)))
+        assertTrue(LogFilter.DEBUG.matches(entry(level = Level.INFO)))
+        assertFalse(LogFilter.DEBUG.matches(entry(level = Level.TRACE)))
 
-        assertTrue(LogFilter.VERBOSE.matches(entry(level = LogLevel.VERBOSE)))
-        assertTrue(LogFilter.VERBOSE.matches(entry(level = LogLevel.ERROR)))
+        assertTrue(LogFilter.VERBOSE.matches(entry(level = Level.TRACE)))
+        assertTrue(LogFilter.VERBOSE.matches(entry(level = Level.ERROR)))
     }
 
     @Test
@@ -122,9 +123,9 @@ class LogFilterTest {
     fun `类型与查询词组合过滤`() {
         val entries =
             listOf(
-                entry(id = 0, tag = "lua", level = LogLevel.INFO, message = "hello"),
-                entry(id = 1, tag = "lua", level = LogLevel.ERROR, message = "boom"),
-                entry(id = 2, tag = "crash", level = LogLevel.ERROR, message = "boom"),
+                entry(id = 0, tag = "lua", level = Level.INFO, message = "hello"),
+                entry(id = 1, tag = "lua", level = Level.ERROR, message = "boom"),
+                entry(id = 2, tag = "crash", level = Level.ERROR, message = "boom"),
             )
         assertEquals(listOf(1L), filterEntries(entries, LogFilter.LUA, "boom").map { it.id })
         assertEquals(listOf(1L, 2L), filterEntries(entries, LogFilter.ERROR, "").map { it.id })

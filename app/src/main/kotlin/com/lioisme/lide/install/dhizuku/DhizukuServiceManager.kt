@@ -7,7 +7,6 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.IBinder
 import android.os.RemoteException
-import android.util.Log
 import com.lioisme.lide.install.BackendStatus
 import com.lioisme.lide.install.IDhizukuInstallerService
 import com.rosan.dhizuku.api.Dhizuku
@@ -21,6 +20,9 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.coroutines.resume
+import io.github.oshai.kotlinlogging.KotlinLogging
+
+private val logger = KotlinLogging.logger("DhizukuServiceManager")
 
 /**
  * Dhizuku 静默安装通道：Dhizuku API 封装（设备所有者上下文）。
@@ -52,7 +54,7 @@ class DhizukuServiceManager(
     /** 预热 Dhizuku 桥并刷新状态（LideApp.onCreate 进程级一次性调用）。 */
     fun initialize() {
         runCatching { Dhizuku.init(context) }
-            .onFailure { Log.w(TAG, "warm-up Dhizuku.init() threw: ${it.message}") }
+            .onFailure { logger.warn { "warm-up Dhizuku.init() threw: ${it.message}" } }
         refreshStatus()
     }
 
@@ -65,7 +67,7 @@ class DhizukuServiceManager(
     fun requestPermission() {
         try {
             if (!Dhizuku.init(context)) {
-                Log.w(TAG, "requestPermission() — Dhizuku.init() failed, cannot request")
+                logger.warn { "requestPermission() — Dhizuku.init() failed, cannot request" }
                 refreshStatus()
                 return
             }
@@ -77,16 +79,15 @@ class DhizukuServiceManager(
                 object : DhizukuRequestPermissionListener() {
                     @Throws(RemoteException::class)
                     override fun onRequestPermission(grantResult: Int) {
-                        Log.d(
-                            TAG,
-                            "Dhizuku permission result: granted=${grantResult == PackageManager.PERMISSION_GRANTED}",
-                        )
+                        logger.debug {
+                            "Dhizuku permission result: granted=${grantResult == PackageManager.PERMISSION_GRANTED}"
+                        }
                         refreshStatus()
                     }
                 },
             )
         } catch (e: Exception) {
-            Log.w(TAG, "Failed to request Dhizuku permission: ${e.message}")
+            logger.warn { "Failed to request Dhizuku permission: ${e.message}" }
         }
     }
 
@@ -97,7 +98,7 @@ class DhizukuServiceManager(
             if (!isPackageInstalled(DHIZUKU_PACKAGE)) return false
             Dhizuku.init(context) && Dhizuku.isPermissionGranted()
         } catch (e: Exception) {
-            Log.w(TAG, "isReadyNow() — check failed: ${e.message}")
+            logger.warn { "isReadyNow() — check failed: ${e.message}" }
             false
         }
     }
@@ -107,9 +108,9 @@ class DhizukuServiceManager(
      * 由调用方回落系统安装器（不阻塞安装主链路）。
      */
     suspend fun getService(): IDhizukuInstallerService? {
-        Log.d(TAG, "getService() — current status=${_status.value}")
+        logger.debug { "getService() — current status=${_status.value}" }
         if (_status.value != BackendStatus.READY) {
-            Log.w(TAG, "getService() — Dhizuku not READY (status=${_status.value}), returning null")
+            logger.warn { "getService() — Dhizuku not READY (status=${_status.value}), returning null" }
             return null
         }
 
@@ -117,16 +118,16 @@ class DhizukuServiceManager(
             installerService?.let { service ->
                 try {
                     val alive = service.asBinder().pingBinder()
-                    Log.d(TAG, "getService() — cached service ping=$alive")
+                    logger.debug { "getService() — cached service ping=$alive" }
                     if (alive) return@withLock service
-                    Log.w(TAG, "getService() — cached service binder dead, rebinding...")
+                    logger.warn { "getService() — cached service binder dead, rebinding..." }
                     installerService = null
                 } catch (e: Exception) {
-                    Log.w(TAG, "getService() — cached service error: ${e.message}, rebinding...")
+                    logger.warn { "getService() — cached service error: ${e.message}, rebinding..." }
                     installerService = null
                 }
             } ?: run {
-                Log.d(TAG, "getService() — no cached service, binding...")
+                logger.debug { "getService() — no cached service, binding..." }
             }
 
             bindService()
@@ -134,7 +135,7 @@ class DhizukuServiceManager(
     }
 
     private suspend fun bindService(): IDhizukuInstallerService? {
-        Log.d(TAG, "bindService() — attempting to bind Dhizuku UserService...")
+        logger.debug { "bindService() — attempting to bind Dhizuku UserService..." }
         return try {
             withTimeoutOrNull(BIND_TIMEOUT_MS) {
                 suspendCancellableCoroutine { continuation ->
@@ -143,7 +144,7 @@ class DhizukuServiceManager(
                             context.packageName,
                             DhizukuInstallerServiceImpl::class.java.name,
                         )
-                    Log.d(TAG, "bindService() — component: $componentName")
+                    logger.debug { "bindService() — component: $componentName" }
 
                     val args = DhizukuUserServiceArgs(componentName)
 
@@ -153,10 +154,10 @@ class DhizukuServiceManager(
                                 name: ComponentName?,
                                 binder: IBinder?,
                             ) {
-                                Log.d(TAG, "onServiceConnected() — name=$name, binderAlive=${binder?.pingBinder()}")
+                                logger.debug { "onServiceConnected() — name=$name, binderAlive=${binder?.pingBinder()}" }
                                 val service = IDhizukuInstallerService.Stub.asInterface(binder)
                                 installerService = service
-                                Log.d(TAG, "Dhizuku installer service connected and cached")
+                                logger.debug { "Dhizuku installer service connected and cached" }
                                 if (continuation.isActive) {
                                     continuation.resume(service)
                                 }
@@ -164,21 +165,21 @@ class DhizukuServiceManager(
 
                             override fun onServiceDisconnected(name: ComponentName?) {
                                 installerService = null
-                                Log.d(TAG, "Dhizuku installer service disconnected: $name")
+                                logger.debug { "Dhizuku installer service disconnected: $name" }
                             }
                         }
 
                     serviceConnection = connection
 
-                    Log.d(TAG, "Calling Dhizuku.bindUserService()...")
+                    logger.debug { "Calling Dhizuku.bindUserService()..." }
                     val bound = Dhizuku.bindUserService(args, connection)
-                    Log.d(TAG, "Dhizuku.bindUserService() returned: $bound")
+                    logger.debug { "Dhizuku.bindUserService() returned: $bound" }
                     if (!bound && continuation.isActive) {
                         continuation.resume(null)
                     }
 
                     continuation.invokeOnCancellation {
-                        Log.d(TAG, "bindService() coroutine cancelled, unbinding...")
+                        logger.debug { "bindService() coroutine cancelled, unbinding..." }
                         try {
                             Dhizuku.unbindUserService(connection)
                         } catch (_: Exception) {
@@ -187,11 +188,11 @@ class DhizukuServiceManager(
                 }
             }.also { service ->
                 if (service == null) {
-                    Log.w(TAG, "bindService() timed out or failed after ${BIND_TIMEOUT_MS}ms")
+                    logger.warn { "bindService() timed out or failed after ${BIND_TIMEOUT_MS}ms" }
                 }
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to bind Dhizuku service: ${e.javaClass.simpleName}: ${e.message}")
+            logger.error { "Failed to bind Dhizuku service: ${e.javaClass.simpleName}: ${e.message}" }
             null
         }
     }
@@ -199,20 +200,20 @@ class DhizukuServiceManager(
     private fun computeStatus(): BackendStatus =
         try {
             if (Build.VERSION.SDK_INT < MIN_SDK) {
-                Log.d(TAG, "computeStatus() — Dhizuku requires API $MIN_SDK+ (host=${Build.VERSION.SDK_INT})")
+                logger.debug { "computeStatus() — Dhizuku requires API $MIN_SDK+ (host=${Build.VERSION.SDK_INT})" }
                 BackendStatus.UNAVAILABLE
             } else if (!isPackageInstalled(DHIZUKU_PACKAGE)) {
-                Log.d(TAG, "computeStatus() — Dhizuku package not installed")
+                logger.debug { "computeStatus() — Dhizuku package not installed" }
                 BackendStatus.UNAVAILABLE
             } else {
                 val initialized =
                     try {
                         Dhizuku.init(context)
                     } catch (e: Exception) {
-                        Log.w(TAG, "Dhizuku.init() threw: ${e.message}")
+                        logger.warn { "Dhizuku.init() threw: ${e.message}" }
                         false
                     }
-                Log.d(TAG, "computeStatus() — Dhizuku.init=$initialized")
+                logger.debug { "computeStatus() — Dhizuku.init=$initialized" }
                 if (!initialized) {
                     BackendStatus.NOT_RUNNING
                 } else {
@@ -220,11 +221,11 @@ class DhizukuServiceManager(
                         try {
                             Dhizuku.isPermissionGranted()
                         } catch (e: Exception) {
-                            Log.w(TAG, "Dhizuku.isPermissionGranted() threw: ${e.message}")
+                            logger.warn { "Dhizuku.isPermissionGranted() threw: ${e.message}" }
                             false
                         }
                     if (granted) {
-                        Log.d(TAG, "computeStatus() — READY")
+                        logger.debug { "computeStatus() — READY" }
                         BackendStatus.READY
                     } else {
                         BackendStatus.PERMISSION_NEEDED
@@ -232,7 +233,7 @@ class DhizukuServiceManager(
                 }
             }
         } catch (e: Exception) {
-            Log.w(TAG, "Error checking Dhizuku status: ${e.javaClass.simpleName}: ${e.message}")
+            logger.warn { "Error checking Dhizuku status: ${e.javaClass.simpleName}: ${e.message}" }
             BackendStatus.NOT_RUNNING
         }
 
@@ -247,7 +248,6 @@ class DhizukuServiceManager(
         }
 
     companion object {
-        private const val TAG = "DhizukuServiceManager"
         private const val DHIZUKU_PACKAGE = "com.rosan.dhizuku"
         private const val BIND_TIMEOUT_MS = 15_000L
 

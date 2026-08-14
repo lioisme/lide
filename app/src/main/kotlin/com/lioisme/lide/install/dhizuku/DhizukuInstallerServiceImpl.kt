@@ -8,12 +8,14 @@ import android.content.IntentFilter
 import android.content.pm.PackageInstaller
 import android.os.Build
 import android.os.ParcelFileDescriptor
-import android.util.Log
 import com.lioisme.lide.install.IDhizukuInstallerService
 import java.util.UUID
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
+import io.github.oshai.kotlinlogging.KotlinLogging
+
+private val logger = KotlinLogging.logger("DhizukuService")
 
 /**
  * Dhizuku UserService 安装器实现，运行于 Dhizuku 按需启动的独立进程
@@ -35,7 +37,6 @@ import java.util.concurrent.atomic.AtomicInteger
  */
 class DhizukuInstallerServiceImpl : IDhizukuInstallerService.Stub() {
     companion object {
-        private const val TAG = "DhizukuService"
 
         private const val STATUS_SUCCESS = 0
         private const val STATUS_FAILURE = -1
@@ -57,14 +58,14 @@ class DhizukuInstallerServiceImpl : IDhizukuInstallerService.Stub() {
                 PendingIntent.FLAG_UPDATE_CURRENT
             }
 
-        private fun log(msg: String) = Log.d(TAG, msg)
+        private fun log(msg: String) = logger.debug { msg }
 
-        private fun logW(msg: String) = Log.w(TAG, msg)
+        private fun logW(msg: String) = logger.warn { msg }
 
         private fun logE(
             msg: String,
             e: Throwable? = null,
-        ) = Log.e(TAG, msg, e)
+        ) = logger.error(e) { msg }
     }
 
     override fun installPackage(

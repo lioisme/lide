@@ -3,7 +3,6 @@ package com.lioisme.lide
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
@@ -38,11 +37,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import io.github.oshai.kotlinlogging.KotlinLogging
+
+private val logger = KotlinLogging.logger("MainActivity")
 
 class MainActivity : ComponentActivity() {
-    private companion object {
-        const val TAG = "MainActivity"
-    }
 
     // 启动意图产物以 Compose state 承载（P2#11 修复）：.alp 解压导入 / 独立 .lua 收养
     // 原在 onCreate/onNewIntent 主线程同步执行（冷启动与点按卡顿），现移入
@@ -157,7 +156,7 @@ class MainActivity : ComponentActivity() {
                 // APK 安装（2026-08-10 T16）：系统「打开方式」将 APK 交给 LIDE 时展示
                 // 安装方式选择（普通系统安装器 / Shizuku / Dhizuku / Root 静默安装）。
                 path.endsWith(".apk", ignoreCase = true) -> {
-                    Log.d(TAG, "handleLaunchIntent() — apk install: $path")
+                    logger.debug { "handleLaunchIntent() — apk install: $path" }
                     pendingApkFile = File(path)
                 }
             }
@@ -177,7 +176,7 @@ class MainActivity : ComponentActivity() {
         // .lua（androlua:// scheme 无签名保护，任意应用可发；引擎进程带宿主全量
         // 权限），归一化后目标必须位于 luaExtDir 之内，越界直接拒绝。
         if (!ProjectEntryOps.isInsideRoot(File(extRoot), target.absolutePath)) {
-            Log.w(TAG, "androlua:// rejected (target outside luaExtDir): $relPath")
+            logger.warn { "androlua:// rejected (target outside luaExtDir): $relPath" }
             return
         }
         if (target.isDirectory) {
@@ -249,7 +248,7 @@ class MainActivity : ComponentActivity() {
             File(projectDir, "init.lua").writeText(ProjectManager.initLuaTemplate(baseName, packageName))
             PendingOpenFile(projectDir.absolutePath, file.name)
         } catch (e: Exception) {
-            Log.e(TAG, "adopt standalone lua failed: ${e.message}")
+            logger.error { "adopt standalone lua failed: ${e.message}" }
             null
         }
 
@@ -289,7 +288,7 @@ class MainActivity : ComponentActivity() {
                     // M3（2026-08-12）：解析/拷贝失败返回 null 而非回落 uri.path
                     // （/document/123 不是真实文件，后续按扩展名分派全部落空，
                     // 且会以无效路径进安装/导入流程）。
-                    Log.w(TAG, "resolve content uri failed: $uri", e)
+                    logger.warn(e) { "resolve content uri failed: $uri" }
                     null
                 }
             }

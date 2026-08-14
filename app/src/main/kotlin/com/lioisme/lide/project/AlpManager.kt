@@ -2,18 +2,15 @@ package com.lioisme.lide.project
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import com.lioisme.lide.engine.RuntimePaths
 import java.io.File
+import io.github.oshai.kotlinlogging.KotlinLogging
+
+private val logger = KotlinLogging.logger("AlpManager")
 
 class AlpManager(
     private val context: Context,
 ) {
-    /** 单一日志 TAG（Q13 收口：历史字面量 Log.e("AlpManager", ...) 统一为常量）。 */
-    private companion object {
-        const val TAG = "AlpManager"
-    }
-
     /** 同名冲突处理策略（WP-015）：覆盖 / 改名（dedupe -1/-2）。 */
     enum class ImportMode { OVERWRITE, RENAME }
 
@@ -34,18 +31,18 @@ class AlpManager(
     ): Boolean {
         val srcDir = File(projectDir)
         if (!srcDir.isDirectory) {
-            Log.e(TAG, "project directory not found: $projectDir")
+            logger.error { "project directory not found: $projectDir" }
             return false
         }
         return try {
             context.contentResolver.openOutputStream(uri)?.use { outputStream ->
                 ZipUtil.zipToStream(srcDir, outputStream)
             } ?: run {
-                Log.e(TAG, "cannot open output stream for $uri")
+                logger.error { "cannot open output stream for $uri" }
                 false
             }
         } catch (e: Exception) {
-            Log.e(TAG, "export to URI failed: ${e.message}")
+            logger.error { "export to URI failed: ${e.message}" }
             false
         }
     }
@@ -53,7 +50,7 @@ class AlpManager(
     fun planImport(alpFile: String): ImportPlan? {
         val file = File(alpFile)
         if (!file.exists()) {
-            Log.e(TAG, "alp file not found: ${file.name}")
+            logger.error { "alp file not found: ${file.name}" }
             return null
         }
         val initContent = ZipUtil.readEntryText(file, "init.lua")

@@ -1,10 +1,12 @@
 package com.lioisme.lide.project
 
-import android.util.Log
 import com.lioisme.lide.engine.RuntimePaths
 import com.lioisme.lide.model.Project
 import java.io.File
 import java.util.concurrent.ConcurrentHashMap
+import io.github.oshai.kotlinlogging.KotlinLogging
+
+private val logger = KotlinLogging.logger("ProjectManager")
 
 /** 工程扫描与读写服务（纯 File 操作；扫描缓存为进程级）。 */
 class ProjectManager {
@@ -21,7 +23,6 @@ class ProjectManager {
     )
 
     companion object {
-        private const val TAG = "ProjectManager"
 
         /**
          * 进程级工程扫描缓存：磁盘状态是进程共享的事实源，与 ProjectManager 实例无关，
@@ -79,7 +80,7 @@ class ProjectManager {
             val projectSub = File(extBase, RuntimePaths.PROJECT_DIR_NAME)
             return scanProjectsIn(projectSub)
         } catch (e: Exception) {
-            Log.e(TAG, "failed to scan luaExtDir: ${e.message}")
+            logger.error { "failed to scan luaExtDir: ${e.message}" }
             return emptyList()
         }
     }
@@ -130,7 +131,7 @@ class ProjectManager {
                 packageName = fields["packagename"] ?: fields["package"] ?: ""
                 icon = fields["icon"]
             } catch (e: Exception) {
-                Log.w(TAG, "loadProject: parse init.lua failed (fallback to dir name): ${dir.name}", e)
+                logger.warn(e) { "loadProject: parse init.lua failed (fallback to dir name): ${dir.name}" }
             }
         }
         return Project(
@@ -158,7 +159,7 @@ class ProjectManager {
             val initFile = File(project.path, "init.lua")
             if (initFile.exists()) initFile.readText() else null
         } catch (e: Exception) {
-            Log.w(TAG, "readInitContent failed: ${project.name}", e)
+            logger.warn(e) { "readInitContent failed: ${project.name}" }
             null
         }
 
@@ -171,7 +172,7 @@ class ProjectManager {
             val content = readInitContent(project)
             if (content != null) PermissionResolver.declared(content) else emptyList()
         } catch (e: Exception) {
-            Log.w(TAG, "loadUserPermissions parse failed: ${project.name}", e)
+            logger.warn(e) { "loadUserPermissions parse failed: ${project.name}" }
             emptyList()
         }
 
@@ -188,7 +189,7 @@ class ProjectManager {
             atomicWrite(File(project.path, "init.lua"), transform(content))
             true
         } catch (e: Exception) {
-            Log.w(TAG, "writeInitFields failed: ${project.name}", e)
+            logger.warn(e) { "writeInitFields failed: ${project.name}" }
             false
         }
 
@@ -201,7 +202,7 @@ class ProjectManager {
         return try {
             if (file.exists()) file.readText() else null
         } catch (e: Exception) {
-            Log.w(TAG, "getProjectScript failed: ${project.name}/$fileName", e)
+            logger.warn(e) { "getProjectScript failed: ${project.name}/$fileName" }
             null
         }
     }
@@ -223,13 +224,13 @@ class ProjectManager {
             tmp.writeText(content)
             if (!tmp.renameTo(file)) {
                 // renameTo 平台差异（Windows 目标已存在时失败；Android POSIX rename 原子替换）。
-                Log.w(TAG, "atomic rename failed, fallback direct write: ${file.name}")
+                logger.warn { "atomic rename failed, fallback direct write: ${file.name}" }
                 tmp.delete()
                 file.writeText(content)
             }
         } catch (e: Exception) {
             tmp.delete()
-            Log.w(TAG, "atomic write failed, fallback direct write: ${file.name}", e)
+            logger.warn(e) { "atomic write failed, fallback direct write: ${file.name}" }
             file.writeText(content)
         }
     }
@@ -245,7 +246,7 @@ class ProjectManager {
             atomicWrite(file, content)
             true
         } catch (e: Exception) {
-            Log.e(TAG, "save failed: ${e.message}")
+            logger.error { "save failed: ${e.message}" }
             false
         }
 
@@ -256,19 +257,19 @@ class ProjectManager {
         // 名称校验（Q9，复用文件树条目规则）：拒绝空名/路径分隔符/通配符等，
         // 防止用户输入经 mkdirs 逃逸工程根目录（宿主写外部存储的路径注入面）。
         if (!ProjectEntryOps.isValidEntryName(name)) {
-            Log.w(TAG, "createProject: invalid name rejected: $name")
+            logger.warn { "createProject: invalid name rejected: $name" }
             return null
         }
         // 隐私（P3-7）：不打印 luaExtDir/工程绝对路径，仅记录工程名。
-        Log.d(TAG, "createProject: name=$name")
+        logger.debug { "createProject: name=$name" }
         val base = File(luaExtDir, RuntimePaths.PROJECT_DIR_NAME)
         if (!base.exists() && !base.mkdirs()) {
-            Log.e(TAG, "Failed to create project base directory")
+            logger.error { "Failed to create project base directory" }
             return null
         }
         val dir = File(base, name)
         if (!dir.mkdirs()) {
-            Log.e(TAG, "Failed to create project directory: $name")
+            logger.error { "Failed to create project directory: $name" }
             return null
         }
         val packageName = packageNameFor(name)
@@ -276,11 +277,11 @@ class ProjectManager {
             File(dir, Project.DEFAULT_MAIN_FILE).writeText("-- $name\nprint(\"hello from $name!\")\n")
             File(dir, "init.lua").writeText(initLuaTemplate(name, packageName))
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to write project files: ${e.message}")
+            logger.error { "Failed to write project files: ${e.message}" }
             dir.deleteRecursively()
             return null
         }
-        Log.d(TAG, "Created project $name")
+        logger.debug { "Created project $name" }
         return Project(
             name = name,
             path = dir.absolutePath,
@@ -293,7 +294,7 @@ class ProjectManager {
             projectCache.remove(project.path)
             File(project.path).deleteRecursively()
         } catch (e: Exception) {
-            Log.e(TAG, "deleteProject failed: ${project.name}", e)
+            logger.error(e) { "deleteProject failed: ${project.name}" }
             false
         }
 
@@ -321,7 +322,7 @@ class ProjectManager {
             try {
                 File(project.path).renameTo(targetDir)
             } catch (e: Exception) {
-                Log.w(TAG, "renameProject: directory rename failed: ${project.name}", e)
+                logger.warn(e) { "renameProject: directory rename failed: ${project.name}" }
                 false
             }
         if (!ok) return null
@@ -341,16 +342,16 @@ class ProjectManager {
         } catch (e: Exception) {
             // 元数据同步失败：回滚目录改名，保证磁盘工程名与显示名一致；回滚也失败时
             // 保留告警（目录已改名但 appname 未同步，用户可见工程名由列表刷新兜底）。
-            Log.e(TAG, "renameProject: init.lua appname sync failed, rolling back rename: $name", e)
+            logger.error(e) { "renameProject: init.lua appname sync failed, rolling back rename: $name" }
             val rollbackOk =
                 try {
                     targetDir.renameTo(File(project.path))
                 } catch (re: Exception) {
-                    Log.e(TAG, "renameProject: rollback rename failed: ${project.name}", re)
+                    logger.error(re) { "renameProject: rollback rename failed: ${project.name}" }
                     false
                 }
             if (!rollbackOk) {
-                Log.e(TAG, "renameProject: rollback failed, disk name and init.lua appname mismatch: $name")
+                logger.error { "renameProject: rollback failed, disk name and init.lua appname mismatch: $name" }
             }
             return null
         }

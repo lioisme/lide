@@ -53,9 +53,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import io.github.oshai.kotlinlogging.KotlinLogging
 
-/** 单一日志 TAG（Q13 收口：历史字面量 Log.w("ApiBrowserScreen", ...) 统一为常量）。 */
-private const val TAG = "ApiBrowserScreen"
+private val logger = KotlinLogging.logger("ApiBrowserScreen")
 
 /**
  * API 浏览器：AppBar 内嵌官方 SearchBar（SearchBarState 驱动）+ 全屏搜索视图
@@ -99,7 +99,7 @@ fun ApiBrowserScreen(
                     ApiIndex.buildBase(context, roots)
                 }
         } catch (t: Throwable) {
-            android.util.Log.w(TAG, "buildBase failed", t)
+            logger.warn(t) { "buildBase failed" }
         }
         if (base != null) {
             snapshot = base
@@ -107,7 +107,7 @@ fun ApiBrowserScreen(
                 withContext(Dispatchers.IO) { ApiIndex.completeBuild() }
                 snapshot = ApiIndex.cached() ?: base
             } catch (t: Throwable) {
-                android.util.Log.w(TAG, "completeBuild failed", t)
+                logger.warn(t) { "completeBuild failed" }
             }
         } else {
             snapshot = ApiIndex.cached() ?: ApiIndex.Snapshot(

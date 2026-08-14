@@ -1,7 +1,6 @@
 package com.lioisme.lide.install
 
 import android.content.Context
-import android.util.Log
 import com.lioisme.lide.install.dhizuku.DhizukuServiceManager
 import com.lioisme.lide.install.root.RootServiceManager
 import com.lioisme.lide.install.shizuku.ShizukuServiceManager
@@ -9,6 +8,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import java.util.concurrent.atomic.AtomicBoolean
+import io.github.oshai.kotlinlogging.KotlinLogging
+
+private val logger = KotlinLogging.logger("InstallerServices")
 
 /**
  * 静默安装运行时（进程级单例，`LideApp.onCreate` 幂等初始化）。
@@ -20,7 +22,6 @@ import java.util.concurrent.atomic.AtomicBoolean
  * 未初始化即访问抛出 [IllegalStateException]（尽早暴露接线错误）。
  */
 object InstallerServices {
-    private const val TAG = "InstallerServices"
 
     /** 后端共享后台 scope（状态刷新 / 安装执行；独立于 Activity 生命周期）。 */
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
@@ -52,7 +53,7 @@ object InstallerServices {
             shizukuManager!!.initialize()
             dhizukuManager!!.initialize()
             initialized.set(true)
-            Log.d(TAG, "init() — three backends initialized")
+            logger.debug { "init() — three backends initialized" }
         }
     }
 

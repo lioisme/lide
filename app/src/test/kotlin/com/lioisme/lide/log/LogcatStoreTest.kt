@@ -5,6 +5,7 @@ import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import io.github.oshai.kotlinlogging.Level
 
 /**
  * LogcatStore 数据层契约测试（2026-08-14 LOGCAT L1）。
@@ -28,7 +29,7 @@ class LogcatStoreTest {
         assertEquals(0L, entry.id)
         assertEquals("lua", entry.tag)
         assertEquals("hello", entry.message)
-        assertEquals(LogLevel.INFO, entry.level)
+        assertEquals(Level.INFO, entry.level)
     }
 
     @Test

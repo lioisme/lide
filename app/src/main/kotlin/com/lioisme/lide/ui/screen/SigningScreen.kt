@@ -71,6 +71,9 @@ import com.lioisme.lide.ui.theme.SettingsManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import io.github.oshai.kotlinlogging.KotlinLogging
+
+private val logger = KotlinLogging.logger("SigningScreen")
 
 /** 指纹展示截断长度（Q16 L14 魔数收口）：SHA-256 十六进制 64 字符，界面行内展示截断 + 省略号。 */
 private const val FINGERPRINT_DISPLAY_CHARS = 31
@@ -263,7 +266,7 @@ fun SigningScreen(
                         Toast.makeText(context, R.string.signing_generated, Toast.LENGTH_SHORT).show()
                     } else {
                         // T5E：失败文案资源化（异常细节仅日志，不直达 UI）。
-                        android.util.Log.w("SigningScreen", "generate failed", ok.exceptionOrNull())
+                        logger.warn(ok.exceptionOrNull()) { "generate failed" }
                         Toast.makeText(context, R.string.signing_generate_failed, Toast.LENGTH_LONG).show()
                     }
                     refresh()
@@ -718,7 +721,7 @@ private fun ImportDialog(
                                     if (it.isEmpty()) error = emptyMessage
                                 }.onFailure { e ->
                                     // T17：读取失败展示本地化文案（异常细节仅日志）。
-                                    android.util.Log.w("SigningScreen", "listAliases failed", e)
+                                    logger.warn(e) { "listAliases failed" }
                                     error = readFailedMessage
                                 }
                         }
@@ -753,7 +756,7 @@ private fun ImportDialog(
                                 onDone()
                             } else {
                                 // T5E：失败文案资源化（异常细节仅日志）。
-                                android.util.Log.w("SigningScreen", "import failed", ok.exceptionOrNull())
+                                logger.warn(ok.exceptionOrNull()) { "import failed" }
                                 Toast.makeText(context, R.string.signing_import_failed, Toast.LENGTH_LONG).show()
                             }
                         }

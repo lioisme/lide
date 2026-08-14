@@ -2,10 +2,12 @@ package com.lioisme.lide.install
 
 import android.content.Context
 import android.os.ParcelFileDescriptor
-import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
+import io.github.oshai.kotlinlogging.KotlinLogging
+
+private val logger = KotlinLogging.logger("InstallerCoordinator")
 
 /**
  * 静默安装调度器：后端解析 + 静默安装执行，失败一律回落系统安装器（调用方）。
@@ -22,7 +24,6 @@ import java.io.File
  * 线程契约：安装执行在 [Dispatchers.IO]；UI 线程不触碰任何 Shizuku/Dhizuku/libsu API。
  */
 object InstallerCoordinator {
-    private const val TAG = "InstallerCoordinator"
 
     /** 后端成功码（与 AIDL 服务实现对齐）。 */
     private const val STATUS_SUCCESS = 0
@@ -44,7 +45,7 @@ object InstallerCoordinator {
                     InstallerBackend.ROOT -> rootInstall(apkFile)
                 }
             } catch (e: Throwable) {
-                Log.w(TAG, "$backend install exception, falling back: ${e.javaClass.simpleName}: ${e.message}")
+                logger.warn { "$backend install exception, falling back: ${e.javaClass.simpleName}: ${e.message}" }
                 false
             }
         }
@@ -54,7 +55,7 @@ object InstallerCoordinator {
         val service = InstallerServices.shizuku.getService() ?: return false
         return ParcelFileDescriptor.open(apkFile, ParcelFileDescriptor.MODE_READ_ONLY).use { pfd ->
             val result = service.installPackage(pfd, apkFile.length(), null)
-            Log.d(TAG, "shizuku install result=$result")
+            logger.debug { "shizuku install result=$result" }
             result == STATUS_SUCCESS
         }
     }
@@ -65,7 +66,7 @@ object InstallerCoordinator {
         val service = InstallerServices.dhizuku.getService() ?: return false
         return ParcelFileDescriptor.open(apkFile, ParcelFileDescriptor.MODE_READ_ONLY).use { pfd ->
             val result = service.installPackage(pfd, apkFile.length(), expectedPkg, expectedVc, null)
-            Log.d(TAG, "dhizuku install result=$result")
+            logger.debug { "dhizuku install result=$result" }
             result == STATUS_SUCCESS
         }
     }
@@ -73,7 +74,7 @@ object InstallerCoordinator {
     private suspend fun rootInstall(apkFile: File): Boolean {
         if (!InstallerServices.root.isReadyNow()) return false
         val result = InstallerServices.root.installPackage(apkFile, null)
-        Log.d(TAG, "root install result=$result")
+        logger.debug { "root install result=$result" }
         return result == STATUS_SUCCESS
     }
 
@@ -83,7 +84,7 @@ object InstallerCoordinator {
             try {
                 InstallerServices.appContext.packageManager.getPackageArchiveInfo(filePath, 0)
             } catch (e: Throwable) {
-                Log.w(TAG, "getPackageArchiveInfo($filePath) failed: ${e.message}")
+                logger.warn { "getPackageArchiveInfo($filePath) failed: ${e.message}" }
                 null
             } ?: return null to -1L
         val versionCode =

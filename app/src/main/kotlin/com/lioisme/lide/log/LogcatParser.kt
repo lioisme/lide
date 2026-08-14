@@ -1,5 +1,7 @@
 package com.lioisme.lide.log
 
+import io.github.oshai.kotlinlogging.Level
+
 /**
  * 纯 Kotlin `logcat -v threadtime` 行解析器（JVM 可测，零 Android 依赖）。
  *
@@ -35,7 +37,7 @@ object LogcatParser {
             val timeText: String,
             val pid: Int,
             val tid: Int,
-            val level: LogLevel,
+            val level: Level,
             val tag: String,
             val message: String,
         ) : Result
@@ -66,7 +68,7 @@ object LogcatParser {
             timeText = "${match.groupValues[1]} ${match.groupValues[2]}",
             pid = match.groupValues[3].toInt(),
             tid = match.groupValues[4].toInt(),
-            level = LogLevel.fromSymbol(match.groupValues[5][0]),
+            level = logcatSymbolToLevel(match.groupValues[5][0]),
             tag = tag,
             message = message,
         )

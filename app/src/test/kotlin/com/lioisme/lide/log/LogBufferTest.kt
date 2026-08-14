@@ -7,6 +7,7 @@ import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import io.github.oshai.kotlinlogging.Level
 
 /**
  * LogBuffer 环形缓冲契约测试（2026-08-14 LOGCAT L1）。
@@ -21,7 +22,7 @@ class LogBufferTest {
             timeText = "08-14 10:22:33.123",
             pid = 1,
             tid = 2,
-            level = LogLevel.INFO,
+            level = Level.INFO,
             tag = "lua",
             message = message,
         )

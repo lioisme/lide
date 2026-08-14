@@ -463,3 +463,75 @@ verifySoraIsolation + verifyMinimalismDebug + verifyMinimalism（release 链路�
    `Currently set values for: angle_gl_driver_selection_pkgs=[]` 两行完整
    显示，不再单行截断），元数据小字行（`08-15 02:09:25 I/om.lioisme.lide`）
    位于消息下方；日志阅读器观感；单测 358 tests / 0 failures。
+
+## 11. 日志架构：kotlin-logging 迁移（2026-08-15 KOTLIN_LOGGING_WORK_ORDER 完工蒸馏）
+
+- **拍板**（用户红线）：日志猫完全使用 kotlin-logging 组件库实现，禁止自己手搓；
+  读取面取舍拍板 = 选项 A（logcat 子进程保留唯一传输，领域模型对齐组件库语义）。
+- **写入面（生产）**：宿主全部日志经 `io.github.oshai:kotlin-logging:8.0.4`
+  （pin 精确版本，`ideDeps` `implementation`，D9）；工厂 =
+  `AndroidNativeLoggerFactory`（D2）：`LideApp.companion.init` 设
+  `kotlin-logging-to-android-native=true`（类加载期最早执行点，先于一切 logger
+  调用）；直连 `android.util.Log`，tag = logger 名，`isLoggable` 门控内建 +
+  消息 lambda 懒求值。**零 SLF4J 运行时**（D3；库侧 slf4j-api 为 compileOnly）。
+  - **命名（D4/D5）**：顶层 `private val logger = KotlinLogging.logger("Xxx")`，
+    显式短名 = 原 TAG 值（含 `ShizukuService`/`DhizukuService` 非类名 tag 原样
+    保留）；级映射 `Log.d→debug`、`i→info`、`w→warn`、`e→error`、`v→trace`；
+    `Log.w(TAG,"…",e)` → `logger.warn(e) { "…" }`（throwable 第一参数）。
+  - **迁移量**：22 文件 / 140 调用点 / 21 `const val TAG` + 1 `TAG_SHARE` /
+    ApiIndex 2 处手写 `isLoggable` 守卫全部清除；引擎 vendor 与 cpp 零改动
+    （R5；引擎 Java 与 Lua print 仍直呼 `android.util.Log`，tag `lua` 等，
+    日志猫 LUA/TEST 筛选语义不变）。
+- **读取面（消费）**：logcat 子进程唯一传输保留（kotlin-logging 无读取能力，
+  v8 已删 MessageBufferLogger，Appender 仅捕获经本库发出的日志——引擎/Lua
+  日志必经 logd，任何日志库无法替代）。**自搓 `LogLevel` 枚举删除**，级别统一
+  = kotlin-logging `Level`（TRACE(0)/DEBUG(10)/INFO(20)/WARN(30)/ERROR(40)/OFF(50)）：
+  - `log/LevelMappings.kt`（新，唯一映射点）：`logcatSymbolToLevel(Char)`（V→TRACE、
+    D→DEBUG、I→INFO、W→WARN、E/F/未知→ERROR）+ `Level.symbolChar()`（回映；OFF→'?'
+    防御兜底）。
+  - 类型迁移：`LogEntry.level`、`LogcatParser.Result.Entry.level`、`LogFilter.minLevel`
+    均改 `Level`；过滤比较用 `Level.toInt()`；`LogFilter.VERBOSE` 阈值 = `Level.TRACE`
+    （kotlin-logging 无 verbose，V 为最细粒度）；UI 消费点（`levelColor`/`LevelBadge`
+    /`levelLabel`）随动，色表 VERBOSE 顶替 TRACE，`symbol` → `symbolChar()`。
+  - 新增 `LevelMappingsTest`（字符→级别 / F 与未知回落 / 回映 / 数值单调序 /
+    formatted 一致性）。
+- **JVM 单测工厂（D11）**：宿主单测类路径携带 kotlin-logging **Android 变体**，
+  其 `detectLogger()` 仅识别 `kotlin-logging-to-android-native`（否则回落 Slf4j 缺类 →
+  `NoClassDefFoundError: org/slf4j/LoggerFactory`）；`testOptions.unitTests.all` 置该
+  属性 → 测试与运行时同工厂，`unitTests.isReturnDefaultValues=true` 下
+  `Log.isLoggable` 桩 false 即 no-op。`kotlin-logging-to-jul` 对 Android 变体无效（实测）。
+- **打包链零改动（D10）**：产物复用宿主根 dex 全量（kotlin-logging 类随包，
+  P0-7 契约已接受多余内容）；打包产物不运行 LideApp → 无工厂配置需求。
+- **验证**（2026-08-15 收口）：`compileArm64DebugKotlin` 0 error；全量单测
+  **363 tests / 0 failures**（原 358 + 新增 5）；`git grep` 宿主树
+  `android.util.Log`/`Log\.[vdiew]\(`/`const val TAG = "` 仅剩 LogFilter.kt:13
+  文档注释（pro 历史语义说明，非代码，保留；SigningCrypto `TAG_*` 为 ASN.1 DER
+  常量、LocaleManager `TAG_SYSTEM/EN/ZH` 为 locale 键，非日志 tag）；
+  `verifyMinimalismDebug` / `verifyVendorIsolation` / `verifySoraIsolation` /
+  `assembleArm64Debug` 全绿；`arm64DebugRuntimeClasspath` 依赖树零 slf4j
+  （kotlin-logging → kotlin-logging-android-debug）。
+- **设备验收**（2026-08-15 补验，x64Debug / Android 14 模拟器 x86_64，ADB 实测）：
+  - **工厂生效**：两次独立进程启动均见 `kotlin-logging: initializing... active
+    logger factory: AndroidNativeLoggerFactory`（`I System.out`，引擎/D2 证据）。
+  - **F1 宿主 tag**：新建工程触发 `D ProjectManager: createProject: name=adbprobe` +
+    `D ProjectManager: Created project adbprobe`（kotlin-logging 短名 tag、级别/消息
+    正确，logcat 直读可见）。
+  - **F2 筛选**：日志猫九项菜单顺序 = pro logcat.lua（全部/Lua/Test/Tcc/错误/警告/
+    信息/调试/详细 + 清空日志）；LUA 筛选后仅剩 tag `lua` 条目（print + 引擎语法错）；
+    ERROR 筛选后仅剩 E 级（libEGL）；搜索词过滤仅剩命中行。
+  - **F3 Lua print**：运行 hello 工程 → `I lua: hello: layout loaded`（引擎
+    `Log.i("lua",…)` 通道，tag `lua` 可见）。
+  - **F4 引擎日志**：demo 语法错误 `I lua: Syntax error: …`、BitmapFactory ENOENT
+    等引擎/系统日志在 logcat 与日志猫均可见。
+  - **F5 交互**：清空日志 → 空态文案；详情页（毫秒时间戳、级别标签 W·警告、tag、
+    PID/TID、全文）+ 复制按钮 → snackbar「已复制到剪贴板」；列表长按复制与详情复制
+    同走 `copyToClipboard` + snackbar（adb 长按手势未触发 snackbar 属输入模拟局限，
+    非功能缺陷）。
+  - **无回归**：应用多次冷启无崩溃；编辑器打开、工程运行、API 浏览器 dex 扫描、
+    日志猫采集（05:13 进程全量）均正常。性能（F6/P1-P3）无迁移前基线对比，机制由
+    KLoggerAndroid `isLoggable` 门控 + lambda 懒求值保证。
+  - **R8（2026-08-15 补齐）**：迁移后 release 首次构建 R8 报 missing classes——
+    kotlin-logging Android 变体编译期引用 org.slf4j 接口（compileOnly，运行时零
+    slf4j），须在 `app/proguard-rules.pro` 追加 `-dontwarn org.slf4j.**`（kotlin-logging
+    官方 R8 约定）；x64/arm64 × Debug/Release 四变体独立任务构建 + apksigner v2 验签
+    通过，release 装机冒烟（R8 后工厂行仍现、进程无崩溃）。

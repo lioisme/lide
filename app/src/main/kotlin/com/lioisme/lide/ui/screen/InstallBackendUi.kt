@@ -31,6 +31,9 @@ import com.lioisme.lide.R
 import com.lioisme.lide.install.BackendStatus
 import com.lioisme.lide.install.InstallerBackend
 import java.io.File
+import io.github.oshai.kotlinlogging.KotlinLogging
+
+private val logger = KotlinLogging.logger("InstallBackendUi")
 
 /**
  * 静默安装后端 UI 共享件（SILENT_INSTALL，2026-08-10）：
@@ -216,7 +219,7 @@ internal fun installApkViaSystem(
         context.startActivity(intent)
     } catch (e: Exception) {
         // T17：安装启动失败消息资源兜底（异常细节仅日志，用户可见文案本地化）。
-        android.util.Log.w("InstallBackendUi", "installApkViaSystem failed", e)
+        logger.warn(e) { "installApkViaSystem failed" }
         Toast.makeText(context, context.getString(R.string.install_failed), Toast.LENGTH_LONG).show()
     }
 }

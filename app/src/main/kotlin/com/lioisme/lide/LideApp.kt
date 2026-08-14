@@ -14,10 +14,16 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
+import io.github.oshai.kotlinlogging.KotlinLogging
+
+private val logger = KotlinLogging.logger("LideApp")
 
 class LideApp : LuaApplication() {
     companion object {
-        private const val TAG = "LideApp"
+        init {
+            // kotlin-logging：AndroidNativeLoggerFactory 必须在首次 logger 调用前启用（2026-08-15 迁移）。
+            System.setProperty("kotlin-logging-to-android-native", "true")
+        }
     }
 
     /** 应用级后台任务 scope：资产提取等幂等后台工作，独立于 Activity 生命周期。 */
@@ -73,7 +79,7 @@ class LideApp : LuaApplication() {
             outDir.mkdirs()
             copyAssetDir("layouts", outDir)
         } catch (e: Exception) {
-            android.util.Log.w(TAG, "extractLayoutTemplates failed", e)
+            logger.warn(e) { "extractLayoutTemplates failed" }
         }
     }
 

@@ -647,6 +647,37 @@
 
 ---
 
+## 2y. 日志能力全面迁移 kotlin-logging（2026-08-15，工作单 docs/in-progress/KOTLIN_LOGGING_WORK_ORDER.md）
+
+> 来源需求（用户红线 2026-08-15）：日志猫完全使用 kotlin-logging 组件库实现，禁止自己手搓。
+> 已收纳基线：`reference/kotlin-logging/`（v8.0.4，commit 0aaa57c）+ `reference/kotlin-logging-example-android/`
+> （官方 Android 示例；经 ghfast.top 镜像克隆，台账已更新 docs/SOURCE_LOCATION.md 与 reference/README.md）。
+> 审计结论：kotlin-logging 为「生产门面」（Android 原生工厂直连 android.util.Log；懒求值 + isLoggable 门控），
+> 官方无 logcat 读取能力（v8 已删 MessageBufferLogger）；引擎 Java 与 Lua print 均为 logd 原生来源。
+> 读取面取舍用户已拍板 = **选项 A**：写入面全量 kotlin-logging；日志猫保留 logcat 子进程唯一传输，
+> 领域模型（级别枚举）对齐 kotlin-logging `Level`。
+
+| # | 任务 | 优先级 | 状态 | 关键词 |
+|---|---|---|---|---|
+| L1 | 依赖装配 + Android 原生工厂配置（LideApp companion init 设 `kotlin-logging-to-android-native`，pin `io.github.oshai:kotlin-logging:8.0.4` 入 ideDeps） | 高 | ✅ 已完成 | `KOTLIN_LOGGING` `kotlin-logging` `native 工厂` |
+| L2 | 写入面全量迁移：23 文件 140 处 `android.util.Log.*` + 23 个 `const val TAG` → `KotlinLogging.logger("短名")`（懒求值，D4 显式命名） | 高 | ✅ 已完成 | `KOTLIN_LOGGING` `写入面` `TAG 清零` |
+| L3 | 读取面级别对齐：删 `log/LogLevel.kt`，改 kotlin-logging `Level` + `log/LevelMappings.kt`（symbolChar/logcatSymbolToLevel，V→TRACE…F→ERROR）；LogFilter/LogcatParser/LogEntry/UI 消费点随动 + 测试更新新增 | 高 | ✅ 已完成 | `KOTLIN_LOGGING` `读取面` `Level 对齐` |
+| L4 | 收尾门禁：宿主树 `android.util.Log`/`const val TAG`/`Log\.[vdiew]\(` 归零（vendor 豁免）+ 全量单测 + verifyMinimalismDebug/verifyVendorIsolation/verifySoraIsolation + 设备验收矩阵（九项筛选逐项一致）+ 文档蒸馏 | 高 | ✅ 已完成 | `KOTLIN_LOGGING` `验收` `门禁` |
+
+> ✅ **整单完成（2026-08-15）**：L1-L4 全部落地。验证证据：单测全集 **363 tests / 0
+> failures**（原 358 + 新增 LevelMappingsTest 5）；`compileArm64DebugKotlin` /
+> `verifyMinimalismDebug` / `verifyVendorIsolation` / `verifySoraIsolation` /
+> `assembleArm64Debug` 全绿；`arm64DebugRuntimeClasspath` 零 slf4j；宿主树
+> `android.util.Log`/`Log\.[vdiew]\(`/`const val TAG = "` 零代码命中（LogFilter.kt:13
+> 文档注释保留；SigningCrypto `TAG_*`/LocaleManager `TAG_*` 为 DER 常量/locale 键非日志
+> tag）；`LogLevel` 全树归零。**设备验收（2026-08-15 补验，x64Debug/Android 14 模拟器）**：
+> 工厂生效行 `active logger factory: AndroidNativeLoggerFactory` 两次启动确认；宿主短名
+> tag 实测（`D ProjectManager: createProject: …`）；日志猫九项筛选/LUA/ERROR/搜索词过滤、
+> Lua print（`I lua: hello: layout loaded`）、引擎错误日志、详情/复制/清空全部实测通过。
+> 结论蒸馏：`docs/kb/ARCHITECTURE.md` §11（日志架构：kotlin-logging 迁移）；工作单已删除。
+
+---
+
 ## 3. 风险与备忘
 
 | 项 | 说明 |

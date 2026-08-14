@@ -36,8 +36,9 @@ import com.lioisme.lide.R
 import com.lioisme.lide.editor.TipIconButton
 import com.lioisme.lide.log.LogEntry
 import com.lioisme.lide.log.LogFilter
-import com.lioisme.lide.log.LogLevel
+import com.lioisme.lide.log.symbolChar
 import com.lioisme.lide.ui.theme.LocalIsDarkTheme
+import io.github.oshai.kotlinlogging.Level
 
 /*
  * 日志猫界面组件集（与 LogcatScreen 状态机解耦，API 浏览器 P3-2 同款拆分）：
@@ -118,27 +119,27 @@ internal fun filterLabel(filter: LogFilter): String =
  * V 灰 / D 蓝 / I 绿 / W 琥珀 / E 红；纯指示色，不设 WCAG 文本对比度门禁）。
  */
 @Composable
-internal fun levelColor(level: LogLevel): Color {
+internal fun levelColor(level: Level): Color {
     val isDark = LocalIsDarkTheme.current
     return if (isDark) DARK_COLORS[level]!! else LIGHT_COLORS[level]!!
 }
 
 private val LIGHT_COLORS =
     mapOf(
-        LogLevel.VERBOSE to Color(0xFF757575),
-        LogLevel.DEBUG to Color(0xFF1565C0),
-        LogLevel.INFO to Color(0xFF2E7D32),
-        LogLevel.WARN to Color(0xFFE65100),
-        LogLevel.ERROR to Color(0xFFC62828),
+        Level.TRACE to Color(0xFF757575),
+        Level.DEBUG to Color(0xFF1565C0),
+        Level.INFO to Color(0xFF2E7D32),
+        Level.WARN to Color(0xFFE65100),
+        Level.ERROR to Color(0xFFC62828),
     )
 
 private val DARK_COLORS =
     mapOf(
-        LogLevel.VERBOSE to Color(0xFF9E9E9E),
-        LogLevel.DEBUG to Color(0xFF64B5F6),
-        LogLevel.INFO to Color(0xFF81C784),
-        LogLevel.WARN to Color(0xFFFFB74D),
-        LogLevel.ERROR to Color(0xFFE57373),
+        Level.TRACE to Color(0xFF9E9E9E),
+        Level.DEBUG to Color(0xFF64B5F6),
+        Level.INFO to Color(0xFF81C784),
+        Level.WARN to Color(0xFFFFB74D),
+        Level.ERROR to Color(0xFFE57373),
     )
 
 /**
@@ -241,7 +242,7 @@ internal fun LogRow(
 
 /** 级别徽章：固定宽淡底圆角（级别色 15% alpha 底 + 级别色字母居中），列锚点恒定。 */
 @Composable
-private fun LevelBadge(level: LogLevel) {
+private fun LevelBadge(level: Level) {
     Box(
         modifier =
             Modifier
@@ -251,7 +252,7 @@ private fun LevelBadge(level: LogLevel) {
         contentAlignment = Alignment.Center,
     ) {
         Text(
-            text = level.symbol.toString(),
+            text = level.symbolChar().toString(),
             style = MaterialTheme.typography.labelMedium,
             fontFamily = FontFamily.Monospace,
             color = levelColor(level),

@@ -46,8 +46,9 @@ import androidx.compose.ui.unit.dp
 import com.lioisme.lide.R
 import com.lioisme.lide.editor.TipIconButton
 import com.lioisme.lide.log.LogEntry
-import com.lioisme.lide.log.LogLevel
 import com.lioisme.lide.log.LogcatStore
+import com.lioisme.lide.log.symbolChar
+import io.github.oshai.kotlinlogging.Level
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -160,7 +161,7 @@ fun LogcatDetailScreen(
                     MetadataRow(stringResource(R.string.log_meta_time), entry.timeText)
                     MetadataRow(
                         stringResource(R.string.log_meta_level),
-                        "${entry.level.symbol} · ${levelLabel(entry)}",
+                        "${entry.level.symbolChar()} · ${levelLabel(entry)}",
                         levelColor(entry.level),
                     )
                     MetadataRow(stringResource(R.string.log_meta_tag), entry.tag)
@@ -246,10 +247,12 @@ private fun MetadataRow(
 private fun levelLabel(entry: LogEntry): String =
     stringResource(
         when (entry.level) {
-            LogLevel.VERBOSE -> R.string.log_level_verbose
-            LogLevel.DEBUG -> R.string.log_level_debug
-            LogLevel.INFO -> R.string.log_level_info
-            LogLevel.WARN -> R.string.log_level_warning
-            LogLevel.ERROR -> R.string.log_level_error
+            Level.TRACE -> R.string.log_level_verbose
+            Level.DEBUG -> R.string.log_level_debug
+            Level.INFO -> R.string.log_level_info
+            Level.WARN -> R.string.log_level_warning
+            Level.ERROR -> R.string.log_level_error
+            // OFF 不产生日志条目（logcat 无对应字符），防御性兜底展示同 verbose 文案。
+            Level.OFF -> R.string.log_level_verbose
         },
     )

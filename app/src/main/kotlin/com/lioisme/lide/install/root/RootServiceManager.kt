@@ -1,7 +1,6 @@
 package com.lioisme.lide.install.root
 
 import android.content.Context
-import android.util.Log
 import com.lioisme.lide.install.BackendStatus
 import com.topjohnwu.superuser.Shell
 import kotlinx.coroutines.CoroutineScope
@@ -13,6 +12,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.util.concurrent.atomic.AtomicBoolean
+import io.github.oshai.kotlinlogging.KotlinLogging
+
+private val logger = KotlinLogging.logger("RootServiceManager")
 
 /**
  * Root 静默安装通道：基于 libsu（com.github.topjohnwu.libsu）的 su shell 封装。
@@ -54,7 +56,7 @@ class RootServiceManager(
                         .setTimeout(SHELL_TIMEOUT_SECONDS),
                 )
             } catch (e: IllegalStateException) {
-                Log.d(TAG, "configureDefaultShell() — main shell already constructed, skipping")
+                logger.debug { "configureDefaultShell() — main shell already constructed, skipping" }
             }
             configured.set(true)
         }
@@ -73,11 +75,11 @@ class RootServiceManager(
     fun requestPermission() {
         configureDefaultShell()
         scope.launch(Dispatchers.IO) {
-            Log.d(TAG, "requestPermission() — forcing main shell creation")
+            logger.debug { "requestPermission() — forcing main shell creation" }
             try {
                 Shell.getShell()
             } catch (e: Exception) {
-                Log.w(TAG, "requestPermission() — getShell failed: ${e.javaClass.simpleName}: ${e.message}")
+                logger.warn { "requestPermission() — getShell failed: ${e.javaClass.simpleName}: ${e.message}" }
             }
             refreshStatusBlocking()
         }
@@ -90,7 +92,7 @@ class RootServiceManager(
             if (granted) rememberGranted(true)
             granted
         } catch (e: Exception) {
-            Log.w(TAG, "isReadyNow() — check failed: ${e.message}")
+            logger.warn { "isReadyNow() — check failed: ${e.message}" }
             false
         }
 
@@ -105,12 +107,12 @@ class RootServiceManager(
         withContext(Dispatchers.IO) {
             configureDefaultShell()
             if (!isRootGranted()) {
-                Log.w(TAG, "installPackage() — root not granted, aborting")
+                logger.warn { "installPackage() — root not granted, aborting" }
                 return@withContext null
             }
             val safeInstaller = installerPackageName?.takeIf { it.isNotBlank() }
             if (safeInstaller != null && !PACKAGE_NAME_PATTERN.matches(safeInstaller)) {
-                Log.w(TAG, "installPackage() — rejecting non-conformant installerPackageName='$safeInstaller'")
+                logger.warn { "installPackage() — rejecting non-conformant installerPackageName='$safeInstaller'" }
                 return@withContext STATUS_FAILURE
             }
 
@@ -121,11 +123,10 @@ class RootServiceManager(
             try {
                 val copyRes = Shell.cmd("cp $srcPath $tmpPathQuoted && chmod 644 $tmpPathQuoted").exec()
                 if (!copyRes.isSuccess) {
-                    Log.e(
-                        TAG,
+                    logger.error {
                         "installPackage() — staging copy failed: exit=${copyRes.code} " +
-                            "out='${copyRes.out.joinToString("\n")}' err='${copyRes.err.joinToString("\n")}'",
-                    )
+                            "out='${copyRes.out.joinToString("\n")}' err='${copyRes.err.joinToString("\n")}'"
+                    }
                     return@withContext STATUS_FAILURE
                 }
 
@@ -136,15 +137,15 @@ class RootServiceManager(
                         append("-r ")
                         append(tmpPathQuoted)
                     }
-                Log.d(TAG, "installPackage() — executing: $command")
+                logger.debug { "installPackage() — executing: $command" }
                 val result = Shell.cmd(command).exec()
                 val stdout = result.out.joinToString("\n").trim()
                 val stderr = result.err.joinToString("\n").trim()
-                Log.d(TAG, "installPackage() — exit=${result.code} stdout='$stdout' stderr='$stderr'")
+                logger.debug { "installPackage() — exit=${result.code} stdout='$stdout' stderr='$stderr'" }
                 if (result.isSuccess && stdout.contains("Success")) {
                     STATUS_SUCCESS
                 } else {
-                    Log.w(TAG, "installPackage() — pm reported failure: stdout='$stdout' stderr='$stderr'")
+                    logger.warn { "installPackage() — pm reported failure: stdout='$stdout' stderr='$stderr'" }
                     STATUS_FAILURE
                 }
             } finally {
@@ -155,7 +156,7 @@ class RootServiceManager(
     private fun refreshStatusBlocking() {
         val computed = computeStatus()
         if (_status.value != computed) {
-            Log.d(TAG, "refreshStatus() — $computed (was ${_status.value})")
+            logger.debug { "refreshStatus() — $computed (was ${_status.value})" }
         }
         _status.value = computed
     }
@@ -182,7 +183,7 @@ class RootServiceManager(
             rememberGranted(granted)
             granted
         } catch (e: Exception) {
-            Log.w(TAG, "isRootGranted() — getShell failed: ${e.message}")
+            logger.warn { "isRootGranted() — getShell failed: ${e.message}" }
             false
         }
 
@@ -198,7 +199,6 @@ class RootServiceManager(
     private fun shellQuote(value: String): String = "'" + value.replace("'", "'\\''") + "'"
 
     companion object {
-        private const val TAG = "RootServiceManager"
         private const val ROOT_PREFS = "lide_root"
         private const val KEY_GRANTED_BEFORE = "granted_before"
         private const val STATUS_SUCCESS = 0

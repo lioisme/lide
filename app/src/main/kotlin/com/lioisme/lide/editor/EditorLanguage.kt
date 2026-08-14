@@ -2,7 +2,6 @@ package com.lioisme.lide.editor
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import io.github.rosemoe.sora.lang.completion.CompletionHelper
 import io.github.rosemoe.sora.lang.completion.CompletionPublisher
 import io.github.rosemoe.sora.langs.textmate.TextMateLanguage
@@ -11,6 +10,9 @@ import io.github.rosemoe.sora.langs.textmate.registry.ThemeRegistry
 import io.github.rosemoe.sora.text.CharPosition
 import io.github.rosemoe.sora.text.ContentReference
 import io.github.rosemoe.sora.widget.CodeEditor
+import io.github.oshai.kotlinlogging.KotlinLogging
+
+private val logger = KotlinLogging.logger("EditorLanguage")
 
 /**
  * 通用 TextMate 语言支持（多语言化：按 scope 装配文法、语言配置、关键字）。
@@ -93,11 +95,7 @@ class EditorLanguage(
                     .forEach { publisher.addItem(it) }
             }
         } catch (t: Throwable) {
-            Log.w(TAG, "requireAutoComplete degraded", t)
+            logger.warn(t) { "requireAutoComplete degraded" }
         }
-    }
-
-    private companion object {
-        const val TAG = "EditorLanguage"
     }
 }

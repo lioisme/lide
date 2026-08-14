@@ -2,11 +2,13 @@ package com.lioisme.lide.install.shizuku
 
 import android.os.Build
 import android.os.ParcelFileDescriptor
-import android.util.Log
 import com.lioisme.lide.install.IShizukuInstallerService
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.util.concurrent.TimeUnit
+import io.github.oshai.kotlinlogging.KotlinLogging
+
+private val logger = KotlinLogging.logger("ShizukuService")
 
 /**
  * Shizuku UserService 安装器实现，运行于 Shizuku 按需启动的独立进程
@@ -25,7 +27,6 @@ import java.util.concurrent.TimeUnit
  */
 class ShizukuInstallerServiceImpl : IShizukuInstallerService.Stub() {
     companion object {
-        private const val TAG = "ShizukuService"
 
         /** API 26+ Process.destroyForcibly() 兼容：低版本回落 destroy()。 */
         private fun Process.destroyForciblySafe() {
@@ -38,14 +39,14 @@ class ShizukuInstallerServiceImpl : IShizukuInstallerService.Stub() {
         private const val UNINSTALL_TIMEOUT_SECONDS = 30L
         private const val PIPE_BUFFER_SIZE = 65_536
 
-        private fun log(msg: String) = Log.d(TAG, msg)
+        private fun log(msg: String) = logger.debug { msg }
 
-        private fun logW(msg: String) = Log.w(TAG, msg)
+        private fun logW(msg: String) = logger.warn { msg }
 
         private fun logE(
             msg: String,
             e: Throwable? = null,
-        ) = Log.e(TAG, msg, e)
+        ) = logger.error(e) { msg }
     }
 
     override fun installPackage(

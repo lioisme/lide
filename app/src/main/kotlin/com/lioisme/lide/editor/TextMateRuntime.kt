@@ -2,7 +2,6 @@ package com.lioisme.lide.editor
 
 import android.content.Context
 import android.os.SystemClock
-import android.util.Log
 import io.github.rosemoe.sora.lang.analysis.AsyncIncrementalAnalyzeManager
 import io.github.rosemoe.sora.langs.textmate.registry.FileProviderRegistry
 import io.github.rosemoe.sora.langs.textmate.registry.GrammarRegistry
@@ -15,6 +14,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import org.eclipse.tm4e.core.registry.IThemeSource
+import io.github.oshai.kotlinlogging.KotlinLogging
+
+private val logger = KotlinLogging.logger("TextMateRuntime")
 
 /**
  * TextMate 运行时单一服务（架构审计 C-4）。
@@ -72,10 +74,10 @@ object TextMateRuntime {
             try {
                 runInit(context.applicationContext, initialThemeName)
                 _state.value = RuntimeState.Ready
-                Log.d(TAG, "textmate runtime ready (theme=$initialThemeName)")
+                logger.debug { "textmate runtime ready (theme=$initialThemeName)" }
             } catch (t: Throwable) {
                 _state.value = RuntimeState.Failed
-                Log.e(TAG, "textmate runtime failed", t)
+                logger.error(t) { "textmate runtime failed" }
             }
         }.apply {
             name = PRELOAD_THREAD_NAME
@@ -154,27 +156,26 @@ object TextMateRuntime {
             try {
                 LanguageDefinitionReader.read(LANGUAGES_JSON)
             } catch (t: Throwable) {
-                Log.e(TAG, "read languages.json failed", t)
+                logger.error(t) { "read languages.json failed" }
                 emptyList()
             }
         if (definitions.isNotEmpty()) {
             try {
                 grammarRegistry.loadGrammars(definitions)
             } catch (t: Throwable) {
-                Log.w(TAG, "batch grammar load failed, falling back per item", t)
+                logger.warn(t) { "batch grammar load failed, falling back per item" }
                 for (definition in definitions) {
                     try {
                         grammarRegistry.loadGrammar(definition)
                     } catch (itemError: Throwable) {
-                        Log.w(TAG, "grammar load failed: ${definition.name}", itemError)
+                        logger.warn(itemError) { "grammar load failed: ${definition.name}" }
                     }
                 }
             }
         }
-        Log.d(TAG, "init total ${SystemClock.elapsedRealtime() - initStart}ms")
+        logger.debug { "init total ${SystemClock.elapsedRealtime() - initStart}ms" }
     }
 
-    private const val TAG = "TextMateRuntime"
     private const val PRELOAD_THREAD_NAME = "TextMatePreload"
     private const val LANGUAGES_JSON = "textmate/languages.json"
 }

@@ -24,6 +24,8 @@
 | `reference/libs/` | 以 dex 方式分发的库源码：BaiduMTJ、SmartRefreshLayout、umeng | 编译 `.dex` 测试（低频） |
 | `reference/代码手册社区/` | 社区帖子语料（`lua_files/` 45 帖 2144 篇 + `lua_manual.db` + `fetch_lua.py`） | community-code-audit 数据源；归纳见 `docs/kb/androlua-community/` |
 | `reference/security-model.md` | 安全模型说明（被 `app/src/main/res/xml/androlua_filepaths.xml` 引用） | 文档 |
+| `reference/kotlin-logging/` | **kotlin-logging v8.0.5**（KMP 日志门面，commit `0aaa57c` 2026-05-27；androidTarget 内置，`KLoggerAndroid` 直连 `android.util.Log`；`Slf4jLoggerFactory` 默认 / `AndroidNativeLoggerFactory`（`-Dkotlin-logging-to-android-native`）/ `DirectLoggerFactory` + `Appender` 三工厂） | 日志唯一事实源（2026-08-15 用户拍板：日志猫全面改用此库，禁自搓；重构工作单见 `docs/in-progress/KOTLIN_LOGGING_WORK_ORDER.md`） |
+| `reference/kotlin-logging-example-android/` | kotlin-logging 官方 Android 示例（v5.0.2 时代 `kotlin-logging-android` 坐标 + `System.setProperty("kotlin-logging-to-android-native","true")` 一次性配置样板） | Android 集成姿势参照 |
 | `reference/README.md` | reference 资产清单 + 已去重基线恢复配方 | 索引 |
 
 ## 2. `app/vendor/` — 上游构建模块（tracked，只读，参与构建）
@@ -73,3 +75,5 @@
 - sora-editor v0.24.6：https://github.com/Rosemoe/sora-editor （tag `v0.24.6`）
 - Squircle CE：https://github.com/microsoft/Squircle-CE （本地 `reference/squircle-ce-master/`）
 - komi-store：本地 `reference/komi-store-main/`（未列入上表时以 `reference/README.md` 为准）
+- kotlin-logging v8.0.5：https://github.com/oshai/kotlin-logging （本地 `reference/kotlin-logging/`；2026-08-15 直连 GitHub 被重置，经 `ghfast.top` 镜像克隆）
+- kotlin-logging-example-android：https://github.com/MicroUtils/kotlin-logging-example-android （本地 `reference/kotlin-logging-example-android/`；同上经镜像克隆）

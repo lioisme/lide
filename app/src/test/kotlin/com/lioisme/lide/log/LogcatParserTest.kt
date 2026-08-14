@@ -4,6 +4,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertSame
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import io.github.oshai.kotlinlogging.Level
 
 /**
  * LogcatParser 契约测试（2026-08-14 LOGCAT L1）。
@@ -23,7 +24,7 @@ class LogcatParserTest {
         assertEquals("08-14 10:22:33.123", entry.timeText)
         assertEquals(1234, entry.pid)
         assertEquals(5678, entry.tid)
-        assertEquals(LogLevel.INFO, entry.level)
+        assertEquals(Level.INFO, entry.level)
         assertEquals("lua", entry.tag)
         assertEquals("hello world", entry.message)
     }
@@ -53,11 +54,11 @@ class LogcatParserTest {
 
     @Test
     fun `级别字符全量映射`() {
-        assertEquals(LogLevel.VERBOSE, parseEntry("08-14 10:22:33.123  1  2  V t: m").level)
-        assertEquals(LogLevel.DEBUG, parseEntry("08-14 10:22:33.123  1  2  D t: m").level)
-        assertEquals(LogLevel.INFO, parseEntry("08-14 10:22:33.123  1  2  I t: m").level)
-        assertEquals(LogLevel.WARN, parseEntry("08-14 10:22:33.123  1  2  W t: m").level)
-        assertEquals(LogLevel.ERROR, parseEntry("08-14 10:22:33.123  1  2  E t: m").level)
+        assertEquals(Level.TRACE, parseEntry("08-14 10:22:33.123  1  2  V t: m").level)
+        assertEquals(Level.DEBUG, parseEntry("08-14 10:22:33.123  1  2  D t: m").level)
+        assertEquals(Level.INFO, parseEntry("08-14 10:22:33.123  1  2  I t: m").level)
+        assertEquals(Level.WARN, parseEntry("08-14 10:22:33.123  1  2  W t: m").level)
+        assertEquals(Level.ERROR, parseEntry("08-14 10:22:33.123  1  2  E t: m").level)
     }
 
     @Test
@@ -70,7 +71,7 @@ class LogcatParserTest {
                 timeText = "08-14 10:22:33.123",
                 pid = 1234,
                 tid = 5678,
-                level = LogLevel.INFO,
+                level = Level.INFO,
                 tag = "lua",
                 message = "hello world",
             )
@@ -80,8 +81,8 @@ class LogcatParserTest {
     @Test
     fun `fatal 级别回落 ERROR`() {
         val entry = parseEntry("08-14 10:22:33.123  1  2  F t: m")
-        assertEquals(LogLevel.ERROR, entry.level)
-        assertSame(LogLevel.ERROR, LogLevel.fromSymbol('F'))
+        assertEquals(Level.ERROR, entry.level)
+        assertSame(Level.ERROR, logcatSymbolToLevel('F'))
     }
 
     @Test
