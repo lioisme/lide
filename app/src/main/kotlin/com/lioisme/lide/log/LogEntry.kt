@@ -21,3 +21,10 @@ data class LogEntry(
     val tag: String,
     val message: String,
 )
+
+/**
+ * 标准 logcat 整行文本（社区惯例：Android Studio Logcat 长按复制 / pro
+ * `logcat -v long` 同款语义）：
+ * `MM-DD HH:MM:SS.mmm PID TID I/tag: message`。
+ */
+fun LogEntry.formatted(): String = "$timeText $pid $tid ${level.symbol}/$tag: $message"

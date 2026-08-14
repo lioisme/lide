@@ -476,6 +476,175 @@
 > 0 error/0 warning + 全量 testArm64DebugUnitTest 全绿（357 tests / 0 failures）
 > + 红线 grep 三连全零。结论已蒸馏进 `docs/kb/ARCHITECTURE.md` §10。
 
+> **（已完成，2026-08-14 二次修订 LOGCAT_LIST_REVISION）** 用户验收反馈「列表
+> 界面不合格，视觉上太混杂」后二次重构（用户三项拍板：① 消息为主角——日志
+> 核心是内容而非来源；② 不受两行限制——改单行式；③ 级别色不放前面——级别
+> 是筛选维度不是主角）。新 LogRow = **单行式消息主角**：**[消息 bodySmall
+> Monospace onSurface weight 1f 单行省略] + [级别字母（语义色小字）] +
+> [tag（labelSmall 等宽 onSurfaceVariant，maxWidth 96dp）] + [时间（labelSmall
+> tnum onSurfaceVariant 右缘列位恒定）]** + 行末细分隔线（outlineVariant 0.4）；
+> 行内 padding(h16, v8)；**无行首色点**（旧 8dp 色点与两行式 tag 主行形态全部
+> 废止——tag 加粗主色文字即混杂感根源）；TAG_MAX_WIDTH 160→96dp。修复过程中
+> PowerShell ANSI 解码误伤中文注释，文件整体重建（UTF-8/LF 校验通过）。
+> 验收证据：ktlintCheck PASS + compileArm64DebugKotlin 0 error + 全量单测
+> **357 tests / 0 failures**。结论已蒸馏进 `docs/kb/ARCHITECTURE.md` §10。
+
+> **（已完成，2026-08-14 三次修订 LOGCAT_LIST_REVISION2）** 用户反馈「为什么是
+> 横向三行？肯定是纵向行啊」——消息/tag/时间不应横向并排一行，应**纵向**排布。
+> 新 LogRow = **纵向两行式（消息主行）**：**行1 [消息 bodySmall Monospace
+> onSurface 全宽单行省略（主色主角）] → 行2 纵向 [级别字母（语义色小字）] +
+> [tag（labelSmall 等宽 onSurfaceVariant，maxWidth 96dp）] + [时间（labelSmall
+> tnum onSurfaceVariant 右缘列位恒定）]** + 行末细分隔线（outlineVariant 0.4）；
+> 行内 padding(h16, v8)；消息全宽不缩进；级别字母置于副行（不做行首色点）。
+> 验收证据：ktlintCheck PASS + compileArm64DebugKotlin 0 error/0 warning +
+> 全量单测 **357 tests / 0 failures**。结论已蒸馏进
+> `docs/kb/ARCHITECTURE.md` §10。
+>
+> **（2026-08-15 ADB 实机验收，x64Debug / Android 14 模拟器）** 安装
+> `app-arm64-debug` 同源 `app-x64-debug.apk` 逐项验证通过：①列表每条日志为
+> **纵向两行式**（行1 消息主色大字 / 行2 tag 灰 + 时间灰，级别 V/D/I/W 字母
+> 语义色小字位于 tag 左侧，无行首色点，行间浅灰细分隔线，行高均匀）；②点击
+> 进详情页（毫秒时间 / 级别 / tag / PID / TID / 完整消息 + 返回与复制按钮）；
+> ③筛选弹层正常（tag 筛选 Lua/Test/Tcc + 级别 错误/警告/信息/详细 + 清除
+> 日志）；④选「错误」后列表只剩 E/Error 条目（筛选生效）；⑤长按日志出现
+> Snackbar「已复制到剪贴板」（复制契约生效）。
+
+> **（已完成，2026-08-15 四次修订 LOGCAT_LIST_REVISION3：单行紧凑分组式）**
+> 用户验收「还是不合格」并逐项点出：两行太高密度低 / 消息只有一行太少 /
+> 太简了要刚刚好 / 不同信息不要放一起 / 满屏省略号。定稿形态 = **单行**：
+> `[消息 bodySmall Monospace onSurface weight(1f) 单行省略（消息区最大化）] +
+> Spacer(12) + [级别字母 labelMedium 语义色] + Spacer(6) + [tag labelMedium
+> 等宽 onSurfaceVariant `widthIn(max = 120dp)`] + Spacer(6) + [时间 labelMedium
+> tnum onSurfaceVariant 右缘列位恒定]`；行内 `padding(h16, v6)`（行高 32dp
+> 级，一屏 21 条）；行末细分隔线不变。TAG_MAX_WIDTH 96→120dp（消除满屏
+> 省略号：`om.lioisme.lide` / `CompatibilityChangeReporter` / `GraphicsEnvironment`
+> 全名实机完整显示）。元数据与消息固定间距分隔不混排。
+> 验收证据：ktlintCheck + compileX64DebugKotlin PASS；全量单测 357 tests /
+> 0 failures；ADB 实机（x64Debug / Android 14）21 条/屏、消息全名显示、tag
+> 无省略、消息左对齐时间右对齐列对齐整齐。
+
+> **（已完成，2026-08-15 五次修订 LOGCAT_LIST_REVISION4：标准 logcat 行形态）**
+> 用户拍板：不再自定义设计，遵循官方规范 / 社区习惯，参考开源社区日志猫
+> 实现。按仓库本地源码参照（`reference/AndroLua_pro-master/app/src/main/
+> assets/logcat.lua`，`logcat -v long` 的 `I/lua: message` 前缀流式 +
+> ListView 长按复制整条）与 Android Studio Logcat 惯例重做。定稿行形态 =
+> 单行 **`[级别字母 labelMedium 语义色][/ 灰][tag labelMedium 等宽
+> onSurfaceVariant maxWidth 120dp][: 灰] [消息 bodySmall Monospace onSurface
+> weight(1f) 单行省略] + Spacer(10) + [时间 labelMedium tnum onSurfaceVariant
+> 右缘列位恒定]`**（`I/lua: message` 标准前缀）；行内 `padding(h16, v6)`；
+> 行末细分隔线不变。长按复制升级为**标准整行文本**（`LogEntry.formatted()`
+> = `MM-DD HH:MM:SS.mmm PID TID I/tag: message`，Android Studio 同款，
+> pro 复制整条语义）；新增 `LogEntry.formatted` 单测（`标准整行格式化`）。
+> 验收证据：ktlintCheck + compileX64DebugKotlin PASS；全量单测 **358 tests /
+> 0 failures**；ADB 实机（x64Debug / Android 14）标准前缀形态生效（级别色
+> I 绿 / D 蓝 / W 橙 / E 红 / V 灰、消息主体、时间行尾、行高 109px 更紧凑）、
+> 长按复制 Snackbar 正常。
+
+> **（已完成，2026-08-15 六次修订 LOGCAT_LIST_REVISION5：纵向展开，消息多行
+> 可读）** 用户拍板（原文）：「时间、日志内容、日志类型等全部都是仅一行显示，
+> 怎么阅读？」——信息不得挤在一行，要方便阅读。定稿 = 每条日志**纵向两段**：
+> **行1（主体）消息内容 bodySmall Monospace onSurface `maxLines = 3` 多行
+> 完整显示**（不再单行截断；超长省略 + 详情页全文）+ **行2（元数据小字一
+> 行）时间（labelSmall tnum onSurfaceVariant）· 级别字母（labelSmall 语义
+> 色）· `/tag`（labelSmall 等宽 onSurfaceVariant `widthIn(max = 160dp)`）**；
+> 行内 `padding(h16, v6)`；行高内容驱动（消息 1 行 ≈ 44dp / 3 行 ≈ 90dp）；
+> 行末细分隔线不变；长按复制仍为 `entry.formatted()` 标准整行。
+> 验收证据：ktlintCheck + compileX64DebugKotlin PASS；全量单测 **358 tests /
+> 0 failures**；ADB 实机（x64Debug / Android 14）截图核验：每条日志上下两
+> 段（消息多行完整可读，如 `Currently set values for:
+> angle_gl_driver_selection_pkgs=[]` 两行完整显示；元数据 `08-15 02:09:25
+> I/om.lioisme.lide` 位于消息下方小字行），日志阅读器观感。
+
+> **（已完成，2026-08-15 七次修订 LOGCAT_LIST_REVISION6：规范整齐，级别字母
+> 固定列）** 用户拍板：**保留现有 AppBar / SearchBar / SearchView / 筛选菜单
+> （搜索状态机红线与 9 项筛选不动），仅重构日志列表**；要求界面规范、整齐、
+> 不标新立异自由发挥（参考开源优秀项目）。定稿 LogRow = **级别字母固定列 +
+> 纵向两段主体**：**[左列固定 24dp 级别字母 labelMedium 等宽语义色列内右对齐
+> （每行字母落点与主体左缘恒定，级别扫描路径稳定，不随 tag 漂移，Android
+> Studio logcat 精神）] + Spacer(8dp) + [主体 Column(weight 1f)：行1 消息
+> bodySmall Monospace onSurface `maxLines = 3` 多行完整显示 → 行2 元数据
+> 时间（labelSmall tnum onSurfaceVariant）· tag（labelSmall 等宽
+> onSurfaceVariant `widthIn(max = 160dp)`）]**（级别字母自元数据行迁出至左
+> 列，元数据行不再含 `/` 前缀）；行 `minHeight 56dp`（消息 1 行时行高一致，
+> 滚动整齐）+ `padding(h16, v10)`；行末细分隔线不变。**空态升级为 M3 规范
+> 空态**：`Icon(Terminal 44dp onSurfaceVariant α0.5)` + 12dp + 文案
+> （bodyMedium onSurfaceVariant 居中，替代裸文本）。新增常量
+> LEVEL_COLUMN_WIDTH(24dp) / LOG_ROW_MIN_HEIGHT(56dp)。长按复制仍为
+> `entry.formatted()` 标准整行。验收证据：compileArm64DebugKotlin PASS +
+> ktlintCheck **全量 PASS** + 全量单测 **358 tests / 0 failures**。
+
+---
+
+## 2x. 日志猫列表重构（2026-08-15，工作单 docs/in-progress/LOGCAT_LIST_STANDARD_WORK_ORDER.md）
+
+> 来源需求（用户 2026-08-15）：**保留现有 AppBar / SearchBar / SearchView（含搜索
+> 状态机红线与 9 项筛选菜单）不动，仅重构日志猫列表**；界面设计要规范、整齐，
+> 不标新立异自由发挥，参考开源优秀项目，**符合行业规范而不是自己写**；用户明确
+> 声明不遵循既有日志猫设计文档（多轮修订可能漂移或理解有误），以业界公开惯例为
+> 准。用户拍板：行形态 = **AS 规范前缀式**（`I/tag: message`）。
+> 质量要求：代码质量/架构达大厂验收标准；每项完成在工作单标记（已完成）+ 验收证据。
+
+| # | 任务 | 优先级 | 状态 | 关键词 |
+|---|---|---|---|---|
+| S1 | 登记：backlog 2x 条目 + 工作单创建 | 高 | ✅ 已完成（2026-08-15） | `LOGCAT_LIST_STANDARD` `登记` |
+| S2 | 代码：LogRow 重写为 AS 规范前缀式（`I/tag: message` + 元数据行时间·PID-TID）+ 常量调整（删 LEVEL_COLUMN_WIDTH / TAG_MAX_WIDTH 160→120dp） | 高 | ✅ 已完成（2026-08-15） | `LOGCAT_LIST_STANDARD` `LogRow` `前缀式` |
+| S3 | 验证：compileArm64DebugKotlin + ktlintCheck + 全量单测 + 红线 grep 三连 | 高 | ✅ 已完成（2026-08-15） | `LOGCAT_LIST_STANDARD` `验收` |
+| S4 | 蒸馏：kb/ARCHITECTURE.md §10 日志行设计段更新（REVISION7）+ backlog 2x 注记 | 高 | ✅ 已完成（2026-08-15） | `LOGCAT_LIST_STANDARD` `蒸馏` |
+| S5 | 收口：工作单标记全部完成 + 删除工作单 | 高 | ✅ 已完成（2026-08-15） | `LOGCAT_LIST_STANDARD` `收口` |
+
+> **（已完成，2026-08-15 八次修订 LOGCAT_LIST_REVISION7：AS 规范前缀式，行业
+> 惯例收口）** 用户拍板：**保留现有 AppBar / SearchBar / SearchView（搜索状态机
+> 红线与 9 项筛选菜单不动），仅重构日志列表**；要求规范、整齐、不标新立异，参考
+> 开源优秀项目、**符合行业规范而不是自己写**，明确不遵循既有日志猫设计文档（多轮
+> 修订可能漂移或理解有误）。参考基线 = Android Studio Logcat Standard View（时间
+> → PID-TID → 级别 → tag → 消息，等宽，soft-wrap）+ MatLog/CatLog 谱系（规范前缀
+> `I/tag: message`）。定稿 LogRow = **规范前缀行 + 元数据小字行**：**行1** `[级别
+> 字母 bodySmall 等宽级别色][/ 灰][tag bodySmall 等宽级别色 widthIn(max=120dp)
+> 省略][: 灰][消息 bodySmall 等宽 onSurface weight(1f) maxLines=3 换行省略]`
+> （`I/tag: message` 标准前缀，前缀与消息统一 bodySmall 等宽同字号基线对齐，
+> 续行对齐消息列 = AS soft-wrap 语义）；**行2** `MM-DD HH:MM:SS（tnum）· PID-TID
+> （等宽）`（`$pid-$tid`，AS Standard View 同款）；行 `minHeight 56dp` +
+> `padding(h16, v10)`；行末细分隔线不变。**常量调整**：删 `LEVEL_COLUMN_WIDTH`
+> (24dp) 固定列机制；`TAG_MAX_WIDTH` 160→120dp。不动项：级别色表/空态/列表容器/
+> 自动滚动/详情页/数据层/i18n（零新增资源）。验收证据：compileArm64DebugKotlin
+> BUILD SUCCESSFUL（0 error）+ ktlintCheck 全量 PASS + 全量单测 **358 tests /
+> 0 failures / 0 errors** + 红线 grep 三连全零（editor 包零 luajava/androlua/
+> loadLibrary、vendor src 零 com.lioisme、git ls-files 二进制零）。结论已蒸馏进
+> `docs/kb/ARCHITECTURE.md` §10。
+
+> **（2026-08-15 REVISION8 修订登记）** 用户验收反馈：REVISION7 前缀式**排版混乱**
+> ——消息列随 tag 长度逐行漂移（锯齿参差）+ 前缀与消息混排在一行。用户拍板：
+> **重构为「徽章固定列锚点」结构**（LogFox 同款）：固定宽级别徽章列 → 右侧消息/
+> 元数据左缘全列表恒定对齐；消息独占整行区、零混排。任务表 S6–S10。
+
+| # | 任务 | 优先级 | 状态 | 关键词 |
+|---|---|---|---|---|
+| S6 | 登记：重建工作单 + backlog 2x 追加 REVISION8 任务行 | 高 | ✅ 已完成（2026-08-15） | `LOGCAT_LIST_STANDARD_R8` `登记` |
+| S7 | 代码：LogRow 重构为徽章固定列（28dp 圆角徽章 + 右侧消息 3 行 + 元数据行 时间·PID-TID·tag），常量新增 LEVEL_BADGE_WIDTH | 高 | ✅ 已完成（2026-08-15） | `LOGCAT_LIST_STANDARD_R8` `LogRow` `徽章固定列` |
+| S8 | 验证：compileArm64DebugKotlin + ktlintCheck + 全量单测 + 红线 grep 三连 | 高 | ✅ 已完成（2026-08-15：ktlintCheck + testArm64DebugUnitTest BUILD SUCCESSFUL——ktlint 曾报 LogcatComponents.kt:253 chain-method-invocation「Unexpected newline before '.'」（background 参数跨行尾逗号后接 .padding），已修为单行链；全量单测 358 tests / 0 failures / 0 errors（40 文件）；红线三连全零：editor 包零 luajava/androlua/loadLibrary、vendor src 零 com.lioisme、git ls-files 二进制零） | `LOGCAT_LIST_STANDARD_R8` `验收` |
+| S9 | 蒸馏：kb/ARCHITECTURE.md §10 日志行设计段更新（REVISION8）+ backlog 2x 注记 | 高 | ✅ 已完成（2026-08-15：ARCHITECTURE.md §10 改写为 REVISION8 徽章固定列定稿 + 本 backlog 完成注记更新） | `LOGCAT_LIST_STANDARD_R8` `蒸馏` |
+| S10 | 收口：工作单标记全部完成 + 删除工作单 | 高 | ✅ 已完成（2026-08-15：工作单 LOGCAT_LIST_STANDARD_WORK_ORDER.md 已删除，结论蒸馏于 ARCHITECTURE.md §10） | `LOGCAT_LIST_STANDARD_R8` `收口` |
+
+> **（已完成，2026-08-15 九次修订 LOGCAT_LIST_REVISION8：徽章固定列锚点）** 用户
+> 验收反馈 REVISION7 前缀式**排版混乱**：消息列随 tag 长度逐行漂移成锯齿、前缀与
+> 消息混排一行。用户拍板：重构为**徽章固定列锚点**结构（LogFox 同款）。定稿
+> LogRow = `[级别徽章固定 28dp 列（圆角 6dp、级别色 15% alpha 淡底 + 级别色字母
+> 居中，私有 LevelBadge）] + 固定 12dp 间距 + [主体 Column(weight 1f)：行1 消息
+> bodySmall 等宽 onSurface maxLines=3 独占整行区零混排；行2 元数据 labelSmall
+> 弱色一行 时间（tnum）· PID-TID（等宽）· tag（等宽 widthIn(max=120dp)）]`——
+> 消息/元数据左缘全列表恒定对齐（行业列式规范：perfetto / MAUI.Sherpa / AS
+> Logcat 同构）。常量：新增 LEVEL_BADGE_WIDTH(28dp) / BADGE_TO_CONTENT_GAP(12dp) /
+> LEVEL_BADGE_CORNER(6dp) / LEVEL_BADGE_ALPHA(0.15f)；LOG_ROW_MIN_HEIGHT /
+> TAG_MAX_WIDTH(120dp) / MAX_MESSAGE_LINES(3) / timeForList 保留；新增 imports
+> （background / RoundedCornerShape）。不动项：级别色表/空态/列表容器/自动滚动/
+> 详情页/数据层/i18n（零新增资源）/ AppBar / SearchBar / SearchView / 筛选菜单 /
+> 搜索状态机红线。验收证据：ktlintCheck + testArm64DebugUnitTest BUILD SUCCESSFUL
+> （ktlint 曾报 LogcatComponents.kt:253 chain-method-invocation「Unexpected newline
+> before '.'」，background 参数跨行尾逗号后接 .padding 触发，已修为单行链）+
+> 全量单测 **358 tests / 0 failures / 0 errors**（40 文件）+ 红线 grep 三连全零
+> （editor 包零 luajava/androlua/loadLibrary、vendor src 零 com.lioisme、git
+> ls-files 二进制零）。结论已蒸馏进 `docs/kb/ARCHITECTURE.md` §10。
+
 ---
 
 ## 3. 风险与备忘

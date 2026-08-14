@@ -9,11 +9,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.FilterList
@@ -27,11 +27,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.lioisme.lide.R
@@ -144,20 +142,27 @@ private val DARK_COLORS =
     )
 
 /**
- * 日志行（LOGCAT_LIST_REDESIGN 2026-08-14：两行式应用列表，对齐 LIDE 主界面范式）：
+ * 日志行（LOGCAT_LIST_REVISION8 2026-08-15 重构定稿：徽章固定列锚点，LogFox 同款）。
  *
- * 布局：[级别色点 垂直居中] + [行1：tag 主文字 · 行尾时间 tnum 右缘对齐]
- *        [行2：消息副行 单行省略] + 行末细分隔线。
+ * 用户拍板：REVISION7 前缀式验收失败（消息列随 tag 长度逐行漂移成锯齿、前缀与
+ * 消息混排一行）；重构为**固定列锚点**结构——每行 = `[级别徽章固定宽列] + 固定
+ * 12dp 间距 + [右侧内容列]`，右侧消息/元数据左缘全列表恒定 x 对齐（行业列式规范：
+ * perfetto Android Logs / MAUI.Sherpa / Android Studio Logcat 同构；移动端落法 =
+ * LogFox）：
  *
- * - 行1 tag 为主文字（labelMedium Monospace Medium onSurface），超宽省略
- *   （widthIn(max = 160dp)）；时间经 weight 占位推至行尾右缘（labelSmall tnum
- *   onSurfaceVariant）——右缘天然列位恒定，不再占用行首固定列；
- * - 行2 消息为副行（bodySmall Monospace onSurfaceVariant 单行省略），与 tag
- *   垂直对齐——废除 108dp 缩进，消除与 tag 徽章的错位阶梯；
- * - 级别色点保留语义（V/D/I/W/E 经典 logcat 色）且垂直居中；
+ * - 左列（固定 LEVEL_BADGE_WIDTH 28dp）：级别徽章——圆角 6dp、级别色 15% alpha
+ *   淡底 + 级别色字母（labelMedium 等宽居中，top 对齐消息首行）；级别一眼扫描
+ *   且列锚点恒定；
+ * - 主体 Column（weight 1f，左缘 = 徽章右缘 + 12dp 恒定）：
+ *   行1 消息（bodySmall Monospace onSurface `maxLines = 3`，**独占整行区零混排**，
+ *   续行自然对齐消息列，超长省略 + 详情页全文）；行2 元数据小字一行
+ *   （labelSmall onSurfaceVariant）：`MM-DD HH:MM:SS（tnum）· PID-TID（等宽）·
+ *   tag（等宽 widthIn(max = 120dp) 省略）`（毫秒降级详情页，详情页展示完整
+ *   timeText；PID-TID 为 AS Standard View 同款 `12345-12345` 形态）；
+ * - 行高 minHeight 56dp（消息 1 行时行高一致，滚动整齐）+ padding(h16, v10)；
  * - 行末细分隔线（outlineVariant 0.4 alpha，ClassRow/MemberRow 同款惯例）；
- * - 列表时间显示 `MM-DD HH:MM:SS`（毫秒降级详情页，详情页展示完整 timeText）；
- * - 单击进详情，长按复制完整消息（对齐 ClassRow 交互契约）。
+ * - 单击进详情；长按复制标准整行文本（`entry.formatted()`，
+ *   `MM-DD HH:MM:SS.mmm PID TID I/tag: message`，Android Studio 同款）。
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -166,69 +171,115 @@ internal fun LogRow(
     onClick: () -> Unit,
     onLongClick: () -> Unit,
 ) {
-    Column(modifier = Modifier.fillMaxWidth()) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .combinedClickable(onClick = onClick, onLongClick = onLongClick)
-                    .padding(horizontal = 16.dp, vertical = 10.dp),
-        ) {
-            Box(
-                modifier =
-                    Modifier
-                        .size(8.dp)
-                        .clip(CircleShape)
-                        .background(levelColor(entry.level)),
+    Row(
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .combinedClickable(onClick = onClick, onLongClick = onLongClick)
+                .heightIn(min = LOG_ROW_MIN_HEIGHT)
+                .padding(horizontal = 16.dp, vertical = 10.dp),
+    ) {
+        // 左列：级别徽章（固定宽淡底圆角，级别一眼扫描；右侧内容左缘恒定锚点）。
+        LevelBadge(level = entry.level)
+        Spacer(Modifier.width(BADGE_TO_CONTENT_GAP))
+        // 主体：消息独占整行区（零混排）+ 元数据小字一行，左缘恒定。
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = entry.message,
+                style = MaterialTheme.typography.bodySmall,
+                fontFamily = FontFamily.Monospace,
+                color = MaterialTheme.colorScheme.onSurface,
+                maxLines = MAX_MESSAGE_LINES,
+                overflow = TextOverflow.Ellipsis,
             )
-            Spacer(Modifier.width(12.dp))
-            Column(modifier = Modifier.weight(1f)) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    // tag 主文字：weight(fill = false) 按内容宽占位并把时间推至行尾右缘。
-                    Text(
-                        text = entry.tag,
-                        style =
-                            MaterialTheme.typography.labelMedium.copy(
-                                fontWeight = FontWeight.Medium,
-                            ),
-                        fontFamily = FontFamily.Monospace,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier =
-                            Modifier
-                                .weight(1f, fill = false)
-                                .widthIn(max = TAG_MAX_WIDTH),
-                    )
-                    Text(
-                        text = timeForList(entry.timeText),
-                        style =
-                            MaterialTheme.typography.labelSmall.copy(
-                                fontFeatureSettings = "tnum",
-                            ),
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        maxLines = 1,
-                    )
-                }
-                Spacer(Modifier.height(2.dp))
+            Spacer(Modifier.height(4.dp))
+            // 元数据：时间 · PID-TID · tag，弱色一行（与消息分离）。
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = entry.message,
-                    style = MaterialTheme.typography.bodySmall,
+                    text = timeForList(entry.timeText),
+                    style =
+                        MaterialTheme.typography.labelSmall.copy(
+                            fontFeatureSettings = "tnum",
+                        ),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1,
+                )
+                Text(
+                    text = " · ",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1,
+                )
+                Text(
+                    text = "${entry.pid}-${entry.tid}",
+                    style = MaterialTheme.typography.labelSmall,
+                    fontFamily = FontFamily.Monospace,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1,
+                )
+                Text(
+                    text = " · ",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1,
+                )
+                Text(
+                    text = entry.tag,
+                    style = MaterialTheme.typography.labelSmall,
                     fontFamily = FontFamily.Monospace,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.widthIn(max = TAG_MAX_WIDTH),
                 )
             }
         }
-        // 行末细分隔线：日志密度大时扫描清晰（ClassRow/MemberRow 同款惯例）。
-        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f))
+    }
+    // 行末细分隔线：日志密度大时扫描清晰（ClassRow/MemberRow 同款惯例）。
+    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f))
+}
+
+/** 级别徽章：固定宽淡底圆角（级别色 15% alpha 底 + 级别色字母居中），列锚点恒定。 */
+@Composable
+private fun LevelBadge(level: LogLevel) {
+    Box(
+        modifier =
+            Modifier
+                .width(LEVEL_BADGE_WIDTH)
+                .background(levelColor(level).copy(alpha = LEVEL_BADGE_ALPHA), RoundedCornerShape(LEVEL_BADGE_CORNER))
+                .padding(vertical = 2.dp),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            text = level.symbol.toString(),
+            style = MaterialTheme.typography.labelMedium,
+            fontFamily = FontFamily.Monospace,
+            color = levelColor(level),
+            maxLines = 1,
+        )
     }
 }
 
-/** tag 最大宽度（超长省略，防止挤压行尾时间列）。 */
-private val TAG_MAX_WIDTH = 160.dp
+/** 级别徽章固定列宽（右侧内容左缘全列表恒定锚点）。 */
+private val LEVEL_BADGE_WIDTH = 28.dp
+
+/** 徽章与内容间距（固定，与徽章宽共同构成列锚点）。 */
+private val BADGE_TO_CONTENT_GAP = 12.dp
+
+/** 徽章圆角。 */
+private val LEVEL_BADGE_CORNER = 6.dp
+
+/** 徽章淡底透明度（级别色 alpha，淡色底 + 级别色字母）。 */
+private const val LEVEL_BADGE_ALPHA = 0.15f
+
+/** 行最小高度（消息 1 行时行高一致，列表滚动整齐）。 */
+private val LOG_ROW_MIN_HEIGHT = 56.dp
+
+/** tag 最大宽度（元数据行中克制省略；120dp 覆盖常见全名）。 */
+private val TAG_MAX_WIDTH = 120.dp
+
+/** 消息最大行数（列表多行可读，超长省略 + 详情页全文）。 */
+private const val MAX_MESSAGE_LINES = 3
 
 /** 列表时间文本长度（`MM-DD HH:MM:SS` = 14 字符；毫秒降级详情页——详情页展示完整 `timeText`）。 */
 private const val TIME_TEXT_LENGTH = 14

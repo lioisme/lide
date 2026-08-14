@@ -61,6 +61,23 @@ class LogcatParserTest {
     }
 
     @Test
+    fun `标准整行格式化`() {
+        // 长按复制契约：Android Studio Logcat / pro `logcat -v long` 同款
+        // `MM-DD HH:MM:SS.mmm PID TID I/tag: message`。
+        val entry =
+            LogEntry(
+                id = 1,
+                timeText = "08-14 10:22:33.123",
+                pid = 1234,
+                tid = 5678,
+                level = LogLevel.INFO,
+                tag = "lua",
+                message = "hello world",
+            )
+        assertEquals("08-14 10:22:33.123 1234 5678 I/lua: hello world", entry.formatted())
+    }
+
+    @Test
     fun `fatal 级别回落 ERROR`() {
         val entry = parseEntry("08-14 10:22:33.123  1  2  F t: m")
         assertEquals(LogLevel.ERROR, entry.level)

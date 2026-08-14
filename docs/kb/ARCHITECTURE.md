@@ -399,23 +399,35 @@ verifySoraIsolation + verifyMinimalismDebug + verifyMinimalism（release 链路�
     API 详情契约）；完整消息 SelectionContainer + 元数据（时间/级别/tag/pid/tid）
     + 复制按钮（snackbar 提示）。顶栏保持手写 TopAppBar（动态 tag 标题需省略
     控制，LideTopBar 无此参数，配色已一致）。
-  - **日志行设计（2026-08-14 LOGCAT_LIST_REDESIGN：两行式应用列表，对齐 LIDE
-    主界面列表范式）**：**[级别色点 8dp 垂直居中] + [行1：tag 主文字（labelMedium
-    Monospace Medium onSurface，`widthIn(max = 160dp)` 超宽省略）·行尾时间
-    （labelSmall tnum onSurfaceVariant，tag 以 `weight(1f, fill = false)` 占位
-    推至行尾右缘——右缘天然列位恒定，不占行首固定列）] + [行2：消息副行
-    （bodySmall Monospace onSurfaceVariant 单行省略，与 tag 垂直对齐）]**；
-    行末 `HorizontalDivider(outlineVariant.copy(alpha = 0.4f))` 细分隔线
-    （ClassRow/MemberRow 同款惯例）；行内 `padding(horizontal = 16.dp,
-    vertical = 10.dp)` 承担边距。历史形态（2v 拍板：时间固定 84dp 列 + tag 灰块
-    徽章 + 消息 108dp 缩进 + 无分隔线）已废止——`TIME_COLUMN_WIDTH`(84dp) /
-    `TIME_COLUMN_START`(108dp) 常量删除；保留 `TIME_TEXT_LENGTH`(14) /
-    `timeForList`（列表时间 `MM-DD HH:MM:SS`，毫秒降级详情页——详情页展示完整
-    `timeText`）与 `TAG_MAX_WIDTH`(160dp)。级别语义色固定（V 灰 / D 蓝 / I 绿 /
-    W 琥珀 / E 红，经典 logcat 色，双模 Material 300/800 配对）；其余全部 M3
-    token；i18n 中英全量。
+- **日志行设计（2026-08-15 LOGCAT_LIST_REVISION8 九次重构：徽章固定列锚点，
+     行业列式规范收口）**：REVISION7（AS 前缀式）验收失败——消息列随 tag 长度
+     逐行漂移成锯齿、前缀与消息混排一行（用户反馈「排版混乱」）。用户拍板重构为
+     **固定列锚点**结构（LogFox 同款）：每行 = **`[级别徽章固定宽列] + 固定 12dp
+     间距 + [右侧内容列]`**，右侧消息/元数据左缘全列表恒定 x 对齐（行业列式规范：
+     perfetto Android Logs / MAUI.Sherpa / Android Studio Logcat 同构）：
+     **左列（固定 LEVEL_BADGE_WIDTH 28dp）**：级别徽章——圆角 6dp、级别色 15%
+     alpha 淡底 + 级别色字母（labelMedium 等宽居中，top 对齐消息首行；级别一眼
+     扫描 + 列锚点恒定，私有 `LevelBadge`）；**主体 Column（weight 1f）**：**行1
+     消息 bodySmall Monospace onSurface `maxLines = 3`（独占整行区零混排，续行
+     自然对齐消息列）** + **行2 元数据小字一行（labelSmall onSurfaceVariant）：
+     `MM-DD HH:MM:SS（tnum）· PID-TID（等宽）· tag（等宽 widthIn(max = 120dp)
+     省略）`**（PID-TID = AS Standard View 同款 `12345-12345`；毫秒降级详情页）；
+     行 `minHeight 56dp` + `padding(horizontal = 16.dp, vertical = 10.dp)`；行末
+     `HorizontalDivider(outlineVariant.copy(alpha = 0.4f))`。**常量**：新增
+     `LEVEL_BADGE_WIDTH(28dp)` / `BADGE_TO_CONTENT_GAP(12dp)` / `LEVEL_BADGE_CORNER`
+     (6dp) / `LEVEL_BADGE_ALPHA(0.15f)`；`TAG_MAX_WIDTH`(120dp) / `LOG_ROW_MIN_HEIGHT`
+     (56dp) / `MAX_MESSAGE_LINES(3)` / `TIME_TEXT_LENGTH(14)` / `timeForList` 保留；
+     新增 imports（background / RoundedCornerShape）。长按复制 = `LogEntry.formatted()`
+     标准整行（`MM-DD HH:MM:SS.mmm PID TID I/tag: message`）。历史形态（REVISION7
+     前缀流式 `I/tag: message` / REVISION6 级别字母固定列 + 元数据行内 tag /
+     REVISION5 元数据行内嵌级别字母 / 单行标准前缀 / 单行分组式 / 纵向两行式 /
+     单行横排三区块 / 2w 两行式 tag 主行 / 2v 时间固定列 + tag 灰块徽章）全部废止。
+     列表时间 `MM-DD HH:MM:SS`（`timeForList` = `timeText.take(14)`，毫秒降级
+     详情页——详情页展示完整 `timeText`）；级别语义色固定（V 灰 / D 蓝 / I 绿 /
+     W 琥珀 / E 红，经典 logcat 色，双模 Material 300/800 配对）；其余全部 M3
+     token；i18n 中英全量（本重构零新增资源）。
   - **列表全宽（2026-08-14 界面重构 R3 延续）**：LazyColumn `contentPadding =
-    0`——无相对外部间距，边距由行内 padding（horizontal 16 / vertical 10）承担
+    0`——无相对外部间距，边距由行内 padding（horizontal 16 / vertical 8）承担
     （对齐 ProjectList 主界面写法，波纹全宽）。
 - **入口（2026-08-14 修订 R3，全局定位）**：**主设置页（SettingsScreen）新增
   「工具」分区**（Article 图标 + `logcat` + `logcat_subtitle`），AndroLua 设置页
@@ -428,6 +440,26 @@ verifySoraIsolation + verifyMinimalismDebug + verifyMinimalism（release 链路�
   （顺手修复既有违规：LogLevel 1 处 + LogcatDetailScreen 2 处 +
   SearchablePermissionPicker 文件头 KDoc 转块注释 1 处 + log 包 5 文件
   ktlintFormat 16 处）；compileArm64DebugKotlin 0 error / 0 warning；
-  全量 testArm64DebugUnitTest = **357 tests / 0 failures**；红线三连 grep
-  全零（editor 包零 luajava/androlua/loadLibrary、vendor 源码零 com.lioisme、
-  git ls-files 二进制零）。
+   全量 testArm64DebugUnitTest = **357 tests / 0 failures**；红线三连 grep
+   全零（editor 包零 luajava/androlua/loadLibrary、vendor 源码零 com.lioisme、
+   git ls-files 二进制零）。
+- **验证**（2026-08-14 LOGCAT_LIST_REVISION 二次重构收口）：ktlintCheck **全量
+   PASS**（文件整体重建后 UTF-8/LF 校验通过）；compileArm64DebugKotlin
+   0 error / 0 warning；全量 testArm64DebugUnitTest = **357 tests / 0 failures**。
+- **验证**（2026-08-14 LOGCAT_LIST_REVISION2 三次重构收口）：ktlintCheck
+   PASS；compileArm64DebugKotlin 0 error / 0 warning；全量 testArm64DebugUnitTest
+   = **357 tests / 0 failures**。
+- **实机验收**（2026-08-15，x64Debug / Android 14 模拟器，ADB）：列表纵向
+   两行式实机生效（消息主行 + 副行 tag/时间，级别字母语义色小字，无行首色
+   点，细分隔线行高均匀）；详情页毫秒时间/PID/TID 完整展示；级别筛选
+   「错误」生效（列表只剩 E/Error）；长按复制 Snackbar 提示正常。
+- **实机验收**（2026-08-15，LOGCAT_LIST_REVISION3 单行紧凑分组式收口，
+   x64Debug / Android 14）：一屏 21 条（行高 32dp 级，密度 +75%）；消息
+   全名完整显示不省略；tag 全名完整（`om.lioisme.lide` /
+   `CompatibilityChangeReporter` / `GraphicsEnvironment`，UI 树文本核验）；
+   消息左对齐 / 时间右缘对齐 / 列对齐整齐；筛选与详情交互无回归。
+- **实机验收**（2026-08-15，LOGCAT_LIST_REVISION5 纵向展开收口，x64Debug /
+   Android 14）：每条日志上下两段实机生效——消息多行完整可读（如
+   `Currently set values for: angle_gl_driver_selection_pkgs=[]` 两行完整
+   显示，不再单行截断），元数据小字行（`08-15 02:09:25 I/om.lioisme.lide`）
+   位于消息下方；日志阅读器观感；单测 358 tests / 0 failures。

@@ -3,15 +3,21 @@ package com.lioisme.lide.ui.screen
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Terminal
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExpandedFullScreenSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -40,6 +46,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.lioisme.lide.R
 import com.lioisme.lide.log.LogEntry
@@ -47,6 +54,7 @@ import com.lioisme.lide.log.LogFilter
 import com.lioisme.lide.log.LogcatStatus
 import com.lioisme.lide.log.LogcatStore
 import com.lioisme.lide.log.filterEntries
+import com.lioisme.lide.log.formatted
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -169,7 +177,7 @@ fun LogcatScreen(
                 emptyMessage = emptyMessage(status, entries.isEmpty()),
                 onEntryClick = onEntryClick,
                 onEntryLongClick = { entry ->
-                    copyToClipboard(context, entry.message)
+                    copyToClipboard(context, entry.formatted())
                     scope.launch {
                         snackbarHostState.showSnackbar(strCopied)
                     }
@@ -226,7 +234,7 @@ fun LogcatScreen(
                     pendingNavigation = id
                 },
                 onEntryLongClick = { entry ->
-                    copyToClipboard(context, entry.message)
+                    copyToClipboard(context, entry.formatted())
                     scope.launch {
                         snackbarHostState.showSnackbar(strCopied)
                     }
@@ -272,12 +280,26 @@ private fun LogListContent(
 ) {
     Box(modifier = modifier) {
         if (entries.isEmpty()) {
-            Text(
-                text = emptyMessage,
+            // 规范空态：图标 + 文案居中（M3 空态惯例），替代裸文本。
+            Column(
                 modifier = Modifier.fillMaxSize().wrapContentSize(Alignment.Center),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Icon(
+                    Icons.Outlined.Terminal,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                    modifier = Modifier.size(44.dp),
+                )
+                Spacer(Modifier.height(12.dp))
+                Text(
+                    text = emptyMessage,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(horizontal = 32.dp),
+                )
+            }
         } else {
             LazyColumn(
                 state = listState,
