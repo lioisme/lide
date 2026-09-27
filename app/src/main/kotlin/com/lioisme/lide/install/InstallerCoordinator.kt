@@ -2,10 +2,10 @@ package com.lioisme.lide.install
 
 import android.content.Context
 import android.os.ParcelFileDescriptor
+import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
-import io.github.oshai.kotlinlogging.KotlinLogging
 
 private val logger = KotlinLogging.logger("InstallerCoordinator")
 
@@ -24,7 +24,6 @@ private val logger = KotlinLogging.logger("InstallerCoordinator")
  * 线程契约：安装执行在 [Dispatchers.IO]；UI 线程不触碰任何 Shizuku/Dhizuku/libsu API。
  */
 object InstallerCoordinator {
-
     /** 后端成功码（与 AIDL 服务实现对齐）。 */
     private const val STATUS_SUCCESS = 0
 

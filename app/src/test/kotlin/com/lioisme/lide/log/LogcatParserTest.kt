@@ -1,10 +1,10 @@
 package com.lioisme.lide.log
 
+import io.github.oshai.kotlinlogging.Level
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertSame
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import io.github.oshai.kotlinlogging.Level
 
 /**
  * LogcatParser 契约测试（2026-08-14 LOGCAT L1）。

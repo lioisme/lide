@@ -33,16 +33,15 @@ import com.lioisme.lide.ui.theme.LideTheme
 import com.lioisme.lide.ui.theme.LocalIsDarkTheme
 import com.lioisme.lide.ui.theme.SettingsManager
 import com.lioisme.lide.ui.theme.resolveColorSchemeNow
+import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
-import io.github.oshai.kotlinlogging.KotlinLogging
 
 private val logger = KotlinLogging.logger("MainActivity")
 
 class MainActivity : ComponentActivity() {
-
     // 启动意图产物以 Compose state 承载（P2#11 修复）：.alp 解压导入 / 独立 .lua 收养
     // 原在 onCreate/onNewIntent 主线程同步执行（冷启动与点按卡顿），现移入
     // lifecycleScope + Dispatchers.IO，完成后写 state 触发重组。

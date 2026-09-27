@@ -47,12 +47,12 @@ import com.lioisme.lide.model.Project
 import com.lioisme.lide.project.LuaConfigParser
 import com.lioisme.lide.project.ProjectManager
 import com.lioisme.lide.ui.theme.SettingsManager
+import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
-import io.github.oshai.kotlinlogging.KotlinLogging
 
 private val logger = KotlinLogging.logger("BuildApkDialog")
 
@@ -551,4 +551,3 @@ private fun shareApk(
         Toast.makeText(context, context.getString(R.string.build_share_failed), Toast.LENGTH_LONG).show()
     }
 }
-

@@ -353,32 +353,56 @@ verifySoraIsolation + verifyMinimalismDebug + verifyMinimalism（release 链路�
 - **范围契约**：仅 LIDE 进程日志——现代 Android（7.0+）未授予 READ_LOGS 时
   logd 按 UID 过滤；宿主 + 引擎**同进程**（AGENTS R2），故「整个软件」=
   宿主 + 引擎 + Lua print 全部可见，其他 App/系统日志不可见（无 root 不另议）。
-- **采集时机**：`LideApp.onCreate` 启动即采集（进程级常驻，环形缓冲上限 3000 条），
-  打开日志页可见本次运行全过程，无丢失窗口；打包产物不运行 LideApp（manifest
-  回落引擎入口 Activity），天然不含此功能。
+- **采集时机**：`LideApp.onCreate` 启动即采集（进程级常驻，环形缓冲字节预算
+   8MB（2026-08-15 核心重构，见下），打开日志页可见本次运行全过程，无丢失窗口；
+   打包产物不运行 LideApp（manifest 回落引擎入口 Activity），天然不含此功能。
 - **数据层**（`com.lioisme.lide.log`，宿主能力，R1/R3/R4 合规，纯 Kotlin 零 sora/
   引擎依赖）：
   - `LogcatParser`：`logcat -v threadtime` 行解析（正则前缀 + 首 `": "` tag/消息
     切分——含冒号 tag 按标准首切分语义，消息以 `" : "` 开头；多行 continuation
     由 store 归并；`----- beginning of` 头丢弃；乱行兜底）。
-  - `LogBuffer`：环形缓冲（容量 3000，溢出丢最旧）+ continuation 归并 + 按 id 查找
-    ——JVM 可测。
+  - `LogBuffer`：环形缓冲 + continuation 归并 + 按 id 查找——JVM 可测。
+    **2026-08-15 核心重构**：字节预算 `DEFAULT_CHAR_BUDGET = 8 * 1024 * 1024`
+    （8M 字符 ≈ 16MB UTF-16 堆，用户拍板），`totalChars` 记账（message + tag +
+    timeText），超预算丢最旧直至满足——消除 3000×16KB ≈ 98MB 最坏 OOM 路径；
+    `tailMessage: StringBuilder` 续行追加（O(1)/行），下次 append 或快照前
+    `flushTail()` 固化（O(消息总长)/消息，替代原 `copy(message + "\n" + text)`
+    O(n²) 全量复制）；builder 被固化后到达的续行经 `mergeToTail` 回退直接归并
+    最新条目（低频路径，不构成 O(n²) 风险）；续行超 `MAX_MESSAGE_LENGTH`
+    丢弃 + 尾部 entry 置 `truncated`。
   - `LogcatReader`：`ProcessBuilder("logcat","-v","threadtime")` 流式读取，
-    `Dispatchers.IO` 阻塞循环；断线自动重启（5s 退避）；全路径 `try/catch(Throwable)`。
+    `Dispatchers.IO` 阻塞循环；**2026-08-15 核心重构**：`-T '<最后时间戳>'`
+    续读（`logcatCommand(resumeTimestamp)` 纯函数，首启不传/续启传 threadtime
+    时间戳——进程中断重启后从上次消费点续读，消除重复条目；同毫秒轻微重复
+    接受，AS 同款）；时间戳经 store 解析回写 `reader.updateTimestamp(timeText)`
+    （@Volatile 跨线程安全）；显式 `Charsets.UTF_8`；`destroy()` 后 2s 超时 →
+    `destroyForcibly()`（防子进程残留）；固定 5s 退避 → 指数退避 + jitter
+    （`backoffDelayMs(attempt, random)`：2s 基数 ×2、上限 30s、+0..1000ms，
+    attempt 归零于首次 Streaming）；全路径 `try/catch(Throwable)`。
   - `LogcatStore`：进程级单例（ApiIndex 同款模式），`StateFlow<List<LogEntry>>`
     （采集器线程写、原子发布不可变快照）+ `StateFlow<LogcatStatus>`
     （Streaming/Unavailable）+ id 单调分配 + `clear()`（内存清空 + best-effort
     `logcat -c`）+ `entryById(id)` + `ensureStarted()` 幂等 + `resetForTest()`。
-    单条消息上限 16384（超长截断，详情展示截断后全文）。
+    **2026-08-15 核心重构**：节流批量发布 `FLUSH_INTERVAL_MS = 100`（append 只入
+    缓冲，窗口到期一次性 snapshot + 发布——日志风暴时发布频率 ≤10/s；
+    `lastPublish` 初始窗口负值保证首条立即发布）；虚拟时钟 `nowProvider` 注入 +
+    `flushForTest()`/`setClockForTest()`（测试可替换时间源，JVM 可测）；单条消息
+    上限 16384（超长截断，`truncated = true` 传播，详情页弱色标注
+    `logcat_truncated`「… 消息已截断（16 KB）」）。
 - **筛选语义**（`LogFilter`，2026-08-14 修订对齐 pro `logcat.lua` 菜单与语义）：
   All/Lua/Test/Tcc/Error/Warning/Info/Debug/Verbose（[LogFilter.entries] 遍历即菜单
   序）；Lua = tag `lua`（`lua:* *:S`，Lua print + 引擎 Lua 业务日志）；Test = tag
   `test`（`test:* *:S`，工程测试约定通道，现无来源恒空态）；Tcc = tag `tcc`
   （LIDE 不构建 tcc 恒空态）；Error≥E、Warning≥W、Info≥I、Debug≥D、Verbose 恒真。
   `filterEntries` 纯函数：类型 ∩ 查询词（tag+message 小写子串），
-  `Dispatchers.Default` + produceState。
+  `Dispatchers.Default` + produceState。**2026-08-15 核心重构**：`LogEntry` 构造期
+  一次 lowercase 预建 `tagLower` / `messageLower`（默认参数不破坏既有构造点），
+  `filterEntries` 消费索引（`entry.tagLower.contains(q)`），消除每查询每行两次
+  lowercase 分配（对齐 api 浏览器 `nameLower` 预索引既有模式）；归并固化时同步
+  重建 `messageLower`。
 - **UI 层**（`ui/screen`，搜索状态机红线照抄 ApiBrowserScreen）：
-  - `LogcatScreen`：CenterAlignedTopAppBar + 折叠搜索条（复用 `ApiCollapsedSearchInput`）
+  - `LogcatScreen`：CenterAlignedTopAppBar + 折叠搜索条（复用中立共享组件
+    `SearchInputField` / `CollapsedSearchInput`，2026-08-15 中立化，见下）
     + 类型筛选菜单（9 项单选 + 菜单底部「清空日志」）；搜索状态机红线
     （`rememberSearchBarState()` 无参 + `searchActive` 独立意图 +
     `LaunchedEffect(searchActive)` 唯一驱动 + 收起路径三件套 + BackHandler）；空态
@@ -387,9 +411,9 @@ verifySoraIsolation + verifyMinimalismDebug + verifyMinimalism（release 链路�
   - **清除/筛选布局（2026-08-14 界面重构）**：「清空日志」并入**类型筛选菜单**
     （9 项筛选后 `HorizontalDivider` + DropdownMenuItem：Delete 图标 +
     `colorScheme.error`，对齐宿主危险操作惯例）；折叠/全屏两态共享组件自动同步；
-    直接清除（内存必清 + `logcat -c` best-effort，无二次确认）。搜索条 trailing
-    仅余筛选按钮；`LogClearButton` 组件删除；共享组件 `ApiSearchInputField` /
-    `ApiCollapsedSearchInput` 的 `clearSlot` 死参数删除（历史 R2 布局已废止）。
+直接清除（内存必清 + `logcat -c` best-effort，无二次确认）。搜索条 trailing
+  仅余筛选按钮；`LogClearButton` 组件删除；共享组件 `SearchInputField` /
+  `CollapsedSearchInput` 的 `clearSlot` 死参数删除（历史 R2 布局已废止）。
   - **搜索占位符（2026-08-14 界面重构）**：共享搜索组件占位符参数化
     （`placeholder: String` 必传）——LogcatScreen 传 `logcat_search_hint`
     （「搜索日志…」），ApiBrowserScreen 传 `api_search_hint`（修复日志猫显示
@@ -463,6 +487,22 @@ verifySoraIsolation + verifyMinimalismDebug + verifyMinimalism（release 链路�
    `Currently set values for: angle_gl_driver_selection_pkgs=[]` 两行完整
    显示，不再单行截断），元数据小字行（`08-15 02:09:25 I/om.lioisme.lide`）
    位于消息下方；日志阅读器观感；单测 358 tests / 0 failures。
+- **验证**（2026-08-15 LOGCAT_CORE_REFACTOR 核心重构收口）：compileArm64DebugKotlin
+   0 error（含 C9 详情页截断标注后复验）；全量 testArm64DebugUnitTest =
+   **42 测试类 / 367 tests / 0 failures**（log 包 48 全绿：新增 LogBufferTest 8 /
+   LogFilterTest 6 / ReaderCommandAndBackoffTest 5，StoreTest 12 全适配虚拟时钟 +
+   节流窗口用例）；ktlintCheck **全量 PASS**（首次运行暴露 30 文件违规 =
+   KOTLIN_LOGGING 迁移遗留 import 排序（io.github.oshai 置于 java 之后）+ 本工作单
+   新文件缺末尾换行 + when 多行分支空行规则，经 `ktlintFormat` 官方格式化全量
+   修复后复验全绿，diff 审查确认纯格式零逻辑变更——R11 既有违规专项随本次清零）；
+   红线四连全零（editor 包零 luajava/androlua/loadLibrary、vendor src 零
+   com.lioisme、git ls-files 零 .so/.dex/.zip、零 .jar 除 wrapper 外）。
+- **组件中立化（2026-08-15 核心重构 B1）**：共享搜索组件从 api 浏览器命名
+  迁移至 `ui/components/SearchInputComponents.kt`（`SearchInputField` /
+  `CollapsedSearchInput` / `copyToClipboard(context, text, label)`——label
+  参数化消除 "lide-api" 语义错位：ApiBrowser* 传 "lide-api"、Logcat* 传
+  "lide-log"）；旧符号 `ApiSearchInputField` / `ApiCollapsedSearchInput` 全树
+  归零（git grep 验证）。
 
 ## 11. 日志架构：kotlin-logging 迁移（2026-08-15 KOTLIN_LOGGING_WORK_ORDER 完工蒸馏）
 

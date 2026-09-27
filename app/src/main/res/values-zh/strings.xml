@@ -565,4 +565,5 @@
     <string name="log_message">日志内容</string>
     <string name="log_copy">复制</string>
     <string name="log_copied">已复制到剪贴板</string>
+    <string name="logcat_truncated">… 消息已截断（16 KB）</string>
 </resources>

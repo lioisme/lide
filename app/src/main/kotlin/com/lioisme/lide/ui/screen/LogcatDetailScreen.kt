@@ -48,6 +48,7 @@ import com.lioisme.lide.editor.TipIconButton
 import com.lioisme.lide.log.LogEntry
 import com.lioisme.lide.log.LogcatStore
 import com.lioisme.lide.log.symbolChar
+import com.lioisme.lide.ui.components.copyToClipboard
 import io.github.oshai.kotlinlogging.Level
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -180,7 +181,7 @@ fun LogcatDetailScreen(
                         )
                         Button(
                             onClick = {
-                                copyToClipboard(context, entry.message)
+                                copyToClipboard(context, entry.message, "lide-log")
                                 scope.launch {
                                     snackbarHostState.showSnackbar(strCopied)
                                 }
@@ -199,6 +200,16 @@ fun LogcatDetailScreen(
                             style = MaterialTheme.typography.bodyMedium,
                             fontFamily = FontFamily.Monospace,
                             color = MaterialTheme.colorScheme.onSurface,
+                        )
+                    }
+                    // 截断标记（2026-08-15 LOGCAT_CORE C9）：消息超长被截断时弱色标注，
+                    // 指示性 UI 不参与复制。
+                    if (entry.truncated) {
+                        Spacer(Modifier.height(4.dp))
+                        Text(
+                            text = stringResource(R.string.logcat_truncated),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
                     Spacer(Modifier.height(24.dp))
@@ -248,10 +259,15 @@ private fun levelLabel(entry: LogEntry): String =
     stringResource(
         when (entry.level) {
             Level.TRACE -> R.string.log_level_verbose
+
             Level.DEBUG -> R.string.log_level_debug
+
             Level.INFO -> R.string.log_level_info
+
             Level.WARN -> R.string.log_level_warning
+
             Level.ERROR -> R.string.log_level_error
+
             // OFF 不产生日志条目（logcat 无对应字符），防御性兜底展示同 verbose 文案。
             Level.OFF -> R.string.log_level_verbose
         },

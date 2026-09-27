@@ -288,7 +288,9 @@ dependencies {
             // 日志门面唯一实现（KOTLIN_LOGGING，2026-08-15）：宿主全部日志经 kotlin-logging
             // 产出（Android 原生工厂直连 android.util.Log，懒求值 + isLoggable 门控内建；
             // slf4j-api 为库侧 compileOnly，选 native 工厂则运行时零 SLF4J 依赖）。
-            // 版本 pin 8.0.4（maven 已发布 tag；HEAD 的 8.0.5 为未发布 next，禁引用）。
+            // 版本 pin 8.0.4（maven 已发布最新 tag；reference/kotlin-logging 收纳的
+            // HEAD commit 0aaa57c "bump to semver 8.0.5" 为未发布 next，maven 解析
+            // 实测不存在，2026-08-15 LOGCAT_CORE C8 复核维持 8.0.4——源码基线 ≠ 依赖版本）。
             "io.github.oshai:kotlin-logging:8.0.4",
         )
     for (d in ideDeps) {

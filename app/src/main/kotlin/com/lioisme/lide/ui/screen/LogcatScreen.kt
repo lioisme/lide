@@ -55,6 +55,9 @@ import com.lioisme.lide.log.LogcatStatus
 import com.lioisme.lide.log.LogcatStore
 import com.lioisme.lide.log.filterEntries
 import com.lioisme.lide.log.formatted
+import com.lioisme.lide.ui.components.CollapsedSearchInput
+import com.lioisme.lide.ui.components.SearchInputField
+import com.lioisme.lide.ui.components.copyToClipboard
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -63,7 +66,7 @@ import kotlinx.coroutines.withContext
  * 日志猫列表页：全局日志查看器（LIDE 进程日志，宿主 + 引擎 + Lua print）。
  *
  * 与 API 浏览器同构（P3-2 组件拆分 + 搜索状态机红线）：
- * - 顶栏：折叠搜索条（[ApiCollapsedSearchInput] 复用）+ 类型筛选菜单
+ * - 顶栏：折叠搜索条（[CollapsedSearchInput] 复用）+ 类型筛选菜单
  *   （菜单底部含「清空日志」项）；
  * - 全屏 SearchView：查询词实时过滤（与正文同一过滤管线：类型 ∩ 查询词）；
  * - 搜索状态机红线全守（rememberSearchBarState 无参 / searchActive 独立 state /
@@ -139,7 +142,7 @@ fun LogcatScreen(
                     SearchBar(
                         state = searchBarState,
                         inputField = {
-                            ApiCollapsedSearchInput(
+                            CollapsedSearchInput(
                                 query = query,
                                 onBack = onBack,
                                 onClear = { query = "" },
@@ -174,7 +177,7 @@ fun LogcatScreen(
                 emptyMessage = emptyMessage(status, entries.isEmpty()),
                 onEntryClick = onEntryClick,
                 onEntryLongClick = { entry ->
-                    copyToClipboard(context, entry.formatted())
+                    copyToClipboard(context, entry.formatted(), "lide-log")
                     scope.launch {
                         snackbarHostState.showSnackbar(strCopied)
                     }
@@ -190,7 +193,7 @@ fun LogcatScreen(
         ExpandedFullScreenSearchBar(
             state = searchBarState,
             inputField = {
-                ApiSearchInputField(
+                SearchInputField(
                     query = query,
                     onQueryChange = { query = it },
                     active = searchActive,
@@ -231,7 +234,7 @@ fun LogcatScreen(
                     pendingNavigation = id
                 },
                 onEntryLongClick = { entry ->
-                    copyToClipboard(context, entry.formatted())
+                    copyToClipboard(context, entry.formatted(), "lide-log")
                     scope.launch {
                         snackbarHostState.showSnackbar(strCopied)
                     }

@@ -566,4 +566,5 @@
     <string name="log_message">Message</string>
     <string name="log_copy">Copy</string>
     <string name="log_copied">Copied to clipboard</string>
+    <string name="logcat_truncated">… Message truncated (16 KB)</string>
 </resources>

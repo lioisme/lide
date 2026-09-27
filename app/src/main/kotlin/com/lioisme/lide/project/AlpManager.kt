@@ -3,8 +3,8 @@ package com.lioisme.lide.project
 import android.content.Context
 import android.net.Uri
 import com.lioisme.lide.engine.RuntimePaths
-import java.io.File
 import io.github.oshai.kotlinlogging.KotlinLogging
+import java.io.File
 
 private val logger = KotlinLogging.logger("AlpManager")
 

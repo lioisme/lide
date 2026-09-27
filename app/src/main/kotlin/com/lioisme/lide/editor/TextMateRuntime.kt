@@ -2,6 +2,7 @@ package com.lioisme.lide.editor
 
 import android.content.Context
 import android.os.SystemClock
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.github.rosemoe.sora.lang.analysis.AsyncIncrementalAnalyzeManager
 import io.github.rosemoe.sora.langs.textmate.registry.FileProviderRegistry
 import io.github.rosemoe.sora.langs.textmate.registry.GrammarRegistry
@@ -14,7 +15,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import org.eclipse.tm4e.core.registry.IThemeSource
-import io.github.oshai.kotlinlogging.KotlinLogging
 
 private val logger = KotlinLogging.logger("TextMateRuntime")
 

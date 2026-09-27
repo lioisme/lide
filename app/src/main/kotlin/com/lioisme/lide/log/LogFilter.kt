@@ -44,6 +44,10 @@ enum class LogFilter(
 /**
  * 列表过滤：类型筛选 ∩ 查询词（tag + message 小写子串，忽略大小写）。
  * 纯函数，后台线程调用（UI 仅经 produceState/remember 消费，见 AGENTS 红线）。
+ *
+ * 2026-08-15 LOGCAT_CORE C5：消费 [LogEntry.tagLower]/[LogEntry.messageLower]
+ * 预建小写索引（构造期一次 lowercase），消除每查询每行两次 lowercase 分配
+ * （对齐 api 浏览器 `nameLower` 预索引既有模式）。
  */
 internal fun filterEntries(
     entries: List<LogEntry>,
@@ -56,8 +60,8 @@ internal fun filterEntries(
         filter.matches(entry) &&
             (
                 q.isEmpty() ||
-                    entry.tag.lowercase().contains(q) ||
-                    entry.message.lowercase().contains(q)
+                    entry.tagLower.contains(q) ||
+                    entry.messageLower.contains(q)
             )
     }
 }

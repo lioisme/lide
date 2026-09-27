@@ -8,13 +8,13 @@ import com.lioisme.lide.i18n.LocaleManager
 import com.lioisme.lide.install.InstallerServices
 import com.lioisme.lide.log.LogcatStore
 import com.lioisme.lide.ui.theme.SettingsManager
+import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
-import io.github.oshai.kotlinlogging.KotlinLogging
 
 private val logger = KotlinLogging.logger("LideApp")
 

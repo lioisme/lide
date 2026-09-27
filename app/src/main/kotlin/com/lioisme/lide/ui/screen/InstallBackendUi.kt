@@ -30,8 +30,8 @@ import androidx.core.content.FileProvider
 import com.lioisme.lide.R
 import com.lioisme.lide.install.BackendStatus
 import com.lioisme.lide.install.InstallerBackend
-import java.io.File
 import io.github.oshai.kotlinlogging.KotlinLogging
+import java.io.File
 
 private val logger = KotlinLogging.logger("InstallBackendUi")
 

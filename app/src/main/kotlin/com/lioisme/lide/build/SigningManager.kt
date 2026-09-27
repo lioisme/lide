@@ -1,13 +1,13 @@
 package com.lioisme.lide.build
 
 import android.content.Context
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
 import java.security.KeyFactory
 import java.security.cert.CertificateFactory
 import java.security.spec.PKCS8EncodedKeySpec
-import io.github.oshai.kotlinlogging.KotlinLogging
 
 private val logger = KotlinLogging.logger("SigningManager")
 

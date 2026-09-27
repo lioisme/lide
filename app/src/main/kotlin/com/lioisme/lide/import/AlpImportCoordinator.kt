@@ -3,8 +3,8 @@ package com.lioisme.lide.import
 import android.content.Context
 import android.net.Uri
 import com.lioisme.lide.project.AlpManager
-import java.io.File
 import io.github.oshai.kotlinlogging.KotlinLogging
+import java.io.File
 
 private val logger = KotlinLogging.logger("AlpImportCoordinator")
 
@@ -24,7 +24,6 @@ private val logger = KotlinLogging.logger("AlpImportCoordinator")
 class AlpImportCoordinator(
     private val context: Context,
 ) {
-
     /** 待确认导入：临时 .alp 文件路径 + 已解析的导入计划（冲突态）。 */
     data class Pending(
         val tempPath: String,

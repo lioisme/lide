@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import com.lioisme.lide.R
 import com.lioisme.lide.apibrowser.ApiReflection
 import com.lioisme.lide.editor.TipIconButton
+import com.lioisme.lide.ui.components.copyToClipboard
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -185,8 +186,8 @@ fun ApiClassDetailScreen(
                                 is DetailRow.Member -> {
                                     MemberRow(
                                         text = row.text,
-                                        onClick = { copyToClipboard(context, row.text) },
-                                        onLongClick = { copyToClipboard(context, row.memberName) },
+                                        onClick = { copyToClipboard(context, row.text, "lide-api") },
+                                        onLongClick = { copyToClipboard(context, row.memberName, "lide-api") },
                                     )
                                 }
                             }

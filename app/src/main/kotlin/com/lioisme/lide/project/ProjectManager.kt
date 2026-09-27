@@ -2,9 +2,9 @@ package com.lioisme.lide.project
 
 import com.lioisme.lide.engine.RuntimePaths
 import com.lioisme.lide.model.Project
+import io.github.oshai.kotlinlogging.KotlinLogging
 import java.io.File
 import java.util.concurrent.ConcurrentHashMap
-import io.github.oshai.kotlinlogging.KotlinLogging
 
 private val logger = KotlinLogging.logger("ProjectManager")
 
@@ -23,7 +23,6 @@ class ProjectManager {
     )
 
     companion object {
-
         /**
          * 进程级工程扫描缓存：磁盘状态是进程共享的事实源，与 ProjectManager 实例无关，
          * Activity 重建/多实例共存时仍生效。指纹未变即复用上次解析结果，跳过逐工程

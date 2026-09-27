@@ -9,11 +9,11 @@ import android.content.pm.PackageInstaller
 import android.os.Build
 import android.os.ParcelFileDescriptor
 import com.lioisme.lide.install.IDhizukuInstallerService
+import io.github.oshai.kotlinlogging.KotlinLogging
 import java.util.UUID
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
-import io.github.oshai.kotlinlogging.KotlinLogging
 
 private val logger = KotlinLogging.logger("DhizukuService")
 
@@ -37,7 +37,6 @@ private val logger = KotlinLogging.logger("DhizukuService")
  */
 class DhizukuInstallerServiceImpl : IDhizukuInstallerService.Stub() {
     companion object {
-
         private const val STATUS_SUCCESS = 0
         private const val STATUS_FAILURE = -1
 

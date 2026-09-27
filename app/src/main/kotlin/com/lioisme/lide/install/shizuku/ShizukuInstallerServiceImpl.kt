@@ -3,10 +3,10 @@ package com.lioisme.lide.install.shizuku
 import android.os.Build
 import android.os.ParcelFileDescriptor
 import com.lioisme.lide.install.IShizukuInstallerService
+import io.github.oshai.kotlinlogging.KotlinLogging
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.util.concurrent.TimeUnit
-import io.github.oshai.kotlinlogging.KotlinLogging
 
 private val logger = KotlinLogging.logger("ShizukuService")
 
@@ -27,7 +27,6 @@ private val logger = KotlinLogging.logger("ShizukuService")
  */
 class ShizukuInstallerServiceImpl : IShizukuInstallerService.Stub() {
     companion object {
-
         /** API 26+ Process.destroyForcibly() 兼容：低版本回落 destroy()。 */
         private fun Process.destroyForciblySafe() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) destroyForcibly() else destroy()

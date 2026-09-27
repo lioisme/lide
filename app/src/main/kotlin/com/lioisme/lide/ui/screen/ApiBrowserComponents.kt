@@ -1,34 +1,23 @@
 package com.lioisme.lide.ui.screen
 
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
-import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,8 +25,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextDecoration
@@ -54,139 +41,11 @@ import com.lioisme.lide.editor.TipIconButton
 
 /*
  * API 浏览器界面组件集（与 ApiBrowserScreen 状态机解耦，P3-2 拆分）：
- * 搜索输入条 / 分类筛选菜单 / 列表行与徽标 / 纯函数助手。
+ * 分类筛选菜单 / 列表行与徽标 / 纯函数助手。
  * 线程契约同 ApiBrowserScreen：行级反射信息仅经 ApiIndex.rowInfoAsync（合并缓存）。
+ * 搜索输入条与剪贴板助手已迁至 `ui/components/SearchInputComponents.kt`
+ * （SearchInputField / CollapsedSearchInput / copyToClipboard，2026-08-15 LOGCAT_CORE B1）。
  */
-
-/**
- * 搜索输入条（折叠态 SearchBar 与全屏 ExpandedFullScreenSearchBar 共用同一实现）。
- * 展开/收起意图经 [active]/[onActiveChange] 与外部独立 state 通信（官方语义）：
- * 本组件不直接触碰 SearchBarState 动画，动画由宿主 LaunchedEffect(active) 幂等驱动，
- * 避免焦点回调与动画互相激发（死循环红线）。
- * 返回按钮置于 leadingIcon、清除 + 分类筛选（[filterSlot]，含 DropdownMenu）置于
- * trailingIcon，与 SearchBar 共占顶栏一行；[placeholder] 由调用方传入（API 浏览器 /
- * 日志猫各自语义文案）。
- */
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-internal fun ApiSearchInputField(
-    query: String,
-    onQueryChange: (String) -> Unit,
-    active: Boolean,
-    onActiveChange: (Boolean) -> Unit,
-    onSearch: () -> Unit,
-    onBack: () -> Unit,
-    placeholder: String,
-    filterSlot: @Composable () -> Unit,
-) {
-    SearchBarDefaults.InputField(
-        query = query,
-        onQueryChange = onQueryChange,
-        onSearch = { onSearch() },
-        expanded = active,
-        onExpandedChange = onActiveChange,
-        placeholder = { Text(placeholder) },
-        leadingIcon = {
-            TipIconButton(tooltip = stringResource(R.string.cd_back), onClick = onBack) {
-                Icon(
-                    Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = stringResource(R.string.cd_back),
-                )
-            }
-        },
-        trailingIcon = {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                if (query.isNotEmpty()) {
-                    TipIconButton(tooltip = stringResource(R.string.api_clear_search), onClick = { onQueryChange("") }) {
-                        Icon(
-                            Icons.Default.Close,
-                            contentDescription = stringResource(R.string.api_clear_search),
-                        )
-                    }
-                }
-                filterSlot()
-            }
-        },
-        modifier = Modifier.fillMaxWidth(),
-    )
-}
-
-/**
- * 折叠态搜索条（AppBar 内）：仅单击进入 SearchView。
- *
- * 不挂载 SearchBarDefaults.InputField——其 BasicTextField 内部
- * `onFocusChanged { if (isFocused) onExpandedChange(true) }` 由"获得焦点"驱动展开，
- * 而长按（文本选择/光标）同样会请求焦点，导致长按也进入 SearchView。
- * 本组件用 [detectTapGestures] 区分单击（展开）与长按（无副作用），
- * 首尾图标按钮（返回 / 清除 / 分类筛选）各自保留单击语义与长按 tooltip。
- * 展开后的输入、焦点与键盘由 ExpandedFullScreenSearchBar 的 focusRequester 自动接管。
- * [placeholder] 由调用方传入（API 浏览器 / 日志猫各自语义文案）。
- */
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-internal fun ApiCollapsedSearchInput(
-    query: String,
-    onBack: () -> Unit,
-    onClear: () -> Unit,
-    onTapToExpand: () -> Unit,
-    placeholder: String,
-    filterSlot: @Composable () -> Unit,
-) {
-    val container = MaterialTheme.colorScheme.surfaceContainerHigh
-    Row(
-        modifier =
-            Modifier
-                .fillMaxWidth()
-                .height(56.dp)
-                .clip(RoundedCornerShape(28.dp))
-                .background(container)
-                .padding(horizontal = 4.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        TipIconButton(tooltip = stringResource(R.string.cd_back), onClick = onBack) {
-            Icon(
-                Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = stringResource(R.string.cd_back),
-            )
-        }
-        Box(
-            modifier =
-                Modifier
-                    .weight(1f)
-                    .fillMaxHeight()
-                    .pointerInput(Unit) {
-                        detectTapGestures(
-                            onTap = { onTapToExpand() },
-                            onLongPress = {},
-                        )
-                    },
-            contentAlignment = Alignment.CenterStart,
-        ) {
-            Text(
-                text = if (query.isEmpty()) placeholder else query,
-                style = MaterialTheme.typography.bodyLarge,
-                color =
-                    if (query.isEmpty()) {
-                        MaterialTheme.colorScheme.onSurfaceVariant
-                    } else {
-                        MaterialTheme.colorScheme.onSurface
-                    },
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.padding(horizontal = 8.dp),
-            )
-        }
-        if (query.isNotEmpty()) {
-            TipIconButton(tooltip = stringResource(R.string.api_clear_search), onClick = onClear) {
-                Icon(
-                    Icons.Default.Close,
-                    contentDescription = stringResource(R.string.api_clear_search),
-                )
-            }
-        }
-        filterSlot()
-    }
-}
 
 /** 分类筛选按钮 + DropdownMenu（SearchBar trailingIcon 槽内使用，锚点随输入条）。 */
 @Composable
@@ -415,17 +274,6 @@ internal fun filterSnapshot(
                 .map { snapshot.classes[it] }
                 .toList()
         }
-    }
-}
-
-internal fun copyToClipboard(
-    context: Context,
-    text: String,
-) {
-    try {
-        val cm = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        cm.setPrimaryClip(ClipData.newPlainText("lide-api", text))
-    } catch (_: Throwable) {
     }
 }
 

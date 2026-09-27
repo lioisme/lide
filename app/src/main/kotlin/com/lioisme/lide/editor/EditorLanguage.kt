@@ -2,6 +2,7 @@ package com.lioisme.lide.editor
 
 import android.content.Context
 import android.os.Bundle
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.github.rosemoe.sora.lang.completion.CompletionHelper
 import io.github.rosemoe.sora.lang.completion.CompletionPublisher
 import io.github.rosemoe.sora.langs.textmate.TextMateLanguage
@@ -10,7 +11,6 @@ import io.github.rosemoe.sora.langs.textmate.registry.ThemeRegistry
 import io.github.rosemoe.sora.text.CharPosition
 import io.github.rosemoe.sora.text.ContentReference
 import io.github.rosemoe.sora.widget.CodeEditor
-import io.github.oshai.kotlinlogging.KotlinLogging
 
 private val logger = KotlinLogging.logger("EditorLanguage")
 

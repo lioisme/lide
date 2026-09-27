@@ -24,10 +24,15 @@ fun logcatSymbolToLevel(symbol: Char): Level =
 fun Level.symbolChar(): Char =
     when (this) {
         Level.TRACE -> 'V'
+
         Level.DEBUG -> 'D'
+
         Level.INFO -> 'I'
+
         Level.WARN -> 'W'
+
         Level.ERROR -> 'E'
+
         // OFF 不产生日志条目（logcat 无对应字符，防御性兜底，不应出现在解析结果中）。
         Level.OFF -> '?'
     }

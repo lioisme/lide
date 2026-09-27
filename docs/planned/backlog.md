@@ -691,3 +691,46 @@
 > 新任务登记格式建议：`### [F8] 任务标题` + 优先级 + 关联文件 + 验收标准
 > 关联：根目录 `README.md`（docs 入口为 `docs/README.md`）
 
+---
+
+## 2z. 日志猫核心重构（2026-08-15，已完成）
+
+> 来源需求（用户 2026-08-15）：以第一性原理为目标，日志猫所有代码/逻辑按
+> **原生实现＞组件库实现＞自实现** 排序；编码规范遵循官方规范/社区习惯；功能、
+> 性能、质量达到语言与组件库上限；架构达到苹果/谷歌大厂验收标准；逐项完成在
+> 工作单标记（已完成）+ 工作内容 + 验收证据。
+> 审计结论（2026-08-15 深度审计，方案已定稿）：整体架构方向正确（读取面 =
+> logcat 子进程唯一原生路径、写入面 = kotlin-logging 组件库、UI = M3 官方组件、
+> 级别语义 = kotlin-logging Level 唯一事实源，均已符合原生＞组件库＞自实现）；
+> 问题集中在**实现未达性能/正确性上限**：P0-1 进程重启重复条目（缺 `-T` 续读）、
+> P0-2 最坏 ~98MB 内存 OOM 风险（无字节预算）、P1-1 每行全量快照发布（日志风暴
+> GC 灾难）、P1-2 过滤每次全量 lowercase 分配（缺预建索引）、P1-3 多行归并 O(n²)
+> 拼接、P2-1 共享搜索组件 `Api*` 命名错位、P2-2 copyToClipboard label 语义错位、
+> P2-3 kotlin-logging 基线 8.0.5 与 pin 8.0.4 不一致、P2-4 截断无标记、P3 细节
+> （UTF-8 显式 / destroyForcibly 超时 / 指数退避 jitter）。
+> 用户拍板（2026-08-15）：字节预算 8MB 淘汰；过滤 = 节流 + 小写索引（不做增量
+> 过滤，下期迭代）；`-T` 时间戳续读（同毫秒轻微重复接受，AS 同款）。
+
+| # | 任务 | 优先级 | 状态 | 关键词 |
+|---|---|---|---|---|
+| C1 | 登记：backlog 2z 条目 + 工作单创建 | 高 | ✅ 已完成（2026-08-15） | `LOGCAT_CORE` `登记` |
+| C2 | 代码 A1：LogcatReader `-T` 续读 + UTF-8 + destroyForcibly 2s 超时 + 指数退避 jitter（logcatCommand / backoffDelayMs 抽纯函数） | 高 | ✅ 已完成（2026-08-15） | `LOGCAT_CORE` `A1` `Reader` |
+| C3 | 代码 A2：LogBuffer 字节预算 8MB 淘汰（totalChars 记账）+ 归并 builder 分片 + 续行超限截断 | 高 | ✅ 已完成（2026-08-15） | `LOGCAT_CORE` `A2` `Buffer` |
+| C4 | 代码 A3：LogcatStore 100ms 节流批量发布 + 虚拟时钟注入（nowProvider）+ truncated 标记 | 高 | ✅ 已完成（2026-08-15） | `LOGCAT_CORE` `A3` `节流` |
+| C5 | 代码 A4：LogEntry 小写索引（tagLower/messageLower 构造期一次）+ filterEntries 零分配 | 高 | ✅ 已完成（2026-08-15） | `LOGCAT_CORE` `A4` `索引` |
+| C6 | 测试 D1：新增 LogBufferTest / LogFilterTest / Reader 命令与退避测试 + LogcatStoreTest 节流适配 | 高 | ✅ 已完成（2026-08-15） | `LOGCAT_CORE` `测试` |
+| C7 | 架构 B1：共享搜索组件中立化至 ui/components（SearchInputField / CollapsedSearchInput / copyToClipboard(label)） | 中 | ✅ 已完成（2026-08-15） | `LOGCAT_CORE` `B1` `中立化` |
+| C8 | 架构 B2：kotlin-logging 版本复核（8.0.5 maven 实测未发布，维持 8.0.4 为正确 pin） | 中 | ✅ 已完成（2026-08-15） | `LOGCAT_CORE` `B2` `版本` |
+| C9 | UI C：详情页截断标记（logcat_truncated 资源 + 弱色标注） | 中 | ✅ 已完成（2026-08-15） | `LOGCAT_CORE` `C` `截断标记` |
+| C10 | 验证 D2：compileArm64DebugKotlin + 全量单测（42 类 367 tests 全绿）+ ktlintCheck 全量 PASS + 红线四连 grep 全零 | 高 | ✅ 已完成（2026-08-15） | `LOGCAT_CORE` `验收` |
+| C11 | 收尾 E：蒸馏 ARCHITECTURE.md §10 修订（数据层契约/组件中立化）+ backlog 2z 注记 + 工作单已删除 | 中 | ✅ 已完成（2026-08-15） | `LOGCAT_CORE` `蒸馏` |
+
+> 完成注记（2026-08-15）：工作单 `docs/in-progress/LOGCAT_CORE_REFACTOR_WORK_ORDER.md`
+> 全程逐项标记（已完成）+ 工作内容 + 验收证据，收口后已删除（git 历史保留）；
+> 结论蒸馏至 `docs/kb/ARCHITECTURE.md` §10（-T 续读 / 字节预算 8MB / 节流 100ms /
+> 小写索引 / truncated 标记 / 组件中立化 / 8.0.4 pin 复核）。附带收益：ktlintCheck
+> 全量 PASS 清零 KOTLIN_LOGGING 迁移遗留 30 文件 import 排序/空行违规（原登记
+> backlog R11 专项随本次收口，无独立工作单）。
+
+---
+

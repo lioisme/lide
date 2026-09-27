@@ -13,6 +13,9 @@ import io.github.oshai.kotlinlogging.Level
  * @param level 日志级别（kotlin-logging [Level]，2026-08-15 迁移；logcat 字符映射见 [logcatSymbolToLevel]）。
  * @param tag 日志 tag（含冒号 tag 按首 `": "` 切分语义，见 [LogcatParser]）。
  * @param message 完整消息（多行 continuation 已归并，见 [LogBuffer.appendContinuation]）。
+ * @param tagLower / @param messageLower 小写预索引（构造期一次 lowercase，
+ *   过滤消费零分配，2026-08-15 LOGCAT_CORE C5；归并更新消息时同步重建）。
+ * @param truncated 消息被截断（首行超长截断或续行超限丢弃，2026-08-15 LOGCAT_CORE C3/C4）。
  */
 data class LogEntry(
     val id: Long,
@@ -22,6 +25,9 @@ data class LogEntry(
     val level: Level,
     val tag: String,
     val message: String,
+    val tagLower: String = tag.lowercase(),
+    val messageLower: String = message.lowercase(),
+    val truncated: Boolean = false,
 )
 
 /**

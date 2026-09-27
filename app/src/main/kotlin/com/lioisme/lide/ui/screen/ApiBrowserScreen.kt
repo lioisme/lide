@@ -49,11 +49,14 @@ import com.lioisme.lide.apibrowser.ApiIndex.ApiClassEntry
 import com.lioisme.lide.apibrowser.ApiIndex.Snapshot
 import com.lioisme.lide.engine.RuntimePaths
 import com.lioisme.lide.project.ProjectManager
+import com.lioisme.lide.ui.components.CollapsedSearchInput
+import com.lioisme.lide.ui.components.SearchInputField
+import com.lioisme.lide.ui.components.copyToClipboard
+import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
-import io.github.oshai.kotlinlogging.KotlinLogging
 
 private val logger = KotlinLogging.logger("ApiBrowserScreen")
 
@@ -189,7 +192,7 @@ fun ApiBrowserScreen(
                             // 导致长按搜索条也进入 SearchView。改用自绘折叠条，仅 detectTapGestures
                             // 单击展开，长按无副作用（展开后的输入与焦点由 ExpandedFullScreenSearchBar
                             // 内部 focusRequester 自动接管，键盘照常弹出）。
-                            ApiCollapsedSearchInput(
+                            CollapsedSearchInput(
                                 query = query,
                                 onBack = onBack,
                                 onClear = { query = "" },
@@ -255,7 +258,7 @@ fun ApiBrowserScreen(
                                 entry = entry,
                                 onClick = { onClassClick(entry.name) },
                                 onLongClick = {
-                                    copyToClipboard(context, entry.name)
+                                    copyToClipboard(context, entry.name, "lide-api")
                                     scope.launch {
                                         snackbarHostState.showSnackbar(
                                             context.getString(R.string.api_copied_format, entry.name, strCopied),
@@ -276,7 +279,7 @@ fun ApiBrowserScreen(
         ExpandedFullScreenSearchBar(
             state = searchBarState,
             inputField = {
-                ApiSearchInputField(
+                SearchInputField(
                     query = query,
                     onQueryChange = { query = it },
                     active = searchActive,
@@ -352,7 +355,7 @@ fun ApiBrowserScreen(
                                     pendingNavigation = entry.name
                                 },
                                 onLongClick = {
-                                    copyToClipboard(context, entry.name)
+                                    copyToClipboard(context, entry.name, "lide-api")
                                     scope.launch {
                                         snackbarHostState.showSnackbar(
                                             context.getString(R.string.api_copied_format, entry.name, strCopied),

@@ -165,7 +165,7 @@ internal fun PermissionCheckRow(
  * 折叠搜索条（U7，2026-08-12）：与 API 浏览器折叠条同款交互——`detectTapGestures`
  * 区分单击（展开）与长按（无副作用），规避 SearchBarDefaults.InputField 内部
  * `onFocusChanged` 因长按文本选择/获得焦点误触发展开；leading 为返回按钮
- * （与 [ApiCollapsedSearchInput] 同款，点击收起搜索态），尾部清除按钮在查询非空时展示。
+ * （与 [CollapsedSearchInput] 同款，点击收起搜索态），尾部清除按钮在查询非空时展示。
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
